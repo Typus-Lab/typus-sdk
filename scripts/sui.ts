@@ -2,6 +2,7 @@ import { JsonRpcProvider, Ed25519Keypair, RawSigner, SuiEventEnvelope, Network, 
 import { fromB64 } from '@mysten/bcs';
 import fs from "fs";
 import fetch from 'cross-fetch';
+
 const { execSync } = require('child_process');
 const rpc = new JsonRpcProvider('https://fullnode.devnet.sui.io:443');
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
@@ -14,6 +15,8 @@ const receiver = "0x15ca0895f29101085cb26e00ede89420741b3140";
 const tx1 = "GRiBgktRqgJ4MSoRhCfSm/+1R/Zh9jy4UncoQeFAu5I="
 // export PRIVATEKEY=~/.sui/sui_config/sui.keystore
 const secretKeysPath = process.env.PRIVATEKEY;
+
+const subVault = "0xd3b2d3ee74afe2b5af0f810b3368955f068188e8"
 
 const TEST_MNEMONIC = "tackle wheat jungle viable memory dwarf swift fold purpose cattle impose horn"
 const VALID_SECRET_KEY = "Itk7iNFs91kXKdqVqmLrBKJItNIoSyWAOh+ZC2qaSihpxiAxNYwKPjwfresk9CSbKCmwNwvXfPQoeLL4rVa4OQ=="//'mdqVWeFekT7pqy5T49+tV12jO0m+ESW7ki4zSU9JiCgbL0kJbj5dvQ/PqcDAzZLZqzshVEs01d1KZdmLh4uZIg==';
@@ -188,3 +191,29 @@ function readJsonFile<T>(filePath: string): T {
 //         console.log(e.event)
 //     }
 // })();
+
+// let packageId = "0xfbbdd33ab4c02e7a315e2477931bae4cbdf46381";
+// let registry = "0x0a9d87a1b6c00415708d2f1c62784b52f797213c";
+// let coin = "0x84e5c5702bfbb00a830fb43e720a3a412cc2a8db";
+// console.log("test for deposit()")
+// await deposit(packageId, registry, coin)
+// async function deposit(packageId: string, registry: string, coin: string) {
+//     let txn = {
+//         packageObjectId: packageId,
+//         module: 'shark_fin',
+//         function: 'deposit',
+//         typeArguments: ["0x2::sui::SUI"],
+//         arguments: [
+//             registry,
+//             0,
+//             true,
+//             coin
+//         ],
+//         gasBudget: 1000,
+//     }
+//     const moveCallTxn = await signer.executeMoveCall(txn);
+//     console.log('moveCallTxn', moveCallTxn);
+// }
+
+
+
