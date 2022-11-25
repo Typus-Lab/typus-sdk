@@ -1,9 +1,11 @@
 import { getMintTx } from "../utils/getMintTx"
-import { registry, packageId } from "../constants"
+import { REGISTRY, PACKAGE_ID } from "../constants"
 (async () => {
     console.log("test for getMintTx()")
 
     let amount = 10000;
-    let mintTx: string = await getMintTx(packageId, registry, amount);
+
+    //the payload to mint test coin
+    let mintTx: any = await getMintTx(PACKAGE_ID, REGISTRY, amount);
     console.log(mintTx)
 })()
