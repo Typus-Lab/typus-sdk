@@ -1,18 +1,16 @@
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
+import { registry, packageId } from "../constants"
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 
 export async function subVaults(): Promise<any> {
-    //packageID and registry
-    let packageID = process.env.PACKAGE!
-    let registry = process.env.VAULT_REGISTRY!
-    return await subVaultsV2(packageID, registry, provider)
+    return await subVaultsV2(packageId, registry, provider)
 }
 
-export async function subVaultsV2(packageID: string, registry: string, provider: JsonRpcProvider): Promise<any> {
+export async function subVaultsV2(packageId: string, registry: string, provider: JsonRpcProvider): Promise<any> {
     //packageID and registry
     // let packageID = process.env.PACKAGE!
     // let registry = process.env.VAULT_REGISTRY!
-    console.log("packageID: " + packageID)
+    console.log("packageID: " + packageId)
     console.log("registry: " + registry)
 
     //vault
