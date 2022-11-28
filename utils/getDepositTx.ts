@@ -1,12 +1,12 @@
-export async function getDepositTx(packageId: string, registry: string, isRolling: Boolean, coin: string, amount: number): Promise<any> {
+export async function getDepositTx(packageId: string, registry: string, typeArgument: string, vaultIndex: number, isRolling: Boolean, coin: string, amount: number): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'shark_fin',
         function: 'deposit',
-        typeArguments: [" 0x2::sui::SUI "],
+        typeArguments: [typeArgument],
         arguments: [
             registry,
-            0,
+            vaultIndex,
             isRolling,
             coin,
             amount,
