@@ -7,7 +7,7 @@ const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 const mintAmount = 10000;
 (async () => {
-    console.log("test for testMint(), try to mint " + mintAmount + " ...")
+    console.log("test for mint, try to mint " + mintAmount + " ...")
 
     let mintTx: any = await getMintTx(PACKAGE_ID, REGISTRY, mintAmount);
     // console.log(mintTx)
