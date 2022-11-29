@@ -1,9 +1,9 @@
 import { getCreateTokenRegistryTx } from "../utils/getCreateTokenRegistryTx"
-import { PACKAGE_ID } from "../constants"
+import { TOKEN_PACKAGE } from "../constants"
 (async () => {
     console.log("test for getCreateTokenRegistryTx()")
 
     //the payload to mint test coin
-    let createTokenRegistryTx: any = await getCreateTokenRegistryTx(PACKAGE_ID);
+    let createTokenRegistryTx: any = await getCreateTokenRegistryTx(TOKEN_PACKAGE);
     console.log(createTokenRegistryTx)
 })()

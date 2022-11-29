@@ -1,5 +1,5 @@
 import { getDepositTx } from "../utils/getDepositTx"
-import { REGISTRY, PACKAGE_ID } from "../constants"
+import { SHARKFIN_PACKAGE, SHARKFIN_REGISTRY } from "../constants"
 (async () => {
     console.log("test for getDepositTx()")
 
@@ -10,6 +10,6 @@ import { REGISTRY, PACKAGE_ID } from "../constants"
     let amount = 9999;
 
     //the payload to mint test coin
-    let depositTx: any = await getDepositTx(PACKAGE_ID, REGISTRY, typeArgument, vaultIndex, isRolling, coin, amount);
+    let depositTx: any = await getDepositTx(SHARKFIN_PACKAGE, SHARKFIN_REGISTRY, typeArgument, vaultIndex, isRolling, coin, amount);
     console.log(depositTx)
 })()

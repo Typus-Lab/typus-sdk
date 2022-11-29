@@ -1,6 +1,6 @@
 import { getMintTx } from "../utils/getMintTx"
 import { getCreateTokenRegistryTx } from "../utils/getCreateTokenRegistryTx"
-import { REGISTRY, PACKAGE_ID, TEST_MNEMONIC } from "../constants"
+import { TOKEN_PACKAGE, TEST_MNEMONIC } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
@@ -11,7 +11,7 @@ const mintAmount = 10005;
     console.log("test for mint, try to mint " + mintAmount + " ...")
 
     console.log("create registry in pakcage:")
-    let createTokenRegistryTx: any = await getCreateTokenRegistryTx(PACKAGE_ID);
+    let createTokenRegistryTx: any = await getCreateTokenRegistryTx(TOKEN_PACKAGE);
 
     //use test wallet to create token registry
     let moveCallTxn = await signer.executeMoveCall(createTokenRegistryTx);
@@ -28,7 +28,7 @@ const mintAmount = 10005;
 
     console.log("new registry for mint token: " + newRegistry)
 
-    let mintTx: any = await getMintTx(PACKAGE_ID, newRegistry, mintAmount);
+    let mintTx: any = await getMintTx(TOKEN_PACKAGE, newRegistry, mintAmount);
 
     moveCallTxn = await signer.executeMoveCall(mintTx);
 

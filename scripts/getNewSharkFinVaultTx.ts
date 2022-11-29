@@ -1,5 +1,5 @@
 import { getNewSharkFinVaultTx } from "../utils/getNewSharkFinVaultTx"
-import { PACKAGE_ID, REGISTRY } from "../constants"
+import { SHARKFIN_PACKAGE, SHARKFIN_REGISTRY } from "../constants"
 (async () => {
     console.log("test for getNewSharkFinVaultTx()")
 
@@ -11,6 +11,6 @@ import { PACKAGE_ID, REGISTRY } from "../constants"
     let highBarrierPrice = 10
 
     //the payload to mint test coin
-    let newSharkFinVaultTx: any = await getNewSharkFinVaultTx(PACKAGE_ID, REGISTRY, typeArgument, expiration, bullish, lowBarrierPrice, highBarrierPrice);
+    let newSharkFinVaultTx: any = await getNewSharkFinVaultTx(SHARKFIN_PACKAGE, SHARKFIN_REGISTRY, typeArgument, expiration, bullish, lowBarrierPrice, highBarrierPrice);
     console.log(newSharkFinVaultTx)
 })()
