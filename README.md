@@ -17,19 +17,19 @@ npx ts-node scripts/sui.ts
     ```bash
     sui client call --gas-budget 10000 --package $PACKAGE --module "token" --function "new" 
     ```
-    to create registry, and use the registry 10001 mint token:
+    to create registry, and use the registry mint 10001 token:
     
     ```bash
     sui client call --gas-budget 10000 --package $PACKAGE --module "token" --function "mint" --args $REGISTRY 10001
     ```
     
-    you will get different object with balance after mint, and all of them created by a same registry.
+    you will get different object with balance every time after mint, and all of them created by a same registry.
 - or run test to mint customized token:
    ```bash
     npx ts-node test/testMint.ts   
     ```
 ### deposit token to shark_fin vault
-- token example: tokenA ,which is created by "mint token" step, and the **type argument** is *0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC*, which can be found wih tokenA object id from explorer
+- token example: tokenA ,which is created by "mint customized token" step, and the **type argument** is *0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC*, which can be found wih tokenA object id from explorer
 - steps to deposit token:
     - step0: insure PACKAGE and VAULT_REGISTRY are correct. (generate from shark_fin package)
     - step1: check shark_fin registry vault num (EX:1)
