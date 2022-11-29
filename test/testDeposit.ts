@@ -1,45 +1,53 @@
+import { getNewSharkFinVaultTx } from "../utils/getNewSharkFinVaultTx"
 import { getDepositTx } from "../utils/getDepositTx"
-import { REGISTRY, PACKAGE_ID, TEST_MNEMONIC } from "../constants"
+import { SHARKFIN_PACKAGE, SHARKFIN_REGISTRY, TEST_MNEMONIC, TOKEN_REGISTRY } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
-const depositAmount = 10000;
+
+/*
+    after deposit, token object balance will decrease, and new vault "deposit" in fields will increase
+*/
+
 (async () => {
-    console.log("test for deposit, try to deposit " + depositAmount + " ...")
-
+    let depositAmount = 123;
+    let typeArgument = "0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC"
+    let expiration = 1671344789
+    let bullish = true
+    let lowBarrierPrice = 1
+    let highBarrierPrice = 10
     let isRolling = true;
-    let coin = "0x7e200466dc7fee2303d8b19c8b311c6471999f61"
-    let amount = 9999;
+    let token = "0xdb85a3efc1706010fa9530ef3b8a8a5cf4b290b7"
 
-    // //change coin type to 0x2::coin::Coin<T0>
-    // let tmpObj = await provider.getObject(coin)
-    // //@ts-ignore
-    // let type = tmpObj.details.data.type
-    // const expectedType = `0x2::coin::Coin<${type}>`;
-    // console.log(expectedType)
+    console.log("test for deposit, try to deposit " + token + " for " + depositAmount + " ...")
 
-    let depositTx: any = await getDepositTx(PACKAGE_ID, REGISTRY, isRolling, coin, amount);
-    console.log(depositTx)
+    //TODO: get num of vault in TOKEN_REGISTRY
+    let registry = await provider.getObject(SHARKFIN_REGISTRY)
+    //@ts-ignore
+    let numOfVaultBeforeCreateVault = registry.details.data.fields.num_of_vault
+    console.log("numOfVaultBeforeCreateVault: " + numOfVaultBeforeCreateVault)
 
-    // //use test wallet to mint test coin by mintTx
-    // const moveCallTxn = await signer.executeMoveCall(depositTx);
-    // console.log('moveCallTxn', moveCallTxn);
+    let newSharkFinVaultTx: any = await getNewSharkFinVaultTx(SHARKFIN_PACKAGE, SHARKFIN_REGISTRY, typeArgument, expiration, bullish, lowBarrierPrice, highBarrierPrice);
+    let moveCallTxn = await signer.executeMoveCall(newSharkFinVaultTx);
 
-    // //@ts-ignore
-    // let digest: string = moveCallTxn.EffectsCert.certificate.transactionDigest
-    // // console.log("digest: " + digest);
-    // const txn = await provider.getTransactionWithEffects(
-    //     digest
-    // );
+    let txn = await provider.getTransactionWithEffects(
+        //@ts-ignore
+        moveCallTxn.EffectsCert.certificate.transactionDigest
+    );
+    let newVault = txn.effects.created![0].reference.objectId
 
-    // //@ts-ignore
-    // let coinObjectId = txn.effects.sharedObjects[0].objectId
-    // console.log("coinObjectId " + coinObjectId)
+    console.log("create new vault " + newVault + " for token successfully")
 
-    // let coinObj = await provider.getObject(coinObjectId)
-    // //@ts-ignore
-    // let coinAmount = coinObj.details.data.fields.supply.fields.value
-    // console.log("coinAmount: " + coinAmount)
+    registry = await provider.getObject(SHARKFIN_REGISTRY)
+    //@ts-ignore
+    let numOfVaultAfterCreateVault = registry.details.data.fields.num_of_vault
+    console.log("numOfVaultAfterCreateVault: " + numOfVaultAfterCreateVault)
+
+    let vaultIndex = numOfVaultAfterCreateVault - 1
+
+    let depositTx: any = await getDepositTx(SHARKFIN_PACKAGE, SHARKFIN_REGISTRY, typeArgument, vaultIndex, isRolling, token, depositAmount);
+    moveCallTxn = await signer.executeMoveCall(depositTx);
+    console.log("deposit to new vault successfully")
 })()
