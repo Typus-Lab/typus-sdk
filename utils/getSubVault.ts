@@ -1,9 +1,9 @@
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
-import { REGISTRY, PACKAGE_ID } from "../constants"
+import { SHARKFIN_PACKAGE, SHARKFIN_REGISTRY } from "../constants"
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 
 export async function subVaults(): Promise<any> {
-    return await subVaultsV2(PACKAGE_ID, REGISTRY, provider)
+    return await subVaultsV2(SHARKFIN_PACKAGE, SHARKFIN_REGISTRY, provider)
 }
 
 export async function subVaultsV2(packageId: string, registry: string, provider: JsonRpcProvider): Promise<any> {
