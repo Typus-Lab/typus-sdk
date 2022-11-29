@@ -1,34 +1,53 @@
 import { getMintTx } from "../utils/getMintTx"
+import { getCreateTokenRegistryTx } from "../utils/getCreateTokenRegistryTx"
 import { REGISTRY, PACKAGE_ID, TEST_MNEMONIC } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
-const mintAmount = 10000;
+const mintAmount = 10005;
 (async () => {
     console.log("test for mint, try to mint " + mintAmount + " ...")
 
-    let mintTx: any = await getMintTx(PACKAGE_ID, REGISTRY, mintAmount);
-    // console.log(mintTx)
+    console.log("create registry in pakcage:")
+    let createTokenRegistryTx: any = await getCreateTokenRegistryTx(PACKAGE_ID);
 
-    //use test wallet to mint test coin by mintTx
-    const moveCallTxn = await signer.executeMoveCall(mintTx);
-    // console.log('moveCallTxn', moveCallTxn);
+    //use test wallet to create token registry
+    let moveCallTxn = await signer.executeMoveCall(createTokenRegistryTx);
+
+    //@ts-ignore
+    let digest: string = moveCallTxn.EffectsCert.certificate.transactionDigest
+
+    let txn = await provider.getTransactionWithEffects(
+        digest
+    );
+
+    // @ts-ignore
+    let newRegistry = txn.effects.created![0].reference.objectId
+
+    console.log("new registry for mint token: " + newRegistry)
+
+    let mintTx: any = await getMintTx(PACKAGE_ID, newRegistry, mintAmount);
+
+    moveCallTxn = await signer.executeMoveCall(mintTx);
 
     //@ts-ignore
     let digest: string = moveCallTxn.EffectsCert.certificate.transactionDigest
     // console.log("digest: " + digest);
-    const txn = await provider.getTransactionWithEffects(
+
+    txn = await provider.getTransactionWithEffects(
         digest
     );
 
     //@ts-ignore
-    let coinObjectId = txn.effects.sharedObjects[0].objectId
-    console.log("coinObjectId " + coinObjectId)
+    let tokenObjectId = txn.effects.created[0].reference.objectId
 
-    let coinObj = await provider.getObject(coinObjectId)
+    let tokenObj = await provider.getObject(tokenObjectId)
     //@ts-ignore
-    let coinAmount = coinObj.details.data.fields.supply.fields.value
-    console.log("coinAmount: " + coinAmount)
+    let newTokenId = tokenObj.details.data.fields.id.id
+    console.log("newTokenId: " + newTokenId)
+    //@ts-ignore
+    let tokenAmount = tokenObj.details.data.fields.balance
+    console.log("tokenAmount: " + tokenAmount)
 })()
