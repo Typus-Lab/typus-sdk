@@ -17,5 +17,6 @@ export async function getDepositTx(packageId: string, registry: string, typeArgu
 }
 
 /*
-sui client call --gas-budget 1000 --package $PACKAGE --module "shark_fin" --function "deposit" --type-args 0x2::sui::SUI --args $VAULT_REGISTRY 0 true 0x7e200466dc7fee2303d8b19c8b311c6471999f61 9999
+    sui client call --gas-budget 1000 --package $PACKAGE --module "shark_fin" --function "deposit" 
+    --type-args 0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC --args $VAULT_REGISTRY 1 true $TOKENAID 9999
 */
