@@ -1,6 +1,6 @@
 import { getUpdateOracleTx } from "../utils/getUpdateOracleTx"
 import { getNewOracleTx } from "../utils/getNewOracleTx"
-import { TEST_MNEMONIC, DOV_PACKAGE } from "../constants"
+import { TEST_MNEMONIC, DOV_PACKAGE, DEFAULT_TYPE_ARGUMENT } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
@@ -8,12 +8,12 @@ const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 
 (async () => {
-    let typeArgument = "0x2::sui::SUI";
+
     let price = 1234;
     let unix = 5678;
 
     console.log("create new oracle...")
-    let newOracleTx: any = await getNewOracleTx(DOV_PACKAGE, typeArgument);
+    let newOracleTx: any = await getNewOracleTx(DOV_PACKAGE, DEFAULT_TYPE_ARGUMENT);
     let moveCallTxn = await signer.executeMoveCall(newOracleTx);
     //@ts-ignore
     let digest: string = moveCallTxn.EffectsCert.certificate.transactionDigest
@@ -29,7 +29,7 @@ const signer = new RawSigner(keypair, provider);
     console.log("managerCap: " + managerCap)
 
     console.log("update oracle...")
-    let updateOracleTx: any = await getUpdateOracleTx(DOV_PACKAGE, typeArgument, newOracle, managerCap, price, unix);
+    let updateOracleTx: any = await getUpdateOracleTx(DOV_PACKAGE, DEFAULT_TYPE_ARGUMENT, newOracle, managerCap, price, unix);
     moveCallTxn = await signer.executeMoveCall(updateOracleTx);
 
     let newOracleObj = await provider.getObject(newOracle)
