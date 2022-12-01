@@ -13,7 +13,7 @@ const signer = new RawSigner(keypair, provider);
 
 (async () => {
     let depositAmount = 123;
-    let typeArgument = "0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC"
+    let typeArgument = "0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC" //0x27b3674c685046f66cad1d5496d2967894fa5329:TOKEN_PACKAGE
     let expiration = 1671344789
     let bullish = true
     let lowBarrierPrice = 1
