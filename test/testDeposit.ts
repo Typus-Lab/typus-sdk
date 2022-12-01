@@ -23,7 +23,6 @@ const signer = new RawSigner(keypair, provider);
 
     console.log("test for deposit, try to deposit " + token + " for " + depositAmount + " ...")
 
-    //TODO: get num of vault in TOKEN_REGISTRY
     let registry = await provider.getObject(SHARKFIN_REGISTRY)
     //@ts-ignore
     let numOfVaultBeforeCreateVault = registry.details.data.fields.num_of_vault
