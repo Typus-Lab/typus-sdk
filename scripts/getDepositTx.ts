@@ -9,7 +9,6 @@ import { SHARKFIN_PACKAGE, SHARKFIN_REGISTRY } from "../constants"
     let coin = "0x51537ac6fdbe920db8319e3fa41b764d721cc46e"
     let amount = 9999;
 
-    //the payload to mint test coin
     let depositTx: any = await getDepositTx(SHARKFIN_PACKAGE, SHARKFIN_REGISTRY, typeArgument, vaultIndex, isRolling, coin, amount);
     console.log(depositTx)
 })()

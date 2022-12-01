@@ -5,7 +5,6 @@ import { TOKEN_PACKAGE } from "../constants"
 
     let typeArgument = "0x2::sui::SUI";
 
-    //the payload to mint test coin
     let mintTx: any = await getNewOracleTx(TOKEN_PACKAGE, typeArgument);
     console.log(mintTx)
 })()

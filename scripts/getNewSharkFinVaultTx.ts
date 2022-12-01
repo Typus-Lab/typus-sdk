@@ -10,7 +10,6 @@ import { SHARKFIN_PACKAGE, SHARKFIN_REGISTRY } from "../constants"
     let lowBarrierPrice = 1
     let highBarrierPrice = 10
 
-    //the payload to mint test coin
     let newSharkFinVaultTx: any = await getNewSharkFinVaultTx(SHARKFIN_PACKAGE, SHARKFIN_REGISTRY, typeArgument, expiration, bullish, lowBarrierPrice, highBarrierPrice);
     console.log(newSharkFinVaultTx)
 })()
