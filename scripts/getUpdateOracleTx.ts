@@ -9,6 +9,6 @@ import { TOKEN_PACKAGE } from "../constants"
     let price = 1234
     let unix = 5678
 
-    let mintTx: any = await getUpdateOracleTx(TOKEN_PACKAGE, typeArgument, oracle, managerCap, price, unix);
-    console.log(mintTx)
+    let updateOracleTx: any = await getUpdateOracleTx(TOKEN_PACKAGE, typeArgument, oracle, managerCap, price, unix);
+    console.log(updateOracleTx)
 })()

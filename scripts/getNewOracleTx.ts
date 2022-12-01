@@ -5,6 +5,6 @@ import { TOKEN_PACKAGE } from "../constants"
 
     let typeArgument = "0x2::sui::SUI";
 
-    let mintTx: any = await getNewOracleTx(TOKEN_PACKAGE, typeArgument);
-    console.log(mintTx)
+    let newOracleTx: any = await getNewOracleTx(TOKEN_PACKAGE, typeArgument);
+    console.log(newOracleTx)
 })()
