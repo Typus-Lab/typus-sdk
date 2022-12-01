@@ -1,5 +1,5 @@
 import { getUpdateOracleTx } from "../utils/getUpdateOracleTx"
-import { TOKEN_PACKAGE } from "../constants"
+import { DOV_PACKAGE } from "../constants"
 (async () => {
     console.log("test for getUpdateOracleTx()")
 
@@ -9,6 +9,6 @@ import { TOKEN_PACKAGE } from "../constants"
     let price = 1234
     let unix = 5678
 
-    let updateOracleTx: any = await getUpdateOracleTx(TOKEN_PACKAGE, typeArgument, oracle, managerCap, price, unix);
+    let updateOracleTx: any = await getUpdateOracleTx(DOV_PACKAGE, typeArgument, oracle, managerCap, price, unix);
     console.log(updateOracleTx)
 })()
