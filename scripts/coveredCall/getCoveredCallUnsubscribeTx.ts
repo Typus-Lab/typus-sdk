@@ -1,4 +1,4 @@
-import { getCoveredCallUnsubscribeTx } from "../../utils/coveredCall/getCoveredCallunsubscribeTx"
+import { getCoveredCallUnsubscribeTx } from "../../utils/coveredCall/getCoveredCallUnsubscribeTx"
 import { COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, COVERED_CALL_MANAGER, DEFAULT_TYPE_ARGUMENT } from "../../constants"
 (async () => {
     console.log("test for getCoveredCallUnsubscribeTx()")
