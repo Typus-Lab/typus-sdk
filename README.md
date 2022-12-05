@@ -13,14 +13,10 @@ npm i
 npx ts-node scripts/sui.ts 
 ```
 ### mint customized token
-- get package object id from dov, run:
-    ```bash
-    sui client call --gas-budget 10000 --package $PACKAGE --module "token" --function "new" 
-    ```
-    to create registry, and use the registry mint 10001 token:
+- get package object id and one of asset registry(for example:BTC )from sui-dev-token, and use the registry mint 10001 token:
     
     ```bash
-    sui client call --gas-budget 10000 --package $PACKAGE --module "token" --function "mint" --args $REGISTRY 10001
+    sui client call --gas-budget 10000 --package $PACKAGE --module "token_btc" --function "mint" --args $REGISTRY 10001
     ```
     
     you will get different object with balance every time after mint, and all of them created by a same registry.
