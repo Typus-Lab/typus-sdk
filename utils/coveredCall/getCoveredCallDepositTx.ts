@@ -10,9 +10,9 @@ export async function getCoveredCallDepositTx(
         arguments: [
             registry,
             index,
-            rolling,
             coin,
-            amount
+            amount,
+            rolling,
         ],
         gasBudget: 10000,
     }
