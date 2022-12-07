@@ -1,5 +1,5 @@
 import { getUpdateOracleTx } from "../utils/getUpdateOracleTx"
-import { DOV_PACKAGE, DEFAULT_TYPE_ARGUMENT } from "../constants"
+import { ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT } from "../constants"
 (async () => {
     console.log("test for getUpdateOracleTx()")
 
@@ -8,6 +8,6 @@ import { DOV_PACKAGE, DEFAULT_TYPE_ARGUMENT } from "../constants"
     let price = 1234
     let unix = 5678
 
-    let updateOracleTx: any = await getUpdateOracleTx(DOV_PACKAGE, DEFAULT_TYPE_ARGUMENT, oracle, managerCap, price, unix);
+    let updateOracleTx: any = await getUpdateOracleTx(ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT, oracle, managerCap, price, unix);
     console.log(updateOracleTx)
 })()
