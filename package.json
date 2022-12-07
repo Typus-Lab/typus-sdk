@@ -46,7 +46,8 @@
     "ts-mocha": "^10.0.0",
     "tslib": "^1.14.1",
     "tsutils": "^2.29.0",
-    "wrappy": "^1.0.2"
+    "wrappy": "^1.0.2",
+    "ws": "^8.11.0"
   },
   "devDependencies": {
     "@types/bs58": "^4.0.1",
