@@ -5,6 +5,6 @@ import { COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT } fr
 
     let index = 0
 
-    let coveredCallUnsubscribeTx: any = await getUnsubscribeTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT, index);
-    console.log(coveredCallUnsubscribeTx)
+    let unsubscribeTx: any = await getUnsubscribeTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT, index);
+    console.log(unsubscribeTx)
 })()
