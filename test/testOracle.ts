@@ -11,9 +11,10 @@ const signer = new RawSigner(keypair, provider);
 
     let price = 1234;
     let unix = 5678;
+    let decimal = 8;
 
     console.log("create new oracle...")
-    let newOracleTx: any = await getNewOracleTx(ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT);
+    let newOracleTx: any = await getNewOracleTx(ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT, decimal);
     let moveCallTxn = await signer.executeMoveCall(newOracleTx);
     //@ts-ignore
     let digest: string = moveCallTxn.EffectsCert.certificate.transactionDigest
