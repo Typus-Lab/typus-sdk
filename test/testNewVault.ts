@@ -19,7 +19,7 @@ const signer = new RawSigner(keypair, provider);
     let unix = 10000000;
     let decimal = 8;
     let expiration = 1;
-    let assetName = "BTC"
+    let assetName = "BTC" //TODO: it will show BTC base64 string in obj fields(for example, BTC will turn into "QlRD")
     let strike = 105
 
     // 2. new price oracle and update
@@ -74,5 +74,8 @@ const signer = new RawSigner(keypair, provider);
         //@ts-ignore
         moveCallTxn.EffectsCert.certificate.transactionDigest
     );
-    console.log("new covered call vault: " + txn.effects.created![0].reference.objectId)
+    for (let obj of txn.effects.created!) {
+        //@ts-ignore
+        if (obj.owner.ObjectOwner == COVERED_CALL_REGISTRY) console.log("new covered call vault: " + obj.reference.objectId)
+    }
 })()
