@@ -12,7 +12,7 @@ const mintAmount = 10005;
     let obj = await provider.getObject(TOKEN_REGISTRY);
 
     //@ts-ignore
-    let type: string = obj.details.data.fields.supply.type
+    let type: string = obj.details.data.fields.treasury_cap.fields.total_supply.type
     let tokenName: string | undefined = TOKEN_NAME.find(e => type.includes(e))
     if (!tokenName) {
         console.log("can't find token in type: " + type)
@@ -21,7 +21,7 @@ const mintAmount = 10005;
     let moudleName = TOKEN_NAME_TO_MODULE[tokenName]
 
     //@ts-ignore
-    console.log("Before: total mint fake " + tokenName + " token in the registry: " + obj.details.data.fields.supply.fields.value)
+    console.log("Before: total mint fake " + tokenName + " token in the registry: " + obj.details.data.fields.treasury_cap.fields.total_supply.fields.value)
 
     let mintTx: any = await getMintTx(TOKEN_PACKAGE, TOKEN_REGISTRY, moudleName, mintAmount);
 
@@ -45,5 +45,5 @@ const mintAmount = 10005;
 
     obj = await provider.getObject(TOKEN_REGISTRY);
     //@ts-ignore
-    console.log("After: total mint fake " + tokenName + " token in the registry: " + obj.details.data.fields.supply.fields.value)
+    console.log("After: total mint fake " + tokenName + " token in the registry: " + obj.details.data.fields.treasury_cap.fields.total_supply.fields.value)
 })()
