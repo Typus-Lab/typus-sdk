@@ -3,28 +3,40 @@ import { getUpdateOracleTx } from "../utils/getUpdateOracleTx"
 import { getNewCoveredCallVaultTx } from "../utils/coveredCall/getNewCoveredCallVaultTx";
 import { COVERED_CALL_MANAGER, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TEST_MNEMONIC, ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
-
+import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
-
-// - test_new_vault(mainly test: new_covered_call_vault)
-// 1. we have manager cap and registry
-// 2. new price oracle and update
-// 3. call new_covered_call_vault
-// 4. check result
+const token = "0xaa8f8ccf372b461e5b8778b250bf13d9b1013174"// minted token 
+const decimal = 8;
+const expiration = 1;
+const assetName = "BTC" //TODO: it will show BTC base64 string in obj fields(for example, BTC will turn into "QlRD")
+const strike = 105
+const price = 98;
+const unix = 10000000;
 
 (async () => {
-    let price = 98;
-    let unix = 10000000;
-    let decimal = 8;
-    let expiration = 1;
-    let assetName = "BTC" //TODO: it will show BTC base64 string in obj fields(for example, BTC will turn into "QlRD")
-    let strike = 105
+    let typeArgument: string = await getTypeArgumentFromToken(token)
+    let priceOracle: string = await createAndUpdatePriceOracle(typeArgument)
 
-    // 2. new price oracle and update
+    let newCoveredCallVaultTx = await getNewCoveredCallVaultTx(
+        COVERED_CALL_PACKAGE,
+        COVERED_CALL_REGISTRY,
+        typeArgument,
+        COVERED_CALL_MANAGER,
+        expiration,
+        assetName,
+        strike,
+        priceOracle,
+    )
+    let moveCallTxn = await signer.executeMoveCall(newCoveredCallVaultTx);
+
+    await checkData(moveCallTxn)
+})()
+
+async function createAndUpdatePriceOracle(typeArgument: string): Promise<any> {
     console.log("create new oracle...")
-    let newOracleTx: any = await getNewOracleTx(ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT, decimal);
+    let newOracleTx: any = await getNewOracleTx(ORACLE_PACKAGE, typeArgument, decimal);
     let moveCallTxn = await signer.executeMoveCall(newOracleTx);
     //@ts-ignore
     let digest: string = moveCallTxn.EffectsCert.certificate.transactionDigest
@@ -44,38 +56,31 @@ const signer = new RawSigner(keypair, provider);
         managerCap = txn.effects.created![0].reference.objectId
     }
 
-    console.log("newOracle: " + priceOracle)
-    console.log("managerCap: " + managerCap)
+    console.log("priceOracle: " + priceOracle)
+    console.log("managerCap of priceOracle: " + managerCap)
 
     console.log("update oracle...")
-    let updateOracleTx: any = await getUpdateOracleTx(ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT, priceOracle, managerCap, price, unix);
+    let updateOracleTx: any = await getUpdateOracleTx(ORACLE_PACKAGE, typeArgument, priceOracle, managerCap, price, unix);
     await signer.executeMoveCall(updateOracleTx);
 
     let newOracleObj = await provider.getObject(priceOracle)
     console.log("updated oracle data:")
     //@ts-ignore
     console.log(newOracleObj.details.data.fields)
+    return priceOracle
+}
 
-    // 3. call new_covered_call_vault
-    let newCoveredCallVaultTx = await getNewCoveredCallVaultTx(
-        COVERED_CALL_PACKAGE,
-        COVERED_CALL_REGISTRY,
-        DEFAULT_TYPE_ARGUMENT,
-        COVERED_CALL_MANAGER,
-        expiration,
-        assetName,
-        strike,
-        priceOracle,
-    )
-    moveCallTxn = await signer.executeMoveCall(newCoveredCallVaultTx);
-
-    // 4. check result
-    txn = await provider.getTransactionWithEffects(
-        //@ts-ignore
-        moveCallTxn.EffectsCert.certificate.transactionDigest
-    );
-    for (let obj of txn.effects.created!) {
-        //@ts-ignore
-        if (obj.owner.ObjectOwner == COVERED_CALL_REGISTRY) console.log("new covered call vault: " + obj.reference.objectId)
+async function checkData(moveCallTxn: any): Promise<any> {
+    try {
+        let txn = await provider.getTransactionWithEffects(
+            //@ts-ignore
+            moveCallTxn.EffectsCert.certificate.transactionDigest
+        );
+        for (let obj of txn.effects.created!) {
+            //@ts-ignore
+            if (obj.owner.ObjectOwner == COVERED_CALL_REGISTRY) console.log("new covered call vault: " + obj.reference.objectId)
+        }
+    } catch (e) {
+        console.error(e)
     }
-})()
+}
