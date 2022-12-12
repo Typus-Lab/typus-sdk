@@ -1,4 +1,4 @@
-import { getNewAuctionWithNextCoveredCallVaultTx } from "../../utils/coveredCall/getNewAuctionWithNextCoveredCallVaultTX"
+import { getNewAuctionWithNextCoveredCallVaultTx } from "../../utils/coveredCall/getNewAuctionWithNextCoveredCallVaultTx"
 import { COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT, COVERED_CALL_MANAGER, ORACLE_PACKAGE } from "../../constants"
 (async () => {
     console.log("test for getNewAuctionWithNextCoveredCallVaultTx()")
