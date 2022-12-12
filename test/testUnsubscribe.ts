@@ -9,12 +9,12 @@ const signer = new RawSigner(keypair, provider);
 
 /*
    after unsubscribe, the subvault (is deposited) "balance" in fields will be 0,
-   and a linked list node will be created if not exist,and the value increase.
+   and a regular linked list node will be created if not exist, and the value increase.
 
    EX: 
-   subvault balance:1234, linked list node value:1000
+   subvault balance:1234, regular linked list node value:1000
    after unsubscribe
-   subvault balance:0, linked list node value:2234
+   subvault balance:0, regular linked list node value:2234
 */
 
 (async () => {

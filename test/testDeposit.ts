@@ -8,7 +8,8 @@ const signer = new RawSigner(keypair, provider);
 
 /*
     after deposit, token object (minted token) balance will decrease, 
-    and subVault "balance" in fields will increase
+    and subVault "balance" in fields will increase,
+    and a new rolling linked list node will be created if not exist, and the value will increase the same value
 */
 
 (async () => {
