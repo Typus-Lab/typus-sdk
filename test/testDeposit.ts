@@ -7,7 +7,8 @@ const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 
 /*
-    after deposit, token object balance will decrease, and new vault "deposit" in fields will increase
+    after deposit, token object (minted token) balance will decrease, 
+    and subVault "balance" in fields will increase
 */
 
 (async () => {
@@ -22,5 +23,5 @@ const signer = new RawSigner(keypair, provider);
 
     let depositTx: any = await getDepositTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, isRolling, token, depositAmount);
     await signer.executeMoveCall(depositTx);
-    console.log("deposit to new vault successfully")
+    console.log("deposit to vault successfully")
 })()
