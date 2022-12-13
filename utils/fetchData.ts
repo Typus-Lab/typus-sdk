@@ -4,13 +4,14 @@ const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 
 const decode = (str: string): string => Buffer.from(str, 'base64').toString('binary');
 
-export interface subVaults {
+export interface SubVaults {
     rolling: string;
     maker: string;
     regular: string;
 }
 
 export async function getCoveredCallVaultsFromRegistry(registry: string): Promise<any> {
+    console.log("registry: " + registry)
     let coveredCallVaults: any[] = await provider.getObjectsOwnedByObject(registry)
     console.log("under the registry, there are " + coveredCallVaults.length + " covered call vaults")
     return coveredCallVaults
@@ -25,10 +26,10 @@ export async function getTableFromCoveredCallVault(coveredCallVault: string): Pr
     return tableUnderCoveredCallVault
 }
 
-export async function getSubVaultsFromTable(tableUnderCoveredCallVault: string): Promise<subVaults> {
+export async function getSubVaultsFromTable(tableUnderCoveredCallVault: string): Promise<SubVaults> {
     let subVaults = await provider.getObjectsOwnedByObject(tableUnderCoveredCallVault)
     console.log("there are " + subVaults.length + " sub vault under table, representing rolling, regular and maker")
-    let result = {} as subVaults;
+    let result = {} as SubVaults;
     for (let subVault of subVaults) {
         let txn = await provider.getObject(subVault.objectId)
         //@ts-ignore
