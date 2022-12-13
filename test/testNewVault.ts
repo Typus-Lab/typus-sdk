@@ -17,7 +17,7 @@ const unix = 10000000;
 
 (async () => {
     let typeArgument: string = await getTypeArgumentFromToken(token)
-    let priceOracle: string = await createAndUpdatePriceOracle(typeArgument)
+    // let priceOracle: string = await createAndUpdatePriceOracle(typeArgument)
 
     let newCoveredCallVaultTx = await getNewCoveredCallVaultTx(
         COVERED_CALL_PACKAGE,
@@ -27,7 +27,6 @@ const unix = 10000000;
         expiration,
         assetName,
         strike,
-        priceOracle,
     )
     let moveCallTxn = await signer.executeMoveCall(newCoveredCallVaultTx);
 
