@@ -12,8 +12,6 @@ export async function getNewAuctionWithNextCoveredCallVaultTx(
     expiration: number,
     assetName: string,
     strikeOtmPct: number,
-    price_oracle: string,
-
 ): Promise<any> {
     let tx = {
         packageObjectId: packageId,
@@ -32,7 +30,6 @@ export async function getNewAuctionWithNextCoveredCallVaultTx(
             expiration,
             assetName,
             strikeOtmPct,
-            price_oracle,
         ],
         gasBudget: 10000,
     }

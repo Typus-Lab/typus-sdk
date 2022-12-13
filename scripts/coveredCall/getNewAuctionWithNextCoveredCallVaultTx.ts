@@ -12,8 +12,6 @@ import { COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT, COV
     let expiration = 2000;
     let assetName = "BTC";
     let strikeOtmPct = 2000;
-    let priceOracle = ""// new oracle by new_oracle
-
 
     let newAuctionWithNextCoveredCallVaultTx: any =
         await getNewAuctionWithNextCoveredCallVaultTx(
@@ -30,7 +28,6 @@ import { COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT, COV
             expiration,
             assetName,
             strikeOtmPct,
-            priceOracle,
         );
     console.log(newAuctionWithNextCoveredCallVaultTx)
 })()
