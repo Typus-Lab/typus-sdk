@@ -19,8 +19,8 @@ export const TEST_MNEMONIC = "plug grain matter asthma aware critic can lottery 
 export const TOKEN_NAME = ["BTC", "ETH", "SUI", "USDC", "USDT"]
 export const TOKEN_NAME_TO_MODULE = {
     "BTC": "btc",
-    "ETH": "token_eth",
-    "SUI": "token_sui",
-    "USDC": "token_usdc",
-    "USDT": "token_usdt",
+    "ETH": "eth",
+    // "SUI": "token_sui",
+    "USDC": "usdc",
+    // "USDT": "token_usdt",
 }
