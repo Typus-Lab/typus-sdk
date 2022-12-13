@@ -15,8 +15,8 @@ const signer = new RawSigner(keypair, provider);
 (async () => {
     let depositAmount = 123;
     let isRolling = true;
-    let token = "0xaa8f8ccf372b461e5b8778b250bf13d9b1013174"// minted token 
-    let vaultIndex = 3;
+    let token = "0x82416a9dacea43afa6570863f1bcd3e55e75448e"// minted token 
+    let vaultIndex = 0;
 
     let typeArgument = await getTypeArgumentFromToken(token)
 
