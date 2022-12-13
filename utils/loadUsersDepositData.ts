@@ -16,7 +16,7 @@ export interface UserDepositData {
     balance: number;
 }
 
-export async function loadUserDepositData(registry: string): Promise<any> {
+export async function loadUsersDepositData(registry: string): Promise<Map<string, UserDepositData[]>> {
 
     //in the return map, the user addr will map to an array of UserDepositData
     let usersDepositData = new Map();
