@@ -16,9 +16,9 @@ export async function getCoveredCallVaultsFromRegistry(registry: string): Promis
     return coveredCallVaults
 }
 
-export async function getTableFromCoveredCallVault(coveredCallVault: any): Promise<any> {
-    console.log("coveredCallVault: " + coveredCallVault.objectId)
-    let tmp: any = await provider.getObject(coveredCallVault.objectId)
+export async function getTableFromCoveredCallVault(coveredCallVault: string): Promise<any> {
+    console.log("coveredCallVault: " + coveredCallVault)
+    let tmp: any = await provider.getObject(coveredCallVault)
     //@ts-ignore
     let tableUnderCoveredCallVault: string = tmp.details.data.fields.value.fields.vault.fields.sub_vaults.fields.id.id
     console.log("table : " + tableUnderCoveredCallVault)
@@ -41,9 +41,11 @@ export async function getSubVaultsFromTable(tableUnderCoveredCallVault: string):
     return result
 }
 
-export async function getTableUnderSubVault(subVault: string): Promise<any> {
+export async function getTableUnderSubVault(subVault: string): Promise<string> {
     console.log("sub vault: " + subVault)
-    let table = await provider.getObject(subVault)
+    let tmp = await provider.getObject(subVault)
+    //@ts-ignore
+    let table: string = tmp.details.data.fields.value.fields.user_shares.fields.nodes.fields.id.id
     console.log("table under sub vault: ", table);
     return table
 }
@@ -54,10 +56,10 @@ export async function getLinkedListNodesFromTable(table: string): Promise<any[]>
     return linkedListNodes
 }
 
-export async function getUserDataFromLinkedListNode(linkedListNode: any): Promise<any[]> {
+export async function getUserDataFromLinkedListNode(linkedListNode: string): Promise<any> {
     let tmp = await provider.getObject(linkedListNode)
     //@ts-ignore
-    let usersData: any[] = tmp.details.data.fields
+    let usersData: any = tmp.details.data.fields
     console.log("users data from linked list node:")
     console.log(usersData)
     return usersData
