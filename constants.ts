@@ -1,6 +1,6 @@
 //publish from sui-dev-token
-export const TOKEN_PACKAGE = "0xd73d20a3ca73054ef56af95754698af0f587f90d";
-export const TOKEN_REGISTRY = "0x882541280791e5c2a2eb386d1f36be220461d471";//fake btc registry
+export const TOKEN_PACKAGE = "0x0a7a15d173690ac676b03eb8285a615a8982cb27";
+export const TOKEN_REGISTRY = "0x25c417ee04e789911fdd4b6edabbeb4320fe7eea";//fake btc registry
 
 //publish from typus-oracle
 export const ORACLE_PACKAGE = "0xe85eabdada216e470344b2e70cdc8155a4007a2a"
