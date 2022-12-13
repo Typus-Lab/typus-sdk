@@ -7,7 +7,7 @@ import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
-const token = "0xaa8f8ccf372b461e5b8778b250bf13d9b1013174"// minted token 
+const token = "0x82416a9dacea43afa6570863f1bcd3e55e75448e"// minted token 
 const decimal = 8;
 const expiration = 1;
 const assetName = "BTC" //TODO: it will show BTC base64 string in obj fields(for example, BTC will turn into "QlRD")
