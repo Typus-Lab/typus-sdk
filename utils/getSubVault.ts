@@ -25,11 +25,11 @@ export async function subVaultsV2(registry: string, provider: JsonRpcProvider): 
         let tmpObj2 = await provider.getObject(vault)
 
         //@ts-ignore
-        let table_id = tmpObj2.details.data.fields.value.fields.vault.fields.sub_vaults.fields.id.id
-        console.log("table: " + table_id)
+        let tableId = tmpObj2.details.data.fields.value.fields.vault.fields.sub_vaults.fields.id.id
+        console.log("table: " + tableId)
 
         //sub vault (maker / rolling / no_rolling) id 
-        let tmpObj3 = await provider.getObjectsOwnedByObject(table_id)
+        let tmpObj3 = await provider.getObjectsOwnedByObject(tableId)
         let subVaultsId: string[] = [];
         tmpObj3.map(e => {
             // console.log("data: " + JSON.stringify(e))
