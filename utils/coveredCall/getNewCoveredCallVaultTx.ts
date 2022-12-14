@@ -1,6 +1,6 @@
 export async function getNewCoveredCallVaultTx(
     packageId: string, registry: string, typeArgument: string, managerCap: string,
-    expiration: number, assetName: string, strike: number
+    expiration: number, strike: number
 ): Promise<any> {
     let tx = {
         packageObjectId: packageId,
@@ -11,7 +11,6 @@ export async function getNewCoveredCallVaultTx(
             managerCap,
             registry,
             expiration,
-            assetName,
             strike,
         ],
         gasBudget: 10000,

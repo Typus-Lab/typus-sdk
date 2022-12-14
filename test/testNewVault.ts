@@ -10,7 +10,6 @@ const signer = new RawSigner(keypair, provider);
 const token = "0x82416a9dacea43afa6570863f1bcd3e55e75448e"// minted token 
 const decimal = 8;
 const expiration = 1;
-const assetName = "BTC" //TODO: it will show BTC base64 string in obj fields(for example, BTC will turn into "QlRD")
 const strike = 105
 const price = 98;
 const unix = 10000000;
@@ -25,7 +24,6 @@ const unix = 10000000;
         typeArgument,
         COVERED_CALL_MANAGER,
         expiration,
-        assetName,
         strike,
     )
     let moveCallTxn = await signer.executeMoveCall(newCoveredCallVaultTx);
