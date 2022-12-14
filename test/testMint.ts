@@ -1,5 +1,5 @@
 import { getMintTx } from "../utils/getMintTx"
-import { TOKEN_PACKAGE, TOKEN_REGISTRY, TEST_MNEMONIC, TOKEN_NAME, TOKEN_NAME_TO_MODULE } from "../constants"
+import { TOKEN_PACKAGE, TOKEN_REGISTRY_BTC, TEST_MNEMONIC, TOKEN_NAME, TOKEN_NAME_TO_MODULE } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
@@ -10,7 +10,7 @@ const mintAmount = 10005;
 (async () => {
     let moudleName: string = await prepareData()
 
-    let mintTx: any = await getMintTx(TOKEN_PACKAGE, TOKEN_REGISTRY, moudleName, mintAmount);
+    let mintTx: any = await getMintTx(TOKEN_PACKAGE, TOKEN_REGISTRY_BTC, moudleName, mintAmount);
     let moveCallTxn: any = await signer.executeMoveCall(mintTx);
 
     await checkData(moveCallTxn)
@@ -20,7 +20,7 @@ async function prepareData(): Promise<any> {
     try {
         console.log("test for mint, try to mint " + mintAmount + " ...")
 
-        let obj = await provider.getObject(TOKEN_REGISTRY);
+        let obj = await provider.getObject(TOKEN_REGISTRY_BTC);
 
         //@ts-ignore
         let type: string = obj.details.data.fields.treasury_cap.fields.total_supply.type
@@ -57,7 +57,7 @@ async function checkData(moveCallTxn: any) {
         let newTokenId = tokenObj.details.data.fields.id.id
         console.log("newTokenId: " + newTokenId)
 
-        let obj = await provider.getObject(TOKEN_REGISTRY);
+        let obj = await provider.getObject(TOKEN_REGISTRY_BTC);
         //@ts-ignore
         console.log("After: total mint in the registry: " + obj.details.data.fields.treasury_cap.fields.total_supply.fields.value)
     } catch (e) {
