@@ -1,5 +1,5 @@
 export async function getDeliveryTx(
-    packageId: string, managerCap: string, registry: string, typeArgument: string, index: number,): Promise<any> {
+    packageId: string, managerCap: string, registry: string, typeArgument: string, index: number, size: number, timeOracle: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
@@ -9,6 +9,8 @@ export async function getDeliveryTx(
             managerCap,
             registry,
             index,
+            size,
+            timeOracle,
         ],
         gasBudget: 10000,
     }

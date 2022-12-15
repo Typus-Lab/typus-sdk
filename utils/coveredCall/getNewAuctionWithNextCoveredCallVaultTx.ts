@@ -10,7 +10,6 @@ export async function getNewAuctionWithNextCoveredCallVaultTx(
     initialPrice: number,
     finalPrice: number,
     expiration: number,
-    assetName: string,
     strikeOtmPct: number,
 ): Promise<any> {
     let tx = {
@@ -28,7 +27,6 @@ export async function getNewAuctionWithNextCoveredCallVaultTx(
             initialPrice,
             finalPrice,
             expiration,
-            assetName,
             strikeOtmPct,
         ],
         gasBudget: 10000,
