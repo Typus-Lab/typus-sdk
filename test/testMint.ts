@@ -1,5 +1,5 @@
 import { getMintTx } from "../utils/getMintTx"
-import { TOKEN_PACKAGE, TOKEN_REGISTRY_BTC, TEST_MNEMONIC, TOKEN_NAME, TOKEN_NAME_TO_MODULE } from "../constants"
+import { TOKEN_PACKAGE, TOKEN_REGISTRY_SUI, TOKEN_REGISTRY_ETH, TEST_MNEMONIC, TOKEN_NAME, TOKEN_NAME_TO_MODULE } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
@@ -8,19 +8,20 @@ const signer = new RawSigner(keypair, provider);
 const mintAmount = 10005;
 
 (async () => {
-    let moudleName: string = await prepareData()
+    let tokenRegistry = TOKEN_REGISTRY_SUI
+    let moduleName: string = await prepareData(tokenRegistry)
 
-    let mintTx: any = await getMintTx(TOKEN_PACKAGE, TOKEN_REGISTRY_BTC, moudleName, mintAmount);
+    let mintTx: any = await getMintTx(TOKEN_PACKAGE, tokenRegistry, moduleName, mintAmount);
     let moveCallTxn: any = await signer.executeMoveCall(mintTx);
 
-    await checkData(moveCallTxn)
+    await checkData(moveCallTxn, tokenRegistry)
 })()
 
-async function prepareData(): Promise<any> {
+async function prepareData(tokenRegistry: string): Promise<any> {
     try {
         console.log("test for mint, try to mint " + mintAmount + " ...")
 
-        let obj = await provider.getObject(TOKEN_REGISTRY_BTC);
+        let obj = await provider.getObject(tokenRegistry);
 
         //@ts-ignore
         let type: string = obj.details.data.fields.treasury_cap.fields.total_supply.type
@@ -40,7 +41,7 @@ async function prepareData(): Promise<any> {
     }
 }
 
-async function checkData(moveCallTxn: any) {
+async function checkData(moveCallTxn: any, tokenRegistry: string) {
     try {
         //@ts-ignore
         let digest: string = moveCallTxn.EffectsCert.certificate.transactionDigest
@@ -57,7 +58,7 @@ async function checkData(moveCallTxn: any) {
         let newTokenId = tokenObj.details.data.fields.id.id
         console.log("newTokenId: " + newTokenId)
 
-        let obj = await provider.getObject(TOKEN_REGISTRY_BTC);
+        let obj = await provider.getObject(tokenRegistry);
         //@ts-ignore
         console.log("After: total mint in the registry: " + obj.details.data.fields.treasury_cap.fields.total_supply.fields.value)
     } catch (e) {
