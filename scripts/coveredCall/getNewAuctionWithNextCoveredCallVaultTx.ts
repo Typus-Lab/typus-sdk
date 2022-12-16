@@ -26,7 +26,6 @@ import { COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT, COV
             initialPrice,
             finalPrice,
             expiration,
-            assetName,
             strikeOtmPct,
         );
     console.log(newAuctionWithNextCoveredCallVaultTx)
