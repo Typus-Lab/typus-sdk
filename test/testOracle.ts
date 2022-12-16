@@ -24,10 +24,15 @@ const signer = new RawSigner(keypair, provider);
     );
 
     // @ts-ignore
-    let newOracle = txn.effects.created![0].reference.objectId
-    console.log("newOracle: " + newOracle)
-    let managerCap = txn.effects.created![1].reference.objectId
-    console.log("managerCap: " + managerCap)
+    let newOracle;
+    let managerCap;
+    if (txn.effects.created![0].owner["AddressOwner"] == undefined) {
+        newOracle = txn.effects.created![0].reference.objectId
+        managerCap = txn.effects.created![1].reference.objectId
+    } else {
+        newOracle = txn.effects.created![1].reference.objectId
+        managerCap = txn.effects.created![0].reference.objectId
+    }
 
     console.log("update oracle...")
     let updateOracleTx: any = await getUpdateOracleTx(ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT, newOracle, managerCap, price, unix);
