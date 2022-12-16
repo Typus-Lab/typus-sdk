@@ -50,7 +50,7 @@ export async function loadUsersDepositData(registry: string): Promise<Map<string
                     subVault: subVaults[subVaultType],
                     subVaultType: subVaultType,
                     linkedListNode: linkedListNode.objectId,
-                    balance: userData.value.fields.value
+                    balance: (userData.value) ? userData.value.fields.value : 0
                 }
 
                 //store user data in return map
