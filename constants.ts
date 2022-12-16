@@ -9,12 +9,12 @@ export const TOKEN_REGISTRY_SUI = "0xa0b7b5fc89ee0fa8a1f3355f9370c9651f7611b6"//
 export const ORACLE_PACKAGE = "0xe450380f9abda5ef5a7d8674f36d60caeb5a5b22"
 
 //publish from typus-dov/cover_call
-export const COVERED_CALL_PACKAGE = "0xaf49c3190359bdce1ef2947ef9e10dcc9227cec2"
-export const COVERED_CALL_REGISTRY = "0x92c1ef1b38b36541d43502954d9e6529aa9cf4d9"
-export const COVERED_CALL_MANAGER = "0x868bf971423bf0c0b443e23dc6d21bcc4169a79b"
+export const COVERED_CALL_PACKAGE = "0xf98dbb57fde46c6c42fd199404037c9f5cfb6cbd"
+export const COVERED_CALL_REGISTRY = "0x060ef5e7d31e578eece3b69fb7f933ad1f34cbf9"
+export const COVERED_CALL_MANAGER = "0xcee379cd9be9e99baf441039d8d874126615ccdd"
 
 //publish from typus-dov/typus-dov
-export const DOV_PACKAGE = "0x0c5b45ef284e97b8564223232cdd291649c0f0b7"
+export const DOV_PACKAGE = "0xfaadf1d975ed3dec39cbe93a1f44c034966f6747"
 
 export const DEFAULT_TYPE_ARGUMENT = "0x2::sui::SUI";
 export const FAKE_TOKEN_TYPE_ARGUMENT = "0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC";
