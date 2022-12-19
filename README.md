@@ -1,12 +1,15 @@
 # typus-sdk
 
-## install
+## Install
 
 ```bash
 npm i 
 ```
-
-## run scripts
+## For Frontend
+* The payload to call is in utils/ , and file name is get...Tx.ts (EX:getClaimTx.ts). It will return a tx. 
+* In scripts/ , the simple example file name to send variable into payload is get...Tx.ts (EX:getClaimTx.ts). 
+* Frontend can refer to scripts/ to call utils/ tx and send it.
+## For integration testing
 ### simple test for important function
 
 ```bash
