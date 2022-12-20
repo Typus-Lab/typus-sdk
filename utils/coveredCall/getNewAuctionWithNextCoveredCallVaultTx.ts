@@ -9,6 +9,7 @@ export async function getNewAuctionWithNextCoveredCallVaultTx(
     decay: number,
     initialPrice: number,
     finalPrice: number,
+    priceDecimal: number,
     expiration: number,
     strikeOtmPct: number,
 ): Promise<any> {
@@ -26,6 +27,7 @@ export async function getNewAuctionWithNextCoveredCallVaultTx(
             decay,
             initialPrice,
             finalPrice,
+            priceDecimal,
             expiration,
             strikeOtmPct,
         ],
