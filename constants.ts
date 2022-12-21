@@ -6,7 +6,7 @@ export const TOKEN_REGISTRY_SUI = "0x1c4ccc2fab72030abf8b04af20408a3c1c8dae5f"//
 
 
 //publish from typus-oracle
-export const ORACLE_PACKAGE = "0xe450380f9abda5ef5a7d8674f36d60caeb5a5b22"
+export const ORACLE_PACKAGE = "0x76d673a3f7aa558016e692b4de02c71de11f00b7"
 
 //publish from typus-dov/cover_call
 export const COVERED_CALL_PACKAGE = "0x04ec35903020610909d274390e94612ce679f635"
