@@ -17,8 +17,8 @@ import { type } from "os";
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
-const token = "0x0e92ca80f2c0eb22b2efd645d278d8f9934151a5"// minted token 
-const tokenB = "0x7ab6f336cebb4d877adf856ac111de7b25c0c147"
+const token = "0x8f306b0fcbcbdee0b3a5e694c06039dfe8ca7f14"// minted token 
+const tokenB = "0xb1bf91e97ea97712903824f2f9f4a29d629e9fab"
 
 const decimal = 8;
 const strike = 2000
@@ -93,7 +93,7 @@ const expirationTsMs2 = 2000000;
     await updateTimeOracle(timeOracle, timeOracleManager, endAuctionTsMs + 1)
 
     //delivery
-    let sellSize = 1;
+    let sellSize = 50000000000;//should be rolling and regular subvault balance
     await delivery(typeArgument, vaultIndex, sellSize, timeOracle)
 
     // //================================end auction================================
