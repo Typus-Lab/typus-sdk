@@ -3,6 +3,7 @@ import { getNewTimeOracleTx } from "../utils/getNewTimeOracleTx"
 import { getUpdateOracleTx } from "../utils/getUpdateOracleTx"
 import { getNewCoveredCallVaultTx } from "../utils/coveredCall/getNewCoveredCallVaultTx";
 import { getDepositTx } from "../utils/coveredCall/getDepositTx"
+import { createTimeOracle } from "../utils/coveredCall/createTimeOracle"
 import { COVERED_CALL_MANAGER, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TEST_MNEMONIC, ORACLE_PACKAGE } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
@@ -144,37 +145,6 @@ async function createPriceOracle(typeArgument: string): Promise<[string, string]
             reject(e)
         }
     })
-}
-
-async function createTimeOracle(): Promise<[string, string]> {
-    return new Promise(async (resolve, reject) => {
-        try {
-            console.log("create new time oracle...")
-            let newTimeOracleTx: any = await getNewTimeOracleTx(ORACLE_PACKAGE);
-            let moveCallTxn = await signer.executeMoveCall(newTimeOracleTx);
-            //@ts-ignore
-            let digest: string = moveCallTxn.EffectsCert.certificate.transactionDigest
-
-            let txn = await provider.getTransactionWithEffects(
-                digest
-            );
-
-            let timeOracle: string;
-            let managerCap: string;
-            if (txn.effects.created![0].owner["AddressOwner"] == undefined) {
-                timeOracle = txn.effects.created![0].reference.objectId
-                managerCap = txn.effects.created![1].reference.objectId
-            } else {
-                timeOracle = txn.effects.created![1].reference.objectId
-                managerCap = txn.effects.created![0].reference.objectId
-            }
-            resolve([timeOracle, managerCap])
-        } catch (e) {
-            console.log("err in createTimeOracle")
-            reject(e)
-        }
-    })
-
 }
 
 async function updatePriceOracle(priceOracle: string, priceOracleManager: string, typeArgument: string, price: number, ts: number) {
