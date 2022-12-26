@@ -9,7 +9,6 @@ const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 const token = "0x686be0d0337df87267ff147c9b6c45b2b8e96976"// minted token 
-const decimal = 8;
 const expiration = 1;
 const strike = 105
 const price = 98;
@@ -37,42 +36,6 @@ const shareDecimal = 4;
 
     await checkData(moveCallTxn)
 })()
-
-async function createAndUpdatePriceOracle(typeArgument: string): Promise<any> {
-    console.log("create new oracle...")
-    let newOracleTx: any = await getNewOracleTx(ORACLE_PACKAGE, typeArgument, decimal);
-    let moveCallTxn = await signer.executeMoveCall(newOracleTx);
-    //@ts-ignore
-    let digest: string = moveCallTxn.EffectsCert.certificate.transactionDigest
-
-    let txn = await provider.getTransactionWithEffects(
-        digest
-    );
-
-    // @ts-ignore
-    let priceOracle;
-    let managerCap;
-    if (txn.effects.created![0].owner["AddressOwner"] == undefined) {
-        priceOracle = txn.effects.created![0].reference.objectId
-        managerCap = txn.effects.created![1].reference.objectId
-    } else {
-        priceOracle = txn.effects.created![1].reference.objectId
-        managerCap = txn.effects.created![0].reference.objectId
-    }
-
-    console.log("priceOracle: " + priceOracle)
-    console.log("managerCap of priceOracle: " + managerCap)
-
-    console.log("update oracle...")
-    let updateOracleTx: any = await getUpdateOracleTx(ORACLE_PACKAGE, typeArgument, priceOracle, managerCap, price, unix);
-    await signer.executeMoveCall(updateOracleTx);
-
-    let newOracleObj = await provider.getObject(priceOracle)
-    console.log("updated oracle data:")
-    //@ts-ignore
-    console.log(newOracleObj.details.data.fields)
-    return priceOracle
-}
 
 async function checkData(moveCallTxn: any): Promise<any> {
     try {
