@@ -7,8 +7,8 @@ export async function getClaimAllTx(
         typeArguments: [typeArgument],
         arguments: [
             registry,
-            index,
-            isRolling,
+            [index],
+            [isRolling],
         ],
         gasBudget: 10000,
     }
