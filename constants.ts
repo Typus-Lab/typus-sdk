@@ -1,12 +1,11 @@
 //publish from sui-dev-token
-export const TOKEN_PACKAGE = "0x2009591841eff19d6c5e97eae7a45f2f3908e502";
-export const TOKEN_REGISTRY_BTC = "0x86d252653e78b9f7c7b5382f93f5c74852544e1c";//fake btc registry
-export const TOKEN_REGISTRY_ETH = "0x569832dd430ea3d31853b2e93e545bde89526021"//fake eth registry
-export const TOKEN_REGISTRY_SUI = "0xde87ddc6cc6570ae8ff3bf9ab4cf07b2d5f7bba3"//fake usdc registry
-
+export const TOKEN_PACKAGE = "0xa2ca2763f446b6822880f270aba71c3483291774";
+export const TOKEN_REGISTRY_BTC = "0xfbe6b865b5ff4bfea92c769aa0a39018100ba75c";//fake btc registry
+export const TOKEN_REGISTRY_ETH = "0x6add7187bcaeef019120b5a0ac63c9c6870ce9c2"//fake eth registry
+export const TOKEN_REGISTRY_SUI = "0x9ded8015e2ce496cee989b6701e69c73e86436e6"//fake usdc registry
 
 //publish from typus-oracle
-export const ORACLE_PACKAGE = "0x136ff71dc0e8cb679f49b095e6dff5943e35cdf1"
+export const ORACLE_PACKAGE = "0x7d683916b32c25b0061e65d3c744838cea225fe9"
 
 //publish from typus-dov/cover_call
 export const COVERED_CALL_PACKAGE = "0x7a08fbb9c4682a98ad575254e9f6886d2f7baf81"
