@@ -5,7 +5,7 @@ import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
-const mintAmount = 10005;
+const mintAmount = 1000500000;
 
 (async () => {
     let tokenRegistry = TOKEN_REGISTRY_SUI
