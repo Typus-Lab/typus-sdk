@@ -11,8 +11,8 @@ export const ORACLE_PACKAGE = "0x7d683916b32c25b0061e65d3c744838cea225fe9"
 export const COVERED_CALL_PACKAGE = "0x56dbf64116e1e70353f4b35e0c708a194d04dbb7"
 export const COVERED_CALL_REGISTRY = "0x0183b44c412e7713bb928c330bd0cbfb8817ff75"
 export const COVERED_CALL_MANAGER = "0x2370429bc93b9861b45d542862bbfd0711f4d686"
-export const USER_SHARE_TABLE = "0xd0765bf26da16c2debf6e136c0fcab67f2054ac3"
-export const MAKER_SHARE_TABLE = "0x762ad4e903b45f0a5e451874d30bce777a69f0f6"
+export const USER_SHARE_TABLE = "0x762ad4e903b45f0a5e451874d30bce777a69f0f6"
+export const MAKER_SHARE_TABLE = "0xd0765bf26da16c2debf6e136c0fcab67f2054ac3"
 
 //publish from typus-dov/typus-dov
 export const DOV_PACKAGE = "0xa6a4607b52f5a2a6299434c8c3e5040e34c325d7"
