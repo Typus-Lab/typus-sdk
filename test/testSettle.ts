@@ -15,6 +15,7 @@ import { getDeliveryTx } from "../utils/coveredCall/getDeliveryTx"
 import { getUpdatePayoffConfigTx } from "../utils/coveredCall/getUpdatePayoffConfigTx"
 import { getSettleTx } from "../utils/coveredCall/getSettleTx"
 import { type } from "os";
+import { share } from "rxjs";
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
@@ -47,7 +48,9 @@ const expirationTsMs2 = 2000000;
     // await updateTimeOracle(timeOracle, timeOracleManager, ts)
 
     //create new vault
-    await createNewVault(typeArgument, expirationTsMs1, priceOracle)
+    let tokenDecimal = 9;
+    let shareDecimal = 4;
+    await createNewVault(typeArgument, expirationTsMs1, tokenDecimal, shareDecimal, timeOracle)
 
     //deposit to new vault
     let vaultIndex = await getNewestVaultIndex(COVERED_CALL_REGISTRY);
@@ -179,7 +182,7 @@ async function updateTimeOracle(timeOracle: string, managerCap: string, ts: numb
     })
 }
 
-async function createNewVault(typeArgument: string, expirationTsMs1: number, priceOracle: string) {
+async function createNewVault(typeArgument: string, expirationTsMs1: number, tokenDecimal: number, shareDecimal: number, timeOracle: string) {
     return new Promise(async (resolve, reject) => {
         try {
             let newCoveredCallVaultTx = await getNewCoveredCallVaultTx(
@@ -187,10 +190,12 @@ async function createNewVault(typeArgument: string, expirationTsMs1: number, pri
                 COVERED_CALL_REGISTRY,
                 typeArgument,
                 COVERED_CALL_MANAGER,
+                tokenDecimal,
+                shareDecimal,
+                timeOracle,
                 expirationTsMs1,
                 strike,
-                // "BTC",
-                // priceOracle
+
             )
             let moveCallTxn = await signer.executeMoveCall(newCoveredCallVaultTx);
             await checkData(moveCallTxn)
@@ -267,7 +272,6 @@ async function createNewAuctionWithNextCoveredCallVault(
                 decaySpeed,
                 initialPrice,
                 finalPrice,
-                8,
                 expirationTsMs2,
                 strike,
             )
