@@ -2,8 +2,9 @@
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { TOKEN_NAME } from '../constants';
 import { Vault } from "../utils/fetchData"
-import { UserDepositData, loadUsersDepositData } from "../utils/loadUsersDepositData"
+
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+
 export async function getVaultDataFromRegistry(registry: string): Promise<Vault[]> {
     console.log("registry: " + registry)
 
