@@ -8,11 +8,9 @@ import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
-const token = "0x686be0d0337df87267ff147c9b6c45b2b8e96976"// minted token 
+const token = "0x3757c4e587ae5ff40b26a5fd7b96fd7c3afbf7ec"// minted token 
 const expiration = 1;
 const strike = 105
-const price = 98;
-const unix = 10000000;
 const tokenDecimal = 9;
 const shareDecimal = 4;
 
