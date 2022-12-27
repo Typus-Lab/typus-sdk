@@ -1,5 +1,6 @@
 
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
+import { UserDepositData } from "../utils/loadUsersDepositData"
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 
 const decode = (str: string): string => Buffer.from(str, 'base64').toString('binary');
@@ -10,6 +11,19 @@ export interface SubVaults {
     regular: string;
 }
 
+export interface Vault {
+    vaultId: string;
+    vaultIdx: number;
+    asset: string;
+    // status:string; // Upcoming Or Active 
+    //tvl:number;
+    //apy:number
+    // expire: string;//Monthly or Weekly
+    // Period
+    // Capacity//not yet
+}
+
+//new version: getVaultDataFromRegistry()
 export async function getCoveredCallVaultsFromRegistry(registry: string): Promise<any> {
     console.log("registry: " + registry)
     let coveredCallVaults: any[] = await provider.getObjectsOwnedByObject(registry)
