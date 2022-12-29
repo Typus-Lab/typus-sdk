@@ -15,14 +15,34 @@ export interface Vault {
     vaultId: string;
     vaultIdx: number;
     asset: string;
-    // status:string; // Upcoming Or Active 
-    //tvl:number;
-    //apy:number
-    // expire: string;//Monthly or Weekly
-    // Period
-    // Capacity//not yet
+
+    //vault
+    ableToDeposit: boolean;
+    ableToWithdraw: boolean;
+    // maker_sub_vault: string;
+    // regular_sub_vault: string;
+    // rolling_sub_vault: string;
+
+    //config
+    expirationTsMs: number;
+    payoffConfig: PayoffConfig;
+    period: number;// daily:0 weekly:1 monthly:2
+    shareDecimal: number;
+    startTsMs: number;
+    tokenDecimal: number;
+
+    //  status:string; // Upcoming Or Active 
+    //  tvl:number;
+    //  apy:number
+    //  Capacity//not yet
 }
 
+export interface PayoffConfig {
+    exposureRatio: number;
+    premiumRoi: number;
+    strike: number;
+    strikeOtmPct: number;
+}
 //new version: getVaultDataFromRegistry()
 export async function getCoveredCallVaultsFromRegistry(registry: string): Promise<any> {
     console.log("registry: " + registry)
