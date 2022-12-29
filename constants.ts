@@ -1,21 +1,21 @@
 //publish from sui-dev-token
-export const TOKEN_PACKAGE = "0xa2ca2763f446b6822880f270aba71c3483291774";
-export const TOKEN_REGISTRY_BTC = "0xfbe6b865b5ff4bfea92c769aa0a39018100ba75c";//fake btc registry
-export const TOKEN_REGISTRY_ETH = "0x6add7187bcaeef019120b5a0ac63c9c6870ce9c2"//fake eth registry
-export const TOKEN_REGISTRY_SUI = "0x9ded8015e2ce496cee989b6701e69c73e86436e6"//fake usdc registry
+export const TOKEN_PACKAGE = "0x97cfaa5d2a79c1be5da410870deb258ed5f42561";
+export const TOKEN_REGISTRY_BTC = "0xb10e4bf339c2495d793647fa726fd5427ca8c328";//fake btc registry
+export const TOKEN_REGISTRY_ETH = "0x59c42da8bb8a3b98a764985af1d9cef7e6e9f87d"//fake eth registry
+export const TOKEN_REGISTRY_SUI = "0xf4a1954d812748ee08dd4c4c1e21bb136a6c089e"//fake usdc registry
 
 //publish from typus-oracle
-export const ORACLE_PACKAGE = "0x7d683916b32c25b0061e65d3c744838cea225fe9"
+export const ORACLE_PACKAGE = "0x437d2eb473bd348ad22b37ffb84bd652656026b1"
 
 //publish from typus-dov/cover_call
-export const COVERED_CALL_PACKAGE = "0x56dbf64116e1e70353f4b35e0c708a194d04dbb7"
-export const COVERED_CALL_REGISTRY = "0x0183b44c412e7713bb928c330bd0cbfb8817ff75"
-export const COVERED_CALL_MANAGER = "0x2370429bc93b9861b45d542862bbfd0711f4d686"
-export const USER_SHARE_TABLE = "0x762ad4e903b45f0a5e451874d30bce777a69f0f6"
-export const MAKER_SHARE_TABLE = "0xd0765bf26da16c2debf6e136c0fcab67f2054ac3"
+export const COVERED_CALL_PACKAGE = "0x5ece57f5f85a00ad812afd9a4a7b7781d157f7ed"
+export const COVERED_CALL_REGISTRY = "0x189cf44a4a1daa77df7aab6d5894e2712843c2c9"
+export const COVERED_CALL_MANAGER = "0x7e39015e03494ebcb976120a0ac2f112c1602dc2"
+export const USER_SHARE_TABLE = "0x59cd2080bfc2ac8bbf917339372f1c36d44431c5"
+export const MAKER_SHARE_TABLE = "0x4b3457ee86bd47048006b181738dd5a29263d4b2"
 
 //publish from typus-dov/typus-dov
-export const DOV_PACKAGE = "0xa6a4607b52f5a2a6299434c8c3e5040e34c325d7"
+export const DOV_PACKAGE = "0x3674cf36f02160cdf3fd983629fed062f2306461"
 
 export const DEFAULT_TYPE_ARGUMENT = "0x2::sui::SUI";
 export const FAKE_TOKEN_TYPE_ARGUMENT = "0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC";
