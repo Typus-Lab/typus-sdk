@@ -11,7 +11,7 @@ export async function getDepositTx(packageId: string, registry: string, typeArgu
             amount,
             isRolling,
         ],
-        gasBudget: 1000,
+        gasBudget: 10000,
     }
     return tx
 }

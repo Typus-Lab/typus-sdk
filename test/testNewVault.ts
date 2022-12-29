@@ -8,11 +8,13 @@ import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
-const token = "0x3757c4e587ae5ff40b26a5fd7b96fd7c3afbf7ec"// minted token 
+const token = "0x07f6ef13aa444a793b11675494a8c7fb3b1acab7"// minted token 
 const expiration = 1;
 const strike = 105
 const tokenDecimal = 9;
 const shareDecimal = 4;
+const period = 1;//weekly
+const start = 1671782400000;// 2022/12/23 Friday 08:00:00
 
 (async () => {
     let typeArgument: string = await getTypeArgumentFromToken(token)
@@ -27,6 +29,8 @@ const shareDecimal = 4;
         tokenDecimal,
         shareDecimal,
         timeOracle,
+        period,
+        start,
         expiration,
         strike,
     )
