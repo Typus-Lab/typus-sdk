@@ -25,6 +25,10 @@ async function getSubVaultsData(registry: string): Promise<Map<number, SubVaultD
     let objsInfo = await provider.getObjectBatch(coveredCallVaultsId)
 
     for (let objInfo of objsInfo) {
+        if (objInfo.status != "Exists") {
+            console.log("obj not exist")
+            continue
+        }
         //@ts-ignore
         let vaultId = Number(objInfo.details.data.fields.name)
 
@@ -49,6 +53,10 @@ export async function getUsersShares(userShareTable: string, registry: string): 
 
     let userShares: UserShare[] = (await provider.getObjectBatch(userShareIds)).map(
         x => {
+            if (x.status != "Exists") {
+                console.log("obj not exist")
+                return {} as UserShare
+            }
             //@ts-ignore
             let index = Number(x.details.data.fields.name.fields.index)
 

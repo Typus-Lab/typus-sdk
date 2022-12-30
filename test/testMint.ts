@@ -22,7 +22,10 @@ async function prepareData(tokenRegistry: string): Promise<any> {
         console.log("test for mint, try to mint " + mintAmount + " ...")
 
         let obj = await provider.getObject(tokenRegistry);
-
+        if (obj.status != "Exists") {
+            console.log("obj not exists")
+            return
+        }
         //@ts-ignore
         let type: string = obj.details.data.fields.treasury_cap.fields.total_supply.type
         console.log("type arugment : " + type)

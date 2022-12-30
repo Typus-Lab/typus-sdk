@@ -54,6 +54,10 @@ export async function getCoveredCallVaultsFromRegistry(registry: string): Promis
 export async function getTableFromCoveredCallVault(coveredCallVault: string): Promise<any> {
     console.log("coveredCallVault: " + coveredCallVault)
     let tmp: any = await provider.getObject(coveredCallVault)
+    if (tmp.status != "Exists") {
+        console.log("obj not exists")
+        return
+    }
     //@ts-ignore
     let tableUnderCoveredCallVault: string = tmp.details.data.fields.value.fields.vault.fields.sub_vaults.fields.id.id
     console.log("table : " + tableUnderCoveredCallVault)
@@ -66,6 +70,10 @@ export async function getSubVaultsFromTable(tableUnderCoveredCallVault: string):
     let result = {} as SubVaults;
     for (let subVault of subVaults) {
         let txn = await provider.getObject(subVault.objectId)
+        if (txn.status != "Exists") {
+            console.log("obj not exists")
+            return {} as SubVaults
+        }
         //@ts-ignore
         let name = decode(txn.details.data.fields.name)//rolling / regular / maker
         //@ts-ignore
@@ -79,6 +87,10 @@ export async function getSubVaultsFromTable(tableUnderCoveredCallVault: string):
 export async function getTableUnderSubVault(subVault: string): Promise<string> {
     console.log("sub vault: " + subVault)
     let tmp = await provider.getObject(subVault)
+    if (tmp.status != "Exists") {
+        console.log("obj not exists")
+        return ""
+    }
     //@ts-ignore
     let table: string = tmp.details.data.fields.value.fields.user_shares.fields.nodes.fields.id.id
     console.log("table under sub vault: ", table);
@@ -93,6 +105,10 @@ export async function getLinkedListNodesFromTable(table: string): Promise<any[]>
 
 export async function getUserDataFromLinkedListNode(linkedListNode: string): Promise<any> {
     let tmp = await provider.getObject(linkedListNode)
+    if (tmp.status != "Exists") {
+        console.log("obj not exists")
+        return
+    }
     //@ts-ignore
     let usersData: any = tmp.details.data.fields
     console.log("users data from linked list node:")

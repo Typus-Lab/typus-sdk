@@ -227,6 +227,10 @@ async function checkData(moveCallTxn: any) {
 
 async function getNewestVaultIndex(registry: string): Promise<number> {
     let tmp = await provider.getObject(registry)
+    if (tmp.status != "Exists") {
+        console.log("obj not exists")
+        return -1
+    }
     //@ts-ignore
     let numOfVault = tmp.details.data.fields.num_of_vault
     return numOfVault - 1

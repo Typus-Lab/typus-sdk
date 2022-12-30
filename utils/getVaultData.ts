@@ -15,6 +15,10 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Vault[
     let vaults: Vault[] = [];
 
     for (let objInfo of objsInfo) {
+        if (objInfo.status != "Exists") {
+            console.log("obj not exist")
+            continue
+        }
         //vault
         //@ts-ignore
         let vault = objInfo.details.data.fields.value.fields.vault.fields

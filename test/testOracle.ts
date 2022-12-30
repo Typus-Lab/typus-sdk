@@ -39,6 +39,10 @@ const signer = new RawSigner(keypair, provider);
     moveCallTxn = await signer.executeMoveCall(updateOracleTx);
 
     let newOracleObj = await provider.getObject(newOracle)
+    if (newOracleObj.status != "Exists") {
+        console.log("obj not exists")
+        return
+    }
     console.log("updated oracle:")
     //@ts-ignore
     console.log(newOracleObj.details.data.fields)
