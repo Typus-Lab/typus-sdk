@@ -21,7 +21,7 @@ const signer = new RawSigner(keypair, provider);
 
     console.log("test for claim, try to claim " + token + " for " + claimAmount + " ...")
 
-    let claimTx: any = await getClaimTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, claimAmount, isRolling);
+    let claimTx: any = await getClaimTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex);
     await signer.executeMoveCall(claimTx);
     console.log("claim successfully")
 

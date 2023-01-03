@@ -1,5 +1,5 @@
 export async function getClaimTx(
-    packageId: string, registry: string, typeArgument: string, index: number, amount: number, isRolling: boolean): Promise<any> {
+    packageId: string, registry: string, typeArgument: string, index: number): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
@@ -8,8 +8,6 @@ export async function getClaimTx(
         arguments: [
             registry,
             index,
-            amount,
-            isRolling,
         ],
         gasBudget: 10000,
     }
