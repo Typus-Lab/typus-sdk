@@ -7,9 +7,9 @@ export async function getNewBidTx(packageId: string, registry: string, typeArgum
         arguments: [
             registry,
             vaultIndex,
-            size,
-            coin,
             time,
+            coin,
+            size,
         ],
         gasBudget: 1000,
     }
