@@ -4,14 +4,9 @@ import { COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT, COV
     console.log("test for getNewAuctionWithNextCoveredCallVaultTx()")
 
     let index = 1;
-    let start = 10;
-    let end = 20;
-    let decay = 2;
-    let initialPrice = 5;
-    let finalPrice = 1;
-    let expiration = 2000;
-    let assetName = "BTC";
-    let strikeOtmPct = 2000;
+    let timeOracle = ""
+    let activationTsMs = 1672992000000
+    let expirationTsMs = 1672992000000 + 604800000
 
     let newAuctionWithNextCoveredCallVaultTx: any =
         await getNewAuctionWithNextCoveredCallVaultTx(
@@ -20,13 +15,9 @@ import { COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT, COV
             COVERED_CALL_REGISTRY,
             DEFAULT_TYPE_ARGUMENT,
             index,
-            start,
-            end,
-            decay,
-            initialPrice,
-            finalPrice,
-            expiration,
-            strikeOtmPct,
+            timeOracle,
+            activationTsMs,
+            expirationTsMs,
         );
     console.log(newAuctionWithNextCoveredCallVaultTx)
 })()

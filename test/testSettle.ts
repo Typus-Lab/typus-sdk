@@ -99,17 +99,15 @@ const expirationTsMs2 = 2000000;
     decaySpeed = 2;
     initialPrice = 500000000
     finalPrice = 100000000
+    activationTsMs = 1672992000000
+    expirationTsMs = 1672992000000 + 604800000
     await createNewAuctionWithNextCoveredCallVault(
         typeArgument,
         vaultIndex,
-        startAuctionTsMs,
-        endAuctionTsMs,
-        decaySpeed,
-        initialPrice,
-        finalPrice,
-        expirationTsMs2,
-        strike
-    )
+        timeOracle,
+        activationTsMs,
+        expirationTsMs,
+    );
 
     //update time oracle
     let currentTime = startAuctionTsMs + 300
@@ -311,13 +309,9 @@ async function depositToVault(typeArgument: string, vaultIndex: number, depositA
 async function createNewAuctionWithNextCoveredCallVault(
     typeArgument: string,
     vaultIndex: number,
-    startAuctionTsMs: number,
-    endAuctionTsMs: number,
-    decaySpeed: number,
-    initialPrice: number,
-    finalPrice: number,
-    expirationTsMs2: number,
-    strike: number
+    timeOracle: string,
+    activationTsMs: number,
+    expirationTsMs: number,
 ) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -327,14 +321,10 @@ async function createNewAuctionWithNextCoveredCallVault(
                 COVERED_CALL_REGISTRY,
                 typeArgument,
                 vaultIndex,
-                startAuctionTsMs,
-                endAuctionTsMs,
-                decaySpeed,
-                initialPrice,
-                finalPrice,
-                expirationTsMs2,
-                strike,
-            )
+                timeOracle,
+                activationTsMs,
+                expirationTsMs,
+            );
             await signer.executeMoveCall(txn);
             console.log("create new auction with next covered call successfully")
             resolve(null)
