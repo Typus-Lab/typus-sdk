@@ -9,12 +9,19 @@ const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 const token = "0x07f6ef13aa444a793b11675494a8c7fb3b1acab7"// minted token 
-const expiration = 1;
-const strike = 105
-const tokenDecimal = 9;
-const shareDecimal = 4;
-const period = 1;//weekly
-const start = 1671782400000;// 2022/12/23 Friday 08:00:00
+let tokenDecimal = 9;
+let shareDecimal = 4;
+let timeOracle = "";
+let period = 1;
+let activationTsMs = 1671782400000;
+let expirationTsMs = 1671782400000 + 604800000;
+let capacity = 1000000000;
+let strikeOtmPct = 500;
+let decaySpeed = 1;
+let initialPrice = 5000;
+let finalPrice = 1000;
+let auctionDurationInMs = 3600000;
+let prevBalance = 0;
 
 (async () => {
     let typeArgument: string = await getTypeArgumentFromToken(token)
@@ -26,14 +33,20 @@ const start = 1671782400000;// 2022/12/23 Friday 08:00:00
         COVERED_CALL_REGISTRY,
         typeArgument,
         COVERED_CALL_MANAGER,
-        tokenDecimal,
-        shareDecimal,
         timeOracle,
         period,
-        start,
-        expiration,
-        strike,
-    )
+        activationTsMs,
+        expirationTsMs,
+        tokenDecimal,
+        shareDecimal,
+        capacity,
+        strikeOtmPct,
+        decaySpeed,
+        initialPrice,
+        finalPrice,
+        auctionDurationInMs,
+        prevBalance,
+    );
     let moveCallTxn = await signer.executeMoveCall(newCoveredCallVaultTx);
 
     await checkData(moveCallTxn)

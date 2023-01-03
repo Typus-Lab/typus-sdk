@@ -51,8 +51,35 @@ const expirationTsMs2 = 2000000;
     let tokenDecimal = 9;
     let shareDecimal = 4;
     let period = 1;
-    let start = 0//???
-    await createNewVault(typeArgument, expirationTsMs1, tokenDecimal, shareDecimal, timeOracle, period, start)
+    let activationTsMs = 1671782400000;
+    let expirationTsMs = 1671782400000 + 604800000;
+    let capacity = 1000000000;
+    let strikeOtmPct = 500;
+    let decaySpeed = 1;
+    let initialPrice = 5000;
+    let finalPrice = 1000;
+    let auctionDurationInMs = 3600000;
+    let prevBalance = 0;
+
+    await createNewVault(
+        COVERED_CALL_PACKAGE,
+        COVERED_CALL_REGISTRY,
+        typeArgument,
+        COVERED_CALL_MANAGER,
+        timeOracle,
+        period,
+        activationTsMs,
+        expirationTsMs,
+        tokenDecimal,
+        shareDecimal,
+        capacity,
+        strikeOtmPct,
+        decaySpeed,
+        initialPrice,
+        finalPrice,
+        auctionDurationInMs,
+        prevBalance,
+    );
 
     //deposit to new vault
     let vaultIndex = await getNewestVaultIndex(COVERED_CALL_REGISTRY);
@@ -69,9 +96,9 @@ const expirationTsMs2 = 2000000;
 
     //new_auction_with_next_covered_call_vault
     let endAuctionTsMs = startAuctionTsMs + 500
-    let decaySpeed = 2;
-    let initialPrice = 500000000
-    let finalPrice = 100000000
+    decaySpeed = 2;
+    initialPrice = 500000000
+    finalPrice = 100000000
     await createNewAuctionWithNextCoveredCallVault(
         typeArgument,
         vaultIndex,
@@ -184,7 +211,27 @@ async function updateTimeOracle(timeOracle: string, managerCap: string, ts: numb
     })
 }
 
-async function createNewVault(typeArgument: string, expirationTsMs1: number, tokenDecimal: number, shareDecimal: number, timeOracle: string, period: number, start: number) {
+async function createNewVault(
+
+    packageId: string,
+    registry: string,
+    typeArgument: string,
+    managerCap: string,
+    timeOracle: string,
+    period: number,
+    activationTsMs: number,
+    expirationTsMs: number,
+    tokenDecimal: number,
+    shareDecimal: number,
+    capacity: number,
+    strikeOtmPct: number,
+    decaySpeed: number,
+    initialPrice: number,
+    finalPrice: number,
+    auctionDurationInMs: number,
+    prevBalance: number,
+
+) {
     return new Promise(async (resolve, reject) => {
         try {
             let newCoveredCallVaultTx = await getNewCoveredCallVaultTx(
@@ -192,15 +239,20 @@ async function createNewVault(typeArgument: string, expirationTsMs1: number, tok
                 COVERED_CALL_REGISTRY,
                 typeArgument,
                 COVERED_CALL_MANAGER,
-                tokenDecimal,
-                shareDecimal,
                 timeOracle,
                 period,
-                start,
-                expirationTsMs1,
-                strike,
-
-            )
+                activationTsMs,
+                expirationTsMs,
+                tokenDecimal,
+                shareDecimal,
+                capacity,
+                strikeOtmPct,
+                decaySpeed,
+                initialPrice,
+                finalPrice,
+                auctionDurationInMs,
+                prevBalance,
+            );
             let moveCallTxn = await signer.executeMoveCall(newCoveredCallVaultTx);
             await checkData(moveCallTxn)
             console.log("create new vault successfully")
