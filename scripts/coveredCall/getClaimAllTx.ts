@@ -6,6 +6,6 @@ import { COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT } fr
     let index = 0
     let isRolling = true
 
-    let claimAllTx: any = await getClaimAllTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT, index, isRolling);
+    let claimAllTx: any = await getClaimAllTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT, index);
     console.log(claimAllTx)
 })()
