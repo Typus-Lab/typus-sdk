@@ -50,7 +50,9 @@ const expirationTsMs2 = 2000000;
     //create new vault
     let tokenDecimal = 9;
     let shareDecimal = 4;
-    await createNewVault(typeArgument, expirationTsMs1, tokenDecimal, shareDecimal, timeOracle)
+    let period = 1;
+    let start = 0//???
+    await createNewVault(typeArgument, expirationTsMs1, tokenDecimal, shareDecimal, timeOracle, period, start)
 
     //deposit to new vault
     let vaultIndex = await getNewestVaultIndex(COVERED_CALL_REGISTRY);
@@ -182,7 +184,7 @@ async function updateTimeOracle(timeOracle: string, managerCap: string, ts: numb
     })
 }
 
-async function createNewVault(typeArgument: string, expirationTsMs1: number, tokenDecimal: number, shareDecimal: number, timeOracle: string) {
+async function createNewVault(typeArgument: string, expirationTsMs1: number, tokenDecimal: number, shareDecimal: number, timeOracle: string, period: number, start: number) {
     return new Promise(async (resolve, reject) => {
         try {
             let newCoveredCallVaultTx = await getNewCoveredCallVaultTx(
@@ -193,6 +195,8 @@ async function createNewVault(typeArgument: string, expirationTsMs1: number, tok
                 tokenDecimal,
                 shareDecimal,
                 timeOracle,
+                period,
+                start,
                 expirationTsMs1,
                 strike,
 
