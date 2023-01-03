@@ -9,8 +9,8 @@ export async function getDeliveryTx(
             managerCap,
             registry,
             index,
-            size,
             timeOracle,
+            size,
         ],
         gasBudget: 10000,
     }
