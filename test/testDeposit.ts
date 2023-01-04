@@ -1,5 +1,5 @@
 import { getDepositTx } from "../utils/coveredCall/getDepositTx"
-import { TEST_MNEMONIC, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY } from "../constants"
+import { TEST_MNEMONIC, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TEST_MINT_TOKEN } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
@@ -8,14 +8,13 @@ const signer = new RawSigner(keypair, provider);
 
 /*
     after deposit, token object (minted token) balance will decrease, 
-    and subVault "balance" in fields will increase,
-    and a new rolling linked list node will be created if not exist, and the value will increase the same value
+    and subVault "rolling_sub_vault" will increase
 */
 
 (async () => {
     let depositAmount = 100000000;
     let isRolling = true;
-    let token = "0x07f6ef13aa444a793b11675494a8c7fb3b1acab7"// minted token 
+    let token = TEST_MINT_TOKEN
     let vaultIndex = 0;
 
     let typeArgument = await getTypeArgumentFromToken(token)

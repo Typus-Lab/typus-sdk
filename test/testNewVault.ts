@@ -2,21 +2,21 @@ import { getNewOracleTx } from "../utils/getNewOracleTx"
 import { getUpdateOracleTx } from "../utils/getUpdateOracleTx"
 import { getNewCoveredCallVaultTx } from "../utils/coveredCall/getNewCoveredCallVaultTx";
 import { createTimeOracle } from "../utils/coveredCall/createTimeOracle"
-import { COVERED_CALL_MANAGER, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TEST_MNEMONIC, ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT } from "../constants"
+import { COVERED_CALL_MANAGER, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TEST_MNEMONIC, TEST_MINT_TOKEN } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
-const token = "0x07f6ef13aa444a793b11675494a8c7fb3b1acab7"// minted token 
+const token = TEST_MINT_TOKEN// minted token 
 let tokenDecimal = 9;
 let shareDecimal = 4;
-let timeOracle = "";
 let period = 1;
 let activationTsMs = 1671782400000;
 let expirationTsMs = 1671782400000 + 604800000;
 let capacity = 1000000000;
 let strikeOtmPct = 500;
+let strikeIncrement = 10000
 let decaySpeed = 1;
 let initialPrice = 5000;
 let finalPrice = 1000;
@@ -27,7 +27,7 @@ let prevBalance = 0;
     let typeArgument: string = await getTypeArgumentFromToken(token)
     // let priceOracle: string = await createAndUpdatePriceOracle(typeArgument)
     let [timeOracle, _] = await createTimeOracle()
-
+    console.log(typeArgument, timeOracle)
     let newCoveredCallVaultTx = await getNewCoveredCallVaultTx(
         COVERED_CALL_PACKAGE,
         COVERED_CALL_REGISTRY,
@@ -41,6 +41,7 @@ let prevBalance = 0;
         shareDecimal,
         capacity,
         strikeOtmPct,
+        strikeIncrement,
         decaySpeed,
         initialPrice,
         finalPrice,
