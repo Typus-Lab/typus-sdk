@@ -10,29 +10,48 @@ export interface SubVaults {
     maker: string;
     regular: string;
 }
+export interface VaultConfig {
+    strikeOtmPct: number,
+    strikeIncrement: number,
+    decaySpeed: number,
+    initialPrice: number,
+    finalPrice: number,
+    auctionDurationInMs: number,
+}
+
+export interface Config {
+    period: number;// daily:0 weekly:1 monthly:2
+    activationTsMs: number
+    expirationTsMs: number;
+    tokenDecimal: number;
+    shareDecimal: number;
+    capacity: number,
+    vaultConfig: VaultConfig,
+    nextVaultConfig: VaultConfig,
+    payoffConfig: PayoffConfig;
+
+}
 
 export interface Vault {
-    vaultId: string;
-    vaultIdx: number;
-    asset: string;
-
-    //vault
     ableToDeposit: boolean;
     ableToWithdraw: boolean;
     // maker_sub_vault: string;
     // regular_sub_vault: string;
     // rolling_sub_vault: string;
+}
+export interface CoveredCallVault {
+    vaultId: string;
+    vaultIdx: number;
+    asset: string;
+    config: Config;
+    vault: Vault;
 
-    //config
-    expirationTsMs: number;
-    payoffConfig: PayoffConfig;
-    period: number;// daily:0 weekly:1 monthly:2
-    shareDecimal: number;
-    startTsMs: number;
-    tokenDecimal: number;
+    // auction:Auction;
+
+    prevBalance: number;
 
     //  status:string; // Upcoming Or Active 
-    //  tvl:number;
+    tvl: number;//regular_sub_vault balance + rolling_sub_vault balance
     //  apy:number
     //  Capacity//not yet
 }
@@ -41,8 +60,8 @@ export interface PayoffConfig {
     exposureRatio: number;
     premiumRoi: number;
     strike: number;
-    strikeOtmPct: number;
 }
+
 //new version: getVaultDataFromRegistry()
 export async function getCoveredCallVaultsFromRegistry(registry: string): Promise<any> {
     console.log("registry: " + registry)
