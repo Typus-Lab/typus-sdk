@@ -1,7 +1,7 @@
 
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { TOKEN_NAME } from '../constants';
-import { CoveredCallVault, PayoffConfig, Config, VaultConfig, Vault } from "../utils/fetchData"
+import { CoveredCallVault, PayoffConfig, Config, VaultConfig, Vault, SubVault } from "../utils/fetchData"
 
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 
@@ -91,9 +91,25 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
             payoffConfig: payoffConfigRes,
         }
 
+        let maker: SubVault = {
+            balance: Number(vault.maker_sub_vault.fields.balance),
+            shareSupply: Number(vault.maker_sub_vault.fields.share_supply),
+        }
+        let regular: SubVault = {
+            balance: Number(vault.regular_sub_vault.fields.balance),
+            shareSupply: Number(vault.regular_sub_vault.fields.share_supply),
+        }
+        let rolling: SubVault = {
+            balance: Number(vault.rolling_sub_vault.fields.balance),
+            shareSupply: Number(vault.rolling_sub_vault.fields.share_supply),
+        }
+
         let vaultRes: Vault = {
             ableToDeposit: vault.able_to_deposit,
             ableToWithdraw: vault.able_to_withdraw,
+            makerSubVault: maker,
+            regularSubVault: regular,
+            rollingSubVault: rolling,
         }
 
         let tvl = Number(vault.regular_sub_vault.fields.balance) + Number(vault.rolling_sub_vault.fields.balance)
