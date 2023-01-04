@@ -1,21 +1,23 @@
 //publish from sui-dev-token
-export const TOKEN_PACKAGE = "0x97cfaa5d2a79c1be5da410870deb258ed5f42561";
-export const TOKEN_REGISTRY_BTC = "0xb10e4bf339c2495d793647fa726fd5427ca8c328";//fake btc registry
-export const TOKEN_REGISTRY_ETH = "0x59c42da8bb8a3b98a764985af1d9cef7e6e9f87d"//fake eth registry
-export const TOKEN_REGISTRY_SUI = "0xf4a1954d812748ee08dd4c4c1e21bb136a6c089e"//fake usdc registry
+export const TOKEN_PACKAGE = "0xed553b5e7e8690216566974f843c59711ae2f0b7";
+export const TOKEN_REGISTRY_BTC = "0xf936133c49899c482e818cb7aad7a1a245615703";//fake btc registry
+export const TOKEN_REGISTRY_ETH = "0x9c041d2f4dc68577b9d828ec23d2f64cc2b0426c"//fake eth registry
+export const TOKEN_REGISTRY_SUI = "0x0a35b52763fda836155f3fab655f1fb0477fd428"//fake usdc registry
 
 //publish from typus-oracle
 export const ORACLE_PACKAGE = "0x437d2eb473bd348ad22b37ffb84bd652656026b1"
 
 //publish from typus-dov/cover_call
-export const COVERED_CALL_PACKAGE = "0x557125ee218ff0f09b74e67110ca11a10b7c3553"
-export const COVERED_CALL_REGISTRY = "0xe713352b3e1679825c8bd209a9f2c5c355572eea"
-export const COVERED_CALL_MANAGER = "0x1924683a4112a39f2eee9e07a770ed7f7f911ad5"
-export const USER_SHARE_TABLE = "0x1987456681ee8ba897a6693d7355931e5d25e17a"
-export const MAKER_SHARE_TABLE = "0xcb3e6ad0b3ab79e35899d134dc42bdd3b97ca485"
+export const COVERED_CALL_PACKAGE = "0x8e1d90b8f79583a3ca67c9e731039b297c59252a"
+export const COVERED_CALL_REGISTRY = "0xd39929844191b67993d84b1bf258ec08a0aa06ba"
+export const COVERED_CALL_MANAGER = "0xbfbdae13e30a27d9774a4bc441b71f07dea03710"
+export const USER_SHARE_TABLE = "0x6d3e5cc791c7d4a7cfb98955f2afa8b55a729fa8"
+export const MAKER_SHARE_TABLE = "0xc42377112a39fb6138e89099912d3888df6444ba"
 
 //publish from typus-dov/typus-dov
 export const DOV_PACKAGE = "0x1ab7f453176dc6d35fe5e8b6b27a53cb73d1061d"
+
+export const TEST_MINT_TOKEN = "0xd3aeb5597cd4ddea33921fe1155387db28502d13"
 
 export const DEFAULT_TYPE_ARGUMENT = "0x2::sui::SUI";
 export const FAKE_TOKEN_TYPE_ARGUMENT = "0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC";
