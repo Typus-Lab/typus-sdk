@@ -32,12 +32,19 @@ export interface Config {
 
 }
 
+export interface SubVault {
+    balance: number,
+    shareSupply: number,
+    // user_shares
+}
+
 export interface Vault {
     ableToDeposit: boolean;
     ableToWithdraw: boolean;
-    // maker_sub_vault: string;
-    // regular_sub_vault: string;
-    // rolling_sub_vault: string;
+    //TODO
+    makerSubVault: SubVault;
+    regularSubVault: SubVault;
+    rollingSubVault: SubVault;
 }
 export interface CoveredCallVault {
     vaultId: string;
