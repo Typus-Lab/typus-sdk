@@ -8,7 +8,8 @@ export async function getTypeArgumentFromToken(token: string): Promise<any> {
         //get typeArgument from token
         let tmp = await provider.getObject(token)
         if (tmp.status != "Exists") {
-            console.log("obj not exists")
+            console.log("obj not exists, but is:")
+            console.log(tmp.status)
             return
         }
         //@ts-ignore

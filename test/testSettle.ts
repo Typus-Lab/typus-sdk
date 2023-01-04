@@ -14,6 +14,7 @@ import { getNewBidTx } from "../utils/coveredCall/getNewBidTx"
 import { getDeliveryTx } from "../utils/coveredCall/getDeliveryTx"
 import { getUpdatePayoffConfigTx } from "../utils/coveredCall/getUpdatePayoffConfigTx"
 import { getSettleTx } from "../utils/coveredCall/getSettleTx"
+import { createPriceOracle } from "../utils/coveredCall/createPriceOracle"
 import { type } from "os";
 import { share } from "rxjs";
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
@@ -148,36 +149,6 @@ const expirationTsMs2 = 2000000;
     //settle 
     await settle(typeArgument, vaultIndex, priceOracle, timeOracle)
 })()
-
-async function createPriceOracle(typeArgument: string): Promise<[string, string]> {
-    return new Promise(async (resolve, reject) => {
-        try {
-            console.log("create new price oracle...")
-            let newOracleTx: any = await getNewOracleTx(ORACLE_PACKAGE, typeArgument, decimal);
-            let moveCallTxn = await signer.executeMoveCall(newOracleTx);
-            //@ts-ignore
-            let digest: string = moveCallTxn.EffectsCert.certificate.transactionDigest
-
-            let txn = await provider.getTransactionWithEffects(
-                digest
-            );
-
-            let priceOracle: string;
-            let managerCap: string;
-            if (txn.effects.created![0].owner["AddressOwner"] == undefined) {
-                priceOracle = txn.effects.created![0].reference.objectId
-                managerCap = txn.effects.created![1].reference.objectId
-            } else {
-                priceOracle = txn.effects.created![1].reference.objectId
-                managerCap = txn.effects.created![0].reference.objectId
-            }
-            resolve([priceOracle, managerCap])
-        } catch (e) {
-            console.error("err in createPriceOracle")
-            reject(e)
-        }
-    })
-}
 
 async function updatePriceOracle(priceOracle: string, priceOracleManager: string, typeArgument: string, price: number, ts: number) {
     return new Promise(async (resolve, reject) => {
