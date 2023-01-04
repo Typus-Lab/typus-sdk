@@ -55,6 +55,7 @@ const expirationTsMs2 = 2000000;
     let expirationTsMs = 1671782400000 + 604800000;
     let capacity = 1000000000;
     let strikeOtmPct = 500;
+    let strikeIncrement = 10000
     let decaySpeed = 1;
     let initialPrice = 5000;
     let finalPrice = 1000;
@@ -74,6 +75,7 @@ const expirationTsMs2 = 2000000;
         shareDecimal,
         capacity,
         strikeOtmPct,
+        strikeIncrement,
         decaySpeed,
         initialPrice,
         finalPrice,
@@ -223,6 +225,7 @@ async function createNewVault(
     shareDecimal: number,
     capacity: number,
     strikeOtmPct: number,
+    strikeIncrement: number,
     decaySpeed: number,
     initialPrice: number,
     finalPrice: number,
@@ -245,6 +248,7 @@ async function createNewVault(
                 shareDecimal,
                 capacity,
                 strikeOtmPct,
+                strikeIncrement,
                 decaySpeed,
                 initialPrice,
                 finalPrice,

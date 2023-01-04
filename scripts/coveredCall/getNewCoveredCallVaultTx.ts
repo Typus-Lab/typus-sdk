@@ -11,6 +11,7 @@ import { COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, COVERED_CALL_MANAGER, DEFA
     let expirationTsMs = 1671782400000 + 604800000;
     let capacity = 1000000000;
     let strikeOtmPct = 500;
+    let strikeIncrement = 10000
     let decaySpeed = 1;
     let initialPrice = 5000;
     let finalPrice = 1000;
@@ -30,6 +31,7 @@ import { COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, COVERED_CALL_MANAGER, DEFA
         shareDecimal,
         capacity,
         strikeOtmPct,
+        strikeIncrement,
         decaySpeed,
         initialPrice,
         finalPrice,
