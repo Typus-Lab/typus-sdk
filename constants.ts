@@ -15,9 +15,9 @@ export const USER_SHARE_TABLE = "0x6d3e5cc791c7d4a7cfb98955f2afa8b55a729fa8"
 export const MAKER_SHARE_TABLE = "0xc42377112a39fb6138e89099912d3888df6444ba"
 
 //publish from typus-dov/typus-dov
-export const DOV_PACKAGE = "0x1ab7f453176dc6d35fe5e8b6b27a53cb73d1061d"
+export const DOV_PACKAGE = "0x829b6a29608dc82aba0da3fc8e5ffa49d9b54386"
 
-export const TEST_MINT_TOKEN = "0xd3aeb5597cd4ddea33921fe1155387db28502d13"
+export const TEST_MINT_TOKEN = "0x672612858fcb5c6abf944638253142820c251753"
 
 export const DEFAULT_TYPE_ARGUMENT = "0x2::sui::SUI";
 export const FAKE_TOKEN_TYPE_ARGUMENT = "0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC";
