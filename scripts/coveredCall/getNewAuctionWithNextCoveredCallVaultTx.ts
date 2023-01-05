@@ -5,6 +5,7 @@ import { COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT, COV
 
     let index = 1;
     let timeOracle = ""
+    let priceOracle = ""
     let activationTsMs = 1672992000000
     let expirationTsMs = 1672992000000 + 604800000
 
@@ -15,6 +16,7 @@ import { COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, DEFAULT_TYPE_ARGUMENT, COV
             COVERED_CALL_REGISTRY,
             DEFAULT_TYPE_ARGUMENT,
             index,
+            priceOracle,
             timeOracle,
             activationTsMs,
             expirationTsMs,
