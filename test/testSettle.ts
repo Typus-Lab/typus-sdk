@@ -107,6 +107,7 @@ const expirationTsMs2 = 2000000;
     await createNewAuctionWithNextCoveredCallVault(
         typeArgument,
         vaultIndex,
+        priceOracle,
         timeOracle,
         activationTsMs,
         expirationTsMs,
@@ -284,6 +285,7 @@ async function depositToVault(typeArgument: string, vaultIndex: number, depositA
 async function createNewAuctionWithNextCoveredCallVault(
     typeArgument: string,
     vaultIndex: number,
+    priceOracle: string,
     timeOracle: string,
     activationTsMs: number,
     expirationTsMs: number,
@@ -296,6 +298,7 @@ async function createNewAuctionWithNextCoveredCallVault(
                 COVERED_CALL_REGISTRY,
                 typeArgument,
                 vaultIndex,
+                priceOracle,
                 timeOracle,
                 activationTsMs,
                 expirationTsMs,

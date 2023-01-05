@@ -5,7 +5,9 @@ import { COVERED_CALL_MANAGER, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY } fro
 
     let typeArgument = "0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC"
     let vaultIndex = 1;
+    let priceOracle = ""
+    let timeOracle = ""
 
-    let newAuctionTx: any = await getNewAuctionTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, COVERED_CALL_MANAGER, vaultIndex);
+    let newAuctionTx: any = await getNewAuctionTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, COVERED_CALL_MANAGER, vaultIndex, priceOracle, timeOracle);
     console.log(newAuctionTx)
 })()
