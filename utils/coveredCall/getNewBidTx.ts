@@ -1,4 +1,4 @@
-export async function getNewBidTx(packageId: string, registry: string, typeArgument: string, vaultIndex: number, size: number, coin: string, time: string): Promise<any> {
+export async function getNewBidTx(packageId: string, registry: string, typeArgument: string, vaultIndex: string, size: string, coin: string, time: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',

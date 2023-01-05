@@ -1,4 +1,4 @@
-export async function getWithdrawTx(packageId: string, registry: string, typeArgument: string, vaultIndex: number, isRolling: Boolean, amount: number): Promise<any> {
+export async function getWithdrawTx(packageId: string, registry: string, typeArgument: string, vaultIndex: string, isRolling: Boolean, amount: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',

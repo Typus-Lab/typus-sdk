@@ -1,4 +1,4 @@
-export async function getRemoveBidTx(packageId: string, registry: string, typeArgument: string, index: number, bidIndex: number): Promise<any> {
+export async function getRemoveBidTx(packageId: string, registry: string, typeArgument: string, index: string, bidIndex: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',

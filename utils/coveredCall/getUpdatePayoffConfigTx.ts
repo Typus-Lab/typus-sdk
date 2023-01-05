@@ -1,4 +1,4 @@
-export async function getUpdatePayoffConfigTx(packageId: string, registry: string, typeArgument: string, managerCap: string, index: number, price: number, roi: number, exposureRatio: number): Promise<any> {
+export async function getUpdatePayoffConfigTx(packageId: string, registry: string, typeArgument: string, managerCap: string, index: string, price: string, roi: string, exposureRatio: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',

@@ -1,5 +1,5 @@
 export async function getRollOverTx(
-    packageId: string, registry: string, typeArgument: string, managerCap: string, index: number): Promise<any> {
+    packageId: string, registry: string, typeArgument: string, managerCap: string, index: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
