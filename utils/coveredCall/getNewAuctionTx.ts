@@ -1,4 +1,4 @@
-export async function getNewAuctionTx(packageId: string, registry: string, typeArgument: string, managerCap: string, index: number): Promise<any> {
+export async function getNewAuctionTx(packageId: string, registry: string, typeArgument: string, managerCap: string, index: number, priceOracle: string, timeOracle: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
@@ -8,6 +8,8 @@ export async function getNewAuctionTx(packageId: string, registry: string, typeA
             managerCap,
             registry,
             index,
+            priceOracle,
+            timeOracle,
         ],
         gasBudget: 1000,
     }
