@@ -1,6 +1,6 @@
 
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
-import { TOKEN_NAME } from '../constants';
+import { TOKEN_NAME, PRICE_DECIMAL, TOKEN_DECIMAL } from '../constants';
 import { CoveredCallVault, PayoffConfig, Config, VaultConfig, Vault, SubVault } from "../utils/fetchData"
 
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
@@ -76,7 +76,7 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
         let payoffConfigRes: PayoffConfig = {
             exposureRatio: Number(payoffConfig.exposure_ratio),
             premiumRoi: Number(payoffConfig.premium_roi),
-            strike: Number(payoffConfig.strike),
+            strike: Number(payoffConfig.strike) / (10 ** PRICE_DECIMAL),
         }
 
         let configRes: Config = {
@@ -85,7 +85,7 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
             expirationTsMs: config.expiration_ts_ms,
             tokenDecimal: config.token_decimal,
             shareDecimal: config.share_decimal,
-            capacity: config.capacity,
+            capacity: Number(config.capacity) / (10 ** TOKEN_DECIMAL),
             vaultConfig: vaultConfigRes,
             nextVaultConfig: nextVaultConfigRes,
             payoffConfig: payoffConfigRes,

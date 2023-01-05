@@ -19,6 +19,9 @@ export const DOV_PACKAGE = "0xaf114c36e5329271f84a0d2cb1310d0efa6c6bb9"
 
 export const TEST_MINT_TOKEN = "0x672612858fcb5c6abf944638253142820c251753"
 
+export const PRICE_DECIMAL = 8
+export const TOKEN_DECIMAL = 9
+
 export const DEFAULT_TYPE_ARGUMENT = "0x2::sui::SUI";
 export const FAKE_TOKEN_TYPE_ARGUMENT = "0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC";
 export const TEST_MNEMONIC = "plug grain matter asthma aware critic can lottery blouse uncover sauce speak";
