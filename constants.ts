@@ -1,21 +1,21 @@
 //publish from sui-dev-token
-export const TOKEN_PACKAGE = "0xed553b5e7e8690216566974f843c59711ae2f0b7";
-export const TOKEN_REGISTRY_BTC = "0xf936133c49899c482e818cb7aad7a1a245615703";//fake btc registry
-export const TOKEN_REGISTRY_ETH = "0x9c041d2f4dc68577b9d828ec23d2f64cc2b0426c"//fake eth registry
-export const TOKEN_REGISTRY_SUI = "0x0a35b52763fda836155f3fab655f1fb0477fd428"//fake usdc registry
+export const TOKEN_PACKAGE = "0x2c9a10117599e2d3232495a525b10f679691c9ae";
+export const TOKEN_REGISTRY_BTC = "0xe0dc19dfc9023f2e86462aa37dc8fae290b4e2bb";//fake btc registry
+export const TOKEN_REGISTRY_ETH = "0x9ad1db50850079e98d5972e3d9a8fdc90b9d1f19"//fake eth registry
+export const TOKEN_REGISTRY_SUI = "0xc6128d63d24cbdb66e50cef4577e5cf36bb889e1"//fake usdc registry
 
 //publish from typus-oracle
-export const ORACLE_PACKAGE = "0x437d2eb473bd348ad22b37ffb84bd652656026b1"
+export const ORACLE_PACKAGE = "0x0d4b13cc0467c0620ce54abf703faa3b419d967b"
 
 //publish from typus-dov/cover_call
-export const COVERED_CALL_PACKAGE = "0x8e1d90b8f79583a3ca67c9e731039b297c59252a"
-export const COVERED_CALL_REGISTRY = "0xd39929844191b67993d84b1bf258ec08a0aa06ba"
-export const COVERED_CALL_MANAGER = "0xbfbdae13e30a27d9774a4bc441b71f07dea03710"
-export const USER_SHARE_TABLE = "0x6d3e5cc791c7d4a7cfb98955f2afa8b55a729fa8"
-export const MAKER_SHARE_TABLE = "0xc42377112a39fb6138e89099912d3888df6444ba"
+export const COVERED_CALL_PACKAGE = "0x26bde55e579bd0418aaa140cd869153afeb34467"
+export const COVERED_CALL_REGISTRY = "0xf1d4a2db033cba8bb3a69cf3de2558d89bed6dd4"
+export const COVERED_CALL_MANAGER = "0xef73bf17e55fc9d5e31513df50c7e912bb729fc6"
+export const USER_SHARE_TABLE = "0xd1ea22029f899265c9588c0e19d0366e6bb60d44"
+export const MAKER_SHARE_TABLE = "0xf4db8e77a8763e1ac2d3038f53456410e2175989"
 
 //publish from typus-dov/typus-dov
-export const DOV_PACKAGE = "0x829b6a29608dc82aba0da3fc8e5ffa49d9b54386"
+export const DOV_PACKAGE = "0xaf114c36e5329271f84a0d2cb1310d0efa6c6bb9"
 
 export const TEST_MINT_TOKEN = "0x672612858fcb5c6abf944638253142820c251753"
 
