@@ -56,7 +56,7 @@ export interface CoveredCallVault {
     // auction:Auction;
 
     prevBalance: number;
-
+    next: number;
     //  status:string; // Upcoming Or Active 
     tvl: number;//regular_sub_vault balance + rolling_sub_vault balance
     //  apy:number

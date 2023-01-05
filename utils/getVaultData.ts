@@ -114,6 +114,9 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
 
         let tvl = Number(vault.regular_sub_vault.fields.balance) + Number(vault.rolling_sub_vault.fields.balance)
 
+        //@ts-ignore
+        let next = objInfo.details.data.fields.value.fields.next as number
+
         let res: CoveredCallVault = {
             vaultId: vaultId,
             vaultIdx: vaultIdx,
@@ -121,6 +124,7 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
             config: configRes,
             vault: vaultRes,
             prevBalance: prevBalance,
+            next: next,
             tvl: tvl,
         }
 
