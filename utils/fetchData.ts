@@ -51,6 +51,8 @@ export interface Bid {
     price: number;
     size: number;
     tsMs: number;
+    tokenBalance: number;
+    ownerAddress: string;
 }
 
 export interface CoveredCallVault {

@@ -15,16 +15,20 @@ export async function getBid(vault: string): Promise<Bid[]> {
     //@ts-ignore
     let bidTable: string = obj.details.data.fields.value.fields.auction.fields.bids.fields.id.id
     let obj2: any[] = await provider.getObjectsOwnedByObject(bidTable)
+
     let ids = obj2.map(e => e.objectId)
 
     let tmp: any[] = await provider.getObjectBatch(ids)
 
     let bids: Bid[] = tmp.map(e => {
         let bidData = e.details.data.fields.value.fields
+
         let res: Bid = {
             price: Number(bidData.price),
             size: Number(bidData.size / (10 ** TOKEN_DECIMAL)),
             tsMs: Number(bidData.ts_ms),
+            tokenBalance: Number(bidData.coin.fields.balance),
+            ownerAddress: bidData.owner,
         }
         return res
     })
