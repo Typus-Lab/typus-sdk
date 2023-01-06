@@ -16,7 +16,8 @@ export async function getNewCoveredCallVaultTx(
     initialPrice: string,
     finalPrice: string,
     auctionDurationInMs: string,
-    prevBalance: string,
+    whitelist: string[],
+    leverage: string,
 ): Promise<any> {
     let tx = {
         packageObjectId: packageId,
@@ -39,7 +40,8 @@ export async function getNewCoveredCallVaultTx(
             initialPrice,
             finalPrice,
             auctionDurationInMs,
-            prevBalance,
+            leverage,
+            whitelist,
         ],
         gasBudget: 10000,
     }
