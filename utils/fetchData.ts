@@ -46,6 +46,13 @@ export interface Vault {
     regularSubVault: SubVault;
     rollingSubVault: SubVault;
 }
+
+export interface Bid {
+    price: number;
+    size: number;
+    tsMs: number;
+}
+
 export interface CoveredCallVault {
     vaultId: string;
     vaultIdx: number;
