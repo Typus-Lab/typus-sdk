@@ -1,5 +1,5 @@
 export async function getSubscribeTx(
-    packageId: string, registry: string, typeArgument: string, index: string,): Promise<any> {
+    packageId: string, registry: string, typeArgument: string, index: string, share: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
@@ -8,6 +8,7 @@ export async function getSubscribeTx(
         arguments: [
             registry,
             index,
+            share,
         ],
         gasBudget: 10000,
     }
