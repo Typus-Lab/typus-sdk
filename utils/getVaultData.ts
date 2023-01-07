@@ -1,7 +1,7 @@
 
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { TOKEN_NAME, PRICE_DECIMAL, TOKEN_DECIMAL } from '../constants';
-import { CoveredCallVault, PayoffConfig, Config, VaultConfig, Vault, SubVault } from "../utils/fetchData"
+import { CoveredCallVault, PayoffConfig, Config, VaultConfig, Vault, SubVault, Auction, PriceConfig } from "../utils/fetchData"
 
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 
@@ -113,6 +113,22 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
         }
 
         //@ts-ignore
+        let auction = objInfo.details.data.fields.value.fields.auction.fields
+
+        let priceConfig = auction.price_config.fields
+        let priceConfigRes: PriceConfig = {
+            decaySpeed: Number(priceConfig.decay_speed),
+            initialPrice: Number(priceConfig.initial_price),
+            finalPrice: Number(priceConfig.final_price),
+        }
+        let auctionRes: Auction = {
+            startTsMs: Number(auction.start_ts_ms),
+            endTsMs: Number(auction.end_ts_ms),
+            priceConfig: priceConfigRes,
+            index: Number(auction.index),
+        }
+
+        //@ts-ignore
         let next = objInfo.details.data.fields.value.fields.next as number
 
         //@ts-ignore
@@ -132,6 +148,7 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
             asset: asset,
             config: configRes,
             vault: vaultRes,
+            auction: auctionRes,
             prevBalance: prevBalance,
             next: next,
             deliveryPrice: deliveryPrice,

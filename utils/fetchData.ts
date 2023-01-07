@@ -55,13 +55,27 @@ export interface Bid {
     ownerAddress: string;
 }
 
+export interface PriceConfig {
+    decaySpeed: number;
+    initialPrice: number;
+    finalPrice: number;
+}
+export interface Auction {
+    startTsMs: number;
+    endTsMs: number;
+    priceConfig: PriceConfig;
+    index: number;
+    // bids
+    // ownerships
+}
+
 export interface CoveredCallVault {
     vaultId: string;
     vaultIdx: number;
     asset: string;
     config: Config;
     vault: Vault;
-    // auction:Auction;
+    auction: Auction;
     prevBalance: number;
     next: number;
     deliveryPrice: number;
