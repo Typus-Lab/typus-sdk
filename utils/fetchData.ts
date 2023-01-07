@@ -85,6 +85,7 @@ export interface CoveredCallVault {
     tvl: number;//regular_sub_vault balance + rolling_sub_vault balance
     //  apy:number
     //  Capacity//not yet
+    vaultBidPrice: number;
 }
 
 export interface PayoffConfig {

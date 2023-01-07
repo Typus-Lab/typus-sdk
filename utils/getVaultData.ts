@@ -2,7 +2,7 @@
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { TOKEN_NAME, PRICE_DECIMAL, TOKEN_DECIMAL } from '../constants';
 import { CoveredCallVault, PayoffConfig, Config, VaultConfig, Vault, SubVault, Auction, PriceConfig } from "../utils/fetchData"
-
+import { createTimeOracle } from "../utils/coveredCall/createTimeOracle"
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 
 export async function getVaultDataFromRegistry(registry: string): Promise<CoveredCallVault[]> {
@@ -13,6 +13,8 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
     let objsInfo = await provider.getObjectBatch(coveredCallVaultsId)
 
     let vaults: CoveredCallVault[] = [];
+
+    let [timeOracle, _] = await createTimeOracle();
 
     for (let objInfo of objsInfo) {
         if (objInfo.status != "Exists") {
@@ -112,20 +114,27 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
             rollingSubVault: rolling,
         }
 
+        let auctionRes: Auction;
         //@ts-ignore
-        let auction = objInfo.details.data.fields.value.fields.auction.fields
+        if (objInfo.details.data.fields.value.fields.auction) {
+            //@ts-ignore
+            let auction = objInfo.details.data.fields.value.fields.auction.fields
 
-        let priceConfig = auction.price_config.fields
-        let priceConfigRes: PriceConfig = {
-            decaySpeed: Number(priceConfig.decay_speed),
-            initialPrice: Number(priceConfig.initial_price),
-            finalPrice: Number(priceConfig.final_price),
-        }
-        let auctionRes: Auction = {
-            startTsMs: Number(auction.start_ts_ms),
-            endTsMs: Number(auction.end_ts_ms),
-            priceConfig: priceConfigRes,
-            index: Number(auction.index),
+            let priceConfig = auction.price_config.fields
+            let priceConfigRes: PriceConfig = {
+                decaySpeed: Number(priceConfig.decay_speed),
+                initialPrice: Number(priceConfig.initial_price),
+                finalPrice: Number(priceConfig.final_price),
+            }
+            auctionRes = {
+                startTsMs: Number(auction.start_ts_ms),
+                endTsMs: Number(auction.end_ts_ms),
+                priceConfig: priceConfigRes,
+                index: Number(auction.index),
+            }
+        } else {
+            console.log("No auction")
+            auctionRes = {} as Auction
         }
 
         //@ts-ignore
@@ -142,6 +151,8 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
 
         let tvl = Number(vault.regular_sub_vault.fields.balance) + Number(vault.rolling_sub_vault.fields.balance)
 
+        let vaultBidPrice: number = await getVaultBidPrice(auctionRes, timeOracle);
+
         let res: CoveredCallVault = {
             vaultId: vaultId,
             vaultIdx: vaultIdx,
@@ -155,10 +166,35 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
             deliverySize: deliverySize,
             owner: owner,
             tvl: tvl,
+            vaultBidPrice: vaultBidPrice,
         }
 
         vaults.push(res)
     }
 
     return vaults
+}
+
+async function getVaultBidPrice(auction: Auction, timeOracle: string): Promise<number> {
+    let tmp = await provider.getObject(timeOracle);
+    //@ts-ignore
+    let currentTsMs = Number(tmp.details.data.fields.ts_ms)
+
+    let initialPrice = Number(auction.priceConfig.initialPrice);
+    let finalPrice = Number(auction.priceConfig.finalPrice);
+    let decaySpeed = Number(auction.priceConfig.decaySpeed);
+    let startTsMs = Number(auction.startTsMs);
+    let endTsMs = Number(auction.endTsMs);
+
+    let priceDiff = initialPrice - finalPrice;
+    // 1 - remaining_time / auction_duration => 1 - (end - current) / (end - start) => (current - start) / (end - start)
+    let numerator = currentTsMs - startTsMs;
+    let denominator = endTsMs - startTsMs;
+
+    while (decaySpeed > 0) {
+        priceDiff = priceDiff * numerator / denominator;
+        decaySpeed = decaySpeed - 1;
+    };
+
+    return initialPrice - priceDiff
 }
