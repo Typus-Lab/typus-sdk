@@ -112,10 +112,19 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
             rollingSubVault: rolling,
         }
 
-        let tvl = Number(vault.regular_sub_vault.fields.balance) + Number(vault.rolling_sub_vault.fields.balance)
-
         //@ts-ignore
         let next = objInfo.details.data.fields.value.fields.next as number
+
+        //@ts-ignore
+        let deliveryPrice = objInfo.details.data.fields.value.fields.delivery_price as number
+
+        //@ts-ignore
+        let deliverySize = objInfo.details.data.fields.value.fields.delivery_size as number
+
+        //@ts-ignore
+        let owner = objInfo.details.data.fields.value.fields.owner as string
+
+        let tvl = Number(vault.regular_sub_vault.fields.balance) + Number(vault.rolling_sub_vault.fields.balance)
 
         let res: CoveredCallVault = {
             vaultId: vaultId,
@@ -125,6 +134,9 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
             vault: vaultRes,
             prevBalance: prevBalance,
             next: next,
+            deliveryPrice: deliveryPrice,
+            deliverySize: deliverySize,
+            owner: owner,
             tvl: tvl,
         }
 

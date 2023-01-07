@@ -61,11 +61,12 @@ export interface CoveredCallVault {
     asset: string;
     config: Config;
     vault: Vault;
-
     // auction:Auction;
-
     prevBalance: number;
     next: number;
+    deliveryPrice: number;
+    deliverySize: number;
+    owner: string;
     //  status:string; // Upcoming Or Active 
     tvl: number;//regular_sub_vault balance + rolling_sub_vault balance
     //  apy:number
