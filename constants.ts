@@ -8,14 +8,14 @@ export const TOKEN_REGISTRY_SUI = "0xc6128d63d24cbdb66e50cef4577e5cf36bb889e1"//
 export const ORACLE_PACKAGE = "0x0d4b13cc0467c0620ce54abf703faa3b419d967b"
 
 //publish from typus-dov/cover_call
-export const COVERED_CALL_PACKAGE = "0x0c79f77e43d138037483ce627d5934772471a2cb"
-export const COVERED_CALL_REGISTRY = "0xb61f0b618faf61e942af9030b9bb80bbf51aa5aa"
-export const COVERED_CALL_MANAGER = "0xbb893cfbf3b64d3ae37d5d3ca38e835dd760dfd7"
-export const USER_SHARE_TABLE = "0xf270d2c5c5003a9bf6fa1e5bed6f541be30d5078"
-export const MAKER_SHARE_TABLE = "0x9457e9cf4ddf408310329d45f6f80fbd4840c5ef"
+export const COVERED_CALL_PACKAGE = "0x8cd580538967d5a83a5695f9e2db9f3695e5bdc0"
+export const COVERED_CALL_REGISTRY = "0xff3eae20040a8ec4d45bae3ac85b662cf8adea4f"
+export const COVERED_CALL_MANAGER = "0xb37ffa9b254f94e4c402806bb6011a2a32642ff4"
+export const USER_SHARE_TABLE = "0x27e557f1464297be0fd2b4fefee1e1077b145d08"
+export const MAKER_SHARE_TABLE = "0x8f55dcd94ce055c1b97e906b9642c0ce6392557e"
 
 //publish from typus-dov/typus-dov
-export const DOV_PACKAGE = "0x9e89746592ac5d34829680abde8874f1397c65bc"
+export const DOV_PACKAGE = "0x1bf2cad8d9d4d11a8e2c981b0f6a9c9744887776"
 
 export const TEST_MINT_TOKEN = "0x672612858fcb5c6abf944638253142820c251753"
 
