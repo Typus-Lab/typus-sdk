@@ -175,7 +175,7 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
     return vaults
 }
 
-async function getVaultBidPrice(auction: Auction, timeOracle: string): Promise<number> {
+export async function getVaultBidPrice(auction: Auction, timeOracle: string): Promise<number> {
     let tmp = await provider.getObject(timeOracle);
     //@ts-ignore
     let currentTsMs = Number(tmp.details.data.fields.ts_ms)
