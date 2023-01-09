@@ -202,7 +202,7 @@ async function createNewVault(
     initialPrice: number,
     finalPrice: number,
     auctionDurationInMs: number,
-    prevBalance: number,
+    leverage: number,
 
 ) {
     return new Promise(async (resolve, reject) => {
@@ -213,19 +213,20 @@ async function createNewVault(
                 typeArgument,
                 COVERED_CALL_MANAGER,
                 timeOracle,
-                period,
-                activationTsMs,
-                expirationTsMs,
-                tokenDecimal,
-                shareDecimal,
-                capacity,
-                strikeOtmPct,
-                strikeIncrement,
-                decaySpeed,
-                initialPrice,
-                finalPrice,
-                auctionDurationInMs,
-                prevBalance,
+                period.toString(),
+                activationTsMs.toString(),
+                expirationTsMs.toString(),
+                tokenDecimal.toString(),
+                shareDecimal.toString(),
+                capacity.toString(),
+                strikeOtmPct.toString(),
+                strikeIncrement.toString(),
+                decaySpeed.toString(),
+                initialPrice.toString(),
+                finalPrice.toString(),
+                auctionDurationInMs.toString(),
+                [],
+                leverage.toString(),
             );
             let moveCallTxn = await signer.executeMoveCall(newCoveredCallVaultTx);
             await checkData(moveCallTxn)
@@ -269,7 +270,7 @@ async function getNewestVaultIndex(registry: string): Promise<number> {
 async function depositToVault(typeArgument: string, vaultIndex: number, depositAmount: number) {
     return new Promise(async (resolve, reject) => {
         try {
-            let depositTx: any = await getDepositTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, isRolling, token, depositAmount);
+            let depositTx: any = await getDepositTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), isRolling, token, depositAmount.toString());
             await signer.executeMoveCall(depositTx);
             console.log("deposit to vault successfully")
             resolve(null)
@@ -317,7 +318,7 @@ async function createNewAuctionWithNextCoveredCallVault(
 async function newBid(typeArgument: string, vaultIndex: number, size: number, token: string, timeOracle: string) {
     return new Promise(async (resolve, reject) => {
         try {
-            let newBidTx: any = await getNewBidTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, size, token, timeOracle);
+            let newBidTx: any = await getNewBidTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), size.toString(), token, timeOracle);
             await signer.executeMoveCall(newBidTx);
             console.log("new bid successfully ")
             resolve(null)
@@ -332,7 +333,7 @@ async function newBid(typeArgument: string, vaultIndex: number, size: number, to
 async function delivery(typeArgument: string, vaultIndex: number, sellSize: number, timeOracle: string) {
     return new Promise(async (resolve, reject) => {
         try {
-            let deliveryTx: any = await getDeliveryTx(COVERED_CALL_PACKAGE, COVERED_CALL_MANAGER, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, sellSize, timeOracle);
+            let deliveryTx: any = await getDeliveryTx(COVERED_CALL_PACKAGE, COVERED_CALL_MANAGER, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), timeOracle);
             await signer.executeMoveCall(deliveryTx);
             console.log("delivery successfully")
             resolve(null)
@@ -348,7 +349,7 @@ async function delivery(typeArgument: string, vaultIndex: number, sellSize: numb
 async function updatePayoffConfig(typeArgument: string, vaultIndex: number, price: number, premiumRoi: number, exposureRatio: number) {
     return new Promise(async (resolve, reject) => {
         try {
-            let updatePayoffConfigTx: any = await getUpdatePayoffConfigTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, COVERED_CALL_MANAGER, vaultIndex, price, premiumRoi, exposureRatio);
+            let updatePayoffConfigTx: any = await getUpdatePayoffConfigTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, COVERED_CALL_MANAGER, vaultIndex.toString(), premiumRoi.toString(), exposureRatio.toString());
             await signer.executeMoveCall(updatePayoffConfigTx);
             console.log("update payoff config successfully")
             resolve(null)
@@ -364,7 +365,7 @@ async function updatePayoffConfig(typeArgument: string, vaultIndex: number, pric
 async function settle(typeArgument: string, vaultIndex: number, priceOracle: string, timeOracle: string) {
     return new Promise(async (resolve, reject) => {
         try {
-            let settleTx: any = await getSettleTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, COVERED_CALL_MANAGER, vaultIndex, priceOracle, timeOracle);
+            let settleTx: any = await getSettleTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, COVERED_CALL_MANAGER, vaultIndex.toString(), priceOracle, timeOracle);
             await signer.executeMoveCall(settleTx);
             console.log("settle successfully")
             resolve(null)

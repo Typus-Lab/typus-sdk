@@ -12,10 +12,10 @@ const signer = new RawSigner(keypair, provider);
 */
 
 (async () => {
-    let depositAmount = 100000000;
+    let depositAmount = "100000000";
     let isRolling = true;
     let token = TEST_MINT_TOKEN
-    let vaultIndex = 0;
+    let vaultIndex = "0";
 
     let typeArgument = await getTypeArgumentFromToken(token)
 

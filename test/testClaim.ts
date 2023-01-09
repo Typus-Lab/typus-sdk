@@ -15,7 +15,7 @@ const signer = new RawSigner(keypair, provider);
     let claimAmount = 13;
     let isRolling = true;
     let token = "0x8f306b0fcbcbdee0b3a5e694c06039dfe8ca7f14"// minted token 
-    let vaultIndex = 59;
+    let vaultIndex = "59";
 
     let typeArgument = await getTypeArgumentFromToken(token)
 

@@ -9,24 +9,26 @@ const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 const token = TEST_MINT_TOKEN// minted token 
-let tokenDecimal = 9;
-let shareDecimal = 4;
-let period = 1;
-let activationTsMs = 1671782400000;
+let tokenDecimal = "9";
+let shareDecimal = "4";
+let period = "1";
+let activationTsMs = "1671782400000";
 let expirationTsMs = 1671782400000 + 604800000;
-let capacity = 1000000000;
-let strikeOtmPct = 500;
-let strikeIncrement = 10000
-let decaySpeed = 1;
-let initialPrice = 5000;
-let finalPrice = 1000;
-let auctionDurationInMs = 3600000;
+let capacity = "1000000000";
+let strikeOtmPct = "500";
+let strikeIncrement = "10000";
+let decaySpeed = "1";
+let initialPrice = "5000";
+let finalPrice = "1000";
+let auctionDurationInMs = "3600000";
 let prevBalance = 0;
+let leverage = "100";
 
 (async () => {
     let typeArgument: string = await getTypeArgumentFromToken(token)
     // let priceOracle: string = await createAndUpdatePriceOracle(typeArgument)
     let [timeOracle, _] = await createTimeOracle()
+
     console.log(typeArgument, timeOracle)
     let newCoveredCallVaultTx = await getNewCoveredCallVaultTx(
         COVERED_CALL_PACKAGE,
@@ -36,7 +38,7 @@ let prevBalance = 0;
         timeOracle,
         period,
         activationTsMs,
-        expirationTsMs,
+        expirationTsMs.toString(),
         tokenDecimal,
         shareDecimal,
         capacity,
@@ -46,7 +48,8 @@ let prevBalance = 0;
         initialPrice,
         finalPrice,
         auctionDurationInMs,
-        prevBalance,
+        [],
+        leverage,
     );
     let moveCallTxn = await signer.executeMoveCall(newCoveredCallVaultTx);
 
