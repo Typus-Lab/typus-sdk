@@ -18,10 +18,11 @@ const signer = new RawSigner(keypair, provider);
 */
 
 (async () => {
-    let depositAmount = 123;
+    let depositAmount = "123";
     let isRolling = true;
     let token = "0xaa8f8ccf372b461e5b8778b250bf13d9b1013174"// minted token 
-    let vaultIndex = 3;
+    let vaultIndex = "3";
+    let share = "0"
 
     let typeArgument = await getTypeArgumentFromToken(token)
 
@@ -29,7 +30,7 @@ const signer = new RawSigner(keypair, provider);
     await signer.executeMoveCall(depositTx);
     console.log("deposit " + depositAmount + " to new vault successfully")
 
-    let unSubscribedTx: any = await getUnsubscribeTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex)
+    let unSubscribedTx: any = await getUnsubscribeTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, share)
     await signer.executeMoveCall(unSubscribedTx);
     console.log("unsubscribe successfully")
 })()
