@@ -115,6 +115,7 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
         }
 
         let auctionRes: Auction;
+        let vaultBidPrice: number;
         //@ts-ignore
         if (objInfo.details.data.fields.value.fields.auction) {
             //@ts-ignore
@@ -132,9 +133,11 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
                 priceConfig: priceConfigRes,
                 index: Number(auction.index),
             }
+            vaultBidPrice = await getVaultBidPrice(auctionRes, timeOracle)
         } else {
             console.log("No auction")
             auctionRes = {} as Auction
+            vaultBidPrice = 0;
         }
 
         //@ts-ignore
@@ -150,8 +153,6 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
         let owner = objInfo.details.data.fields.value.fields.owner as string
 
         let tvl = Number(vault.regular_sub_vault.fields.balance) + Number(vault.rolling_sub_vault.fields.balance)
-
-        let vaultBidPrice: number = await getVaultBidPrice(auctionRes, timeOracle);
 
         let res: CoveredCallVault = {
             vaultId: vaultId,
