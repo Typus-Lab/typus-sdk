@@ -34,6 +34,7 @@
     "mkdirp": "^0.5.5",
     "mocha": "^10.1.0",
     "moment": "^2.29.4",
+    "node-cron": "^3.0.2",
     "once": "^1.4.0",
     "path-is-absolute": "^1.0.1",
     "path-parse": "^1.0.7",
