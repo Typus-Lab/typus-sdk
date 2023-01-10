@@ -134,8 +134,9 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
                 index: Number(auction.index),
             }
             vaultBidPrice = await getVaultBidPrice(auctionRes, timeOracle)
+            console.log("get auction in " + vaultId)
         } else {
-            console.log("No auction")
+            console.log("No auction " + vaultId)
             auctionRes = {} as Auction
             vaultBidPrice = 0;
         }
