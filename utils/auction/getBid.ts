@@ -24,10 +24,10 @@ export async function getBid(vault: string): Promise<Bid[]> {
         let bidData = e.details.data.fields.value.fields
 
         let res: Bid = {
-            price: Number(bidData.price),
-            size: Number(bidData.size / (10 ** TOKEN_DECIMAL)),
-            tsMs: Number(bidData.ts_ms),
-            tokenBalance: Number(bidData.coin.fields.balance),
+            price: (bidData.price),
+            size: Number(bidData.size / (10 ** TOKEN_DECIMAL)).toString(),
+            tsMs: (bidData.ts_ms),
+            tokenBalance: (bidData.coin.fields.balance),
             ownerAddress: bidData.owner,
         }
         return res

@@ -1,6 +1,6 @@
 
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
-import { UserDepositData } from "../utils/loadUsersDepositData"
+
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 
 const decode = (str: string): string => Buffer.from(str, 'base64').toString('binary');
@@ -11,21 +11,21 @@ export interface SubVaults {
     regular: string;
 }
 export interface VaultConfig {
-    strikeOtmPct: number,
-    strikeIncrement: number,
-    decaySpeed: number,
-    initialPrice: number,
-    finalPrice: number,
-    auctionDurationInMs: number,
+    strikeOtmPct: string,
+    strikeIncrement: string,
+    decaySpeed: string,
+    initialPrice: string,
+    finalPrice: string,
+    auctionDurationInMs: string,
 }
 
 export interface Config {
-    period: number;// daily:0 weekly:1 monthly:2
-    activationTsMs: number
-    expirationTsMs: number;
-    tokenDecimal: number;
-    shareDecimal: number;
-    capacity: number,
+    period: string;// daily:0 weekly:1 monthly:2
+    activationTsMs: string
+    expirationTsMs: string;
+    tokenDecimal: string;
+    shareDecimal: string;
+    capacity: string,
     vaultConfig: VaultConfig,
     nextVaultConfig: VaultConfig,
     payoffConfig: PayoffConfig;
@@ -33,8 +33,8 @@ export interface Config {
 }
 
 export interface SubVault {
-    balance: number,
-    shareSupply: number,
+    balance: string,
+    shareSupply: string,
     // user_shares
 }
 
@@ -48,50 +48,50 @@ export interface Vault {
 }
 
 export interface Bid {
-    price: number;
-    size: number;
-    tsMs: number;
-    tokenBalance: number;
+    price: string;
+    size: string;
+    tsMs: string;
+    tokenBalance: string;
     ownerAddress: string;
 }
 
-export interface PriceConfig {
-    decaySpeed: number;
-    initialPrice: number;
-    finalPrice: number;
+export interface PriceConfig {//TODO : string
+    decaySpeed: string;
+    initialPrice: string;
+    finalPrice: string;
 }
 export interface Auction {
-    startTsMs: number;
-    endTsMs: number;
+    startTsMs: string;
+    endTsMs: string;
     priceConfig: PriceConfig;
-    index: number;
+    index: string;
     // bids
     // ownerships
 }
 
 export interface CoveredCallVault {
     vaultId: string;
-    vaultIdx: number;
+    vaultIdx: string;
     asset: string;
     config: Config;
     vault: Vault;
     auction: Auction;
-    prevBalance: number;
-    next: number;
-    deliveryPrice: number;
-    deliverySize: number;
+    prevBalance: string;
+    next: string;
+    deliveryPrice: string;
+    deliverySize: string;
     owner: string;
     //  status:string; // Upcoming Or Active 
-    tvl: number;//regular_sub_vault balance + rolling_sub_vault balance
-    //  apy:number
+    tvl: string;//regular_sub_vault balance + rolling_sub_vault balance
+    //  apy:string
     //  Capacity//not yet
-    vaultBidPrice: number;
+    vaultBidPrice: string;
 }
 
 export interface PayoffConfig {
-    exposureRatio: number;
-    premiumRoi: number;
-    strike: number;
+    exposureRatio: string;
+    premiumRoi: string;
+    strike: string;
 }
 
 //new version: getVaultDataFromRegistry()

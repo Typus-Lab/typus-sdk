@@ -76,9 +76,9 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
 
         let payoffConfig = config.payoff_config.fields
         let payoffConfigRes: PayoffConfig = {
-            exposureRatio: Number(payoffConfig.exposure_ratio),
-            premiumRoi: Number(payoffConfig.premium_roi),
-            strike: Number(payoffConfig.strike) / (10 ** PRICE_DECIMAL),
+            exposureRatio: (payoffConfig.exposure_ratio),
+            premiumRoi: (payoffConfig.premium_roi),
+            strike: ((payoffConfig.strike) / (10 ** PRICE_DECIMAL)).toString(),
         }
 
         let configRes: Config = {
@@ -87,23 +87,23 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
             expirationTsMs: config.expiration_ts_ms,
             tokenDecimal: config.token_decimal,
             shareDecimal: config.share_decimal,
-            capacity: Number(config.capacity) / (10 ** TOKEN_DECIMAL),
+            capacity: (Number(config.capacity) / (10 ** TOKEN_DECIMAL)).toString(),
             vaultConfig: vaultConfigRes,
             nextVaultConfig: nextVaultConfigRes,
             payoffConfig: payoffConfigRes,
         }
 
         let maker: SubVault = {
-            balance: Number(vault.maker_sub_vault.fields.balance),
-            shareSupply: Number(vault.maker_sub_vault.fields.share_supply),
+            balance: (vault.maker_sub_vault.fields.balance),
+            shareSupply: (vault.maker_sub_vault.fields.share_supply),
         }
         let regular: SubVault = {
-            balance: Number(vault.regular_sub_vault.fields.balance),
-            shareSupply: Number(vault.regular_sub_vault.fields.share_supply),
+            balance: (vault.regular_sub_vault.fields.balance),
+            shareSupply: (vault.regular_sub_vault.fields.share_supply),
         }
         let rolling: SubVault = {
-            balance: Number(vault.rolling_sub_vault.fields.balance),
-            shareSupply: Number(vault.rolling_sub_vault.fields.share_supply),
+            balance: (vault.rolling_sub_vault.fields.balance),
+            shareSupply: (vault.rolling_sub_vault.fields.share_supply),
         }
 
         let vaultRes: Vault = {
@@ -123,15 +123,15 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
 
             let priceConfig = auction.price_config.fields
             let priceConfigRes: PriceConfig = {
-                decaySpeed: Number(priceConfig.decay_speed),
-                initialPrice: Number(priceConfig.initial_price),
-                finalPrice: Number(priceConfig.final_price),
+                decaySpeed: (priceConfig.decay_speed),
+                initialPrice: (priceConfig.initial_price),
+                finalPrice: (priceConfig.final_price),
             }
             auctionRes = {
-                startTsMs: Number(auction.start_ts_ms),
-                endTsMs: Number(auction.end_ts_ms),
+                startTsMs: (auction.start_ts_ms),
+                endTsMs: (auction.end_ts_ms),
                 priceConfig: priceConfigRes,
-                index: Number(auction.index),
+                index: (auction.index),
             }
             vaultBidPrice = await getVaultBidPrice(auctionRes, timeOracle)
             console.log("get auction in " + vaultId)
@@ -142,13 +142,13 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
         }
 
         //@ts-ignore
-        let next = objInfo.details.data.fields.value.fields.next as number
+        let next = objInfo.details.data.fields.value.fields.next
 
         //@ts-ignore
-        let deliveryPrice = objInfo.details.data.fields.value.fields.delivery_price as number
+        let deliveryPrice = objInfo.details.data.fields.value.fields.delivery_price
 
         //@ts-ignore
-        let deliverySize = objInfo.details.data.fields.value.fields.delivery_size as number
+        let deliverySize = objInfo.details.data.fields.value.fields.delivery_size
 
         //@ts-ignore
         let owner = objInfo.details.data.fields.value.fields.owner as string
@@ -157,18 +157,18 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
 
         let res: CoveredCallVault = {
             vaultId: vaultId,
-            vaultIdx: vaultIdx,
+            vaultIdx: vaultIdx.toString(),
             asset: asset,
             config: configRes,
             vault: vaultRes,
             auction: auctionRes,
-            prevBalance: prevBalance,
+            prevBalance: prevBalance.toString(),
             next: next,
             deliveryPrice: deliveryPrice,
             deliverySize: deliverySize,
             owner: owner,
-            tvl: tvl,
-            vaultBidPrice: vaultBidPrice,
+            tvl: tvl.toString(),
+            vaultBidPrice: vaultBidPrice.toString(),
         }
 
         vaults.push(res)
