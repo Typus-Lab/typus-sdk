@@ -8,11 +8,11 @@ export const TOKEN_REGISTRY_SUI = "0xc6128d63d24cbdb66e50cef4577e5cf36bb889e1"//
 export const ORACLE_PACKAGE = "0x0d4b13cc0467c0620ce54abf703faa3b419d967b"
 
 //publish from typus-dov/cover_call
-export const COVERED_CALL_PACKAGE = "0x8cd580538967d5a83a5695f9e2db9f3695e5bdc0"
-export const COVERED_CALL_REGISTRY = "0xff3eae20040a8ec4d45bae3ac85b662cf8adea4f"
-export const COVERED_CALL_MANAGER = "0xb37ffa9b254f94e4c402806bb6011a2a32642ff4"
-export const USER_SHARE_TABLE = "0x27e557f1464297be0fd2b4fefee1e1077b145d08"
-export const MAKER_SHARE_TABLE = "0x8f55dcd94ce055c1b97e906b9642c0ce6392557e"
+export const COVERED_CALL_PACKAGE = "0x9e02627cbd517b378cb2119862f618078246c813"
+export const COVERED_CALL_REGISTRY = "0x3b94b2ead34d0f617c6302ceb2f4e4cb8ff69ae6"
+export const COVERED_CALL_MANAGER = "0x10f71ab8bac2a9be4d4972e07a1ea67bef94c263"
+export const USER_SHARE_TABLE = "0xa885de38c4e3a28c136ea6aa6cc49a934261042a"
+export const MAKER_SHARE_TABLE = "0x70241eccfc271f3c54efc56392f5a6c77950501e"
 
 //publish from typus-dov/typus-dov
 export const DOV_PACKAGE = "0x1bf2cad8d9d4d11a8e2c981b0f6a9c9744887776"
@@ -33,3 +33,4 @@ export const TOKEN_NAME_TO_MODULE = {
     "USDC": "usdc",
     // "USDT": "token_usdt",
 }
+
