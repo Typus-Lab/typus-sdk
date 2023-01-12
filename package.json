@@ -49,7 +49,8 @@
     "tslib": "^1.14.1",
     "tsutils": "^2.29.0",
     "wrappy": "^1.0.2",
-    "ws": "^8.11.0"
+    "ws": "^8.11.0",
+    "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
     "@types/bs58": "^4.0.1",
