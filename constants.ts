@@ -15,7 +15,7 @@ export const USER_SHARE_TABLE = "0xa885de38c4e3a28c136ea6aa6cc49a934261042a"
 export const MAKER_SHARE_TABLE = "0x70241eccfc271f3c54efc56392f5a6c77950501e"
 
 //publish from typus-dov/typus-dov
-export const DOV_PACKAGE = "0x1bf2cad8d9d4d11a8e2c981b0f6a9c9744887776"
+export const DOV_PACKAGE = "0xdbb42109c373ded4b97016230e5d065fb96813b8"
 
 export const TEST_MINT_TOKEN = "0x672612858fcb5c6abf944638253142820c251753"
 
