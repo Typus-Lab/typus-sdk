@@ -270,7 +270,7 @@ async function getNewestVaultIndex(registry: string): Promise<number> {
 async function depositToVault(typeArgument: string, vaultIndex: number, depositAmount: number) {
     return new Promise(async (resolve, reject) => {
         try {
-            let depositTx: any = await getDepositTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), isRolling, token, depositAmount.toString());
+            let depositTx: any = await getDepositTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), token, depositAmount.toString());
             await signer.executeMoveCall(depositTx);
             console.log("deposit to vault successfully")
             resolve(null)

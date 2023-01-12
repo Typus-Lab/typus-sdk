@@ -26,7 +26,7 @@ const signer = new RawSigner(keypair, provider);
 
     let typeArgument = await getTypeArgumentFromToken(token)
 
-    let depositTx: any = await getDepositTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, isRolling, token, depositAmount);
+    let depositTx: any = await getDepositTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, token, depositAmount);
     await signer.executeMoveCall(depositTx);
     console.log("deposit " + depositAmount + " to new vault successfully")
 

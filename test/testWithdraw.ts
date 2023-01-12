@@ -19,7 +19,7 @@ const signer = new RawSigner(keypair, provider);
 
     console.log("test for withdraw, try to withdraw " + token + " for " + withdrawAmount + " ...")
 
-    let withdrawTx = await getWithdrawTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), isRolling, withdrawAmount.toString());
+    let withdrawTx = await getWithdrawTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), withdrawAmount.toString());
     await signer.executeMoveCall(withdrawTx);
     console.log("withdraw to vault successfully")
 })()
