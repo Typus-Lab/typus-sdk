@@ -1,7 +1,7 @@
 
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { TOKEN_NAME, PRICE_DECIMAL, TOKEN_DECIMAL } from '../constants';
-import { CoveredCallVault, PayoffConfig, Config, VaultConfig, Vault, SubVault, Auction, PriceConfig } from "../utils/fetchData"
+import { CoveredCallVault, PayoffConfig, Config, VaultConfig, Vault, SubVault, Auction, PriceConfig, DeliveryInfo } from "../utils/fetchData"
 import { createTimeOracle } from "../utils/coveredCall/createTimeOracle"
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 
@@ -50,9 +50,10 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
         //@ts-ignore
         let vault = objInfo.details.data.fields.value.fields.vault.fields
 
-        //prevBalance
+        //prevBalance    
         //@ts-ignore
-        let prevBalance = objInfo.details.data.fields.value.fields.prev_balance as number
+        let prev = objInfo.details.data.fields.value.fields.prev
+        prev = (prev != null) ? prev as number : 0
 
         let vaultConfig = config.vault_config.fields
         let vaultConfigRes: VaultConfig = {
@@ -145,10 +146,10 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
         let next = objInfo.details.data.fields.value.fields.next
 
         //@ts-ignore
-        let deliveryPrice = objInfo.details.data.fields.value.fields.delivery_price
+        let totalBidSize = objInfo.details.data.fields.value.fields.total_bid_size
 
         //@ts-ignore
-        let deliverySize = objInfo.details.data.fields.value.fields.delivery_size
+        let deliveryInfo: DeliveryInfo = objInfo.details.data.fields.value.fields.delivery_info
 
         //@ts-ignore
         let owner = objInfo.details.data.fields.value.fields.owner as string
@@ -162,10 +163,10 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
             config: configRes,
             vault: vaultRes,
             auction: auctionRes,
-            prevBalance: prevBalance.toString(),
+            prev: prev.toString(),
             next: next,
-            deliveryPrice: deliveryPrice,
-            deliverySize: deliverySize,
+            totalBidSize: totalBidSize,
+            deliveryInfo: deliveryInfo,
             owner: owner,
             tvl: tvl.toString(),
             vaultBidPrice: vaultBidPrice.toString(),
