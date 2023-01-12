@@ -1,4 +1,4 @@
-export async function getDepositTx(packageId: string, registry: string, typeArgument: string, vaultIndex: string, isRolling: Boolean, coin: string, amount: string): Promise<any> {
+export async function getDepositTx(packageId: string, registry: string, typeArgument: string, vaultIndex: string, coin: string, amount: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
@@ -9,7 +9,6 @@ export async function getDepositTx(packageId: string, registry: string, typeArgu
             vaultIndex,
             coin,
             amount,
-            isRolling,
         ],
         gasBudget: 10000,
     }
