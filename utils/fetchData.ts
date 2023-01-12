@@ -69,6 +69,11 @@ export interface Auction {
     // ownerships
 }
 
+export interface DeliveryInfo {
+    deliveryPrice: string;
+    deliverySize: string;
+}
+
 export interface CoveredCallVault {
     vaultId: string;
     vaultIdx: string;
@@ -76,10 +81,10 @@ export interface CoveredCallVault {
     config: Config;
     vault: Vault;
     auction: Auction;
-    prevBalance: string;
+    prev: string;
     next: string;
-    deliveryPrice: string;
-    deliverySize: string;
+    totalBidSize: string;
+    deliveryInfo: DeliveryInfo;
     owner: string;
     //  status:string; // Upcoming Or Active 
     tvl: string;//regular_sub_vault balance + rolling_sub_vault balance
