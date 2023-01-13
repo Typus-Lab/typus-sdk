@@ -1,18 +1,19 @@
 //publish from sui-dev-token
-export const TOKEN_PACKAGE = "0x2c9a10117599e2d3232495a525b10f679691c9ae";
-export const TOKEN_REGISTRY_BTC = "0xe0dc19dfc9023f2e86462aa37dc8fae290b4e2bb";//fake btc registry
-export const TOKEN_REGISTRY_ETH = "0x9ad1db50850079e98d5972e3d9a8fdc90b9d1f19"//fake eth registry
-export const TOKEN_REGISTRY_SUI = "0xc6128d63d24cbdb66e50cef4577e5cf36bb889e1"//fake usdc registry
+export const TOKEN_PACKAGE = "0x1ed338b4e737d89729386b8170b0f45910ad30fa";
+export const TOKEN_REGISTRY_BTC = "0xf5f939a6a79927e55582985a8bf125d37b0ab297";//fake btc registry
+export const TOKEN_REGISTRY_ETH = "0xb79efcacd84dc70dd6969686d7e7fadadc14c2d5"//fake eth registry
+export const TOKEN_REGISTRY_SUI = "0xde095084d4485b0482ab8dc8fe8c8328902fa223"//fake usdc registry
 
 //publish from typus-oracle
-export const ORACLE_PACKAGE = "0x0d4b13cc0467c0620ce54abf703faa3b419d967b"
+export const ORACLE_PACKAGE = "0x5b1f5680041041624069ef03f23947001b073642"
 
 //publish from typus-dov/cover_call
-export const COVERED_CALL_PACKAGE = "0x9e02627cbd517b378cb2119862f618078246c813"
-export const COVERED_CALL_REGISTRY = "0x3b94b2ead34d0f617c6302ceb2f4e4cb8ff69ae6"
-export const COVERED_CALL_MANAGER = "0x10f71ab8bac2a9be4d4972e07a1ea67bef94c263"
-export const USER_SHARE_TABLE = "0xa885de38c4e3a28c136ea6aa6cc49a934261042a"
-export const MAKER_SHARE_TABLE = "0x70241eccfc271f3c54efc56392f5a6c77950501e"
+export const COVERED_CALL_PACKAGE = "0x00d18316601f16439dec0a6b3e40ef861fc84ee4"
+export const COVERED_CALL_REGISTRY = "0xe3960d9dc8e39328e514d42d3318c5878145c27e"
+export const COVERED_CALL_MANAGER = "0xfe26a77c66f4ae0314e1510921f8dea9be01db9c"
+export const USER_SHARE_TABLE = "0x4d98c1efa4aef5b02e8fe27bca6ac4d8dde62935"
+export const USER_REFUND_TABLE = "0x3e80b4c0f7d1b05a73d180487aa2bbf5e3c77792"
+export const MAKER_SHARE_TABLE = "0xef0dabd3f82d4cc09c440a61f095a977d72ade05"
 
 //publish from typus-dov/typus-dov
 export const DOV_PACKAGE = "0xdbb42109c373ded4b97016230e5d065fb96813b8"
@@ -33,4 +34,3 @@ export const TOKEN_NAME_TO_MODULE = {
     "USDC": "usdc",
     // "USDT": "token_usdt",
 }
-
