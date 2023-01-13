@@ -1,18 +1,17 @@
-export async function getAuthorizedAddCoveredCallVaultAuthorizedUserTx(
+export async function getAuthorizedRemoveAuthorizedUserTx(
     packageId: string,
     registry: string,
-    typeArgument: string,
-    index: string,
+    managerCap: string,
     address: string,
 ): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
-        function: 'authorized_add_covered_call_vault_authorized_user',
-        typeArguments: [typeArgument],
+        function: 'remove_authorized_user',
+        typeArguments: [],
         arguments: [
+            managerCap,
             registry,
-            index,
             address,
         ],
         gasBudget: 10000,

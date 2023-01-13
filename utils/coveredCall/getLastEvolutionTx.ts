@@ -1,19 +1,25 @@
-export async function getAuthorizedAddCoveredCallVaultAuthorizedUserTx(
+export async function getEvolutionTx(
     packageId: string,
     registry: string,
     typeArgument: string,
+    managerCap: string,
     index: string,
-    address: string,
+    priceOracle: string,
+    timeOracle: string,
+    expirationTsMs: string,
 ): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
-        function: 'authorized_add_covered_call_vault_authorized_user',
+        function: 'last_evolution',
         typeArguments: [typeArgument],
         arguments: [
+            managerCap,
             registry,
             index,
-            address,
+            priceOracle,
+            timeOracle,
+            expirationTsMs,
         ],
         gasBudget: 10000,
     }

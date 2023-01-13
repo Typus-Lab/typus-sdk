@@ -1,5 +1,6 @@
 export async function getUpdateNextVaultConfigTx(
     packageId: string,
+    managerCap: string,
     registry: string,
     typeArgument: string,
     index: string,
@@ -16,6 +17,7 @@ export async function getUpdateNextVaultConfigTx(
         function: 'update_next_vault_config',
         typeArguments: [typeArgument],
         arguments: [
+            managerCap,
             registry,
             index,
             strikeOtmPct,

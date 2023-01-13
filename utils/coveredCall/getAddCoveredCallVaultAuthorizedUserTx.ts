@@ -1,5 +1,6 @@
-export async function getAuthorizedAddCoveredCallVaultAuthorizedUserTx(
+export async function getAddCoveredCallVaultAuthorizedUserTx(
     packageId: string,
+    managerCap: string,
     registry: string,
     typeArgument: string,
     index: string,
@@ -8,9 +9,10 @@ export async function getAuthorizedAddCoveredCallVaultAuthorizedUserTx(
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
-        function: 'authorized_add_covered_call_vault_authorized_user',
+        function: 'add_covered_call_vault_authorized_user',
         typeArguments: [typeArgument],
         arguments: [
+            managerCap,
             registry,
             index,
             address,
