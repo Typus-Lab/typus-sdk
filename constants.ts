@@ -18,7 +18,7 @@ export const USER_REFUND_TABLE = "0x3e80b4c0f7d1b05a73d180487aa2bbf5e3c77792"
 export const MAKER_SHARE_TABLE = "0xef0dabd3f82d4cc09c440a61f095a977d72ade05"
 
 //publish from typus-dov/typus-dov
-export const DOV_PACKAGE = "0xdbb42109c373ded4b97016230e5d065fb96813b8"
+export const DOV_PACKAGE = "0x7d808c68990f1c1f54efeda8bbbe3a9746ce4026"
 
 export const TEST_MINT_TOKEN = "0x672612858fcb5c6abf944638253142820c251753"
 
