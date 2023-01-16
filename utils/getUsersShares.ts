@@ -68,8 +68,8 @@ export async function getUsersShares(userShareTable: string, registry: string): 
 
             //user deposit amount = (user share/total share) * total balance
             let depositAmount = isRolling ?
-                (share * subVaultsData.get(index)?.isRollingTotalSupply! / subVaultsData.get(index)?.isRollingTotalBalance!) :
-                (share * subVaultsData.get(index)?.regularTotalSupply! / subVaultsData.get(index)?.regularTotalBalance!)
+                (share / subVaultsData.get(index)?.isRollingTotalSupply! * subVaultsData.get(index)?.isRollingTotalBalance!) :
+                (share / subVaultsData.get(index)?.regularTotalSupply! * subVaultsData.get(index)?.regularTotalBalance!)
 
             let res: UserShare = {
 
