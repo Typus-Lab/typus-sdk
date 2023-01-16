@@ -17,50 +17,39 @@ let chatId = "-1001784476809";
 
 (async () => {
 
-    // let newRes = [
-    //     {
-    //         timestamp: 1673857997978,
-    //         txDigest: '6nPoQW9CvNg1oar83zPRDgBcLoXRNKMwFGZW3FdP7b9m',
-    //         id: { txSeq: 397231, eventSeq: 7 },
-    //         event: { moveEvent: [Object] }
-    //     },
-    //     {
-    //         timestamp: 1673857516477,
-    //         txDigest: '8vFQpAREgq3jviMTSMC2i3quaAn1nneVhjdSV8y7qnjz',
-    //         id: { txSeq: 384407, eventSeq: 7 },
-    //         event: { moveEvent: [Object] }
-    //     }
-    // ]
-
-    // let res = [
-    //     {
-    //         timestamp: 1673857516477,
-    //         txDigest: '8vFQpAREgq3jviMTSMC2i3quaAn1nneVhjdSV8y7qnjz',
-    //         id: { txSeq: 384407, eventSeq: 7 },
-    //         event: { moveEvent: [Object] }
-    //     }
-    // ]
-
-    // const newBid = newRes.filter(({ timestamp: id1 }) => !res.some(({ timestamp: id2 }) => id2 === id1));
-
-    // console.log("new bid amount: " + newBid.length)
-
-    let bidType = DOV_PACKAGE + "::dutch::NewBid<" + TOKEN_PACKAGE + "::eth::ETH>"
+    let bidType = COVERED_CALL_PACKAGE + "::covered_call::NewBid<" + TOKEN_PACKAGE + "::eth::ETH>"
 
     let newAuctionType = COVERED_CALL_PACKAGE + "::covered_call::NewAuction"
 
-    let endAuctionType = ""
+    let endAuctionType = DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::eth::ETH>"
 
     let renewSec = 10
 
     let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY);
 
-    await getBidEventsCranker(bidType, renewSec, vault)//new_bid
+    // await getBidEventsCranker(bidType, renewSec, vault)//new_bid
 
     // await getNewAuctionEventsCranker(newAuctionType, renewSec, vault)//evolution
 
-    // await getEndAuctionEventsCranker(endAuctionType, renewSec, vault)
+    await getEndAuctionEventsCranker(endAuctionType, renewSec, vault)
 })()
+
+async function generateBidId(vault: CoveredCallVault[]): Promise<string[]> {
+    //use the vault to generate "SUI-20JAN23-120-C"
+    let liveVault = vault?.filter((v) => {
+        const start = moment.unix(Number(v.config.activationTsMs) / 1000);
+        return start.isBefore(moment());
+    });
+
+    let res: any[] = liveVault.map(v => {
+        const expiration = moment
+            .unix(Number(v.config.expirationTsMs) / 1000)
+            .format("DDMMMYY");
+        const bidId = `${v.asset}-${expiration}-${v.config.payoffConfig.strike}-C`;
+        return bidId
+    })
+    return res
+}
 
 export async function getBidEventsCranker(type: string, renewSec: number, vault: CoveredCallVault[]) {
     let res: any[] = [];
@@ -68,11 +57,6 @@ export async function getBidEventsCranker(type: string, renewSec: number, vault:
     cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
         console.log("listening for every " + renewSec.toString() + " s...")
         const events = await provider.getEvents(
-            /// from object id , can only get one event  
-            // { Object: "0x89bc7299c684413ab81f7536603451277b8ed754" },
-
-            // { Transaction: "4aTaXLyCwT9geQg5PC3UAGGBMbuySFCzeJ6Cf62RrUEg"},
-
             { MoveEvent: type },
             null,
             null,
@@ -81,7 +65,7 @@ export async function getBidEventsCranker(type: string, renewSec: number, vault:
         let newRes: any[] = events.data
 
         if (newRes.length != res.length) {
-            console.log("the total bid event number now:" + events.data.length)
+            console.log("the total bid event number now: " + events.data.length)
             console.log("there are " + (newRes.length - res.length).toString() + " new bids")
 
             //TODO
@@ -89,37 +73,25 @@ export async function getBidEventsCranker(type: string, renewSec: number, vault:
 
             console.log("new bid amount: " + newBid.length)
 
-            let newBidFormat: string = ""
+            let format: string = ""
+            let bidIds: string[] = await generateBidId(vault);
+            //TODO
+            let bidId = bidIds[0]
             newBid.map(async (e) => {
-
-                //asset
-                let tmp = vault.find(vault =>
-                    (vault.vaultIdx == (e.event.moveEvent.fields.index).toString())
-                )
-                let asset = tmp?.asset
-
-                let time = moment.unix(e.timestamp / 1000).format("DDMMMYY")
-
-                let price = e.event.moveEvent.fields.price
 
                 let size = (Number(e.event.moveEvent.fields.size) / (10 ** TOKEN_DECIMAL)).toString()
 
-                newBidFormat += asset + "-" + time + "-" + price + "-C" + " is bid with " + size + " " + asset + "!"
+                format += bidId + " is bid with " + size + " " + bidId.split("-")[0] + "! \n"
 
             })
 
-            //SUI-20JAN23-120-C is bid with 1000 SUI!
-            let telegramText: string = newBidFormat
+            let telegramText: string = format
             console.log(telegramText)
             // sendEventToTelegramChannel(telegramText)
 
             res = newRes
         }
-        // events.data.forEach((envelope: SuiEventEnvelope) => {
 
-        //     const event = envelope.event
-        //     console.log(event)
-        // })
 
     });
 }
@@ -178,31 +150,18 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
         )
 
         let newRes: any[] = events.data
-
         if (newRes.length != res.length) {
-            let newAuction = newRes.filter((e) => {
-                return res.indexOf(e) === -1
+            let format: string = ""
+            let bidIds: string[] = await generateBidId(vault);
+            //TODO
+            let bidId = bidIds[0]
+            newRes.map(async (e) => {
+                format += bidId + " auction is closed! \n"
             })
 
-            let msg: string = ""
-            newAuction.map(async (e) => {
-                console.log(e)
-                // //asset
-                // let tmp = vault.find(vault =>
-                //     (vault.vaultIdx == (e.event.moveEvent.fields.index).toString())
-                // )
-                // let asset = tmp?.asset
-
-                // let time = moment.unix(e.timestamp / 1000).format("DDMMMYY")
-                // let price = Number(e.event.moveEvent.fields.strike) / (10 ** PRICE_DECIMAL)
-                // msg += asset + "-" + time + "-" + price + "-C" + " auction is live now!\n"
-            })
-
-            // SUI-20JAN23-120-C auction is live now!
-            let telegramText: string = msg
+            let telegramText: string = format
             console.log(telegramText)
             // sendEventToTelegramChannel(telegramText)
-
             res = newRes
         }
     });
