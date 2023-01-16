@@ -70,6 +70,7 @@ export async function getUsersShares(userShareTable: string, registry: string): 
             let depositAmount = isRolling ?
                 (share / subVaultsData.get(index)?.isRollingTotalSupply! * subVaultsData.get(index)?.isRollingTotalBalance!) :
                 (share / subVaultsData.get(index)?.regularTotalSupply! * subVaultsData.get(index)?.regularTotalBalance!)
+            depositAmount = Number(depositAmount.toFixed(0))
 
             let res: UserShare = {
 
