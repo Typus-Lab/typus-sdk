@@ -10,6 +10,11 @@ import { CoveredCallVault } from "../utils/fetchData";
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 let apiToken = "5864284783:AAHwXWgt2YgLENdJ9mVBUDBVLHXrMLNgkic";
 
+interface BidInterface {
+    bidFormat: string;
+    bidTime: number;
+}
+
 /*
 「https://api.telegram.org/botTOKEN/getUpdates」，change TOKEN to token from botFather
 */
@@ -26,11 +31,12 @@ let chatId = "-1001784476809";
 
     let newAuctionType = COVERED_CALL_PACKAGE + "::covered_call::NewAuction"
 
-    let endAuctionTypes: string[] = [
-        DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::eth::ETH>",
-        DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::btc::BTC>",
-        DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::sui::SUI>",
-    ]
+    // let endAuctionTypes: string[] = [
+    //     DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::eth::ETH>",
+    //     DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::btc::BTC>",
+    //     DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::sui::SUI>",
+    // ]
+    let endAuctionType = DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::eth::ETH>";
 
     let renewSec = 10
 
@@ -42,26 +48,35 @@ let chatId = "-1001784476809";
 
     await getNewAuctionEventsCranker(newAuctionType, renewSec, vault)//evolution
 
-    endAuctionTypes.map(async (endAuctionType) => {
-        await getEndAuctionEventsCranker(endAuctionType, renewSec, vault)
-    })
+
+    await getEndAuctionEventsCranker(endAuctionType, renewSec, vault)
+
 
 })()
 
-async function generateBidId(vault: CoveredCallVault[]): Promise<string[]> {
+async function generateBidId(vault: CoveredCallVault[]): Promise<any[]> {
     //use the vault to generate "SUI-20JAN23-120-C"
     let liveVault = vault?.filter((v) => {
         const start = moment.unix(Number(v.config.activationTsMs) / 1000);
-        return start.isBefore(moment());
+        const settled =
+            v.vault.ableToDeposit === false && v.vault.ableToWithdraw === true;
+        return start.isBefore(moment()) && !settled;
     });
 
     let res: any[] = liveVault.map(v => {
+        let time: string = v.config.expirationTsMs
         const expiration = moment
-            .unix(Number(v.config.expirationTsMs) / 1000)
+            .unix(Number(time) / 1000)
             .format("DDMMMYY");
         const bidId = `${v.asset}-${expiration}-${v.config.payoffConfig.strike}-C`;
-        return bidId
+
+        let obj: BidInterface = {
+            bidFormat: bidId,
+            bidTime: Number(time)
+        }
+        return obj
     })
+
     return res
 }
 
@@ -87,23 +102,28 @@ export async function getBidEventsCranker(type: string, renewSec: number, vault:
             console.log("new bid amount: " + newBid.length)
 
             let format: string = ""
-            let bidIds: string[] = await generateBidId(vault);
+            let bidIds: BidInterface[] = await generateBidId(vault);
             // [
             //     'ETH-18Jan23-1750-C',
             //     'BTC-18Jan23-21800-C',
             //     'ETH-17Jan23-1750-C',
             //     'SUI-18Jan23-9-C'
             //   ]
-
+            console.log(bidIds)
             newBid.map(async (e) => {
+                // console.log(e.timestamp)
                 //TODO: find correct bidID
-                let bidId = bidIds.find(bidId => e.event.moveEvent.type.includes(bidId.split("-")[0]))
+                let bidId = bidIds.find(bidId => {
+                    let type: string = e.event.moveEvent.type;
+                    let asset: string = bidId.bidFormat.split("-")[0]
+                    return e.event.moveEvent.type.includes(bidId.bidFormat.split("-")[0])
+                })
 
                 if (bidId) {
 
                     let size = (Number(e.event.moveEvent.fields.size) / (10 ** TOKEN_DECIMAL)).toString()
 
-                    format += bidId + " is bid with " + size + " " + bidId.split("-")[0] + "! \n"
+                    format += bidId.bidFormat + " is bid with " + size + " " + bidId.bidFormat.split("-")[0] + "! \n"
                 } else {
                     console.log("can't get bidId in getBidEventsCranker")
                 }
@@ -111,7 +131,7 @@ export async function getBidEventsCranker(type: string, renewSec: number, vault:
 
             let telegramText: string = format
             console.log(telegramText)
-            sendEventToTelegramChannel(telegramText)
+            // sendEventToTelegramChannel(telegramText)
 
             res = newRes
         }
@@ -133,15 +153,15 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
 
         if (newRes.length != res.length) {
             let format: string = ""
-            let bidIds: string[] = await generateBidId(vault);
+            let bidIds: BidInterface[] = await generateBidId(vault);
 
             bidIds.map(async (bidId) => {
-                format += bidId + " auction is live now! \n"
+                format += bidId.bidFormat + " auction is live now! \n"
             })
 
             let telegramText: string = format
             console.log(telegramText)
-            sendEventToTelegramChannel(telegramText)
+            // sendEventToTelegramChannel(telegramText)
             res = newRes
         }
     });
@@ -161,15 +181,15 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
         let newRes: any[] = events.data
         if (newRes.length != res.length) {
             let format: string = ""
-            let bidIds: string[] = await generateBidId(vault);
+            let bidIds: BidInterface[] = await generateBidId(vault);
 
             bidIds.map(async (bidId) => {
-                format += bidId + " auction is closed! \n"
+                format += bidId.bidFormat + " auction is closed! \n"
             })
 
             let telegramText: string = format
             console.log(telegramText)
-            sendEventToTelegramChannel(telegramText)
+            // sendEventToTelegramChannel(telegramText)
             res = newRes
         }
     })
