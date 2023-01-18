@@ -164,7 +164,7 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
             config: configRes,
             vault: vaultRes,
             auction: auctionRes,
-            prev: prev.toString(),
+            prev: (prev) ? prev.toString() : null,
             next: next,
             totalBidSize: totalBidSize,
             deliveryInfo: deliveryInfo,
