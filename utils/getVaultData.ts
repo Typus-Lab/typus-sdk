@@ -54,7 +54,7 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
         //prevBalance    
         //@ts-ignore
         let prev = objInfo.details.data.fields.value.fields.prev
-        prev = (prev != null) ? prev as number : 0
+        prev = (prev != null) ? prev as number : null
 
         let vaultConfig = config.vault_config.fields
         let vaultConfigRes: VaultConfig = {
