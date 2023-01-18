@@ -72,6 +72,7 @@ export interface Auction {
 export interface DeliveryInfo {
     deliveryPrice: string;
     deliverySize: string;
+    // tsMs: string;
 }
 
 export interface CoveredCallVault {
