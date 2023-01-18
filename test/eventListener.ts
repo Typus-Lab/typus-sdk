@@ -17,21 +17,35 @@ let chatId = "-1001784476809";
 
 (async () => {
 
-    let bidType = COVERED_CALL_PACKAGE + "::covered_call::NewBid<" + TOKEN_PACKAGE + "::eth::ETH>"
+    let bidTypes: string[] = [
+        COVERED_CALL_PACKAGE + "::covered_call::NewBid<" + TOKEN_PACKAGE + "::eth::ETH>",
+        COVERED_CALL_PACKAGE + "::covered_call::NewBid<" + TOKEN_PACKAGE + "::btc::BTC>",
+        COVERED_CALL_PACKAGE + "::covered_call::NewBid<" + TOKEN_PACKAGE + "::sui::SUI>",
+    ]
+    // let bidType = COVERED_CALL_PACKAGE + "::covered_call::NewBid<" + TOKEN_PACKAGE + "::eth::ETH>"
 
     let newAuctionType = COVERED_CALL_PACKAGE + "::covered_call::NewAuction"
 
-    let endAuctionType = DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::eth::ETH>"
+    let endAuctionTypes: string[] = [
+        DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::eth::ETH>",
+        DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::btc::BTC>",
+        DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::sui::SUI>",
+    ]
 
     let renewSec = 10
 
     let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY);
 
-    // await getBidEventsCranker(bidType, renewSec, vault)//new_bid
+    bidTypes.map(async (bidType) => {
+        await getBidEventsCranker(bidType, renewSec, vault)//new_bid
+    })
 
-    // await getNewAuctionEventsCranker(newAuctionType, renewSec, vault)//evolution
+    await getNewAuctionEventsCranker(newAuctionType, renewSec, vault)//evolution
 
-    await getEndAuctionEventsCranker(endAuctionType, renewSec, vault)
+    endAuctionTypes.map(async (endAuctionType) => {
+        await getEndAuctionEventsCranker(endAuctionType, renewSec, vault)
+    })
+
 })()
 
 async function generateBidId(vault: CoveredCallVault[]): Promise<string[]> {
@@ -55,7 +69,7 @@ export async function getBidEventsCranker(type: string, renewSec: number, vault:
     let res: any[] = [];
 
     cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
-        console.log("listening for every " + renewSec.toString() + " s...")
+
         const events = await provider.getEvents(
             { MoveEvent: type },
             null,
@@ -68,39 +82,47 @@ export async function getBidEventsCranker(type: string, renewSec: number, vault:
             console.log("the total bid event number now: " + events.data.length)
             console.log("there are " + (newRes.length - res.length).toString() + " new bids")
 
-            //TODO
             let newBid = newRes.filter(({ timestamp: id1 }) => !res.some(({ timestamp: id2 }) => id2 === id1));
 
             console.log("new bid amount: " + newBid.length)
 
             let format: string = ""
             let bidIds: string[] = await generateBidId(vault);
-            //TODO
-            let bidId = bidIds[0]
+            // [
+            //     'ETH-18Jan23-1750-C',
+            //     'BTC-18Jan23-21800-C',
+            //     'ETH-17Jan23-1750-C',
+            //     'SUI-18Jan23-9-C'
+            //   ]
+
             newBid.map(async (e) => {
+                //TODO: find correct bidID
+                let bidId = bidIds.find(bidId => e.event.moveEvent.type.includes(bidId.split("-")[0]))
 
-                let size = (Number(e.event.moveEvent.fields.size) / (10 ** TOKEN_DECIMAL)).toString()
+                if (bidId) {
 
-                format += bidId + " is bid with " + size + " " + bidId.split("-")[0] + "! \n"
+                    let size = (Number(e.event.moveEvent.fields.size) / (10 ** TOKEN_DECIMAL)).toString()
 
+                    format += bidId + " is bid with " + size + " " + bidId.split("-")[0] + "! \n"
+                } else {
+                    console.log("can't get bidId in getBidEventsCranker")
+                }
             })
 
             let telegramText: string = format
             console.log(telegramText)
-            // sendEventToTelegramChannel(telegramText)
+            sendEventToTelegramChannel(telegramText)
 
             res = newRes
         }
+    })
 
-
-    });
 }
 
 export async function getNewAuctionEventsCranker(type: string, renewSec: number, vault: CoveredCallVault[]) {
     let res: any[] = [];
 
     cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
-        console.log("listening for every " + renewSec.toString() + " s...")
         const events = await provider.getEvents(
             { MoveEvent: type },
             null,
@@ -110,29 +132,16 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
         let newRes: any[] = events.data
 
         if (newRes.length != res.length) {
-            let newAuction = newRes.filter((e) => {
-                return res.indexOf(e) === -1
+            let format: string = ""
+            let bidIds: string[] = await generateBidId(vault);
+
+            bidIds.map(async (bidId) => {
+                format += bidId + " auction is live now! \n"
             })
 
-            let msg: string = ""
-            newAuction.map(async (e) => {
-
-                //asset
-                let tmp = vault.find(vault =>
-                    (vault.vaultIdx == (e.event.moveEvent.fields.index).toString())
-                )
-                let asset = tmp?.asset
-
-                let time = moment.unix(e.timestamp / 1000).format("DDMMMYY")
-                let price = Number(e.event.moveEvent.fields.strike) / (10 ** PRICE_DECIMAL)
-                msg += asset + "-" + time + "-" + price + "-C" + " auction is live now!\n"
-            })
-
-            // SUI-20JAN23-120-C auction is live now!
-            let telegramText: string = msg
+            let telegramText: string = format
             console.log(telegramText)
-            // sendEventToTelegramChannel(telegramText)
-
+            sendEventToTelegramChannel(telegramText)
             res = newRes
         }
     });
@@ -142,7 +151,7 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
     let res: any[] = [];
 
     cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
-        console.log("listening for every " + renewSec.toString() + " s...")
+
         const events = await provider.getEvents(
             { MoveEvent: type },
             null,
@@ -153,18 +162,17 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
         if (newRes.length != res.length) {
             let format: string = ""
             let bidIds: string[] = await generateBidId(vault);
-            //TODO
-            let bidId = bidIds[0]
-            newRes.map(async (e) => {
+
+            bidIds.map(async (bidId) => {
                 format += bidId + " auction is closed! \n"
             })
 
             let telegramText: string = format
             console.log(telegramText)
-            // sendEventToTelegramChannel(telegramText)
+            sendEventToTelegramChannel(telegramText)
             res = newRes
         }
-    });
+    })
 }
 
 export async function sendEventToTelegramChannel(text: any) {
