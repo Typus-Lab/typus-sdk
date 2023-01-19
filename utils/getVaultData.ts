@@ -135,7 +135,7 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
                 priceConfig: priceConfigRes,
                 index: (auction.index),
             }
-            vaultBidPrice = await getVaultBidPrice(auctionRes, timeOracle)
+            vaultBidPrice = await getVaultBidPrice(auctionRes)
             console.log("get auction in " + vaultId)
         } else {
             console.log("No auction " + vaultId)
@@ -179,26 +179,23 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
     return vaults
 }
 
-export async function getVaultBidPrice(auction: Auction, timeOracle: string): Promise<number> {
-    let tmp = await provider.getObject(timeOracle);
+export async function getVaultBidPrice(auction: Auction): Promise<number> {
     //@ts-ignore
-    let currentTsMs = Number(tmp.details.data.fields.ts_ms)
-
+    let current = Date.now()
     let initialPrice = Number(auction.priceConfig.initialPrice);
     let finalPrice = Number(auction.priceConfig.finalPrice);
     let decaySpeed = Number(auction.priceConfig.decaySpeed);
-    let startTsMs = Number(auction.startTsMs);
-    let endTsMs = Number(auction.endTsMs);
+    let start = Number(auction.startTsMs);
+    let end = Number(auction.endTsMs);
 
-    let priceDiff = initialPrice - finalPrice;
+    /// decayed_price = 
+    ///     initial_price -
+    ///         (initial_price - final_price) *
+    ///             (1 - remaining_time / auction_duration) ^ decay_speed
+
     // 1 - remaining_time / auction_duration => 1 - (end - current) / (end - start) => (current - start) / (end - start)
-    let numerator = currentTsMs - startTsMs;
-    let denominator = endTsMs - startTsMs;
 
-    while (decaySpeed > 0) {
-        priceDiff = priceDiff * numerator / denominator;
-        decaySpeed = decaySpeed - 1;
-    };
-
-    return initialPrice - priceDiff
+    return initialPrice -
+        (initialPrice - finalPrice) *
+        (((current - start) / (end - start)) ^ decaySpeed)
 }
