@@ -15,13 +15,13 @@ const signer = new RawSigner(keypair, provider);
     let claimAmount = 13;
     let isRolling = true;
     let token = "0x8f306b0fcbcbdee0b3a5e694c06039dfe8ca7f14"// minted token 
-    let vaultIndex = "59";
+    let vaultIndex = ["59"];
 
     let typeArgument = await getTypeArgumentFromToken(token)
 
     console.log("test for claim, try to claim " + token + " for " + claimAmount + " ...")
 
-    let claimTx: any = await getClaimTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex);
+    let claimTx: any = await getClaimTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex[0]);
     await signer.executeMoveCall(claimTx);
     console.log("claim successfully")
 
