@@ -149,8 +149,19 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
         //@ts-ignore
         let totalBidSize = objInfo.details.data.fields.value.fields.total_bid_size
 
+        let deliveryInfo: DeliveryInfo
         //@ts-ignore
-        let deliveryInfo: DeliveryInfo = objInfo.details.data.fields.value.fields.delivery_info ? objInfo.details.data.fields.value.fields.delivery_info.fields : null;
+        if (objInfo.details.data.fields.value.fields.delivery_info) {
+            deliveryInfo = {
+                //@ts-ignore
+                deliveryPrice: objInfo.details.data.fields.value.fields.delivery_info.fields.delivery_price,
+                //@ts-ignore
+                deliverySize: objInfo.details.data.fields.value.fields.delivery_info.fields.delivery_size,
+            }
+        } else {
+            deliveryInfo = {} as DeliveryInfo
+        }
+
 
         //@ts-ignore
         let owner = objInfo.details.data.fields.value.fields.owner as string
