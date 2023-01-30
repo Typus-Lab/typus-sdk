@@ -1,23 +1,23 @@
 //publish from sui-dev-token
-export const TOKEN_PACKAGE = "0x3e416d10557c532838c2d0d6996c8a3bc81371a7"
-export const TOKEN_REGISTRY_BTC = "0xee26a4debb44a6c09e0f446c5c98da2217a0ca5d"
-export const TOKEN_REGISTRY_ETH = "0x00c7526bc0b4b7be9fb6d23e60e325700194e018"
-export const TOKEN_REGISTRY_SUI = "0x342f858a4f813a8f95ddc216ddf7bcb775a92782"
-export const TOKEN_REGISTRY_APT = "0x09de00969635499a7f824688bff570efbf886a68"
-export const TOKEN_REGISTRY_DOGE = "0xa33ba6e2c736a2548b8c1cef13fed947c6aae163"
-export const TOKEN_REGISTRY_USDC = "0xf22cd5b80e1263e436fb4d71879ebb1b2799aa36"
+export const TOKEN_PACKAGE = "0xa1d0cdb1b41c786d53a03d30340ab05718010e04"
+export const TOKEN_REGISTRY_BTC = "0x7325b75b85ee45e78204a9dcf7800a397259eb3d"
+export const TOKEN_REGISTRY_ETH = "0x475d3b10d29c03d85dfa707b5479955729216d4d"
+export const TOKEN_REGISTRY_SUI = "0x3b87b3f0403f527d28fd1301074a12446f43817a"
+export const TOKEN_REGISTRY_APT = "0xf1a947ebc2643942bf3f2ecbd6b583c0f8dc3baf"
+export const TOKEN_REGISTRY_DOGE = "0x4dbe73f8a744008bc20d12aaa0d4fc8f01692358"
+export const TOKEN_REGISTRY_USDC = "0x82e0a1473c6c4d4f713a0ac5957e0c7a2278ed1e"
 //publish from typus-oracle
-export const ORACLE_PACKAGE = "0xcba43b3a1672f3c782e2167fc64710799009d5bb"
+export const ORACLE_PACKAGE = "0x0a55a6dfa713f83cb3be5e3ca8a8435ccdbb500d"
 
 export const TIME_ORACLE = "0x55031e1edc517a4b16543c1c081ba33a59ffd084"
 
 //publish from typus-dov/cover_call
-export const COVERED_CALL_PACKAGE = "0xb92f3c4c26151b86977b8811765fe74cb133a35f"
-export const COVERED_CALL_REGISTRY = "0x0a4bd1721cb02a957d1602f5b2e53ad421408acb"
-export const COVERED_CALL_MANAGER = "0x6fd90bf4bb9490e5fce51b8eb11fbf37c43f4cbc"
-export const USER_SHARE_TABLE = "0xc90f9f13f9823719011a9b2de73bb4d6e05eaf28"
-export const USER_REFUND_TABLE = "0x2a63900582a5177f7ff440613ba091618f373bfa"
-export const MAKER_SHARE_TABLE = "0xfcfd04446aa3dd004150081df8982c1f09b20fb1"
+export const COVERED_CALL_PACKAGE = "0x503ac615e4844aa31b5e3ca2feadea0d74e1b8af"
+export const COVERED_CALL_REGISTRY = "0xdf5e52550dc82396ea48a97dbbec65322779db77"
+export const COVERED_CALL_MANAGER = "0x9be7316b23f19c89073852ad7b8881f8cc89f727"
+export const USER_SHARE_TABLE = "0xd41260528fe89a571cbcabeefd9c5bd560f01b07"
+export const USER_REFUND_TABLE = "0xca101b960ca0f71f5d7c090a912e70a22a7b3587"
+export const MAKER_SHARE_TABLE = "0xe66a7a0051082bdc728077ac6309a7baee208f57"
 
 //publish from typus-dov/typus-dov
 export const DOV_PACKAGE = "0x49e71a735dc6bdf7327e6c663d04a3e7f68bafd0"
