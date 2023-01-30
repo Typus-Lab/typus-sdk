@@ -1,14 +1,16 @@
 
-import { TEST_MNEMONIC, DOV_PACKAGE, TOKEN_PACKAGE, COVERED_CALL_PACKAGE, TOKEN_DECIMAL, COVERED_CALL_REGISTRY, TESTNET_RPC_ENDPOINT } from "../constants"
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network, SuiEventEnvelope, SuiEvent } from '@mysten/sui.js';
+import { DOV_PACKAGE, TOKEN_PACKAGE, COVERED_CALL_PACKAGE, TOKEN_DECIMAL, COVERED_CALL_REGISTRY, TESTNET_RPC_ENDPOINT } from "../constants"
+import { JsonRpcProvider } from '@mysten/sui.js';
 import { getVaultDataFromRegistry } from "../utils/getVaultData"
 import cron from "node-cron";
-import { string } from "superstruct";
 import { XMLHttpRequest } from "XMLHttpRequest"
 import moment from "moment"
 import { CoveredCallVault } from "../utils/fetchData";
 const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
-let apiToken = "5864284783:AAHwXWgt2YgLENdJ9mVBUDBVLHXrMLNgkic";
+const apiToken = process.env.api_token;
+const chatId = process.env.chat_id;
+// let apiToken = "5864284783:AAHwXWgt2YgLENdJ9mVBUDBVLHXrMLNgkic";
+// let chatId = "-1001784476809";
 
 interface BidInterface {
     bidFormat: string;
@@ -18,7 +20,7 @@ interface BidInterface {
 /*
 「https://api.telegram.org/botTOKEN/getUpdates」，change TOKEN to token from botFather
 */
-let chatId = "-1001784476809";
+
 
 (async () => {
 
@@ -48,11 +50,13 @@ let chatId = "-1001784476809";
 
     await getNewAuctionEventsCranker(newAuctionType, renewSec, vault)//evolution
 
-
     await getEndAuctionEventsCranker(endAuctionType, renewSec, vault)
-
-
 })()
+
+async function twoObjArrAreSame(x: any[], y: any[]): Promise<boolean> {
+    if (JSON.stringify(x) === JSON.stringify(y)) { return true }
+    else { return false }
+}
 
 async function generateBidId(vault: CoveredCallVault[]): Promise<any[]> {
     //use the vault to generate "SUI-20JAN23-120-C"
@@ -109,7 +113,7 @@ export async function getBidEventsCranker(type: string, renewSec: number, vault:
             //     'ETH-17Jan23-1750-C',
             //     'SUI-18Jan23-9-C'
             //   ]
-            console.log(bidIds)
+            // console.log(bidIds)
             newBid.map(async (e) => {
                 // console.log(e.timestamp)
                 //TODO: find correct bidID
@@ -151,7 +155,8 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
 
         let newRes: any[] = events.data
 
-        if (newRes.length != res.length) {
+        // if (newRes.length != res.length) {
+        if (!await twoObjArrAreSame(newRes, res)) {
             let format: string = ""
             let bidIds: BidInterface[] = await generateBidId(vault);
 
@@ -179,7 +184,8 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
         )
 
         let newRes: any[] = events.data
-        if (newRes.length != res.length) {
+        // if (newRes.length != res.length) {
+        if (!await twoObjArrAreSame(newRes, res)) {
             let format: string = ""
             let bidIds: BidInterface[] = await generateBidId(vault);
 
