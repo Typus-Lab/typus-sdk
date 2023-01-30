@@ -9,7 +9,7 @@ export const TOKEN_REGISTRY_USDC = "0x82e0a1473c6c4d4f713a0ac5957e0c7a2278ed1e"
 //publish from typus-oracle
 export const ORACLE_PACKAGE = "0x0a55a6dfa713f83cb3be5e3ca8a8435ccdbb500d"
 
-export const TIME_ORACLE = "0x55031e1edc517a4b16543c1c081ba33a59ffd084"
+export const TIME_ORACLE = "0x31ce3e644e13dcb241d68bdba2783b1d6ab72a6c"
 
 //publish from typus-dov/cover_call
 export const COVERED_CALL_PACKAGE = "0x503ac615e4844aa31b5e3ca2feadea0d74e1b8af"
