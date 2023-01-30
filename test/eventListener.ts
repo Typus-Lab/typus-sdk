@@ -1,5 +1,5 @@
 
-import { TEST_MNEMONIC, DOV_PACKAGE, TOKEN_PACKAGE, COVERED_CALL_PACKAGE, TOKEN_DECIMAL, COVERED_CALL_REGISTRY, PRICE_DECIMAL } from "../constants"
+import { TEST_MNEMONIC, DOV_PACKAGE, TOKEN_PACKAGE, COVERED_CALL_PACKAGE, TOKEN_DECIMAL, COVERED_CALL_REGISTRY, TESTNET_RPC_ENDPOINT } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network, SuiEventEnvelope, SuiEvent } from '@mysten/sui.js';
 import { getVaultDataFromRegistry } from "../utils/getVaultData"
 import cron from "node-cron";
@@ -7,7 +7,7 @@ import { string } from "superstruct";
 import { XMLHttpRequest } from "XMLHttpRequest"
 import moment from "moment"
 import { CoveredCallVault } from "../utils/fetchData";
-const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 let apiToken = "5864284783:AAHwXWgt2YgLENdJ9mVBUDBVLHXrMLNgkic";
 
 interface BidInterface {

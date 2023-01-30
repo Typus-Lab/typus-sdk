@@ -1,9 +1,9 @@
 
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
-import { TOKEN_NAME, PRICE_DECIMAL, TOKEN_DECIMAL, TIME_ORACLE } from '../constants';
+import { TOKEN_NAME, PRICE_DECIMAL, TOKEN_DECIMAL, TESTNET_RPC_ENDPOINT } from '../constants';
 import { CoveredCallVault, PayoffConfig, Config, VaultConfig, Vault, SubVault, Auction, PriceConfig, DeliveryInfo } from "../utils/fetchData"
-import { createTimeOracle } from "../utils/coveredCall/createTimeOracle"
-const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+
+const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 
 export async function getVaultDataFromRegistry(registry: string): Promise<CoveredCallVault[]> {
     console.log("registry: " + registry)
@@ -13,9 +13,6 @@ export async function getVaultDataFromRegistry(registry: string): Promise<Covere
     let objsInfo = await provider.getObjectBatch(coveredCallVaultsId)
 
     let vaults: CoveredCallVault[] = [];
-
-    // let [timeOracle, _] = await createTimeOracle();
-    let timeOracle = TIME_ORACLE;
 
     for (let objInfo of objsInfo) {
         if (objInfo.status != "Exists") {

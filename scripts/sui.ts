@@ -2,10 +2,9 @@ import { JsonRpcProvider, Ed25519Keypair, RawSigner, SuiEventEnvelope, Network, 
 import { fromB64 } from '@mysten/bcs';
 import fs from "fs";
 import fetch from 'cross-fetch';
-
+import { TESTNET_RPC_ENDPOINT } from "../constants"
 const { execSync } = require('child_process');
-const rpc = new JsonRpcProvider('https://fullnode.devnet.sui.io:443');
-const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 const owner = "0xd28103a499003bed0b1b9ee52988ecdd2db82224";
 const obj1 = "0x7e9e58daeb94bbd0450bb9ee9f00e219a1f2b734";//obj owned by owner
 const obj2 = "0x74aa838eb6627c8e74b0645484abb463e6fd6669";//obj owned by owner

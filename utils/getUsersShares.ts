@@ -1,6 +1,7 @@
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { getVaultDataFromRegistry } from "../utils/getVaultData"
-const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+import { TESTNET_RPC_ENDPOINT } from "../constants"
+const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 export interface UserShare {
     coveredCallVaultIndex: number;
     isRolling: boolean;

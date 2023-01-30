@@ -4,7 +4,7 @@
 // import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 // import { expect } from 'chai';
 // import * as assert from "assert";
-// const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+// const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 // const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 // const signer = new RawSigner(keypair, provider);
 

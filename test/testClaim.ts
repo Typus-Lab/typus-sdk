@@ -1,9 +1,9 @@
 import { getClaimTx } from "../utils/coveredCall/getClaimTx"
 import { getClaimAllTx } from "../utils/coveredCall/getClaimAllTx";
-import { TEST_MNEMONIC, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY } from "../constants"
+import { TEST_MNEMONIC, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TESTNET_RPC_ENDPOINT } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
-const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 

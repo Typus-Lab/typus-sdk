@@ -1,8 +1,8 @@
 
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
-import { TOKEN_DECIMAL } from '../../constants';
+import { TOKEN_DECIMAL, TESTNET_RPC_ENDPOINT } from '../../constants';
 import { Bid } from "../fetchData"
-const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 
 export async function getBid(vault: string): Promise<Bid[]> {
 

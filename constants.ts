@@ -38,3 +38,5 @@ export const TOKEN_NAME_TO_MODULE = {
     "USDC": "usdc",
     // "USDT": "token_usdt",
 }
+
+export const TESTNET_RPC_ENDPOINT = "https://fullnode.testnet.sui.io:443"

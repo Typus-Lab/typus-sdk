@@ -1,11 +1,11 @@
 import { getNewAuctionTx } from "../utils/coveredCall/getNewAuctionTx"
 import { getNewAuctionWithNextCoveredCallVaultTx } from "../utils/coveredCall/getNewAuctionWithNextCoveredCallVaultTx"
-import { COVERED_CALL_MANAGER, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TEST_MNEMONIC, TEST_MINT_TOKEN } from "../constants"
+import { COVERED_CALL_MANAGER, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TEST_MNEMONIC, TEST_MINT_TOKEN, TESTNET_RPC_ENDPOINT } from "../constants"
 import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 import { createPriceOracle } from "../utils/coveredCall/createPriceOracle"
 import { createTimeOracle } from "../utils/coveredCall/createTimeOracle"
-const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 (async () => {

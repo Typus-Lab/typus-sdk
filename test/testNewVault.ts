@@ -2,10 +2,10 @@ import { getNewOracleTx } from "../utils/getNewOracleTx"
 import { getUpdateOracleTx } from "../utils/getUpdateOracleTx"
 import { getNewCoveredCallVaultTx } from "../utils/coveredCall/getNewCoveredCallVaultTx";
 import { createTimeOracle } from "../utils/coveredCall/createTimeOracle"
-import { COVERED_CALL_MANAGER, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TEST_MNEMONIC, TEST_MINT_TOKEN } from "../constants"
+import { COVERED_CALL_MANAGER, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TEST_MNEMONIC, TEST_MINT_TOKEN, TESTNET_RPC_ENDPOINT } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
-const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 const token = TEST_MINT_TOKEN// minted token 

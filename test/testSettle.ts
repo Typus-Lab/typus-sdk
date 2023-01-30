@@ -4,7 +4,7 @@ import { getUpdateOracleTx } from "../utils/getUpdateOracleTx"
 import { getNewCoveredCallVaultTx } from "../utils/coveredCall/getNewCoveredCallVaultTx";
 import { getDepositTx } from "../utils/coveredCall/getDepositTx"
 import { createTimeOracle } from "../utils/coveredCall/createTimeOracle"
-import { COVERED_CALL_MANAGER, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TEST_MNEMONIC, ORACLE_PACKAGE } from "../constants"
+import { COVERED_CALL_MANAGER, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TEST_MNEMONIC, ORACLE_PACKAGE, TESTNET_RPC_ENDPOINT } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
 import { getUpdateTimeOracleTx } from "../utils/getUpdateTimeOracleTx";
@@ -17,7 +17,7 @@ import { getSettleTx } from "../utils/coveredCall/getSettleTx"
 import { createPriceOracle } from "../utils/coveredCall/createPriceOracle"
 import { type } from "os";
 import { share } from "rxjs";
-const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 const token = "0x8f306b0fcbcbdee0b3a5e694c06039dfe8ca7f14"// minted token 

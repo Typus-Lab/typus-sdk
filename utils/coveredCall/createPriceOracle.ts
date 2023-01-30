@@ -1,8 +1,8 @@
 import { getNewOracleTx } from "../../utils/getNewOracleTx"
-import { TEST_MNEMONIC, ORACLE_PACKAGE } from "../../constants"
+import { TEST_MNEMONIC, ORACLE_PACKAGE, TESTNET_RPC_ENDPOINT } from "../../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 
-const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 
