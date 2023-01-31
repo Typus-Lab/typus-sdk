@@ -7,8 +7,8 @@ var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 import moment from 'moment';
 import { CoveredCallVault } from '../utils/fetchData';
 const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT); //for read only operations
-const apiToken = process.env.api_token;
-const chatId = process.env.chat_id;
+const apiToken = process.env.API_TOKEN;
+const chatId = process.env.CHAT_ID;
 // let apiToken = "5864284783:AAHwXWgt2YgLENdJ9mVBUDBVLHXrMLNgkic";
 // let chatId = "-1001784476809";
 
