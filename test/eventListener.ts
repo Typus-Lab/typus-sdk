@@ -1,12 +1,12 @@
 
 import { DOV_PACKAGE, TOKEN_PACKAGE, COVERED_CALL_PACKAGE, TOKEN_DECIMAL, COVERED_CALL_REGISTRY, TESTNET_RPC_ENDPOINT } from "../constants"
 import { JsonRpcProvider } from '@mysten/sui.js';
-import { getVaultDataFromRegistry } from "../utils/getVaultData"
-import cron from "node-cron";
-import { XMLHttpRequest } from "XMLHttpRequest"
-import moment from "moment"
-import { CoveredCallVault } from "../utils/fetchData";
-const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
+import { getVaultDataFromRegistry } from '../utils/getVaultData';
+import cron from 'node-cron';
+var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+import moment from 'moment';
+import { CoveredCallVault } from '../utils/fetchData';
+const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT); //for read only operations
 const apiToken = process.env.api_token;
 const chatId = process.env.chat_id;
 // let apiToken = "5864284783:AAHwXWgt2YgLENdJ9mVBUDBVLHXrMLNgkic";
