@@ -135,7 +135,7 @@ export async function getBidEventsCranker(type: string, renewSec: number, vault:
 
             let telegramText: string = format
             console.log(telegramText)
-            // sendEventToTelegramChannel(telegramText)
+            sendEventToTelegramChannel(telegramText)
 
             res = newRes
         }
@@ -166,7 +166,7 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
 
             let telegramText: string = format
             console.log(telegramText)
-            // sendEventToTelegramChannel(telegramText)
+            sendEventToTelegramChannel(telegramText)
             res = newRes
         }
     });
@@ -195,7 +195,7 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
 
             let telegramText: string = format
             console.log(telegramText)
-            // sendEventToTelegramChannel(telegramText)
+            sendEventToTelegramChannel(telegramText)
             res = newRes
         }
     })
