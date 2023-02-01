@@ -10,7 +10,7 @@ export async function getAuthorizedLastEvolutionTx(
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
-        function: 'last_evolution',
+        function: 'authorized_last_evolution',
         typeArguments: [typeArgument],
         arguments: [
             registry,
