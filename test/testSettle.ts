@@ -36,7 +36,7 @@ const expirationTsMs2 = 2000000;
 // let timeOracleManager = '0xcad2723ff9c95ce423d3614375e2fa73ce9a7c04';
 
 (async () => {
-    let typeArgument: string = await getTypeArgumentFromToken(token)
+    let typeArgument: string = await getTypeArgumentFromToken(token, provider)
 
     //create price oracle and time oracle
     let [priceOracle, priceOracleManager] = await createPriceOracle(typeArgument)

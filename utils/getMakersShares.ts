@@ -1,6 +1,6 @@
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { TESTNET_RPC_ENDPOINT } from "../constants"
-const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
+// const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 export interface MakerShare {
     coveredCallVaultIndex: string;
     share: string;
@@ -13,7 +13,7 @@ interface SubVaultData {
     makerTotalBalance: number;
 }
 
-async function getSubVaultsData(registry: string): Promise<Map<number, SubVaultData>> {
+async function getSubVaultsData(registry: string, provider: JsonRpcProvider): Promise<Map<number, SubVaultData>> {
 
     let subVaultsData = new Map();
 
@@ -41,9 +41,9 @@ async function getSubVaultsData(registry: string): Promise<Map<number, SubVaultD
     return subVaultsData
 }
 
-export async function getMakersShares(makerShareTable: string, registry: string): Promise<MakerShare[]> {
+export async function getMakersShares(makerShareTable: string, registry: string, provider: JsonRpcProvider): Promise<MakerShare[]> {
 
-    let subVaultsData: Map<number, SubVaultData> = await getSubVaultsData(registry)//vault idx to subvault info
+    let subVaultsData: Map<number, SubVaultData> = await getSubVaultsData(registry, provider)//vault idx to subvault info
 
     let makerShareIds: string[] = (await provider.getObjectsOwnedByObject(makerShareTable)).map(x => x.objectId);
 

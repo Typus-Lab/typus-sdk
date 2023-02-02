@@ -17,7 +17,7 @@ const signer = new RawSigner(keypair, provider);
     let token = "0x8f306b0fcbcbdee0b3a5e694c06039dfe8ca7f14"// minted token 
     let vaultIndex = ["59"];
 
-    let typeArgument = await getTypeArgumentFromToken(token)
+    let typeArgument = await getTypeArgumentFromToken(token, provider)
 
     console.log("test for claim, try to claim " + token + " for " + claimAmount + " ...")
 

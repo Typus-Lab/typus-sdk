@@ -42,7 +42,7 @@ interface BidInterface {
 
     let renewSec = 10
 
-    let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY);
+    let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
 
     bidTypes.map(async (bidType) => {
         await getBidEventsCranker(bidType, renewSec, vault)//new_bid

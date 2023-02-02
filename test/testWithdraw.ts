@@ -15,7 +15,7 @@ const signer = new RawSigner(keypair, provider);
     let vaultIndex = 0;
     //======================================================================================
 
-    let typeArgument = await getTypeArgumentFromToken(token)
+    let typeArgument = await getTypeArgumentFromToken(token, provider)
 
     console.log("test for withdraw, try to withdraw " + token + " for " + withdrawAmount + " ...")
 

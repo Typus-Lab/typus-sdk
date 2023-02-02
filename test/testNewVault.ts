@@ -25,7 +25,7 @@ let prevBalance = 0;
 let leverage = "100";
 
 (async () => {
-    let typeArgument: string = await getTypeArgumentFromToken(token)
+    let typeArgument: string = await getTypeArgumentFromToken(token, provider)
     // let priceOracle: string = await createAndUpdatePriceOracle(typeArgument)
     let [timeOracle, _] = await createTimeOracle()
 

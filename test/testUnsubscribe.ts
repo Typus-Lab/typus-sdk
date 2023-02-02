@@ -24,7 +24,7 @@ const signer = new RawSigner(keypair, provider);
     let vaultIndex = "3";
     let share = "0"
 
-    let typeArgument = await getTypeArgumentFromToken(token)
+    let typeArgument = await getTypeArgumentFromToken(token, provider)
 
     let depositTx: any = await getDepositTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, token, depositAmount);
     await signer.executeMoveCall(depositTx);

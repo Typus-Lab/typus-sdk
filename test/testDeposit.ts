@@ -17,7 +17,7 @@ const signer = new RawSigner(keypair, provider);
     let token = TEST_MINT_TOKEN
     let vaultIndex = "0";
 
-    let typeArgument = await getTypeArgumentFromToken(token)
+    let typeArgument = await getTypeArgumentFromToken(token, provider)
 
     console.log("test for deposit, try to deposit " + token + " for " + depositAmount + " ...")
 

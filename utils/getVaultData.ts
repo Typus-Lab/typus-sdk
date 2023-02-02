@@ -3,9 +3,9 @@ import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { TOKEN_NAME, PRICE_DECIMAL, TOKEN_DECIMAL, TESTNET_RPC_ENDPOINT } from '../constants';
 import { CoveredCallVault, PayoffConfig, Config, VaultConfig, Vault, SubVault, Auction, PriceConfig, DeliveryInfo } from "../utils/fetchData"
 
-const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
+// const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 
-export async function getVaultDataFromRegistry(registry: string): Promise<CoveredCallVault[]> {
+export async function getVaultDataFromRegistry(registry: string, provider: JsonRpcProvider): Promise<CoveredCallVault[]> {
     console.log("registry: " + registry)
 
     let coveredCallVaults: any[] = await provider.getObjectsOwnedByObject(registry)
