@@ -1,5 +1,5 @@
 //publish from sui-dev-token
-export const TOKEN_PACKAGE = "0xa1d0cdb1b41c786d53a03d30340ab05718010e04"
+export const TOKEN_PACKAGE = "0x232b50236cb72e062e5a028614ba5e0df666e0d5"
 export const TOKEN_REGISTRY_BTC = "0x7325b75b85ee45e78204a9dcf7800a397259eb3d"
 export const TOKEN_REGISTRY_ETH = "0x475d3b10d29c03d85dfa707b5479955729216d4d"
 export const TOKEN_REGISTRY_SUI = "0x3b87b3f0403f527d28fd1301074a12446f43817a"
@@ -7,17 +7,17 @@ export const TOKEN_REGISTRY_APT = "0xf1a947ebc2643942bf3f2ecbd6b583c0f8dc3baf"
 export const TOKEN_REGISTRY_DOGE = "0x4dbe73f8a744008bc20d12aaa0d4fc8f01692358"
 export const TOKEN_REGISTRY_USDC = "0x82e0a1473c6c4d4f713a0ac5957e0c7a2278ed1e"
 //publish from typus-oracle
-export const ORACLE_PACKAGE = "0x0a55a6dfa713f83cb3be5e3ca8a8435ccdbb500d"
+export const ORACLE_PACKAGE = "0x63b5ef3c1858e196a1340988d96ad35fe1fcb06f"
 
-export const TIME_ORACLE = '0x0119099132458022017849d2351e1c0281047980';
+export const TIME_ORACLE = '0x5f717110e094686d6673c1e1ecf0e47f22e88842';
 
 //publish from typus-dov/cover_call
-export const COVERED_CALL_PACKAGE = "0x503ac615e4844aa31b5e3ca2feadea0d74e1b8af"
-export const COVERED_CALL_REGISTRY = "0xdf5e52550dc82396ea48a97dbbec65322779db77"
-export const COVERED_CALL_MANAGER = "0x9be7316b23f19c89073852ad7b8881f8cc89f727"
-export const USER_SHARE_TABLE = "0xd41260528fe89a571cbcabeefd9c5bd560f01b07"
-export const USER_REFUND_TABLE = "0xca101b960ca0f71f5d7c090a912e70a22a7b3587"
-export const MAKER_SHARE_TABLE = "0xe66a7a0051082bdc728077ac6309a7baee208f57"
+export const COVERED_CALL_PACKAGE = "0xb5ddd49ba8329599d68511979b6a0512f5164db9"
+export const COVERED_CALL_REGISTRY = "0x4fd15766082b199930d25e6cd1288029da74a7c6"
+export const COVERED_CALL_MANAGER = "0xe00532cbf1e6c724e885b01c059b8c0da0a5f5bf"
+export const USER_SHARE_TABLE = "0xb2cb82f755dad2346777051f8a637b3eaa69445f"
+export const USER_REFUND_TABLE = "0xa29a7f3c278a1c4263b6ae8bcf021448ac7abab7"
+export const MAKER_SHARE_TABLE = "0x0895223fff9aeaa627d8e4b9457c546270b01fb0"
 
 //publish from typus-dov/typus-dov
 export const DOV_PACKAGE = "0x49e71a735dc6bdf7327e6c663d04a3e7f68bafd0"
