@@ -1,11 +1,12 @@
 
-import { DOV_PACKAGE, TOKEN_PACKAGE, COVERED_CALL_PACKAGE, TOKEN_DECIMAL, COVERED_CALL_REGISTRY, TESTNET_RPC_ENDPOINT } from "../constants"
+import { DOV_PACKAGE, TOKEN_PACKAGE, COVERED_CALL_PACKAGE, TOKEN_DECIMAL, COVERED_CALL_REGISTRY, TESTNET_RPC_ENDPOINT, TOKEN_NAME } from "../constants"
 import { JsonRpcProvider } from '@mysten/sui.js';
 import { getVaultDataFromRegistry } from '../utils/getVaultData';
 import cron from 'node-cron';
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 import moment from 'moment';
 import { CoveredCallVault } from '../utils/fetchData';
+import Decimal from "decimal.js";
 const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT); //for read only operations
 const apiToken = process.env.API_TOKEN;
 const chatId = process.env.CHAT_ID;
@@ -15,6 +16,8 @@ const chatId = process.env.CHAT_ID;
 interface BidInterface {
     bidFormat: string;
     bidTime: number;
+    period: string;// Daily = 0, Weekly = 1, Monthly = 2
+    vaultIdx: string;
 }
 
 /*
@@ -33,12 +36,7 @@ interface BidInterface {
 
     let newAuctionType = COVERED_CALL_PACKAGE + "::covered_call::NewAuction"
 
-    // let endAuctionTypes: string[] = [
-    //     DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::eth::ETH>",
-    //     DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::btc::BTC>",
-    //     DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::sui::SUI>",
-    // ]
-    let endAuctionType = DOV_PACKAGE + "::dutch::Delivery<" + TOKEN_PACKAGE + "::eth::ETH>";
+    let endAuctionType = COVERED_CALL_PACKAGE + "::covered_call::Delivery<" + TOKEN_PACKAGE + "::eth::ETH>";
 
     let renewSec = 10
 
@@ -58,7 +56,7 @@ async function twoObjArrAreSame(x: any[], y: any[]): Promise<boolean> {
     else { return false }
 }
 
-async function generateBidId(vault: CoveredCallVault[]): Promise<any[]> {
+async function generateBidId(vault: CoveredCallVault[]): Promise<BidInterface[]> {
     //use the vault to generate "SUI-20JAN23-120-C"
     let liveVault = vault?.filter((v) => {
         const start = moment.unix(Number(v.config.activationTsMs) / 1000);
@@ -73,10 +71,14 @@ async function generateBidId(vault: CoveredCallVault[]): Promise<any[]> {
             .unix(Number(time) / 1000)
             .format("DDMMMYY");
         const bidId = `${v.asset}-${expiration}-${v.config.payoffConfig.strike}-C`;
+        let period = (v.config.period)
+        let vaultIdx = v.vaultIdx;
 
         let obj: BidInterface = {
             bidFormat: bidId,
-            bidTime: Number(time)
+            bidTime: Number(time),
+            period: period,
+            vaultIdx: vaultIdx,
         }
         return obj
     })
@@ -96,38 +98,26 @@ export async function getBidEventsCranker(type: string, renewSec: number, vault:
         )
 
         let newRes: any[] = events.data
-
-        if (newRes.length != res.length) {
-            console.log("the total bid event number now: " + events.data.length)
-            console.log("there are " + (newRes.length - res.length).toString() + " new bids")
+        // newRes.map(e => { console.log(e.event.moveEvent.fields) })
+        let newBidHappened: boolean = newRes.length != res.length
+        if (newBidHappened) {
 
             let newBid = newRes.filter(({ timestamp: id1 }) => !res.some(({ timestamp: id2 }) => id2 === id1));
 
-            console.log("new bid amount: " + newBid.length)
-
             let format: string = ""
             let bidIds: BidInterface[] = await generateBidId(vault);
-            // [
-            //     'ETH-18Jan23-1750-C',
-            //     'BTC-18Jan23-21800-C',
-            //     'ETH-17Jan23-1750-C',
-            //     'SUI-18Jan23-9-C'
-            //   ]
-            // console.log(bidIds)
-            newBid.map(async (e) => {
-                // console.log(e.timestamp)
-                //TODO: find correct bidID
-                let bidId = bidIds.find(bidId => {
-                    let type: string = e.event.moveEvent.type;
-                    let asset: string = bidId.bidFormat.split("-")[0]
-                    return e.event.moveEvent.type.includes(bidId.bidFormat.split("-")[0])
-                })
 
+            // console.log(bidIds)
+
+            newBid.map(async (e) => {
+                let newBidVaultIdx: string = e.event.moveEvent.fields.index
+
+                let bidId = bidIds.find(bidId => bidId.vaultIdx == newBidVaultIdx)
                 if (bidId) {
 
                     let size = (Number(e.event.moveEvent.fields.size) / (10 ** TOKEN_DECIMAL)).toString()
-
-                    format += bidId.bidFormat + " is bid with " + size + " " + bidId.bidFormat.split("-")[0] + "! \n"
+                    let period = (bidId.period == "0") ? "Daily " : (bidId.period == "1") ? "Weekly " : (bidId.period == "2") ? "Monthly " : "- "
+                    format += period + bidId.bidFormat + " is bid with " + size + " " + bidId.bidFormat.split("-")[0] + "! \n"
                 } else {
                     console.log("can't get bidId in getBidEventsCranker")
                 }
@@ -155,14 +145,22 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
 
         let newRes: any[] = events.data
 
-        // if (newRes.length != res.length) {
         if (!await twoObjArrAreSame(newRes, res)) {
-            let format: string = ""
+            let format: string = "Typus Auction is live! Bid now! \n"
             let bidIds: BidInterface[] = await generateBidId(vault);
 
-            bidIds.map(async (bidId) => {
-                format += bidId.bidFormat + " auction is live now! \n"
-            })
+            for (let asset of TOKEN_NAME) {
+                let targetBids = bidIds.filter((bidId) =>
+                    bidId.bidFormat.toString().includes(asset)
+                )
+                if (targetBids.length) {
+                    format += asset + " Options \n"
+                    targetBids.map((bidId) => {
+                        let period = (bidId.period == "0") ? "Daily " : (bidId.period == "1") ? "Weekly " : (bidId.period == "2") ? "Monthly " : "- "
+                        format += "\t" + period + "Covered Call-" + bidId.bidFormat + " \n"
+                    })
+                }
+            }
 
             let telegramText: string = format
             console.log(telegramText)
@@ -184,14 +182,29 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
         )
 
         let newRes: any[] = events.data
-        // if (newRes.length != res.length) {
+
         if (!await twoObjArrAreSame(newRes, res)) {
             let format: string = ""
             let bidIds: BidInterface[] = await generateBidId(vault);
 
-            bidIds.map(async (bidId) => {
-                format += bidId.bidFormat + " auction is closed! \n"
-            })
+            for (let asset of TOKEN_NAME) {
+                let targetBids = bidIds.filter((bidId) =>
+                    bidId.bidFormat.toString().includes(asset)
+                )
+                if (targetBids.length) {
+                    targetBids.map((bidId) => {
+                        let vaultIdx = bidId.vaultIdx
+                        let targetVault = vault.find(e => e.vaultIdx == vaultIdx)
+
+                        let totalAuctioned = (new Decimal(targetVault?.deliveryInfo.deliverySize!).div(new Decimal(10 ** TOKEN_DECIMAL))).toFixed(2)
+                        let clearingPrice = (new Decimal(targetVault?.deliveryInfo.deliveryPrice!).div(new Decimal(10 ** 5))).toFixed(4)
+
+                        let period = (bidId.period == "0") ? "Daily " : (bidId.period == "1") ? "Weekly " : (bidId.period == "2") ? "Monthly " : "- "
+                        format += period + "Covered Call-" + bidId.bidFormat + " auction is closed! Total auctioned " + totalAuctioned +
+                            " " + asset + " at a clearing price of " + clearingPrice + " " + asset + " \n"
+                    })
+                }
+            }
 
             let telegramText: string = format
             console.log(telegramText)
