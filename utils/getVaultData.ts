@@ -133,9 +133,9 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
                 index: (auction.index),
             }
             vaultBidPrice = await getVaultBidPrice(auctionRes)
-            console.log("get auction in " + vaultId)
+            // console.log("get auction in " + vaultId)
         } else {
-            console.log("No auction " + vaultId)
+            // console.log("No auction " + vaultId)
             auctionRes = {} as Auction
             vaultBidPrice = 0;
         }
