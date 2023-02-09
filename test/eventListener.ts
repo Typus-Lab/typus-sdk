@@ -40,15 +40,15 @@ interface BidInterface {
 
     let renewSec = 10
 
-    let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
+    // let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
 
     bidTypes.map(async (bidType) => {
-        await getBidEventsCranker(bidType, renewSec, vault)//new_bid
+        await getBidEventsCranker(bidType, renewSec, provider)//new_bid
     })
 
-    await getNewAuctionEventsCranker(newAuctionType, renewSec, vault)//evolution
+    await getNewAuctionEventsCranker(newAuctionType, renewSec, provider)//evolution
 
-    await getEndAuctionEventsCranker(endAuctionType, renewSec, vault)
+    await getEndAuctionEventsCranker(endAuctionType, renewSec, provider)
 })()
 
 async function twoObjArrAreSame(x: any[], y: any[]): Promise<boolean> {
@@ -86,7 +86,7 @@ async function generateBidId(vault: CoveredCallVault[]): Promise<BidInterface[]>
     return res
 }
 
-export async function getBidEventsCranker(type: string, renewSec: number, vault: CoveredCallVault[]) {
+export async function getBidEventsCranker(type: string, renewSec: number, provider: JsonRpcProvider) {
     let res: any[] = [];
 
     cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
@@ -98,16 +98,15 @@ export async function getBidEventsCranker(type: string, renewSec: number, vault:
         )
 
         let newRes: any[] = events.data
-        // newRes.map(e => { console.log(e.event.moveEvent.fields) })
+
         let newBidHappened: boolean = newRes.length != res.length
         if (newBidHappened) {
 
             let newBid = newRes.filter(({ timestamp: id1 }) => !res.some(({ timestamp: id2 }) => id2 === id1));
 
             let format: string = ""
+            let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
             let bidIds: BidInterface[] = await generateBidId(vault);
-
-            // console.log(bidIds)
 
             newBid.map(async (e) => {
                 let newBidVaultIdx: string = e.event.moveEvent.fields.index
@@ -125,7 +124,7 @@ export async function getBidEventsCranker(type: string, renewSec: number, vault:
 
             let telegramText: string = format
             console.log(telegramText)
-            sendEventToTelegramChannel(telegramText)
+            // sendEventToTelegramChannel(telegramText)
 
             res = newRes
         }
@@ -133,7 +132,7 @@ export async function getBidEventsCranker(type: string, renewSec: number, vault:
 
 }
 
-export async function getNewAuctionEventsCranker(type: string, renewSec: number, vault: CoveredCallVault[]) {
+export async function getNewAuctionEventsCranker(type: string, renewSec: number, provider: JsonRpcProvider) {
     let res: any[] = [];
 
     cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
@@ -147,6 +146,7 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
 
         if (!await twoObjArrAreSame(newRes, res)) {
             let format: string = "Typus Auction is live! Bid now! \n"
+            let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
             let bidIds: BidInterface[] = await generateBidId(vault);
 
             for (let asset of TOKEN_NAME) {
@@ -164,13 +164,13 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
 
             let telegramText: string = format
             console.log(telegramText)
-            sendEventToTelegramChannel(telegramText)
+            // sendEventToTelegramChannel(telegramText)
             res = newRes
         }
     });
 }
 
-export async function getEndAuctionEventsCranker(type: string, renewSec: number, vault: CoveredCallVault[]) {
+export async function getEndAuctionEventsCranker(type: string, renewSec: number, provider: JsonRpcProvider) {
     let res: any[] = [];
 
     cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
@@ -185,30 +185,38 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
 
         if (!await twoObjArrAreSame(newRes, res)) {
             let format: string = ""
+            let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
             let bidIds: BidInterface[] = await generateBidId(vault);
-
             for (let asset of TOKEN_NAME) {
+
                 let targetBids = bidIds.filter((bidId) =>
                     bidId.bidFormat.toString().includes(asset)
                 )
+
                 if (targetBids.length) {
-                    targetBids.map((bidId) => {
+
+                    targetBids.map(async (bidId) => {
                         let vaultIdx = bidId.vaultIdx
                         let targetVault = vault.find(e => e.vaultIdx == vaultIdx)
 
-                        let totalAuctioned = (new Decimal(targetVault?.deliveryInfo.deliverySize!).div(new Decimal(10 ** TOKEN_DECIMAL))).toFixed(2)
-                        let clearingPrice = (new Decimal(targetVault?.deliveryInfo.deliveryPrice!).div(new Decimal(10 ** 5))).toFixed(4)
+                        let totalAuctioned = "-"
+                        let clearingPrice = "-"
+                        if (targetVault?.deliveryInfo) {
+                            // console.log(targetVault.deliveryInfo)
+                            totalAuctioned = (new Decimal(targetVault?.deliveryInfo.deliverySize!).div(new Decimal(10 ** TOKEN_DECIMAL))).toFixed(2)
+                            clearingPrice = (new Decimal(targetVault?.deliveryInfo.deliveryPrice!).div(new Decimal(10 ** 5))).toFixed(4)
+                        }
 
                         let period = (bidId.period == "0") ? "Daily " : (bidId.period == "1") ? "Weekly " : (bidId.period == "2") ? "Monthly " : "- "
                         format += period + "Covered Call-" + bidId.bidFormat + " auction is closed! Total auctioned " + totalAuctioned +
                             " " + asset + " at a clearing price of " + clearingPrice + " " + asset + " \n"
                     })
                 }
-            }
 
+            }
             let telegramText: string = format
             console.log(telegramText)
-            sendEventToTelegramChannel(telegramText)
+            // sendEventToTelegramChannel(telegramText)
             res = newRes
         }
     })
