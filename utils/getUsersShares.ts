@@ -1,12 +1,13 @@
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { TESTNET_RPC_ENDPOINT } from "../constants"
+import BigNumber from 'bignumber.js';
 // const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 export interface UserShare {
     coveredCallVaultIndex: number;
     isRolling: boolean;
     share: number;
     user: string;
-    depositAmount: number;
+    depositAmount: string;
 }
 
 interface SubVaultData {
@@ -67,10 +68,11 @@ export async function getUsersShares(userShareTable: string, registry: string, p
             let share = Number(x.details.data.fields.value);
 
             //user deposit amount = (user share/total share) * total balance
-            let depositAmount = isRolling ?
-                (share / subVaultsData.get(index)?.isRollingTotalSupply! * subVaultsData.get(index)?.isRollingTotalBalance!) :
-                (share / subVaultsData.get(index)?.regularTotalSupply! * subVaultsData.get(index)?.regularTotalBalance!)
-            depositAmount = Number(depositAmount.toFixed(0))
+            let depositAmount: BigNumber = isRolling ?
+                (new BigNumber(share).div(new BigNumber(subVaultsData.get(index)?.isRollingTotalSupply!)).multipliedBy(subVaultsData.get(index)?.isRollingTotalBalance!)) :
+                (new BigNumber(share).div(new BigNumber(subVaultsData.get(index)?.regularTotalSupply!)).multipliedBy(subVaultsData.get(index)?.regularTotalBalance!))
+
+            let depositAmountRes = depositAmount.toNumber().toFixed(0)
 
             let res: UserShare = {
 
@@ -81,7 +83,7 @@ export async function getUsersShares(userShareTable: string, registry: string, p
                 share: share,
                 //@ts-ignore
                 user: x.details.data.fields.name.fields.user,
-                depositAmount: depositAmount,
+                depositAmount: depositAmountRes,
             }
 
             return res
