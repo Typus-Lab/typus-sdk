@@ -1,13 +1,13 @@
 
 import { DOV_PACKAGE, TOKEN_PACKAGE, COVERED_CALL_PACKAGE, TOKEN_DECIMAL, COVERED_CALL_REGISTRY, TESTNET_RPC_ENDPOINT, TOKEN_NAME } from "../constants"
-import { JsonRpcProvider } from '@mysten/sui.js';
+import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { getVaultDataFromRegistry } from '../utils/getVaultData';
 import cron from 'node-cron';
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 import moment from 'moment';
 import { CoveredCallVault } from '../utils/fetchData';
 import Decimal from "decimal.js";
-const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT); //for read only operations
+const provider = new JsonRpcProvider(Network.DEVNET); //for read only operations
 const apiToken = process.env.API_TOKEN;
 const chatId = process.env.CHAT_ID;
 // let apiToken = "5864284783:AAHwXWgt2YgLENdJ9mVBUDBVLHXrMLNgkic";
@@ -124,7 +124,7 @@ export async function getBidEventsCranker(type: string, renewSec: number, provid
 
             let telegramText: string = format
             console.log(telegramText)
-            // sendEventToTelegramChannel(telegramText)
+            sendEventToTelegramChannel(telegramText)
 
             res = newRes
         }
@@ -164,7 +164,7 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
 
             let telegramText: string = format
             console.log(telegramText)
-            // sendEventToTelegramChannel(telegramText)
+            sendEventToTelegramChannel(telegramText)
             res = newRes
         }
     });
@@ -216,7 +216,7 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
             }
             let telegramText: string = format
             console.log(telegramText)
-            // sendEventToTelegramChannel(telegramText)
+            sendEventToTelegramChannel(telegramText)
             res = newRes
         }
     })
