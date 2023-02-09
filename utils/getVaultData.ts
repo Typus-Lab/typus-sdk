@@ -87,6 +87,7 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
             tokenDecimal: config.token_decimal,
             shareDecimal: config.share_decimal,
             capacity: (Number(config.capacity) / (10 ** TOKEN_DECIMAL)).toString(),
+            leverage: config.leverage,
             vaultConfig: vaultConfigRes,
             nextVaultConfig: nextVaultConfigRes,
             payoffConfig: payoffConfigRes,

@@ -26,6 +26,7 @@ export interface Config {
     tokenDecimal: string;
     shareDecimal: string;
     capacity: string,
+    leverage: string,
     vaultConfig: VaultConfig,
     nextVaultConfig: VaultConfig,
     payoffConfig: PayoffConfig;
