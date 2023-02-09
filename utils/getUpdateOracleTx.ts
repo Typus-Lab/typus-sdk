@@ -10,7 +10,7 @@ export async function getUpdateOracleTx(packageId: string, typeArgument: string,
             price,
             unix
         ],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

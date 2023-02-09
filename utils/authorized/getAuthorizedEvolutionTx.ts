@@ -21,7 +21,7 @@ export async function getAuthorizedEvolutionTx(
             activationTsMs,
             expirationTsMs,
         ],
-        gasBudget: 10000,
+        gasBudget: 100000,
     }
     return tx
 }

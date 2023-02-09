@@ -101,7 +101,7 @@ function readJsonFile<T>(filePath: string): T {
 //     console.log("test for transferObject()")
 //     const transferTxn = await signer.transferObject({
 //         objectId: obj1,
-//         gasBudget: 1000,
+//         gasBudget: 100000,
 //         recipient: receiver,
 //     });
 //     console.log('transferTxn', transferTxn);
@@ -120,7 +120,7 @@ function readJsonFile<T>(filePath: string): T {
 //             'An NFT created by the wallet Command Line Tool',
 //             'ipfs://bafkreibngqhl3gaa7daob4i2vccziay2jjlp435cf66vhono7nrvww53ty',
 //         ],
-//         gasBudget: 10000,
+//         gasBudget: 100000,
 //     });
 //     console.log('moveCallTxn', moveCallTxn);
 // })();
@@ -159,7 +159,7 @@ function readJsonFile<T>(filePath: string): T {
 //     );
 //     const publishTxn = await signer.publish({
 //         compiledModules: modulesInBytes,
-//         gasBudget: 10000,
+//         gasBudget: 100000,
 //     });
 //     console.log('publishTxn', publishTxn);
 // })();
@@ -208,7 +208,7 @@ function readJsonFile<T>(filePath: string): T {
 //             true,
 //             coin
 //         ],
-//         gasBudget: 1000,
+//         gasBudget: 100000,
 //     }
 //     const moveCallTxn = await signer.executeMoveCall(txn);
 //     console.log('moveCallTxn', moveCallTxn);

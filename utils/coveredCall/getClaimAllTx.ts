@@ -9,7 +9,7 @@ export async function getClaimAllTx(
             registry,
             index,
         ],
-        gasBudget: 10000,
+        gasBudget: 100000,
     }
     return tx
 }

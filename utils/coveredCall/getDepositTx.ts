@@ -10,7 +10,7 @@ export async function getDepositTx(packageId: string, registry: string, typeArgu
             coin,
             amount,
         ],
-        gasBudget: 10000,
+        gasBudget: 100000,
     }
     return tx
 }

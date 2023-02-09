@@ -5,7 +5,7 @@ export async function getNewTimeOracleTx(packageId: string): Promise<any> {
         function: 'new_time',
         typeArguments: [],
         arguments: [],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

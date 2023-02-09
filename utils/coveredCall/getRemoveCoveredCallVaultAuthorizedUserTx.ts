@@ -17,7 +17,7 @@ export async function getRemoveCoveredCallVaultAuthorizedUserTx(
             index,
             address,
         ],
-        gasBudget: 10000,
+        gasBudget: 100000,
     }
     return tx
 }

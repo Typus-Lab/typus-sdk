@@ -10,7 +10,7 @@ export async function getNewAuctionTx(packageId: string, registry: string, typeA
             priceOracle,
             timeOracle,
         ],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

@@ -9,7 +9,7 @@ export async function getCloseVaultTx(packageId: string, managerCap: string, typ
             registry,
             index,
         ],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

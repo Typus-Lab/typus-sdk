@@ -14,7 +14,7 @@ export async function getAuthorizedRemoveAuthorizedUserTx(
             registry,
             address,
         ],
-        gasBudget: 10000,
+        gasBudget: 100000,
     }
     return tx
 }

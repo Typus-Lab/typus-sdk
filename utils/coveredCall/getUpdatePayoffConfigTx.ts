@@ -11,7 +11,7 @@ export async function getUpdatePayoffConfigTx(packageId: string, registry: strin
             roi,
             exposureRatio,
         ],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

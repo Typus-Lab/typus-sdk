@@ -5,7 +5,7 @@ export async function getCreateTokenRegistryTx(packageId: string): Promise<any> 
         function: 'new',
         typeArguments: [],
         arguments: [],
-        gasBudget: 10000,
+        gasBudget: 100000,
     }
     return tx
 }

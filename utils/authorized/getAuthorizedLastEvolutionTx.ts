@@ -19,7 +19,7 @@ export async function getAuthorizedLastEvolutionTx(
             timeOracle,
             expirationTsMs,
         ],
-        gasBudget: 10000,
+        gasBudget: 100000,
     }
     return tx
 }

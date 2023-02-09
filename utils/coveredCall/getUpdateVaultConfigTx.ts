@@ -26,7 +26,7 @@ export async function getUpdateVaultConfigTx(
             finalPrice,
             auctionDurationInMs,
         ],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

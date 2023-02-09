@@ -11,7 +11,7 @@ export async function getNewBidTx(packageId: string, registry: string, typeArgum
             coin,
             size,
         ],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

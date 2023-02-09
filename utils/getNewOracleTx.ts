@@ -5,7 +5,7 @@ export async function getNewOracleTx(packageId: string, typeArgument: string, de
         function: 'new_oracle',
         typeArguments: [typeArgument],
         arguments: [decimal],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

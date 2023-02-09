@@ -10,7 +10,7 @@ export async function getCloseAuctionTx(packageId: string, managerCap: string, t
             index,
             time,
         ],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

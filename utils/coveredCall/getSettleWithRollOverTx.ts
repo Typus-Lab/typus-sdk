@@ -12,7 +12,7 @@ export async function getSettleWithRollOverTx(
             priceOracle,
             timeOracle,
         ],
-        gasBudget: 10000,
+        gasBudget: 100000,
     }
     return tx
 }

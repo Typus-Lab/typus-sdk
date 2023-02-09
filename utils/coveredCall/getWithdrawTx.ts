@@ -9,7 +9,7 @@ export async function getWithdrawTx(packageId: string, registry: string, typeArg
             vaultIndex,
             share,
         ],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

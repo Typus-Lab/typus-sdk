@@ -8,7 +8,7 @@ export async function getNewManagerTx(packageId: string, managerCap: string, use
             managerCap,
             user,
         ],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

@@ -7,7 +7,7 @@ export async function getRemoveManagerTx(packageId: string, managerCap: string):
         arguments: [
             managerCap,
         ],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

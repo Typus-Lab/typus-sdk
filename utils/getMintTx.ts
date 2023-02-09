@@ -9,7 +9,7 @@ export async function getMintTx(packageId: string, registry: string, moduleName:
             amount,
 
         ],
-        gasBudget: 10000,
+        gasBudget: 100000,
     }
     return tx
 }

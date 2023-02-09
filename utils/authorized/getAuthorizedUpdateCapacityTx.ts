@@ -9,7 +9,7 @@ export async function getAuthorizedUpdateCapacityTx(packageId: string, typeArgum
             index,
             capacity
         ],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

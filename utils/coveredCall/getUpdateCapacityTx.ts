@@ -10,7 +10,7 @@ export async function getUpdateCapacityTx(packageId: string, managerCap: string,
             index,
             capacity
         ],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }

@@ -10,7 +10,7 @@ export async function getUpdateTimeOracleTx(packageId: string, oracle: string, m
 
             ts
         ],
-        gasBudget: 1000,
+        gasBudget: 100000,
     }
     return tx
 }
