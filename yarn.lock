@@ -284,10 +284,10 @@
   resolved "https://registry.yarnpkg.com/@mysten/bcs/-/bcs-0.5.0.tgz#d2570971e3d9121b83091ced38db13e907ab4198"
   integrity sha512-FjGnXZfR4dY01Q1l3xjgaU+ruIlVomXZk8vzgsQXPFOv7O4pNiOOpJyMEMUnWcyUiktk4R9MxoJJrygOtdxaUw==
 
-"@mysten/sui.js@^0.25.0":
-  version "0.25.0"
-  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.25.0.tgz#dc784564d2df796b4ae5c1eaae16314418cbc460"
-  integrity sha512-q4Ue5epgjM58x/D3Sr7QYugcXWmthJktowyXMlcxipypwX629PLENN15MDuUIqtHLRWvbCu9VLxL6qvLFFExzg==
+"@mysten/sui.js@^0.26.1":
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.26.1.tgz#a94baeafdef54f54b0ac4a9e5b1c5d1f4cd5d625"
+  integrity sha512-bc7jNv5iDQzD2OgOTRDIl7Ro4JGYQ2zkPwJzLyLlp+0ZvjNNeSgHOYb/bG7lNmqgHJO4hO/1bBWPphyQLB+pzA==
   dependencies:
     "@mysten/bcs" "0.5.0"
     "@noble/hashes" "^1.1.5"
@@ -668,6 +668,11 @@ base-x@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/base-x/-/base-x-4.0.0.tgz#d0e3b7753450c73f8ad2389b5c018a4af7b2224a"
   integrity sha512-FuwxlW4H5kh37X/oW59pwTzzTKRzfrrQwhmyspRM7swOEZcHtDZSCt45U6oKgtuFE+WYPblePMVIPR4RZrh/hw==
+
+bignumber.js@^9.1.1:
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.1.1.tgz#c4df7dc496bd849d4c9464344c1aa74228b4dac6"
+  integrity sha512-pHm4LsMJ6lzgNGVfZHjMoO8sdoRhOzOH4MLmY65Jg70bpxCKu5iOHNJyfF6OyvYw7t8Fpf35RuzUyqnQsj8Vig==
 
 binary-extensions@^2.0.0:
   version "2.2.0"
