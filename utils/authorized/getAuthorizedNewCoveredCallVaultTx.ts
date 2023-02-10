@@ -17,7 +17,7 @@ export async function getAuthorizedNewCoveredCallVaultTx(
     finalPrice: string,
     auctionDurationInMs: string,
     whitelist: string[],
-    leverage: string,
+    leverage: string
 ): Promise<any> {
     let tx = {
         packageObjectId: packageId,
@@ -25,7 +25,6 @@ export async function getAuthorizedNewCoveredCallVaultTx(
         function: 'authorized_new_covered_call_vault',
         typeArguments: [typeArgument],
         arguments: [
-            managerCap,
             registry,
             timeOracle,
             period,
@@ -44,8 +43,8 @@ export async function getAuthorizedNewCoveredCallVaultTx(
             whitelist,
         ],
         gasBudget: 100000,
-    }
-    return tx
+    };
+    return tx;
 }
 
 /*

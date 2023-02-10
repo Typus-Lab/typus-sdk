@@ -7,10 +7,9 @@ export async function getAuthorizedUpdateVaultConfigTx(
     decaySpeed: string,
     initialPrice: string,
     finalPrice: string,
-    auctionDurationInMs: string,
+    auctionDurationInMs: string
 ): Promise<any> {
     let tx = {
-
         packageObjectId: packageId,
         module: 'covered_call',
         function: 'authorized_update_vault_config',
@@ -25,6 +24,6 @@ export async function getAuthorizedUpdateVaultConfigTx(
             auctionDurationInMs,
         ],
         gasBudget: 100000,
-    }
-    return tx
+    };
+    return tx;
 }

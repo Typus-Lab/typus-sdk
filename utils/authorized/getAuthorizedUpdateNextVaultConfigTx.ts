@@ -8,7 +8,7 @@ export async function getUpdateNextVaultConfigTx(
     decaySpeed: string,
     initialPrice: string,
     finalPrice: string,
-    auctionDurationInMs: string,
+    auctionDurationInMs: string
 ): Promise<any> {
     let tx = {
         packageObjectId: packageId,
@@ -26,6 +26,6 @@ export async function getUpdateNextVaultConfigTx(
             auctionDurationInMs,
         ],
         gasBudget: 100000,
-    }
-    return tx
+    };
+    return tx;
 }
