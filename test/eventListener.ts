@@ -145,7 +145,8 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
         let newRes: any[] = events.data
 
         if (!await twoObjArrAreSame(newRes, res)) {
-            let format: string = "Typus Auction is live! Bid now! \n"
+            let format: string = "Typus Auction is live! "
+            format += '<a href="https://devnet.typus.finance/auction">Bid now </a>' + "! \n"
             let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
             let bidIds: BidInterface[] = await generateBidId(vault);
 
@@ -224,7 +225,7 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
 
 export async function sendEventToTelegramChannel(text: any) {
 
-    let urlString = `https://api.telegram.org/bot${apiToken}/sendMessage?chat_id=${chatId}&text=${text}`;
+    let urlString = `https://api.telegram.org/bot${apiToken}/sendMessage?chat_id=${chatId}&text=${text}&parse_mode=HTML`;
 
     let request = new XMLHttpRequest();
     request.open("GET", urlString);
