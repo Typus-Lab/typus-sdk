@@ -1,4 +1,5 @@
 export async function getUpdateNextVaultConfigTx(
+    gasBudget: string,
     packageId: string,
     registry: string,
     typeArgument: string,
@@ -25,7 +26,7 @@ export async function getUpdateNextVaultConfigTx(
             finalPrice,
             auctionDurationInMs,
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     };
     return tx;
 }
