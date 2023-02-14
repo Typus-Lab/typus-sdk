@@ -1,11 +1,12 @@
-export async function getCreateTokenRegistryTx(packageId: string): Promise<any> {
+export async function getCreateTokenRegistryTx(
+    gasBudget: string, packageId: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'token',
         function: 'new',
         typeArguments: [],
         arguments: [],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

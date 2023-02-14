@@ -1,4 +1,5 @@
 export async function getSettleTx(
+    gasBudget: string,
     packageId: string, registry: string, typeArgument: string, managerCap: string, index: string, priceOracle: string, timeOracle: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
@@ -12,7 +13,7 @@ export async function getSettleTx(
             priceOracle,
             timeOracle,
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

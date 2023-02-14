@@ -20,8 +20,9 @@ const signer = new RawSigner(keypair, provider);
     let typeArgument = await getTypeArgumentFromToken(token, provider)
 
     console.log("test for deposit, try to deposit " + token + " for " + depositAmount + " ...")
-
-    let depositTx: any = await getDepositTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, token, depositAmount);
+    let gasBudget = "100000"
+    let depositTx: any = await getDepositTx(
+        gasBudget, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, token, depositAmount);
     await signer.executeMoveCall(depositTx);
     console.log("deposit to vault successfully")
 })()

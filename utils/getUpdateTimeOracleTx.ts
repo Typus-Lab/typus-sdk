@@ -1,4 +1,5 @@
-export async function getUpdateTimeOracleTx(packageId: string, oracle: string, managerCap: string, ts: number): Promise<any> {
+export async function getUpdateTimeOracleTx(
+    gasBudget: string, packageId: string, oracle: string, managerCap: string, ts: number): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'unix_time',
@@ -10,7 +11,7 @@ export async function getUpdateTimeOracleTx(packageId: string, oracle: string, m
 
             ts
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

@@ -1,4 +1,5 @@
-export async function getWithdrawTx(packageId: string, registry: string, typeArgument: string, vaultIndex: string, share: string): Promise<any> {
+export async function getWithdrawTx(
+    gasBudget: string, packageId: string, registry: string, typeArgument: string, vaultIndex: string, share: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
@@ -9,7 +10,7 @@ export async function getWithdrawTx(packageId: string, registry: string, typeArg
             vaultIndex,
             share,
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

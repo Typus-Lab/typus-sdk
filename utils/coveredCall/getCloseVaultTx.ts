@@ -1,4 +1,5 @@
-export async function getCloseVaultTx(packageId: string, managerCap: string, typeArgument: string, registry: string, index: string): Promise<any> {
+export async function getCloseVaultTx(
+    gasBudget: string, packageId: string, managerCap: string, typeArgument: string, registry: string, index: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
@@ -9,7 +10,7 @@ export async function getCloseVaultTx(packageId: string, managerCap: string, typ
             registry,
             index,
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

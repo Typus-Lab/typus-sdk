@@ -1,11 +1,12 @@
-export async function getNewTimeOracleTx(packageId: string): Promise<any> {
+export async function getNewTimeOracleTx(
+    gasBudget: string, packageId: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'unix_time',
         function: 'new_time',
         typeArguments: [],
         arguments: [],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

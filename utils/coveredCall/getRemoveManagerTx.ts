@@ -1,4 +1,5 @@
-export async function getRemoveManagerTx(packageId: string, managerCap: string): Promise<any> {
+export async function getRemoveManagerTx(
+    gasBudget: string, packageId: string, managerCap: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
@@ -7,7 +8,7 @@ export async function getRemoveManagerTx(packageId: string, managerCap: string):
         arguments: [
             managerCap,
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

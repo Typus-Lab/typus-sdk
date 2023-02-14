@@ -1,4 +1,5 @@
 export async function getAuthorizedDeliveryTx(
+    gasBudget: string,
     packageId: string,
     registry: string,
     typeArgument: string,
@@ -11,7 +12,7 @@ export async function getAuthorizedDeliveryTx(
         function: 'authorized_delivery',
         typeArguments: [typeArgument],
         arguments: [registry, index, timeOracle],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     };
     return tx;
 }

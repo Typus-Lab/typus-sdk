@@ -1,4 +1,5 @@
 export async function getAuthorizedEvolutionTx(
+    gasBudget: string,
     packageId: string,
     registry: string,
     typeArgument: string,
@@ -14,7 +15,7 @@ export async function getAuthorizedEvolutionTx(
         function: 'authorized_evolution',
         typeArguments: [typeArgument],
         arguments: [registry, index, priceOracle, timeOracle, activationTsMs, expirationTsMs],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     };
     return tx;
 }

@@ -1,4 +1,5 @@
 export async function getAuthorizedUpdateCapacityTx(
+    gasBudget: string,
     packageId: string,
     typeArgument: string,
     registry: string,
@@ -11,7 +12,7 @@ export async function getAuthorizedUpdateCapacityTx(
         function: 'authorized_update_capacity',
         typeArguments: [typeArgument],
         arguments: [registry, index, capacity],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     };
     return tx;
 }

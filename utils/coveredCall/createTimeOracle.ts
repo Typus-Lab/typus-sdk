@@ -12,7 +12,9 @@ export async function createTimeOracle(): Promise<[string, string]> {
     return new Promise(async (resolve, reject) => {
         try {
             console.log("create new time oracle...")
-            let newTimeOracleTx: any = await getNewTimeOracleTx(ORACLE_PACKAGE);
+            let gasBudget = "100000"
+            let newTimeOracleTx: any = await getNewTimeOracleTx(
+                gasBudget, ORACLE_PACKAGE);
             let moveCallTxn = await signer.executeMoveCall(newTimeOracleTx);
             //@ts-ignore
             let digest: string = moveCallTxn.EffectsCert.certificate.transactionDigest

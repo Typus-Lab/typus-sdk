@@ -36,7 +36,8 @@
 
 //     it('Create new vault in registry', async () => {
 //         try {
-//             let newSharkFinVaultTx: any = await getNewSharkFinVaultTx(SHARKFIN_PACKAGE, SHARKFIN_REGISTRY, typeArgument, expiration, bullish, lowBarrierPrice, highBarrierPrice);
+//             let newSharkFinVaultTx: any = await getNewSharkFinVaultTx(
+// gasBudget: string, SHARKFIN_PACKAGE, SHARKFIN_REGISTRY, typeArgument, expiration, bullish, lowBarrierPrice, highBarrierPrice);
 
 //             let moveCallTxn = await signer.executeMoveCall(newSharkFinVaultTx);
 //             console.log(moveCallTxn)
@@ -53,7 +54,8 @@
 //             let numOfVaultBeforeCreateVault = registry.details.data.fields.num_of_vault
 //             // console.log("numOfVaultBeforeCreateVault: " + numOfVaultBeforeCreateVault)
 
-//             let newSharkFinVaultTx: any = await getNewSharkFinVaultTx(SHARKFIN_PACKAGE, SHARKFIN_REGISTRY, typeArgument, expiration, bullish, lowBarrierPrice, highBarrierPrice);
+//             let newSharkFinVaultTx: any = await getNewSharkFinVaultTx(
+// gasBudget: string, SHARKFIN_PACKAGE, SHARKFIN_REGISTRY, typeArgument, expiration, bullish, lowBarrierPrice, highBarrierPrice);
 //             await signer.executeMoveCall(newSharkFinVaultTx);
 
 //             registry = await provider.getObject(SHARKFIN_REGISTRY)

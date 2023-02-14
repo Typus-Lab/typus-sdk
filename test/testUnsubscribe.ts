@@ -6,7 +6,7 @@ import { getUnsubscribeTx } from "../utils/coveredCall/getUnsubscribeTx";
 const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
-
+const gasBudget = "100000";
 /*
    after unsubscribe, the subvault (is deposited) "balance" in fields will be 0,
    and a regular linked list node will be created if not exist, and the value increase.
@@ -26,11 +26,13 @@ const signer = new RawSigner(keypair, provider);
 
     let typeArgument = await getTypeArgumentFromToken(token, provider)
 
-    let depositTx: any = await getDepositTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, token, depositAmount);
+    let depositTx: any = await getDepositTx(
+        gasBudget, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, token, depositAmount);
     await signer.executeMoveCall(depositTx);
     console.log("deposit " + depositAmount + " to new vault successfully")
 
-    let unSubscribedTx: any = await getUnsubscribeTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, share)
+    let unSubscribedTx: any = await getUnsubscribeTx(
+        gasBudget, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex, share)
     await signer.executeMoveCall(unSubscribedTx);
     console.log("unsubscribe successfully")
 })()

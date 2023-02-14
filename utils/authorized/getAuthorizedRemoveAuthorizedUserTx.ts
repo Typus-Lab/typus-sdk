@@ -1,4 +1,5 @@
 export async function getAuthorizedRemoveAuthorizedUserTx(
+    gasBudget: string,
     packageId: string,
     registry: string,
     managerCap: string,
@@ -10,7 +11,7 @@ export async function getAuthorizedRemoveAuthorizedUserTx(
         function: 'remove_authorized_user',
         typeArguments: [],
         arguments: [managerCap, registry, address],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     };
     return tx;
 }

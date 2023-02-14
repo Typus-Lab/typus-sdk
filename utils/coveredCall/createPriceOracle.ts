@@ -12,7 +12,9 @@ export async function createPriceOracle(typeArgument: string): Promise<[string, 
     return new Promise(async (resolve, reject) => {
         try {
             console.log("create new price oracle...")
-            let newOracleTx: any = await getNewOracleTx(ORACLE_PACKAGE, typeArgument, decimal);
+            let gasBudget = "100000"
+            let newOracleTx: any = await getNewOracleTx(
+                gasBudget, ORACLE_PACKAGE, typeArgument, decimal);
             let moveCallTxn = await signer.executeMoveCall(newOracleTx);
             //@ts-ignore
             let digest: string = moveCallTxn.EffectsCert.certificate.transactionDigest

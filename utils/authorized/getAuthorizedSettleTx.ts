@@ -1,4 +1,5 @@
 export async function getAuthorizedSettleTx(
+    gasBudget: string,
     packageId: string,
     registry: string,
     typeArgument: string,
@@ -12,7 +13,7 @@ export async function getAuthorizedSettleTx(
         function: 'authorized_settle',
         typeArguments: [typeArgument],
         arguments: [registry, index, priceOracle, timeOracle],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     };
     return tx;
 }

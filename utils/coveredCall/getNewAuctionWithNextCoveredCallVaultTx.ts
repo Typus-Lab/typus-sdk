@@ -1,4 +1,5 @@
 export async function getNewAuctionWithNextCoveredCallVaultTx(
+    gasBudget: string,
     packageId: string,
     managerCap: string,
     registry: string,
@@ -23,7 +24,7 @@ export async function getNewAuctionWithNextCoveredCallVaultTx(
             activationTsMs,
             expirationTsMs,
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

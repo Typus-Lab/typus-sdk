@@ -1,4 +1,5 @@
 export async function getEvolutionTx(
+    gasBudget: string,
     packageId: string,
     registry: string,
     typeArgument: string,
@@ -23,7 +24,7 @@ export async function getEvolutionTx(
             activationTsMs,
             expirationTsMs,
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

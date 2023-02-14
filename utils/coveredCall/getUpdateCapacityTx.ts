@@ -1,4 +1,5 @@
-export async function getUpdateCapacityTx(packageId: string, managerCap: string, typeArgument: string, registry: string, index: string, capacity: string): Promise<any> {
+export async function getUpdateCapacityTx(
+    gasBudget: string, packageId: string, managerCap: string, typeArgument: string, registry: string, index: string, capacity: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
@@ -10,7 +11,7 @@ export async function getUpdateCapacityTx(packageId: string, managerCap: string,
             index,
             capacity
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

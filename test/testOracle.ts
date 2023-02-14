@@ -14,7 +14,9 @@ const signer = new RawSigner(keypair, provider);
     let decimal = 8;
 
     console.log("create new oracle...")
-    let newOracleTx: any = await getNewOracleTx(ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT, decimal);
+    let gasBudget = "100000"
+    let newOracleTx: any = await getNewOracleTx(
+        gasBudget, ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT, decimal);
     let moveCallTxn = await signer.executeMoveCall(newOracleTx);
     //@ts-ignore
     let digest: string = moveCallTxn.EffectsCert.certificate.transactionDigest
@@ -35,7 +37,8 @@ const signer = new RawSigner(keypair, provider);
     }
 
     console.log("update oracle...")
-    let updateOracleTx: any = await getUpdateOracleTx(ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT, newOracle, managerCap, price, unix);
+    let updateOracleTx: any = await getUpdateOracleTx(
+        gasBudget, ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT, newOracle, managerCap, price, unix);
     moveCallTxn = await signer.executeMoveCall(updateOracleTx);
 
     let newOracleObj = await provider.getObject(newOracle)

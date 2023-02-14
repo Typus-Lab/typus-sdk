@@ -1,4 +1,5 @@
-export async function getMintTx(packageId: string, registry: string, moduleName: string, amount: number): Promise<any> {
+export async function getMintTx(
+    gasBudget: string, packageId: string, registry: string, moduleName: string, amount: number): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: moduleName,
@@ -9,7 +10,7 @@ export async function getMintTx(packageId: string, registry: string, moduleName:
             amount,
 
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

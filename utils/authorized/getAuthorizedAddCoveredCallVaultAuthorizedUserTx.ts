@@ -1,4 +1,5 @@
 export async function getAuthorizedAddCoveredCallVaultAuthorizedUserTx(
+    gasBudget: string,
     packageId: string,
     registry: string,
     typeArgument: string,
@@ -11,7 +12,7 @@ export async function getAuthorizedAddCoveredCallVaultAuthorizedUserTx(
         function: 'authorized_add_covered_call_vault_authorized_user',
         typeArguments: [typeArgument],
         arguments: [registry, index, address],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     };
     return tx;
 }

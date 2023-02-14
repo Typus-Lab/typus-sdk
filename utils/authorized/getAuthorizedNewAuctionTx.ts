@@ -1,4 +1,5 @@
 export async function getNewAuctionTx(
+    gasBudget: string,
     packageId: string,
     registry: string,
     typeArgument: string,
@@ -12,7 +13,7 @@ export async function getNewAuctionTx(
         function: 'authorized_new_auction',
         typeArguments: [typeArgument],
         arguments: [registry, index, priceOracle, timeOracle],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     };
     return tx;
 }

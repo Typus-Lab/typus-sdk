@@ -1,11 +1,12 @@
-export async function getNewOracleTx(packageId: string, typeArgument: string, decimal: number): Promise<any> {
+export async function getNewOracleTx(
+    gasBudget: string, packageId: string, typeArgument: string, decimal: number): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'oracle',
         function: 'new_oracle',
         typeArguments: [typeArgument],
         arguments: [decimal],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

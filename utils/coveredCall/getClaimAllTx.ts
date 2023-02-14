@@ -1,4 +1,5 @@
 export async function getClaimAllTx(
+    gasBudget: string,
     packageId: string, registry: string, typeArgument: string, index: string[]): Promise<any> {
     let tx = {
         packageObjectId: packageId,
@@ -9,7 +10,7 @@ export async function getClaimAllTx(
             registry,
             index,
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

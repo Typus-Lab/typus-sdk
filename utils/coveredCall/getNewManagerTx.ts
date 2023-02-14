@@ -1,4 +1,5 @@
-export async function getNewManagerTx(packageId: string, managerCap: string, user: string): Promise<any> {
+export async function getNewManagerTx(
+    gasBudget: string, packageId: string, managerCap: string, user: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
@@ -8,7 +9,7 @@ export async function getNewManagerTx(packageId: string, managerCap: string, use
             managerCap,
             user,
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

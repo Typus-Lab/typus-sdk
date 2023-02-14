@@ -1,4 +1,5 @@
-export async function getCloseAuctionTx(packageId: string, managerCap: string, typeArgument: string, registry: string, index: string, time: string): Promise<any> {
+export async function getCloseAuctionTx(
+    gasBudget: string, packageId: string, managerCap: string, typeArgument: string, registry: string, index: string, time: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
@@ -10,7 +11,7 @@ export async function getCloseAuctionTx(packageId: string, managerCap: string, t
             index,
             time,
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

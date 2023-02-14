@@ -21,11 +21,14 @@ const signer = new RawSigner(keypair, provider);
 
     console.log("test for claim, try to claim " + token + " for " + claimAmount + " ...")
 
-    let claimTx: any = await getClaimTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex[0]);
+    let gasBudget = "100000";
+    let claimTx: any = await getClaimTx(
+        gasBudget, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex[0]);
     await signer.executeMoveCall(claimTx);
     console.log("claim successfully")
 
-    let claimAllTx: any = await getClaimAllTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex);
+    let claimAllTx: any = await getClaimAllTx(
+        gasBudget, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex);
     await signer.executeMoveCall(claimAllTx);
     console.log("claim all successfully")
 })()

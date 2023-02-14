@@ -1,4 +1,5 @@
 export async function getAuthorizedNewCoveredCallVaultTx(
+    gasBudget: string,
     packageId: string,
     registry: string,
     typeArgument: string,
@@ -42,7 +43,7 @@ export async function getAuthorizedNewCoveredCallVaultTx(
             leverage,
             whitelist,
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     };
     return tx;
 }

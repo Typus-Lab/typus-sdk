@@ -1,4 +1,5 @@
 export async function getUnsubscribeTx(
+    gasBudget: string,
     packageId: string, registry: string, typeArgument: string, index: string, share: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
@@ -10,7 +11,7 @@ export async function getUnsubscribeTx(
             index,
             share,
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }

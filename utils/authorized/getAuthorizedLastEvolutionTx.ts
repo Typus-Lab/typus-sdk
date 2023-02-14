@@ -1,4 +1,5 @@
 export async function getAuthorizedLastEvolutionTx(
+    gasBudget: string,
     packageId: string,
     registry: string,
     typeArgument: string,
@@ -13,7 +14,7 @@ export async function getAuthorizedLastEvolutionTx(
         function: 'authorized_last_evolution',
         typeArguments: [typeArgument],
         arguments: [registry, index, priceOracle, timeOracle, expirationTsMs],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     };
     return tx;
 }

@@ -28,7 +28,7 @@ const strike = 2000
 const isRolling = true;
 const expirationTsMs1 = 1000000;
 const expirationTsMs2 = 2000000;
-
+const gasBudget = "100000";
 
 // let priceOracle = '0x636b4e02991f13720571d0cbbc8b83d80cd14729';
 // let priceOracleManager = '0xd958057a227cdfd2080f4aeda7a16d6fe7135bcc';
@@ -154,7 +154,9 @@ const expirationTsMs2 = 2000000;
 async function updatePriceOracle(priceOracle: string, priceOracleManager: string, typeArgument: string, price: number, ts: number) {
     return new Promise(async (resolve, reject) => {
         try {
-            let updateOracleTx: any = await getUpdateOracleTx(ORACLE_PACKAGE, typeArgument, priceOracle, priceOracleManager, price, ts);
+
+            let updateOracleTx: any = await getUpdateOracleTx(
+                gasBudget, ORACLE_PACKAGE, typeArgument, priceOracle, priceOracleManager, price, ts);
             await signer.executeMoveCall(updateOracleTx);
             console.log("update price oracle successfully")
             resolve(null)
@@ -170,7 +172,8 @@ async function updatePriceOracle(priceOracle: string, priceOracleManager: string
 async function updateTimeOracle(timeOracle: string, managerCap: string, ts: number) {
     return new Promise(async (resolve, reject) => {
         try {
-            let updateTimeOracleTx: any = await getUpdateTimeOracleTx(ORACLE_PACKAGE, timeOracle, managerCap, ts);
+            let updateTimeOracleTx: any = await getUpdateTimeOracleTx(
+                gasBudget, ORACLE_PACKAGE, timeOracle, managerCap, ts);
             await signer.executeMoveCall(updateTimeOracleTx);
             console.log("update time oracle successfully")
             resolve(null)
@@ -208,6 +211,7 @@ async function createNewVault(
     return new Promise(async (resolve, reject) => {
         try {
             let newCoveredCallVaultTx = await getNewCoveredCallVaultTx(
+                gasBudget,
                 COVERED_CALL_PACKAGE,
                 COVERED_CALL_REGISTRY,
                 typeArgument,
@@ -270,7 +274,8 @@ async function getNewestVaultIndex(registry: string): Promise<number> {
 async function depositToVault(typeArgument: string, vaultIndex: number, depositAmount: number) {
     return new Promise(async (resolve, reject) => {
         try {
-            let depositTx: any = await getDepositTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), token, depositAmount.toString());
+            let depositTx: any = await getDepositTx(
+                gasBudget, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), token, depositAmount.toString());
             await signer.executeMoveCall(depositTx);
             console.log("deposit to vault successfully")
             resolve(null)
@@ -294,6 +299,7 @@ async function createNewAuctionWithNextCoveredCallVault(
     return new Promise(async (resolve, reject) => {
         try {
             let txn = await getNewAuctionWithNextCoveredCallVaultTx(
+                gasBudget,
                 COVERED_CALL_PACKAGE,
                 COVERED_CALL_MANAGER,
                 COVERED_CALL_REGISTRY,
@@ -318,7 +324,8 @@ async function createNewAuctionWithNextCoveredCallVault(
 async function newBid(typeArgument: string, vaultIndex: number, size: number, token: string, timeOracle: string) {
     return new Promise(async (resolve, reject) => {
         try {
-            let newBidTx: any = await getNewBidTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), size.toString(), token, timeOracle);
+            let newBidTx: any = await getNewBidTx(
+                gasBudget, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), size.toString(), token, timeOracle);
             await signer.executeMoveCall(newBidTx);
             console.log("new bid successfully ")
             resolve(null)
@@ -333,7 +340,8 @@ async function newBid(typeArgument: string, vaultIndex: number, size: number, to
 async function delivery(typeArgument: string, vaultIndex: number, sellSize: number, timeOracle: string) {
     return new Promise(async (resolve, reject) => {
         try {
-            let deliveryTx: any = await getDeliveryTx(COVERED_CALL_PACKAGE, COVERED_CALL_MANAGER, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), timeOracle);
+            let deliveryTx: any = await getDeliveryTx(
+                gasBudget, COVERED_CALL_PACKAGE, COVERED_CALL_MANAGER, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), timeOracle);
             await signer.executeMoveCall(deliveryTx);
             console.log("delivery successfully")
             resolve(null)
@@ -349,7 +357,8 @@ async function delivery(typeArgument: string, vaultIndex: number, sellSize: numb
 async function updatePayoffConfig(typeArgument: string, vaultIndex: number, price: number, premiumRoi: number, exposureRatio: number) {
     return new Promise(async (resolve, reject) => {
         try {
-            let updatePayoffConfigTx: any = await getUpdatePayoffConfigTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, COVERED_CALL_MANAGER, vaultIndex.toString(), premiumRoi.toString(), exposureRatio.toString());
+            let updatePayoffConfigTx: any = await getUpdatePayoffConfigTx(
+                gasBudget, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, COVERED_CALL_MANAGER, vaultIndex.toString(), premiumRoi.toString(), exposureRatio.toString());
             await signer.executeMoveCall(updatePayoffConfigTx);
             console.log("update payoff config successfully")
             resolve(null)
@@ -365,7 +374,8 @@ async function updatePayoffConfig(typeArgument: string, vaultIndex: number, pric
 async function settle(typeArgument: string, vaultIndex: number, priceOracle: string, timeOracle: string) {
     return new Promise(async (resolve, reject) => {
         try {
-            let settleTx: any = await getSettleTx(COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, COVERED_CALL_MANAGER, vaultIndex.toString(), priceOracle, timeOracle);
+            let settleTx: any = await getSettleTx(
+                gasBudget, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, COVERED_CALL_MANAGER, vaultIndex.toString(), priceOracle, timeOracle);
             await signer.executeMoveCall(settleTx);
             console.log("settle successfully")
             resolve(null)

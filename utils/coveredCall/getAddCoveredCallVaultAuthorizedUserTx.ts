@@ -1,4 +1,5 @@
 export async function getAddCoveredCallVaultAuthorizedUserTx(
+    gasBudget: string,
     packageId: string,
     managerCap: string,
     registry: string,
@@ -17,7 +18,7 @@ export async function getAddCoveredCallVaultAuthorizedUserTx(
             index,
             address,
         ],
-        gasBudget: 100000,
+        gasBudget: gasBudget,
     }
     return tx
 }
