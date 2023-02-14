@@ -12,7 +12,7 @@ export async function createTimeOracle(): Promise<[string, string]> {
     return new Promise(async (resolve, reject) => {
         try {
             console.log("create new time oracle...")
-            let gasBudget = "100000"
+            let gasBudget = 100000
             let newTimeOracleTx: any = await getNewTimeOracleTx(
                 gasBudget, ORACLE_PACKAGE);
             let moveCallTxn = await signer.executeMoveCall(newTimeOracleTx);

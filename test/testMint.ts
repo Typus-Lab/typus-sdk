@@ -10,7 +10,7 @@ const mintAmount = 1000500000;
 (async () => {
     let tokenRegistry = TOKEN_REGISTRY_SUI
     let moduleName: string = await prepareData(tokenRegistry)
-    let gasBudget = "100000"
+    let gasBudget = 100000
     let mintTx: any = await getMintTx(
         gasBudget, TOKEN_PACKAGE, tokenRegistry, moduleName, mintAmount);
     let moveCallTxn: any = await signer.executeMoveCall(mintTx);

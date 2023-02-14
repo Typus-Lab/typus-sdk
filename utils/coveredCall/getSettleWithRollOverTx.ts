@@ -1,5 +1,5 @@
 export async function getSettleWithRollOverTx(
-    gasBudget: string,
+    gasBudget: number,
     packageId: string, registry: string, typeArgument: string, managerCap: string, index: string, priceOracle: string, timeOracle: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,

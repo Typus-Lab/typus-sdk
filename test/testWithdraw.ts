@@ -18,7 +18,7 @@ const signer = new RawSigner(keypair, provider);
     let typeArgument = await getTypeArgumentFromToken(token, provider)
 
     console.log("test for withdraw, try to withdraw " + token + " for " + withdrawAmount + " ...")
-    let gasBudget = "100000"
+    let gasBudget = 100000
     let withdrawTx = await getWithdrawTx(
         gasBudget, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex.toString(), withdrawAmount.toString());
     await signer.executeMoveCall(withdrawTx);

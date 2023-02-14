@@ -28,7 +28,7 @@ const strike = 2000
 const isRolling = true;
 const expirationTsMs1 = 1000000;
 const expirationTsMs2 = 2000000;
-const gasBudget = "100000";
+const gasBudget = 100000;
 
 // let priceOracle = '0x636b4e02991f13720571d0cbbc8b83d80cd14729';
 // let priceOracleManager = '0xd958057a227cdfd2080f4aeda7a16d6fe7135bcc';

@@ -1,5 +1,5 @@
 export async function getUpdateNextVaultConfigTx(
-    gasBudget: string,
+    gasBudget: number,
     packageId: string,
     managerCap: string,
     registry: string,

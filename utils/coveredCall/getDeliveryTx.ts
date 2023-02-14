@@ -1,5 +1,5 @@
 export async function getDeliveryTx(
-    gasBudget: string,
+    gasBudget: number,
     packageId: string, managerCap: string, registry: string, typeArgument: string, index: string, timeOracle: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,

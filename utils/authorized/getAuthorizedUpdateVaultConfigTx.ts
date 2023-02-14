@@ -1,5 +1,5 @@
 export async function getAuthorizedUpdateVaultConfigTx(
-    gasBudget: string,
+    gasBudget: number,
     packageId: string,
     typeArgument: string,
     registry: string,

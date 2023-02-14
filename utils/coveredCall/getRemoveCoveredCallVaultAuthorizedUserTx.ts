@@ -1,5 +1,5 @@
 export async function getRemoveCoveredCallVaultAuthorizedUserTx(
-    gasBudget: string,
+    gasBudget: number,
     packageId: string,
     managerCap: string,
     registry: string,

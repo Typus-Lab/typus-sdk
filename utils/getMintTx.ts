@@ -1,5 +1,5 @@
 export async function getMintTx(
-    gasBudget: string, packageId: string, registry: string, moduleName: string, amount: number): Promise<any> {
+    gasBudget: number, packageId: string, registry: string, moduleName: string, amount: number): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: moduleName,

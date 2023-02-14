@@ -1,5 +1,5 @@
 export async function getNewAuctionTx(
-    gasBudget: string, packageId: string, registry: string, typeArgument: string, managerCap: string, index: string, priceOracle: string, timeOracle: string): Promise<any> {
+    gasBudget: number, packageId: string, registry: string, typeArgument: string, managerCap: string, index: string, priceOracle: string, timeOracle: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',

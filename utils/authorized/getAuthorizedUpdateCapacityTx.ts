@@ -1,5 +1,5 @@
 export async function getAuthorizedUpdateCapacityTx(
-    gasBudget: string,
+    gasBudget: number,
     packageId: string,
     typeArgument: string,
     registry: string,

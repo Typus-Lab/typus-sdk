@@ -21,7 +21,7 @@ const signer = new RawSigner(keypair, provider);
 
     console.log("test for claim, try to claim " + token + " for " + claimAmount + " ...")
 
-    let gasBudget = "100000";
+    let gasBudget = 100000;
     let claimTx: any = await getClaimTx(
         gasBudget, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, typeArgument, vaultIndex[0]);
     await signer.executeMoveCall(claimTx);

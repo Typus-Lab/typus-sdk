@@ -16,7 +16,7 @@ const signer = new RawSigner(keypair, provider);
     let [timeOracle, timeOracleManager] = await createTimeOracle()
     let activationTsMs = 1671992000000
     let expirationTsMs = 1
-    let gasBudget = "100000"
+    let gasBudget = 100000
     let newAuctionTx: any = await getNewAuctionTx(
         gasBudget,
         COVERED_CALL_PACKAGE,

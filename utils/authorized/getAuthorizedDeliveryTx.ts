@@ -1,5 +1,5 @@
 export async function getAuthorizedDeliveryTx(
-    gasBudget: string,
+    gasBudget: number,
     packageId: string,
     registry: string,
     typeArgument: string,

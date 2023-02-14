@@ -1,5 +1,5 @@
 export async function getClaimTx(
-    gasBudget: string,
+    gasBudget: number,
     packageId: string, registry: string, typeArgument: string, index: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,

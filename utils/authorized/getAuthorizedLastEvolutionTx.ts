@@ -1,5 +1,5 @@
 export async function getAuthorizedLastEvolutionTx(
-    gasBudget: string,
+    gasBudget: number,
     packageId: string,
     registry: string,
     typeArgument: string,

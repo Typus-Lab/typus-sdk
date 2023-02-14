@@ -1,5 +1,5 @@
 export async function getAuthorizedRemoveAuthorizedUserTx(
-    gasBudget: string,
+    gasBudget: number,
     packageId: string,
     registry: string,
     managerCap: string,

@@ -1,5 +1,5 @@
 export async function getUpdateOracleTx(
-    gasBudget: string, packageId: string, typeArgument: string, oracle: string, managerCap: string, price: number, unix: number): Promise<any> {
+    gasBudget: number, packageId: string, typeArgument: string, oracle: string, managerCap: string, price: number, unix: number): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'oracle',

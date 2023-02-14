@@ -1,5 +1,5 @@
 export async function getCreateTokenRegistryTx(
-    gasBudget: string, packageId: string): Promise<any> {
+    gasBudget: number, packageId: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'token',

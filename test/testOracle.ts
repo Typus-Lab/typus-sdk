@@ -14,7 +14,7 @@ const signer = new RawSigner(keypair, provider);
     let decimal = 8;
 
     console.log("create new oracle...")
-    let gasBudget = "100000"
+    let gasBudget = 100000
     let newOracleTx: any = await getNewOracleTx(
         gasBudget, ORACLE_PACKAGE, DEFAULT_TYPE_ARGUMENT, decimal);
     let moveCallTxn = await signer.executeMoveCall(newOracleTx);

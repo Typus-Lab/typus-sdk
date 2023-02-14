@@ -30,7 +30,7 @@ let leverage = "100";
     let [timeOracle, _] = await createTimeOracle()
 
     console.log(typeArgument, timeOracle)
-    let gasBudget = "100000"
+    let gasBudget = 100000
     let newCoveredCallVaultTx = await getNewCoveredCallVaultTx(
         gasBudget,
         COVERED_CALL_PACKAGE,

@@ -1,5 +1,5 @@
 export async function getUpdateTimeOracleTx(
-    gasBudget: string, packageId: string, oracle: string, managerCap: string, ts: number): Promise<any> {
+    gasBudget: number, packageId: string, oracle: string, managerCap: string, ts: number): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'unix_time',

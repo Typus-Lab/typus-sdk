@@ -6,7 +6,7 @@ import { getUnsubscribeTx } from "../utils/coveredCall/getUnsubscribeTx";
 const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
-const gasBudget = "100000";
+const gasBudget = 100000;
 /*
    after unsubscribe, the subvault (is deposited) "balance" in fields will be 0,
    and a regular linked list node will be created if not exist, and the value increase.

@@ -1,5 +1,5 @@
 export async function getRemoveBidTx(
-    gasBudget: string, packageId: string, registry: string, typeArgument: string, index: string, bidIndex: string): Promise<any> {
+    gasBudget: number, packageId: string, registry: string, typeArgument: string, index: string, bidIndex: string): Promise<any> {
     let tx = {
         packageObjectId: packageId,
         module: 'covered_call',
