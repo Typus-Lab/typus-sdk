@@ -15,9 +15,9 @@ export const TIME_ORACLE = '0x9472de591c68ee1a8a9771221c391f86feb2c1bb';
 export const COVERED_CALL_PACKAGE = "0x60923650807ee3ccc53c539920b7b0ccea4b1554"
 export const COVERED_CALL_REGISTRY = "0x46d88d85f2f22d7fffda51127fe48b274aedd2f1"
 export const COVERED_CALL_MANAGER = "0xa47107c76cc3cbb7fdf19d16ac79f8fd9b9f5e4f"
-export const USER_SHARE_TABLE = "0xb88a461c47ec45198fd7de39cd72b7be3dcaad93"
+export const USER_SHARE_TABLE = "0xc216df077ee67f081fdb72a95c9729ec2102587f"
 export const USER_REFUND_TABLE = "0x0bd398f74aa24022595e7c7ae50bd2f258ca07aa"
-export const MAKER_SHARE_TABLE = "0x9d492e3724f23bad705c8d30ac244ae76006cef1"
+export const MAKER_SHARE_TABLE = "0xe80a202dd890d24e64acc345c1b30acbe63a46f3"
 
 //publish from typus-dov/typus-dov
 export const DOV_PACKAGE = "0x49e71a735dc6bdf7327e6c663d04a3e7f68bafd0"
