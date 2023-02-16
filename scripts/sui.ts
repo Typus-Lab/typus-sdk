@@ -1,4 +1,4 @@
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, SuiEventEnvelope, Network, Base64DataBuffer } from '@mysten/sui.js';
+import { JsonRpcProvider, Ed25519Keypair, RawSigner, SuiEventEnvelope, Network } from '@mysten/sui.js';
 import { fromB64 } from '@mysten/bcs';
 import fs from "fs";
 import fetch from 'cross-fetch';
@@ -45,21 +45,6 @@ function readJsonFile<T>(filePath: string): T {
 //         owner
 //     )
 //     console.log(objects)
-// })();
-
-// //Success
-// (async () => {
-//     console.log("test for getObjectsOwnedByObject()")
-
-//     const objects = await provider.getObjectsOwnedByObject(
-//         obj1
-//     )
-//     console.log(objects)
-
-//     //filter obj by type
-//     for (let object of objects) {
-//         if (object.type.includes("dynamic_field")) console.log("it's dynamic field object")
-//     }
 // })();
 
 // //Success
