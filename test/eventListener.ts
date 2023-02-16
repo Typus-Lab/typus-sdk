@@ -38,7 +38,7 @@ interface BidInterface {
 
     let endAuctionType = COVERED_CALL_PACKAGE + "::covered_call::Delivery<" + TOKEN_PACKAGE + "::eth::ETH>";
 
-    let renewSec = 10
+    let renewSec = 30
 
     // let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
 
@@ -118,8 +118,6 @@ export async function getBidEventsCranker(type: string, renewSec: number, provid
                     let size = (Number(e.event.moveEvent.fields.size) / (10 ** TOKEN_DECIMAL)).toString()
                     let period = (bidId.period == "0") ? "Daily " : (bidId.period == "1") ? "Weekly " : (bidId.period == "2") ? "Monthly " : "- "
                     format += period + bidId.bidFormat + " is bid with " + size + " " + bidId.bidFormat.split("-")[0] + "! \n"
-                } else {
-                    console.log("can't get bidId in getBidEventsCranker")
                 }
             })
 
@@ -150,7 +148,8 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
         )
 
         let newRes: any[] = events.data
-
+        // console.log("new Res in getNewAuctionEventsCranker:")
+        // console.log(newRes)
         if (!await twoObjArrAreSame(newRes, res)) {
             let format: string = "Typus Auction is live! "
             format += '<a href="https://devnet.typus.finance/auction">Bid now </a>' + "! \n"
@@ -203,16 +202,19 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
         )
 
         let newRes: any[] = events.data
-
+        // console.log("new Res in getEndAuctionEventsCranker:")
+        // console.log(newRes)
         if (!await twoObjArrAreSame(newRes, res)) {
             let format: string = ""
             let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
             let newBidIds: BidInterface[] = await generateBidId(vault);
+            // console.log("new bid ids before filter:")
             console.log(newBidIds)
             //compare newBidIds to bidIds 
             newBidIds = newBidIds.filter(e =>
                 !bidIds.find(tmp => tmp.bidFormat == e.bidFormat)
             )
+            // console.log("new bid ids after filter:")
             console.log(newBidIds)
             for (let asset of TOKEN_NAME) {
 
@@ -262,8 +264,4 @@ export async function sendEventToTelegramChannel(text: any) {
     let request = new XMLHttpRequest();
     request.open("GET", urlString);
     request.send();
-
-    // request.onload = function () {
-    //     console.log(JSON.parse(request.responseText));
-    // };
 }
