@@ -8,7 +8,8 @@ import { CoveredCallVault, PayoffConfig, Config, VaultConfig, Vault, SubVault, A
 export async function getVaultDataFromRegistry(registry: string, provider: JsonRpcProvider): Promise<CoveredCallVault[]> {
     console.log("registry: " + registry)
 
-    let coveredCallVaults: any[] = await provider.getObjectsOwnedByObject(registry)
+    let coveredCallVaults: any[] = (await provider.getDynamicFields(registry)).data
+
     let coveredCallVaultsId: string[] = coveredCallVaults.map(e => e.objectId as string)
     let objsInfo = await provider.getObjectBatch(coveredCallVaultsId)
 

@@ -17,7 +17,7 @@ async function getSubVaultsData(registry: string, provider: JsonRpcProvider): Pr
 
     let subVaultsData = new Map();
 
-    let coveredCallVaults: any[] = await provider.getObjectsOwnedByObject(registry)
+    let coveredCallVaults: any[] = (await provider.getDynamicFields(registry)).data
     let coveredCallVaultsId: string[] = coveredCallVaults.map(e => e.objectId as string)
     let objsInfo = await provider.getObjectBatch(coveredCallVaultsId)
 
@@ -45,7 +45,7 @@ export async function getMakersShares(makerShareTable: string, registry: string,
 
     let subVaultsData: Map<number, SubVaultData> = await getSubVaultsData(registry, provider)//vault idx to subvault info
 
-    let makerShareIds: string[] = (await provider.getObjectsOwnedByObject(makerShareTable)).map(x => x.objectId);
+    let makerShareIds: string[] = (await provider.getDynamicFields(makerShareTable)).data.map(x => x.objectId);
 
     let makerShares: MakerShare[] = (await provider.getObjectBatch(makerShareIds)).map(
         x => {

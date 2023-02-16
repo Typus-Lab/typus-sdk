@@ -14,7 +14,7 @@ export async function getWhiteListFromRegistry(registry: string, provider: JsonR
     //@ts-ignore
     let whiteListsTable: string = tmp.details.data.fields.authority.fields.whitelist.fields.nodes.fields.id.id
 
-    let whiteListsNodes: any[] = await provider.getObjectsOwnedByObject(whiteListsTable)
+    let whiteListsNodes: any[] = (await provider.getDynamicFields(whiteListsTable)).data
     let whiteListsTableId: string[] = whiteListsNodes.map(e => e.objectId)
     let tmp2: GetObjectDataResponse[] = await provider.getObjectBatch(whiteListsTableId)
     //@ts-ignore

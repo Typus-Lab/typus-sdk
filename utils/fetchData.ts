@@ -104,7 +104,7 @@ export interface PayoffConfig {
 //new version: getVaultDataFromRegistry()
 export async function getCoveredCallVaultsFromRegistry(registry: string): Promise<any> {
     console.log("registry: " + registry)
-    let coveredCallVaults: any[] = await provider.getObjectsOwnedByObject(registry)
+    let coveredCallVaults: any[] = (await provider.getDynamicFields(registry)).data
     console.log("under the registry, there are " + coveredCallVaults.length + " covered call vaults")
     return coveredCallVaults
 }
@@ -123,7 +123,7 @@ export async function getTableFromCoveredCallVault(coveredCallVault: string): Pr
 }
 
 export async function getSubVaultsFromTable(tableUnderCoveredCallVault: string): Promise<SubVaults> {
-    let subVaults = await provider.getObjectsOwnedByObject(tableUnderCoveredCallVault)
+    let subVaults = (await provider.getDynamicFields(tableUnderCoveredCallVault)).data
     console.log("there are " + subVaults.length + " sub vault under table, representing rolling, regular and maker")
     let result = {} as SubVaults;
     for (let subVault of subVaults) {
@@ -156,7 +156,7 @@ export async function getTableUnderSubVault(subVault: string): Promise<string> {
 }
 
 export async function getLinkedListNodesFromTable(table: string): Promise<any[]> {
-    let linkedListNodes: any[] = await provider.getObjectsOwnedByObject(table)
+    let linkedListNodes: any[] = (await provider.getDynamicFields(table)).data
     console.log("there are " + linkedListNodes.length + " linked list nodes in table")
     return linkedListNodes
 }
