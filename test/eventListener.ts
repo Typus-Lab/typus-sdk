@@ -88,6 +88,7 @@ async function generateBidId(vault: CoveredCallVault[]): Promise<BidInterface[]>
 
 export async function getBidEventsCranker(type: string, renewSec: number, provider: JsonRpcProvider) {
     let res: any[] = [];
+    let isFirstTime: boolean = true;
 
     cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
 
@@ -124,7 +125,11 @@ export async function getBidEventsCranker(type: string, renewSec: number, provid
 
             let telegramText: string = format
             console.log(telegramText)
-            sendEventToTelegramChannel(telegramText)
+            if (!isFirstTime) {
+                sendEventToTelegramChannel(telegramText)
+            } else {
+                isFirstTime = false;
+            }
 
             res = newRes
         }
@@ -134,6 +139,8 @@ export async function getBidEventsCranker(type: string, renewSec: number, provid
 
 export async function getNewAuctionEventsCranker(type: string, renewSec: number, provider: JsonRpcProvider) {
     let res: any[] = [];
+    let bidIds: any[] = [];
+    let isFirstTime: boolean = true;
 
     cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
         const events = await provider.getEvents(
@@ -148,31 +155,44 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
             let format: string = "Typus Auction is live! "
             format += '<a href="https://devnet.typus.finance/auction">Bid now </a>' + "! \n"
             let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
-            let bidIds: BidInterface[] = await generateBidId(vault);
+            let newBidIds: BidInterface[] = await generateBidId(vault);
+
+            //compare newBidIds to bidIds 
+            newBidIds = newBidIds.filter(e =>
+                !bidIds.find(tmp => tmp.bidFormat == e.bidFormat)
+            )
 
             for (let asset of TOKEN_NAME) {
-                let targetBids = bidIds.filter((bidId) =>
+                let targetBids = newBidIds.filter((bidId) =>
                     bidId.bidFormat.toString().includes(asset)
                 )
                 if (targetBids.length) {
-                    format += asset + " Options \n"
+                    format += "* " + asset + " Options \n"
                     targetBids.map((bidId) => {
                         let period = (bidId.period == "0") ? "Daily " : (bidId.period == "1") ? "Weekly " : (bidId.period == "2") ? "Monthly " : "- "
                         format += "\t" + period + "Covered Call-" + bidId.bidFormat + " \n"
+                        format += " \n"
                     })
                 }
             }
 
             let telegramText: string = format
             console.log(telegramText)
-            sendEventToTelegramChannel(telegramText)
+            if (!isFirstTime) {
+                sendEventToTelegramChannel(telegramText)
+            } else {
+                isFirstTime = false;
+            }
             res = newRes
+            bidIds = newBidIds
         }
     });
 }
 
 export async function getEndAuctionEventsCranker(type: string, renewSec: number, provider: JsonRpcProvider) {
     let res: any[] = [];
+    let bidIds: any[] = [];
+    let isFirstTime: boolean = true;
 
     cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
 
@@ -187,10 +207,16 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
         if (!await twoObjArrAreSame(newRes, res)) {
             let format: string = ""
             let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
-            let bidIds: BidInterface[] = await generateBidId(vault);
+            let newBidIds: BidInterface[] = await generateBidId(vault);
+            console.log(newBidIds)
+            //compare newBidIds to bidIds 
+            newBidIds = newBidIds.filter(e =>
+                !bidIds.find(tmp => tmp.bidFormat == e.bidFormat)
+            )
+            console.log(newBidIds)
             for (let asset of TOKEN_NAME) {
 
-                let targetBids = bidIds.filter((bidId) =>
+                let targetBids = newBidIds.filter((bidId) =>
                     bidId.bidFormat.toString().includes(asset)
                 )
 
@@ -202,23 +228,29 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
 
                         let totalAuctioned = "-"
                         let clearingPrice = "-"
-                        if (targetVault?.deliveryInfo) {
-                            // console.log(targetVault.deliveryInfo)
+
+                        if (JSON.stringify(targetVault?.deliveryInfo) != '{}') {
                             totalAuctioned = (new Decimal(targetVault?.deliveryInfo.deliverySize!).div(new Decimal(10 ** TOKEN_DECIMAL))).toFixed(2)
                             clearingPrice = (new Decimal(targetVault?.deliveryInfo.deliveryPrice!).div(new Decimal(10 ** 5))).toFixed(4)
                         }
 
                         let period = (bidId.period == "0") ? "Daily " : (bidId.period == "1") ? "Weekly " : (bidId.period == "2") ? "Monthly " : "- "
-                        format += period + "Covered Call-" + bidId.bidFormat + " auction is closed! Total auctioned " + totalAuctioned +
+                        format += "* " + period + "Covered Call-" + bidId.bidFormat + " auction is closed! Total auctioned " + totalAuctioned +
                             " " + asset + " at a clearing price of " + clearingPrice + " " + asset + " \n"
+                        format += " \n"
                     })
                 }
 
             }
             let telegramText: string = format
             console.log(telegramText)
-            sendEventToTelegramChannel(telegramText)
+            if (!isFirstTime) {
+                sendEventToTelegramChannel(telegramText)
+            } else {
+                isFirstTime = false;
+            }
             res = newRes
+            bidIds = newBidIds
         }
     })
 }
