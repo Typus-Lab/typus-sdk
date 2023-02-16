@@ -30,13 +30,12 @@ export const TOKEN_DECIMAL = 9
 export const DEFAULT_TYPE_ARGUMENT = "0x2::sui::SUI";
 export const FAKE_TOKEN_TYPE_ARGUMENT = "0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC"
 export const TEST_MNEMONIC = "plug grain matter asthma aware critic can lottery blouse uncover sauce speak"
-export const TOKEN_NAME = ["BTC", "ETH", "SUI", "USDC", "USDT"]
+export const TOKEN_NAME = ["BTC", "ETH", "SUI", "USDC", "USDT", "APT", "DOGE"]
 export const TOKEN_NAME_TO_MODULE = {
     "BTC": "btc",
     "ETH": "eth",
     "SUI": "sui",
     "USDC": "usdc",
-    // "USDT": "token_usdt",
 }
 
 export const TESTNET_RPC_ENDPOINT = "https://fullnode.testnet.sui.io:443"
