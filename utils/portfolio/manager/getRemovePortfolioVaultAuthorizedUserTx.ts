@@ -1,5 +1,6 @@
-
-/// typeArgument: <D_TOKEN, B_TOKEN, O_TOKEN>
+/**
+ * @param  typeArguments [D_TOKEN, B_TOKEN, O_TOKEN]
+*/
 export async function getRemovePortfolioVaultAuthorizedUserTx(
     gasBudget: number,
     packageId: string,
