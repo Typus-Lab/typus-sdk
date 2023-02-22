@@ -18,6 +18,9 @@ interface BidInterface {
     bidTime: number;
     period: string;// Daily = 0, Weekly = 1, Monthly = 2
     vaultIdx: string;
+    asset: string;
+    expiration: string;
+    strike: string;
 }
 
 /*
@@ -81,6 +84,9 @@ async function generateBidId(vault: CoveredCallVault[]): Promise<BidInterface[]>
             bidTime: Number(time),
             period: period,
             vaultIdx: vaultIdx,
+            asset: v.asset,
+            expiration: expiration,
+            strike: v.config.payoffConfig.strike
         }
         return obj
     })
@@ -161,6 +167,11 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
             //compare newBidIds to bidIds 
             newBidIds = newBidIds.filter(e =>
                 !bidIds.find(tmp => tmp.bidFormat == e.bidFormat)
+            )
+
+            //filter auction not started
+            newBidIds = newBidIds.filter(e =>
+                e.strike != "0"
             )
 
             for (let asset of TOKEN_NAME) {
