@@ -1,5 +1,5 @@
 
-import { DOV_PACKAGE, TOKEN_PACKAGE, COVERED_CALL_PACKAGE, TOKEN_DECIMAL, COVERED_CALL_REGISTRY, TESTNET_RPC_ENDPOINT, TOKEN_NAME } from "../constants"
+import { TOKEN_PACKAGE, COVERED_CALL_PACKAGE, TOKEN_DECIMAL, COVERED_CALL_REGISTRY, TOKEN_NAME } from "../constants"
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { getVaultDataFromRegistry } from '../utils/getVaultData';
 import cron from 'node-cron';
@@ -7,11 +7,10 @@ var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 import moment from 'moment';
 import { CoveredCallVault } from '../utils/fetchData';
 import Decimal from "decimal.js";
+
 const provider = new JsonRpcProvider(Network.DEVNET); //for read only operations
 const apiToken = process.env.API_TOKEN;
 const chatId = process.env.CHAT_ID;
-// let apiToken = "5864284783:AAHwXWgt2YgLENdJ9mVBUDBVLHXrMLNgkic";
-// let chatId = "-1001784476809";
 
 interface BidInterface {
     bidFormat: string;
