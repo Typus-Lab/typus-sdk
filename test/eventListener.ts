@@ -260,12 +260,11 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
             console.log(telegramText)
             if (!isFirstTime) {
                 sendEventToTelegramChannel(telegramText)
-            } else {
-                isFirstTime = false;
             }
             res = newRes
             bidIds = newBidIds
         }
+        isFirstTime = false;
     })
 }
 
