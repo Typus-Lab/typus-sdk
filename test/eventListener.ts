@@ -244,12 +244,12 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
                         if (JSON.stringify(targetVault?.deliveryInfo) != '{}') {
                             totalAuctioned = (new Decimal(targetVault?.deliveryInfo.deliverySize!).div(new Decimal(10 ** TOKEN_DECIMAL))).toFixed(2)
                             clearingPrice = (new Decimal(targetVault?.deliveryInfo.deliveryPrice!).div(new Decimal(10 ** 5))).toFixed(4)
-                        }
 
-                        let period = (bidId.period == "0") ? "Daily " : (bidId.period == "1") ? "Weekly " : (bidId.period == "2") ? "Monthly " : "- "
-                        format += "* " + period + "Covered Call-" + bidId.bidFormat + " auction is closed! Total auctioned " + totalAuctioned +
-                            " " + asset + " at a clearing price of " + clearingPrice + " " + asset + " \n"
-                        format += " \n"
+                            let period = (bidId.period == "0") ? "Daily " : (bidId.period == "1") ? "Weekly " : (bidId.period == "2") ? "Monthly " : "- "
+                            format += "* " + period + "Covered Call-" + bidId.bidFormat + " auction is closed! Total auctioned " + totalAuctioned +
+                                " " + asset + " at a clearing price of " + clearingPrice + " " + asset + " \n"
+                            format += " \n"
+                        }
                     })
                 }
 
