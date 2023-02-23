@@ -132,12 +132,11 @@ export async function getBidEventsCranker(type: string, renewSec: number, provid
             console.log(telegramText)
             if (!isFirstTime) {
                 sendEventToTelegramChannel(telegramText)
-            } else {
-                isFirstTime = false;
             }
 
             res = newRes
         }
+        isFirstTime = false;
     })
 
 }
@@ -191,12 +190,11 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
             console.log(telegramText)
             if (!isFirstTime) {
                 sendEventToTelegramChannel(telegramText)
-            } else {
-                isFirstTime = false;
             }
             res = newRes
             bidIds = newBidIds
         }
+        isFirstTime = false;
     });
 }
 
