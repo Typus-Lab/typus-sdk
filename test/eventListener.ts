@@ -42,7 +42,7 @@ interface BidInterface {
 
     let endAuctionType = COVERED_CALL_PACKAGE + "::covered_call::Delivery<" + TOKEN_PACKAGE + "::eth::ETH>";
 
-    let renewSec = 5
+    let renewSec = 30
 
     // let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
 
