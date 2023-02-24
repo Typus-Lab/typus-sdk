@@ -40,7 +40,7 @@ interface BidInterface {
 
     let newAuctionType = COVERED_CALL_PACKAGE + "::covered_call::NewAuction"
 
-    let endAuctionType = COVERED_CALL_PACKAGE + "::covered_call::Delivery<" + TOKEN_PACKAGE + "::eth::ETH>";
+    let endAuctionType = COVERED_CALL_PACKAGE + "::covered_call::Delivery";
 
     let renewSec = 30
 
