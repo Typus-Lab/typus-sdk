@@ -167,6 +167,9 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
 
         let tvl = Number(vault.regular_sub_vault.fields.balance) + Number(vault.rolling_sub_vault.fields.balance)
 
+        //@ts-ignore
+        let authority = await getNodesKeyFromLinkedList(objInfo.details.data.fields.value.fields.authority, provider)
+
         let res: CoveredCallVault = {
             vaultId: vaultId,
             vaultIdx: vaultIdx.toString(),
@@ -179,6 +182,7 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
             totalBidSize: totalBidSize,
             deliveryInfo: deliveryInfo,
             owner: owner,
+            authority,
             tvl: tvl.toString(),
             vaultBidPrice: vaultBidPrice.toString(),
         }
@@ -208,4 +212,12 @@ export async function getVaultBidPrice(auction: Auction): Promise<number> {
     return initialPrice -
         (initialPrice - finalPrice) *
         (((current - start) / (end - start)) ^ decaySpeed)
+}
+
+export async function getNodesKeyFromLinkedList(linkedList: string, provider: JsonRpcProvider): Promise<string[]> {
+
+    //@ts-ignore
+    let linkedListNodes: string[] = (await provider.getDynamicFields(linkedList.fields.whitelist.fields.nodes.fields.id.id)).data.map(d => d.name)
+
+    return linkedListNodes
 }

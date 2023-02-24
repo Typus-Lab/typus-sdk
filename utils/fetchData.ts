@@ -86,6 +86,7 @@ export interface CoveredCallVault {
     totalBidSize: string;
     deliveryInfo: DeliveryInfo;
     owner: string;
+    authority: string[];
     //  status:string; // Upcoming Or Active 
     tvl: string;//regular_sub_vault balance + rolling_sub_vault balance
     //  apy:string
