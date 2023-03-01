@@ -26,39 +26,27 @@ interface BidInterface {
 「https://api.telegram.org/botTOKEN/getUpdates」，change TOKEN to token from botFather
 */
 
+const renewSec = 60;
+const ASSETS = ["BTC", "ETH", "SUI", "APT", "DOGE"];
 
 (async () => {
+    let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
 
-    let bidTypes: string[] = [
-        COVERED_CALL_PACKAGE + "::covered_call::NewBid<" + TOKEN_PACKAGE + "::eth::ETH>",
-        COVERED_CALL_PACKAGE + "::covered_call::NewBid<" + TOKEN_PACKAGE + "::btc::BTC>",
-        COVERED_CALL_PACKAGE + "::covered_call::NewBid<" + TOKEN_PACKAGE + "::sui::SUI>",
-        COVERED_CALL_PACKAGE + "::covered_call::NewBid<" + TOKEN_PACKAGE + "::doge::DOGE>",
-        COVERED_CALL_PACKAGE + "::covered_call::NewBid<" + TOKEN_PACKAGE + "::apt::APT>",
-    ]
-    // let bidType = COVERED_CALL_PACKAGE + "::covered_call::NewBid<" + TOKEN_PACKAGE + "::eth::ETH>"
-
-    let newAuctionType = COVERED_CALL_PACKAGE + "::covered_call::NewAuction"
-
-    let endAuctionType = COVERED_CALL_PACKAGE + "::covered_call::Delivery";
-
-    let renewSec = 30
-
-    // let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
-
-    bidTypes.map(async (bidType) => {
-        await getBidEventsCranker(bidType, renewSec, provider)//new_bid
+    cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
+        vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
     })
 
-    await getNewAuctionEventsCranker(newAuctionType, renewSec, provider)//evolution
+    for (let asset of ASSETS) {
+        let bidType = COVERED_CALL_PACKAGE + "::covered_call::NewBid<" + TOKEN_PACKAGE + "::" + asset.toLowerCase() + "::" + asset + ">"
+        let endAuctionType = COVERED_CALL_PACKAGE + "::covered_call::Delivery<" + TOKEN_PACKAGE + "::" + asset.toLowerCase() + "::" + asset + ">"
 
-    await getEndAuctionEventsCranker(endAuctionType, renewSec, provider)
+        await getBidEventsCranker(bidType, renewSec, provider, vault)//new_bid
+        await getEndAuctionEventsCranker(endAuctionType, renewSec, provider, vault)
+    }
+
+    let newAuctionType = COVERED_CALL_PACKAGE + "::covered_call::NewAuction"
+    await getNewAuctionEventsCranker(newAuctionType, renewSec, provider, vault)//evolution
 })()
-
-async function twoObjArrAreSame(x: any[], y: any[]): Promise<boolean> {
-    if (JSON.stringify(x) === JSON.stringify(y)) { return true }
-    else { return false }
-}
 
 async function generateBidId(vault: CoveredCallVault[]): Promise<BidInterface[]> {
     //use the vault to generate "SUI-20JAN23-120-C"
@@ -93,7 +81,7 @@ async function generateBidId(vault: CoveredCallVault[]): Promise<BidInterface[]>
     return res
 }
 
-export async function getBidEventsCranker(type: string, renewSec: number, provider: JsonRpcProvider) {
+export async function getBidEventsCranker(type: string, renewSec: number, provider: JsonRpcProvider, vault: CoveredCallVault[]) {
     let res: any[] = [];
     let isFirstTime: boolean = true;
 
@@ -103,17 +91,15 @@ export async function getBidEventsCranker(type: string, renewSec: number, provid
             { MoveEvent: type },
             null,
             null,
+            'descending'
         )
 
         let newRes: any[] = events.data
-
-        let newBidHappened: boolean = newRes.length != res.length
-        if (newBidHappened) {
+        if (JSON.stringify(newRes) != JSON.stringify(res)) {
 
             let newBid = newRes.filter(({ timestamp: id1 }) => !res.some(({ timestamp: id2 }) => id2 === id1));
 
             let format: string = ""
-            let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
             let bidIds: BidInterface[] = await generateBidId(vault);
 
             newBid.map(async (e) => {
@@ -129,37 +115,34 @@ export async function getBidEventsCranker(type: string, renewSec: number, provid
             })
 
             let telegramText: string = format
-            console.log(telegramText)
             if (!isFirstTime) {
+                console.log(telegramText)
                 sendEventToTelegramChannel(telegramText)
             }
-
             res = newRes
+            isFirstTime = false;
         }
-        isFirstTime = false;
     })
-
 }
 
-export async function getNewAuctionEventsCranker(type: string, renewSec: number, provider: JsonRpcProvider) {
-    let res: any[] = [];
+export async function getNewAuctionEventsCranker(type: string, renewSec: number, provider: JsonRpcProvider, vault: CoveredCallVault[]) {
     let bidIds: any[] = [];
     let isFirstTime: boolean = true;
+    let lastTxDigest = "";
 
     cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
         const events = await provider.getEvents(
             { MoveEvent: type },
             null,
             null,
+            'descending'
         )
 
         let newRes: any[] = events.data
-        // console.log("new Res in getNewAuctionEventsCranker:")
-        // console.log(newRes)
-        if (!await twoObjArrAreSame(newRes, res)) {
+        let txDigest = newRes[0].txDigest;
+        if (txDigest != lastTxDigest) {
             let format: string = "Typus Auction is live! "
             format += '<a href="https://devnet.typus.finance/auction">Bid now </a>' + "! \n"
-            let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
             let newBidIds: BidInterface[] = await generateBidId(vault);
 
             //compare newBidIds to bidIds 
@@ -187,21 +170,21 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
             }
 
             let telegramText: string = format
-            console.log(telegramText)
             if (!isFirstTime) {
+                console.log(telegramText)
                 sendEventToTelegramChannel(telegramText)
             }
-            res = newRes
+            lastTxDigest = txDigest
             bidIds = newBidIds
+            isFirstTime = false;
         }
-        isFirstTime = false;
     });
 }
 
-export async function getEndAuctionEventsCranker(type: string, renewSec: number, provider: JsonRpcProvider) {
-    let res: any[] = [];
+export async function getEndAuctionEventsCranker(type: string, renewSec: number, provider: JsonRpcProvider, vault: CoveredCallVault[]) {
     let bidIds: any[] = [];
     let isFirstTime: boolean = true;
+    let lastTxDigest = "";
 
     cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
 
@@ -209,23 +192,24 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
             { MoveEvent: type },
             null,
             null,
+            'descending'
         )
 
         let newRes: any[] = events.data
         // console.log("new Res in getEndAuctionEventsCranker:")
         // console.log(newRes)
-        if (!await twoObjArrAreSame(newRes, res)) {
+        let txDigest = newRes[0].txDigest;
+        if (txDigest != lastTxDigest) {
             let format: string = ""
-            let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
             let newBidIds: BidInterface[] = await generateBidId(vault);
             // console.log("new bid ids before filter:")
-            console.log(newBidIds)
+            // console.log(newBidIds)
             //compare newBidIds to bidIds 
             newBidIds = newBidIds.filter(e =>
                 !bidIds.find(tmp => tmp.bidFormat == e.bidFormat)
             )
             // console.log("new bid ids after filter:")
-            console.log(newBidIds)
+            // console.log(newBidIds)
             for (let asset of TOKEN_NAME) {
 
                 let targetBids = newBidIds.filter((bidId) =>
@@ -252,17 +236,16 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
                         }
                     })
                 }
-
             }
             let telegramText: string = format
-            console.log(telegramText)
             if (!isFirstTime) {
+                console.log(telegramText)
                 sendEventToTelegramChannel(telegramText)
             }
-            res = newRes
+            lastTxDigest = txDigest
             bidIds = newBidIds
+            isFirstTime = false;
         }
-        isFirstTime = false;
     })
 }
 

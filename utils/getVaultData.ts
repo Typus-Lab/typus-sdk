@@ -6,7 +6,7 @@ import { CoveredCallVault, PayoffConfig, Config, VaultConfig, Vault, SubVault, A
 // const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 
 export async function getVaultDataFromRegistry(registry: string, provider: JsonRpcProvider): Promise<CoveredCallVault[]> {
-    console.log("registry: " + registry)
+    // console.log("registry: " + registry)
 
     let coveredCallVaults: any[] = (await provider.getDynamicFields(registry)).data
 
