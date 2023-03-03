@@ -1,3 +1,8 @@
+/**
+    public(friend) entry fun remove_manager(
+        manager_cap: ManagerCap,
+    )
+*/
 export async function getRemoveManagerTx(
     gasBudget: number,
     packageId: string,

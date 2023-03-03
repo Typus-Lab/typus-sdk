@@ -36,7 +36,7 @@ export async function getAuthorizedNewPortfolioVaultTx(
     bTokenDecimal: string,  // u64
     oTokenDecimal: string,  // u64
     capacity: string,       // u64
-    strikeOtmPct: string[], // vector<u64>
+    strikePct: string[], // vector<u64>
     weight: string[],       // vector<u64>
     isBuyer: string[],      // vector<bool>
     strikeIncrement: string,// u64
@@ -64,7 +64,7 @@ export async function getAuthorizedNewPortfolioVaultTx(
             bTokenDecimal,
             oTokenDecimal,
             capacity,
-            strikeOtmPct,
+            strikePct,
             weight,
             isBuyer,
             strikeIncrement,

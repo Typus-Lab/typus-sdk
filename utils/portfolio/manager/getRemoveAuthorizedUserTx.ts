@@ -1,3 +1,10 @@
+/**
+    public(friend) entry fun remove_authorized_user(
+        manager_cap: &ManagerCap,
+        registry: &mut Registry,
+        user_address: address,
+    )
+*/
 export async function getRemoveAuthorizedUserTx(
     gasBudget: number,
     packageId: string,

@@ -1,3 +1,10 @@
+/**
+    public(friend) entry fun new_manager(
+        _manager_cap: &ManagerCap,
+        user: address,
+        ctx: &mut TxContext
+    )
+*/
 export async function getNewManagerTx(
     gasBudget: number,
     packageId: string,

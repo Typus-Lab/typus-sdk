@@ -4,7 +4,7 @@ export async function getAuthorizedUpdateNextVaultConfigTx(
     registry: string,
     typeArguments: string[],
     index: string,
-    strikeOtmPct: string[], // vector<u64>
+    strikePct: string[], // vector<u64>
     weight: string[],       // vector<u64>
     isBuyer: string[],      // vector<bool>
     strikeIncrement: string,
@@ -21,7 +21,7 @@ export async function getAuthorizedUpdateNextVaultConfigTx(
         arguments: [
             registry,
             index,
-            strikeOtmPct,
+            strikePct,
             weight,
             isBuyer,
             strikeIncrement,

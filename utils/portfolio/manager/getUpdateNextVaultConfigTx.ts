@@ -5,7 +5,7 @@ export async function getUpdateNextVaultConfigTx(
     registry: string,
     typeArguments: string[],
     index: string,
-    strikeOtmPct: string[], // vector<u64>
+    strikePct: string[],    // vector<u64>
     weight: string[],       // vector<u64>
     isBuyer: string[],      // vector<bool>
     strikeIncrement: string,
@@ -23,7 +23,7 @@ export async function getUpdateNextVaultConfigTx(
             managerCap,
             registry,
             index,
-            strikeOtmPct,
+            strikePct,
             weight,
             isBuyer,
             strikeIncrement,

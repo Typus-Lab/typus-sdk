@@ -1,7 +1,7 @@
 /**
- *  manager_cap: & ManagerCap,
-    registry: & mut Registry,
-    time_oracle: & Time,
+    manager_cap: &ManagerCap,
+    registry: &mut Registry,
+    time_oracle: &Time,
     option_type: u64,
     period: u8,
     activation_ts_ms: u64,
@@ -38,7 +38,7 @@ export async function getNewPortfolioVaultTx(
     bTokenDecimal: string,  // u64
     oTokenDecimal: string,  // u64
     capacity: string,       // u64
-    strikeOtmPct: string[], // vector<u64>
+    strikePct: string[], // vector<u64>
     weight: string[],       // vector<u64>
     isBuyer: string[],      // vector<bool>
     strikeIncrement: string,// u64
@@ -67,7 +67,7 @@ export async function getNewPortfolioVaultTx(
             bTokenDecimal,
             oTokenDecimal,
             capacity,
-            strikeOtmPct,
+            strikePct,
             weight,
             isBuyer,
             strikeIncrement,

@@ -1,9 +1,16 @@
+/**
+    public(friend) entry fun add_authorized_user(
+        manager_cap: & ManagerCap,
+        registry: & mut Registry,
+        user_addresses: vector<address>,
+    ) 
+*/
 export async function getAddAuthorizedUserTx(
     gasBudget: number,
     packageId: string,
     managerCap: string,
     registry: string,
-    address: string,
+    userAddresses: string[],
 ): Promise<any> {
     let tx = {
         packageObjectId: packageId,
@@ -13,7 +20,7 @@ export async function getAddAuthorizedUserTx(
         arguments: [
             managerCap,
             registry,
-            address,
+            userAddresses,
         ],
         gasBudget: gasBudget,
     }
