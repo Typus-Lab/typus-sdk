@@ -18,14 +18,12 @@ export interface PortfolioVault {
 
     optionType: string;
     config: Config;
-    depositorVault: DVault;
-    bidderVault: BVault;
+    depositorVault: DepositVault;
+    bidderVault: BidVault;
     auction: Auction;
-    prev: string;
-    next: string;
-    totalBidSize: string;
     deliveryInfo: DeliveryInfo;
-    owner: string;
+    creator: string;
+    authority: string[];
 
     //  status:string; // Upcoming Or Active 
     tvl: string;//regular_sub_vault balance + rolling_sub_vault balance
@@ -35,7 +33,7 @@ export interface PortfolioVault {
 }
 
 export interface Config {
-    period: string;// daily:0 weekly:1 monthly:2
+    period: string; // daily:0 weekly:1 monthly:2
     activationTsMs: string
     expirationTsMs: string;
     dTokenDecimal: string;
@@ -67,23 +65,23 @@ export interface VaultConfig {
 export interface DeliveryInfo {
     deliveryPrice: string;
     deliverySize: string;
-    // tsMs: string;
+    tsMs: string;
 }
 
 // typus_dov::vault
 
-export interface DVault {
-    ableToDeposit: boolean;
-    ableToWithdraw: boolean;
-    regularSubVault: SubVault;
-    rollingSubVault: SubVault;
-    refundSubVault: SubVault;
+export interface DepositVault {
+    activeSubVault: SubVault;
+    deactivatingSubVault: SubVault;
+    inactiveSubVault: SubVault;
+    warmupSubVault: SubVault;
+    hasNext: boolean;
 }
 
-export interface BVault {
-    bidder_sub_vault: SubVault,
-    premium_sub_vault: SubVault,
-    performance_fee_sub_vault: SubVault,
+export interface BidVault {
+    bidderSubVault: SubVault,
+    premiumSubVault: SubVault,
+    performanceFeeSubVault: SubVault,
 }
 
 export interface SubVault {
@@ -99,9 +97,10 @@ export interface Auction {
     startTsMs: string;
     endTsMs: string;
     priceConfig: PriceConfig;
-    index: string;
+    index: string; // bid index
     // bids
     // ownerships
+    totalBidSize: string;
 }
 
 export interface PriceConfig {
