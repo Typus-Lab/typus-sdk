@@ -141,8 +141,8 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
         let newRes: any[] = events.data
         let txDigest = newRes[0].txDigest;
         if (txDigest != lastTxDigest) {
-            let format: string = "Typus Auction is live! "
-            format += '<a href="https://devnet.typus.finance/auction">Bid now </a>' + "! \n"
+            let head: string = "Typus Auction is live! " + '<a href="https://devnet.typus.finance/auction">Bid now </a>' + "! \n"
+            let format: string = ""
             let newBidIds: BidInterface[] = await generateBidId(vault);
 
             //compare newBidIds to bidIds 
@@ -168,9 +168,8 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
                     })
                 }
             }
-
-            let telegramText: string = format
-            if (!isFirstTime) {
+            if (!isFirstTime && format != "") {
+                let telegramText: string = head + format
                 console.log(telegramText)
                 sendEventToTelegramChannel(telegramText)
             }
