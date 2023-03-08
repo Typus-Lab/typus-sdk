@@ -145,7 +145,7 @@ export async function getNewAuctionEventsCranker(type: string, renewSec: number,
             let format: string = ""
             let newBidIds: BidInterface[] = await generateBidId(vault);
 
-            //compare newBidIds to bidIds 
+            //compare newBidIds to bidIds
             newBidIds = newBidIds.filter(e =>
                 !bidIds.find(tmp => tmp.bidFormat == e.bidFormat)
             )
@@ -203,7 +203,7 @@ export async function getEndAuctionEventsCranker(type: string, renewSec: number,
             let newBidIds: BidInterface[] = await generateBidId(vault);
             // console.log("new bid ids before filter:")
             // console.log(newBidIds)
-            //compare newBidIds to bidIds 
+            //compare newBidIds to bidIds
             newBidIds = newBidIds.filter(e =>
                 !bidIds.find(tmp => tmp.bidFormat == e.bidFormat)
             )

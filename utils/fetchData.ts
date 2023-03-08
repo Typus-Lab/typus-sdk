@@ -3,32 +3,87 @@ import { JsonRpcProvider, Network } from '@mysten/sui.js';
 const provider = new JsonRpcProvider(Network.DEVNET); //for read only operations
 const decode = (str: string): string => Buffer.from(str, 'base64').toString('binary');
 
-export interface SubVaults {
-    rolling: string;
-    maker: string;
-    regular: string;
+// typus_portfolio::portfolio
+
+export interface PortfolioVault {
+    vaultId: string;
+    dToken: string;
+    bToken: string;
+    oToken: string;
+
+    info: Info;
+    config: Config;
+    depositVault: DepositVault;
+    bidVault: BidVault;
+    auction: Auction;
+    authority: string[];
+
+    tvl: string;        //regular_sub_vault balance + rolling_sub_vault balance
+    vaultBidPrice: string;
 }
+
+export interface Info {
+    index: string;
+    creator: string;
+    create_ts_ms: string;
+    round: string;
+    deliveryInfo: DeliveryInfo;
+}
+
+export interface Config {
+    optionType: string;
+    period: string;         // daily:0 weekly:1 monthly:2
+    activationTsMs: string;
+    expirationTsMs: string;
+    dTokenDecimal: string;
+    bTokenDecimal: string;
+    oTokenDecimal: string;
+    capacity: string;
+    leverage: string;
+    hasNext: boolean;
+    vaultConfig: VaultConfig;
+    nextVaultConfig: VaultConfig;
+}
+
+export interface PayoffConfig {
+    strikePct: string,  // u64
+    weight: string;     // u64
+    isBuyer: boolean;    // bool
+    strike: string;     // Option<u64>,
+}
+
 export interface VaultConfig {
-    strikeOtmPct: string,
+    payoffConfig: PayoffConfig[];
     strikeIncrement: string,
+    lotSize: string,
     decaySpeed: string,
     initialPrice: string,
     finalPrice: string,
     auctionDurationInMs: string,
 }
 
-export interface Config {
-    period: string;// daily:0 weekly:1 monthly:2
-    activationTsMs: string
-    expirationTsMs: string;
-    tokenDecimal: string;
-    shareDecimal: string;
-    capacity: string,
-    leverage: string,
-    vaultConfig: VaultConfig,
-    nextVaultConfig: VaultConfig,
-    payoffConfig: PayoffConfig;
+export interface DeliveryInfo {
+    round: string;
+    price: string;
+    size: string;
+    premium: string;
+    tsMs: string;
+}
 
+// typus_dov::vault
+
+export interface DepositVault {
+    activeSubVault: SubVault;
+    deactivatingSubVault: SubVault;
+    inactiveSubVault: SubVault;
+    warmupSubVault: SubVault;
+    hasNext: boolean;
+}
+
+export interface BidVault {
+    bidderSubVault: SubVault,
+    premiumSubVault: SubVault,
+    performanceFeeSubVault: SubVault,
 }
 
 export interface SubVault {
@@ -37,13 +92,24 @@ export interface SubVault {
     // user_shares
 }
 
-export interface Vault {
-    ableToDeposit: boolean;
-    ableToWithdraw: boolean;
-    //TODO
-    makerSubVault: SubVault;
-    regularSubVault: SubVault;
-    rollingSubVault: SubVault;
+
+// typus_dov::dutch
+
+export interface Auction {
+    startTsMs: string;
+    endTsMs: string;
+    priceConfig: PriceConfig;
+    index: string; // bid index
+    // bids
+    // ownerships
+    totalBidSize: string;
+    ableToRemoveBid: boolean;
+}
+
+export interface PriceConfig {
+    decaySpeed: string;
+    initialPrice: string;
+    finalPrice: string;
 }
 
 export interface Bid {
@@ -52,123 +118,4 @@ export interface Bid {
     tsMs: string;
     tokenBalance: string;
     ownerAddress: string;
-}
-
-export interface PriceConfig {//TODO : string
-    decaySpeed: string;
-    initialPrice: string;
-    finalPrice: string;
-}
-export interface Auction {
-    startTsMs: string;
-    endTsMs: string;
-    priceConfig: PriceConfig;
-    index: string;
-    // bids
-    // ownerships
-}
-
-export interface DeliveryInfo {
-    deliveryPrice: string;
-    deliverySize: string;
-    // tsMs: string;
-}
-
-export interface CoveredCallVault {
-    vaultId: string;
-    vaultIdx: string;
-    asset: string;
-    config: Config;
-    vault: Vault;
-    auction: Auction;
-    prev: string;
-    next: string;
-    totalBidSize: string;
-    deliveryInfo: DeliveryInfo;
-    owner: string;
-    authority: string[];
-    //  status:string; // Upcoming Or Active 
-    tvl: string;//regular_sub_vault balance + rolling_sub_vault balance
-    //  apy:string
-    //  Capacity//not yet
-    vaultBidPrice: string;
-}
-
-export interface PayoffConfig {
-    exposureRatio: string;
-    premiumRoi: string;
-    strike: string;
-}
-
-//new version: getVaultDataFromRegistry()
-export async function getCoveredCallVaultsFromRegistry(registry: string): Promise<any> {
-    console.log("registry: " + registry)
-    let coveredCallVaults: any[] = (await provider.getDynamicFields(registry)).data
-    console.log("under the registry, there are " + coveredCallVaults.length + " covered call vaults")
-    return coveredCallVaults
-}
-
-export async function getTableFromCoveredCallVault(coveredCallVault: string): Promise<any> {
-    console.log("coveredCallVault: " + coveredCallVault)
-    let tmp: any = await provider.getObject(coveredCallVault)
-    if (tmp.status != "Exists") {
-        console.log("obj not exists")
-        return
-    }
-    //@ts-ignore
-    let tableUnderCoveredCallVault: string = tmp.details.data.fields.value.fields.vault.fields.sub_vaults.fields.id.id
-    console.log("table : " + tableUnderCoveredCallVault)
-    return tableUnderCoveredCallVault
-}
-
-export async function getSubVaultsFromTable(tableUnderCoveredCallVault: string): Promise<SubVaults> {
-    let subVaults = (await provider.getDynamicFields(tableUnderCoveredCallVault)).data
-    console.log("there are " + subVaults.length + " sub vault under table, representing rolling, regular and maker")
-    let result = {} as SubVaults;
-    for (let subVault of subVaults) {
-        let txn = await provider.getObject(subVault.objectId)
-        if (txn.status != "Exists") {
-            console.log("obj not exists")
-            return {} as SubVaults
-        }
-        //@ts-ignore
-        let name = decode(txn.details.data.fields.name)//rolling / regular / maker
-        //@ts-ignore
-        result[name] = txn.details.data.fields.id.id
-    }
-    console.log("sub vaults:")
-    console.log(result)
-    return result
-}
-
-export async function getTableUnderSubVault(subVault: string): Promise<string> {
-    console.log("sub vault: " + subVault)
-    let tmp = await provider.getObject(subVault)
-    if (tmp.status != "Exists") {
-        console.log("obj not exists")
-        return ""
-    }
-    //@ts-ignore
-    let table: string = tmp.details.data.fields.value.fields.user_shares.fields.nodes.fields.id.id
-    console.log("table under sub vault: ", table);
-    return table
-}
-
-export async function getLinkedListNodesFromTable(table: string): Promise<any[]> {
-    let linkedListNodes: any[] = (await provider.getDynamicFields(table)).data
-    console.log("there are " + linkedListNodes.length + " linked list nodes in table")
-    return linkedListNodes
-}
-
-export async function getUserDataFromLinkedListNode(linkedListNode: string): Promise<any> {
-    let tmp = await provider.getObject(linkedListNode)
-    if (tmp.status != "Exists") {
-        console.log("obj not exists")
-        return
-    }
-    //@ts-ignore
-    let usersData: any = tmp.details.data.fields
-    console.log("users data from linked list node:")
-    console.log(usersData)
-    return usersData
 }
