@@ -8,9 +8,7 @@ const decode = (str: string): string => Buffer.from(str, 'base64').toString('bin
 export interface PortfolioVault {
     vaultId: string;
     typeArgs: string[];
-    dToken: string;
-    bToken: string;
-    oToken: string;
+    assets: string[];
 
     info: Info;
     config: Config;

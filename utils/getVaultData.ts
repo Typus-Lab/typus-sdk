@@ -136,9 +136,7 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
         let res: PortfolioVault = {
             vaultId: vaultId,
             typeArgs,
-            dToken: assets[0],
-            bToken: assets[1],
-            oToken: assets[2],
+            assets,
             info,
             config: configRes,
             depositVault,
