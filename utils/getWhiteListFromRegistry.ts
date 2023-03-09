@@ -1,9 +1,5 @@
 
-import { JsonRpcProvider, Network, GetObjectDataResponse } from '@mysten/sui.js';
-import { TOKEN_NAME, PRICE_DECIMAL, TOKEN_DECIMAL, TESTNET_RPC_ENDPOINT } from '../constants';
-import { CoveredCallVault, PayoffConfig, Config, VaultConfig, Vault, SubVault, Auction, PriceConfig, DeliveryInfo } from "./fetchData"
-
-// const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
+import { JsonRpcProvider, GetObjectDataResponse } from '@mysten/sui.js';
 
 export async function getWhiteListFromRegistry(registry: string, provider: JsonRpcProvider): Promise<string[]> {
     console.log("registry: " + registry)
