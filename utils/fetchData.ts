@@ -25,7 +25,7 @@ export interface PortfolioVault {
 export interface Info {
     index: string;
     creator: string;
-    create_ts_ms: string;
+    createTsMs: string;
     round: string;
     deliveryInfo: DeliveryInfo;
 }

@@ -1,7 +1,7 @@
 
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { TOKEN_NAME, PRICE_DECIMAL, TOKEN_DECIMAL, TESTNET_RPC_ENDPOINT } from '../constants';
-import { PortfolioVault, PayoffConfig, Config, VaultConfig, DepositVault, BidVault, SubVault, Auction, PriceConfig, DeliveryInfo } from "./fetchData"
+import { PortfolioVault, PayoffConfig, Config, VaultConfig, DepositVault, BidVault, SubVault, Auction, PriceConfig, DeliveryInfo, Info } from "./fetchData"
 
 // const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 
@@ -21,16 +21,9 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
             continue
         }
 
-        //@ts-ignore
-        // console.log(objInfo.details.data.fields.value.fields.config.fields)
-
         //vaultId
         //@ts-ignore
         let vaultId = objInfo.details.data.fields.id.id
-
-        //vaultIdx
-        //@ts-ignore
-        let vaultIdx = objInfo.details.data.fields.name as number
 
         //asset
         //@ts-ignore
@@ -40,6 +33,34 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
             console.log("can't find token")
             asset = ""
         }
+
+        let deliveryInfo: DeliveryInfo
+        //@ts-ignore
+        if (objInfo.details.data.fields.value.fields.delivery_info) {
+            //@ts-ignore
+            let fields = objInfo.details.data.fields.value.fields.delivery_info.fields;
+            deliveryInfo = {
+                round: fields.round,
+                price: fields.price,
+                size: fields.size,
+                premium: fields.premium,
+                tsMs: fields.ts_ms,
+            }
+        } else {
+            deliveryInfo = {} as DeliveryInfo
+        }
+
+        // info
+        //@ts-ignore
+        let infoF = objInfo.details.data.fields.value.fields.config.fields
+
+        let info: Info = {
+            index: infoF.index,
+            creator: infoF.creator,
+            createTsMs: infoF.create_ts_ms,
+            round: infoF.round,
+            deliveryInfo
+        };
 
         //config
         //@ts-ignore
@@ -96,31 +117,53 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
         }
 
         //@ts-ignore
-        let depositorVault = objInfo.details.data.fields.value.fields.depositor_vault.fields
+        let depositVaultF = objInfo.details.data.fields.value.fields.depositor_vault.fields
 
         let activeSubVault: SubVault = {
-            balance: (depositorVault.active_sub_vault.fields.balance),
-            shareSupply: (depositorVault.active_sub_vault.fields.share_supply),
+            balance: (depositVaultF.active_sub_vault.fields.balance),
+            shareSupply: (depositVaultF.active_sub_vault.fields.share_supply),
         }
         let deactivatingSubVault: SubVault = {
-            balance: (depositorVault.deactivating_sub_vault.fields.balance),
-            shareSupply: (depositorVault.deactivating_sub_vault.fields.share_supply),
+            balance: (depositVaultF.deactivating_sub_vault.fields.balance),
+            shareSupply: (depositVaultF.deactivating_sub_vault.fields.share_supply),
         }
         let inactiveSubVault: SubVault = {
-            balance: (depositorVault.inactive_sub_vault.fields.balance),
-            shareSupply: (depositorVault.inactive_sub_vault.fields.share_supply),
+            balance: (depositVaultF.inactive_sub_vault.fields.balance),
+            shareSupply: (depositVaultF.inactive_sub_vault.fields.share_supply),
         }
         let warmupSubVault: SubVault = {
-            balance: (depositorVault.warmup_sub_vault.fields.balance),
-            shareSupply: (depositorVault.warmup_sub_vault.fields.share_supply),
+            balance: (depositVaultF.warmup_sub_vault.fields.balance),
+            shareSupply: (depositVaultF.warmup_sub_vault.fields.share_supply),
         }
 
-        let depositVaultRes: DepositVault = {
+        let depositVault: DepositVault = {
             activeSubVault: activeSubVault,
             deactivatingSubVault: deactivatingSubVault,
             inactiveSubVault: inactiveSubVault,
             warmupSubVault: warmupSubVault,
-            hasNext: depositorVault.has_next
+            hasNext: depositVaultF.has_next
+        }
+
+        //@ts-ignore
+        let depositorVault = objInfo.details.data.fields.value.fields.depositor_vault.fields
+
+        let bidderSubVault: SubVault = {
+            balance: (depositorVault.bidder_sub_vault.fields.balance),
+            shareSupply: (depositorVault.bidder_sub_vault.fields.share_supply),
+        }
+        let premiumSubVault: SubVault = {
+            balance: (depositorVault.premium_sub_vault.fields.balance),
+            shareSupply: (depositorVault.premium_sub_vault.fields.share_supply),
+        }
+        let performanceFeeSubVault: SubVault = {
+            balance: (depositorVault.performance_fee_sub_vault.fields.balance),
+            shareSupply: (depositorVault.performance_fee_sub_vault.fields.share_supply),
+        }
+
+        let bidVault: BidVault = {
+            bidderSubVault,
+            premiumSubVault,
+            performanceFeeSubVault
         }
 
         let auctionRes: Auction;
@@ -158,22 +201,6 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
         //@ts-ignore
         let totalBidSize = objInfo.details.data.fields.value.fields.total_bid_size
 
-        let deliveryInfo: DeliveryInfo
-        //@ts-ignore
-        if (objInfo.details.data.fields.value.fields.delivery_info) {
-            //@ts-ignore
-            let fields = objInfo.details.data.fields.value.fields.delivery_info.fields;
-            deliveryInfo = {
-                round: fields.round,
-                price: fields.price,
-                size: fields.size,
-                premium: fields.premium,
-                tsMs: fields.ts_ms,
-            }
-        } else {
-            deliveryInfo = {} as DeliveryInfo
-        }
-
 
         //@ts-ignore
         let owner = objInfo.details.data.fields.value.fields.owner as string
@@ -188,9 +215,10 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
             dToken: asset,
             bToken: asset,
             oToken: asset,
-
+            info,
             config: configRes,
-            depositVault: depositVaultRes,
+            depositVault,
+            bidVault,
             auction: auctionRes,
             authority,
             tvl: tvl.toString(),
