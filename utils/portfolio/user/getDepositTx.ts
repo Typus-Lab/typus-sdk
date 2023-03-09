@@ -5,7 +5,7 @@
         coins: vector<Coin<D_TOKEN>>,
         amount: u64,
         ctx: &mut TxContext
-    ) 
+    )
  * @param typeArguments [D_TOKEN, B_TOKEN, O_TOKEN]
 */
 export async function getDepositTx(
