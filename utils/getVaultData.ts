@@ -1,7 +1,7 @@
 
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { TOKEN_NAME, PRICE_DECIMAL, TOKEN_DECIMAL, TESTNET_RPC_ENDPOINT } from '../constants';
-import { PortfolioVault, PayoffConfig, Config, VaultConfig, DepositVault, BidVault, SubVault, Auction, PriceConfig, DeliveryInfo, Info } from "./fetchData"
+import { PortfolioVault, PayoffConfig, Config, VaultConfig, DepositVault, BidVault, SubVault, Auction, PriceConfig, DeliveryInfo, Info, parseVaultConfig, parseSubVault } from "./fetchData"
 
 // const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 
@@ -11,6 +11,7 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
     let coveredCallVaults: any[] = (await provider.getDynamicFields(registry)).data
 
     let coveredCallVaultsId: string[] = coveredCallVaults.map(e => e.objectId as string)
+    console.log(coveredCallVaultsId)
     let objsInfo = await provider.getObjectBatch(coveredCallVaultsId)
 
     let vaults: PortfolioVault[] = [];
@@ -25,14 +26,13 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
         //@ts-ignore
         let vaultId = objInfo.details.data.fields.id.id
 
-        //asset
         //@ts-ignore
-        let type = objInfo.details.data.fields.value.type
-        let asset: string | undefined = TOKEN_NAME.find(e => type.includes(e))
-        if (!asset) {
-            console.log("can't find token")
-            asset = ""
-        }
+        let type: string = objInfo.details.data.fields.value.type
+        type = type.split("<")[1]
+        type = type.split(">")[0]
+        let typeArgs = type.split(", ")
+        console.log(typeArgs)
+        let assets = typeArgs.map(x => x.split("::")[2])
 
         let deliveryInfo: DeliveryInfo
         //@ts-ignore
@@ -52,8 +52,7 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
 
         // info
         //@ts-ignore
-        let infoF = objInfo.details.data.fields.value.fields.config.fields
-
+        let infoF = objInfo.details.data.fields.value.fields.info.fields
         let info: Info = {
             index: infoF.index,
             creator: infoF.creator,
@@ -66,41 +65,6 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
         //@ts-ignore
         let config = objInfo.details.data.fields.value.fields.config.fields
 
-        //prevBalance
-        //@ts-ignore
-        let prev = objInfo.details.data.fields.value.fields.prev
-        prev = (prev != null) ? prev as number : null
-
-        let vaultConfig = config.vault_config.fields
-        let vaultConfigRes: VaultConfig = {
-            payoffConfig: vaultConfig.payoffConfig,
-            strikeIncrement: vaultConfig.strike_increment,
-            lotSize: vaultConfig.lot_size,
-            decaySpeed: vaultConfig.decay_speed,
-            initialPrice: vaultConfig.initial_price,
-            finalPrice: vaultConfig.final_price,
-            auctionDurationInMs: vaultConfig.auction_duration_in_ms,
-        }
-
-        let nextVaultConfig = config.next_vault_config.fields
-        let nextVaultConfigRes: VaultConfig = {
-            payoffConfig: nextVaultConfig.payoffConfig,
-            strikeIncrement: nextVaultConfig.strike_increment,
-            lotSize: nextVaultConfig.lot_size,
-            decaySpeed: nextVaultConfig.decay_speed,
-            initialPrice: nextVaultConfig.initial_price,
-            finalPrice: nextVaultConfig.final_price,
-            auctionDurationInMs: nextVaultConfig.auction_duration_in_ms,
-        }
-
-        let payoffConfig = config.payoff_config.fields
-        let payoffConfigRes: PayoffConfig = {
-            strikePct: payoffConfig.strike_pct,
-            weight: payoffConfig.weight,
-            isBuyer: payoffConfig.is_buyer,
-            strike: ((payoffConfig.strike) / (10 ** PRICE_DECIMAL)).toString(),
-        }
-
         let configRes: Config = {
             optionType: config.option_type,
             period: config.period,// daily:0 weekly:1 monthly:2
@@ -109,61 +73,31 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
             dTokenDecimal: config.d_token_decimal,
             bTokenDecimal: config.b_token_decimal,
             oTokenDecimal: config.o_token_decimal,
+            lotSize: config.lot_size,
             capacity: (Number(config.capacity) / (10 ** config.d_token_decimal)).toString(),
             leverage: config.leverage,
             hasNext: config.has_next,
-            vaultConfig: vaultConfigRes,
-            nextVaultConfig: nextVaultConfigRes,
+            activeVaultConfig: parseVaultConfig(config.active_vault_config.fields),
+            warmupVaultConfig: parseVaultConfig(config.warmup_vault_config.fields),
+            upcomingVaultConfig: parseVaultConfig(config.upcoming_vault_config.fields),
         }
 
         //@ts-ignore
-        let depositVaultF = objInfo.details.data.fields.value.fields.depositor_vault.fields
-
-        let activeSubVault: SubVault = {
-            balance: (depositVaultF.active_sub_vault.fields.balance),
-            shareSupply: (depositVaultF.active_sub_vault.fields.share_supply),
-        }
-        let deactivatingSubVault: SubVault = {
-            balance: (depositVaultF.deactivating_sub_vault.fields.balance),
-            shareSupply: (depositVaultF.deactivating_sub_vault.fields.share_supply),
-        }
-        let inactiveSubVault: SubVault = {
-            balance: (depositVaultF.inactive_sub_vault.fields.balance),
-            shareSupply: (depositVaultF.inactive_sub_vault.fields.share_supply),
-        }
-        let warmupSubVault: SubVault = {
-            balance: (depositVaultF.warmup_sub_vault.fields.balance),
-            shareSupply: (depositVaultF.warmup_sub_vault.fields.share_supply),
-        }
-
+        let depositVaultF = objInfo.details.data.fields.value.fields.deposit_vault.fields
         let depositVault: DepositVault = {
-            activeSubVault: activeSubVault,
-            deactivatingSubVault: deactivatingSubVault,
-            inactiveSubVault: inactiveSubVault,
-            warmupSubVault: warmupSubVault,
+            activeSubVault: parseSubVault(depositVaultF.active_sub_vault.fields),
+            deactivatingSubVault: parseSubVault(depositVaultF.deactivating_sub_vault.fields),
+            inactiveSubVault: parseSubVault(depositVaultF.inactive_sub_vault.fields),
+            warmupSubVault: parseSubVault(depositVaultF.warmup_sub_vault.fields),
             hasNext: depositVaultF.has_next
         }
 
         //@ts-ignore
-        let depositorVault = objInfo.details.data.fields.value.fields.depositor_vault.fields
-
-        let bidderSubVault: SubVault = {
-            balance: (depositorVault.bidder_sub_vault.fields.balance),
-            shareSupply: (depositorVault.bidder_sub_vault.fields.share_supply),
-        }
-        let premiumSubVault: SubVault = {
-            balance: (depositorVault.premium_sub_vault.fields.balance),
-            shareSupply: (depositorVault.premium_sub_vault.fields.share_supply),
-        }
-        let performanceFeeSubVault: SubVault = {
-            balance: (depositorVault.performance_fee_sub_vault.fields.balance),
-            shareSupply: (depositorVault.performance_fee_sub_vault.fields.share_supply),
-        }
-
+        let bidVaultF = objInfo.details.data.fields.value.fields.bid_vault.fields
         let bidVault: BidVault = {
-            bidderSubVault,
-            premiumSubVault,
-            performanceFeeSubVault
+            bidderSubVault: parseSubVault(bidVaultF.bidder_sub_vault.fields),
+            premiumSubVault: parseSubVault(bidVaultF.premium_sub_vault.fields),
+            performanceFeeSubVault: parseSubVault(bidVaultF.performance_fee_sub_vault.fields),
         }
 
         let auctionRes: Auction;
@@ -195,26 +129,16 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
             vaultBidPrice = 0;
         }
 
-        //@ts-ignore
-        let next = objInfo.details.data.fields.value.fields.next
-
-        //@ts-ignore
-        let totalBidSize = objInfo.details.data.fields.value.fields.total_bid_size
-
-
-        //@ts-ignore
-        let owner = objInfo.details.data.fields.value.fields.owner as string
-
-        let tvl = Number(depositorVault.regular_sub_vault.fields.balance) + Number(depositorVault.rolling_sub_vault.fields.balance)
+        let tvl = Number(depositVault.activeSubVault.balance) + Number(depositVault.warmupSubVault.balance)
 
         //@ts-ignore
         let authority = await getNodesKeyFromLinkedList(objInfo.details.data.fields.value.fields.authority, provider)
 
         let res: PortfolioVault = {
             vaultId: vaultId,
-            dToken: asset,
-            bToken: asset,
-            oToken: asset,
+            dToken: assets[0],
+            bToken: assets[1],
+            oToken: assets[2],
             info,
             config: configRes,
             depositVault,

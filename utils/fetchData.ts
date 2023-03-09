@@ -38,11 +38,36 @@ export interface Config {
     dTokenDecimal: string;
     bTokenDecimal: string;
     oTokenDecimal: string;
+    lotSize: string,
     capacity: string;
     leverage: string;
     hasNext: boolean;
-    vaultConfig: VaultConfig;
-    nextVaultConfig: VaultConfig;
+    activeVaultConfig: VaultConfig;
+    warmupVaultConfig: VaultConfig;
+    upcomingVaultConfig: VaultConfig;
+}
+
+export function parseVaultConfig(vaultConfigF: any): VaultConfig {
+    let payoffConfigs = vaultConfigF.payoff_configs.map(x => parsePayoffConfig(x))
+
+    return {
+        payoffConfigs,
+        strikeIncrement: vaultConfigF.strike_increment,
+        decaySpeed: vaultConfigF.decay_speed,
+        initialPrice: vaultConfigF.initial_price,
+        finalPrice: vaultConfigF.final_price,
+        auctionDurationInMs: vaultConfigF.auction_duration_in_ms,
+    }
+}
+
+export function parsePayoffConfig(payoffConfigF: any): PayoffConfig {
+    console.log(payoffConfigF)
+    return {
+        strikePct: payoffConfigF.strike_pct,
+        weight: payoffConfigF.weight,
+        isBuyer: payoffConfigF.is_buyer,
+        strike: payoffConfigF.strike,
+    }
 }
 
 export interface PayoffConfig {
@@ -53,9 +78,8 @@ export interface PayoffConfig {
 }
 
 export interface VaultConfig {
-    payoffConfig: PayoffConfig[];
+    payoffConfigs: PayoffConfig[];
     strikeIncrement: string,
-    lotSize: string,
     decaySpeed: string,
     initialPrice: string,
     finalPrice: string,
@@ -92,6 +116,12 @@ export interface SubVault {
     // user_shares
 }
 
+export function parseSubVault(subVaultF: any): SubVault {
+    return {
+        balance: subVaultF.balance,
+        shareSupply: subVaultF.share_supply,
+    }
+}
 
 // typus_dov::dutch
 
