@@ -1,26 +1,25 @@
-import { getWithdrawTx } from "../utils/coveredCall/getWithdrawTx"
-import { TEST_MNEMONIC, COVERED_CALL_PACKAGE, REGISTRY, TESTNET_RPC_ENDPOINT } from "../constants"
+
+import { TEST_MNEMONIC, REGISTRY, PORTFOLIO_PACKAGE } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
-import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
-const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
+import { PortfolioVault } from "../utils/fetchData";
+import { getVaultDataFromRegistry } from "../utils/getVaultData";
+import { getWithdrawTx } from "../utils/portfolio/user/getWithdrawTx";
+const provider = new JsonRpcProvider(Network.DEVNET); //for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 
-
 (async () => {
-    let withdrawAmount = 12;
-    //================================ refer to testDeposit ================================
-    let isRolling = true;
-    let token = "0x82416a9dacea43afa6570863f1bcd3e55e75448e"// minted token
-    let vaultIndex = 0;
-    //======================================================================================
+    let share = "100000000";
 
-    let typeArgument = await getTypeArgumentFromToken(token, provider)
+    let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider);
+    let portfolioVault = portfolioVaults[0];
+    console.log(portfolioVault)
 
-    console.log("test for withdraw, try to withdraw " + token + " for " + withdrawAmount + " ...")
+    let typeArguments = portfolioVault.typeArgs;
+    let vaultIndex = portfolioVault.info.index;
+
     let gasBudget = 100000
-    let withdrawTx = await getWithdrawTx(
-        gasBudget, COVERED_CALL_PACKAGE, REGISTRY, typeArgument, vaultIndex.toString(), withdrawAmount.toString());
-    await signer.executeMoveCall(withdrawTx);
-    console.log("withdraw to vault successfully")
+    let depositTx: any = await getWithdrawTx(gasBudget, PORTFOLIO_PACKAGE, REGISTRY, typeArguments, vaultIndex, share);
+    let res = await signer.executeMoveCall(depositTx);
+    console.log(res)
 })()
