@@ -2,13 +2,13 @@ import { getNewOracleTx } from "../utils/getNewOracleTx"
 import { getUpdateOracleTx } from "../utils/getUpdateOracleTx"
 import { getNewCoveredCallVaultTx } from "../utils/coveredCall/getNewCoveredCallVaultTx";
 import { createTimeOracle } from "../utils/coveredCall/createTimeOracle"
-import { COVERED_CALL_MANAGER, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TEST_MNEMONIC, TEST_MINT_TOKEN, TESTNET_RPC_ENDPOINT } from "../constants"
+import { MANAGER_CAP, COVERED_CALL_PACKAGE, REGISTRY, TEST_MNEMONIC, TEST_MINT_TOKEN, TESTNET_RPC_ENDPOINT } from "../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
 const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
-const token = TEST_MINT_TOKEN// minted token 
+const token = TEST_MINT_TOKEN// minted token
 let tokenDecimal = "9";
 let shareDecimal = "4";
 let period = "1";
@@ -34,9 +34,9 @@ let leverage = "100";
     let newCoveredCallVaultTx = await getNewCoveredCallVaultTx(
         gasBudget,
         COVERED_CALL_PACKAGE,
-        COVERED_CALL_REGISTRY,
+        REGISTRY,
         typeArgument,
-        COVERED_CALL_MANAGER,
+        MANAGER_CAP,
         timeOracle,
         period,
         activationTsMs,
@@ -66,7 +66,7 @@ async function checkData(moveCallTxn: any): Promise<any> {
         );
         for (let obj of txn.effects.created!) {
             //@ts-ignore
-            if (obj.owner.ObjectOwner == COVERED_CALL_REGISTRY) console.log("new covered call vault: " + obj.reference.objectId)
+            if (obj.owner.ObjectOwner == REGISTRY) console.log("new covered call vault: " + obj.reference.objectId)
         }
     } catch (e) {
         console.error(e)

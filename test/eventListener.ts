@@ -1,5 +1,5 @@
 
-import { TOKEN_PACKAGE, COVERED_CALL_PACKAGE, TOKEN_DECIMAL, COVERED_CALL_REGISTRY, TOKEN_NAME } from "../constants"
+import { TOKEN_PACKAGE, COVERED_CALL_PACKAGE, TOKEN_DECIMAL, REGISTRY, TOKEN_NAME } from "../constants"
 import { JsonRpcProvider, Network } from '@mysten/sui.js';
 import { getVaultDataFromRegistry } from '../utils/getVaultData';
 import cron from 'node-cron';
@@ -30,10 +30,10 @@ const renewSec = 60;
 const ASSETS = ["BTC", "ETH", "SUI", "APT", "DOGE"];
 
 (async () => {
-    let vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
+    let vault = await getVaultDataFromRegistry(REGISTRY, provider);
 
     cron.schedule('*/' + renewSec.toString() + ' * * * * *', async () => {
-        vault = await getVaultDataFromRegistry(COVERED_CALL_REGISTRY, provider);
+        vault = await getVaultDataFromRegistry(REGISTRY, provider);
     })
 
     for (let asset of ASSETS) {

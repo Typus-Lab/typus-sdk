@@ -1,6 +1,6 @@
 import { getNewAuctionTx } from "../utils/coveredCall/getNewAuctionTx"
 import { getNewAuctionWithNextCoveredCallVaultTx } from "../utils/coveredCall/getNewAuctionWithNextCoveredCallVaultTx"
-import { COVERED_CALL_MANAGER, COVERED_CALL_PACKAGE, COVERED_CALL_REGISTRY, TEST_MNEMONIC, TEST_MINT_TOKEN, TESTNET_RPC_ENDPOINT } from "../constants"
+import { MANAGER_CAP, COVERED_CALL_PACKAGE, REGISTRY, TEST_MNEMONIC, TEST_MINT_TOKEN, TESTNET_RPC_ENDPOINT } from "../constants"
 import { getTypeArgumentFromToken } from "../utils/getTypeArgumentFromToken"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
 import { createPriceOracle } from "../utils/coveredCall/createPriceOracle"
@@ -9,7 +9,7 @@ const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only opera
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 (async () => {
-    let token = TEST_MINT_TOKEN// minted token 
+    let token = TEST_MINT_TOKEN// minted token
     let typeArgument: string = await getTypeArgumentFromToken(token, provider)
     let vaultIndex = 0;
     let [priceOracle, priceOracleManager] = await createPriceOracle(typeArgument)
@@ -20,9 +20,9 @@ const signer = new RawSigner(keypair, provider);
     let newAuctionTx: any = await getNewAuctionTx(
         gasBudget,
         COVERED_CALL_PACKAGE,
-        COVERED_CALL_REGISTRY,
+        REGISTRY,
         typeArgument,
-        COVERED_CALL_MANAGER,
+        MANAGER_CAP,
         vaultIndex.toString(),
         priceOracle,
         timeOracle
@@ -30,8 +30,8 @@ const signer = new RawSigner(keypair, provider);
     // let newAuctionTx: any = await getNewAuctionWithNextCoveredCallVaultTx(
     //     gasBudget,
     //     COVERED_CALL_PACKAGE,
-    //     COVERED_CALL_MANAGER,
-    //     COVERED_CALL_REGISTRY,
+    //     MANAGER_CAP,
+    //     REGISTRY,
     //     typeArgument,
     //     vaultIndex,
     //     priceOracle,
