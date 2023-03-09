@@ -11,7 +11,7 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
     let coveredCallVaults: any[] = (await provider.getDynamicFields(registry)).data
 
     let coveredCallVaultsId: string[] = coveredCallVaults.map(e => e.objectId as string)
-    console.log(coveredCallVaultsId)
+    // console.log(coveredCallVaultsId)
     let objsInfo = await provider.getObjectBatch(coveredCallVaultsId)
 
     let vaults: PortfolioVault[] = [];
@@ -31,7 +31,6 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
         type = type.split("<")[1]
         type = type.split(">")[0]
         let typeArgs = type.split(", ")
-        console.log(typeArgs)
         let assets = typeArgs.map(x => x.split("::")[2])
 
         let deliveryInfo: DeliveryInfo
@@ -136,6 +135,7 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
 
         let res: PortfolioVault = {
             vaultId: vaultId,
+            typeArgs,
             dToken: assets[0],
             bToken: assets[1],
             oToken: assets[2],

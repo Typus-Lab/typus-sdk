@@ -7,6 +7,7 @@ const decode = (str: string): string => Buffer.from(str, 'base64').toString('bin
 
 export interface PortfolioVault {
     vaultId: string;
+    typeArgs: string[];
     dToken: string;
     bToken: string;
     oToken: string;
@@ -61,7 +62,6 @@ export function parseVaultConfig(vaultConfigF: any): VaultConfig {
 }
 
 export function parsePayoffConfig(payoffConfigF: any): PayoffConfig {
-    console.log(payoffConfigF)
     return {
         strikePct: payoffConfigF.strike_pct,
         weight: payoffConfigF.weight,
