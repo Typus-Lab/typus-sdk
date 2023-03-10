@@ -19,6 +19,7 @@
     final_price: u64,
     auction_duration_in_ms: u64,
     leverage: u64,
+    has_next: bool,
     whitelist: vector<address>,
  * @param  typeArguments [D_TOKEN, B_TOKEN, O_TOKEN]
  */
@@ -47,6 +48,7 @@ export async function getAuthorizedNewPortfolioVaultTx(
     auctionDurationInMs: string,
     whitelist: string[],
     leverage: string,
+    hasNext: string,        // bool
 ): Promise<any> {
     let tx = {
         packageObjectId: packageId,
@@ -74,6 +76,7 @@ export async function getAuthorizedNewPortfolioVaultTx(
             finalPrice,
             auctionDurationInMs,
             leverage,
+            hasNext,
             whitelist,
         ],
         gasBudget: gasBudget,

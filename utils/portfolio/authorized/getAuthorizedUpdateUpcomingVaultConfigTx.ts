@@ -1,4 +1,4 @@
-export async function getAuthorizedUpdateNextVaultConfigTx(
+export async function getAuthorizedUpdateUpcomingVaultConfigTx(
     gasBudget: number,
     packageId: string,
     registry: string,
@@ -16,7 +16,7 @@ export async function getAuthorizedUpdateNextVaultConfigTx(
     let tx = {
         packageObjectId: packageId,
         module: 'portfolio',
-        function: 'authorized_update_next_vault_config',
+        function: 'authorized_update_upcoming_vault_config',
         typeArguments,
         arguments: [
             registry,

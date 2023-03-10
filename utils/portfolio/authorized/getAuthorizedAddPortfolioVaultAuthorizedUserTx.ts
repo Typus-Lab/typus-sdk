@@ -7,7 +7,7 @@ export async function getAuthorizedAddPortfolioVaultAuthorizedUserTx(
     registry: string,
     typeArguments: string[],
     index: string,
-    address: string,
+    addresses: string[],
 ): Promise<any> {
     let tx = {
         packageObjectId: packageId,
@@ -17,7 +17,7 @@ export async function getAuthorizedAddPortfolioVaultAuthorizedUserTx(
         arguments: [
             registry,
             index,
-            address,
+            addresses,
         ],
         gasBudget: gasBudget,
     }

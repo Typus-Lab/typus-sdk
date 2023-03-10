@@ -1,4 +1,4 @@
-export async function getAuthorizedUpdateVaultConfigTx(
+export async function getAuthorizedUpdateWarmupVaultConfigTx(
     gasBudget: number,
     packageId: string,
     typeArguments: string[],
@@ -13,7 +13,7 @@ export async function getAuthorizedUpdateVaultConfigTx(
     let tx = {
         packageObjectId: packageId,
         module: 'portfolio',
-        function: 'authorized_update_vault_config',
+        function: 'authorized_update_warmup_vault_config',
         typeArguments,
         arguments: [
             registry,
