@@ -65,7 +65,7 @@ export function parseUserStatusResult(rawData: Uint8Array): GetUserStatusResult 
     return userStatusResult
 }
 
-function intFromBytes(x) {
+export function intFromBytes(x) {
     var val = 0;
     for (var i = 0; i < x.length; ++i) {
         val += x[i];
