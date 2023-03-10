@@ -7,8 +7,8 @@ import { getUserStatus, parseUserStatusResult } from "../utils/portfolio/helper/
 const provider = new JsonRpcProvider(Network.DEVNET); //for read only operations
 
 (async () => {
-    let user = "0x7ece7464c461df204c1eb0ef9b6186018bac83ee"
-    let index = "1"
+    let user = "0x4a3b00eac21bfbe062932a5c2b9710245edb2cc2"
+    let index = "0"
 
     let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider);
     let portfolioVault = portfolioVaults.find(portfolioVault => portfolioVault.info.index == index)!;
@@ -25,8 +25,9 @@ const provider = new JsonRpcProvider(Network.DEVNET); //for read only operations
     // @ts-ignore
     let rawData: Uint8Array = res.results.Ok[0][1].returnValues[0][0];
     console.log(rawData)
-    console.log(parseUserStatusResult(rawData))
 
+    let userStatusResult = parseUserStatusResult(rawData);
+    console.log(userStatusResult)
 
     //    [191, 19, 151, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     //     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
