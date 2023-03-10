@@ -7,7 +7,7 @@
         coins: vector<Coin<B_TOKEN>>,
         size: u64,
         ctx: &mut TxContext,
-    ) 
+    )
  * @param typeArguments [D_TOKEN, B_TOKEN, O_TOKEN]
 */
 export async function getNewBidTx(
@@ -15,7 +15,7 @@ export async function getNewBidTx(
     packageId: string,
     registry: string,
     typeArguments: string[],
-    index: string[],
+    index: string,
     priceOracle: string,
     timeOracle: string,
     coins: string[],
