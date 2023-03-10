@@ -10,9 +10,10 @@ const signer = new RawSigner(keypair, provider);
 
 (async () => {
     let depositAmount = "100000000";
+    let index = "0"
 
     let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider);
-    let portfolioVault = portfolioVaults[0];
+    let portfolioVault = portfolioVaults.find(portfolioVault => portfolioVault.info.index == index)!;
     console.log(portfolioVault)
 
     let dToken = portfolioVault.typeArgs[0];

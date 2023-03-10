@@ -37,11 +37,41 @@ export async function getUserStatus(
 
 
 interface GetUserStatusResult {
-    active: string,
-    deactivating: string,
-    inactive: string,
-    warmup: string,
-    bidder: string,
-    premium: string,
-    performance_fee: string,
+    active: number,
+    deactivating: number,
+    inactive: number,
+    warmup: number,
+    bidder: number,
+    premium: number,
+    performance_fee: number,
+}
+
+
+export function parseUserStatusResult(rawData: Uint8Array): GetUserStatusResult {
+    let temp: number[] = [];
+    for (var i = 0; i < rawData.length / 8; ++i) {
+        // console.log(i)
+        temp.push(intFromBytes(rawData.slice(i * 8, (i + 1) * 8).reverse()))
+    }
+    let userStatusResult: GetUserStatusResult = {
+        active: temp[0],
+        deactivating: temp[1],
+        inactive: temp[2],
+        warmup: temp[3],
+        bidder: temp[4],
+        premium: temp[5],
+        performance_fee: temp[6],
+    }
+    return userStatusResult
+}
+
+function intFromBytes(x) {
+    var val = 0;
+    for (var i = 0; i < x.length; ++i) {
+        val += x[i];
+        if (i < x.length - 1) {
+            val = val << 8;
+        }
+    }
+    return val;
 }
