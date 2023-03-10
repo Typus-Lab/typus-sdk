@@ -8,6 +8,12 @@ export const TOKEN_REGISTRY_SUI = "0x3b87b3f0403f527d28fd1301074a12446f43817a"
 export const ORACLE_PACKAGE = config.ORACLE_PACKAGE
 export const TIME_ORACLE = config.TIME_ORACLE
 
+export const BTC_ORACLE = config.BTC_ORACLE
+export const ETH_ORACLE = config.ETH_ORACLE
+export const SUI_ORACLE = config.SUI_ORACLE
+export const APT_ORACLE = config.APT_ORACLE
+export const DOGE_ORACLE = config.DOGE_ORACLE
+
 //publish from typus-dov/cover_call
 export const COVERED_CALL_PACKAGE = config.COVERED_CALL_PACKAGE;
 export const PORTFOLIO_PACKAGE = config.PORTFOLIO_PACKAGE;
