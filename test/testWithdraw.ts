@@ -19,7 +19,7 @@ const signer = new RawSigner(keypair, provider);
     let vaultIndex = portfolioVault.info.index;
 
     let gasBudget = 100000
-    let depositTx: any = await getWithdrawTx(gasBudget, PORTFOLIO_PACKAGE, REGISTRY, typeArguments, vaultIndex, share);
+    let depositTx: any = await getWithdrawTx(gasBudget, PORTFOLIO_PACKAGE, REGISTRY, typeArguments, vaultIndex, [share]);
     let res = await signer.executeMoveCall(depositTx);
     console.log(res)
 })()

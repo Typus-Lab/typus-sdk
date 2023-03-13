@@ -18,6 +18,6 @@ const signer = new RawSigner(keypair, provider);
 
     let gasBudget = 100000;
     let claimTx: any = await getUnsubscribeTx(
-        gasBudget, PORTFOLIO_PACKAGE, REGISTRY, typeArguments, index, share);
+        gasBudget, PORTFOLIO_PACKAGE, REGISTRY, typeArguments, index, [share]);
     await signer.executeMoveCall(claimTx);
 })()

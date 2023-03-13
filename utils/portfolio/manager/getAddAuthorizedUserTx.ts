@@ -3,7 +3,7 @@
         manager_cap: & ManagerCap,
         registry: & mut Registry,
         user_addresses: vector<address>,
-    ) 
+    )
 */
 export async function getAddAuthorizedUserTx(
     gasBudget: number,

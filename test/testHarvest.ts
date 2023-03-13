@@ -17,6 +17,6 @@ const signer = new RawSigner(keypair, provider);
 
     let gasBudget = 100000;
     let claimTx: any = await getHarvestTx(
-        gasBudget, PORTFOLIO_PACKAGE, REGISTRY, typeArguments, [index]);
+        gasBudget, PORTFOLIO_PACKAGE, REGISTRY, typeArguments, index);
     await signer.executeMoveCall(claimTx);
 })()

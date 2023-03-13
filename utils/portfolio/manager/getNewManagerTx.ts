@@ -1,7 +1,7 @@
 /**
     public(friend) entry fun new_manager(
         _manager_cap: &ManagerCap,
-        user: address,
+        users: vector<address>,
         ctx: &mut TxContext
     )
 */
@@ -9,7 +9,7 @@ export async function getNewManagerTx(
     gasBudget: number,
     packageId: string,
     managerCap: string,
-    address: string,
+    addresses: string[],
 ): Promise<any> {
     let tx = {
         packageObjectId: packageId,
@@ -18,7 +18,7 @@ export async function getNewManagerTx(
         typeArguments: [],
         arguments: [
             managerCap,
-            address,
+            addresses,
         ],
         gasBudget: gasBudget,
     }
