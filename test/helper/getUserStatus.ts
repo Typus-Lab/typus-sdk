@@ -1,8 +1,8 @@
-import { PORTFOLIO_PACKAGE, REGISTRY } from "../constants"
-import { getVaultDataFromRegistry } from "../utils/getVaultData"
+import { PORTFOLIO_PACKAGE, REGISTRY } from "../../constants"
+import { getVaultDataFromRegistry } from "../../utils/getVaultData"
 import { JsonRpcProvider, Network, UnserializedSignableTransaction } from '@mysten/sui.js';
-import { PortfolioVault } from "../utils/fetchData"
-import { getUserStatus, parseUserStatusResult } from "../utils/portfolio/helper/getUserStatus";
+import { PortfolioVault } from "../../utils/fetchData"
+import { getUserStatus, parseUserStatusResult } from "../../utils/portfolio/helper/getUserStatus";
 
 const provider = new JsonRpcProvider(Network.DEVNET); //for read only operations
 
