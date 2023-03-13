@@ -15,13 +15,9 @@ export const APT_ORACLE = config.APT_ORACLE
 export const DOGE_ORACLE = config.DOGE_ORACLE
 
 //publish from typus-dov/cover_call
-export const COVERED_CALL_PACKAGE = config.COVERED_CALL_PACKAGE;
 export const PORTFOLIO_PACKAGE = config.PORTFOLIO_PACKAGE;
 export const REGISTRY = config.REGISTRY;
 export const MANAGER_CAP = config.MANAGER_CAP
-export const USER_SHARE_TABLE = config.USER_SHARE_TABLE
-export const USER_REFUND_TABLE = config.USER_REFUND_TABLE
-export const MAKER_SHARE_TABLE = config.MAKER_SHARE_TABLE
 
 //publish from typus-dov/typus-dov
 export const TEST_MINT_TOKEN = "0x672612858fcb5c6abf944638253142820c251753"
