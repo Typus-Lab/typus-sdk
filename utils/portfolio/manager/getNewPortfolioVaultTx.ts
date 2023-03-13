@@ -40,7 +40,7 @@ export async function getNewPortfolioVaultTx(
     capacity: string,       // u64
     strikePct: string[], // vector<u64>
     weight: string[],       // vector<u64>
-    isBuyer: string[],      // vector<bool>
+    isBuyer: boolean[],      // vector<bool>
     strikeIncrement: string,// u64
     lotSize: string,
     decaySpeed: string,

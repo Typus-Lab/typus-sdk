@@ -6,7 +6,7 @@ export async function getAuthorizedUpdateUpcomingVaultConfigTx(
     index: string,
     strikePct: string[], // vector<u64>
     weight: string[],       // vector<u64>
-    isBuyer: string[],      // vector<bool>
+    isBuyer: boolean[],      // vector<bool>
     strikeIncrement: string,
     decaySpeed: string,
     initialPrice: string,

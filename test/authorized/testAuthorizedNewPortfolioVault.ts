@@ -1,7 +1,5 @@
-import { TEST_MNEMONIC, REGISTRY, TESTNET_RPC_ENDPOINT, PORTFOLIO_PACKAGE, TIME_ORACLE } from "../../constants"
+import { TEST_MNEMONIC, REGISTRY, PORTFOLIO_PACKAGE, TIME_ORACLE } from "../../constants"
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
-import { PortfolioVault } from "../../utils/fetchData";
-import { getVaultDataFromRegistry } from "../../utils/getVaultData";
 import { getAuthorizedNewPortfolioVaultTx } from "../../utils/portfolio/authorized/getAuthorizedNewPortfolioVaultTx";
 const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
