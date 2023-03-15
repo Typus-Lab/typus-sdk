@@ -1,9 +1,8 @@
 
-import { JsonRpcProvider, Network } from '@mysten/sui.js';
-import { TOKEN_NAME, PRICE_DECIMAL, TOKEN_DECIMAL, TESTNET_RPC_ENDPOINT } from '../constants';
-import { PortfolioVault, PayoffConfig, Config, VaultConfig, DepositVault, BidVault, SubVault, Auction, PriceConfig, DeliveryInfo, Info, parseVaultConfig, parseSubVault } from "./fetchData"
 
-// const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
+import { JsonRpcProvider } from '@mysten/sui.js';
+import { PortfolioVault, Config, DepositVault, BidVault, Auction, PriceConfig, DeliveryInfo, Info, parseVaultConfig, parseSubVault } from "./fetchData"
+
 
 export async function getVaultDataFromRegistry(registry: string, provider: JsonRpcProvider): Promise<PortfolioVault[]> {
     // console.log("registry: " + registry)

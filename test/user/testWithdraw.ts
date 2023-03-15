@@ -1,10 +1,10 @@
 
 import { TEST_MNEMONIC, REGISTRY, PORTFOLIO_PACKAGE } from "../../constants"
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
+import { JsonRpcProvider, Ed25519Keypair, RawSigner, devnetConnection } from '@mysten/sui.js';
 import { PortfolioVault } from "../../utils/fetchData";
 import { getVaultDataFromRegistry } from "../../utils/getVaultData";
 import { getWithdrawTx } from "../../utils/portfolio/user/getWithdrawTx";
-const provider = new JsonRpcProvider(Network.DEVNET); //for read only operations
+const provider = new JsonRpcProvider(devnetConnection); //for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 

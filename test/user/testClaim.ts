@@ -1,9 +1,9 @@
-import { TEST_MNEMONIC, REGISTRY, TESTNET_RPC_ENDPOINT, PORTFOLIO_PACKAGE } from "../../constants"
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
+import { TEST_MNEMONIC, REGISTRY, PORTFOLIO_PACKAGE } from "../../constants"
+import { JsonRpcProvider, Ed25519Keypair, RawSigner, devnetConnection } from '@mysten/sui.js';
 import { getClaimTx } from "../../utils/portfolio/user/getClaimTx";
 import { PortfolioVault } from "../../utils/fetchData";
 import { getVaultDataFromRegistry } from "../../utils/getVaultData";
-const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+const provider = new JsonRpcProvider(devnetConnection);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 

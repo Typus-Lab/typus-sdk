@@ -1,7 +1,7 @@
-import { JsonRpcProvider, SuiEventEnvelope, Network } from '@mysten/sui.js';
+import { JsonRpcProvider, SuiEventEnvelope, devnetConnection } from '@mysten/sui.js';
 import WebSocket from 'ws';
 
-const provider = new JsonRpcProvider("ws://136.243.36.109:9001");//for read only operations
+const provider = new JsonRpcProvider(devnetConnection);//for read only operations
 const devnetNftFilter = {
     All: [
         { EventType: 'MoveEvent' },

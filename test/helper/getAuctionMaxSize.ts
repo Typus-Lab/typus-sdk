@@ -1,12 +1,12 @@
 import { PORTFOLIO_PACKAGE, REGISTRY } from "../../constants"
 import { getVaultDataFromRegistry } from "../../utils/getVaultData"
-import { JsonRpcProvider, Network, UnserializedSignableTransaction } from '@mysten/sui.js';
+import { JsonRpcProvider, devnetConnection, UnserializedSignableTransaction } from '@mysten/sui.js';
 import { PortfolioVault } from "../../utils/fetchData"
 import { getAuctionMaxSize } from "../../utils/portfolio/helper/getAuctionMaxSize";
 import { intFromBytes } from "../../utils/portfolio/helper/getUserStatus";
 
 
-const provider = new JsonRpcProvider(Network.DEVNET); //for read only operations
+const provider = new JsonRpcProvider(devnetConnection); //for read only operations
 
 (async () => {
     let user = "0x4a3b00eac21bfbe062932a5c2b9710245edb2cc2"

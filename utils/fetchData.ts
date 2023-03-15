@@ -1,6 +1,6 @@
 
-import { JsonRpcProvider, Network } from '@mysten/sui.js';
-const provider = new JsonRpcProvider(Network.DEVNET); //for read only operations
+import { devnetConnection, JsonRpcProvider } from '@mysten/sui.js';
+const provider = new JsonRpcProvider(devnetConnection); //for read only operations
 const decode = (str: string): string => Buffer.from(str, 'base64').toString('binary');
 
 // typus_portfolio::portfolio

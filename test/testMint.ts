@@ -1,8 +1,8 @@
 import { getMintTx } from "../utils/getMintTx"
 import { TOKEN_PACKAGE, TOKEN_REGISTRY_SUI, TEST_MNEMONIC, TOKEN_NAME, TOKEN_NAME_TO_MODULE } from "../constants"
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Network } from '@mysten/sui.js';
+import { JsonRpcProvider, Ed25519Keypair, RawSigner, devnetConnection } from '@mysten/sui.js';
 
-const provider = new JsonRpcProvider(Network.DEVNET);//for read only operations
+const provider = new JsonRpcProvider(devnetConnection);//for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 const mintAmount = 1000500000;

@@ -1,7 +1,5 @@
 
-import { JsonRpcProvider, Network } from '@mysten/sui.js';
-import { TESTNET_RPC_ENDPOINT } from "../constants"
-// const provider = new JsonRpcProvider(TESTNET_RPC_ENDPOINT);//for read only operations
+import { JsonRpcProvider } from '@mysten/sui.js';
 
 export async function getTypeArgumentFromToken(token: string, provider: JsonRpcProvider): Promise<any> {
     try {
