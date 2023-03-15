@@ -37,21 +37,21 @@ export async function getUserStatus(
 
 
 interface GetUserStatusResult {
-    active: number,
-    deactivating: number,
-    inactive: number,
-    warmup: number,
-    bidder: number,
-    premium: number,
-    performance_fee: number,
+    active: bigint,
+    deactivating: bigint,
+    inactive: bigint,
+    warmup: bigint,
+    bidder: bigint,
+    premium: bigint,
+    performance_fee: bigint,
 }
 
 
 export function parseUserStatusResult(rawData: Uint8Array): GetUserStatusResult {
-    let temp: number[] = [];
+    let temp: bigint[] = [];
     for (var i = 0; i < rawData.length / 8; ++i) {
         // console.log(i)
-        temp.push(intFromBytes(rawData.slice(i * 8, (i + 1) * 8).reverse()))
+        temp.push(U64FromBytes(rawData.slice(i * 8, (i + 1) * 8).reverse()))
     }
     let userStatusResult: GetUserStatusResult = {
         active: temp[0],
@@ -65,13 +65,11 @@ export function parseUserStatusResult(rawData: Uint8Array): GetUserStatusResult 
     return userStatusResult
 }
 
-export function intFromBytes(x) {
-    var val = 0;
-    for (var i = 0; i < x.length; ++i) {
-        val += x[i];
-        if (i < x.length - 1) {
-            val = val << 8;
-        }
+export function U64FromBytes(x) {
+    var val = BigInt(0);
+    for (var i = 0; i < x.length; i++) {
+        val = val << BigInt(8);
+        val += BigInt(x[i]);
     }
     return val;
 }

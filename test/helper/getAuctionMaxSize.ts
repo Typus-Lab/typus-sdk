@@ -3,7 +3,7 @@ import { getVaultDataFromRegistry } from "../../utils/getVaultData"
 import { JsonRpcProvider, devnetConnection, UnserializedSignableTransaction } from '@mysten/sui.js';
 import { PortfolioVault } from "../../utils/fetchData"
 import { getAuctionMaxSize } from "../../utils/portfolio/helper/getAuctionMaxSize";
-import { intFromBytes } from "../../utils/portfolio/helper/getUserStatus";
+import { U64FromBytes } from "../../utils/portfolio/helper/getUserStatus";
 
 
 const provider = new JsonRpcProvider(devnetConnection); //for read only operations
@@ -27,5 +27,5 @@ const provider = new JsonRpcProvider(devnetConnection); //for read only operatio
     // @ts-ignore
     let rawData: Uint8Array = res.results.Ok[0][1].returnValues[0][0];
     console.log(rawData)
-    console.log(intFromBytes(rawData.reverse()))
+    console.log(U64FromBytes(rawData.reverse()))
 })()
