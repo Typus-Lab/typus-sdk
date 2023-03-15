@@ -47,7 +47,7 @@ export interface Config {
 }
 
 export function parseVaultConfig(vaultConfigF: any): VaultConfig {
-    let payoffConfigs = vaultConfigF.payoff_configs.map(x => parsePayoffConfig(x))
+    let payoffConfigs = vaultConfigF.payoff_configs.map(x => parsePayoffConfig(x.fields))
 
     return {
         payoffConfigs,

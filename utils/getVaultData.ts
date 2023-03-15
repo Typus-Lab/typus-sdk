@@ -35,9 +35,9 @@ export async function getVaultDataFromRegistry(registry: string, provider: JsonR
 
         let deliveryInfo: DeliveryInfo
         //@ts-ignore
-        if (objInfo.details.data.fields.value.fields.delivery_info) {
+        if (objInfo.details.data.fields.value.fields.info.fields.delivery_info) {
             //@ts-ignore
-            let fields = objInfo.details.data.fields.value.fields.delivery_info.fields;
+            let fields = objInfo.details.data.fields.value.fields.info.fields.delivery_info.fields;
             deliveryInfo = {
                 round: fields.round,
                 price: fields.price,
