@@ -26,8 +26,8 @@ export async function getBid(vault: string, provider: JsonRpcProvider): Promise<
             price: (bidData.price),
             size: Number(bidData.size / (10 ** TOKEN_DECIMAL)).toString(),
             tsMs: (bidData.ts_ms),
-            tokenBalance: (bidData.coin.fields.balance),
-            ownerAddress: bidData.owner,
+            tokenBalance: (bidData.balance),
+            ownerAddress: bidData.bidder,
         }
         return res
     })
