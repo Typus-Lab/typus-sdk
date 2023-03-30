@@ -1,18 +1,22 @@
+import { TransactionBlock } from "@mysten/sui.js";
 export async function getMintTx(
-    gasBudget: number, packageId: string, registry: string, moduleName: string, amount: number): Promise<any> {
-    let tx = {
-        packageObjectId: packageId,
-        module: moduleName,
-        function: 'mint',
-        typeArguments: [],
-        arguments: [
-            registry,
-            amount,
+  gasBudget: number,
+  packageId: string,
+  registry: string,
+  moduleName: string,
+  amount: number
+) {
+  const tx = new TransactionBlock();
+  const target = `${packageId}::${moduleName}::mint` as any;
+  const txArguments = [tx.pure(registry), tx.pure(amount)];
 
-        ],
-        gasBudget: gasBudget,
-    }
-    return tx
+  tx.moveCall({
+    target,
+    arguments: txArguments,
+  });
+  tx.setGasBudget(gasBudget);
+
+  return tx;
 }
 
 /*

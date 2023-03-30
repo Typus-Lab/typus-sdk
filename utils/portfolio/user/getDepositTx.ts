@@ -1,3 +1,4 @@
+import { TransactionBlock } from "@mysten/sui.js";
 /**
     public(friend) entry fun deposit<D_TOKEN, B_TOKEN, O_TOKEN>(
         registry: &mut Registry,
@@ -9,19 +10,30 @@
  * @param typeArguments [D_TOKEN, B_TOKEN, O_TOKEN]
 */
 export async function getDepositTx(
-    gasBudget: number, packageId: string, registry: string, typeArguments: string[], vaultIndex: string, coins: string[], amount: string): Promise<any> {
-    let tx = {
-        packageObjectId: packageId,
-        module: 'portfolio',
-        function: 'deposit',
-        typeArguments,
-        arguments: [
-            registry,
-            vaultIndex,
-            coins,
-            amount,
-        ],
-        gasBudget: gasBudget,
-    }
-    return tx
+  gasBudget: number,
+  packageId: string,
+  module: string,
+  registry: string,
+  typeArguments: string[],
+  vaultIndex: string,
+  coins: string[],
+  amount: string
+) {
+  const tx = new TransactionBlock();
+  const target = `${packageId}::${module}::deposit` as any;
+  const txArguments = [
+    tx.pure(registry),
+    tx.pure(vaultIndex),
+    tx.pure(coins),
+    tx.pure(amount),
+  ];
+
+  tx.moveCall({
+    target,
+    typeArguments,
+    arguments: txArguments,
+  });
+  tx.setGasBudget(gasBudget);
+
+  return tx;
 }

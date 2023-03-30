@@ -43,7 +43,7 @@ interface GetUserStatusResult {
   warmup: bigint;
   bidder: bigint;
   premium: bigint;
-  performance_fee: bigint;
+  performanceFee: bigint;
 }
 
 export function parseUserStatusResult(
@@ -61,7 +61,7 @@ export function parseUserStatusResult(
     warmup: temp[3],
     bidder: temp[4],
     premium: temp[5],
-    performance_fee: temp[6],
+    performanceFee: temp[6],
   };
   return userStatusResult;
 }

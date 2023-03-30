@@ -1,3 +1,4 @@
+import { TransactionBlock } from "@mysten/sui.js";
 /**
     public fun get_auction_max_size<D_TOKEN, B_TOKEN, O_TOKEN>(
         registry: &Registry,
@@ -6,22 +7,22 @@
     ): u64
 */
 export async function getAuctionMaxSize(
-    packageId: string,
-    typeArguments: string[],
-    registry: string,
-    index: string,
-    priceOracle: string,
+  packageId: string,
+  module: string,
+  typeArguments: string[],
+  registry: string,
+  index: string,
+  priceOracle: string
 ): Promise<any> {
-    let tx = {
-        packageObjectId: packageId,
-        module: 'portfolio',
-        function: 'get_auction_max_size',
-        typeArguments,
-        arguments: [
-            registry,
-            index,
-            priceOracle,
-        ],
-    }
-    return tx
+  const tx = new TransactionBlock();
+  const target = `${packageId}::${module}::get_auction_max_size` as any;
+  const txArguments = [tx.pure(registry), tx.pure(index), tx.pure(priceOracle)];
+
+  tx.moveCall({
+    target,
+    typeArguments,
+    arguments: txArguments,
+  });
+
+  return tx;
 }
