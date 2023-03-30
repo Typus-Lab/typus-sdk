@@ -1,21 +1,30 @@
+import { JsonRpcProvider } from "@mysten/sui.js";
 
-import { JsonRpcProvider } from '@mysten/sui.js';
+export async function getTypeArgumentFromToken(
+  token: string,
+  provider: JsonRpcProvider
+): Promise<any> {
+  try {
+    const tokenInfo = await provider.getObject({
+      id: token,
+      options: { showContent: true },
+    });
 
-export async function getTypeArgumentFromToken(token: string, provider: JsonRpcProvider): Promise<any> {
-    try {
-        //get typeArgument from token
-        let tmp = await provider.getObject(token)
-        if (tmp.status != "Exists") {
-            console.log("obj not exists, but is:")
-            console.log(tmp.status)
-            return
-        }
-        //@ts-ignore
-        let typeArgument: string = tmp.details.data.type
-        typeArgument = typeArgument.split("<")[1]
-        typeArgument = typeArgument.split(">")[0]
-        return typeArgument
-    } catch (e) {
-        console.error(e);
+    if (tokenInfo.error !== undefined) {
+      console.log("obj not exists, but is:");
+      console.log(tokenInfo.error.tag);
+      return;
     }
+    1;
+    console.log(tokenInfo);
+
+    //@ts-ignore
+    let typeArgument: string = tokenInfo.data.content.type;
+    console.log(typeArgument);
+    typeArgument = typeArgument.split("<")[1];
+    typeArgument = typeArgument.split(">")[0];
+    return typeArgument;
+  } catch (e) {
+    console.error(e);
+  }
 }
