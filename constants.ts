@@ -6,7 +6,7 @@ export const TOKEN_REGISTRY_SUI = "0x3b87b3f0403f527d28fd1301074a12446f43817a"
 
 //publish from typus-oracle
 export const ORACLE_PACKAGE = config.ORACLE_PACKAGE
-export const TIME_ORACLE = config.TIME_ORACLE
+export const TIME_ORACLE = "0x6"
 
 export const BTC_ORACLE = config.BTC_ORACLE
 export const ETH_ORACLE = config.ETH_ORACLE
