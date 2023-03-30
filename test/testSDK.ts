@@ -27,14 +27,16 @@ const test = async () => {
   //const data = await getVaultDataFromRegistry(registry, provider);
   const userStatusTx = await getUserStatus(
     packageAddress,
+    "single_collateral",
     typeArgs,
     registry,
     "12",
-    "0x586f88ab13f90a93c955123c0e6fc2510b8c172a"
+    "0x6c6d47e87f44c3d738113a6b7a7320ce49d0664b4b130b601f8176e706c1cc7e"
   );
 
   const userStatus = await provider.devInspectTransactionBlock({
-    sender: "0x586f88ab13f90a93c955123c0e6fc2510b8c172a",
+    sender:
+      "0x6c6d47e87f44c3d738113a6b7a7320ce49d0664b4b130b601f8176e706c1cc7e",
     transactionBlock: userStatusTx,
   });
 

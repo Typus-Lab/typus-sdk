@@ -17,13 +17,14 @@ import { TransactionBlock } from "@mysten/sui.js";
 */
 export async function getUserStatus(
   packageId: string,
+  module: string,
   typeArguments: string[],
   registry: string,
   index: string,
   userAddress: string
 ) {
   const tx = new TransactionBlock();
-  const target = `${packageId}::portfolio::get_user_status` as any;
+  const target = `${packageId}::${module}::get_user_status` as any;
   const txArguments = [tx.pure(registry), tx.pure(index), tx.pure(userAddress)];
 
   tx.moveCall({
