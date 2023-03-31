@@ -21,12 +21,8 @@ export async function getDepositTx(
 ) {
   const tx = new TransactionBlock();
   const target = `${packageId}::${module}::deposit` as any;
-  const txArguments = [
-    tx.pure(registry),
-    tx.pure(vaultIndex),
-    tx.pure(coins),
-    tx.pure(amount),
-  ];
+  const vec = tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) });
+  const txArguments = [tx.pure(registry), tx.pure(vaultIndex), vec, tx.pure(amount)];
 
   tx.moveCall({
     target,

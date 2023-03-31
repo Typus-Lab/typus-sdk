@@ -16,7 +16,7 @@ export async function getWithdrawTx(
   typeArguments: string[],
   vaultIndex: string,
   share: string[]
-): Promise<any> {
+): Promise<TransactionBlock> {
   const tx = new TransactionBlock();
   const target = `${packageId}::${module}::withdraw` as any;
   const txArguments = [tx.pure(registry), tx.pure(vaultIndex), tx.pure(share)];

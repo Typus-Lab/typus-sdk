@@ -25,12 +25,13 @@ export async function getNewBidTx(
 ) {
   const tx = new TransactionBlock();
   const target = `${packageId}::${module}::new_bid` as any;
+  const vec = tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) });
   const txArguments = [
     tx.pure(registry),
     tx.pure(index),
     tx.pure(priceOracle),
     tx.pure(timeOracle),
-    tx.pure(coins),
+    vec,
     tx.pure(size),
   ];
 

@@ -18,7 +18,8 @@ export async function getUnsubscribeTx(
 ) {
   const tx = new TransactionBlock();
   const target = `${packageId}::${module}::unsubscribe` as any;
-  const txArguments = [tx.pure(registry), tx.pure(index), tx.pure(share)];
+  const vec = tx.makeMoveVec({ objects: share.map((id) => tx.object(id)) });
+  const txArguments = [tx.pure(registry), tx.pure(index), vec];
 
   tx.moveCall({
     target,
