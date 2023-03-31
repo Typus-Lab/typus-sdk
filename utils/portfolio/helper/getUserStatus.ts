@@ -46,9 +46,7 @@ interface GetUserStatusResult {
   performanceFee: bigint;
 }
 
-export function parseUserStatusResult(
-  rawData: Uint8Array
-): GetUserStatusResult {
+export function parseUserStatusResult(rawData: Uint8Array): GetUserStatusResult {
   let temp: bigint[] = [];
   for (var i = 0; i < rawData.length / 8; ++i) {
     // console.log(i)

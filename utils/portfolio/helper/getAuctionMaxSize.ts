@@ -13,16 +13,14 @@ export async function getAuctionMaxSize(
   registry: string,
   index: string,
   priceOracle: string
-): Promise<any> {
+) {
   const tx = new TransactionBlock();
   const target = `${packageId}::${module}::get_auction_max_size` as any;
   const txArguments = [tx.pure(registry), tx.pure(index), tx.pure(priceOracle)];
-
   tx.moveCall({
     target,
     typeArguments,
     arguments: txArguments,
   });
-
   return tx;
 }
