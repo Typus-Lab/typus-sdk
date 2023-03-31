@@ -1,3 +1,5 @@
+import { TransactionBlock } from "@mysten/sui.js";
+
 /**
     public(friend) entry fun new_manager(
         _manager_cap: &ManagerCap,
@@ -6,21 +8,19 @@
     )
 */
 export async function getNewManagerTx(
-    gasBudget: number,
-    packageId: string,
-    managerCap: string,
-    addresses: string[],
-): Promise<any> {
-    let tx = {
-        packageObjectId: packageId,
-        module: 'portfolio',
-        function: 'new_manager',
-        typeArguments: [],
-        arguments: [
-            managerCap,
-            addresses,
-        ],
-        gasBudget: gasBudget,
-    }
-    return tx
+  gasBudget: number,
+  packageId: string,
+  managerCap: string,
+  addresses: string[]
+) {
+  const tx = new TransactionBlock();
+  const target = `${packageId}::${module}::new_manager` as any;
+  const txArguments = [tx.pure(managerCap), tx.pure(addresses)];
+  tx.moveCall({
+    target,
+    typeArguments: [],
+    arguments: txArguments,
+  });
+  tx.setGasBudget(gasBudget);
+  return tx;
 }

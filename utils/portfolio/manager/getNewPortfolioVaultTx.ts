@@ -1,3 +1,5 @@
+import { TransactionBlock } from "@mysten/sui.js";
+
 /**
     manager_cap: &ManagerCap,
     registry: &mut Registry,
@@ -24,62 +26,63 @@
  * @param  typeArguments [D_TOKEN, B_TOKEN, O_TOKEN]
  */
 export async function getNewPortfolioVaultTx(
-    gasBudget: number,
-    packageId: string,
-    registry: string,
-    typeArguments: string[],
-    managerCap: string,
-    timeOracle: string,
-    optionType: string,     // u64
-    period: string,         // u8
-    activationTsMs: string, // u64
-    expirationTsMs: string, // u64
-    dTokenDecimal: string,  // u64
-    bTokenDecimal: string,  // u64
-    oTokenDecimal: string,  // u64
-    capacity: string,       // u64
-    strikePct: string[], // vector<u64>
-    weight: string[],       // vector<u64>
-    isBuyer: boolean[],      // vector<bool>
-    strikeIncrement: string,// u64
-    lotSize: string,
-    decaySpeed: string,
-    initialPrice: string,
-    finalPrice: string,
-    auctionDurationInMs: string,
-    whitelist: string[],
-    leverage: string,
-): Promise<any> {
-    let tx = {
-        packageObjectId: packageId,
-        module: 'portfolio',
-        function: 'new_portfolio_vault',
-        typeArguments,
-        arguments: [
-            managerCap,
-            registry,
-            timeOracle,
-            optionType,
-            period,
-            activationTsMs,
-            expirationTsMs,
-            dTokenDecimal,
-            bTokenDecimal,
-            oTokenDecimal,
-            capacity,
-            strikePct,
-            weight,
-            isBuyer,
-            strikeIncrement,
-            lotSize,
-            decaySpeed,
-            initialPrice,
-            finalPrice,
-            auctionDurationInMs,
-            leverage,
-            whitelist,
-        ],
-        gasBudget: gasBudget,
-    }
-    return tx
+  gasBudget: number,
+  packageId: string,
+  registry: string,
+  typeArguments: string[],
+  managerCap: string,
+  timeOracle: string,
+  optionType: string, // u64
+  period: string, // u8
+  activationTsMs: string, // u64
+  expirationTsMs: string, // u64
+  dTokenDecimal: string, // u64
+  bTokenDecimal: string, // u64
+  oTokenDecimal: string, // u64
+  capacity: string, // u64
+  strikePct: string[], // vector<u64>
+  weight: string[], // vector<u64>
+  isBuyer: boolean[], // vector<bool>
+  strikeIncrement: string, // u64
+  lotSize: string,
+  decaySpeed: string,
+  initialPrice: string,
+  finalPrice: string,
+  auctionDurationInMs: string,
+  whitelist: string[],
+  leverage: string
+) {
+  const tx = new TransactionBlock();
+  const target = `${packageId}::${module}::new_portfolio_vault` as any;
+  const txArguments = [
+    tx.pure(managerCap),
+    tx.pure(registry),
+    tx.pure(timeOracle),
+    tx.pure(optionType),
+    tx.pure(period),
+    tx.pure(activationTsMs),
+    tx.pure(expirationTsMs),
+    tx.pure(dTokenDecimal),
+    tx.pure(bTokenDecimal),
+    tx.pure(oTokenDecimal),
+    tx.pure(capacity),
+    tx.pure(strikePct),
+    tx.pure(weight),
+    tx.pure(isBuyer),
+    tx.pure(strikeIncrement),
+    tx.pure(lotSize),
+    tx.pure(decaySpeed),
+    tx.pure(initialPrice),
+    tx.pure(finalPrice),
+    tx.pure(auctionDurationInMs),
+    tx.pure(leverage),
+    tx.pure(whitelist),
+  ];
+  tx.moveCall({
+    target,
+    typeArguments,
+    arguments: txArguments,
+  });
+  tx.setGasBudget(gasBudget);
+  return tx;
 }
