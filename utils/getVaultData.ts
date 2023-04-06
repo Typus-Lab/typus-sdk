@@ -23,10 +23,8 @@ export async function getVaultDataFromRegistry(
     })
   ).data;
 
-  let coveredCallVaultsId: string[] = coveredCallVaults.map(
-    (e) => e.objectId as string
-  );
-  // console.log(coveredCallVaultsId)
+  let coveredCallVaultsId: string[] = coveredCallVaults.map((e) => e.objectId as string);
+  console.log(coveredCallVaultsId);
   let objsInfo = await provider.multiGetObjects({
     ids: coveredCallVaultsId,
     options: { showContent: true },
@@ -92,17 +90,12 @@ export async function getVaultDataFromRegistry(
       bTokenDecimal: config.b_token_decimal,
       oTokenDecimal: config.o_token_decimal,
       lotSize: config.lot_size,
-      capacity: (
-        Number(config.capacity) /
-        10 ** config.d_token_decimal
-      ).toString(),
+      capacity: (Number(config.capacity) / 10 ** config.d_token_decimal).toString(),
       leverage: config.leverage,
       hasNext: config.has_next,
       activeVaultConfig: parseVaultConfig(config.active_vault_config.fields),
       warmupVaultConfig: parseVaultConfig(config.warmup_vault_config.fields),
-      upcomingVaultConfig: parseVaultConfig(
-        config.upcoming_vault_config.fields
-      ),
+      upcomingVaultConfig: parseVaultConfig(config.upcoming_vault_config.fields),
     };
 
     //@ts-ignore
@@ -111,12 +104,8 @@ export async function getVaultDataFromRegistry(
       objInfo.data.content.fields.value.fields.deposit_vault.fields;
     const depositVault: DepositVault = {
       activeSubVault: parseSubVault(depositVaultField.active_sub_vault.fields),
-      deactivatingSubVault: parseSubVault(
-        depositVaultField.deactivating_sub_vault.fields
-      ),
-      inactiveSubVault: parseSubVault(
-        depositVaultField.inactive_sub_vault.fields
-      ),
+      deactivatingSubVault: parseSubVault(depositVaultField.deactivating_sub_vault.fields),
+      inactiveSubVault: parseSubVault(depositVaultField.inactive_sub_vault.fields),
       warmupSubVault: parseSubVault(depositVaultField.warmup_sub_vault.fields),
       hasNext: depositVaultField.has_next,
     };
@@ -127,9 +116,7 @@ export async function getVaultDataFromRegistry(
     const bidVault: BidVault = {
       bidderSubVault: parseSubVault(bidVaultField.bidder_sub_vault.fields),
       premiumSubVault: parseSubVault(bidVaultField.premium_sub_vault.fields),
-      performanceFeeSubVault: parseSubVault(
-        bidVaultField.performance_fee_sub_vault.fields
-      ),
+      performanceFeeSubVault: parseSubVault(bidVaultField.performance_fee_sub_vault.fields),
     };
 
     //@ts-ignore
@@ -157,14 +144,12 @@ export async function getVaultDataFromRegistry(
     }
 
     const tvl =
-      Number(depositVault.activeSubVault.balance) +
-      Number(depositVault.warmupSubVault.balance);
+      Number(depositVault.activeSubVault.balance) + Number(depositVault.warmupSubVault.balance);
 
     // @ts-ignore
     const authorityId =
       // @ts-ignore
-      objInfo.data.content.fields.value.fields.authority.fields.whitelist.fields
-        .id.id;
+      objInfo.data.content.fields.value.fields.authority.fields.whitelist.fields.id.id;
 
     const authority = await getNodesKeyFromLinkedList(authorityId, provider);
 

@@ -1,7 +1,6 @@
 import { devnetConnection, JsonRpcProvider } from "@mysten/sui.js";
 const provider = new JsonRpcProvider(devnetConnection); //for read only operations
-const decode = (str: string): string =>
-  Buffer.from(str, "base64").toString("binary");
+const decode = (str: string): string => Buffer.from(str, "base64").toString("binary");
 
 // typus_portfolio::portfolio
 
@@ -45,10 +44,8 @@ export interface Config {
   upcomingVaultConfig: VaultConfig;
 }
 
-export function parseVaultConfig(vaultConfigF: any): VaultConfig {
-  let payoffConfigs = vaultConfigF.payoff_configs.map((x) =>
-    parsePayoffConfig(x.fields)
-  );
+export function parseVaultConfig(vaultConfigF): VaultConfig {
+  let payoffConfigs = vaultConfigF.payoff_configs.map((x) => parsePayoffConfig(x.fields));
 
   return {
     payoffConfigs,
@@ -60,7 +57,7 @@ export function parseVaultConfig(vaultConfigF: any): VaultConfig {
   };
 }
 
-export function parsePayoffConfig(payoffConfigF: any): PayoffConfig {
+export function parsePayoffConfig(payoffConfigF): PayoffConfig {
   return {
     strikePct: payoffConfigF.strike_pct,
     weight: payoffConfigF.weight,
@@ -115,7 +112,7 @@ export interface SubVault {
   // user_shares
 }
 
-export function parseSubVault(subVaultF: any): SubVault {
+export function parseSubVault(subVaultF): SubVault {
   return {
     balance: subVaultF.balance,
     shareSupply: subVaultF.share_supply,

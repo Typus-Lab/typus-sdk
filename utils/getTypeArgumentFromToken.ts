@@ -1,9 +1,6 @@
 import { JsonRpcProvider } from "@mysten/sui.js";
 
-export async function getTypeArgumentFromToken(
-  token: string,
-  provider: JsonRpcProvider
-): Promise<any> {
+export async function getTypeArgumentFromToken(token: string, provider: JsonRpcProvider) {
   try {
     const tokenInfo = await provider.getObject({
       id: token,

@@ -1,21 +1,23 @@
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, devnetConnection } from '@mysten/sui.js';
+import { JsonRpcProvider, Ed25519Keypair, RawSigner, devnetConnection } from "@mysten/sui.js";
 import fs from "fs";
-const { execSync } = require('child_process');
-const provider = new JsonRpcProvider(devnetConnection);//for read only operations
+const { execSync } = require("child_process");
+const provider = new JsonRpcProvider(devnetConnection); //for read only operations
 const owner = "0xd28103a499003bed0b1b9ee52988ecdd2db82224";
-const obj1 = "0x7e9e58daeb94bbd0450bb9ee9f00e219a1f2b734";//obj owned by owner
-const obj2 = "0x74aa838eb6627c8e74b0645484abb463e6fd6669";//obj owned by owner
+const obj1 = "0x7e9e58daeb94bbd0450bb9ee9f00e219a1f2b734"; //obj owned by owner
+const obj2 = "0x74aa838eb6627c8e74b0645484abb463e6fd6669"; //obj owned by owner
 const obj1Digest = "tclmc0L6hewmfWxQAxSl9eUe14C82+hzE4OblKgY38U=";
 const obj2Digest = "tclmc0L6hewmfWxQAxSl9eUe14C82+hzE4OblKgY38U=";
 const receiver = "0x15ca0895f29101085cb26e00ede89420741b3140";
-const tx1 = "GRiBgktRqgJ4MSoRhCfSm/+1R/Zh9jy4UncoQeFAu5I="
+const tx1 = "GRiBgktRqgJ4MSoRhCfSm/+1R/Zh9jy4UncoQeFAu5I=";
 // export PRIVATEKEY=~/.sui/sui_config/sui.keystore
 const secretKeysPath = process.env.PRIVATEKEY;
 
-const subVault = "0xd3b2d3ee74afe2b5af0f810b3368955f068188e8"
+const subVault = "0xd3b2d3ee74afe2b5af0f810b3368955f068188e8";
 
-const TEST_MNEMONIC = "tackle wheat jungle viable memory dwarf swift fold purpose cattle impose horn"
-const VALID_SECRET_KEY = "Itk7iNFs91kXKdqVqmLrBKJItNIoSyWAOh+ZC2qaSihpxiAxNYwKPjwfresk9CSbKCmwNwvXfPQoeLL4rVa4OQ=="//'mdqVWeFekT7pqy5T49+tV12jO0m+ESW7ki4zSU9JiCgbL0kJbj5dvQ/PqcDAzZLZqzshVEs01d1KZdmLh4uZIg==';
+const TEST_MNEMONIC =
+  "tackle wheat jungle viable memory dwarf swift fold purpose cattle impose horn";
+const VALID_SECRET_KEY =
+  "Itk7iNFs91kXKdqVqmLrBKJItNIoSyWAOh+ZC2qaSihpxiAxNYwKPjwfresk9CSbKCmwNwvXfPQoeLL4rVa4OQ=="; //'mdqVWeFekT7pqy5T49+tV12jO0m+ESW7ki4zSU9JiCgbL0kJbj5dvQ/PqcDAzZLZqzshVEs01d1KZdmLh4uZIg==';
 
 // let secretKeys = (readJsonFile<any>(secretKeysPath as string))
 // let sender = secretKeys[0]
@@ -26,12 +28,7 @@ let keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 
 function readJsonFile<T>(filePath: string): T {
-    return JSON.parse(
-        fs.readFileSync(
-            filePath,
-            "utf-8"
-        )
-    )
+  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 }
 
 // //Success
@@ -91,8 +88,8 @@ function readJsonFile<T>(filePath: string): T {
 
 // //Fail (without correct signer)
 // (async () => {
-//     console.log("test for executeMoveCall()")
-//     const moveCallTxn = await signer.executeMoveCall({
+//     console.log("test for signAndExecuteTransactionBlock()")
+//     const moveCallTxn = await signer.signAndExecuteTransactionBlock({
 //         packageObjectId: '0x2',
 //         module: 'devnet_nft',
 //         function: 'mint',
@@ -192,9 +189,6 @@ function readJsonFile<T>(filePath: string): T {
 //         ],
 //         gasBudget: gasBudget,
 //     }
-//     const moveCallTxn = await signer.executeMoveCall(txn);
+//     const moveCallTxn = await signer.signAndExecuteTransactionBlock(txn);
 //     console.log('moveCallTxn', moveCallTxn);
 // }
-
-
-

@@ -1,25 +1,25 @@
+import { TransactionBlock } from "@mysten/sui.js";
+
 /**
  * @param  typeArguments [D_TOKEN, B_TOKEN, O_TOKEN]
-*/
+ */
 export async function getAuthorizedRemovePortfolioVaultAuthorizedUserTx(
-    gasBudget: number,
-    packageId: string,
-    registry: string,
-    typeArguments: string[],
-    index: string,
-    addresses: string[],
-): Promise<any> {
-    let tx = {
-        packageObjectId: packageId,
-        module: 'portfolio',
-        function: 'authorized_remove_portfolio_vault_authorized_user',
-        typeArguments,
-        arguments: [
-            registry,
-            index,
-            addresses,
-        ],
-        gasBudget: gasBudget,
-    }
-    return tx
+  gasBudget: number,
+  packageId: string,
+  registry: string,
+  typeArguments: string[],
+  index: string,
+  users: string[]
+) {
+  const tx = new TransactionBlock();
+  const target =
+    `${packageId}::${module}::authorized_remove_portfolio_vault_authorized_user` as any;
+  const txArguments = [tx.pure(registry), tx.pure(index), tx.pure(users)];
+  tx.moveCall({
+    target,
+    typeArguments,
+    arguments: txArguments,
+  });
+  tx.setGasBudget(gasBudget);
+  return tx;
 }

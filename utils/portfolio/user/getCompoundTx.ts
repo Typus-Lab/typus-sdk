@@ -14,7 +14,7 @@ export async function getCompoundTx(
   registry: string,
   typeArguments: string[],
   index: string
-): Promise<any> {
+) {
   const tx = new TransactionBlock();
   const target = `${packageId}::${module}::compound` as any;
   const txArguments = [tx.pure(registry), tx.pure(index)];

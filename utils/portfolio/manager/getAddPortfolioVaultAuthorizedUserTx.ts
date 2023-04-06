@@ -4,7 +4,7 @@ import { TransactionBlock } from "@mysten/sui.js";
         manager_cap: &ManagerCap,
         registry: &mut Registry,
         index: u64,
-        user_address: address,
+        users: vector<address>,
     )
  * @param  typeArguments [D_TOKEN, B_TOKEN, O_TOKEN]
  */
@@ -15,11 +15,11 @@ export async function getAddPortfolioVaultAuthorizedUserTx(
   registry: string,
   typeArguments: string[],
   index: string,
-  address: string
+  users: string[]
 ) {
   const tx = new TransactionBlock();
   const target = `${packageId}::${module}::add_portfolio_vault_authorized_user` as any;
-  const txArguments = [tx.pure(managerCap), tx.pure(registry), tx.pure(index), tx.pure(address)];
+  const txArguments = [tx.pure(managerCap), tx.pure(registry), tx.pure(index), tx.pure(users)];
   tx.moveCall({
     target,
     typeArguments,

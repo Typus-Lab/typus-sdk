@@ -1,31 +1,44 @@
-import { PORTFOLIO_PACKAGE, REGISTRY } from "../../constants"
-import { getVaultDataFromRegistry } from "../../utils/getVaultData"
-import { JsonRpcProvider, devnetConnection, UnserializedSignableTransaction } from '@mysten/sui.js';
-import { PortfolioVault } from "../../utils/fetchData"
+import {
+  ETH_ORACLE,
+  MODULE,
+  PORTFOLIO_PACKAGE,
+  REGISTRY,
+  testnetConnection,
+} from "../../constants";
+import { getVaultDataFromRegistry } from "../../utils/getVaultData";
+import { JsonRpcProvider, devnetConnection } from "@mysten/sui.js";
+import { PortfolioVault } from "../../utils/fetchData";
 import { getAuctionMaxSize } from "../../utils/portfolio/helper/getAuctionMaxSize";
 import { U64FromBytes } from "../../utils/portfolio/helper/getUserStatus";
 
-
-const provider = new JsonRpcProvider(devnetConnection); //for read only operations
+const provider = new JsonRpcProvider(testnetConnection); //for read only operations
 
 (async () => {
-    let user = "0x4a3b00eac21bfbe062932a5c2b9710245edb2cc2"
-    let dogeOracle = "0x48ab076f16e2bc3fdfb9be44990976dadcc30128"
-    let index = "0"
+  let sender = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9";
+  let oracle = ETH_ORACLE;
+  let index = "1";
 
-    let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider);
-    let portfolioVault = portfolioVaults.find(portfolioVault => portfolioVault.info.index == index)!;
-    console.log(portfolioVault)
+  let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider);
+  let portfolioVault = portfolioVaults.find(
+    (portfolioVault) => portfolioVault.info.index == index
+  )!;
+  console.log(portfolioVault);
 
-    let tx: UnserializedSignableTransaction = {
-        kind: 'moveCall',
-        data: await getAuctionMaxSize(PORTFOLIO_PACKAGE, portfolioVault.typeArgs, REGISTRY, portfolioVault.info.index, dogeOracle),
-    }
-    // success only during auction period
-    let res = await provider.devInspectTransaction(user, tx)
-    console.log(res)
-    // @ts-ignore
-    let rawData: Uint8Array = res.results.Ok[0][1].returnValues[0][0];
-    console.log(rawData)
-    console.log(U64FromBytes(rawData.reverse()))
-})()
+  console.log(portfolioVault.config.activeVaultConfig.payoffConfigs);
+
+  let transactionBlock = await getAuctionMaxSize(
+    PORTFOLIO_PACKAGE,
+    MODULE,
+    portfolioVault.typeArgs,
+    REGISTRY,
+    portfolioVault.info.index,
+    oracle
+  );
+  // success only during auction period
+  let res = await provider.devInspectTransactionBlock({ transactionBlock, sender });
+  console.log(res);
+  // @ts-ignore
+  let rawData = res.results[0].returnValues[0][0];
+  console.log(rawData);
+  console.log(U64FromBytes(rawData.reverse()));
+})();

@@ -13,11 +13,11 @@ export async function getBid(vault: string, provider: JsonRpcProvider): Promise<
 
     //@ts-ignore
     let bidTable: string = obj.details.data.fields.value.fields.auction.fields.bids.fields.id.id
-    let obj2: any[] = (await provider.getDynamicFields(bidTable)).data
+    let obj2[] = (await provider.getDynamicFields(bidTable)).data
 
     let ids = obj2.map(e => e.objectId)
 
-    let tmp: any[] = await provider.getObjectBatch(ids)
+    let tmp[] = await provider.getObjectBatch(ids)
 
     let bids: Bid[] = tmp.map(e => {
         let bidData = e.details.data.fields.value.fields
