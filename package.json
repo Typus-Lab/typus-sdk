@@ -2,7 +2,7 @@
   "name": "@typus/typus-sdk",
   "author": "Typus",
   "description": "typus sdk",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "dependencies": {
     "@mysten/sui.js": "^0.31.0",
     "@types/node": "^17.0.0",
