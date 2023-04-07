@@ -1,9 +1,10 @@
 import { TEST_MNEMONIC, REGISTRY, PORTFOLIO_PACKAGE, MODULE } from "../../constants";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, devnetConnection } from "@mysten/sui.js";
+import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import { getDepositTx } from "../../utils/portfolio/user/getDepositTx";
 import { PortfolioVault } from "../../utils/fetchData";
 import { getVaultDataFromRegistry } from "../../utils/getVaultData";
-const provider = new JsonRpcProvider(devnetConnection); //for read only operations
+const connection = new Connection({ fullnode: "https://rpc-testnet.suiscan.xyz:443" });
+const provider = new JsonRpcProvider(connection); //for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 
@@ -11,7 +12,7 @@ const signer = new RawSigner(keypair, provider);
   let depositAmount = "100000000";
   let index = "1";
 
-  let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider);
+  let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider, index);
   let portfolioVault = portfolioVaults.find(
     (portfolioVault) => portfolioVault.info.index == index
   )!;
