@@ -1,6 +1,9 @@
 import { JsonRpcProvider } from "@mysten/sui.js";
 
-export async function getTypeArgumentFromToken(token: string, provider: JsonRpcProvider) {
+export async function getTypeArgumentFromToken(
+  token: string,
+  provider: JsonRpcProvider
+) {
   try {
     const tokenInfo = await provider.getObject({
       id: token,
@@ -9,7 +12,7 @@ export async function getTypeArgumentFromToken(token: string, provider: JsonRpcP
 
     if (tokenInfo.error !== undefined) {
       console.log("obj not exists, but is:");
-      console.log(tokenInfo.error.tag);
+      console.log(tokenInfo.error.code);
       return;
     }
     1;

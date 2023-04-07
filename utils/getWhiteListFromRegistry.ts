@@ -3,9 +3,7 @@ import { JsonRpcProvider } from "@mysten/sui.js";
 export async function getWhiteListFromRegistry(
   registry: string,
   provider: JsonRpcProvider
-): Promise<void> {
-  const whiteLists: string[] = [];
-
+): Promise<string[]> {
   const registryInfo = await provider.getObject({
     id: registry,
     options: { showContent: true },

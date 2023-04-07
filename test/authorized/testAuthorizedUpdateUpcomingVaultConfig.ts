@@ -1,5 +1,10 @@
 import { TEST_MNEMONIC, REGISTRY, PORTFOLIO_PACKAGE } from "../../constants";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, devnetConnection } from "@mysten/sui.js";
+import {
+  JsonRpcProvider,
+  Ed25519Keypair,
+  RawSigner,
+  devnetConnection,
+} from "@mysten/sui.js";
 import { getAuthorizedUpdateUpcomingVaultConfigTx } from "../../utils/portfolio/authorized/getAuthorizedUpdateUpcomingVaultConfigTx";
 const provider = new JsonRpcProvider(devnetConnection); //for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
@@ -39,6 +44,8 @@ const signer = new RawSigner(keypair, provider);
     auctionDurationInMs
   );
 
-  let res = await signer.signAndExecuteTransactionBlock(claimTx);
+  let res = await signer.signAndExecuteTransactionBlock({
+    transactionBlock: claimTx,
+  });
   console.log(res);
 })();

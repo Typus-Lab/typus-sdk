@@ -1,25 +1,16 @@
-import { JsonRpcProvider, SuiEventEnvelope, devnetConnection } from "@mysten/sui.js";
+import { JsonRpcProvider, devnetConnection } from "@mysten/sui.js";
 import WebSocket from "ws";
 
 const provider = new JsonRpcProvider(devnetConnection); //for read only operations
 const devnetNftFilter = {
-  All: [{ EventType: "MoveEvent" }, { Package: "0x2" }, { Module: "devnet_nft" }],
+  All: [
+    { EventType: "MoveEvent" },
+    { Package: "0x2" },
+    { Module: "devnet_nft" },
+  ],
 };
 (async () => {
   console.log("test for subscribeEvent()");
-
-  const subscriptionId = await provider.subscribeEvent(
-    // { "SenderAddress": "0x82a2d7e3875b49217702d61b7411576af12ecab3" },
-    { All: [] },
-    (event: SuiEventEnvelope) => {
-      console.log(event);
-      // handle subscription notification message here. This function is called once per subscription message.
-    }
-  );
-
-  // later, to unsubscribe
-  // calls RPC method 'sui_unsubscribeEvent' with params: [ subscriptionId ]
-  const subFoundAndRemoved = await provider.unsubscribeEvent(subscriptionId);
 })();
 
 // (async () => {
