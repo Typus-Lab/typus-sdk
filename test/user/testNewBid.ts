@@ -5,24 +5,23 @@ import {
   TIME_ORACLE,
   DOGE_ORACLE,
   MODULE,
+  testnetConnection,
 } from "../../constants";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, devnetConnection } from "@mysten/sui.js";
+import { JsonRpcProvider, Ed25519Keypair, RawSigner } from "@mysten/sui.js";
 
 import { PortfolioVault } from "../../utils/fetchData";
 import { getVaultDataFromRegistry } from "../../utils/getVaultData";
 import { getNewBidTx } from "../../utils/portfolio/user/getNewBidTx";
-const provider = new JsonRpcProvider(devnetConnection); //for read only operations
+const provider = new JsonRpcProvider(testnetConnection); //for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 
 (async () => {
-  let size = "100000000";
-  let index = "0";
+  let size = "330000000";
+  let index = "1";
 
-  let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider);
-  let portfolioVault = portfolioVaults.find(
-    (portfolioVault) => portfolioVault.info.index == index
-  )!;
+  let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider, index);
+  let portfolioVault = portfolioVaults[0];
   console.log(portfolioVault);
 
   let bToken = portfolioVault.typeArgs[1];
