@@ -126,8 +126,8 @@ export interface Auction {
   endTsMs: string;
   priceConfig: PriceConfig;
   index: string; // bid index
-  // bids
-  // ownerships
+  bids: string; // Table<u64, Bid<TOKEN>>,
+  ownerships: string; // Table<address, vector<u64>>,
   totalBidSize: string;
   ableToRemoveBid: boolean;
 }

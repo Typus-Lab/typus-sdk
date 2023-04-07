@@ -10,10 +10,8 @@ const provider = new JsonRpcProvider(testnetConnection); //for read only operati
   let sender = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9";
   let index = "1";
 
-  let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider);
-  let portfolioVault = portfolioVaults.find(
-    (portfolioVault) => portfolioVault.info.index == index
-  )!;
+  let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider, index);
+  let portfolioVault = portfolioVaults[0];
   console.log(portfolioVault);
 
   let transactionBlock = await getUserStatus(

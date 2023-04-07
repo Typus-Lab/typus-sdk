@@ -131,6 +131,8 @@ export async function getVaultDataFromRegistry(
     if (auctionField) {
       const auction = auctionField.fields;
 
+      // console.log(auction);
+
       const priceConfig = auction.price_config.fields;
       const priceConfigRes: PriceConfig = {
         decaySpeed: priceConfig.decay_speed,
@@ -142,6 +144,8 @@ export async function getVaultDataFromRegistry(
         endTsMs: auction.end_ts_ms,
         priceConfig: priceConfigRes,
         index: auction.index,
+        bids: auction.bids.fields.id.id,
+        ownerships: auction.ownerships.fields.id.id,
         totalBidSize: auction.total_bid_size,
         ableToRemoveBid: auction.able_to_remove_bid,
       };

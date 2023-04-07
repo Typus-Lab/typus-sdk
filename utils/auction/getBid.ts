@@ -1,18 +1,12 @@
 import { JsonRpcProvider } from "@mysten/sui.js";
 import { TOKEN_DECIMAL } from "../../constants";
-import { Bid } from "../fetchData";
+import { Bid, PortfolioVault } from "../fetchData";
 
-export async function getBid(vault: string, provider: JsonRpcProvider): Promise<Bid[]> {
-  let obj = await provider.getObject({ id: vault });
-  if (obj.error) {
-    console.log("obj not exists");
-    return [];
-  }
-
-  //@ts-ignore
-  let bidTable: string = obj.details.data.fields.value.fields.auction.fields.bids.fields.id.id;
-  let obj2 = (await provider.getDynamicFields({ parentId: bidTable })).data;
-
+export async function getBid(
+  portfolioVault: PortfolioVault,
+  provider: JsonRpcProvider
+): Promise<Bid[]> {
+  let obj2 = (await provider.getDynamicFields({ parentId: portfolioVault.auction.bids })).data;
   let ids = obj2.map((e) => e.objectId);
 
   let tmp = await provider.multiGetObjects({
@@ -23,6 +17,8 @@ export async function getBid(vault: string, provider: JsonRpcProvider): Promise<
   let bids: Bid[] = tmp.map((e) => {
     //@ts-ignore
     let bidData = e.data?.content.fields.value.fields;
+
+    // console.log(bidData);
 
     let res: Bid = {
       price: bidData.price,

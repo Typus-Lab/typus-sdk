@@ -1,4 +1,5 @@
 import {
+  BTC_ORACLE,
   ETH_ORACLE,
   MODULE,
   PORTFOLIO_PACKAGE,
@@ -15,15 +16,12 @@ const provider = new JsonRpcProvider(testnetConnection); //for read only operati
 
 (async () => {
   let sender = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9";
-  let oracle = ETH_ORACLE;
+  let oracle = BTC_ORACLE;
   let index = "1";
 
-  let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider);
-  let portfolioVault = portfolioVaults.find(
-    (portfolioVault) => portfolioVault.info.index == index
-  )!;
+  let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider, index);
+  let portfolioVault = portfolioVaults[0];
   console.log(portfolioVault);
-
   console.log(portfolioVault.config.activeVaultConfig.payoffConfigs);
 
   let transactionBlock = await getAuctionMaxSize(
