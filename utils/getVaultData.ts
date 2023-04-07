@@ -14,16 +14,22 @@ import {
 
 export async function getVaultDataFromRegistry(
   registry: string,
-  provider: JsonRpcProvider
+  provider: JsonRpcProvider,
+  index?: string
 ): Promise<PortfolioVault[]> {
   const vaults: PortfolioVault[] = [];
-  const coveredCallVaults = (
+  var coveredCallVaults = (
     await provider.getDynamicFields({
       parentId: registry,
     })
   ).data;
 
+  if (index) {
+    coveredCallVaults = coveredCallVaults.filter((e) => e.name.value == index);
+  }
+
   let coveredCallVaultsId: string[] = coveredCallVaults.map((e) => e.objectId as string);
+
   console.log(coveredCallVaultsId);
   let objsInfo = await provider.multiGetObjects({
     ids: coveredCallVaultsId,
