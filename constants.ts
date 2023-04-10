@@ -20,6 +20,7 @@ export const DOGE_ORACLE = config.DOGE_ORACLE;
 export const PORTFOLIO_PACKAGE = config.PORTFOLIO_PACKAGE;
 export const REGISTRY = config.REGISTRY;
 export const MANAGER_CAP = config.MANAGER_CAP;
+export const USER_SHARE_REGISTRY = config.USER_SHARE_REGISTRY;
 export const MODULE = "single_collateral";
 
 //publish from typus-dov/typus-dov
@@ -43,3 +44,11 @@ export const testnetConnection = new Connection({
   fullnode: "https://fullnode.testnet.sui.io:443/",
   faucet: "https://faucet.testnet.sui.io/gas",
 });
+
+export const ACTIVE_SUB_VAULT_TAG: number = 0;
+export const DEACTIVATING_SUB_VAULT_TAG: number = 1;
+export const INACTIVE_SUB_VAULT_TAG: number = 2;
+export const WARMUP_SUB_VAULT_TAG: number = 3;
+export const BIDDER_SUB_VAULT_TAG: number = 4;
+export const PREMIUM_SUB_VAULT_TAG: number = 5;
+export const PERFORMANCE_FEE_SUB_VAULT_TAG: number = 6;

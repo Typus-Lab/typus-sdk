@@ -193,3 +193,49 @@ export async function getNodesKeyFromLinkedList(
 
   return linkedListNodes;
 }
+
+export async function getUserShares(
+  user_share_registry: string,
+  provider: JsonRpcProvider,
+  user: string
+): Promise<Share[]> {
+  var user_shares = (
+    await provider.getDynamicFields({
+      parentId: user_share_registry,
+    })
+  ).data;
+
+  // console.log(user_shares);
+
+  user_shares = user_shares.filter((user_share) => user_share.name.value.user == user);
+
+  // console.log(user_shares);
+
+  let objsInfo = await provider.multiGetObjects({
+    ids: user_shares.map((user_share) => user_share.objectId),
+    options: { showContent: true },
+  });
+
+  // console.log(objsInfo);
+
+  let shares: Share[] = [];
+
+  objsInfo.forEach((info) => {
+    // @ts-ignore
+    let fields = info.data.content.fields;
+    let share: Share = {
+      index: fields.name.fields.index,
+      tag: fields.name.fields.tag,
+      value: fields.value.fields.value,
+    };
+    shares.push(share);
+  });
+
+  return shares;
+}
+
+export interface Share {
+  index: string;
+  tag: string;
+  value: string;
+}
