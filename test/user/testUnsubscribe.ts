@@ -18,7 +18,7 @@ const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 
 (async () => {
-  let index = "0";
+  let index = "3";
   let share = "100000";
 
   let portfolioVaults: PortfolioVault[] = await getVaultDataFromRegistry(REGISTRY, provider, index);
@@ -34,7 +34,7 @@ const signer = new RawSigner(keypair, provider);
     REGISTRY,
     typeArguments,
     index,
-    []
+    [share]
   );
   await signer.signAndExecuteTransactionBlock({ transactionBlock });
 })();
