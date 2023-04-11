@@ -5,7 +5,7 @@ import {
   RawSigner,
   devnetConnection,
 } from "@mysten/sui.js";
-import { getAuthorizedUpdateUpcomingVaultConfigTx } from "../../utils/portfolio/authorized/getAuthorizedUpdateUpcomingVaultConfigTx";
+import { getAuthorizedUpdateUpcomingVaultConfigTx } from "../../utils/portfolio/single-collateral/authorized/getAuthorizedUpdateUpcomingVaultConfigTx";
 const provider = new JsonRpcProvider(devnetConnection); //for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);

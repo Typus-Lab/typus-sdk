@@ -10,7 +10,7 @@ import {
   RawSigner,
   devnetConnection,
 } from "@mysten/sui.js";
-import { getAuthorizedUpdateWarmupVaultConfigTx } from "../../utils/portfolio/authorized/getAuthorizedUpdateWarmupVaultConfigTx";
+import { getAuthorizedUpdateWarmupVaultConfigTx } from "../../utils/portfolio/single-collateral/authorized/getAuthorizedUpdateWarmupVaultConfigTx";
 const provider = new JsonRpcProvider(devnetConnection); //for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
