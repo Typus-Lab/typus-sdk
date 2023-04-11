@@ -223,12 +223,14 @@ export async function getUserShares(
   objsInfo.forEach((info) => {
     // @ts-ignore
     let fields = info.data.content.fields;
-    let share: Share = {
-      index: fields.name.fields.index,
-      tag: fields.name.fields.tag,
-      value: fields.value.fields.value,
-    };
-    shares.push(share);
+    if (fields.value.fields.exists) {
+      let share: Share = {
+        index: fields.name.fields.index,
+        tag: fields.name.fields.tag,
+        value: fields.value.fields.value,
+      };
+      shares.push(share);
+    }
   });
 
   return shares;
