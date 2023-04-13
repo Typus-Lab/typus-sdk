@@ -241,3 +241,54 @@ export interface Share {
   tag: string;
   value: string;
 }
+
+export async function getUserInfo(
+  user_share_registry: string,
+  provider: JsonRpcProvider
+): Promise<UserInfo[]> {
+  var user_shares = (
+    await provider.getDynamicFields({
+      parentId: user_share_registry,
+    })
+  ).data;
+
+  let objsInfo = await provider.multiGetObjects({
+    ids: user_shares.map((user_share) => user_share.objectId),
+    options: { showContent: true },
+  });
+
+  // console.log(objsInfo);
+
+  let user_infos: UserInfo[] = [];
+
+  objsInfo.forEach((info) => {
+    // @ts-ignore
+    let fields = info.data.content.fields;
+    if (fields.value.fields.exists) {
+      let share: Share = {
+        index: fields.name.fields.index,
+        tag: fields.name.fields.tag,
+        value: fields.value.fields.value,
+      };
+      let user = fields.name.fields.user;
+      let user_info = user_infos.find((user_info) => user_info.user == user);
+
+      if (user_info) {
+        user_info.shares.push(share);
+      } else {
+        let info: UserInfo = {
+          user,
+          shares: [share],
+        };
+        user_infos.push(info);
+      }
+    }
+  });
+
+  return user_infos;
+}
+
+export interface UserInfo {
+  user: string;
+  shares: Share[];
+}
