@@ -1,8 +1,8 @@
-import { getBid } from "../utils/auction/getBid";
+import { getBid } from "../../utils/auction/getBid";
 import { JsonRpcProvider } from "@mysten/sui.js";
-import { PortfolioVault } from "../utils/fetchData";
-import { getVaultDataFromRegistry } from "../utils/getVaultData";
-import { REGISTRY, testnetConnection } from "../constants";
+import { PortfolioVault } from "../../utils/portfolio/single-collateral/fetchData";
+import { getVaultDataFromRegistry } from "../../utils/portfolio/single-collateral/getVaultData";
+import { REGISTRY, testnetConnection } from "../../constants";
 
 const provider = new JsonRpcProvider(testnetConnection); //for read only operations
 

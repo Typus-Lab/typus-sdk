@@ -5,12 +5,12 @@ import {
   PORTFOLIO_PACKAGE,
   REGISTRY,
   testnetConnection,
-} from "../../constants";
-import { getVaultDataFromRegistry } from "../../utils/getVaultData";
+} from "../../../constants";
+import { getVaultDataFromRegistry } from "../../../utils/portfolio/single-collateral/getVaultData";
 import { JsonRpcProvider, devnetConnection } from "@mysten/sui.js";
-import { PortfolioVault } from "../../utils/fetchData";
-import { getAuctionMaxSize } from "../../utils/portfolio/helper/getAuctionMaxSize";
-import { U64FromBytes } from "../../utils/portfolio/helper/getUserStatus";
+import { PortfolioVault } from "../../../utils/portfolio/single-collateral/fetchData";
+import { getAuctionMaxSize } from "../../../utils/portfolio/single-collateral/helper/getAuctionMaxSize";
+import { U64FromBytes } from "../../../utils/portfolio/single-collateral/helper/getUserStatus";
 
 const provider = new JsonRpcProvider(testnetConnection); //for read only operations
 

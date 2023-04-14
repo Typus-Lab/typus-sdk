@@ -1,8 +1,8 @@
-import { TEST_MNEMONIC, REGISTRY, PORTFOLIO_PACKAGE, MODULE } from "../../constants";
+import { TEST_MNEMONIC, REGISTRY, PORTFOLIO_PACKAGE, MODULE } from "../../../constants";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
-import { getDepositTx } from "../../utils/portfolio/user/getDepositTx";
-import { PortfolioVault } from "../../utils/fetchData";
-import { getVaultDataFromRegistry } from "../../utils/getVaultData";
+import { getDepositTx } from "../../../utils/portfolio/single-collateral/user/getDepositTx";
+import { PortfolioVault } from "../../../utils/portfolio/single-collateral/fetchData";
+import { getVaultDataFromRegistry } from "../../../utils/portfolio/single-collateral/getVaultData";
 const connection = new Connection({ fullnode: "https://rpc-testnet.suiscan.xyz:443" });
 const provider = new JsonRpcProvider(connection); //for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);

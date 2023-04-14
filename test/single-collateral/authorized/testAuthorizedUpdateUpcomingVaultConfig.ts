@@ -1,16 +1,11 @@
-import {
-  TEST_MNEMONIC,
-  REGISTRY,
-  PORTFOLIO_PACKAGE,
-  TIME_ORACLE,
-} from "../../constants";
+import { TEST_MNEMONIC, REGISTRY, PORTFOLIO_PACKAGE } from "../../../constants";
 import {
   JsonRpcProvider,
   Ed25519Keypair,
   RawSigner,
   devnetConnection,
 } from "@mysten/sui.js";
-import { getAuthorizedUpdateWarmupVaultConfigTx } from "../../utils/portfolio/single-collateral/authorized/getAuthorizedUpdateWarmupVaultConfigTx";
+import { getAuthorizedUpdateUpcomingVaultConfigTx } from "../../../utils/portfolio/single-collateral/authorized/getAuthorizedUpdateUpcomingVaultConfigTx";
 const provider = new JsonRpcProvider(devnetConnection); //for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
@@ -28,13 +23,20 @@ const signer = new RawSigner(keypair, provider);
   let finalPrice = "1791643";
   let auctionDurationInMs = "1800000";
 
+  let strikePct = ["10254"];
+  let weight = ["1"];
+  let isBuyer = [false];
+
   let gasBudget = 100000;
-  let claimTx = await getAuthorizedUpdateWarmupVaultConfigTx(
+  let claimTx = await getAuthorizedUpdateUpcomingVaultConfigTx(
     gasBudget,
     PORTFOLIO_PACKAGE,
-    typeArguments,
     REGISTRY,
+    typeArguments,
     index,
+    strikePct,
+    weight,
+    isBuyer,
     strikeIncrement,
     decaySpeed,
     initialPrice,

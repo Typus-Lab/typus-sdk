@@ -1,247 +1,319 @@
-import { JsonRpcProvider, Connection } from "@mysten/sui.js";
+import { JsonRpcProvider } from "@mysten/sui.js";
 import {
     DepositVault,
     BidVault,
     parseDepositVault,
     parseBidVault,
 } from "../../typus-framework/vault";
+import { Auction, parseAuction } from "../../typus-framework/dutch";
 
 export interface PortfolioVault {
     vaultId: string;
     typeArgs: string[];
     assets: string[];
+    info: Info;
+    config: Config;
     tokenDepositVault: DepositVault,
     usdDepositVault: DepositVault,
     bidVault: BidVault,
+    auction: Auction;
+    authority: string;
+    tokenTvl: BigInt;
+    usdTvl: BigInt;
 }
 
-export async function getPortfolioVaultDataFromRegistry(
-    registry: string,
+export interface Info {
+    index: string;
+    creator: string;
+    createTsMs: string;
+    round: string;
+    oracleInfo: OracleInfo;
+    deliveryInfo?: DeliveryInfo;
+}
+
+export interface OracleInfo {
+    price: string;
+    decimal: string;
+}
+
+export interface DeliveryInfo {
+    round: string;
+    price: string;
+    size: string;
+    premium: string;
+    tsMs: string;
+}
+
+export interface Config {
+    strategyName: string;
+    period: number; // daily:0 weekly:1 monthly:2
+    activationTsMs: string;
+    expirationTsMs: string;
+    oTokenDecimal: string;
+    uTokenDecimal: string;
+    bTokenDecimal: string;
+    lotSize: string;
+    capacity: string;
+    leverage: string;
+    hasNext: boolean;
+    activeVaultConfig: VaultConfig;
+    warmupVaultConfig: VaultConfig;
+    upcomingVaultConfig: VaultConfig;
+}
+
+export interface VaultConfig {
+    callPayoffConfigs: PayoffConfig[];
+    putPayoffConfigs: PayoffConfig[];
+    strikeIncrement: string;
+    decaySpeed: string;
+    initialPrice: string;
+    finalPrice: string;
+    auctionDurationInMs: string;
+}
+
+export interface PayoffConfig {
+    strikePct: string;
+    weight: string;
+    isBuyer: boolean;
+    strike?: string;
+}
+
+export async function getPortfolioVaults(
     provider: JsonRpcProvider,
+    registry: string,
+    token_deposit_vault_registry: string,
+    usd_deposit_vault_registry: string,
+    bid_vault_registry: string,
     index?: string
-) {
+): Promise<Map<string, PortfolioVault>> {
     let portfolioVaultIds = (await provider.getDynamicFields({ parentId: registry, }))
         .data
-        .filter((e) => index ? e.name.value == index : true)
-        .map((e) => e.objectId as string);
+        .filter((x) => index ? x.name.value == index : true)
+        .map((x) => x.objectId as string);
 
-    console.log(portfolioVaultIds);
-
-    let portfolioVaults = await provider.multiGetObjects({
+    let portfolioVaults = (await provider.multiGetObjects({
         ids: portfolioVaultIds,
         options: { showContent: true },
-    });
+    }))
+        .filter((portfolioVault) => portfolioVault.error == undefined)
+        .reduce(function (map, portfolioVault) {
+            // console.log(JSON.stringify(portfolioVault, null, 4));
+            // @ts-ignore
+            let vaultId = portfolioVault.data.content.fields.id.id;
+            // @ts-ignore
+            let typeArgs = (new RegExp('.*<(.*), (.*), (.*)>')).exec(portfolioVault.data.content.type).slice(1, 4);
+            let assets = typeArgs.map((x) => x.split("::")[2]);
+            let oracleInfo: OracleInfo = {
+                // @ts-ignore
+                price: portfolioVault.data.content.fields.info.fields.oracle_info.fields.price,
+                // @ts-ignore
+                decimal: portfolioVault.data.content.fields.info.fields.oracle_info.fields.decimal,
+            };
+            let deliveryInfo: DeliveryInfo | undefined =
+                // @ts-ignore
+                portfolioVault.data.content.fields.info.fields.delivery_info ? {
+                    // @ts-ignore
+                    round: portfolioVault.data.content.fields.info.fields.delivery_info.fields.round,
+                    // @ts-ignore
+                    price: portfolioVault.data.content.fields.info.fields.delivery_info.fields.price,
+                    // @ts-ignore
+                    size: portfolioVault.data.content.fields.info.fields.delivery_info.fields.size,
+                    // @ts-ignore
+                    premium: portfolioVault.data.content.fields.info.fields.delivery_info.fields.premium,
+                    // @ts-ignore
+                    tsMs: portfolioVault.data.content.fields.info.fields.delivery_info.fields.ts_ms,
+                } : undefined;
+            let info: Info = {
+                // @ts-ignore
+                index: portfolioVault.data.content.fields.info.fields.index,
+                // @ts-ignore
+                creator: portfolioVault.data.content.fields.info.fields.creator,
+                // @ts-ignore
+                createTsMs: portfolioVault.data.content.fields.info.fields.create_ts_ms,
+                // @ts-ignore
+                round: portfolioVault.data.content.fields.info.fields.round,
+                oracleInfo,
+                deliveryInfo,
+            };
+            let config: Config = {
+                // @ts-ignore
+                strategyName: portfolioVault.data.content.fields.config.fields.strategy_name,
+                // @ts-ignore
+                period: portfolioVault.data.content.fields.config.fields.period,
+                // @ts-ignore
+                activationTsMs: portfolioVault.data.content.fields.config.fields.activation_ts_ms,
+                // @ts-ignore
+                expirationTsMs: portfolioVault.data.content.fields.config.fields.expiration_ts_ms,
+                // @ts-ignore
+                oTokenDecimal: portfolioVault.data.content.fields.config.fields.o_token_decimal,
+                // @ts-ignore
+                uTokenDecimal: portfolioVault.data.content.fields.config.fields.u_token_decimal,
+                // @ts-ignore
+                bTokenDecimal: portfolioVault.data.content.fields.config.fields.b_token_decimal,
+                // @ts-ignore
+                lotSize: portfolioVault.data.content.fields.config.fields.lot_size,
+                // @ts-ignore
+                capacity: portfolioVault.data.content.fields.config.fields.capacity,
+                // @ts-ignore
+                leverage: portfolioVault.data.content.fields.config.fields.leverage,
+                // @ts-ignore
+                hasNext: portfolioVault.data.content.fields.config.fields.has_next,
+                activeVaultConfig: {
+                    // @ts-ignore
+                    callPayoffConfigs: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.call_payoff_configs
+                        .map((x) => ({
+                            strikePct: x.fields.strike_pct,
+                            weight: x.fields.weight,
+                            isBuyer: x.fields.is_buyer,
+                            strike: x.fields.strike,
+                        } as PayoffConfig)),
+                    // @ts-ignore
+                    putPayoffConfigs: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.put_payoff_configs
+                        .map((x) => ({
+                            strikePct: x.fields.strike_pct,
+                            weight: x.fields.weight,
+                            isBuyer: x.fields.is_buyer,
+                            strike: x.fields.strike,
+                        } as PayoffConfig)),
+                    // @ts-ignore
+                    strikeIncrement: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.strike_increment,
+                    // @ts-ignore
+                    decaySpeed: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.decay_speed,
+                    // @ts-ignore
+                    initialPrice: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.initial_price,
+                    // @ts-ignore
+                    finalPrice: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.final_price,
+                    // @ts-ignore
+                    auctionDurationInMs: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.auction_duration_in_ms,
+                } as VaultConfig,
+                warmupVaultConfig: {
+                    // @ts-ignore
+                    callPayoffConfigs: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.call_payoff_configs
+                        .map((x) => ({
+                            strikePct: x.fields.strike_pct,
+                            weight: x.fields.weight,
+                            isBuyer: x.fields.is_buyer,
+                            strike: x.fields.strike,
+                        } as PayoffConfig)),
+                    // @ts-ignore
+                    putPayoffConfigs: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.put_payoff_configs
+                        .map((x) => ({
+                            strikePct: x.fields.strike_pct,
+                            weight: x.fields.weight,
+                            isBuyer: x.fields.is_buyer,
+                            strike: x.fields.strike,
+                        } as PayoffConfig)),
+                    // @ts-ignore
+                    strikeIncrement: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.strike_increment,
+                    // @ts-ignore
+                    decaySpeed: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.decay_speed,
+                    // @ts-ignore
+                    initialPrice: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.initial_price,
+                    // @ts-ignore
+                    finalPrice: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.final_price,
+                    // @ts-ignore
+                    auctionDurationInMs: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.auction_duration_in_ms,
+                } as VaultConfig,
+                upcomingVaultConfig: {
+                    // @ts-ignore
+                    callPayoffConfigs: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.call_payoff_configs
+                        .map((x) => ({
+                            strikePct: x.fields.strike_pct,
+                            weight: x.fields.weight,
+                            isBuyer: x.fields.is_buyer,
+                            strike: x.fields.strike,
+                        } as PayoffConfig)),
+                    // @ts-ignore
+                    putPayoffConfigs: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.put_payoff_configs
+                        .map((x) => ({
+                            strikePct: x.fields.strike_pct,
+                            weight: x.fields.weight,
+                            isBuyer: x.fields.is_buyer,
+                            strike: x.fields.strike,
+                        } as PayoffConfig)),
+                    // @ts-ignore
+                    strikeIncrement: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.strike_increment,
+                    // @ts-ignore
+                    decaySpeed: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.decay_speed,
+                    // @ts-ignore
+                    initialPrice: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.initial_price,
+                    // @ts-ignore
+                    finalPrice: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.final_price,
+                    // @ts-ignore
+                    auctionDurationInMs: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.auction_duration_in_ms,
+                } as VaultConfig,
+            };
+            // @ts-ignore
+            let auction = portfolioVault.data.content.fields.auction ? parseAuction(portfolioVault.data.content.fields.auction) : undefined;
+            // @ts-ignore
+            let authority = portfolioVault.data.content.fields.authority.fields.whitelist.fields.id.id;
+            map[info.index] = {
+                vaultId,
+                typeArgs,
+                assets,
+                info,
+                config,
+                tokenDepositVault: {},
+                usdDepositVault: {},
+                bidVault: {},
+                auction,
+                authority,
+            } as PortfolioVault;
+            return map;
+        }, {});
 
-    console.log(portfolioVaults);
+    let tokenDepositVaultIds = (await provider.getDynamicFields({ parentId: token_deposit_vault_registry, }))
+        .data
+        .filter((x) => index ? x.name.value == index : true)
+        .map((x) => x.objectId as string);
+    let tokenDepositVaults = (await provider.multiGetObjects({
+        ids: tokenDepositVaultIds,
+        options: { showContent: true },
+    }))
+        .filter((tokenDepositVault) => tokenDepositVault.error == undefined)
+        .forEach((tokenDepositVault) => {
+            // @ts-ignore
+            let index = tokenDepositVault.data.content.fields.name;
+            // @ts-ignore
+            let depositVault = parseDepositVault(tokenDepositVault.data.content.fields.value);
+            let tvl = BigInt(depositVault.activeSubVault.balance) + BigInt(depositVault.warmupSubVault.balance);
+            portfolioVaults[index].tokenTvl = tvl;
+            portfolioVaults[index].tokenDepositVault = depositVault;
+        });
 
-    // for (let objInfo of objsInfo) {
-    //     if (objInfo.error !== undefined) {
-    //         console.log("obj not exist");
-    //         continue;
-    //     }
+    let usdDepositVaultIds = (await provider.getDynamicFields({ parentId: usd_deposit_vault_registry, }))
+        .data
+        .filter((x) => index ? x.name.value == index : true)
+        .map((x) => x.objectId as string);
+    let usdDepositVaults = (await provider.multiGetObjects({
+        ids: usdDepositVaultIds,
+        options: { showContent: true },
+    }))
+        .filter((usdDepositVault) => usdDepositVault.error == undefined)
+        .forEach((usdDepositVault) => {
+            // @ts-ignore
+            let index = usdDepositVault.data.content.fields.name;
+            // @ts-ignore
+            let depositVault = parseDepositVault(usdDepositVault.data.content.fields.value);
+            let tvl = BigInt(depositVault.activeSubVault.balance) + BigInt(depositVault.warmupSubVault.balance);
+            portfolioVaults[index].usdTvl = tvl;
+            portfolioVaults[index].usdDepositVault = depositVault;
+        });
 
-    //     // typescript sdk wrong type @@
-    //     //@ts-ignore
-    //     const vaultId: string = objInfo.data.content.fields.id.id;
-    //     //@ts-ignore
-    //     let type: string = objInfo.data.content.fields.value.type;
-    //     type = type.split("<")[1];
-    //     type = type.split(">")[0];
-    //     const typeArgs = type.split(", ");
-    //     const assets = typeArgs.map((x) => x.split("::")[2]);
+    let bidVaultIds = (await provider.getDynamicFields({ parentId: bid_vault_registry, }))
+        .data
+        .filter((x) => index ? x.name.value == index : true)
+        .map((x) => x.objectId as string);
+    let bidVaults = (await provider.multiGetObjects({
+        ids: bidVaultIds,
+        options: { showContent: true },
+    }))
+        .filter((bidVault) => bidVault.error == undefined)
+        .forEach((bidVault) => {
+            // @ts-ignore
+            portfolioVaults[bidVault.data.content.fields.name].bidVault = parseBidVault(bidVault.data.content.fields.value);
+        });
 
-    //     //@ts-ignore
-    //     const infoFields = objInfo.data.content.fields.value.fields.info.fields;
-
-    //     let deliveryInfo: DeliveryInfo;
-    //     //@ts-ignore
-    //     if (infoFields.delivery_info) {
-    //         //@ts-ignore
-    //         const fields =
-    //             //@ts-ignore
-    //             infoFields.delivery_info.fields;
-    //         deliveryInfo = {
-    //             round: fields.round,
-    //             price: fields.price,
-    //             size: fields.size,
-    //             premium: fields.premium,
-    //             tsMs: fields.ts_ms,
-    //         };
-    //     } else {
-    //         deliveryInfo = {} as DeliveryInfo;
-    //     }
-
-    //     // info
-    //     //@ts-ignore
-
-    //     let info: Info = {
-    //         index: infoFields.index,
-    //         creator: infoFields.creator,
-    //         createTsMs: infoFields.create_ts_ms,
-    //         round: infoFields.round,
-    //         deliveryInfo,
-    //     };
-
-    //     //config
-    //     //@ts-ignore
-    //     const config = objInfo.data.content.fields.value.fields.config.fields;
-
-    //     const configRes: Config = {
-    //         optionType: config.option_type,
-    //         period: config.period, // daily:0 weekly:1 monthly:2
-    //         activationTsMs: config.activation_ts_ms,
-    //         expirationTsMs: config.expiration_ts_ms,
-    //         dTokenDecimal: config.d_token_decimal,
-    //         bTokenDecimal: config.b_token_decimal,
-    //         oTokenDecimal: config.o_token_decimal,
-    //         lotSize: config.lot_size,
-    //         capacity: (Number(config.capacity) / 10 ** config.d_token_decimal).toString(),
-    //         leverage: config.leverage,
-    //         hasNext: config.has_next,
-    //         activeVaultConfig: parseVaultConfig(config.active_vault_config.fields),
-    //         warmupVaultConfig: parseVaultConfig(config.warmup_vault_config.fields),
-    //         upcomingVaultConfig: parseVaultConfig(config.upcoming_vault_config.fields),
-    //     };
-
-    //     //@ts-ignore
-    //     const depositVaultField =
-    //         //@ts-ignore
-    //         objInfo.data.content.fields.value.fields.deposit_vault.fields;
-    //     const depositVault: DepositVault = {
-    //         activeSubVault: parseSubVault(depositVaultField.active_sub_vault.fields),
-    //         deactivatingSubVault: parseSubVault(depositVaultField.deactivating_sub_vault.fields),
-    //         inactiveSubVault: parseSubVault(depositVaultField.inactive_sub_vault.fields),
-    //         warmupSubVault: parseSubVault(depositVaultField.warmup_sub_vault.fields),
-    //         hasNext: depositVaultField.has_next,
-    //     };
-
-    //     const bidVaultField =
-    //         //@ts-ignore
-    //         objInfo.data.content.fields.value.fields.bid_vault.fields;
-    //     const bidVault: BidVault = {
-    //         bidderSubVault: parseSubVault(bidVaultField.bidder_sub_vault.fields),
-    //         premiumSubVault: parseSubVault(bidVaultField.premium_sub_vault.fields),
-    //         performanceFeeSubVault: parseSubVault(bidVaultField.performance_fee_sub_vault.fields),
-    //     };
-
-    //     //@ts-ignore
-    //     const auctionField = objInfo.data.content.fields.value.fields.auction;
-    //     let auctionRes: Auction;
-    //     if (auctionField) {
-    //         const auction = auctionField.fields;
-
-    //         // console.log(auction);
-
-    //         const priceConfig = auction.price_config.fields;
-    //         const priceConfigRes: PriceConfig = {
-    //             decaySpeed: priceConfig.decay_speed,
-    //             initialPrice: priceConfig.initial_price,
-    //             finalPrice: priceConfig.final_price,
-    //         };
-    //         auctionRes = {
-    //             startTsMs: auction.start_ts_ms,
-    //             endTsMs: auction.end_ts_ms,
-    //             priceConfig: priceConfigRes,
-    //             index: auction.index,
-    //             bids: auction.bids.fields.id.id,
-    //             ownerships: auction.ownerships.fields.id.id,
-    //             totalBidSize: auction.total_bid_size,
-    //             ableToRemoveBid: auction.able_to_remove_bid,
-    //         };
-    //     } else {
-    //         auctionRes = {} as Auction;
-    //     }
-
-    //     const tvl =
-    //         Number(depositVault.activeSubVault.balance) + Number(depositVault.warmupSubVault.balance);
-
-    //     // @ts-ignore
-    //     const authorityId =
-    //         // @ts-ignore
-    //         objInfo.data.content.fields.value.fields.authority.fields.whitelist.fields.id.id;
-
-    //     const authority = await getNodesKeyFromLinkedList(authorityId, provider);
-
-    //     const portfolioVaults: PortfolioVault = {
-    //         vaultId: vaultId,
-    //         typeArgs,
-    //         assets,
-    //         info,
-    //         config: configRes,
-    //         depositVault,
-    //         bidVault,
-    //         auction: auctionRes,
-    //         authority,
-    //         tvl: tvl.toString(),
-    //     };
-
-    //     vaults.push(portfolioVaults);
-    // }
-    // return vaults;
+    // @ts-ignore
+    return portfolioVaults;
 }
-
-// export async function getNodesKeyFromLinkedList(
-//     linkedList: string,
-//     provider: JsonRpcProvider
-// ): Promise<string[]> {
-//     //@ts-ignore
-//     let linkedListNodes: string[] = (
-//         await provider.getDynamicFields({ parentId: linkedList })
-//     ).data.map((d) => d.name.value);
-
-//     return linkedListNodes;
-// }
-
-// export async function getUserShares(
-//     user_share_registry: string,
-//     provider: JsonRpcProvider,
-//     user: string
-// ): Promise<Share[]> {
-//     var user_shares = (
-//         await provider.getDynamicFields({
-//             parentId: user_share_registry,
-//         })
-//     ).data;
-
-//     // console.log(user_shares);
-
-//     user_shares = user_shares.filter((user_share) => user_share.name.value.user == user);
-
-//     // console.log(user_shares);
-
-//     let objsInfo = await provider.multiGetObjects({
-//         ids: user_shares.map((user_share) => user_share.objectId),
-//         options: { showContent: true },
-//     });
-
-//     // console.log(objsInfo);
-
-//     let shares: Share[] = [];
-
-//     objsInfo.forEach((info) => {
-//         // @ts-ignore
-//         let fields = info.data.content.fields;
-//         let share: Share = {
-//             index: fields.name.fields.index,
-//             tag: fields.name.fields.tag,
-//             value: fields.value.fields.value,
-//         };
-//         shares.push(share);
-//     });
-
-//     return shares;
-// }
-
-// export interface Share {
-//     index: string;
-//     tag: string;
-//     value: string;
-// }
-
-// const connection = new Connection({ fullnode: "https://rpc-testnet.suiscan.xyz:443" });
-// const connection = new Connection({ fullnode: "https://sui-testnet-rpc.allthatnode.com:443" });
-const connection = new Connection({ fullnode: "https://fullnode.testnet.sui.io:443" });
-const provider = new JsonRpcProvider(connection); //for read only operations
-(async () => {
-    await getPortfolioVaultDataFromRegistry("0x758e3efaf8f70a1d115e2990b091b2531638048b36733d5781628e41db0ba8e9", provider);
-})();

@@ -1,5 +1,5 @@
-import { REGISTRY } from "../constants"
-import { getWhiteListFromRegistry } from "../utils/getWhiteListFromRegistry"
+import { REGISTRY } from "../../constants"
+import { getWhiteListFromRegistry } from "../../utils/portfolio/single-collateral/getWhiteListFromRegistry"
 import { JsonRpcProvider, devnetConnection } from '@mysten/sui.js';
 
 const provider = new JsonRpcProvider(devnetConnection);//for read only operations

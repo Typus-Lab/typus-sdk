@@ -1,11 +1,11 @@
-import { getMintTx } from "../utils/getMintTx";
+import { getMintTx } from "../../utils/portfolio/single-collateral/getMintTx";
 import {
   TOKEN_PACKAGE,
   TOKEN_REGISTRY_SUI,
   TEST_MNEMONIC,
   TOKEN_NAME,
   TOKEN_NAME_TO_MODULE,
-} from "../constants";
+} from "../../constants";
 import {
   JsonRpcProvider,
   Ed25519Keypair,
@@ -62,10 +62,10 @@ async function prepareData(tokenRegistry: string) {
     //@ts-ignore
     console.log(
       "Before: total mint fake " +
-        tokenName +
-        " token in the registry: " +
-        //@ts-ignore
-        obj.details.data.fields.treasury_cap.fields.total_supply.fields.value
+      tokenName +
+      " token in the registry: " +
+      //@ts-ignore
+      obj.details.data.fields.treasury_cap.fields.total_supply.fields.value
     );
     return moudleName;
   } catch (e) {
@@ -92,8 +92,8 @@ async function checkData(moveCallTxn, tokenRegistry: string) {
     //@ts-ignore
     console.log(
       "After: total mint in the registry: " +
-        //@ts-ignore
-        obj.details.data.fields.treasury_cap.fields.total_supply.fields.value
+      //@ts-ignore
+      obj.details.data.fields.treasury_cap.fields.total_supply.fields.value
     );
   } catch (e) {
     console.error(e);

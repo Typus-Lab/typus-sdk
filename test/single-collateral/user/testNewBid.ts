@@ -6,12 +6,12 @@ import {
   DOGE_ORACLE,
   MODULE,
   testnetConnection,
-} from "../../constants";
+} from "../../../constants";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner } from "@mysten/sui.js";
 
-import { PortfolioVault } from "../../utils/fetchData";
-import { getVaultDataFromRegistry } from "../../utils/getVaultData";
-import { getNewBidTx } from "../../utils/portfolio/user/getNewBidTx";
+import { PortfolioVault } from "../../../utils/portfolio/single-collateral/fetchData";
+import { getVaultDataFromRegistry } from "../../../utils/portfolio/single-collateral/getVaultData";
+import { getNewBidTx } from "../../../utils/portfolio/single-collateral/user/getNewBidTx";
 const provider = new JsonRpcProvider(testnetConnection); //for read only operations
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);

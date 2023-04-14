@@ -6,9 +6,9 @@ import {
   RawSigner,
   SuiEvent,
 } from "@mysten/sui.js";
-import { TEST_MNEMONIC } from "../constants";
-import { getUserStatus } from "../utils/portfolio/helper/getUserStatus";
-import { getVaultDataFromRegistry } from "../utils/getVaultData";
+import { TEST_MNEMONIC } from "../../constants";
+import { getUserStatus } from "../../utils/portfolio/single-collateral/helper/getUserStatus";
+import { getVaultDataFromRegistry } from "../../utils/portfolio/single-collateral/getVaultData";
 
 const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const provider = new JsonRpcProvider(
