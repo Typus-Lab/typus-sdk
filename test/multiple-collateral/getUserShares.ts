@@ -11,8 +11,4 @@ const user = "0x603272d1e61de086a18751482684f882642eb080144aee425c4c34b5e56470b0
 (async () => {
     let result = await getUserShares(provider, packageId, registry, indexes, user);
     console.log(JSON.stringify(result, (_, v) => typeof v === 'bigint' ? `${v}` : v, 2));
-    // let portfolioVaultIds = (await provider.getDynamicFields({ parentId: "0xdcb1f0c4d31528a67f89303e3a99e15b9e21c7e22b4123a0e43e90b3fae5ea1e", }))
-    //     .data
-    //     .sort((a, b) => a.name.value - b.name.value)
-    //     .forEach((x) => console.log(x));
 })();

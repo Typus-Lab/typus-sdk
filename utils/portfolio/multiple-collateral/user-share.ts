@@ -45,7 +45,7 @@ export async function getUserShares(
         //     position: u8,    // 1
         //     share: u64,      // 8
         // }
-        let user_share_bytes = bytes.splice(bytes.length - 57, 57);
+        let user_share_bytes = bytes.splice(bytes.length - 50, 50);
         let index = U64FromBytes(user_share_bytes.splice(0, 8).reverse()).toString();
         let tag = U64FromBytes(user_share_bytes.splice(0, 1).reverse()).toString();
         user_share_bytes.splice(0, 32);
