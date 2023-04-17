@@ -4,8 +4,8 @@ import { getUserShares } from "../../utils/portfolio/multiple-collateral/user-sh
 const connection = new Connection({ fullnode: "https://rpc-testnet.suiscan.xyz:443" });
 // const connection = new Connection({ fullnode: "https://fullnode.testnet.sui.io:443" });
 const provider = new JsonRpcProvider(connection); //for read only operations
-const packageId = "0x5bc14570416400e66d178646067f9f44c7a1ae8bfa489630e86c3a57de10e49a";
-const registry = "0xbb8abceca4104136a0deded4bfc81c12a8d4f3a3b55cd11482dd9a569c6c2dce";
+const packageId = "0xab7e0bab5980ad0b55d3fae9d64c1bd41043a3bf383ff41dbc7f0c4ffe766213";
+const registry = "0x5083936779bd8bbc26f374baf90981ad5af8f57fe22920105aa47d4e012364de";
 const indexes = ["0", "1", "2"];
 const user = "0x603272d1e61de086a18751482684f882642eb080144aee425c4c34b5e56470b0";
 (async () => {
