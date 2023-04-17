@@ -18,8 +18,8 @@ export interface PortfolioVault {
     bidVault: BidVault,
     auction: Auction;
     authority: string;
-    tokenTvl: BigInt;
-    usdTvl: BigInt;
+    tokenTvl: bigint;
+    usdTvl: bigint;
 }
 
 export interface Info {

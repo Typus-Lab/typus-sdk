@@ -17,6 +17,19 @@ export interface SubVault {
     shareSupply: string;
 }
 
+export interface DepositVaultUserShare {
+    activeSubVaultUserShare: bigint;
+    deactivatingSubVaultUserShare: bigint;
+    inactiveSubVaultUserShare: bigint;
+    warmupSubVaultUserShare: bigint;
+}
+
+export interface BidVaultUserShare {
+    bidderSubVaultUserShare: bigint;
+    premiumSubVaultUserShare: bigint;
+    performanceFeeSubVaultUserShare: bigint;
+}
+
 export function parseDepositVault(depositVault): DepositVault {
     return {
         activeSubVault: parseSubVault(depositVault.fields.active_sub_vault),

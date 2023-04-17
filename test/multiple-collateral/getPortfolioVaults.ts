@@ -1,7 +1,8 @@
 import { JsonRpcProvider, Connection } from "@mysten/sui.js";
 import { getPortfolioVaults } from "../../utils/portfolio/multiple-collateral/portfolio-vault";
 
-const connection = new Connection({ fullnode: "https://fullnode.testnet.sui.io:443" });
+const connection = new Connection({ fullnode: "https://rpc-testnet.suiscan.xyz:443" });
+// const connection = new Connection({ fullnode: "https://fullnode.testnet.sui.io:443" });
 const provider = new JsonRpcProvider(connection); //for read only operations
 const registry = "0xbb8abceca4104136a0deded4bfc81c12a8d4f3a3b55cd11482dd9a569c6c2dce";
 const token_deposit_vault_registry = "0xe44c1cc639e907b3e2f8566e965ce50fb25ff64222c5a299ad151a3baa0e49aa";
