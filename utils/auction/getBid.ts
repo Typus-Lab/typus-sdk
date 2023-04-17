@@ -1,12 +1,14 @@
 import { JsonRpcProvider } from "@mysten/sui.js";
 import { TOKEN_DECIMAL } from "../../constants";
-import { Bid, PortfolioVault } from "../fetchData";
+import { Bid, PortfolioVault } from "../portfolio/single-collateral/fetchData";
 
 export async function getBid(
   portfolioVault: PortfolioVault,
   provider: JsonRpcProvider
 ): Promise<Bid[]> {
-  let obj2 = (await provider.getDynamicFields({ parentId: portfolioVault.auction.bids })).data;
+  let obj2 = (
+    await provider.getDynamicFields({ parentId: portfolioVault.auction.bids })
+  ).data;
   let ids = obj2.map((e) => e.objectId);
 
   let tmp = await provider.multiGetObjects({
