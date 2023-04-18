@@ -18,9 +18,8 @@ export const DOGE_ORACLE = config.DOGE_ORACLE;
 
 //publish from typus-dov/cover_call
 export const PORTFOLIO_PACKAGE = config.PORTFOLIO_PACKAGE;
-export const REGISTRY = config.REGISTRY;
+export const REGISTRY = config.SINGLE_COLLATERAL_REGISTRY;
 export const MANAGER_CAP = config.MANAGER_CAP;
-export const USER_SHARE_REGISTRY = config.USER_SHARE_REGISTRY;
 export const MODULE = "single_collateral";
 
 //publish from typus-dov/typus-dov
