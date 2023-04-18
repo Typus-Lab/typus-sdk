@@ -1,10 +1,5 @@
 import { JsonRpcProvider } from "@mysten/sui.js";
-import {
-    DepositVault,
-    BidVault,
-    parseDepositVault,
-    parseBidVault,
-} from "../../typus-framework/vault";
+import { DepositVault, BidVault, parseDepositVault, parseBidVault } from "../../typus-framework/vault";
 import { Auction, parseAuction } from "../../typus-framework/dutch";
 
 export interface PortfolioVault {
@@ -13,9 +8,9 @@ export interface PortfolioVault {
     assets: string[];
     info: Info;
     config: Config;
-    tokenDepositVault: DepositVault,
-    usdDepositVault: DepositVault,
-    bidVault: BidVault,
+    tokenDepositVault: DepositVault;
+    usdDepositVault: DepositVault;
+    bidVault: BidVault;
     auction: Auction;
     authority: string;
     tokenTvl: bigint;
@@ -86,22 +81,23 @@ export async function getPortfolioVaults(
     bid_vault_registry: string,
     index?: string
 ): Promise<Map<string, PortfolioVault>> {
-    let portfolioVaultIds = (await provider.getDynamicFields({ parentId: registry, }))
-        .data
-        .filter((x) => index ? x.name.value == index : true)
+    let portfolioVaultIds = (await provider.getDynamicFields({ parentId: registry })).data
+        .filter((x) => (index ? x.name.value == index : true))
         .map((x) => x.objectId as string);
 
-    let portfolioVaults = (await provider.multiGetObjects({
-        ids: portfolioVaultIds,
-        options: { showContent: true },
-    }))
+    let portfolioVaults = (
+        await provider.multiGetObjects({
+            ids: portfolioVaultIds,
+            options: { showContent: true },
+        })
+    )
         .filter((portfolioVault) => portfolioVault.error == undefined)
         .reduce(function (map, portfolioVault) {
             // console.log(JSON.stringify(portfolioVault, null, 4));
             // @ts-ignore
             let vaultId = portfolioVault.data.content.fields.id.id;
             // @ts-ignore
-            let typeArgs = (new RegExp('.*<(.*), (.*), (.*)>')).exec(portfolioVault.data.content.type).slice(1, 4);
+            let typeArgs = new RegExp(".*<(.*), (.*), (.*)>").exec(portfolioVault.data.content.type).slice(1, 4);
             let assets = typeArgs.map((x) => x.split("::")[2]);
             let oracleInfo: OracleInfo = {
                 // @ts-ignore
@@ -111,18 +107,20 @@ export async function getPortfolioVaults(
             };
             let deliveryInfo: DeliveryInfo | undefined =
                 // @ts-ignore
-                portfolioVault.data.content.fields.info.fields.delivery_info ? {
-                    // @ts-ignore
-                    round: portfolioVault.data.content.fields.info.fields.delivery_info.fields.round,
-                    // @ts-ignore
-                    price: portfolioVault.data.content.fields.info.fields.delivery_info.fields.price,
-                    // @ts-ignore
-                    size: portfolioVault.data.content.fields.info.fields.delivery_info.fields.size,
-                    // @ts-ignore
-                    premium: portfolioVault.data.content.fields.info.fields.delivery_info.fields.premium,
-                    // @ts-ignore
-                    tsMs: portfolioVault.data.content.fields.info.fields.delivery_info.fields.ts_ms,
-                } : undefined;
+                portfolioVault.data.content.fields.info.fields.delivery_info
+                    ? {
+                          // @ts-ignore
+                          round: portfolioVault.data.content.fields.info.fields.delivery_info.fields.round,
+                          // @ts-ignore
+                          price: portfolioVault.data.content.fields.info.fields.delivery_info.fields.price,
+                          // @ts-ignore
+                          size: portfolioVault.data.content.fields.info.fields.delivery_info.fields.size,
+                          // @ts-ignore
+                          premium: portfolioVault.data.content.fields.info.fields.delivery_info.fields.premium,
+                          // @ts-ignore
+                          tsMs: portfolioVault.data.content.fields.info.fields.delivery_info.fields.ts_ms,
+                      }
+                    : undefined;
             let info: Info = {
                 // @ts-ignore
                 index: portfolioVault.data.content.fields.info.fields.index,
@@ -160,21 +158,25 @@ export async function getPortfolioVaults(
                 hasNext: portfolioVault.data.content.fields.config.fields.has_next,
                 activeVaultConfig: {
                     // @ts-ignore
-                    callPayoffConfigs: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.call_payoff_configs
-                        .map((x) => ({
-                            strikePct: x.fields.strike_pct,
-                            weight: x.fields.weight,
-                            isBuyer: x.fields.is_buyer,
-                            strike: x.fields.strike,
-                        } as PayoffConfig)),
+                    callPayoffConfigs: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.call_payoff_configs.map(
+                        (x) =>
+                            ({
+                                strikePct: x.fields.strike_pct,
+                                weight: x.fields.weight,
+                                isBuyer: x.fields.is_buyer,
+                                strike: x.fields.strike,
+                            } as PayoffConfig)
+                    ),
                     // @ts-ignore
-                    putPayoffConfigs: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.put_payoff_configs
-                        .map((x) => ({
-                            strikePct: x.fields.strike_pct,
-                            weight: x.fields.weight,
-                            isBuyer: x.fields.is_buyer,
-                            strike: x.fields.strike,
-                        } as PayoffConfig)),
+                    putPayoffConfigs: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.put_payoff_configs.map(
+                        (x) =>
+                            ({
+                                strikePct: x.fields.strike_pct,
+                                weight: x.fields.weight,
+                                isBuyer: x.fields.is_buyer,
+                                strike: x.fields.strike,
+                            } as PayoffConfig)
+                    ),
                     // @ts-ignore
                     strikeIncrement: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.strike_increment,
                     // @ts-ignore
@@ -188,21 +190,25 @@ export async function getPortfolioVaults(
                 } as VaultConfig,
                 warmupVaultConfig: {
                     // @ts-ignore
-                    callPayoffConfigs: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.call_payoff_configs
-                        .map((x) => ({
-                            strikePct: x.fields.strike_pct,
-                            weight: x.fields.weight,
-                            isBuyer: x.fields.is_buyer,
-                            strike: x.fields.strike,
-                        } as PayoffConfig)),
+                    callPayoffConfigs: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.call_payoff_configs.map(
+                        (x) =>
+                            ({
+                                strikePct: x.fields.strike_pct,
+                                weight: x.fields.weight,
+                                isBuyer: x.fields.is_buyer,
+                                strike: x.fields.strike,
+                            } as PayoffConfig)
+                    ),
                     // @ts-ignore
-                    putPayoffConfigs: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.put_payoff_configs
-                        .map((x) => ({
-                            strikePct: x.fields.strike_pct,
-                            weight: x.fields.weight,
-                            isBuyer: x.fields.is_buyer,
-                            strike: x.fields.strike,
-                        } as PayoffConfig)),
+                    putPayoffConfigs: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.put_payoff_configs.map(
+                        (x) =>
+                            ({
+                                strikePct: x.fields.strike_pct,
+                                weight: x.fields.weight,
+                                isBuyer: x.fields.is_buyer,
+                                strike: x.fields.strike,
+                            } as PayoffConfig)
+                    ),
                     // @ts-ignore
                     strikeIncrement: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.strike_increment,
                     // @ts-ignore
@@ -216,21 +222,25 @@ export async function getPortfolioVaults(
                 } as VaultConfig,
                 upcomingVaultConfig: {
                     // @ts-ignore
-                    callPayoffConfigs: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.call_payoff_configs
-                        .map((x) => ({
-                            strikePct: x.fields.strike_pct,
-                            weight: x.fields.weight,
-                            isBuyer: x.fields.is_buyer,
-                            strike: x.fields.strike,
-                        } as PayoffConfig)),
+                    callPayoffConfigs: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.call_payoff_configs.map(
+                        (x) =>
+                            ({
+                                strikePct: x.fields.strike_pct,
+                                weight: x.fields.weight,
+                                isBuyer: x.fields.is_buyer,
+                                strike: x.fields.strike,
+                            } as PayoffConfig)
+                    ),
                     // @ts-ignore
-                    putPayoffConfigs: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.put_payoff_configs
-                        .map((x) => ({
-                            strikePct: x.fields.strike_pct,
-                            weight: x.fields.weight,
-                            isBuyer: x.fields.is_buyer,
-                            strike: x.fields.strike,
-                        } as PayoffConfig)),
+                    putPayoffConfigs: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.put_payoff_configs.map(
+                        (x) =>
+                            ({
+                                strikePct: x.fields.strike_pct,
+                                weight: x.fields.weight,
+                                isBuyer: x.fields.is_buyer,
+                                strike: x.fields.strike,
+                            } as PayoffConfig)
+                    ),
                     // @ts-ignore
                     strikeIncrement: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.strike_increment,
                     // @ts-ignore
@@ -262,14 +272,15 @@ export async function getPortfolioVaults(
             return map;
         }, {});
 
-    let tokenDepositVaultIds = (await provider.getDynamicFields({ parentId: token_deposit_vault_registry, }))
-        .data
-        .filter((x) => index ? x.name.value == index : true)
+    let tokenDepositVaultIds = (await provider.getDynamicFields({ parentId: token_deposit_vault_registry })).data
+        .filter((x) => (index ? x.name.value == index : true))
         .map((x) => x.objectId as string);
-    let tokenDepositVaults = (await provider.multiGetObjects({
-        ids: tokenDepositVaultIds,
-        options: { showContent: true },
-    }))
+    let tokenDepositVaults = (
+        await provider.multiGetObjects({
+            ids: tokenDepositVaultIds,
+            options: { showContent: true },
+        })
+    )
         .filter((tokenDepositVault) => tokenDepositVault.error == undefined)
         .forEach((tokenDepositVault) => {
             // @ts-ignore
@@ -281,14 +292,15 @@ export async function getPortfolioVaults(
             portfolioVaults[index].tokenDepositVault = depositVault;
         });
 
-    let usdDepositVaultIds = (await provider.getDynamicFields({ parentId: usd_deposit_vault_registry, }))
-        .data
-        .filter((x) => index ? x.name.value == index : true)
+    let usdDepositVaultIds = (await provider.getDynamicFields({ parentId: usd_deposit_vault_registry })).data
+        .filter((x) => (index ? x.name.value == index : true))
         .map((x) => x.objectId as string);
-    let usdDepositVaults = (await provider.multiGetObjects({
-        ids: usdDepositVaultIds,
-        options: { showContent: true },
-    }))
+    let usdDepositVaults = (
+        await provider.multiGetObjects({
+            ids: usdDepositVaultIds,
+            options: { showContent: true },
+        })
+    )
         .filter((usdDepositVault) => usdDepositVault.error == undefined)
         .forEach((usdDepositVault) => {
             // @ts-ignore
@@ -300,14 +312,15 @@ export async function getPortfolioVaults(
             portfolioVaults[index].usdDepositVault = depositVault;
         });
 
-    let bidVaultIds = (await provider.getDynamicFields({ parentId: bid_vault_registry, }))
-        .data
-        .filter((x) => index ? x.name.value == index : true)
+    let bidVaultIds = (await provider.getDynamicFields({ parentId: bid_vault_registry })).data
+        .filter((x) => (index ? x.name.value == index : true))
         .map((x) => x.objectId as string);
-    let bidVaults = (await provider.multiGetObjects({
-        ids: bidVaultIds,
-        options: { showContent: true },
-    }))
+    let bidVaults = (
+        await provider.multiGetObjects({
+            ids: bidVaultIds,
+            options: { showContent: true },
+        })
+    )
         .filter((bidVault) => bidVault.error == undefined)
         .forEach((bidVault) => {
             // @ts-ignore
