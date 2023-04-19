@@ -4,6 +4,7 @@ import { TransactionBlock } from "@mysten/sui.js";
         registry: &Registry,
         index: u64,
         price_oracle: &Oracle<O_TOKEN>,
+        clock: &Clock,
     ): u64
 */
 export async function getAuctionMaxSize(
@@ -16,7 +17,7 @@ export async function getAuctionMaxSize(
 ) {
   const tx = new TransactionBlock();
   const target = `${packageId}::${module}::get_auction_max_size` as any;
-  const txArguments = [tx.pure(registry), tx.pure(index), tx.pure(priceOracle)];
+  const txArguments = [tx.pure(registry), tx.pure(index), tx.pure(priceOracle), tx.pure("0x6")];
   tx.moveCall({
     target,
     typeArguments,
