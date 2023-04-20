@@ -9,6 +9,8 @@ export const TOKEN_REGISTRY_SUI = "0x3b87b3f0403f527d28fd1301074a12446f43817a";
 //publish from typus-oracle
 export const ORACLE_PACKAGE = config.ORACLE_PACKAGE;
 export const TIME_ORACLE = "0x6";
+export const CLOCK = "0x6";
+export const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
 export const BTC_ORACLE = config.BTC_ORACLE;
 export const ETH_ORACLE = config.ETH_ORACLE;
@@ -32,20 +34,19 @@ export const TOKEN_DECIMAL = 9;
 export const TEST_MNEMONIC = "";
 
 export const DEFAULT_TYPE_ARGUMENT = "0x2::sui::SUI";
-export const FAKE_TOKEN_TYPE_ARGUMENT =
-  "0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC";
+export const FAKE_TOKEN_TYPE_ARGUMENT = "0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC";
 // export const TEST_MNEMONIC = mnemonic.MNEMONIC;
 export const TOKEN_NAME = ["BTC", "ETH", "SUI", "USDC", "USDT", "APT", "DOGE"];
 export const TOKEN_NAME_TO_MODULE = {
-  BTC: "btc",
-  ETH: "eth",
-  SUI: "sui",
-  USDC: "usdc",
+    BTC: "btc",
+    ETH: "eth",
+    SUI: "sui",
+    USDC: "usdc",
 };
 
 export const testnetConnection = new Connection({
-  fullnode: "https://fullnode.testnet.sui.io:443/",
-  faucet: "https://faucet.testnet.sui.io/gas",
+    fullnode: "https://fullnode.testnet.sui.io:443/",
+    faucet: "https://faucet.testnet.sui.io/gas",
 });
 
 export const ACTIVE_SUB_VAULT_TAG: number = 0;

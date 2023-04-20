@@ -209,8 +209,6 @@ export async function getPortfolioVaults(
                 } as VaultConfig,
             };
             // @ts-ignore
-            console.log(portfolioVault.data.content.fields);
-            // @ts-ignore
             let auction = portfolioVault.data.content.fields.auction ? parseAuction(portfolioVault.data.content.fields.auction) : undefined;
             // @ts-ignore
             let authority = portfolioVault.data.content.fields.authority.fields.whitelist.fields.id.id;
