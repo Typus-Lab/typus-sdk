@@ -1,15 +1,12 @@
 import { JsonRpcProvider, TransactionBlock } from "@mysten/sui.js";
 import { U64FromBytes } from "../../tools";
-import {
-    DepositVaultUserShare,
-    BidVaultUserShare,
-} from "../../typus-framework/vault";
+import { DepositVaultUserShare, BidVaultUserShare } from "../../typus-framework/vault";
 
 export interface UserShare {
     index: string;
-    tokenDepositVaultUserShare: DepositVaultUserShare,
-    usdDepositVaultUserShare: DepositVaultUserShare,
-    bidVaultUserShare: BidVaultUserShare,
+    tokenDepositVaultUserShare: DepositVaultUserShare;
+    usdDepositVaultUserShare: DepositVaultUserShare;
+    bidVaultUserShare: BidVaultUserShare;
 }
 
 export async function getUserShares(
@@ -17,15 +14,11 @@ export async function getUserShares(
     packageId: string,
     registry: string,
     indexes: string[],
-    user: string,
+    user: string
 ): Promise<Map<string, UserShare>> {
     let transactionBlock = new TransactionBlock();
     let target = `${packageId}::multiple_collateral::get_user_shares` as any;
-    let transactionBlockArguments = [
-        transactionBlock.pure(registry),
-        transactionBlock.pure(indexes),
-        transactionBlock.pure(user)
-    ];
+    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(indexes), transactionBlock.pure(user)];
     transactionBlock.moveCall({
         target,
         arguments: transactionBlockArguments,
@@ -64,43 +57,46 @@ export async function getUserShares(
             case "0": {
                 if (position == "0") {
                     result[index].tokenDepositVaultUserShare.activeSubVaultUserShare = share;
-                }
-                else {
+                } else {
                     result[index].usdDepositVaultUserShare.activeSubVaultUserShare = share;
                 }
+                break;
             }
             case "1": {
                 if (position == "0") {
                     result[index].tokenDepositVaultUserShare.deactivatingSubVaultUserShare = share;
-                }
-                else {
+                } else {
                     result[index].usdDepositVaultUserShare.deactivatingSubVaultUserShare = share;
                 }
+                break;
             }
             case "2": {
                 if (position == "0") {
                     result[index].tokenDepositVaultUserShare.inactiveSubVaultUserShare = share;
-                }
-                else {
+                } else {
                     result[index].usdDepositVaultUserShare.inactiveSubVaultUserShare = share;
                 }
+                break;
             }
             case "3": {
                 if (position == "0") {
                     result[index].tokenDepositVaultUserShare.warmupSubVaultUserShare = share;
-                }
-                else {
+                } else {
                     result[index].usdDepositVaultUserShare.warmupSubVaultUserShare = share;
                 }
+                break;
             }
             case "4": {
                 result[index].bidVaultUserShare.bidderSubVaultUserShare = share;
+                break;
             }
             case "5": {
                 result[index].bidVaultUserShare.premiumSubVaultUserShare = share;
+                break;
             }
             case "6": {
                 result[index].bidVaultUserShare.performanceFeeSubVaultUserShare = share;
+                break;
             }
         }
     }

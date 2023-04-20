@@ -1,14 +1,11 @@
 import { JsonRpcProvider, TransactionBlock } from "@mysten/sui.js";
 import { U64FromBytes } from "../../tools";
-import {
-    DepositVaultUserShare,
-    BidVaultUserShare,
-} from "../../typus-framework/vault";
+import { DepositVaultUserShare, BidVaultUserShare } from "../../typus-framework/vault";
 
 export interface UserShare {
     index: string;
-    depositVaultUserShare: DepositVaultUserShare,
-    bidVaultUserShare: BidVaultUserShare,
+    depositVaultUserShare: DepositVaultUserShare;
+    bidVaultUserShare: BidVaultUserShare;
 }
 
 export async function getUserShares(
@@ -16,15 +13,11 @@ export async function getUserShares(
     packageId: string,
     registry: string,
     indexes: string[],
-    user: string,
+    user: string
 ): Promise<Map<string, UserShare>> {
     let transactionBlock = new TransactionBlock();
     let target = `${packageId}::single_collateral::get_user_shares` as any;
-    let transactionBlockArguments = [
-        transactionBlock.pure(registry),
-        transactionBlock.pure(indexes),
-        transactionBlock.pure(user)
-    ];
+    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(indexes), transactionBlock.pure(user)];
     transactionBlock.moveCall({
         target,
         arguments: transactionBlockArguments,
@@ -59,24 +52,31 @@ export async function getUserShares(
         switch (tag) {
             case "0": {
                 result[index].depositVaultUserShare.activeSubVaultUserShare = share;
+                break;
             }
             case "1": {
                 result[index].depositVaultUserShare.deactivatingSubVaultUserShare = share;
+                break;
             }
             case "2": {
                 result[index].depositVaultUserShare.inactiveSubVaultUserShare = share;
+                break;
             }
             case "3": {
                 result[index].depositVaultUserShare.warmupSubVaultUserShare = share;
+                break;
             }
             case "4": {
                 result[index].bidVaultUserShare.bidderSubVaultUserShare = share;
+                break;
             }
             case "5": {
                 result[index].bidVaultUserShare.premiumSubVaultUserShare = share;
+                break;
             }
             case "6": {
                 result[index].bidVaultUserShare.performanceFeeSubVaultUserShare = share;
+                break;
             }
         }
     }
