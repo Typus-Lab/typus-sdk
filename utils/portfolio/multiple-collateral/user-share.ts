@@ -47,9 +47,23 @@ export async function getUserShares(
         if (result[index] == undefined) {
             result[index] = {
                 index,
-                tokenDepositVaultUserShare: {},
-                usdDepositVaultUserShare: {},
-                bidVaultUserShare: {},
+                tokenDepositVaultUserShare: {
+                    activeSubVaultUserShare: BigInt(0),
+                    deactivatingSubVaultUserShare: BigInt(0),
+                    inactiveSubVaultUserShare: BigInt(0),
+                    warmupSubVaultUserShare: BigInt(0),
+                },
+                usdDepositVaultUserShare: {
+                    activeSubVaultUserShare: BigInt(0),
+                    deactivatingSubVaultUserShare: BigInt(0),
+                    inactiveSubVaultUserShare: BigInt(0),
+                    warmupSubVaultUserShare: BigInt(0),
+                },
+                bidVaultUserShare: {
+                    bidderSubVaultUserShare: BigInt(0),
+                    premiumSubVaultUserShare: BigInt(0),
+                    performanceFeeSubVaultUserShare: BigInt(0),
+                },
             } as UserShare;
         }
         result[index].index = index;
