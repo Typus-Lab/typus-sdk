@@ -1,6 +1,6 @@
 import { Connection } from "@mysten/sui.js";
 import config from "./config.json";
-// import mnemonic from "./mnemonic.json";
+import mnemonic from "./mnemonic.json";
 
 //publish from sui-dev-token
 export const TOKEN_PACKAGE = config.TOKEN_PACKAGE;
@@ -31,22 +31,21 @@ export const TEST_MINT_TOKEN = "0x672612858fcb5c6abf944638253142820c251753";
 
 export const PRICE_DECIMAL = 8;
 export const TOKEN_DECIMAL = 9;
-export const TEST_MNEMONIC = "";
 
 export const DEFAULT_TYPE_ARGUMENT = "0x2::sui::SUI";
 export const FAKE_TOKEN_TYPE_ARGUMENT = "0x27b3674c685046f66cad1d5496d2967894fa5329::token::USDC";
-// export const TEST_MNEMONIC = mnemonic.MNEMONIC;
+export const TEST_MNEMONIC = mnemonic.MNEMONIC;
 export const TOKEN_NAME = ["BTC", "ETH", "SUI", "USDC", "USDT", "APT", "DOGE"];
 export const TOKEN_NAME_TO_MODULE = {
-    BTC: "btc",
-    ETH: "eth",
-    SUI: "sui",
-    USDC: "usdc",
+  BTC: "btc",
+  ETH: "eth",
+  SUI: "sui",
+  USDC: "usdc",
 };
 
 export const testnetConnection = new Connection({
-    fullnode: "https://fullnode.testnet.sui.io:443/",
-    faucet: "https://faucet.testnet.sui.io/gas",
+  fullnode: "https://fullnode.testnet.sui.io:443/",
+  faucet: "https://faucet.testnet.sui.io/gas",
 });
 
 export const ACTIVE_SUB_VAULT_TAG: number = 0;
