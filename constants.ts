@@ -21,7 +21,7 @@ export const DOGE_ORACLE = config.DOGE_ORACLE;
 //publish from typus-dov/cover_call
 export const PORTFOLIO_PACKAGE = config.PORTFOLIO_PACKAGE;
 export const REGISTRY = config.SINGLE_COLLATERAL_REGISTRY;
-export const MANAGER_CAP = config.MANAGER_CAP;
+// export const MANAGER_CAP = config.MANAGER_CAP;
 export const MODULE = "single_collateral";
 export const SINGLE_COLLATERAL_DEPOSIT_VAULT_REGISTRY = config.SINGLE_COLLATERAL_DEPOSIT_VAULT_REGISTRY;
 export const SINGLE_COLLATERAL_BID_VAULT_REGISTRY = config.SINGLE_COLLATERAL_BID_VAULT_REGISTRY;
@@ -37,15 +37,15 @@ export const FAKE_TOKEN_TYPE_ARGUMENT = "0x27b3674c685046f66cad1d5496d2967894fa5
 export const TEST_MNEMONIC = mnemonic.MNEMONIC;
 export const TOKEN_NAME = ["BTC", "ETH", "SUI", "USDC", "USDT", "APT", "DOGE"];
 export const TOKEN_NAME_TO_MODULE = {
-  BTC: "btc",
-  ETH: "eth",
-  SUI: "sui",
-  USDC: "usdc",
+    BTC: "btc",
+    ETH: "eth",
+    SUI: "sui",
+    USDC: "usdc",
 };
 
 export const testnetConnection = new Connection({
-  fullnode: "https://fullnode.testnet.sui.io:443/",
-  faucet: "https://faucet.testnet.sui.io/gas",
+    fullnode: "https://fullnode.testnet.sui.io:443/",
+    faucet: "https://faucet.testnet.sui.io/gas",
 });
 
 export const ACTIVE_SUB_VAULT_TAG: number = 0;

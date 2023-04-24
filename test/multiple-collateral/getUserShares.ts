@@ -10,5 +10,5 @@ const indexes = ["0", "1", "2"];
 const user = "0x603272d1e61de086a18751482684f882642eb080144aee425c4c34b5e56470b0";
 (async () => {
     let result = await getUserShares(provider, packageId, registry, indexes, user);
-    console.log(JSON.stringify(result, (_, v) => typeof v === 'bigint' ? `${v}` : v, 2));
+    console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();
