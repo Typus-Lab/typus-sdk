@@ -4,8 +4,8 @@ import { getAuctionMaxSize } from "../../utils/portfolio/single-collateral/view-
 import { getPortfolioVaults } from "../../utils/portfolio/single-collateral/portfolio-vault";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const index = "5";
 (async () => {
+    let index = "5";
     let portfolioVaults = await getPortfolioVaults(
         provider,
         config.SINGLE_COLLATERAL_REGISTRY,

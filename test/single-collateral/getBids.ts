@@ -1,24 +1,19 @@
 import { JsonRpcProvider, Connection } from "@mysten/sui.js";
 import config from "../../config.json";
-import { getMaxLossPerUnit } from "../../utils/portfolio/single-collateral/view-function";
 import { getPortfolioVaults } from "../../utils/portfolio/single-collateral/portfolio-vault";
+import { getBids } from "../../utils/typus-framework/dutch";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
+
 (async () => {
-    let index = "5";
+    let index = "0";
     let portfolioVaults = await getPortfolioVaults(
         provider,
         config.SINGLE_COLLATERAL_REGISTRY,
         config.SINGLE_COLLATERAL_DEPOSIT_VAULT_REGISTRY,
         config.SINGLE_COLLATERAL_BID_VAULT_REGISTRY
     );
-    let result = await getMaxLossPerUnit(
-        provider,
-        config.PORTFOLIO_PACKAGE,
-        portfolioVaults[index].typeArgs,
-        config.SINGLE_COLLATERAL_REGISTRY,
-        index,
-        config.ETH_ORACLE
-    );
-    console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
+
+    let bid = await getBids(provider, portfolioVaults[index].auction);
+    console.log(bid);
 })();

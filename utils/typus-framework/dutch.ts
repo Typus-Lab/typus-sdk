@@ -1,8 +1,10 @@
+import { JsonRpcProvider } from "@mysten/sui.js";
+
 export interface Auction {
     startTsMs: string;
     endTsMs: string;
     priceConfig: PriceConfig;
-    bidIndex: string;   // bid index
+    bidIndex: string; // bid index
     bids: string; // Table<u64, Bid<TOKEN>>,
     ownerships: string; // Table<address, vector<u64>>,
     totalBidSize: string;
@@ -38,4 +40,25 @@ export function parseAuction(auction): Auction {
         totalBidSize: auction.fields.total_bid_size,
         ableToRemoveBid: auction.fields.able_to_remove_bid,
     };
+}
+
+export async function getBids(provider: JsonRpcProvider, auction: Auction): Promise<Bid[]> {
+    let bidIds = (await provider.getDynamicFields({ parentId: auction.bids })).data.map((x) => x.objectId);
+
+    return (
+        await provider.multiGetObjects({
+            ids: bidIds,
+            options: { showContent: true },
+        })
+    ).map((e) => {
+        //@ts-ignore
+        let bidData = e.data.content.fields.value.fields;
+        return {
+            price: bidData.price,
+            size: bidData.size,
+            tsMs: bidData.ts_ms,
+            tokenBalance: bidData.balance,
+            ownerAddress: bidData.bidder,
+        };
+    });
 }
