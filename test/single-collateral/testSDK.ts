@@ -2,7 +2,7 @@ import { JsonRpcProvider, devnetConnection, Connection, Ed25519Keypair, RawSigne
 import { TEST_MNEMONIC } from "../../constants";
 import { getVaultDataFromRegistry } from "../../utils/portfolio/single-collateral/getVaultData";
 
-const keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
+const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const provider = new JsonRpcProvider(
     new Connection({
         fullnode: "wss://node.shinami.com:443/ws/v1/sui_devnet_cfbd006037ff239969283dca8229432d",
