@@ -1,4 +1,5 @@
 export interface DepositVault {
+    token: string;
     activeSubVault: SubVault;
     deactivatingSubVault: SubVault;
     inactiveSubVault: SubVault;
@@ -7,6 +8,7 @@ export interface DepositVault {
 }
 
 export interface BidVault {
+    token: string;
     bidderSubVault: SubVault;
     premiumSubVault: SubVault;
     performanceFeeSubVault: SubVault;
@@ -32,6 +34,8 @@ export interface BidVaultUserShare {
 
 export function parseDepositVault(depositVault): DepositVault {
     return {
+        // @ts-ignore
+        token: new RegExp(".*<.*, (.*)>").exec(depositVault.type)[1],
         activeSubVault: parseSubVault(depositVault.fields.active_sub_vault),
         deactivatingSubVault: parseSubVault(depositVault.fields.deactivating_sub_vault),
         inactiveSubVault: parseSubVault(depositVault.fields.inactive_sub_vault),
@@ -42,6 +46,8 @@ export function parseDepositVault(depositVault): DepositVault {
 
 export function parseBidVault(bidVault): BidVault {
     return {
+        // @ts-ignore
+        token: new RegExp(".*<.*, (.*)>").exec(bidVault.type)[1],
         bidderSubVault: parseSubVault(bidVault.fields.bidder_sub_vault),
         premiumSubVault: parseSubVault(bidVault.fields.premium_sub_vault),
         performanceFeeSubVault: parseSubVault(bidVault.fields.performance_fee_sub_vault),
