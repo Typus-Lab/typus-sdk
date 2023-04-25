@@ -15,7 +15,7 @@ const SPONSOR_RPC_URL = "https://api.shinami.com/gas/v1/sui_testnet_17aa4c66d7a3
 
 // Sui Node endpoint:
 const connection = new Connection({
-  fullnode: "https://fullnode.testnet.sui.io:443",
+  fullnode: "https://node.shinami.com:443/api/v1/sui_testnet_c702de54dad05016124f2cfabc1de7e8",
 });
 const suiProvider = new JsonRpcProvider(connection);
 
