@@ -84,8 +84,8 @@ export async function getAddPortfolioVaultAuthorizedUserTx(
     packageId: string,
     typeArguments: string[],
     managerCap: string,
-    index: string,
     registry: string,
+    index: string,
     users: string[]
 ) {
     let tx = new TransactionBlock();
@@ -112,8 +112,8 @@ export async function getRemovePortfolioVaultAuthorizedUserTx(
     packageId: string,
     typeArguments: string[],
     managerCap: string,
-    index: string,
     registry: string,
+    index: string,
     users: string[]
 ) {
     let tx = new TransactionBlock();
