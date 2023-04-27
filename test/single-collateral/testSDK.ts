@@ -1,5 +1,4 @@
 import { JsonRpcProvider, devnetConnection, Connection, Ed25519Keypair, RawSigner, SuiEvent } from "@mysten/sui.js";
-import { TEST_MNEMONIC } from "../../constants";
 import { getVaultDataFromRegistry } from "../../utils/portfolio/single-collateral/getVaultData";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));

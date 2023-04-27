@@ -14,10 +14,8 @@ const secretKeysPath = process.env.PRIVATEKEY;
 
 const subVault = "0xd3b2d3ee74afe2b5af0f810b3368955f068188e8";
 
-const TEST_MNEMONIC =
-  "tackle wheat jungle viable memory dwarf swift fold purpose cattle impose horn";
-const VALID_SECRET_KEY =
-  "Itk7iNFs91kXKdqVqmLrBKJItNIoSyWAOh+ZC2qaSihpxiAxNYwKPjwfresk9CSbKCmwNwvXfPQoeLL4rVa4OQ=="; //'mdqVWeFekT7pqy5T49+tV12jO0m+ESW7ki4zSU9JiCgbL0kJbj5dvQ/PqcDAzZLZqzshVEs01d1KZdmLh4uZIg==';
+const TEST_MNEMONIC = "tackle wheat jungle viable memory dwarf swift fold purpose cattle impose horn";
+const VALID_SECRET_KEY = "Itk7iNFs91kXKdqVqmLrBKJItNIoSyWAOh+ZC2qaSihpxiAxNYwKPjwfresk9CSbKCmwNwvXfPQoeLL4rVa4OQ=="; //'mdqVWeFekT7pqy5T49+tV12jO0m+ESW7ki4zSU9JiCgbL0kJbj5dvQ/PqcDAzZLZqzshVEs01d1KZdmLh4uZIg==';
 
 // let secretKeys = (readJsonFile<any>(secretKeysPath as string))
 // let sender = secretKeys[0]
@@ -28,7 +26,7 @@ let keypair = Ed25519Keypair.deriveKeypair(TEST_MNEMONIC);
 const signer = new RawSigner(keypair, provider);
 
 function readJsonFile<T>(filePath: string): T {
-  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
+    return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 }
 
 // //Success

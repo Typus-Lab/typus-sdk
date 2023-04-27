@@ -1,4 +1,4 @@
-import { TEST_MNEMONIC, REGISTRY, PORTFOLIO_PACKAGE, TIME_ORACLE } from "../../../constants";
+import { REGISTRY, PORTFOLIO_PACKAGE, TIME_ORACLE } from "../../../constants";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, devnetConnection } from "@mysten/sui.js";
 import { getAuthorizedUpdateWarmupVaultConfigTx } from "../../../utils/portfolio/single-collateral/authorized/getAuthorizedUpdateWarmupVaultConfigTx";
 const provider = new JsonRpcProvider(devnetConnection); //for read only operations

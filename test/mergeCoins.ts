@@ -1,4 +1,3 @@
-import { TEST_MNEMONIC } from "../constants";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, devnetConnection, TransactionBlock, testnetConnection, Connection } from "@mysten/sui.js";
 const connection = new Connection({ fullnode: "https://rpc-testnet.suiscan.xyz:443" });
 const provider = new JsonRpcProvider(connection); //for read only operations

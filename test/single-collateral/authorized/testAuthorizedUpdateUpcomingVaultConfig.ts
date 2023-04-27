@@ -1,4 +1,4 @@
-import { TEST_MNEMONIC, REGISTRY, PORTFOLIO_PACKAGE } from "../../../constants";
+import { REGISTRY, PORTFOLIO_PACKAGE } from "../../../constants";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, devnetConnection } from "@mysten/sui.js";
 import { getAuthorizedUpdateUpcomingVaultConfigTx } from "../../../utils/portfolio/single-collateral/authorized/getAuthorizedUpdateUpcomingVaultConfigTx";
 const provider = new JsonRpcProvider(devnetConnection); //for read only operations
