@@ -3,9 +3,9 @@ import { getUserShares } from "../../utils/portfolio/single-collateral/user-shar
 import config from "../../config.json";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const indexes = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 const user = "0xdc72506f269feb89822c13e66b282bc52c5724c27e575a04cbec949a13671d13";
 (async () => {
+    let indexes = ["0", "1", "2"];
     let result = await getUserShares(provider, config.PORTFOLIO_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY, indexes, user);
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();

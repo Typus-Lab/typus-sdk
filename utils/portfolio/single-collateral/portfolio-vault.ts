@@ -229,7 +229,7 @@ export async function getPortfolioVaults(
     let depositVaultIds = (await provider.getDynamicFields({ parentId: deposit_vault_registry })).data
         .filter((x) => (index ? x.name.value == index : true))
         .map((x) => x.objectId as string);
-    let depositVaults = (
+    (
         await provider.multiGetObjects({
             ids: depositVaultIds,
             options: { showContent: true },
@@ -249,7 +249,7 @@ export async function getPortfolioVaults(
     let bidVaultIds = (await provider.getDynamicFields({ parentId: bid_vault_registry })).data
         .filter((x) => (index ? x.name.value == index : true))
         .map((x) => x.objectId as string);
-    let bidVaults = (
+    (
         await provider.multiGetObjects({
             ids: bidVaultIds,
             options: { showContent: true },

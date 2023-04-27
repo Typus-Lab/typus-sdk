@@ -4,8 +4,8 @@ import { getMaxLossPerUnit } from "../../utils/portfolio/multiple-collateral/vie
 import { getPortfolioVaults } from "../../utils/portfolio/multiple-collateral/portfolio-vault";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const index = "5";
 (async () => {
+    let index = "0";
     let portfolioVaults = await getPortfolioVaults(
         provider,
         config.MULTIPLE_COLLATERAL_REGISTRY,
