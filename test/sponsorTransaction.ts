@@ -59,9 +59,27 @@ const progTxnTransfer = async () => {
     return transactionBlock;
 };
 
+const progTxnMoveCall = () => {
+    const txb = new TransactionBlock();
+    const v = txb.makeMoveVec({
+        objects: [txb.object("0x490c9ea233152eeb5d4c6285fb4b94a28110b783670e38ac0f00d7d719972410")],
+    });
+
+    txb.moveCall({
+        target: "0x8e3be3caa0bc8c461e78252e360407d44962db2afd67fd38fd98bab9d327baf1::single_collateral::deposit",
+        typeArguments: [
+            "0xd175cff04f1d49574efb6f138bc3b9b7313915a57b5ca04141fb1cb4f66984b2::eth::ETH",
+            "0xd175cff04f1d49574efb6f138bc3b9b7313915a57b5ca04141fb1cb4f66984b2::eth::ETH",
+            "0xd175cff04f1d49574efb6f138bc3b9b7313915a57b5ca04141fb1cb4f66984b2::eth::ETH",
+        ],
+        arguments: [txb.pure("0x0aea6911732b61a0fa89cbbb16c713844d5e7682d6c01f957f938dd1e17c5760"), txb.pure("1"), v, txb.pure("100000000")],
+    });
+    return txb;
+};
+
 const sponsorTransactionE2E = async () => {
     // get the gasless TransactionBlock for the desired programmable transaction
-    const gaslessTxb = progTxnTransfer();
+    const gaslessTxb = progTxnMoveCall();
 
     // generate the bcs serialized transaction data without any gas object data
     const gaslessPayloadBytes = await (await gaslessTxb).build({ provider: suiProvider, onlyTransactionKind: true });
