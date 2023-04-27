@@ -44,12 +44,20 @@ const depositorRequestData = {
         start: "now",
         end: "now",
         step: 1,
-        timezone: "Asia/Taipei",
     },
     samplesLimit: 200,
 };
 
-export async function getDepositorLeaderBoard(): Promise<LeaderBoard[]> {
+export async function getDepositorLeaderBoard(start?: string, end?: string, step?: number): Promise<LeaderBoard[]> {
+    if (start) {
+        depositorRequestData.timeRange.start = start;
+    }
+    if (end) {
+        depositorRequestData.timeRange.end = end;
+    }
+    if (step) {
+        depositorRequestData.timeRange.step = step;
+    }
     const jsonData = JSON.stringify(depositorRequestData);
 
     let response = await fetch(apiUrl, {
@@ -62,9 +70,9 @@ export async function getDepositorLeaderBoard(): Promise<LeaderBoard[]> {
         let data = await response.json();
         let samples = data.results[0].matrix.samples;
         let leader_board: LeaderBoard[] = samples.map((element) => {
-            //   console.log("metric:", element.metric, "values: ", element.values);
-            //   console.log("user:", element.metric.labels.user, "score: ", element.values[0].value);
-            return { user: element.metric.labels.user, score: element.values[0].value };
+            // console.log("metric:", element.metric, "values: ", element.values);
+            // console.log("user:", element.metric.labels.user, "score: ", element.values.at(-1).value);
+            return { user: element.metric.labels.user, score: element.values.at(-1).value };
         });
         leader_board.sort((a, b) => b.score - a.score);
         // console.log(leader_board);
@@ -94,12 +102,20 @@ const bidderRequestData = {
         start: "now",
         end: "now",
         step: 1,
-        timezone: "Asia/Taipei",
     },
     samplesLimit: 200,
 };
 
-export async function getBidderLeaderBoard(): Promise<LeaderBoard[]> {
+export async function getBidderLeaderBoard(start?: string, end?: string, step?: number): Promise<LeaderBoard[]> {
+    if (start) {
+        bidderRequestData.timeRange.start = start;
+    }
+    if (end) {
+        bidderRequestData.timeRange.end = end;
+    }
+    if (step) {
+        bidderRequestData.timeRange.step = step;
+    }
     const jsonData = JSON.stringify(bidderRequestData);
 
     let response = await fetch(apiUrl, {
@@ -112,9 +128,9 @@ export async function getBidderLeaderBoard(): Promise<LeaderBoard[]> {
         let data = await response.json();
         let samples = data.results[0].matrix.samples;
         let leader_board: LeaderBoard[] = samples.map((element) => {
-            //   console.log("metric:", element.metric, "values: ", element.values);
-            //   console.log("user:", element.metric.labels.user, "score: ", element.values[0].value);
-            return { user: element.metric.labels.user, score: element.values[0].value };
+            // console.log("metric:", element.metric, "values: ", element.values);
+            // console.log("user:", element.metric.labels.user, "score: ", element.values.at(-1).value);
+            return { user: element.metric.labels.user, score: element.values.at(-1).value };
         });
         leader_board.sort((a, b) => b.score - a.score);
         // console.log(leader_board);
@@ -128,3 +144,8 @@ interface LeaderBoard {
     user: string;
     score: number;
 }
+
+// (async () => {
+//     console.log(await getDepositorLeaderBoard("1682434800"));
+//     console.log(await getBidderLeaderBoard("1682434800"));
+// })();
