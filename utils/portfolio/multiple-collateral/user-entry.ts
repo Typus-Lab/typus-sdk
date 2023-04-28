@@ -9,6 +9,7 @@ import { TransactionBlock } from "@mysten/sui.js";
         token_amount: u64,
         ctx: &mut TxContext
     )
+    @param typeArguments [Token Deposit Vault Token, Usd Deposit Vault Token, Bid Vault Token]
 */
 export async function getDepositTx(
     gasBudget: number,
@@ -43,6 +44,7 @@ export async function getDepositTx(
         share: Option<u64>,
         ctx: &mut TxContext
     )
+    @param typeArguments [Token Deposit Vault Token, Usd Deposit Vault Token, Bid Vault Token]
 */
 export async function getWithdrawTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, index: string, share?: string) {
     let tx = new TransactionBlock();
@@ -56,11 +58,12 @@ export async function getWithdrawTx(gasBudget: number, packageId: string, typeAr
     return tx;
 }
 /**
-    public(friend) entry fun claim<O_TOKEN, U_TOKEN, B_TOKEN>(
+    public(friend) entry fun claim<O_TOKEN, U_TOKEN>(
         registry: &mut Registry,
         index: u64,
         ctx: &mut TxContext
     )
+    @param typeArguments [Token Deposit Vault Token, Usd Deposit Vault Token]
 */
 export async function getClaimTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, index: string) {
     let tx = new TransactionBlock();
@@ -74,11 +77,12 @@ export async function getClaimTx(gasBudget: number, packageId: string, typeArgum
     return tx;
 }
 /**
-    public(friend) entry fun harvest<O_TOKEN, U_TOKEN, B_TOKEN>(
+    public(friend) entry fun harvest<TOKEN>(
         registry: &mut Registry,
         index: u64,
         ctx: &mut TxContext
     )
+    @param typeArguments [Bid Vault Token]
 */
 export async function getHarvestTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, index: string) {
     let tx = new TransactionBlock();
@@ -97,6 +101,7 @@ export async function getHarvestTx(gasBudget: number, packageId: string, typeArg
         index: u64,
         ctx: &mut TxContext
     )
+    @param typeArguments [Token Deposit Vault Token, Usd Deposit Vault Token, Bid Vault Token]
 */
 export async function getClaimAndHarvestTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, index: string) {
     let tx = new TransactionBlock();
@@ -116,6 +121,7 @@ export async function getClaimAndHarvestTx(gasBudget: number, packageId: string,
         usd_coins: vector<Coin<U_TOKEN>>,
         ctx: &mut TxContext,
     )
+    @param typeArguments [Token Deposit Vault Token, Usd Deposit Vault Token]
 */
 export async function getCompoundTokenTx(
     gasBudget: number,
@@ -136,12 +142,13 @@ export async function getCompoundTokenTx(
     return tx;
 }
 /**
-    public(friend) entry fun compound_usd<TOKEN, O_TOKEN>(
+    public(friend) entry fun compound_usd<O_TOKEN, TOKEN>(
         registry: &mut Registry,
         index: u64,
         token_coins: vector<Coin<O_TOKEN>>,
         ctx: &mut TxContext,
     )
+    @param typeArguments [Token Deposit Vault Token, Usd Deposit Vault Token]
 */
 export async function getCompoundUsdTx(
     gasBudget: number,
@@ -162,12 +169,13 @@ export async function getCompoundUsdTx(
     return tx;
 }
 /**
-    public(friend) entry fun unsubscribe<O_TOKEN, U_TOKEN, B_TOKEN>(
+    public(friend) entry fun unsubscribe<O_TOKEN, U_TOKEN>(
         registry: &mut Registry,
         index: u64,
         share: Option<u64>,
         ctx: &mut TxContext
     )
+    @param typeArguments [Token Deposit Vault Token, Usd Deposit Vault Token]
 */
 export async function getUnsubscribeTx(
     gasBudget: number,
@@ -197,6 +205,7 @@ export async function getUnsubscribeTx(
         size: u64,
         ctx: &mut TxContext,
     )
+    @param typeArguments [Token Deposit Vault Token, Usd Deposit Vault Token, Bid Vault Token]
 */
 export async function getNewBidTx(
     gasBudget: number,
