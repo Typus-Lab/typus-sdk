@@ -1,7 +1,7 @@
-import { Connection, Ed25519Keypair, JsonRpcProvider, RawSigner, TransactionBlock } from "@mysten/sui.js";
+import { Connection, Ed25519Keypair, JsonRpcProvider, RawSigner } from "@mysten/sui.js";
 import { rpcClient } from "typed-rpc";
-import { MODULE, PORTFOLIO_PACKAGE, REGISTRY } from "../constants";
-import { getDepositTx } from "../utils/portfolio/single-collateral/user/getDepositTx";
+import { PORTFOLIO_PACKAGE, REGISTRY } from "../constants";
+import { getDepositTx } from "../utils/portfolio/single-collateral/user-entry";
 
 // The initiator of the transaction
 const SENDER_ADDRESS = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9";
@@ -55,7 +55,7 @@ const progTxnMoveCall = async () => {
     let vaultIndex = "1";
     let coins = ["0x490c9ea233152eeb5d4c6285fb4b94a28110b783670e38ac0f00d7d719972410"];
     let depositAmount = "100000000";
-    let transactionBlock = await getDepositTx(GAS_BUDGET, PORTFOLIO_PACKAGE, MODULE, REGISTRY, typeArguments, vaultIndex, coins, depositAmount);
+    let transactionBlock = await getDepositTx(GAS_BUDGET, PORTFOLIO_PACKAGE, typeArguments, REGISTRY, vaultIndex, coins, depositAmount);
     return transactionBlock;
 };
 
