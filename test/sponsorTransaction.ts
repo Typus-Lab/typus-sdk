@@ -8,7 +8,7 @@ const SENDER_ADDRESS = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b6183
 const SENDER_RECOVERY_PHRASE = "";
 
 // gas budget, in MIST
-const GAS_BUDGET = 50000000;
+const GAS_BUDGET = 10000000;
 
 // Gas Station endpoint:
 const SPONSOR_RPC_URL = "https://api.shinami.com/gas/v1/sui_testnet_17aa4c66d7a325601abde1f043793003";
@@ -46,7 +46,7 @@ interface SponsorRpc {
 const sponsor = rpcClient<SponsorRpc>(SPONSOR_RPC_URL);
 
 // Different examples of programmable transaction blocks that can be crafted.
-const progTxnTransfer = async () => {
+const progTxnMoveCall = async () => {
     let typeArguments = [
         "0xd175cff04f1d49574efb6f138bc3b9b7313915a57b5ca04141fb1cb4f66984b2::eth::ETH",
         "0xd175cff04f1d49574efb6f138bc3b9b7313915a57b5ca04141fb1cb4f66984b2::eth::ETH",
@@ -59,36 +59,22 @@ const progTxnTransfer = async () => {
     return transactionBlock;
 };
 
-const progTxnMoveCall = () => {
-    const txb = new TransactionBlock();
-    const v = txb.makeMoveVec({
-        objects: [txb.object("0x490c9ea233152eeb5d4c6285fb4b94a28110b783670e38ac0f00d7d719972410")],
-    });
-
-    txb.moveCall({
-        target: "0x8e3be3caa0bc8c461e78252e360407d44962db2afd67fd38fd98bab9d327baf1::single_collateral::deposit",
-        typeArguments: [
-            "0xd175cff04f1d49574efb6f138bc3b9b7313915a57b5ca04141fb1cb4f66984b2::eth::ETH",
-            "0xd175cff04f1d49574efb6f138bc3b9b7313915a57b5ca04141fb1cb4f66984b2::eth::ETH",
-            "0xd175cff04f1d49574efb6f138bc3b9b7313915a57b5ca04141fb1cb4f66984b2::eth::ETH",
-        ],
-        arguments: [txb.pure("0x0aea6911732b61a0fa89cbbb16c713844d5e7682d6c01f957f938dd1e17c5760"), txb.pure("1"), v, txb.pure("100000000")],
-    });
-    return txb;
-};
-
 const sponsorTransactionE2E = async () => {
     // get the gasless TransactionBlock for the desired programmable transaction
-    const gaslessTxb = progTxnMoveCall();
+    const gaslessTxb = await progTxnMoveCall();
 
     // generate the bcs serialized transaction data without any gas object data
-    const gaslessPayloadBytes = await (await gaslessTxb).build({ provider: suiProvider, onlyTransactionKind: true });
+    const gaslessPayloadBytes = await gaslessTxb.build({ provider: suiProvider, onlyTransactionKind: true });
 
     // convert the byte array to a base64 encoded string to return
     const gaslessPayloadBase64 = btoa(gaslessPayloadBytes.reduce((data, byte) => data + String.fromCharCode(byte), ""));
+    // console.log("PAYLOAD", gaslessPayloadBase64);
 
     // Send the gasless programmable payload to Shinami Gas Station for sponsorship
     const sponsoredResponse = await sponsor.gas_sponsorTransactionBlock(gaslessPayloadBase64, SENDER_ADDRESS, GAS_BUDGET);
+    // console.log("SIG: ", sponsoredResponse.signature);
+    // console.log("TXBYTES: ", sponsoredResponse.txBytes);
+    // console.log("DIGEST: ", sponsoredResponse.txDigest);
 
     // The transaction should be sponsored now, so its status will be "IN_FLIGHT"
     const sponsoredStatus = await sponsor.gas_getSponsoredTransactionBlockStatus(sponsoredResponse.txDigest);
@@ -97,8 +83,10 @@ const sponsorTransactionE2E = async () => {
     // The sponsoredReponse will contain the full transaction payload and the signature of the gas object owner. To send it off for execution,
     // the full transaction payload still needs to be signed by the sender of the transaction.
 
+    let transactionBlock = Uint8Array.from(atob(sponsoredResponse.txBytes), (c) => c.charCodeAt(0));
+
     // Sign the full transaction payload with the sender's key.
-    const senderSig = await signer.signTransactionBlock({ transactionBlock: TransactionBlock.from(sponsoredResponse.txBytes) });
+    const senderSig = await signer.signTransactionBlock({ transactionBlock });
 
     // Send the full transaction payload, along with the gas owner and sender's signatures for execution on the sui network
     const executeResponse = await suiProvider.executeTransactionBlock({
@@ -111,7 +99,7 @@ const sponsorTransactionE2E = async () => {
 };
 
 const normalTransactionE2E = async () => {
-    const transactionBlock = await progTxnTransfer();
+    const transactionBlock = await progTxnMoveCall();
     let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
     console.log(res);
 };
