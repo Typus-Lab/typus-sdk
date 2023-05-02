@@ -14,7 +14,7 @@ const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPO
     );
     let result = await getAuctionMaxSize(
         provider,
-        config.PORTFOLIO_PACKAGE,
+        config.SINGLE_COLLATERAL_PACKAGE,
         portfolioVaults[index].typeArgs,
         config.SINGLE_COLLATERAL_REGISTRY,
         index,
