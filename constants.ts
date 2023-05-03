@@ -1,9 +1,4 @@
 import { Connection } from "@mysten/sui.js";
-import path from "path";
-import dotenv from "dotenv";
-
-// import .env file if exists
-dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 export const CLOCK = "0x6";
 export const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";

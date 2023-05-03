@@ -5,7 +5,7 @@ import { getPortfolioVaults } from "../../utils/portfolio/single-collateral/port
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
 (async () => {
-    let index = "5";
+    let index = "0";
     let portfolioVaults = await getPortfolioVaults(
         provider,
         config.SINGLE_COLLATERAL_REGISTRY,
@@ -18,7 +18,7 @@ const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPO
         portfolioVaults[index].typeArgs,
         config.SINGLE_COLLATERAL_REGISTRY,
         index,
-        config.ETH_ORACLE
+        config.BTC_ORACLE
     );
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();

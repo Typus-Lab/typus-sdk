@@ -1,5 +1,5 @@
 import { JsonRpcProvider, Connection } from "@mysten/sui.js";
-import { getUserShares } from "../../utils/portfolio/multiple-collateral/user-share";
+import { getUserShares } from "../../utils/portfolio/multiple-collateral/view-function";
 
 const connection = new Connection({ fullnode: "https://rpc-testnet.suiscan.xyz:443" });
 // const connection = new Connection({ fullnode: "https://fullnode.testnet.sui.io:443" });

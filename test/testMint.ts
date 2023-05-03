@@ -1,5 +1,5 @@
 import { getMintTx } from "../../utils/portfolio/single-collateral/getMintTx";
-import { TOKEN_PACKAGE, TOKEN_REGISTRY_SUI, TOKEN_NAME, TOKEN_NAME_TO_MODULE } from "../../constants";
+import { TOKEN_PACKAGE, TOKEN_REGISTRY_SUI, TOKEN_NAME, TOKEN_NAME_TO_MODULE } from "../constants";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, devnetConnection } from "@mysten/sui.js";
 
 const provider = new JsonRpcProvider(devnetConnection); //for read only operations
