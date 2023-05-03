@@ -1,37 +1,12 @@
 import { Connection } from "@mysten/sui.js";
-import config from "./config.json";
 import path from "path";
 import dotenv from "dotenv";
 
 // import .env file if exists
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
-//publish from sui-dev-token
-export const TOKEN_PACKAGE = config.TOKEN_PACKAGE;
-export const TOKEN_REGISTRY_SUI = "0x3b87b3f0403f527d28fd1301074a12446f43817a";
-
-//publish from typus-oracle
-export const ORACLE_PACKAGE = config.ORACLE_PACKAGE;
-export const TIME_ORACLE = "0x6";
 export const CLOCK = "0x6";
 export const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-
-export const BTC_ORACLE = config.BTC_ORACLE;
-export const ETH_ORACLE = config.ETH_ORACLE;
-export const SUI_ORACLE = config.SUI_ORACLE;
-export const APT_ORACLE = config.APT_ORACLE;
-export const DOGE_ORACLE = config.DOGE_ORACLE;
-
-//publish from typus-dov/cover_call
-export const PORTFOLIO_PACKAGE = config.PORTFOLIO_PACKAGE;
-export const REGISTRY = config.SINGLE_COLLATERAL_REGISTRY;
-// export const MANAGER_CAP = config.MANAGER_CAP;
-export const MODULE = "single_collateral";
-export const SINGLE_COLLATERAL_DEPOSIT_VAULT_REGISTRY = config.SINGLE_COLLATERAL_DEPOSIT_VAULT_REGISTRY;
-export const SINGLE_COLLATERAL_BID_VAULT_REGISTRY = config.SINGLE_COLLATERAL_BID_VAULT_REGISTRY;
-
-//publish from typus-dov/typus-dov
-export const TEST_MINT_TOKEN = "0x672612858fcb5c6abf944638253142820c251753";
 
 export const PRICE_DECIMAL = 8;
 export const TOKEN_DECIMAL = 9;
