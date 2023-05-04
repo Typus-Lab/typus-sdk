@@ -1,6 +1,6 @@
 import { JsonRpcProvider, Connection } from "@mysten/sui.js";
 import config from "../../config.json";
-import { getPortfolioVaults } from "../../utils/portfolio/multiple-collateral/portfolio-vault";
+import { getPortfolioVaults } from "../../utils/typus-dov-double/portfolio-vault";
 import { getBids } from "../../utils/typus-framework/dutch";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));

@@ -1,7 +1,7 @@
 import { JsonRpcProvider, Connection } from "@mysten/sui.js";
 import config from "../../config.json";
-import { getAuctionMaxSize } from "../../utils/portfolio/single-collateral/view-function";
-import { getPortfolioVaults } from "../../utils/portfolio/single-collateral/portfolio-vault";
+import { getAuctionMaxSize } from "../../utils/typus-dov-single/view-function";
+import { getPortfolioVaults } from "../../utils/typus-dov-single/portfolio-vault";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
 (async () => {
