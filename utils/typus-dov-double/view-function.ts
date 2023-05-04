@@ -18,7 +18,7 @@ export async function getUserShares(
     user: string
 ): Promise<Map<string, UserShare>> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::multiple_collateral::get_user_shares` as any;
+    let target = `${packageId}::typus_dov_double::get_user_shares` as any;
     let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(indexes), transactionBlock.pure(user)];
     transactionBlock.moveCall({
         target,
@@ -128,7 +128,7 @@ export async function getAuctionMaxSize(
     index: string
 ): Promise<BigInt> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::multiple_collateral::get_auction_max_size` as any;
+    let target = `${packageId}::typus_dov_double::get_auction_max_size` as any;
     let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(index)];
     transactionBlock.moveCall({
         target,
@@ -149,7 +149,7 @@ export async function getMaxLossPerUnit(
     index: string
 ): Promise<BigInt> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::multiple_collateral::get_max_loss_per_unit` as any;
+    let target = `${packageId}::typus_dov_double::get_max_loss_per_unit` as any;
     let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(index)];
     transactionBlock.moveCall({
         target,

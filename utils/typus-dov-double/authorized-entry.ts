@@ -18,7 +18,7 @@ export async function getAuthorizedAddPortfolioVaultAuthorizedUserTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::authorized_add_portfolio_vault_authorized_user`,
+        target: `${packageId}::typus_dov_double::authorized_add_portfolio_vault_authorized_user`,
         typeArguments,
         arguments: [tx.pure(registry), tx.pure(index), tx.pure(users)],
     });
@@ -44,7 +44,7 @@ export async function getAuthorizedRemovePortfolioVaultAuthorizedUserTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::authorized_remove_portfolio_vault_authorized_user`,
+        target: `${packageId}::typus_dov_double::authorized_remove_portfolio_vault_authorized_user`,
         typeArguments,
         arguments: [tx.pure(registry), tx.pure(index), tx.pure(users)],
     });
@@ -115,7 +115,7 @@ export async function getAuthorizedNewPortfolioVaultTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::authorized_new_portfolio_vault`,
+        target: `${packageId}::typus_dov_double::authorized_new_portfolio_vault`,
         typeArguments,
         arguments: [
             tx.pure(registry),
@@ -168,7 +168,7 @@ export async function getAuthorizedUpdateCapacityTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::authorized_update_capacity`,
+        target: `${packageId}::typus_dov_double::authorized_update_capacity`,
         typeArguments,
         arguments: [tx.pure(registry), tx.pure(index), tx.pure(capacity)],
     });
@@ -202,7 +202,7 @@ export async function getAuthorizedUpdateWarmupVaultConfigTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::authorized_update_warmup_vault_config`,
+        target: `${packageId}::typus_dov_double::authorized_update_warmup_vault_config`,
         typeArguments,
         arguments: [
             tx.pure(registry),
@@ -256,7 +256,7 @@ export async function getAuthorizedUpdateUpcomingVaultConfigTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::authorized_update_upcoming_vault_config`,
+        target: `${packageId}::typus_dov_double::authorized_update_upcoming_vault_config`,
         typeArguments,
         arguments: [
             tx.pure(registry),
@@ -297,7 +297,7 @@ export async function getAuthorizedDeliveryTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::authorized_delivery`,
+        target: `${packageId}::typus_dov_double::authorized_delivery`,
         typeArguments,
         arguments: [tx.pure(registry), tx.pure(index), tx.pure(priceOracle), tx.pure("0x6")],
     });

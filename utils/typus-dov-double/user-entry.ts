@@ -23,7 +23,7 @@ export async function getDepositTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::deposit`,
+        target: `${packageId}::typus_dov_double::deposit`,
         typeArguments,
         arguments: [
             tx.pure(registry),
@@ -49,7 +49,7 @@ export async function getDepositTx(
 export async function getWithdrawTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, index: string, share?: string) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::withdraw`,
+        target: `${packageId}::typus_dov_double::withdraw`,
         typeArguments,
         arguments: [tx.pure(registry), tx.pure(index), tx.pure(share ? [share] : [])],
     });
@@ -68,7 +68,7 @@ export async function getWithdrawTx(gasBudget: number, packageId: string, typeAr
 export async function getClaimTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, index: string) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::claim`,
+        target: `${packageId}::typus_dov_double::claim`,
         typeArguments,
         arguments: [tx.pure(registry), tx.pure(index)],
     });
@@ -87,7 +87,7 @@ export async function getClaimTx(gasBudget: number, packageId: string, typeArgum
 export async function getHarvestTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, index: string) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::harvest`,
+        target: `${packageId}::typus_dov_double::harvest`,
         typeArguments,
         arguments: [tx.pure(registry), tx.pure(index)],
     });
@@ -106,7 +106,7 @@ export async function getHarvestTx(gasBudget: number, packageId: string, typeArg
 export async function getClaimAndHarvestTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, index: string) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::claim_and_harvest`,
+        target: `${packageId}::typus_dov_double::claim_and_harvest`,
         typeArguments,
         arguments: [tx.pure(registry), tx.pure(index)],
     });
@@ -133,7 +133,7 @@ export async function getCompoundTokenTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::compound_token`,
+        target: `${packageId}::typus_dov_double::compound_token`,
         typeArguments,
         arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: u_coins.map((id) => tx.object(id)) })],
     });
@@ -160,7 +160,7 @@ export async function getCompoundUsdTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::compound_usd`,
+        target: `${packageId}::typus_dov_double::compound_usd`,
         typeArguments,
         arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: o_coins.map((id) => tx.object(id)) })],
     });
@@ -187,7 +187,7 @@ export async function getUnsubscribeTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::unsubscribe`,
+        target: `${packageId}::typus_dov_double::unsubscribe`,
         typeArguments,
         arguments: [tx.pure(registry), tx.pure(index), tx.pure(share ? [share] : [])],
     });
@@ -219,7 +219,7 @@ export async function getNewBidTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::new_bid`,
+        target: `${packageId}::typus_dov_double::new_bid`,
         typeArguments,
         arguments: [
             tx.pure(registry),

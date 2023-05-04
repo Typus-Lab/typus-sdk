@@ -10,7 +10,7 @@ import { TransactionBlock } from "@mysten/sui.js";
 export async function getNewManagerTx(gasBudget: number, packageId: string, managerCap: string, users: string[]) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::new_manager`,
+        target: `${packageId}::typus_dov_double::new_manager`,
         arguments: [tx.pure(managerCap), tx.pure(users)],
     });
     tx.setGasBudget(gasBudget);
@@ -27,7 +27,7 @@ export async function getNewManagerTx(gasBudget: number, packageId: string, mana
 export async function getRemoveManagerTx(gasBudget: number, packageId: string, managerCap: string) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::remove_manager`,
+        target: `${packageId}::typus_dov_double::remove_manager`,
         arguments: [tx.pure(managerCap)],
     });
     tx.setGasBudget(gasBudget);
@@ -45,7 +45,7 @@ export async function getRemoveManagerTx(gasBudget: number, packageId: string, m
 export async function getAddAuthorizedUserTx(gasBudget: number, packageId: string, managerCap: string, registry: string, users: string[]) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::add_authorized_user`,
+        target: `${packageId}::typus_dov_double::add_authorized_user`,
         arguments: [tx.pure(managerCap), tx.pure(registry), tx.pure(users)],
     });
     tx.setGasBudget(gasBudget);
@@ -63,7 +63,7 @@ export async function getAddAuthorizedUserTx(gasBudget: number, packageId: strin
 export async function getRemoveAuthorizedUserTx(gasBudget: number, packageId: string, managerCap: string, registry: string, users: string[]) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::remove_authorized_user`,
+        target: `${packageId}::typus_dov_double::remove_authorized_user`,
         arguments: [tx.pure(managerCap), tx.pure(registry), tx.pure(users)],
     });
     tx.setGasBudget(gasBudget);
@@ -90,7 +90,7 @@ export async function getAddPortfolioVaultAuthorizedUserTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::add_portfolio_vault_authorized_user`,
+        target: `${packageId}::typus_dov_double::add_portfolio_vault_authorized_user`,
         typeArguments,
         arguments: [tx.pure(managerCap), tx.pure(registry), tx.pure(index), tx.pure(users)],
     });
@@ -118,7 +118,7 @@ export async function getRemovePortfolioVaultAuthorizedUserTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::remove_portfolio_vault_authorized_user`,
+        target: `${packageId}::typus_dov_double::remove_portfolio_vault_authorized_user`,
         typeArguments,
         arguments: [tx.pure(managerCap), tx.pure(registry), tx.pure(index), tx.pure(users)],
     });
@@ -145,7 +145,7 @@ export async function getUpdateRestrictActivationTimePeriodTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::update_restrict_activation_time_period`,
+        target: `${packageId}::typus_dov_double::update_restrict_activation_time_period`,
         arguments: [tx.pure(managerCap), tx.pure(registry), tx.pure(from_ts_ms), tx.pure(to_ts_ms)],
     });
     tx.setGasBudget(gasBudget);
@@ -217,7 +217,7 @@ export async function getNewPortfolioVaultTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::new_portfolio_vault`,
+        target: `${packageId}::typus_dov_double::new_portfolio_vault`,
         typeArguments,
         arguments: [
             tx.pure(managerCap),
@@ -273,7 +273,7 @@ export async function getUpdateCapacityTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::update_capacity`,
+        target: `${packageId}::typus_dov_double::update_capacity`,
         typeArguments,
         arguments: [tx.pure(managerCap), tx.pure(registry), tx.pure(index), tx.pure(capacity)],
     });
@@ -309,7 +309,7 @@ export async function getUpdateWarmupVaultConfigTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::update_warmup_vault_config`,
+        target: `${packageId}::typus_dov_double::update_warmup_vault_config`,
         typeArguments,
         arguments: [
             tx.pure(managerCap),
@@ -366,7 +366,7 @@ export async function getUpdateUpcomingVaultConfigTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::update_upcoming_vault_config`,
+        target: `${packageId}::typus_dov_double::update_upcoming_vault_config`,
         typeArguments,
         arguments: [
             tx.pure(managerCap),
@@ -410,7 +410,7 @@ export async function getDeliveryTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::delivery`,
+        target: `${packageId}::typus_dov_double::delivery`,
         typeArguments,
         arguments: [tx.pure(managerCap), tx.pure(registry), tx.pure(index), tx.pure(priceOracle), tx.pure("0x6")],
     });
@@ -439,7 +439,7 @@ export async function getEvolutionTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::evolution`,
+        target: `${packageId}::typus_dov_double::evolution`,
         typeArguments,
         arguments: [tx.pure(managerCap), tx.pure(registry), tx.pure(index), tx.pure(priceOracle), tx.pure("0x6")],
     });
@@ -458,7 +458,7 @@ export async function getEvolutionTx(
 export async function getCloseTx(gasBudget: number, packageId: string, typeArguments: string[], managerCap: string, registry: string, index: string) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::evolution`,
+        target: `${packageId}::typus_dov_double::evolution`,
         typeArguments,
         arguments: [tx.pure(managerCap), tx.pure(registry), tx.pure(index)],
     });
@@ -494,7 +494,7 @@ export async function getUpdateActiveVaultConfigTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::update_active_vault_config`,
+        target: `${packageId}::typus_dov_double::update_active_vault_config`,
         typeArguments,
         arguments: [
             tx.pure(managerCap),
@@ -534,7 +534,7 @@ export async function getNewAuctionTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::new_auction`,
+        target: `${packageId}::typus_dov_double::new_auction`,
         typeArguments,
         arguments: [tx.pure(managerCap), tx.pure(registry), tx.pure(index), tx.pure(start_ts_ms), tx.pure(price_oracle), tx.pure("0x6")],
     });
@@ -561,7 +561,7 @@ export async function getTerminateVaultTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::terminate_vault`,
+        target: `${packageId}::typus_dov_double::terminate_vault`,
         typeArguments,
         arguments: [tx.pure(managerCap), tx.pure(registry), tx.pure(index), tx.pure("0x6")],
     });
@@ -588,7 +588,7 @@ export async function getTerminateAuctionTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::multiple_collateral::terminate_auction`,
+        target: `${packageId}::typus_dov_double::terminate_auction`,
         typeArguments,
         arguments: [tx.pure(managerCap), tx.pure(registry), tx.pure(index), tx.pure("0x6")],
     });
