@@ -28,9 +28,10 @@ const signer = new RawSigner(keypair, provider);
         portfolioVaults[index].typeArgs,
         config.SINGLE_COLLATERAL_REGISTRY,
         index,
-        config.ETH_ORACLE,
+        config.SUI_ORACLE,
         coins,
-        size
+        size,
+        "1000000000000"
     );
 
     let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });

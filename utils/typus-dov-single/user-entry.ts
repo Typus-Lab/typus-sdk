@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js";
+import { TransactionBlock, SUI_TYPE_ARG, getObjectReference } from "@mysten/sui.js";
 
 /**
     public(friend) entry fun deposit<D_TOKEN, B_TOKEN, O_TOKEN>(
@@ -20,11 +20,20 @@ export async function getDepositTx(
     amount: string
 ) {
     let tx = new TransactionBlock();
-    tx.moveCall({
-        target: `${packageId}::typus_dov_single::deposit`,
-        typeArguments,
-        arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }), tx.pure(amount)],
-    });
+    if (typeArguments[0] == SUI_TYPE_ARG) {
+        let [coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
+        tx.moveCall({
+            target: `${packageId}::typus_dov_single::deposit`,
+            typeArguments,
+            arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: [coin] }), tx.pure(amount)],
+        });
+    } else {
+        tx.moveCall({
+            target: `${packageId}::typus_dov_single::deposit`,
+            typeArguments,
+            arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }), tx.pure(amount)],
+        });
+    }
     tx.setGasBudget(gasBudget);
 
     return tx;
@@ -172,21 +181,31 @@ export async function getNewBidTx(
     index: string,
     priceOracle: string,
     coins: string[],
-    size: string
+    size: string,
+    premium_required: string // fe float * b_token_decimal
 ) {
     let tx = new TransactionBlock();
-    tx.moveCall({
-        target: `${packageId}::typus_dov_single::new_bid`,
-        typeArguments,
-        arguments: [
-            tx.pure(registry),
-            tx.pure(index),
-            tx.pure(priceOracle),
-            tx.pure("0x6"),
-            tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
-            tx.pure(size),
-        ],
-    });
+    if (typeArguments[0] == SUI_TYPE_ARG) {
+        let [coin] = tx.splitCoins(tx.gas, [tx.pure(premium_required)]);
+        tx.moveCall({
+            target: `${packageId}::typus_dov_single::new_bid`,
+            typeArguments,
+            arguments: [tx.pure(registry), tx.pure(index), tx.pure(priceOracle), tx.pure("0x6"), tx.makeMoveVec({ objects: [coin] }), tx.pure(size)],
+        });
+    } else {
+        tx.moveCall({
+            target: `${packageId}::typus_dov_single::new_bid`,
+            typeArguments,
+            arguments: [
+                tx.pure(registry),
+                tx.pure(index),
+                tx.pure(priceOracle),
+                tx.pure("0x6"),
+                tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
+                tx.pure(size),
+            ],
+        });
+    }
     tx.setGasBudget(gasBudget);
 
     return tx;

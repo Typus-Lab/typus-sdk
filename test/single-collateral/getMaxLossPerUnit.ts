@@ -18,7 +18,7 @@ const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPO
         portfolioVaults[index].typeArgs,
         config.SINGLE_COLLATERAL_REGISTRY,
         index,
-        config.BTC_ORACLE
+        config.SUI_ORACLE
     );
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();

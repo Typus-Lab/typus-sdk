@@ -10,7 +10,7 @@ const signer = new RawSigner(keypair, provider);
 
 (async () => {
     let gasBudget = 100000000;
-    let depositAmount = "100000000";
+    let depositAmount = "1000000000";
     let index = "0";
 
     let portfolioVaults = await getPortfolioVaults(
