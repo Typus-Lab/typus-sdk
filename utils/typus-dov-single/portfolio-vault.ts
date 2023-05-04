@@ -1,6 +1,6 @@
 import { JsonRpcProvider } from "@mysten/sui.js";
-import { DepositVault, BidVault, parseDepositVault, parseBidVault } from "../../typus-framework/vault";
-import { Auction, parseAuction } from "../../typus-framework/dutch";
+import { DepositVault, BidVault, parseDepositVault, parseBidVault } from "../typus-framework/vault";
+import { Auction, parseAuction } from "../typus-framework/dutch";
 
 export interface PortfolioVault {
     vaultId: string;

@@ -1,11 +1,12 @@
 import { JsonRpcProvider, TransactionBlock } from "@mysten/sui.js";
-import { U64FromBytes } from "../../tools";
-import { DepositVaultUserShare, BidVaultUserShare } from "../../typus-framework/vault";
-import { CLOCK, SENDER } from "../../../constants";
+import { U64FromBytes } from "../tools";
+import { DepositVaultUserShare, BidVaultUserShare } from "../typus-framework/vault";
+import { CLOCK, SENDER } from "../../constants";
 
 export interface UserShare {
     index: string;
-    depositVaultUserShare: DepositVaultUserShare;
+    tokenDepositVaultUserShare: DepositVaultUserShare;
+    usdDepositVaultUserShare: DepositVaultUserShare;
     bidVaultUserShare: BidVaultUserShare;
 }
 
@@ -17,7 +18,7 @@ export async function getUserShares(
     user: string
 ): Promise<Map<string, UserShare>> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::single_collateral::get_user_shares` as any;
+    let target = `${packageId}::multiple_collateral::get_user_shares` as any;
     let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(indexes), transactionBlock.pure(user)];
     transactionBlock.moveCall({
         target,
@@ -30,22 +31,30 @@ export async function getUserShares(
         map[key] = value;
         return map;
     }, {});
-    while (bytes.length > 49) {
+    while (bytes.length > 50) {
         // struct UserShare {
         //     index: u64,      // 8
         //     tag: u64,        // 1
         //     user: address,   // 32
+        //     position: u8,    // 1
         //     share: u64,      // 8
         // }
-        let user_share_bytes = bytes.splice(bytes.length - 49, 49);
+        let user_share_bytes = bytes.splice(bytes.length - 50, 50);
         let index = U64FromBytes(user_share_bytes.splice(0, 8).reverse()).toString();
         let tag = U64FromBytes(user_share_bytes.splice(0, 1).reverse()).toString();
         user_share_bytes.splice(0, 32);
+        let position = U64FromBytes(user_share_bytes.splice(0, 1).reverse()).toString();
         let share = U64FromBytes(user_share_bytes.splice(0, 8).reverse());
         if (result[index] == undefined) {
             result[index] = {
                 index,
-                depositVaultUserShare: {
+                tokenDepositVaultUserShare: {
+                    activeSubVaultUserShare: BigInt(0),
+                    deactivatingSubVaultUserShare: BigInt(0),
+                    inactiveSubVaultUserShare: BigInt(0),
+                    warmupSubVaultUserShare: BigInt(0),
+                },
+                usdDepositVaultUserShare: {
                     activeSubVaultUserShare: BigInt(0),
                     deactivatingSubVaultUserShare: BigInt(0),
                     inactiveSubVaultUserShare: BigInt(0),
@@ -61,19 +70,35 @@ export async function getUserShares(
         result[index].index = index;
         switch (tag) {
             case "0": {
-                result[index].depositVaultUserShare.activeSubVaultUserShare = share;
+                if (position == "0") {
+                    result[index].tokenDepositVaultUserShare.activeSubVaultUserShare = share;
+                } else {
+                    result[index].usdDepositVaultUserShare.activeSubVaultUserShare = share;
+                }
                 break;
             }
             case "1": {
-                result[index].depositVaultUserShare.deactivatingSubVaultUserShare = share;
+                if (position == "0") {
+                    result[index].tokenDepositVaultUserShare.deactivatingSubVaultUserShare = share;
+                } else {
+                    result[index].usdDepositVaultUserShare.deactivatingSubVaultUserShare = share;
+                }
                 break;
             }
             case "2": {
-                result[index].depositVaultUserShare.inactiveSubVaultUserShare = share;
+                if (position == "0") {
+                    result[index].tokenDepositVaultUserShare.inactiveSubVaultUserShare = share;
+                } else {
+                    result[index].usdDepositVaultUserShare.inactiveSubVaultUserShare = share;
+                }
                 break;
             }
             case "3": {
-                result[index].depositVaultUserShare.warmupSubVaultUserShare = share;
+                if (position == "0") {
+                    result[index].tokenDepositVaultUserShare.warmupSubVaultUserShare = share;
+                } else {
+                    result[index].usdDepositVaultUserShare.warmupSubVaultUserShare = share;
+                }
                 break;
             }
             case "4": {
@@ -100,17 +125,11 @@ export async function getAuctionMaxSize(
     packageId: string,
     typeArguments: string[],
     registry: string,
-    index: string,
-    priceOracle: string
+    index: string
 ): Promise<BigInt> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::single_collateral::get_auction_max_size` as any;
-    let transactionBlockArguments = [
-        transactionBlock.pure(registry),
-        transactionBlock.pure(index),
-        transactionBlock.pure(priceOracle),
-        transactionBlock.pure(CLOCK),
-    ];
+    let target = `${packageId}::multiple_collateral::get_auction_max_size` as any;
+    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(index)];
     transactionBlock.moveCall({
         target,
         typeArguments,
@@ -127,17 +146,11 @@ export async function getMaxLossPerUnit(
     packageId: string,
     typeArguments: string[],
     registry: string,
-    index: string,
-    priceOracle: string
+    index: string
 ): Promise<BigInt> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::single_collateral::get_max_loss_per_unit` as any;
-    let transactionBlockArguments = [
-        transactionBlock.pure(registry),
-        transactionBlock.pure(index),
-        transactionBlock.pure(priceOracle),
-        transactionBlock.pure(CLOCK),
-    ];
+    let target = `${packageId}::multiple_collateral::get_max_loss_per_unit` as any;
+    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(index)];
     transactionBlock.moveCall({
         target,
         typeArguments,

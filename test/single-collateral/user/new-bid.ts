@@ -1,6 +1,6 @@
 import "../../load_env";
-import { getNewBidTx } from "../../../utils/portfolio/single-collateral/user-entry";
-import { getPortfolioVaults } from "../../../utils/portfolio/single-collateral/portfolio-vault";
+import { getNewBidTx } from "../../../utils/typus-dov-single/user-entry";
+import { getPortfolioVaults } from "../../../utils/typus-dov-single/portfolio-vault";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import config from "../../../config.json";
 
