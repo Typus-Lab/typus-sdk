@@ -185,7 +185,7 @@ export async function getNewBidTx(
     premium_required: string // fe float * b_token_decimal
 ) {
     let tx = new TransactionBlock();
-    if (typeArguments[0] == SUI_TYPE_ARG) {
+    if (typeArguments[1] == SUI_TYPE_ARG) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(premium_required)]);
         tx.moveCall({
             target: `${packageId}::typus_dov_single::new_bid`,
