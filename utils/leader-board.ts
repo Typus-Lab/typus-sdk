@@ -1,4 +1,4 @@
-const apiUrl = "https://app.sentio.xyz/api/v1/metrics/wayne/typus/query_range";
+const apiUrl = "https://app.sentio.xyz/api/v1/insights/wayne/typus/query";
 
 const headers = {
     "api-key": "oBOW8DsO1izVrINCy6Tmxga9YcWeOL87O",
@@ -6,46 +6,28 @@ const headers = {
 };
 
 const depositorRequestData = {
+    timeRange: {
+        start: "-7d",
+        end: "now",
+        step: 3600,
+    },
+    limit: 200,
     queries: [
         {
-            query: "callPortfolioHarvest",
-            alias: "",
-            id: "a",
-            labelSelector: {},
-            aggregate: {
-                op: "SUM",
-                grouping: ["user"],
+            metricsQuery: {
+                query: "depositTvl",
+                alias: "",
+                id: "a",
+                labelSelector: {
+                    // user: "0x823bd0c4d601d625b1b1555dbe17da495db71070a4365205467838aecc32cbad",
+                },
+                aggregate: {
+                    op: "SUM",
+                    grouping: ["user"],
+                },
             },
-            functions: [],
-            disabled: true,
-        },
-        {
-            query: "callPortfolioCompound",
-            alias: "",
-            id: "b",
-            labelSelector: {},
-            aggregate: {
-                op: "SUM",
-                grouping: ["user"],
-            },
-            functions: [],
-            disabled: true,
         },
     ],
-    formulas: [
-        {
-            expression: "a+b",
-            alias: "Score",
-            id: "A",
-            disabled: false,
-        },
-    ],
-    timeRange: {
-        start: "now",
-        end: "now",
-        step: 1,
-    },
-    samplesLimit: 200,
 };
 
 export async function getDepositorLeaderBoard(start?: string, end?: string, step?: number): Promise<LeaderBoard[]> {
@@ -69,11 +51,18 @@ export async function getDepositorLeaderBoard(start?: string, end?: string, step
     if (response.ok) {
         let data = await response.json();
         let samples = data.results[0].matrix.samples;
-        let leader_board: LeaderBoard[] = samples.map((element) => {
-            // console.log("metric:", element.metric, "values: ", element.values);
-            // console.log("user:", element.metric.labels.user, "score: ", element.values.at(-1).value);
-            return { user: element.metric.labels.user, score: element.values.at(-1).value };
-        });
+        let leader_board: LeaderBoard[] = samples
+            .map((element) => {
+                // console.log("metric:", element.metric, "values: ", element.values);
+                // console.log("user:", element.metric.labels.user, "score: ", element.values.at(-1).value);
+                let sum = element.values.reduce((acc, curr) => acc + curr.value / 1000000000 / 24 / 7 / 2, 0);
+
+                return {
+                    user: element.metric.labels.user,
+                    score: sum,
+                };
+            })
+            .filter((element) => element.score != 0);
         leader_board.sort((a, b) => b.score - a.score);
         // console.log(leader_board);
         return leader_board;
@@ -83,38 +72,37 @@ export async function getDepositorLeaderBoard(start?: string, end?: string, step
 }
 
 const bidderRequestData = {
+    timeRange: {
+        start: "-7d",
+        end: "now",
+        step: 3600,
+    },
+    limit: 200,
     queries: [
         {
-            query: "callPortfolioNewBid",
-            alias: "Score",
-            id: "a",
-            labelSelector: {},
-            aggregate: {
-                op: "SUM",
-                grouping: ["user"],
+            metricsQuery: {
+                query: "totalNewBid",
+                alias: "",
+                id: "a",
+                labelSelector: {},
+                aggregate: {
+                    op: "SUM",
+                    grouping: ["user"],
+                },
+                functions: [],
+                disabled: false,
             },
-            functions: [],
-            disabled: false,
+            dataSource: "METRICS",
         },
     ],
-    formulas: [],
-    timeRange: {
-        start: "now",
-        end: "now",
-        step: 1,
-    },
-    samplesLimit: 200,
 };
 
-export async function getBidderLeaderBoard(start?: string, end?: string, step?: number): Promise<LeaderBoard[]> {
-    if (start) {
-        bidderRequestData.timeRange.start = start;
+export async function getBidderLeaderBoard(startTimestamp?: string, end?: string): Promise<LeaderBoard[]> {
+    if (startTimestamp) {
+        bidderRequestData.timeRange.start = startTimestamp;
     }
     if (end) {
         bidderRequestData.timeRange.end = end;
-    }
-    if (step) {
-        bidderRequestData.timeRange.step = step;
     }
     const jsonData = JSON.stringify(bidderRequestData);
 
@@ -126,12 +114,25 @@ export async function getBidderLeaderBoard(start?: string, end?: string, step?: 
 
     if (response.ok) {
         let data = await response.json();
+        // console.log(data);
         let samples = data.results[0].matrix.samples;
-        let leader_board: LeaderBoard[] = samples.map((element) => {
-            // console.log("metric:", element.metric, "values: ", element.values);
-            // console.log("user:", element.metric.labels.user, "score: ", element.values.at(-1).value);
-            return { user: element.metric.labels.user, score: element.values.at(-1).value };
-        });
+        let leader_board: LeaderBoard[] = samples
+            .map((element) => {
+                // console.log("metric:", element.metric, "values: ", element.values);
+                // console.log("user:", element.metric.labels.user, "score: ", element.values.at(-1).value);
+                let a = 0;
+                let log_0 = element.values.at(0);
+                if (log_0.timestamp == startTimestamp) {
+                    a = log_0.value;
+                }
+                let b = element.values.at(-1).value;
+
+                return {
+                    user: element.metric.labels.user,
+                    score: (b - a) / 1000000000,
+                };
+            })
+            .filter((element) => element.score != 0);
         leader_board.sort((a, b) => b.score - a.score);
         // console.log(leader_board);
         return leader_board;
@@ -145,7 +146,7 @@ interface LeaderBoard {
     score: number;
 }
 
-// (async () => {
-//     console.log(await getDepositorLeaderBoard("1682434800"));
-//     console.log(await getBidderLeaderBoard("1682434800"));
-// })();
+(async () => {
+    // console.log(await getDepositorLeaderBoard("1684108800"));
+    // console.log(await getBidderLeaderBoard("1684108800"));
+})();
