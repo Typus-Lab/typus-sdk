@@ -3,14 +3,15 @@ import { getDepositTx } from "../../../utils/typus-dov-single/user-entry";
 import { getPortfolioVaults } from "../../../utils/typus-dov-single/portfolio-vault";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import config from "../../../config.json";
-import { sponsorTransactionE2E } from "../../sponsorTransaction";
+import { SponsorRpc, sponsorTransactionE2E } from "../../sponsorTransaction";
+import { rpcClient } from "typed-rpc";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const signer = new RawSigner(keypair, provider);
 
 (async () => {
-    let gasBudget = 10000000;
+    let gasBudget = 50000000;
     let depositAmount = "1000000000";
     let index = "0";
 
@@ -33,5 +34,7 @@ const signer = new RawSigner(keypair, provider);
         depositAmount
     );
 
-    sponsorTransactionE2E(transactionBlock, provider, signer, gasBudget);
+    const sponsor = rpcClient<SponsorRpc>(config.SPONSOR_RPC_URL);
+
+    sponsorTransactionE2E(transactionBlock, sponsor, provider, signer, gasBudget);
 })();

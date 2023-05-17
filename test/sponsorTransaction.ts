@@ -1,8 +1,3 @@
-import { rpcClient } from "typed-rpc";
-
-// Gas Station endpoint:
-const SPONSOR_RPC_URL = "https://api.shinami.com/gas/v1/sui_testnet_2f6c5fa7b5a77b76a8d930612f08b8d3";
-
 // Setup for issuing json rpc calls to the gas station for sponsorship. We use typed-rpc typescript lib here.
 interface SponsoredTransaction {
     txBytes: string;
@@ -13,13 +8,12 @@ interface SponsoredTransaction {
 }
 type SponsoredTransactionStatus = "IN_FLIGHT" | "COMPLETE" | "INVALID";
 
-interface SponsorRpc {
+export interface SponsorRpc {
     gas_sponsorTransactionBlock(txBytes: string, sender: string, gasBudget: number): SponsoredTransaction;
     gas_getSponsoredTransactionBlockStatus(txDigest: string): SponsoredTransactionStatus;
 }
-const sponsor = rpcClient<SponsorRpc>(SPONSOR_RPC_URL);
 
-export const sponsorTransactionE2E = async (gaslessTxb, provider, signer, gasBudget) => {
+export const sponsorTransactionE2E = async (gaslessTxb, sponsor, provider, signer, gasBudget) => {
     // generate the bcs serialized transaction data without any gas object data
     const gaslessPayloadBytes = await gaslessTxb.build({ provider: provider, onlyTransactionKind: true });
 
