@@ -1,5 +1,5 @@
 import { JsonRpcProvider, TransactionBlock } from "@mysten/sui.js";
-import { U64FromBytes } from "../tools";
+import { U64FromBytes, AddressFromBytes } from "../tools";
 import { DepositVaultUserShare, BidVaultUserShare } from "../typus-framework/vault";
 import { CLOCK, SENDER } from "../../constants";
 
@@ -7,6 +7,15 @@ export interface UserShare {
     index: string;
     depositVaultUserShare: DepositVaultUserShare;
     bidVaultUserShare: BidVaultUserShare;
+}
+
+export interface UserBid {
+    index: string;
+    price: string;
+    size: string;
+    ts_ms: string;
+    balance: string;
+    bidder: string;
 }
 
 export async function getUserShares(
@@ -154,14 +163,11 @@ export async function getAuctionTotalBidSize(
     packageId: string,
     typeArguments: string[],
     registry: string,
-    index: string,
+    index: string
 ): Promise<BigInt> {
     let transactionBlock = new TransactionBlock();
     let target = `${packageId}::typus_dov_single::get_auction_total_bid_size` as any;
-    let transactionBlockArguments = [
-        transactionBlock.pure(registry),
-        transactionBlock.pure(index),
-    ];
+    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(index)];
     transactionBlock.moveCall({
         target,
         typeArguments,
@@ -171,4 +177,52 @@ export async function getAuctionTotalBidSize(
     let bytes = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results[0].returnValues[0][0];
 
     return U64FromBytes(bytes.reverse());
+}
+
+export async function getAuctionBids(
+    provider: JsonRpcProvider,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string
+): Promise<UserBid[]> {
+    let transactionBlock = new TransactionBlock();
+    let target = `${packageId}::typus_dov_single::get_auction_bids` as any;
+    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(index)];
+    transactionBlock.moveCall({
+        target,
+        typeArguments,
+        arguments: transactionBlockArguments,
+    });
+    // @ts-ignore
+    let bytes = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results[0].returnValues[0][0];
+
+    let result: UserBid[] = [];
+    while (bytes.length > 72) {
+        // struct UserBid {
+        //     index: u64,       // 8
+        //     price: u64,       // 8
+        //     size: u64,        // 8
+        //     ts_ms: u64,       // 8
+        //     balance: u64,     // 8
+        //     bidder: address,  // 32
+        // }
+        let user_bid_bytes = bytes.splice(bytes.length - 72, 72);
+        let index = U64FromBytes(user_bid_bytes.splice(0, 8).reverse()).toString();
+        let price = U64FromBytes(user_bid_bytes.splice(0, 8).reverse()).toString();
+        let size = U64FromBytes(user_bid_bytes.splice(0, 8).reverse()).toString();
+        let ts_ms = U64FromBytes(user_bid_bytes.splice(0, 8).reverse()).toString();
+        let balance = U64FromBytes(user_bid_bytes.splice(0, 8).reverse()).toString();
+        let bidder = AddressFromBytes(user_bid_bytes.splice(0, 32));
+        result.push({
+            index,
+            price,
+            size,
+            ts_ms,
+            balance,
+            bidder,
+        } as UserBid);
+    }
+
+    return result;
 }
