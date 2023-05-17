@@ -51,11 +51,12 @@ export async function getDepositorLeaderBoard(start?: string, end?: string, step
     if (response.ok) {
         let data = await response.json();
         let samples = data.results[0].matrix.samples;
+        let len = samples.reduce((acc, curr) => (acc > curr.values.length ? acc : curr.values.length), 0);
         let leader_board: LeaderBoard[] = samples
             .map((element) => {
                 // console.log("metric:", element.metric, "values: ", element.values);
                 // console.log("user:", element.metric.labels.user, "score: ", element.values.at(-1).value);
-                let sum = element.values.reduce((acc, curr) => acc + curr.value / 1000000000 / 24 / 7 / 2, 0);
+                let sum = element.values.reduce((acc, curr) => acc + curr.value / 1000000000 / len, 0);
 
                 return {
                     user: element.metric.labels.user,
