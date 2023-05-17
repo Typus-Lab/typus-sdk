@@ -148,3 +148,27 @@ export async function getMaxLossPerUnit(
 
     return U64FromBytes(bytes.reverse());
 }
+
+export async function getAuctionTotalBidSize(
+    provider: JsonRpcProvider,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string,
+): Promise<BigInt> {
+    let transactionBlock = new TransactionBlock();
+    let target = `${packageId}::typus_dov_single::get_auction_total_bid_size` as any;
+    let transactionBlockArguments = [
+        transactionBlock.pure(registry),
+        transactionBlock.pure(index),
+    ];
+    transactionBlock.moveCall({
+        target,
+        typeArguments,
+        arguments: transactionBlockArguments,
+    });
+    // @ts-ignore
+    let bytes = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results[0].returnValues[0][0];
+
+    return U64FromBytes(bytes.reverse());
+}
