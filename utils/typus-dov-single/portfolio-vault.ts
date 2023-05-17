@@ -37,6 +37,7 @@ export interface Config {
     period: number; // daily:0 weekly:1 monthly:2
     activationTsMs: string;
     expirationTsMs: string;
+    auctionDelayTsMs: string;
     dTokenDecimal: string;
     bTokenDecimal: string;
     oTokenDecimal: string;
@@ -76,17 +77,33 @@ export async function getPortfolioVaults(
         .filter((x) => (index ? x.name.value == index : true))
         .map((x) => x.objectId as string);
 
-    let portfolioVaults = (
+    let portfolioVaults = await (
         await provider.multiGetObjects({
             ids: portfolioVaultIds,
             options: { showContent: true },
         })
     )
         .filter((portfolioVault) => portfolioVault.error == undefined)
-        .reduce(function (map, portfolioVault) {
+        .reduce(async (promise, portfolioVault) => {
+            let map = await promise;
             // console.log(JSON.stringify(portfolioVault, null, 4));
             // @ts-ignore
             let vaultId = portfolioVault.data.content.fields.id.id;
+            let auctionDelayTsMs = "0";
+            await provider
+                .getDynamicFieldObject({
+                    parentId: vaultId,
+                    name: {
+                        type: "vector<u8>",
+                        value: [97, 117, 99, 116, 105, 111, 110, 95, 115, 116, 97, 114, 116, 95, 100, 101, 108, 97, 121, 95, 116, 115, 95, 109, 115],
+                    },
+                })
+                .then((result) => {
+                    if (result.error == undefined) {
+                        // @ts-ignore
+                        auctionDelayTsMs = result.data.content.fields.value;
+                    }
+                });
             // @ts-ignore
             let typeArgs = new RegExp(".*<(.*), (.*), (.*)>").exec(portfolioVault.data.content.type).slice(1, 4);
             let assets = typeArgs.map((x) => x.split("::")[2]);
@@ -126,6 +143,7 @@ export async function getPortfolioVaults(
                 activationTsMs: portfolioVault.data.content.fields.config.fields.activation_ts_ms,
                 // @ts-ignore
                 expirationTsMs: portfolioVault.data.content.fields.config.fields.expiration_ts_ms,
+                auctionDelayTsMs,
                 // @ts-ignore
                 dTokenDecimal: portfolioVault.data.content.fields.config.fields.d_token_decimal,
                 // @ts-ignore
@@ -224,7 +242,7 @@ export async function getPortfolioVaults(
                 authority,
             } as PortfolioVault;
             return map;
-        }, {});
+        }, Promise.resolve({}));
 
     let depositVaultIds = (await provider.getDynamicFields({ parentId: deposit_vault_registry })).data
         .filter((x) => (index ? x.name.value == index : true))
