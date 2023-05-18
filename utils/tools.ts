@@ -10,7 +10,7 @@ export function U64FromBytes(x) {
 export function AddressFromBytes(x) {
     var address = "0x";
     for (var i = 0; i < x.length; i++) {
-        address = address.concat(x[i].toString(16));
+        address = address.concat(x[i].toString(16).padStart(2, "0"));
     }
     return address;
 }
