@@ -1,4 +1,4 @@
-import { TransactionBlock, SUI_TYPE_ARG, getObjectReference } from "@mysten/sui.js";
+import { TransactionBlock } from "@mysten/sui.js";
 
 /**
     public(friend) entry fun deposit<D_TOKEN, B_TOKEN, O_TOKEN>(
@@ -20,7 +20,7 @@ export async function getDepositTx(
     amount: string
 ) {
     let tx = new TransactionBlock();
-    if (typeArguments[0] == SUI_TYPE_ARG) {
+    if (typeArguments[0] == "0x2::sui::SUI" || typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI") {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
         tx.moveCall({
             target: `${packageId}::typus_dov_single::deposit`,
@@ -185,7 +185,7 @@ export async function getNewBidTx(
     premium_required: string // fe float * b_token_decimal
 ) {
     let tx = new TransactionBlock();
-    if (typeArguments[1] == SUI_TYPE_ARG) {
+    if (typeArguments[1] == "0x2::sui::SUI" || typeArguments[1] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI") {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(premium_required)]);
         tx.moveCall({
             target: `${packageId}::typus_dov_single::new_bid`,
