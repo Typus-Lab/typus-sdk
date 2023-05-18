@@ -1,3 +1,5 @@
+import { rpcClient } from "typed-rpc";
+
 // Setup for issuing json rpc calls to the gas station for sponsorship. We use typed-rpc typescript lib here.
 interface SponsoredTransaction {
     txBytes: string;
@@ -7,6 +9,8 @@ interface SponsoredTransaction {
     expireAfterEpoch: number;
 }
 type SponsoredTransactionStatus = "IN_FLIGHT" | "COMPLETE" | "INVALID";
+
+export const sponsorRpcClient = (sponserRpcUrl) => rpcClient<SponsorRpc>(sponserRpcUrl);
 
 export interface SponsorRpc {
     gas_sponsorTransactionBlock(txBytes: string, sender: string, gasBudget: number): SponsoredTransaction;
