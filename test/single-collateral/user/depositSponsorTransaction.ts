@@ -3,7 +3,7 @@ import { getDepositTx } from "../../../utils/typus-dov-single/user-entry";
 import { getPortfolioVaults } from "../../../utils/typus-dov-single/portfolio-vault";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import config from "../../../config.json";
-import { sponsorTransactionE2E, sponsorRpcClient } from "../../../utils/sponsorTransaction";
+import { sponsorTransactionE2E, sponsorRpcClient, sponsorTransactionBlock, executeSponsorTransactionBlock } from "../../../utils/sponsorTransaction";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -35,5 +35,10 @@ const signer = new RawSigner(keypair, provider);
 
     const sponsor = sponsorRpcClient(config.SPONSOR_RPC_URL);
 
-    sponsorTransactionE2E(transactionBlock, sponsor, provider, signer, gasBudget);
+    const [sponsoredResponse, sponsorTxB] = await sponsorTransactionBlock(transactionBlock, sponsor, provider, gasBudget, await signer.getAddress());
+
+    // // Sign the full transaction payload with the sender's key.
+    const senderSig = await signer.signTransactionBlock({ transactionBlock: sponsorTxB });
+
+    await executeSponsorTransactionBlock(provider, sponsoredResponse, senderSig);
 })();
