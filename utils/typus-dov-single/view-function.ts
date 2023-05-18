@@ -2,6 +2,7 @@ import { JsonRpcProvider, TransactionBlock } from "@mysten/sui.js";
 import { U64FromBytes, AddressFromBytes } from "../tools";
 import { DepositVaultUserShare, BidVaultUserShare } from "../typus-framework/vault";
 import { CLOCK, SENDER } from "../../constants";
+import { func } from "superstruct";
 
 export interface UserShare {
     index: string;
@@ -10,12 +11,27 @@ export interface UserShare {
 }
 
 export interface UserBid {
-    index: string;
+    bid_index: string;
     price: string;
     size: string;
     ts_ms: string;
-    balance: string;
+    coin_value: string;
     bidder: string;
+}
+
+export interface VaultUserShare {
+    user: string;
+    share: string;
+}
+
+export interface VaultUserShares {
+    active: VaultUserShare[];
+    deactivating: VaultUserShare[];
+    inactive: VaultUserShare[];
+    warmup: VaultUserShare[];
+    bidder: VaultUserShare[];
+    premium: VaultUserShare[];
+    performanceFee: VaultUserShare[];
 }
 
 export async function getUserShares(
@@ -208,21 +224,74 @@ export async function getAuctionBids(
         //     bidder: address,  // 32
         // }
         let user_bid_bytes = bytes.splice(bytes.length - 72, 72);
-        let index = U64FromBytes(user_bid_bytes.splice(0, 8).reverse()).toString();
+        let bid_index = U64FromBytes(user_bid_bytes.splice(0, 8).reverse()).toString();
         let price = U64FromBytes(user_bid_bytes.splice(0, 8).reverse()).toString();
         let size = U64FromBytes(user_bid_bytes.splice(0, 8).reverse()).toString();
         let ts_ms = U64FromBytes(user_bid_bytes.splice(0, 8).reverse()).toString();
-        let balance = U64FromBytes(user_bid_bytes.splice(0, 8).reverse()).toString();
+        let coin_value = U64FromBytes(user_bid_bytes.splice(0, 8).reverse()).toString();
         let bidder = AddressFromBytes(user_bid_bytes.splice(0, 32));
         result.push({
-            index,
+            bid_index,
             price,
             size,
             ts_ms,
-            balance,
+            coin_value,
             bidder,
         } as UserBid);
     }
 
     return result;
+}
+
+export async function getVaultUserShares(
+    provider: JsonRpcProvider,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string
+): Promise<VaultUserShares> {
+    let transactionBlock = new TransactionBlock();
+    let target = `${packageId}::typus_dov_single::get_vault_user_shares` as any;
+    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(index)];
+    transactionBlock.moveCall({
+        target,
+        typeArguments,
+        arguments: transactionBlockArguments,
+    });
+    // @ts-ignore
+    let bytes = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results[0].returnValues;
+
+    return {
+        // @ts-ignore
+        active: parseVaultUserShares(bytes[0][0]),
+        // @ts-ignore
+        deactivating: parseVaultUserShares(bytes[1][0]),
+        // @ts-ignore
+        inactive: parseVaultUserShares(bytes[2][0]),
+        // @ts-ignore
+        warmup: parseVaultUserShares(bytes[3][0]),
+        // @ts-ignore
+        bidder: parseVaultUserShares(bytes[4][0]),
+        // @ts-ignore
+        premium: parseVaultUserShares(bytes[5][0]),
+        // @ts-ignore
+        performanceFee: parseVaultUserShares(bytes[6][0]),
+    } as VaultUserShares;
+}
+function parseVaultUserShares(bytes: number[]): VaultUserShare[] {
+    let result: VaultUserShare[] = [];
+    while (bytes.length > 40) {
+        // struct UserBid {
+        //     user: address,  // 32
+        //     share: u64,     // 8
+        // }
+        let user_share_bytes = bytes.splice(bytes.length - 40, 40);
+        let user = AddressFromBytes(user_share_bytes.splice(0, 32));
+        let share = U64FromBytes(user_share_bytes.splice(0, 8).reverse()).toString();
+        result.push({
+            user,
+            share,
+        } as VaultUserShare);
+    }
+    return result.reverse();
 }
