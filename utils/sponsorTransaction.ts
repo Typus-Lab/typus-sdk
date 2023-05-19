@@ -90,3 +90,36 @@ export const sponsorTransactionE2E = async (gaslessTxb, sponsor, provider, signe
     });
     console.log("Execution Status:", executeResponse.effects?.status.status);
 };
+
+export async function getSponsoredDeposit(
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string,
+    coins: string[],
+    amount: string,
+    signerAddress: string
+): Promise<[SponsoredTransaction, Uint8Array]> {
+    const jsonData = JSON.stringify({
+        packageId: packageId,
+        typeArguments: typeArguments,
+        registry: registry,
+        index: index,
+        coins: coins,
+        amount: amount,
+        signerAddress: signerAddress,
+    });
+
+    let response = await fetch("https://function-1-jbw5emju3a-uc.a.run.app", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: jsonData,
+    });
+
+    const data = await response.json();
+    console.log(data);
+    const sponsoredResponse = data[0];
+    const transactionBlock = Buffer.from(data[1].data);
+
+    return [sponsoredResponse, transactionBlock];
+}
