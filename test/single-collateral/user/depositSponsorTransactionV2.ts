@@ -10,7 +10,7 @@ const signer = new RawSigner(keypair, provider);
 
 (async () => {
     const depositAmount = "10000000";
-    const index = "6";
+    const index = "0";
 
     const portfolioVaults = await getPortfolioVaults(
         provider,
@@ -28,6 +28,7 @@ const signer = new RawSigner(keypair, provider);
     const signerAddress = await signer.getAddress();
 
     const [sponsoredResponse, transactionBlock] = await getSponsoredDeposit(
+        config.SPONSOR_API,
         config.SINGLE_COLLATERAL_PACKAGE,
         portfolioVault.typeArgs,
         config.SINGLE_COLLATERAL_REGISTRY,

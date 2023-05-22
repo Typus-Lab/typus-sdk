@@ -92,6 +92,7 @@ export const sponsorTransactionE2E = async (gaslessTxb, sponsor, provider, signe
 };
 
 export async function getSponsoredDeposit(
+    sponsorApi: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -111,7 +112,7 @@ export async function getSponsoredDeposit(
         signerAddress: signerAddress,
     });
 
-    let response = await fetch("https://function-1-jbw5emju3a-uc.a.run.app", {
+    let response = await fetch(sponsorApi, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: jsonData,
@@ -126,6 +127,7 @@ export async function getSponsoredDeposit(
 }
 
 export async function getSponsoredCompound(
+    sponsorApi: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -141,7 +143,7 @@ export async function getSponsoredCompound(
         signerAddress: signerAddress,
     });
 
-    let response = await fetch("https://function-1-jbw5emju3a-uc.a.run.app", {
+    let response = await fetch(sponsorApi, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: jsonData,
@@ -156,6 +158,7 @@ export async function getSponsoredCompound(
 }
 
 export async function getSponsoredNewBid(
+    sponsorApi: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -177,7 +180,7 @@ export async function getSponsoredNewBid(
         signerAddress: signerAddress,
     });
 
-    let response = await fetch("https://function-1-jbw5emju3a-uc.a.run.app", {
+    let response = await fetch(sponsorApi, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: jsonData,
