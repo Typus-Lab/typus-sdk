@@ -3,7 +3,6 @@ import { PortfolioVault, getPortfolioVaults } from "../../../utils/typus-dov-sin
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import config from "../../../config.json";
 import { executeSponsorTransactionBlock, getSponsoredDeposit } from "../../../utils/sponsorTransaction";
-import { sponsoredDeposit } from "../../../utils/_sponsorTransaction.js";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
