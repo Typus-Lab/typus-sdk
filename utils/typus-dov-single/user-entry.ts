@@ -17,10 +17,14 @@ export async function getDepositTx(
     registry: string,
     index: string,
     coins: string[],
-    amount: string
+    amount: string,
+    usingSponsoredGasCoin: boolean
 ) {
     let tx = new TransactionBlock();
-    if (typeArguments[0] == "0x2::sui::SUI" || typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI") {
+    if (
+        !usingSponsoredGasCoin &&
+        (typeArguments[0] == "0x2::sui::SUI" || typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI")
+    ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
         tx.moveCall({
             target: `${packageId}::typus_dov_single::deposit`,
@@ -182,10 +186,14 @@ export async function getNewBidTx(
     priceOracle: string,
     coins: string[],
     size: string,
-    premium_required: string // fe float * b_token_decimal
+    premium_required: string, // fe float * b_token_decimal
+    usingSponsoredGasCoin: boolean
 ) {
     let tx = new TransactionBlock();
-    if (typeArguments[1] == "0x2::sui::SUI" || typeArguments[1] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI") {
+    if (
+        !usingSponsoredGasCoin &&
+        (typeArguments[1] == "0x2::sui::SUI" || typeArguments[1] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI")
+    ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(premium_required)]);
         tx.moveCall({
             target: `${packageId}::typus_dov_single::new_bid`,
