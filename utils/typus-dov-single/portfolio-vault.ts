@@ -73,6 +73,8 @@ export async function getPortfolioVaults(
     bid_vault_registry: string,
     index?: string
 ): Promise<Map<string, PortfolioVault>> {
+    console.warn = function () {};
+
     let portfolioVaultIds = (await provider.getDynamicFields({ parentId: registry })).data
         .filter((x) => (index ? x.name.value == index : true))
         .map((x) => x.objectId as string);
