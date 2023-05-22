@@ -101,12 +101,81 @@ export async function getSponsoredDeposit(
     signerAddress: string
 ): Promise<[SponsoredTransaction, Uint8Array]> {
     const jsonData = JSON.stringify({
+        functionName: "deposit",
         packageId: packageId,
         typeArguments: typeArguments,
         registry: registry,
         index: index,
         coins: coins,
         amount: amount,
+        signerAddress: signerAddress,
+    });
+
+    let response = await fetch("https://function-1-jbw5emju3a-uc.a.run.app", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: jsonData,
+    });
+
+    const data = await response.json();
+    console.log(data);
+    const sponsoredResponse = data[0];
+    const transactionBlock = Buffer.from(data[1].data);
+
+    return [sponsoredResponse, transactionBlock];
+}
+
+export async function getSponsoredCompound(
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string,
+    signerAddress: string
+): Promise<[SponsoredTransaction, Uint8Array]> {
+    const jsonData = JSON.stringify({
+        functionName: "compound",
+        packageId: packageId,
+        typeArguments: typeArguments,
+        registry: registry,
+        index: index,
+        signerAddress: signerAddress,
+    });
+
+    let response = await fetch("https://function-1-jbw5emju3a-uc.a.run.app", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: jsonData,
+    });
+
+    const data = await response.json();
+    console.log(data);
+    const sponsoredResponse = data[0];
+    const transactionBlock = Buffer.from(data[1].data);
+
+    return [sponsoredResponse, transactionBlock];
+}
+
+export async function getSponsoredNewBid(
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string,
+    priceOracle: string,
+    coins: string[],
+    size: string,
+    premium_required: string, // fe float * b_token_decimal
+    signerAddress: string
+): Promise<[SponsoredTransaction, Uint8Array]> {
+    const jsonData = JSON.stringify({
+        functionName: "newBid",
+        packageId: packageId,
+        typeArguments: typeArguments,
+        registry: registry,
+        index: index,
+        priceOracle: priceOracle,
+        coins: coins,
+        size: size,
+        premium_required: premium_required,
         signerAddress: signerAddress,
     });
 
