@@ -1,4 +1,4 @@
-import { JsonRpcProvider } from "@mysten/sui.js";
+import { JsonRpcProvider, normalizeSuiAddress } from "@mysten/sui.js";
 import { DepositVault, BidVault, parseDepositVault, parseBidVault } from "../typus-framework/vault";
 import { Auction, parseAuction } from "../typus-framework/dutch";
 
@@ -98,7 +98,21 @@ export async function getPortfolioVaults(
             let vaultId = portfolioVault.data.content.fields.id.id;
             // @ts-ignore
             let typeArgs = new RegExp(".*<(.*), (.*), (.*)>").exec(portfolioVault.data.content.type).slice(1, 4);
-            let assets = typeArgs.map((x) => x.split("::")[2]);
+            let assets = typeArgs.map((x) => {
+                let typeArgs = x.split("::");
+                switch (normalizeSuiAddress(typeArgs[0])) {
+                    case "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881":
+                        return "WBTC";
+                    case "0xaf8cd5edc19c4512f4259f0bee101a40d41ebed738ade5874359610ef8eeced5":
+                        return "WETH";
+                    case "0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf":
+                        return "USDC";
+                    case "0xc060006111016b8a020ad5b33834984a437aaa7d3c74c18e09a95d48aceab08c":
+                        return "USDT";
+                    default:
+                        return typeArgs[2];
+                }
+            });
             let oracleInfo: OracleInfo = {
                 // @ts-ignore
                 price: portfolioVault.data.content.fields.info.fields.oracle_info.fields.price,
