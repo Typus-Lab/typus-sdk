@@ -163,7 +163,6 @@ export async function getSponsoredNewBid(
     priceOracle: string,
     coins: string[],
     size: string,
-    premium_required: string, // fe float * b_token_decimal
     signerAddress: string
 ): Promise<[SponsoredTransaction, Uint8Array]> {
     const jsonData = JSON.stringify({
@@ -175,7 +174,6 @@ export async function getSponsoredNewBid(
         priceOracle: priceOracle,
         coins: coins,
         size: size,
-        premium_required: premium_required,
         signerAddress: signerAddress,
     });
 

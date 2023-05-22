@@ -9,8 +9,8 @@ const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const signer = new RawSigner(keypair, provider);
 
 (async () => {
-    const depositAmount = "1000000000";
-    const index = "0";
+    const depositAmount = "10000000";
+    const index = "6";
 
     const portfolioVaults = await getPortfolioVaults(
         provider,
@@ -19,7 +19,7 @@ const signer = new RawSigner(keypair, provider);
         config.SINGLE_COLLATERAL_BID_VAULT_REGISTRY,
         index
     );
-    const portfolioVault: PortfolioVault = portfolioVaults[0];
+    const portfolioVault: PortfolioVault = portfolioVaults[index];
 
     let coins = (await provider.getCoins({ owner: await signer.getAddress(), coinType: portfolioVault.depositVault.token })).data.map(
         (coin) => coin.coinObjectId
