@@ -18,7 +18,7 @@ export async function getDepositTx(
     index: string,
     coins: string[],
     amount: string,
-    usingSponsoredGasCoin: boolean
+    usingSponsoredGasCoin = false
 ) {
     let tx = new TransactionBlock();
     if (
@@ -187,7 +187,7 @@ export async function getNewBidTx(
     coins: string[],
     size: string,
     premium_required: string, // fe float * b_token_decimal
-    usingSponsoredGasCoin: boolean
+    usingSponsoredGasCoin = false
 ) {
     let tx = new TransactionBlock();
     if (
