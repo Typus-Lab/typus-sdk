@@ -18,14 +18,39 @@ const depositorRequestData = {
                 query: "depositTvl",
                 alias: "",
                 id: "a",
-                labelSelector: {
-                    // user: "0x823bd0c4d601d625b1b1555dbe17da495db71070a4365205467838aecc32cbad",
-                },
+                labelSelector: {},
                 aggregate: {
                     op: "SUM",
-                    grouping: ["user"],
+                    grouping: ["user", "coin_symbol"],
                 },
+                functions: [],
+                disabled: true,
             },
+            dataSource: "METRICS",
+        },
+        {
+            priceQuery: {
+                id: "b",
+                alias: "",
+                coinId: [
+                    {
+                        symbol: "SUI",
+                    },
+                    {
+                        symbol: "USDC",
+                    },
+                ],
+                disabled: true,
+            },
+            dataSource: "PRICE",
+        },
+    ],
+    formulas: [
+        {
+            expression: "a*b",
+            alias: "{{user}}",
+            id: "A",
+            disabled: false,
         },
     ],
 };
@@ -56,7 +81,7 @@ export async function getDepositorLeaderBoard(start?: string, end?: string, step
             .map((element) => {
                 // console.log("metric:", element.metric, "values: ", element.values);
                 // console.log("user:", element.metric.labels.user, "score: ", element.values.at(-1).value);
-                let sum = element.values.reduce((acc, curr) => acc + curr.value / 1000000000 / len, 0);
+                let sum = element.values.reduce((acc, curr) => acc + curr.value / len, 0);
 
                 return {
                     user: element.metric.labels.user,
