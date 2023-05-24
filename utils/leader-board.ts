@@ -77,7 +77,7 @@ export async function getDepositorLeaderBoard(start?: string, end?: string, step
         let data = await response.json();
 
         let samples = data.results[0].matrix.samples;
-        let len = samples.reduce((acc, curr) => (acc > curr.values.length ? acc : curr.values.length), 0);
+        let len = samples.reduce((acc, curr) => (acc > curr.values.length ? acc : curr.values.length), 0) - 1;
         let leader_board: LeaderBoard[] = samples
             .map((element) => {
                 // console.log("metric:", element.metric, "values: ", element.values);
@@ -196,6 +196,6 @@ interface LeaderBoard {
 }
 
 (async () => {
-    console.log(await getDepositorLeaderBoard("1684886400"));
-    console.log(await getBidderLeaderBoard("1684886400"));
+    // console.log(await getDepositorLeaderBoard("1684886400"));
+    // console.log(await getBidderLeaderBoard("1684886400"));
 })();
