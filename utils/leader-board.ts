@@ -90,9 +90,20 @@ export async function getDepositorLeaderBoard(start?: string, end?: string, step
                 };
             })
             .filter((element) => element.score != 0);
-        leader_board.sort((a, b) => b.score - a.score);
-        // console.log(leader_board);
-        return leader_board;
+
+        const userScoreMap: { [key: string]: number } = leader_board.reduce((map, obj) => {
+            if (map[obj.user]) {
+                map[obj.user] += obj.score;
+            } else {
+                map[obj.user] = obj.score;
+            }
+            return map;
+        }, {});
+
+        const result: LeaderBoard[] = Object.entries(userScoreMap).map(([user, score]) => ({ user, score }));
+        result.sort((a, b) => b.score - a.score);
+        // console.log(result);
+        return result;
     } catch (e) {
         return [];
     }
@@ -160,9 +171,20 @@ export async function getBidderLeaderBoard(startTimestamp?: string, end?: string
                 };
             })
             .filter((element) => element.score != 0);
-        leader_board.sort((a, b) => b.score - a.score);
-        // console.log(leader_board);
-        return leader_board;
+
+        const userScoreMap: { [key: string]: number } = leader_board.reduce((map, obj) => {
+            if (map[obj.user]) {
+                map[obj.user] += obj.score;
+            } else {
+                map[obj.user] = obj.score;
+            }
+            return map;
+        }, {});
+
+        const result: LeaderBoard[] = Object.entries(userScoreMap).map(([user, score]) => ({ user, score }));
+        result.sort((a, b) => b.score - a.score);
+        // console.log(result);
+        return result;
     } catch (e) {
         return [];
     }
