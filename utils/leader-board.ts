@@ -156,7 +156,7 @@ export async function getBidderLeaderBoard(startTimestamp?: string, end?: string
 
                 return {
                     user: element.metric.labels.user,
-                    score: (b - a) / 1000000000,
+                    score: b - a,
                 };
             })
             .filter((element) => element.score != 0);
@@ -174,6 +174,6 @@ interface LeaderBoard {
 }
 
 (async () => {
-    console.log(await getDepositorLeaderBoard("1684922400"));
-    console.log(await getBidderLeaderBoard("1684922400"));
+    console.log(await getDepositorLeaderBoard("1684886400"));
+    console.log(await getBidderLeaderBoard("1684886400"));
 })();
