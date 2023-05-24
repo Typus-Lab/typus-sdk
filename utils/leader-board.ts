@@ -73,8 +73,9 @@ export async function getDepositorLeaderBoard(start?: string, end?: string, step
         body: jsonData,
     });
 
-    if (response.ok) {
+    try {
         let data = await response.json();
+
         let samples = data.results[0].matrix.samples;
         let len = samples.reduce((acc, curr) => (acc > curr.values.length ? acc : curr.values.length), 0);
         let leader_board: LeaderBoard[] = samples
@@ -92,8 +93,8 @@ export async function getDepositorLeaderBoard(start?: string, end?: string, step
         leader_board.sort((a, b) => b.score - a.score);
         // console.log(leader_board);
         return leader_board;
-    } else {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+    } catch (e) {
+        return [];
     }
 }
 
@@ -138,7 +139,7 @@ export async function getBidderLeaderBoard(startTimestamp?: string, end?: string
         body: jsonData,
     });
 
-    if (response.ok) {
+    try {
         let data = await response.json();
         // console.log(data);
         let samples = data.results[0].matrix.samples;
@@ -162,8 +163,8 @@ export async function getBidderLeaderBoard(startTimestamp?: string, end?: string
         leader_board.sort((a, b) => b.score - a.score);
         // console.log(leader_board);
         return leader_board;
-    } else {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+    } catch (e) {
+        return [];
     }
 }
 
@@ -173,6 +174,6 @@ interface LeaderBoard {
 }
 
 (async () => {
-    // console.log(await getDepositorLeaderBoard("1684108800"));
-    // console.log(await getBidderLeaderBoard("1684108800"));
+    console.log(await getDepositorLeaderBoard("1684922400"));
+    console.log(await getBidderLeaderBoard("1684922400"));
 })();
