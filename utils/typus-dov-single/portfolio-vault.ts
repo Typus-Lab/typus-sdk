@@ -92,20 +92,6 @@ export async function getPortfolioVaults(
             // @ts-ignore
             let vaultId = portfolioVault.data.content.fields.id.id;
             let auctionDelayTsMs = "0";
-            await provider
-                .getDynamicFieldObject({
-                    parentId: vaultId,
-                    name: {
-                        type: "vector<u8>",
-                        value: [97, 117, 99, 116, 105, 111, 110, 95, 115, 116, 97, 114, 116, 95, 100, 101, 108, 97, 121, 95, 116, 115, 95, 109, 115],
-                    },
-                })
-                .then((result) => {
-                    if (result.error == undefined) {
-                        // @ts-ignore
-                        auctionDelayTsMs = result.data.content.fields.value;
-                    }
-                });
             // @ts-ignore
             let typeArgs = new RegExp(".*<(.*), (.*), (.*)>").exec(portfolioVault.data.content.type).slice(1, 4);
             let assets = typeArgs.map((x) => {
@@ -297,4 +283,23 @@ export async function getPortfolioVaults(
 
     // @ts-ignore
     return portfolioVaults;
+}
+
+export async function getPortfolioVaultAuctionDelayTsMs(provider: JsonRpcProvider, portfolio_vault: PortfolioVault): Promise<string> {
+    let auctionDelayTsMs = "0";
+    await provider
+        .getDynamicFieldObject({
+            parentId: portfolio_vault.vaultId,
+            name: {
+                type: "vector<u8>",
+                value: [97, 117, 99, 116, 105, 111, 110, 95, 115, 116, 97, 114, 116, 95, 100, 101, 108, 97, 121, 95, 116, 115, 95, 109, 115],
+            },
+        })
+        .then((result) => {
+            if (result.error == undefined) {
+                // @ts-ignore
+                auctionDelayTsMs = result.data.content.fields.value;
+            }
+        });
+    return auctionDelayTsMs;
 }
