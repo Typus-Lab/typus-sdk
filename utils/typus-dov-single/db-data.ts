@@ -1,4 +1,4 @@
-import { VaultConfig } from "../../lib/utils/typus-dov-single/portfolio-vault";
+import { PayoffConfig, VaultConfig, PortfolioVault } from "./portfolio-vault";
 
 const dbFilter = (functionNames: string[], vaultIndex: string | undefined = undefined) => ({
     collection: "typus_dov_single",
@@ -45,13 +45,19 @@ export async function getSettle(vaultIndex: string | undefined = undefined) {
     console.log(settleEvents);
 }
 
-export async function getLog(vaultIndex: string | undefined = undefined) {
+export async function getShowMap(
+    portfolioVaults: Map<string, PortfolioVault>,
+    vaultIndex: string | undefined = undefined
+): Promise<Map<string, Map<string, Show>>> {
     let events = await getDb(["NewAuction", "Delivery", "Settle"], vaultIndex);
     // console.log(events);
 
-    const groupEvent: Map<string, Map<string, GroupEvent>> = await events.reduce(async (promise, event) => {
-        let map = await promise;
+    const groupEventMap: Map<string, Map<string, GroupEvent>> = await events.reduce(async (promise, event) => {
+        let map: Map<string, Map<string, GroupEvent>> = await promise;
         // console.log(event);
+
+        const index: string = event.index.toString();
+        const round: string = event.round.toString();
 
         let round_event: GroupEvent = {
             newAuctionEvent: undefined,
@@ -59,45 +65,134 @@ export async function getLog(vaultIndex: string | undefined = undefined) {
             settleEvent: undefined,
         };
 
-        if (map[event.index]) {
-            let round_events = map[event.index];
-            if (round_events[event.round]) {
-                round_event = round_events[event.round];
+        if (map.has(index)) {
+            let round_events = map.get(index)!;
+            if (round_events.has(round)) {
+                round_event = round_events.get(round)!;
             }
         }
 
         switch (event.function) {
             case "NewAuction":
                 round_event.newAuctionEvent = event as NewAuctionEvent;
+                round_event.newAuctionEvent.vault_config = {
+                    payoffConfigs: event.vault_config.payoff_configs.map(
+                        (x) =>
+                            ({
+                                strikePct: x.strike_pct,
+                                weight: x.weight,
+                                isBuyer: x.is_buyer,
+                                strike: x.strike,
+                            } as PayoffConfig)
+                    ),
+                    strikeIncrement: event.vault_config.strike_increment,
+                    decaySpeed: event.vault_config.decay_speed,
+                    initialPrice: event.vault_config.initial_price,
+                    finalPrice: event.vault_config.final_price,
+                    auctionDurationInMs: event.vault_config.auction_duration_in_ms,
+                } as VaultConfig;
+                break;
             case "Delivery":
                 round_event.deliveryEvent = event as DeliveryEvent;
-            case "Settle": {
+                break;
+            case "Settle":
                 round_event.settleEvent = event as SettleEvent;
-            }
+                break;
         }
 
-        if (map[event.index]) {
-            map[event.index][event.round] = round_event;
+        if (map.get(index)) {
+            let round_events = map.get(index)!;
+            round_events.set(round, round_event);
+            map.set(index, round_events);
         } else {
             let round_events = new Map<string, GroupEvent>();
-            round_events[event.round] = round_event;
-            map[event.index] = round_events;
+            round_events.set(round, round_event);
+            map.set(index, round_events);
         }
 
         return map;
-    }, Promise.resolve({}));
+    }, Promise.resolve(new Map<string, Map<string, GroupEvent>>()));
 
-    console.log(groupEvent);
+    // console.log(groupEventMap);
+
+    const showMap: Map<string, Map<string, Show>> = new Map();
+
+    await groupEventMap.forEach(async (innerMap, outerKey) => {
+        if (portfolioVaults[outerKey]) {
+            const newInnerMap: Map<string, Show> = new Map();
+
+            innerMap.forEach(async (groupEvent, innerKey) => {
+                if (groupEvent.settleEvent) {
+                    const show: Show = await groupEventToShow(groupEvent, portfolioVaults[outerKey]);
+                    // console.log(show);
+                    newInnerMap.set(innerKey, show);
+                }
+            });
+
+            showMap.set(outerKey, newInnerMap);
+        }
+    });
+
+    // console.log(showMap);
+
+    return showMap;
 }
-
-(async () => {
-    await getLog();
-})();
 
 interface GroupEvent {
     newAuctionEvent: NewAuctionEvent | undefined;
     deliveryEvent: DeliveryEvent | undefined;
     settleEvent: SettleEvent | undefined;
+}
+
+interface Show {
+    ProjectedAPY: number;
+    ActivationDate: Date;
+    SettlementTime: Date;
+    StrikePrice: number[];
+    SettlePrice: number;
+    Return: number;
+    Filled: number;
+    PaidToDepositors: number; // premium_value
+    PaidToBidders;
+    EarnedByDepositors;
+}
+
+async function groupEventToShow(groupEvent: GroupEvent, portfolioVault: PortfolioVault): Promise<Show> {
+    const newAuctionEvent = groupEvent.newAuctionEvent!;
+    const deliveryEvent = groupEvent.deliveryEvent!;
+    const settleEvent = groupEvent.settleEvent!;
+
+    const PaidToDepositors = Number(deliveryEvent.premium_value) / 10 ** Number(portfolioVault.config.bTokenDecimal);
+    const portfolio_payoff = settleEvent.portfolio_payoff_is_neg ? Number(-settleEvent.portfolio_payoff) : Number(settleEvent.portfolio_payoff);
+    const PaidToBidders = portfolio_payoff / 10 ** Number(portfolioVault.config.oTokenDecimal);
+
+    let exp: number;
+    switch (portfolioVault.config.period) {
+        case 0:
+            exp = 365;
+            break;
+        case 1:
+            exp = 52;
+            break;
+        case 2:
+            exp = 12;
+            break;
+    }
+
+    const result: Show = {
+        ProjectedAPY: (1 + (1.01 * Number(deliveryEvent.delivery_price)) / 10 ** Number(portfolioVault.config.bTokenDecimal)) ** exp! - 1,
+        ActivationDate: new Date(Number(newAuctionEvent.timestamp_ms)),
+        SettlementTime: new Date(Number(settleEvent.timestamp_ms)),
+        StrikePrice: newAuctionEvent.vault_config.payoffConfigs.map((payoffConfig) => Number(payoffConfig.strike!) / 10 ** 8),
+        SettlePrice: Number(settleEvent.oracle_price) / 10 ** 8,
+        Return: Number(settleEvent.share_price) / 10 ** 8 - 1,
+        Filled: Number(deliveryEvent.delivery_size) / Number(deliveryEvent.max_size),
+        PaidToDepositors,
+        PaidToBidders,
+        EarnedByDepositors: PaidToDepositors - PaidToBidders,
+    };
+
+    return result;
 }
 
 interface Log {
