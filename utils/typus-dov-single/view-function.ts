@@ -125,6 +125,7 @@ export async function getAuctionMaxSize(
     packageId: string,
     typeArguments: string[],
     registry: string,
+    additional_config_registry: string,
     index: string,
     priceOracle: string
 ): Promise<BigInt> {
@@ -132,6 +133,7 @@ export async function getAuctionMaxSize(
     let target = `${packageId}::typus_dov_single::get_auction_max_size` as any;
     let transactionBlockArguments = [
         transactionBlock.pure(registry),
+        transactionBlock.pure(additional_config_registry),
         transactionBlock.pure(index),
         transactionBlock.pure(priceOracle),
         transactionBlock.pure(CLOCK),
@@ -152,6 +154,7 @@ export async function getMaxLossPerUnit(
     packageId: string,
     typeArguments: string[],
     registry: string,
+    additional_config_registry: string,
     index: string,
     priceOracle: string
 ): Promise<BigInt> {
@@ -159,6 +162,7 @@ export async function getMaxLossPerUnit(
     let target = `${packageId}::typus_dov_single::get_max_loss_per_unit` as any;
     let transactionBlockArguments = [
         transactionBlock.pure(registry),
+        transactionBlock.pure(additional_config_registry),
         transactionBlock.pure(index),
         transactionBlock.pure(priceOracle),
         transactionBlock.pure(CLOCK),

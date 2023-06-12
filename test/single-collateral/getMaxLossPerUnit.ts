@@ -17,6 +17,7 @@ const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPO
         config.SINGLE_COLLATERAL_PACKAGE,
         portfolioVaults[index].typeArgs,
         config.SINGLE_COLLATERAL_REGISTRY,
+        config.SINGLE_COLLATERAL_ADDITIONAL_CONFIG_REGISTRY,
         index,
         config.SUI_ORACLE
     );

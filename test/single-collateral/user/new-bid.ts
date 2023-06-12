@@ -27,6 +27,7 @@ const signer = new RawSigner(keypair, provider);
         config.SINGLE_COLLATERAL_PACKAGE,
         portfolioVaults[index].typeArgs,
         config.SINGLE_COLLATERAL_REGISTRY,
+        config.SINGLE_COLLATERAL_ADDITIONAL_CONFIG_REGISTRY,
         index,
         config.SUI_ORACLE,
         coins,
