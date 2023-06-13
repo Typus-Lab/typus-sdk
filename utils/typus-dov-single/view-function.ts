@@ -1,8 +1,8 @@
 import { JsonRpcProvider, TransactionBlock } from "@mysten/sui.js";
+import { BcsReader } from "@mysten/bcs";
 import { U64FromBytes, AddressFromBytes } from "../tools";
 import { DepositVaultUserShare, BidVaultUserShare } from "../typus-framework/vault";
 import { CLOCK, SENDER } from "../../constants";
-import { func } from "superstruct";
 
 export interface UserShare {
     index: string;
@@ -32,6 +32,14 @@ export interface VaultUserShares {
     bidder: VaultUserShare[];
     premium: VaultUserShare[];
     performanceFee: VaultUserShare[];
+}
+
+export interface AdditionalConfig {
+    index: string;
+    auction_start_delay_ts_ms: string;
+    auction_lot_size: string;
+    auction_benchmark_price: string;
+    oracle_id: string;
 }
 
 export async function getUserShares(
@@ -298,4 +306,67 @@ function parseVaultUserShares(bytes: number[]): VaultUserShare[] {
         } as VaultUserShare);
     }
     return result.reverse();
+}
+
+export async function getAdditionalConfigs(
+    provider: JsonRpcProvider,
+    packageId: string,
+    additional_config_registry: string,
+    indexes: string[]
+): Promise<Map<string, AdditionalConfig>> {
+    let transactionBlock = new TransactionBlock();
+    let target = `${packageId}::typus_dov_single::get_additional_configs` as any;
+    // let target = `${packageId}::test::get_additional_configs` as any;
+    let transactionBlockArguments = [transactionBlock.pure(additional_config_registry), transactionBlock.pure(indexes)];
+    // let transactionBlockArguments = [];
+    transactionBlock.moveCall({
+        target,
+        arguments: transactionBlockArguments,
+    });
+    // @ts-ignore
+    let bytes = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results[0].returnValues[0][0];
+    let reader = new BcsReader(new Uint8Array(bytes));
+    let result = Array.from(new Map()).reduce((map, [key, value]) => {
+        map[key] = value;
+        return map;
+    }, {});
+    // index: u64
+    // auction_start_delay_ts_ms: Option<u64>
+    // auction_lot_size: Option<u64>
+    // auction_benchmark_price: Option<u64>
+    // oracle_id: Option<address>
+    reader.readVec((reader) => {
+        reader.read8();
+        let index = reader.read64();
+        let auction_start_delay_ts_ms = reader
+            .readVec((reader) => {
+                return reader.read64();
+            })
+            .at(0);
+        let auction_lot_size = reader
+            .readVec((reader) => {
+                return reader.read64();
+            })
+            .at(0);
+        let auction_benchmark_price = reader
+            .readVec((reader) => {
+                return reader.read64();
+            })
+            .at(0);
+        let oracle_id = reader
+            .readVec((reader) => {
+                return reader.read64();
+            })
+            .at(0);
+        result[index] = {
+            index,
+            auction_start_delay_ts_ms: auction_start_delay_ts_ms ? auction_start_delay_ts_ms : "0",
+            auction_lot_size: auction_lot_size ? auction_lot_size : "0",
+            auction_benchmark_price: auction_benchmark_price ? auction_benchmark_price : "0",
+            oracle_id: oracle_id ? oracle_id : "0",
+        } as AdditionalConfig;
+    });
+
+    // @ts-ignore
+    return result;
 }

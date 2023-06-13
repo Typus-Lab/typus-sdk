@@ -1,7 +1,7 @@
 {
     "VERSION": "2.6.0",
     "DB_NAME": "mainnet_1_0_0",
-    "RPC_ENDPOINT": "https://sui-mainnet.blockvision.org:443/v1/2PJPDa6ftWDVE3ixOJJ7EklvI6e",
+    "RPC_ENDPOINT": "https://node.shinami.com:443/api/v1/sui_testnet_c702de54dad05016124f2cfabc1de7e8",
     "SINGLE_COLLATERAL_PACKAGE": "0xe8bb6571a837ff8b8e9a553299cde2b5c3f15655385a666a92147c2be8fc2401",
     "SINGLE_COLLATERAL_PACKAGE_ORIGIN": "0xa76499eda1d37751473de5f30e106f35943ada2f6ea764861243e7f5aa5bcc97",
     "SINGLE_COLLATERAL_MANAGER_CAP": "0x5e8de2cd90dfed48fc26bb21a07abb91668c549d715f3a80a2c900d42eefaec5",
