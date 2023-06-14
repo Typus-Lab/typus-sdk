@@ -90,6 +90,7 @@ export const sponsorTransactionE2E = async (gaslessTxb, sponsor, provider, signe
     requestType: "WaitForLocalExecution",
   });
   console.log("Execution Status:", executeResponse.effects?.status.status);
+  return executeResponse;
 };
 
 export async function getSponsoredDeposit(
