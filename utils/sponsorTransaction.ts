@@ -56,8 +56,8 @@ export const executeSponsorTransactionBlock = async (provider, sponsoredResponse
     options: { showEffects: true },
     requestType: "WaitForLocalExecution",
   });
-  console.log("Execution Status:", executeResponse.effects?.status.status);
-  return executeResponse.effects?.status.status;
+  console.log("SDK Execution Status:", executeResponse.effects?.status.status);
+  return executeResponse;
 };
 
 export const sponsorTransactionE2E = async (gaslessTxb, sponsor, provider, signer, gasBudget) => {
