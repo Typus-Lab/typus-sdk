@@ -355,7 +355,7 @@ export async function getAdditionalConfigs(
             .at(0);
         let oracle_id = reader
             .readVec((reader) => {
-                return reader.read64();
+                return AddressFromBytes(reader.readBytes(32));
             })
             .at(0);
         result[index] = {
