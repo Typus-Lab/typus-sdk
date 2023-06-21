@@ -1,8 +1,8 @@
 import "../../load_env";
-import { getDepositTx } from "../../../utils/typus-dov-single/user-entry";
 import { getPortfolioVaults } from "../../../utils/typus-dov-single/portfolio-vault";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import config from "../../../config.json";
+import { getClaimTx } from "../../../utils/typus-dov-single/user-entry";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -10,7 +10,6 @@ const signer = new RawSigner(keypair, provider);
 
 (async () => {
     let gasBudget = 100000000;
-    let depositAmount = "10000";
     let index = "0";
 
     let portfolioVaults = await getPortfolioVaults(
@@ -19,17 +18,12 @@ const signer = new RawSigner(keypair, provider);
         config.SINGLE_COLLATERAL_DEPOSIT_VAULT_REGISTRY,
         config.SINGLE_COLLATERAL_BID_VAULT_REGISTRY
     );
-    let coins = (await provider.getCoins({ owner: await signer.getAddress(), coinType: portfolioVaults[index].depositVault.token })).data.map(
-        (coin) => coin.coinObjectId
-    );
-    let transactionBlock = await getDepositTx(
+    let transactionBlock = await getClaimTx(
         gasBudget,
         config.SINGLE_COLLATERAL_PACKAGE,
-        portfolioVaults[index].typeArgs,
+        portfolioVaults[index].typeArgs.slice(0, 1),
         config.SINGLE_COLLATERAL_REGISTRY,
-        portfolioVaults[index].info.index,
-        coins,
-        depositAmount
+        portfolioVaults[index].info.index
     );
 
     let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
