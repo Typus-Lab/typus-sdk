@@ -1,8 +1,6 @@
 import { PayoffConfig, VaultConfig, PortfolioVault } from "./portfolio-vault";
 
-const apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/mongodb-mainnet";
-
-export async function getDb(functionNames: string[], vaultIndex: string | undefined = undefined) {
+export async function getDb(apiUrl: string, functionNames: string[], vaultIndex: string | undefined = undefined) {
     const jsonData = JSON.stringify({ functionNames: functionNames, vaultIndex: vaultIndex });
 
     let response = await fetch(apiUrl, {
@@ -17,25 +15,12 @@ export async function getDb(functionNames: string[], vaultIndex: string | undefi
     }
 }
 
-export async function getNewAuction(vaultIndex: string | undefined = undefined) {
-    const result = await getDb(["NewAuction"], vaultIndex);
-    console.log(result);
-}
-
-export async function getDelivery(vaultIndex: string | undefined = undefined) {
-    await getDb(["Delivery"], vaultIndex);
-}
-
-export async function getSettle(vaultIndex: string | undefined = undefined) {
-    let settleEvents: SettleEvent[] = await getDb(["Settle"], vaultIndex);
-    console.log(settleEvents);
-}
-
 export async function getShowMap(
+    apiUrl: string,
     portfolioVaults: Map<string, PortfolioVault>,
     vaultIndex: string | undefined = undefined
 ): Promise<Map<string, Map<string, Show>>> {
-    let events = await getDb(["NewAuction", "Delivery", "Settle"], vaultIndex);
+    let events = await getDb(apiUrl, ["NewAuction", "Delivery", "Settle"], vaultIndex);
     // console.log(events);
 
     const groupEventMap: Map<string, Map<string, GroupEvent>> = await events.reduce(async (promise, event) => {
