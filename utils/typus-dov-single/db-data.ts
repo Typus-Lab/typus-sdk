@@ -1,39 +1,25 @@
 import { PayoffConfig, VaultConfig, PortfolioVault } from "./portfolio-vault";
 
-const dbFilter = (functionNames: string[], vaultIndex: string | undefined = undefined) => ({
-    collection: "typus_dov_single",
-    database: "mainnet_1_0_0",
-    dataSource: "typus",
-    filter: {
-        function: { $in: functionNames },
-        index: vaultIndex,
-    },
-});
-
-const apiUrl = "https://data.mongodb-api.com/app/data-dwhde/endpoint/data/v1/action/find";
-
-const headers = {
-    "api-key": "ZnJu3wGqGoYotyvHl5Qis0UvUJRDJkBBwIsRaHdmBuzfy4jyPBH1LzazIfOO0GSm",
-    "Content-Type": "application/json",
-};
+const apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/mongodb-mainnet";
 
 export async function getDb(functionNames: string[], vaultIndex: string | undefined = undefined) {
-    const jsonData = JSON.stringify(dbFilter(functionNames, vaultIndex));
+    const jsonData = JSON.stringify({ functionNames: functionNames, vaultIndex: vaultIndex });
 
     let response = await fetch(apiUrl, {
         method: "POST",
-        headers,
+        headers: { "Content-Type": "application/json" },
         body: jsonData,
     });
 
     if (response.ok) {
         let data = await response.json();
-        return data.documents;
+        return data;
     }
 }
 
 export async function getNewAuction(vaultIndex: string | undefined = undefined) {
-    await getDb(["NewAuction"], vaultIndex);
+    const result = await getDb(["NewAuction"], vaultIndex);
+    console.log(result);
 }
 
 export async function getDelivery(vaultIndex: string | undefined = undefined) {
@@ -163,7 +149,9 @@ async function groupEventToShow(groupEvent: GroupEvent, portfolioVault: Portfoli
     const settleEvent = groupEvent.settleEvent!;
 
     const PaidToDepositors = Number(deliveryEvent.premium_value) / 10 ** Number(portfolioVault.config.bTokenDecimal);
-    const portfolio_payoff = settleEvent.portfolio_payoff_is_neg ? Number(-settleEvent.portfolio_payoff) : Number(settleEvent.portfolio_payoff);
+    const portfolio_payoff = settleEvent.portfolio_payoff_is_neg
+        ? Number(-settleEvent.portfolio_payoff)
+        : Number(settleEvent.portfolio_payoff);
     const PaidToBidders = portfolio_payoff / 10 ** Number(portfolioVault.config.oTokenDecimal);
 
     let exp: number;
