@@ -93,7 +93,7 @@ export async function getShowMap(
             const newInnerMap: Map<string, Show> = new Map();
 
             innerMap.forEach(async (groupEvent, innerKey) => {
-                if (groupEvent.settleEvent) {
+                if (groupEvent.settleEvent && groupEvent.newAuctionEvent) {
                     const show: Show = await groupEventToShow(groupEvent, portfolioVaults[outerKey]);
                     // console.log(show);
                     newInnerMap.set(innerKey, show);
