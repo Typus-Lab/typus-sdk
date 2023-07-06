@@ -93,11 +93,9 @@ export async function getShowMap(
             const newInnerMap: Map<string, Show> = new Map();
 
             innerMap.forEach(async (groupEvent, innerKey) => {
-                if (groupEvent.settleEvent && groupEvent.newAuctionEvent) {
-                    const show: Show = await groupEventToShow(groupEvent, portfolioVaults[outerKey]);
-                    // console.log(show);
-                    newInnerMap.set(innerKey, show);
-                }
+                const show: Show = await groupEventToShow(groupEvent, portfolioVaults[outerKey]);
+                // console.log(show);
+                newInnerMap.set(innerKey, show);
             });
 
             showMap.set(outerKey, newInnerMap);
@@ -119,24 +117,20 @@ interface Show {
     ProjectedAPY: number;
     ActivationDate: Date;
     SettlementTime: Date;
-    StrikePrice: number[];
+    StrikePrice: number[] | undefined;
     SettlePrice: number;
     Return: number;
     Filled: number;
     PaidToDepositors: number; // premium_value
-    PaidToBidders;
-    EarnedByDepositors;
+    PaidToBidders: number;
+    EarnedByDepositors: number;
 }
 
 async function groupEventToShow(groupEvent: GroupEvent, portfolioVault: PortfolioVault): Promise<Show> {
-    const newAuctionEvent = groupEvent.newAuctionEvent!;
-    const deliveryEvent = groupEvent.deliveryEvent!;
-    const settleEvent = groupEvent.settleEvent!;
-
-    const PaidToDepositors = Number(deliveryEvent.premium_value) / 10 ** Number(portfolioVault.config.bTokenDecimal);
-    const portfolio_payoff = settleEvent.portfolio_payoff_is_neg
-        ? Number(-settleEvent.portfolio_payoff)
-        : Number(settleEvent.portfolio_payoff);
+    const PaidToDepositors = Number(groupEvent.deliveryEvent?.premium_value) / 10 ** Number(portfolioVault.config.bTokenDecimal);
+    const portfolio_payoff = groupEvent.settleEvent?.portfolio_payoff_is_neg
+        ? Number(-groupEvent.settleEvent?.portfolio_payoff)
+        : Number(groupEvent.settleEvent?.portfolio_payoff);
     const PaidToBidders = portfolio_payoff / 10 ** Number(portfolioVault.config.oTokenDecimal);
 
     let exp: number;
@@ -153,14 +147,20 @@ async function groupEventToShow(groupEvent: GroupEvent, portfolioVault: Portfoli
     }
 
     const result: Show = {
-        ProjectedAPY: (1 + (1.01 * Number(deliveryEvent.delivery_price)) / 10 ** Number(portfolioVault.config.bTokenDecimal)) ** exp! - 1,
-        ActivationDate: new Date(Number(newAuctionEvent.timestamp_ms)),
-        SettlementTime: new Date(Number(settleEvent.timestamp_ms)),
-        StrikePrice: newAuctionEvent.vault_config.payoffConfigs.map((payoffConfig) => Number(payoffConfig.strike!) / 10 ** 8),
-        SettlePrice: Number(settleEvent.oracle_price) / 10 ** 8,
-        Return: Number(settleEvent.share_price) / 10 ** 8 - 1,
-        Filled: Number(deliveryEvent.delivery_size) / Number(deliveryEvent.max_size),
+        // newAuctionEvent
+        ActivationDate: new Date(Number(groupEvent.newAuctionEvent?.timestamp_ms)),
+        StrikePrice: groupEvent.newAuctionEvent?.vault_config.payoffConfigs.map((payoffConfig) => Number(payoffConfig.strike!) / 10 ** 8),
+
+        // deliveryEvent
+        ProjectedAPY:
+            (1 + (1.01 * Number(groupEvent.deliveryEvent?.delivery_price)) / 10 ** Number(portfolioVault.config.bTokenDecimal)) ** exp! - 1,
+        Filled: Number(groupEvent.deliveryEvent?.delivery_size) / Number(groupEvent.deliveryEvent?.max_size),
         PaidToDepositors,
+
+        // settleEvent
+        SettlementTime: new Date(Number(groupEvent.settleEvent?.timestamp_ms)),
+        SettlePrice: Number(groupEvent.settleEvent?.oracle_price) / 10 ** 8,
+        Return: Number(groupEvent.settleEvent?.share_price) / 10 ** 8 - 1,
         PaidToBidders,
         EarnedByDepositors: PaidToDepositors - PaidToBidders,
     };
