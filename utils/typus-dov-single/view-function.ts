@@ -40,6 +40,7 @@ export interface AdditionalConfig {
     auction_lot_size: string;
     auction_benchmark_price: string;
     oracle_id: string;
+    risk_level: string;
 }
 
 export async function getUserShares(
@@ -358,12 +359,18 @@ export async function getAdditionalConfigs(
                 return AddressFromBytes(reader.readBytes(32));
             })
             .at(0);
+        let risk_level = reader
+            .readVec((reader) => {
+                return reader.read8();
+            })
+            .at(0);
         result[index] = {
             index,
             auction_start_delay_ts_ms: auction_start_delay_ts_ms ? auction_start_delay_ts_ms : "0",
             auction_lot_size: auction_lot_size ? auction_lot_size : "0",
             auction_benchmark_price: auction_benchmark_price ? auction_benchmark_price : "0",
             oracle_id: oracle_id ? oracle_id : "0",
+            risk_level: risk_level ? risk_level : "0",
         } as AdditionalConfig;
     });
 
