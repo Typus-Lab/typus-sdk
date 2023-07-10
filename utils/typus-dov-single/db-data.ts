@@ -124,6 +124,9 @@ interface Show {
     PaidToDepositors: number; // premium_value
     PaidToBidders: number;
     EarnedByDepositors: number;
+    NewAuctionTx: string | undefined;
+    DeliveryTx: string | undefined;
+    SettleTx: string | undefined;
 }
 
 async function groupEventToShow(groupEvent: GroupEvent, portfolioVault: PortfolioVault): Promise<Show> {
@@ -148,16 +151,19 @@ async function groupEventToShow(groupEvent: GroupEvent, portfolioVault: Portfoli
 
     const result: Show = {
         // newAuctionEvent
+        NewAuctionTx: groupEvent.newAuctionEvent?.tx_digest,
         ActivationDate: new Date(Number(groupEvent.newAuctionEvent?.timestamp_ms)),
         StrikePrice: groupEvent.newAuctionEvent?.vault_config.payoffConfigs.map((payoffConfig) => Number(payoffConfig.strike!) / 10 ** 8),
 
         // deliveryEvent
+        DeliveryTx: groupEvent.deliveryEvent?.tx_digest,
         ProjectedAPY:
             (1 + (1.01 * Number(groupEvent.deliveryEvent?.delivery_price)) / 10 ** Number(portfolioVault.config.bTokenDecimal)) ** exp! - 1,
         Filled: Number(groupEvent.deliveryEvent?.delivery_size) / Number(groupEvent.deliveryEvent?.max_size),
         PaidToDepositors,
 
         // settleEvent
+        SettleTx: groupEvent.settleEvent?.tx_digest,
         SettlementTime: new Date(Number(groupEvent.settleEvent?.timestamp_ms)),
         SettlePrice: Number(groupEvent.settleEvent?.oracle_price) / 10 ** 8,
         Return: Number(groupEvent.settleEvent?.share_price) / 10 ** 8 - 1,
