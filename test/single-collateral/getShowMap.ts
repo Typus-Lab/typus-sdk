@@ -12,8 +12,6 @@ import { getShowMap } from "../../utils/typus-dov-single/db-data";
         config.SINGLE_COLLATERAL_BID_VAULT_REGISTRY
     );
 
-    const apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/mongodb-testnet";
-
-    const showMap = await getShowMap(apiUrl, portfolioVaults);
+    const showMap = await getShowMap(config.DB_NAME, portfolioVaults, undefined, "1688973184000");
     console.log(showMap);
 })();

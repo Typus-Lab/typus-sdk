@@ -1,7 +1,15 @@
 import { PayoffConfig, VaultConfig, PortfolioVault } from "./portfolio-vault";
 
-export async function getDb(apiUrl: string, functionNames: string[], vaultIndex: string | undefined = undefined) {
-    const jsonData = JSON.stringify({ functionNames: functionNames, vaultIndex: vaultIndex });
+const apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/mongodb";
+
+export async function getDb(database: string, functionNames: string[], vaultIndex: string | undefined, startTsMs: string, limit: number) {
+    const jsonData = JSON.stringify({
+        database: database,
+        functionNames: functionNames,
+        vaultIndex: vaultIndex,
+        startTsMs: startTsMs,
+        limit: limit,
+    });
 
     let response = await fetch(apiUrl, {
         method: "POST",
@@ -16,11 +24,13 @@ export async function getDb(apiUrl: string, functionNames: string[], vaultIndex:
 }
 
 export async function getShowMap(
-    apiUrl: string,
+    database: string,
     portfolioVaults: Map<string, PortfolioVault>,
-    vaultIndex: string | undefined = undefined
+    vaultIndex: string | undefined = undefined,
+    startTsMs: string = "0",
+    limit: number = 1000
 ): Promise<Map<string, Map<string, Show>>> {
-    let events = await getDb(apiUrl, ["NewAuction", "Delivery", "Settle"], vaultIndex);
+    let events = await getDb(database, ["NewAuction", "Delivery", "Settle"], vaultIndex, startTsMs, limit);
     // console.log(events);
 
     const groupEventMap: Map<string, Map<string, GroupEvent>> = await events.reduce(async (promise, event) => {
