@@ -53,9 +53,32 @@ export async function getPackageVersion(provider: JsonRpcProvider, packageId: st
         id: packageId,
         options: {
             showContent: true,
+            showBcs: true,
         },
     });
-    // @ts-ignore
-    let version = new RegExp("upgrade_registry[^\\[]+\\[[^\\[]+\\[([^\\]]+)\\]").exec(packageData.data.content.disassembled.typus_dov_single)[1];
-    return U64FromBytes(version.split(", ").reverse());
+    let version = new RegExp(
+        "Constants \\[[^=]+=> u64: ([^\\s][^\\s])([^\\s][^\\s])([^\\s][^\\s])([^\\s][^\\s])([^\\s][^\\s])([^\\s][^\\s])([^\\s][^\\s])([^\\s][^\\s])"
+    ).exec(
+        // @ts-ignore
+        packageData.data.content.disassembled.typus_dov_single
+        // "	25: Ret}Constants [0 => u64: e803000000000000jadsfiklajsl1 => u64: 0200000000000000"
+    );
+    return U64FromBytes([
+        // @ts-ignore
+        parseInt(version[8], 16),
+        // @ts-ignore
+        parseInt(version[7], 16),
+        // @ts-ignore
+        parseInt(version[6], 16),
+        // @ts-ignore
+        parseInt(version[5], 16),
+        // @ts-ignore
+        parseInt(version[4], 16),
+        // @ts-ignore
+        parseInt(version[3], 16),
+        // @ts-ignore
+        parseInt(version[2], 16),
+        // @ts-ignore
+        parseInt(version[1], 16),
+    ]);
 }
