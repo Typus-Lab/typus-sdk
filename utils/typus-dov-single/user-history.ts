@@ -1,12 +1,17 @@
 import { JsonRpcProvider, SuiEventFilter } from "@mysten/sui.js";
 import { assetToDecimal, typeArgsToAssets } from "../token";
 
-export async function getUserHistory(provider: JsonRpcProvider, originPackage: string, sender: string): Promise<TxHistory[]> {
+export async function getUserHistory(
+    provider: JsonRpcProvider,
+    originPackage: string,
+    sender: string,
+    startTimeMs: number
+): Promise<TxHistory[]> {
     const senderFilter: SuiEventFilter = {
         Sender: sender,
     };
 
-    var result = await provider.queryEvents({ query: senderFilter });
+    var result = await provider.queryEvents({ query: senderFilter, order: "descending" });
     // console.log(result);
 
     var txHistory = await parseTxHistory(result.data, originPackage);
@@ -15,9 +20,12 @@ export async function getUserHistory(provider: JsonRpcProvider, originPackage: s
         result = await provider.queryEvents({ query: senderFilter, cursor: result.nextCursor });
         const nextPage = await parseTxHistory(result.data, originPackage);
         txHistory = txHistory.concat(nextPage);
+        if (result.hasNextPage && Number(result.data[24].timestampMs) < startTimeMs) {
+            break;
+        }
     }
 
-    // console.log(txHistory);
+    // console.log(txHistory.length);
 
     return txHistory;
 }
