@@ -152,6 +152,7 @@ export async function getUnsubscribeTx(
   packageId: string,
   typeArguments: string[],
   registry: string,
+  additional_config_registry: string,
   index: string,
   share?: string
 ) {
@@ -159,7 +160,7 @@ export async function getUnsubscribeTx(
   tx.moveCall({
     target: `${packageId}::typus_dov_single::unsubscribe`,
     typeArguments,
-    arguments: [tx.pure(registry), tx.pure(index), tx.pure(share ? [share] : [])],
+    arguments: [tx.pure(registry), tx.pure(additional_config_registry), tx.pure(index), tx.pure(share ? [share] : [])],
   });
   tx.setGasBudget(gasBudget);
 
