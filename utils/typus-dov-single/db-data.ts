@@ -2,12 +2,20 @@ import { PayoffConfig, VaultConfig, PortfolioVault } from "./portfolio-vault";
 
 const apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/mongodb";
 
-export async function getDb(database: string, functionNames: string[], vaultIndex: string | undefined, startTsMs: string, limit: number) {
+export async function getDb(
+    database: string,
+    functionNames: string[],
+    vaultIndex: string | undefined,
+    startTsMs: string,
+    limit: number,
+    endTsMs: string | undefined = undefined
+) {
     const jsonData = JSON.stringify({
         database: database,
         functionNames: functionNames,
         vaultIndex: vaultIndex,
         startTsMs: startTsMs,
+        endTsMs: endTsMs,
         limit: limit,
     });
 
