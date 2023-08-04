@@ -70,7 +70,7 @@ export async function getWithdrawTx(gasBudget: number, packageId: string, typeAr
     )
     @param typeArguments [Deposit Vault Token]
 */
-export async function getClaimTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, index: string) {
+export async function getClaimTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, additional_config_registry: string, index: string) {
   let tx = new TransactionBlock();
   tx.moveCall({
     target: `${packageId}::typus_dov_single::claim`,
@@ -89,7 +89,7 @@ export async function getClaimTx(gasBudget: number, packageId: string, typeArgum
     )
     @param typeArguments [Bid Vault Token]
 */
-export async function getHarvestTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, index: string) {
+export async function getHarvestTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, additional_config_registry: string, index: string) {
   let tx = new TransactionBlock();
   tx.moveCall({
     target: `${packageId}::typus_dov_single::harvest`,
@@ -108,7 +108,7 @@ export async function getHarvestTx(gasBudget: number, packageId: string, typeArg
     )
     @param typeArguments [Deposit Vault Token, Bid Vault Token]
 */
-export async function getClaimAndHarvestTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, index: string) {
+export async function getClaimAndHarvestTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, additional_config_registry: string, index: string) {
   let tx = new TransactionBlock();
   tx.moveCall({
     target: `${packageId}::typus_dov_single::claim_and_harvest`,
@@ -127,7 +127,7 @@ export async function getClaimAndHarvestTx(gasBudget: number, packageId: string,
     )
     @param typeArguments [Deposit Vault Token, Oracle Token]
 */
-export async function getCompoundTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, index: string) {
+export async function getCompoundTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, additional_config_registry: string, index: string) {
   let tx = new TransactionBlock();
   tx.moveCall({
     target: `${packageId}::typus_dov_single::compound`,
