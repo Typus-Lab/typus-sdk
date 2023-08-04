@@ -1,4 +1,5 @@
 import { normalizeSuiAddress } from "@mysten/sui.js";
+import config from "../config.json";
 
 export function typeArgsToAssets(typeArgs: string[]): string[] {
     let assets = typeArgs.map((x) => {
@@ -14,6 +15,14 @@ export function typeArgsToAssets(typeArgs: string[]): string[] {
                 return "USDC";
             case "0xc060006111016b8a020ad5b33834984a437aaa7d3c74c18e09a95d48aceab08c":
                 return "USDT";
+            case config.TOKEN_PACKAGE:
+                if (typeArgs[2] == "BTC") {
+                    return "WBTC";
+                } else if (typeArgs[2] == "ETH") {
+                    return "WETH";
+                }
+
+                return typeArgs[2];
             default:
                 return typeArgs[2];
         }
