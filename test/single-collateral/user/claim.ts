@@ -23,6 +23,7 @@ const signer = new RawSigner(keypair, provider);
         config.SINGLE_COLLATERAL_PACKAGE,
         portfolioVaults[index].typeArgs.slice(0, 1),
         config.SINGLE_COLLATERAL_REGISTRY,
+        config.SINGLE_COLLATERAL_AC_REGISTRY,
         portfolioVaults[index].info.index
     );
 
