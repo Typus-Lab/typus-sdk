@@ -167,10 +167,13 @@ async function groupEventToShow(groupEvent: GroupEvent, portfolioVault: Portfoli
             break;
     }
 
+    let ActivationTsMs = Number(groupEvent.newAuctionEvent?.timestamp_ms);
+    let SettlementTsMs = Number(groupEvent.settleEvent?.timestamp_ms);
+
     const result: Show = {
         // newAuctionEvent
         NewAuctionTx: groupEvent.newAuctionEvent?.tx_digest,
-        ActivationDate: new Date(Number(groupEvent.newAuctionEvent?.timestamp_ms)),
+        ActivationDate: new Date(ActivationTsMs - (ActivationTsMs % 3600000)),
         StrikePrice: groupEvent.newAuctionEvent?.vault_config.payoffConfigs.map((payoffConfig) => Number(payoffConfig.strike!) / 10 ** 8),
 
         // deliveryEvent
@@ -182,7 +185,7 @@ async function groupEventToShow(groupEvent: GroupEvent, portfolioVault: Portfoli
 
         // settleEvent
         SettleTx: groupEvent.settleEvent?.tx_digest,
-        SettlementTime: new Date(Number(groupEvent.settleEvent?.timestamp_ms)),
+        SettlementTime: new Date(SettlementTsMs - (SettlementTsMs % 3600000)),
         SettlePrice: Number(groupEvent.settleEvent?.oracle_price) / 10 ** 8,
         Return: Number(groupEvent.settleEvent?.share_price) / 10 ** 8 - 1,
         PaidToBidders,
