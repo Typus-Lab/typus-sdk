@@ -87,9 +87,11 @@ export async function getPortfolioVaults(
         })
     )
         .filter((portfolioVault) => portfolioVault.error == undefined)
+        // @ts-ignore
+        .filter((portfolioVault) => !portfolioVault.data.content.type.includes("0x2::balance::Balance"))
         .reduce(async (promise, portfolioVault) => {
             let map = await promise;
-            // console.log(JSON.stringify(portfolioVault, null, 4));
+            console.log(JSON.stringify(portfolioVault, null, 4));
             // @ts-ignore
             let vaultId = portfolioVault.data.content.fields.id.id;
             let auctionDelayTsMs = "0";
@@ -156,7 +158,7 @@ export async function getPortfolioVaults(
                                 weight: x.fields.weight,
                                 isBuyer: x.fields.is_buyer,
                                 strike: x.fields.strike,
-                            } as PayoffConfig)
+                            }) as PayoffConfig
                     ),
                     // @ts-ignore
                     strikeIncrement: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.strike_increment,
@@ -178,7 +180,7 @@ export async function getPortfolioVaults(
                                 weight: x.fields.weight,
                                 isBuyer: x.fields.is_buyer,
                                 strike: x.fields.strike,
-                            } as PayoffConfig)
+                            }) as PayoffConfig
                     ),
                     // @ts-ignore
                     strikeIncrement: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.strike_increment,
@@ -200,7 +202,7 @@ export async function getPortfolioVaults(
                                 weight: x.fields.weight,
                                 isBuyer: x.fields.is_buyer,
                                 strike: x.fields.strike,
-                            } as PayoffConfig)
+                            }) as PayoffConfig
                     ),
                     // @ts-ignore
                     strikeIncrement: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.strike_increment,
@@ -279,7 +281,9 @@ export async function getPortfolioVaultAuctionDelayTsMs(provider: JsonRpcProvide
             parentId: portfolio_vault.vaultId,
             name: {
                 type: "vector<u8>",
-                value: [97, 117, 99, 116, 105, 111, 110, 95, 115, 116, 97, 114, 116, 95, 100, 101, 108, 97, 121, 95, 116, 115, 95, 109, 115],
+                value: [
+                    97, 117, 99, 116, 105, 111, 110, 95, 115, 116, 97, 114, 116, 95, 100, 101, 108, 97, 121, 95, 116, 115, 95, 109, 115,
+                ],
             },
         })
         .then((result) => {
