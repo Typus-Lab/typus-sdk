@@ -92,7 +92,7 @@
         // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
         "skipLibCheck": true,
         /* Skip type checking all .d.ts files. */
-        "lib": ["dom", "es5", "scripthost", "es2015.promise", "es2020"]
+        "lib": ["dom", "es5", "scripthost", "es2015.promise", "es2022"]
     },
     "include": ["**/*.ts"],
     "exclude": ["node_modules", "**/__tests__/*", "scripts", "test"]
