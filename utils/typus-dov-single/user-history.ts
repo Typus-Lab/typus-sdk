@@ -58,7 +58,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string): Promise
 
             let matches = new RegExp("<([^>]+)>").exec(event.type);
             if (matches) {
-                const typeArgs = matches[1].split(",");
+                const typeArgs = matches[1].split(", ");
                 // console.log(typeArgs);
 
                 const assets = typeArgsToAssets(typeArgs);
