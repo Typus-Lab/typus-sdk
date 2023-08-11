@@ -15,6 +15,7 @@ export async function getDepositTx(
     packageId: string,
     typeArguments: string[],
     registry: string,
+    additional_config_registry: string,
     index: string,
     coins: string[],
     amount: string,
@@ -30,13 +31,25 @@ export async function getDepositTx(
         tx.moveCall({
             target: `${packageId}::typus_dov_single::deposit`,
             typeArguments,
-            arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: [coin] }), tx.pure(amount)],
+            arguments: [
+                tx.pure(registry),
+                tx.pure(additional_config_registry),
+                tx.pure(index),
+                tx.makeMoveVec({ objects: [coin] }),
+                tx.pure(amount),
+            ],
         });
     } else {
         tx.moveCall({
             target: `${packageId}::typus_dov_single::deposit`,
             typeArguments,
-            arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }), tx.pure(amount)],
+            arguments: [
+                tx.pure(registry),
+                tx.pure(additional_config_registry),
+                tx.pure(index),
+                tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
+                tx.pure(amount),
+            ],
         });
     }
     tx.setGasBudget(gasBudget);
