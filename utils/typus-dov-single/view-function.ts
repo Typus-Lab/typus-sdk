@@ -45,6 +45,8 @@ export interface AdditionalConfig {
     min_deposit: string;
     incentive_flag: string;
     incentive_rate_bp: string;
+    remaining_incentive_sui: string;
+    depositor_incentive_rate_bp: string;
     current_portfolio_step: string;
 }
 
@@ -401,6 +403,16 @@ export async function getAdditionalConfigs(
                     return reader.read64();
                 })
                 .at(0);
+            let remaining_incentive_sui = reader
+                .readVec((reader) => {
+                    return reader.read64();
+                })
+                .at(0);
+            let depositor_incentive_rate_bp = reader
+                .readVec((reader) => {
+                    return reader.read64();
+                })
+                .at(0);
             let current_portfolio_step = reader
                 .readVec((reader) => {
                     return reader.read64();
@@ -417,6 +429,8 @@ export async function getAdditionalConfigs(
                 min_deposit: min_deposit ? min_deposit : "0",
                 incentive_flag: incentive_flag ? incentive_flag : "0",
                 incentive_rate_bp: incentive_rate_bp ? incentive_rate_bp : "0",
+                remaining_incentive_sui: remaining_incentive_sui ? remaining_incentive_sui : "0",
+                depositor_incentive_rate_bp: depositor_incentive_rate_bp ? depositor_incentive_rate_bp : "0",
                 current_portfolio_step: current_portfolio_step ? current_portfolio_step : "0",
             } as AdditionalConfig;
         }
