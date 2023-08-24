@@ -42,6 +42,7 @@ interface TxHistory {
     Fee: number;
     // NewBid (3 typeArgs)
     BidSize: number;
+    BidPaid: number;
 }
 
 async function parseTxHistory(datas: Array<any>, originPackage: string): Promise<Array<TxHistory>> {
@@ -64,6 +65,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string): Promise
                 const assets = typeArgsToAssets(typeArgs);
                 // console.log(assets);
                 let asset = action == "NewBid" ? assets[2] : assets[0];
+                let b_asset = assets[1];
 
                 const parsedJson = event.parsedJson!;
 
@@ -76,6 +78,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string): Promise
                     Amount: Number(parsedJson.amount) / 10 ** assetToDecimal(asset)!,
                     Fee: Number(parsedJson.fee) / 10 ** assetToDecimal(asset)!,
                     BidSize: Number(parsedJson.size) / 10 ** assetToDecimal(asset)!,
+                    BidPaid: Number(parsedJson.coin_value) / 10 ** assetToDecimal(b_asset)!,
                 });
 
                 return txHistory;
