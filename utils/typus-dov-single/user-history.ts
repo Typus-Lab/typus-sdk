@@ -25,9 +25,17 @@ export async function getUserHistory(
         }
     }
 
-    // console.log(txHistory.length);
-
-    return txHistory;
+    return await txHistory.reduce(async (promise, currentValue) => {
+        let tx: TxHistory[] = await promise;
+        if (currentValue.Action == "IncentiveNewBid") {
+            let i = tx.findIndex((x) => x.txDigest == currentValue.txDigest && x.Action == "NewBid");
+            tx[i].BidPaidWithIncentive = tx[i].BidPaid - currentValue.IncentiveValue;
+            tx[i].IncentiveValue = currentValue.IncentiveValue;
+        } else {
+            tx.push(currentValue);
+        }
+        return tx;
+    }, Promise.resolve(new Array<TxHistory>()));
 }
 
 interface TxHistory {
@@ -43,6 +51,10 @@ interface TxHistory {
     // NewBid (3 typeArgs)
     BidSize: number;
     BidPaid: number;
+    BidPaidWithIncentive: number | undefined;
+    BidPaidAsset: string;
+    // IncentiveNewBid
+    IncentiveValue: number;
 }
 
 async function parseTxHistory(datas: Array<any>, originPackage: string): Promise<Array<TxHistory>> {
@@ -69,23 +81,20 @@ async function parseTxHistory(datas: Array<any>, originPackage: string): Promise
 
                 const parsedJson = event.parsedJson!;
 
-                if (action == "IncentiveNewBid") {
-                    let i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
-                    let incentive_value = Number(parsedJson.incentive_value) / 10 ** assetToDecimal(asset)!;
-                    txHistory[i].BidPaid = txHistory[i].BidPaid - incentive_value;
-                } else {
-                    txHistory.push({
-                        Vault: parsedJson.index,
-                        Action: action,
-                        Date: new Date(Number(event.timestampMs)),
-                        txDigest: event.id.txDigest,
-                        Asset: asset,
-                        Amount: Number(parsedJson.amount) / 10 ** assetToDecimal(asset)!,
-                        Fee: Number(parsedJson.fee) / 10 ** assetToDecimal(asset)!,
-                        BidSize: Number(parsedJson.size) / 10 ** assetToDecimal(asset)!,
-                        BidPaid: Number(parsedJson.coin_value) / 10 ** assetToDecimal(b_asset)!,
-                    });
-                }
+                txHistory.push({
+                    Vault: parsedJson.index,
+                    Action: action,
+                    Date: new Date(Number(event.timestampMs)),
+                    txDigest: event.id.txDigest,
+                    Asset: asset,
+                    Amount: Number(parsedJson.amount) / 10 ** assetToDecimal(asset)!,
+                    Fee: Number(parsedJson.fee) / 10 ** assetToDecimal(asset)!,
+                    BidSize: Number(parsedJson.size) / 10 ** assetToDecimal(asset)!,
+                    BidPaid: Number(parsedJson.coin_value) / 10 ** assetToDecimal(b_asset)!,
+                    BidPaidWithIncentive: undefined,
+                    BidPaidAsset: b_asset,
+                    IncentiveValue: Number(parsedJson.incentive_value) / 10 ** assetToDecimal(asset)!,
+                });
 
                 return txHistory;
             }
