@@ -1,8 +1,9 @@
-import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
+// import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
 // import { JsonRpcProvider } from "@mysten/sui.js/dist/cjs/providers/json-rpc-provider";
+import { JsonRpcProvider } from "@mysten/sui.js";
 
-export async function getPool(client: SuiClient, pool: string) {
-    const res = await client.getObject({ id: pool, options: { showContent: true } });
+export async function getPool(provider: JsonRpcProvider, pool: string) {
+    const res = await provider.getObject({ id: pool, options: { showContent: true } });
 
     // @ts-ignore
     const fields = res.data?.content.fields;

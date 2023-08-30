@@ -12,7 +12,7 @@ const address = keypair.toSuiAddress();
 const pool = "";
 
 (async () => {
-    // const kiosk = await getOwnedKiosks(client, address);
+    const kiosk = await getOwnedKiosks(client, address);
 
     const objs = await client.getOwnedObjects({
         owner: address,
