@@ -7,7 +7,7 @@
         "@mysten/bcs": "^0.7.3",
         "@mysten/kiosk": "^0.5.1",
         "@mysten/sui.js": "^0.41.0",
-        "@types/node": "^20.4.2",
+        "@types/node": "^20.5.7",
         "bignumber.js": "^9.1.1",
         "bs58": "^5.0.0",
         "builtin-modules": "^3.3.0",
