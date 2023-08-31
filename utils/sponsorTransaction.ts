@@ -197,3 +197,65 @@ export async function getSponsoredNewBid(
 
     return [sponsoredResponse, transactionBlock];
 }
+
+export async function getSponsoredMint(
+    sponsorApi: string,
+    nftPackageId: string,
+    pool: string,
+    whitelist_token: string,
+    signerAddress: string
+): Promise<[SponsoredTransaction, Uint8Array]> {
+    const jsonData = JSON.stringify({
+        functionName: "mint",
+        nftPackageId: nftPackageId,
+        pool: pool,
+        whitelist_token: whitelist_token,
+        signerAddress: signerAddress,
+    });
+
+    let response = await fetch(sponsorApi, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: jsonData,
+    });
+
+    const data = await response.json();
+    console.log(data);
+    const sponsoredResponse = data[0];
+    const transactionBlock = Buffer.from(data[1].data);
+
+    return [sponsoredResponse, transactionBlock];
+}
+
+export async function getSponsoredMintToKiosk(
+    sponsorApi: string,
+    nftPackageId: string,
+    pool: string,
+    whitelist_token: string,
+    kiosk: string,
+    kiosk_cap: string,
+    signerAddress: string
+): Promise<[SponsoredTransaction, Uint8Array]> {
+    const jsonData = JSON.stringify({
+        functionName: "mintToKiosk",
+        nftPackageId: nftPackageId,
+        pool: pool,
+        whitelist_token: whitelist_token,
+        kiosk: kiosk,
+        kiosk_cap: kiosk_cap,
+        signerAddress: signerAddress,
+    });
+
+    let response = await fetch(sponsorApi, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: jsonData,
+    });
+
+    const data = await response.json();
+    console.log(data);
+    const sponsoredResponse = data[0];
+    const transactionBlock = Buffer.from(data[1].data);
+
+    return [sponsoredResponse, transactionBlock];
+}

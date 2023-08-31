@@ -8,6 +8,7 @@
     "keystore": "0.keystore",
     "mainnet": false,
     "GAS_ACCESS_KEY": "sui_testnet_7d89c82580fafe7e85794f541367104c",
+    "sponsorApi": "https://northamerica-northeast1-aqueous-freedom-378103.cloudfunctions.net/sponsor-testnet",
     "none": "0xc4c7f44d886de363e2f88c92ba997af74be57b7d2573d63cbbbd819f9d9fb8aa",
     "bucket_protocol": "0x69269cce88ad20b25ade82a83f3199744c419951a045a5c444e515658fbd79c0",
     "kriya_dex": "0x5d2f8ede5ac185c2a905024ebe58e4cc25610f520d1a7986fd59fdfca90c0e90",
