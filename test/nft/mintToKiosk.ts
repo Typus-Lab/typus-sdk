@@ -41,7 +41,7 @@ const necklace = "typus";
 
     const kiosks = await getOwnedKiosks(provider, address);
 
-    if (wlTokens.length > 0) {
+    if (wlTokens.length > 0 && kiosks.kioskOwnerCaps.length > 0) {
         const wlToken = wlTokens[0].data?.objectId!;
 
         const kiosk = kiosks.kioskIds[0];
