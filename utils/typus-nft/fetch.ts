@@ -13,7 +13,7 @@ export async function getPool(provider: JsonRpcProvider, pool: string) {
         pool_id: pool,
         is_live: fields.is_live,
         num: Number(fields.num),
-        remaing: fields.tails.length,
+        remaining: fields.tails.length,
     };
 
     return poolData;
@@ -23,7 +23,7 @@ export interface PoolData {
     pool_id: string;
     is_live: boolean;
     num: number;
-    remaing: number;
+    remaining: number;
 }
 
 export const necklaces = [
@@ -58,7 +58,7 @@ export async function getPoolMap(provider: JsonRpcProvider, nftConfig) {
             pool_id: pools[i],
             is_live: fields.is_live,
             num: Number(fields.num),
-            remaing: fields.tails.length,
+            remaining: fields.tails.length,
         };
 
         map[necklace] = poolData;
