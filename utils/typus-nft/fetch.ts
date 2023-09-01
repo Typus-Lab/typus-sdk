@@ -1,6 +1,7 @@
 // import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
 // import { JsonRpcProvider } from "@mysten/sui.js/dist/cjs/providers/json-rpc-provider";
 import { JsonRpcProvider } from "@mysten/sui.js";
+import { fetchKiosk, OwnedKiosks } from "@mysten/kiosk";
 
 export async function getPool(provider: JsonRpcProvider, pool: string) {
     const res = await provider.getObject({ id: pool, options: { showContent: true } });
@@ -90,4 +91,58 @@ export async function getWhitelistMap(nftConfig, wlTokens) {
     });
 
     return whitelistMap;
+}
+
+export async function getTailsIds(provider: JsonRpcProvider, nftConfig, kiosks: OwnedKiosks) {
+    let Tails: string[] = [];
+
+    for (let kioskId of kiosks.kioskIds) {
+        const res = await fetchKiosk(provider, kioskId, {}, {});
+        // console.log(res);
+        const tails = res.data.items.filter((item) => item.type == `${nftConfig.PACKAGE}::typus_nft::Tails`).map((item) => item.objectId);
+        // console.log(tails);
+
+        Tails = Tails.concat(tails);
+    }
+
+    return Tails;
+}
+
+export async function getTails(provider: JsonRpcProvider, tailsIds: string[]) {
+    let Tails: Tails[] = [];
+
+    const results = await provider.multiGetObjects({ ids: tailsIds, options: { showContent: true } });
+
+    for (let result of results) {
+        // @ts-ignore
+        const fields = result.data?.content.fields;
+
+        const tails: Tails = {
+            id: fields.id.id,
+            name: fields.name,
+            number: fields.number,
+            url: fields.url,
+            level: fields.level,
+            exp: fields.exp,
+            first_bid: fields.first_bid,
+            first_deposit: fields.first_deposit,
+            first_deposit_nft: fields.first_deposit_nft,
+        };
+
+        Tails.push(tails);
+    }
+
+    return Tails;
+}
+
+interface Tails {
+    id: string;
+    name: string;
+    number: string;
+    url: string;
+    level: string;
+    exp: string;
+    first_bid: string;
+    first_deposit: string;
+    first_deposit_nft: string;
 }
