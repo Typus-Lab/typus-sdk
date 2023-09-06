@@ -38,9 +38,9 @@ export const necklaces = [
     "scallop_sui",
     "shinami_corp",
     "studio_mirai",
-    "sui_frens",
     "sui_network",
     "blockvision",
+    "team",
 ];
 
 export async function getPoolMap(provider: JsonRpcProvider, nftConfig) {
