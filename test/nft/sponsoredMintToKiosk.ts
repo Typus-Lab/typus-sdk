@@ -32,6 +32,7 @@ const necklace = "typus";
         result = await provider.getOwnedObjects({
             owner: address,
             options: { showType: true, showContent: true },
+            cursor: result.nextCursor,
         });
         datas = datas.concat(result.data);
     }
