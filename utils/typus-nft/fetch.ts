@@ -41,6 +41,7 @@ export const necklaces = [
     "sui_network",
     "blockvision",
     "team",
+    "nft_vault",
 ];
 
 export async function getPoolMap(provider: JsonRpcProvider, nftConfig) {
@@ -48,22 +49,23 @@ export async function getPoolMap(provider: JsonRpcProvider, nftConfig) {
 
     const res = await provider.multiGetObjects({ ids: pools, options: { showContent: true } });
 
-    const poolMap: Map<string, PoolData> = await necklaces.reduce(async (promise, necklace, i) => {
-        let map = await promise;
+    const poolMap = new Map<string, PoolData>();
 
+    necklaces.forEach(async (necklace, i) => {
         // @ts-ignore
         const fields = res[i].data?.content.fields;
+
+        // console.log(fields);
 
         const poolData: PoolData = {
             pool_id: pools[i],
             is_live: fields.is_live,
             num: Number(fields.num),
-            remaining: fields.tails.length,
+            remaining: Number(fields.tails.fields.contents.fields.size),
         };
 
-        map[necklace] = poolData;
-        return map;
-    }, Promise.resolve(new Map<string, PoolData>()));
+        poolMap.set(necklace, poolData);
+    });
 
     return poolMap;
 }
