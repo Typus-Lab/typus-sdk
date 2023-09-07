@@ -21,16 +21,25 @@ const necklace = "typus";
 
     console.log(address);
 
-    const objs = await provider.getOwnedObjects({
+    var result = await provider.getOwnedObjects({
         owner: address,
         options: { showType: true, showContent: true },
     });
-    // console.log(objs);
 
-    const wlTokens = objs.data.filter(
-        (obj) =>
+    var datas = result.data;
+
+    while (result.hasNextPage) {
+        result = await provider.getOwnedObjects({
+            owner: address,
+            options: { showType: true, showContent: true },
+        });
+        datas = datas.concat(result.data);
+    }
+
+    const wlTokens = datas.filter(
+        (data) =>
             // @ts-ignore
-            obj.data?.type?.startsWith(config.PACKAGE) && obj.data?.content?.fields.for == pool
+            data.type?.startsWith(config.PACKAGE) && obj.content?.fields.for == pool
     );
 
     // console.log(wlTokens);
