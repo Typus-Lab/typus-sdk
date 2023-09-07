@@ -13,7 +13,7 @@ export async function getPool(provider: JsonRpcProvider, pool: string) {
         pool_id: pool,
         is_live: fields.is_live,
         num: Number(fields.num),
-        remaining: fields.tails.length,
+        remaining: Number(fields.tails.fields.contents.fields.size),
     };
 
     return poolData;

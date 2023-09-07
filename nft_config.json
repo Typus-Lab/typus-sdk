@@ -8,6 +8,7 @@
     "keystore": "0.keystore",
     "GAS_BUDGET": 1500000000,
     "mainnet": false,
+    "sponsorApi": "https://northamerica-northeast1-aqueous-freedom-378103.cloudfunctions.net/sponsor-testnet",
     "GAS_ACCESS_KEY": "sui_testnet_7d89c82580fafe7e85794f541367104c",
     "none": "0x890710409703f2e6a5544c0ce8b0293349b8bd83966f146da4fc4abaca687d9f",
     "bucket_protocol": "0xad68e616c73a9c3ba98ad73721ce3f339a0ed93e0bead632a66db2845d1196b6",
