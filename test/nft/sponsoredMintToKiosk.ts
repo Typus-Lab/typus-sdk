@@ -12,7 +12,7 @@ const signer = new RawSigner(keypair, provider);
 
 const gasBudget = 100000000;
 // const address = keypair.toSuiAddress();
-const necklace = "typus";
+const necklace = "shinami_corp";
 
 (async () => {
     const pool = config[necklace];
@@ -37,13 +37,13 @@ const necklace = "typus";
         datas = datas.concat(result.data);
     }
 
-    const wlTokens = datas.filter(
-        (data) =>
-            // @ts-ignore
-            data.type?.startsWith(config.PACKAGE) && obj.content?.fields.for == pool
-    );
+    const wlTokens = datas.filter((data) => {
+        // console.log(data);
+        // @ts-ignore
+        return data.data?.type?.startsWith(config.PACKAGE) && data.data?.content?.fields.for == pool;
+    });
 
-    // console.log(wlTokens);
+    console.log(wlTokens.length);
 
     const poolData = await getPool(provider, pool);
 
@@ -52,16 +52,14 @@ const necklace = "typus";
     const kiosks = await getOwnedKiosks(provider, address);
 
     if (wlTokens.length > 0) {
-        const wlToken = wlTokens[0].data?.objectId!;
-
         const kiosk = kiosks.kioskIds[0];
         const kioskOwnerCap = kiosks.kioskOwnerCaps[0];
 
         const [sponsoredResponse, transactionBlock] = await getSponsoredMintToKiosk(
             config.sponsorApi,
-            config.PACKAGE,
+            config.UPGRADE_PACKAGE,
             pool,
-            wlToken,
+            wlTokens[0].data?.objectId!,
             kiosk,
             kioskOwnerCap.objectId,
             address
