@@ -59,6 +59,7 @@ export async function getDepositTx(
 
     return tx;
 }
+
 /**
     public(friend) entry fun withdraw<D_TOKEN, B_TOKEN, O_TOKEN>(
         registry: &mut Registry,
@@ -92,6 +93,7 @@ export async function getWithdrawTx(
 
     return tx;
 }
+
 /**
     public(friend) entry fun unsubscribe<D_TOKEN, B_TOKEN, O_TOKEN>(
         registry: &mut Registry,
@@ -125,6 +127,7 @@ export async function getUnsubscribeTx(
 
     return tx;
 }
+
 /**
     public(friend) entry fun claim<D_TOKEN, B_TOKEN, O_TOKEN>(
         registry: &mut Registry,
@@ -151,6 +154,7 @@ export async function getClaimTx(
 
     return tx;
 }
+
 /**
     public(friend) entry fun harvest<D_TOKEN, B_TOKEN, O_TOKEN>(
         registry: &mut Registry,
@@ -177,6 +181,7 @@ export async function getHarvestTx(
 
     return tx;
 }
+
 /**
     public(friend) entry fun compound<D_TOKEN, B_TOKEN, O_TOKEN>(
         registry: &mut Registry,
@@ -203,6 +208,7 @@ export async function getCompoundTx(
 
     return tx;
 }
+
 /**
     public(friend) entry fun new_bid<D_TOKEN, B_TOKEN, O_TOKEN>(
         registry: &mut Registry,
@@ -249,6 +255,33 @@ export async function getNewBidTx(
             ],
         });
     }
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
+/**
+    public(friend) entry fun exercise<D_TOKEN, B_TOKEN, O_TOKEN>(
+        registry: &mut Registry,
+        index: u64,
+        receipts: vector<TypusBidReceipt>,
+        ctx: &mut TxContext,
+    )
+*/
+export async function getExerciseTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string,
+    receipts: string[]
+) {
+    let tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${packageId}::typus_dov_single::exercise`,
+        typeArguments,
+        arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: receipts.map((id) => tx.object(id)) })],
+    });
     tx.setGasBudget(gasBudget);
 
     return tx;
