@@ -167,56 +167,32 @@ export async function getHarvestTx(
 
     return tx;
 }
-// /**
-//     public(friend) entry fun claim_and_harvest<D_TOKEN, B_TOKEN>(
-//         registry: &mut Registry,
-//         index: u64,
-//         ctx: &mut TxContext
-//     )
-// */
-// export async function getClaimAndHarvestTx(
-//     gasBudget: number,
-//     packageId: string,
-//     typeArguments: string[],
-//     registry: string,
-//     additional_config_registry: string,
-//     index: string
-// ) {
-//     let tx = new TransactionBlock();
-//     tx.moveCall({
-//         target: `${packageId}::typus_dov_single::claim_and_harvest`,
-//         typeArguments,
-//         arguments: [tx.pure(registry), tx.pure(additional_config_registry), tx.pure(index)],
-//     });
-//     tx.setGasBudget(gasBudget);
+/**
+    public(friend) entry fun compound<D_TOKEN, B_TOKEN, O_TOKEN>(
+        registry: &mut Registry,
+        index: u64,
+        receipts: vector<TypusDepositReceipt>,
+        ctx: &mut TxContext,
+    )
+*/
+export async function getCompoundTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string,
+    receipts: string[]
+) {
+    let tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${packageId}::typus_dov_single::compound`,
+        typeArguments,
+        arguments: [tx.pure(registry), tx.pure(index), tx.pure(receipts)],
+    });
+    tx.setGasBudget(gasBudget);
 
-//     return tx;
-// }
-// /**
-//     public(friend) entry fun compound<TOKEN, O_TOKEN>(
-//         registry: &mut Registry,
-//         index: u64,
-//         ctx: &mut TxContext,
-//     )
-// */
-// export async function getCompoundTx(
-//     gasBudget: number,
-//     packageId: string,
-//     typeArguments: string[],
-//     registry: string,
-//     additional_config_registry: string,
-//     index: string
-// ) {
-//     let tx = new TransactionBlock();
-//     tx.moveCall({
-//         target: `${packageId}::typus_dov_single::compound`,
-//         typeArguments,
-//         arguments: [tx.pure(registry), tx.pure(additional_config_registry), tx.pure(index)],
-//     });
-//     tx.setGasBudget(gasBudget);
-
-//     return tx;
-// }
+    return tx;
+}
 // /**
 //     public(friend) entry fun new_bid<D_TOKEN, B_TOKEN, O_TOKEN>(
 //         registry: &mut Registry,
