@@ -95,13 +95,28 @@ export async function getWhitelistMap(nftConfig, wlTokens) {
     return whitelistMap;
 }
 
-export async function getTailsIds(provider: JsonRpcProvider, nftConfig, kiosks: OwnedKiosks) {
-    let Tails: string[] = [];
+interface TailsId {
+    nftId: string;
+    kiosk: string;
+    kioskCap: string;
+}
 
-    for (let kioskId of kiosks.kioskIds) {
-        const res = await fetchKiosk(provider, kioskId, {}, {});
+export async function getTailsIds(provider: JsonRpcProvider, nftConfig, kiosks: OwnedKiosks) {
+    let Tails: TailsId[] = [];
+
+    for (let kioskOwnerCap of kiosks.kioskOwnerCaps) {
+        const res = await fetchKiosk(provider, kioskOwnerCap.kioskId, {}, {});
         // console.log(res);
-        const tails = res.data.items.filter((item) => item.type == `${nftConfig.PACKAGE}::typus_nft::Tails`).map((item) => item.objectId);
+        const tails: TailsId[] = res.data.items
+            .filter((item) => item.type == `${nftConfig.PACKAGE}::typus_nft::Tails`)
+            .map((item) => {
+                let t: TailsId = {
+                    nftId: item.objectId,
+                    kiosk: kioskOwnerCap.kioskId,
+                    kioskCap: kioskOwnerCap.objectId,
+                };
+                return t;
+            });
         // console.log(tails);
 
         Tails = Tails.concat(tails);
@@ -113,27 +128,30 @@ export async function getTailsIds(provider: JsonRpcProvider, nftConfig, kiosks: 
 export async function getTails(provider: JsonRpcProvider, tailsIds: string[]) {
     let Tails: Tails[] = [];
 
-    const results = await provider.multiGetObjects({ ids: tailsIds, options: { showContent: true } });
+    while (tailsIds.length > 0) {
+        let len = tailsIds.length > 50 ? 50 : tailsIds.length;
 
-    for (let result of results) {
-        // @ts-ignore
-        const fields = result.data?.content.fields;
+        const results = await provider.multiGetObjects({ ids: tailsIds.splice(0, len), options: { showContent: true } });
 
-        const tails: Tails = {
-            id: fields.id.id,
-            name: fields.name,
-            number: fields.number,
-            url: fields.url,
-            level: fields.level,
-            exp: fields.exp,
-            first_bid: fields.first_bid,
-            first_deposit: fields.first_deposit,
-            first_deposit_nft: fields.first_deposit_nft,
-        };
+        for (let result of results) {
+            // @ts-ignore
+            const fields = result.data?.content.fields;
 
-        Tails.push(tails);
+            const tails: Tails = {
+                id: fields.id.id,
+                name: fields.name,
+                number: fields.number,
+                url: fields.url,
+                level: fields.level,
+                exp: fields.exp,
+                first_bid: fields.first_bid,
+                first_deposit: fields.first_deposit,
+                first_deposit_nft: fields.first_deposit_nft,
+            };
+
+            Tails.push(tails);
+        }
     }
-
     return Tails;
 }
 
