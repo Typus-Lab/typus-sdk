@@ -59,34 +59,34 @@ export async function getDepositTx(
 
     return tx;
 }
-// /**
-//     public(friend) entry fun withdraw<D_TOKEN, B_TOKEN, O_TOKEN>(
-//         registry: &mut Registry,
-//         index: u64,
-//         receipts: vector<TypusDepositReceipt>,
-//         share: Option<u64>,
-//         ctx: &mut TxContext,
-//     )
-// */
-// export async function getWithdrawTx(
-//     gasBudget: number,
-//     packageId: string,
-//     typeArguments: string[],
-//     registry: string,
-//     index: string,
-//     receipts: string[],
-//     share?: string
-// ) {
-//     let tx = new TransactionBlock();
-//     tx.moveCall({
-//         target: `${packageId}::typus_dov_single::withdraw`,
-//         typeArguments,
-//         arguments: [tx.pure(registry), tx.pure(index), tx.pure(receipts), tx.pure(share ? [share] : [])],
-//     });
-//     tx.setGasBudget(gasBudget);
+/**
+    public(friend) entry fun withdraw<D_TOKEN, B_TOKEN, O_TOKEN>(
+        registry: &mut Registry,
+        index: u64,
+        receipts: vector<TypusDepositReceipt>,
+        share: Option<u64>,
+        ctx: &mut TxContext,
+    )
+*/
+export async function getWithdrawTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string,
+    receipts: string[],
+    share?: string
+) {
+    let tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${packageId}::typus_dov_single::withdraw`,
+        typeArguments,
+        arguments: [tx.pure(registry), tx.pure(index), tx.pure(receipts), tx.pure(share ? [share] : [])],
+    });
+    tx.setGasBudget(gasBudget);
 
-//     return tx;
-// }
+    return tx;
+}
 // /**
 //     public(friend) entry fun unsubscribe<D_TOKEN, B_TOKEN, O_TOKEN>(
 //         registry: &mut Registry,
