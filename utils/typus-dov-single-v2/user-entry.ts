@@ -87,73 +87,66 @@ export async function getWithdrawTx(
 
     return tx;
 }
-// /**
-//     public(friend) entry fun unsubscribe<D_TOKEN, B_TOKEN, O_TOKEN>(
-//         registry: &mut Registry,
-//         index: u64,
-//         receipts: vector<TypusDepositReceipt>,
-//         share: Option<u64>,
-//         ctx: &mut TxContext,
-//     )
-//     @param typeArguments [Deposit Vault Token]
-// */
-// export async function getUnsubscribeTx(
-//     gasBudget: number,
-//     packageId: string,
-//     typeArguments: string[],
-//     registry: string,
-//     index: string,
-//     receipts: string[],
-//     share?: string
-// ) {
-//     let tx = new TransactionBlock();
-//     tx.moveCall({
-//         target: `${packageId}::typus_dov_single::unsubscribe`,
-//         typeArguments,
-//         arguments: [
-//             tx.pure(registry),
-//             tx.pure(index),
-//             tx.pure(receipts),
-//             tx.pure(share ? [share] : []),
-//         ],
-//     });
-//     tx.setGasBudget(gasBudget);
+/**
+    public(friend) entry fun unsubscribe<D_TOKEN, B_TOKEN, O_TOKEN>(
+        registry: &mut Registry,
+        index: u64,
+        receipts: vector<TypusDepositReceipt>,
+        share: Option<u64>,
+        ctx: &mut TxContext,
+    )
+*/
+export async function getUnsubscribeTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string,
+    receipts: string[],
+    share?: string
+) {
+    let tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${packageId}::typus_dov_single::unsubscribe`,
+        typeArguments,
+        arguments: [tx.pure(registry), tx.pure(index), tx.pure(receipts), tx.pure(share ? [share] : [])],
+    });
+    tx.setGasBudget(gasBudget);
 
-//     return tx;
-// }
-// /**
-//     public(friend) entry fun claim<TOKEN>(
-//         registry: &mut Registry,
-//         index: u64,
-//         ctx: &mut TxContext
-//     )
-//     @param typeArguments [Deposit Vault Token]
-// */
-// export async function getClaimTx(
-//     gasBudget: number,
-//     packageId: string,
-//     typeArguments: string[],
-//     registry: string,
-//     additional_config_registry: string,
-//     index: string
-// ) {
-//     let tx = new TransactionBlock();
-//     tx.moveCall({
-//         target: `${packageId}::typus_dov_single::claim`,
-//         typeArguments,
-//         arguments: [tx.pure(registry), tx.pure(additional_config_registry), tx.pure(index)],
-//     });
-//     tx.setGasBudget(gasBudget);
+    return tx;
+}
+/**
+    public(friend) entry fun claim<D_TOKEN, B_TOKEN, O_TOKEN>(
+        registry: &mut Registry,
+        index: u64,
+        receipts: vector<TypusDepositReceipt>,
+        ctx: &mut TxContext,
+    )
+*/
+export async function getClaimTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string,
+    receipts: string[]
+) {
+    let tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${packageId}::typus_dov_single::claim`,
+        typeArguments,
+        arguments: [tx.pure(registry), tx.pure(index), tx.pure(receipts)],
+    });
+    tx.setGasBudget(gasBudget);
 
-//     return tx;
-// }
+    return tx;
+}
 // /**
 //     public(friend) entry fun harvest<TOKEN>(
 //         registry: &mut Registry,
 //         index: u64,
 //         ctx: &mut TxContext
 //     )
-//     @param typeArguments [Bid Vault Token]
 // */
 // export async function getHarvestTx(
 //     gasBudget: number,
@@ -179,7 +172,6 @@ export async function getWithdrawTx(
 //         index: u64,
 //         ctx: &mut TxContext
 //     )
-//     @param typeArguments [Deposit Vault Token, Bid Vault Token]
 // */
 // export async function getClaimAndHarvestTx(
 //     gasBudget: number,
@@ -205,7 +197,6 @@ export async function getWithdrawTx(
 //         index: u64,
 //         ctx: &mut TxContext,
 //     )
-//     @param typeArguments [Deposit Vault Token, Oracle Token]
 // */
 // export async function getCompoundTx(
 //     gasBudget: number,
@@ -235,7 +226,6 @@ export async function getWithdrawTx(
 //         size: u64,
 //         ctx: &mut TxContext,
 //     )
-//     @param typeArguments [Deposit Vault Token, Bid Vault Token, Oracle Token]
 // */
 // export async function getNewBidTx(
 //     gasBudget: number,
