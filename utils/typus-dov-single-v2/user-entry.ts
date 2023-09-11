@@ -286,3 +286,21 @@ export async function getExerciseTx(
 
     return tx;
 }
+
+/**
+    public(friend) entry fun refund<TOKEN>(
+        registry: &mut Registry,
+        ctx: &mut TxContext,
+    )
+*/
+export async function getRefundTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string) {
+    let tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${packageId}::typus_dov_single::refund`,
+        typeArguments,
+        arguments: [tx.pure(registry)],
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
