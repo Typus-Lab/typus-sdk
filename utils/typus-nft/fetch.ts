@@ -1,6 +1,6 @@
 // import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
 // import { JsonRpcProvider } from "@mysten/sui.js/dist/cjs/providers/json-rpc-provider";
-import { JsonRpcProvider } from "@mysten/sui.js";
+import { JsonRpcProvider, TransactionBlock } from "@mysten/sui.js";
 import { fetchKiosk, OwnedKiosks } from "@mysten/kiosk";
 
 export async function getPool(provider: JsonRpcProvider, pool: string) {
@@ -155,7 +155,7 @@ export async function getTails(provider: JsonRpcProvider, tailsIds: string[]) {
     return Tails;
 }
 
-interface Tails {
+export interface Tails {
     id: string;
     name: string;
     number: string;
@@ -166,3 +166,24 @@ interface Tails {
     first_deposit: string;
     first_deposit_nft: string;
 }
+
+export function getLevelExp(level: number): number | undefined {
+    switch (level) {
+        case 1:
+            return LevelExpVec[1];
+        case 2:
+            return LevelExpVec[2];
+        case 3:
+            return LevelExpVec[3];
+        case 4:
+            return LevelExpVec[4];
+        case 5:
+            return LevelExpVec[5];
+        case 6:
+            return LevelExpVec[6];
+        case 7:
+            return LevelExpVec[7];
+    }
+}
+
+export const LevelExpVec = [0, 0, 1_000, 50_000, 250_000, 1_000_000, 5_000_000, 20_000_000];

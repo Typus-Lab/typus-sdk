@@ -29,7 +29,7 @@ const necklace = "typus";
     const wlTokens = objs.data.filter(
         (obj) =>
             // @ts-ignore
-            obj.data?.type?.startsWith(config.PACKAGE) && obj.data?.content?.fields.for == pool
+            obj.data?.type?.startsWith(config.NFT_PACKAGE) && obj.data?.content?.fields.for == pool
     );
 
     // console.log(wlTokens);
@@ -41,7 +41,7 @@ const necklace = "typus";
     if (wlTokens.length > 0) {
         const wlToken = wlTokens[0].data?.objectId!;
 
-        let transactionBlock = await getMintTx(gasBudget, config.PACKAGE, pool, wlToken);
+        let transactionBlock = await getMintTx(gasBudget, config.NFT_PACKAGE, pool, wlToken);
 
         // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
         let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });

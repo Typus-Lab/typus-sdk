@@ -12,7 +12,7 @@ const signer = new RawSigner(keypair, provider);
 
 const gasBudget = 100000000;
 // const address = keypair.toSuiAddress();
-const necklace = "shinami_corp";
+const necklace = "team";
 
 (async () => {
     const pool = config[necklace];
@@ -40,7 +40,7 @@ const necklace = "shinami_corp";
     const wlTokens = datas.filter((data) => {
         // console.log(data);
         // @ts-ignore
-        return data.data?.type?.startsWith(config.PACKAGE) && data.data?.content?.fields.for == pool;
+        return data.data?.type?.startsWith(config.NFT_PACKAGE) && data.data?.content?.fields.for == pool;
     });
 
     console.log(wlTokens.length);
@@ -57,7 +57,7 @@ const necklace = "shinami_corp";
 
         const [sponsoredResponse, transactionBlock] = await getSponsoredMintToKiosk(
             config.sponsorApi,
-            config.UPGRADE_PACKAGE,
+            config.NFT_PACKAGE,
             pool,
             wlTokens[0].data?.objectId!,
             kiosk,

@@ -12,7 +12,7 @@ const signer = new RawSigner(keypair, provider);
 
 const gasBudget = 100000000;
 // const address = keypair.toSuiAddress();
-const necklace = "typus";
+const necklace = "team";
 
 (async () => {
     const pool = config[necklace];
@@ -30,7 +30,7 @@ const necklace = "typus";
     const wlTokens = objs.data.filter(
         (obj) =>
             // @ts-ignore
-            obj.data?.type?.startsWith(config.PACKAGE) && obj.data?.content?.fields.for == pool
+            obj.data?.type?.startsWith(config.NFT_PACKAGE) && obj.data?.content?.fields.for == pool
     );
 
     // console.log(wlTokens);
@@ -48,7 +48,7 @@ const necklace = "typus";
         const kioskOwnerCap = kiosks.kioskOwnerCaps[0];
 
         if (kioskOwnerCap.kioskId == kiosk) {
-            let transactionBlock = await getMintToKioskTx(gasBudget, config.PACKAGE, pool, wlToken, kiosk, kioskOwnerCap.objectId);
+            let transactionBlock = await getMintToKioskTx(gasBudget, config.NFT_PACKAGE, pool, wlToken, kiosk, kioskOwnerCap.objectId);
 
             // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
             let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });

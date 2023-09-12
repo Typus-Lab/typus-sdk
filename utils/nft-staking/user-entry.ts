@@ -97,3 +97,22 @@ export async function getFirstDepositTx(gasBudget: number, nftPackageId: string,
 
     return tx;
 }
+
+/**
+    public fun level_up(
+        registry: &mut Registry,
+        ctx: &mut TxContext
+    )
+*/
+export async function getLevelUpTx(gasBudget: number, nftPackageId: string, registry: string) {
+    let tx = new TransactionBlock();
+
+    tx.moveCall({
+        target: `${nftPackageId}::staking::level_up`,
+        typeArguments: [],
+        arguments: [tx.object(registry)],
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
