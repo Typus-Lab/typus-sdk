@@ -108,7 +108,7 @@ export async function getTailsIds(provider: JsonRpcProvider, nftConfig, kiosks: 
         const res = await fetchKiosk(provider, kioskOwnerCap.kioskId, {}, {});
         // console.log(res);
         const tails: TailsId[] = res.data.items
-            .filter((item) => item.type == `${nftConfig.PACKAGE}::typus_nft::Tails`)
+            .filter((item) => item.type == `${nftConfig.NFT_PACKAGE}::typus_nft::Tails`)
             .map((item) => {
                 let t: TailsId = {
                     nftId: item.objectId,

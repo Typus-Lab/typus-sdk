@@ -11,7 +11,7 @@ const signer = new RawSigner(keypair, provider);
 
 const gasBudget = 100000000;
 // const address = keypair.toSuiAddress();
-const necklace = "typus";
+const necklace = "team";
 
 (async () => {
     const pool = config[necklace];

@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js";
+import { TransactionArgument, TransactionBlock } from "@mysten/sui.js";
 
 /**
     entry fun free_mint(
@@ -45,6 +45,23 @@ export async function getMintToKioskTx(
         arguments: [tx.object(pool), tx.object(whitelist_token), tx.object(kiosk), tx.object(kiosk_cap)],
     });
     tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
+/**
+    public fun pay<T>(
+        policy: &mut TransferPolicy<T>,
+        request: &mut TransferRequest<T>,
+        payment: Coin<SUI>
+    )
+*/
+export async function getPayRoyaltyTx(tx: TransactionBlock, nftPackageId: string, policy: string, request: TransactionArgument, coin) {
+    tx.moveCall({
+        target: `${nftPackageId}::royalty_rule::pay`,
+        typeArguments: [`${nftPackageId}::typus_nft::Tails`],
+        arguments: [tx.object(policy), request, coin],
+    });
 
     return tx;
 }

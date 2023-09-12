@@ -5,13 +5,13 @@
     "mainnet": false,
     "GAS_ACCESS_KEY": "sui_testnet_7d89c82580fafe7e85794f541367104c",
     "sponsorApi": "https://northamerica-northeast1-aqueous-freedom-378103.cloudfunctions.net/sponsor-testnet",
-    "PACKAGE": "0x59059238216610192f8b1ea407b72303e03a715a91196b24dd9e8ac3c8587d11",
-    "REGISTRY": "0xad60292f97983993b5c146ee188eb6beccf806fbe67746478a92610f03b9de01",
-    "NFT_TABLE": "0xfb3632b65aa37ae5df08163d7bff7b74867f790fe0c0fc41dc85b27097a2d939",
-    "MANAGER_CAP": "0xd04a84c8d64a30737d20c30e0b25dcdd710e0acf8c8063caaf99cac6584df1e9",
+    "PACKAGE": "0x148ee4b8e1a0eebb08dd0b6dfd20aee9a8123620e121de7e2c5f58cc295024e7",
+    "REGISTRY": "0xa6e64d0a6d97fa1c4bf58a12481ce99077a60e8fa129be7e9ef70d6c4cb9125f",
+    "NFT_TABLE": "0x4487737143316a43fab9583b8477cf0082aea891be8c949d2f17018f47f58940",
+    "MANAGER_CAP": "0x4fb042938d56ab84d52514e308b59a8b53d5f40962282b613ef016ee07fde8c6",
     "FOLDER": "/Users/waynekuo/Documents/GitHub/tails-by-typus-renderer-private/tails_by_typus_renderer/data",
-    "NFT_PACKAGE": "0x59059238216610192f8b1ea407b72303e03a715a91196b24dd9e8ac3c8587d11",
-    "NFT_MANAGER_CAP": "0x6aa8e356ad0b78aa655888f1af2c096fb92087d41541c537432077b304077916",
-    "NFT_TRANSFER_POLICY": "0xe6d016173b304f38344c0affcd850779cc88d7c6e2bade366f801a7499629cf3",
-    "team": "0x53d8b8ccbb02ad5a54e6d4551434f6d9d6fba0e820da882462377a5410007328"
+    "NFT_PACKAGE": "0x148ee4b8e1a0eebb08dd0b6dfd20aee9a8123620e121de7e2c5f58cc295024e7",
+    "NFT_MANAGER_CAP": "0x49829a3cdd4bcc8de7bab30f30d1f868b0e04b6d34ca1fd56094c08c5f21ec08",
+    "NFT_TRANSFER_POLICY": "0x6aff3956e8f5cde441a05525f0bebef351dd726dd3eb5c03123ae96cafcbfe97",
+    "team": "0x41ac79f5bf27c9601e7d4bf837047756479752ae7b1e225001a52fc1fad44e73"
 }
