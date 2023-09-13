@@ -1,4 +1,5 @@
 import { TransactionArgument, TransactionBlock } from "@mysten/sui.js";
+import { CLOCK } from "../../constants";
 
 /**
     entry fun free_mint(
@@ -13,7 +14,7 @@ export async function getMintTx(gasBudget: number, nftPackageId: string, pool: s
     tx.moveCall({
         target: `${nftPackageId}::typus_nft::free_mint`,
         typeArguments: [],
-        arguments: [tx.object(pool), tx.object(whitelist_token)],
+        arguments: [tx.object(pool), tx.object(whitelist_token), tx.object(CLOCK)],
     });
     tx.setGasBudget(gasBudget);
 
@@ -42,7 +43,7 @@ export async function getMintToKioskTx(
     tx.moveCall({
         target: `${nftPackageId}::typus_nft::free_mint_into_kiosk`,
         typeArguments: [],
-        arguments: [tx.object(pool), tx.object(whitelist_token), tx.object(kiosk), tx.object(kiosk_cap)],
+        arguments: [tx.object(pool), tx.object(whitelist_token), tx.object(kiosk), tx.object(kiosk_cap), tx.object(CLOCK)],
     });
     tx.setGasBudget(gasBudget);
 
