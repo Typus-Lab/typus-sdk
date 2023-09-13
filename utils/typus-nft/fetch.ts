@@ -12,6 +12,7 @@ export async function getPool(provider: JsonRpcProvider, pool: string) {
     const poolData: PoolData = {
         pool_id: pool,
         is_live: fields.is_live,
+        start_ms: fields.start_ms,
         num: Number(fields.num),
         remaining: Number(fields.tails.fields.contents.fields.size),
     };
@@ -22,6 +23,7 @@ export async function getPool(provider: JsonRpcProvider, pool: string) {
 export interface PoolData {
     pool_id: string;
     is_live: boolean;
+    start_ms: string;
     num: number;
     remaining: number;
 }
@@ -60,6 +62,7 @@ export async function getPoolMap(provider: JsonRpcProvider, nftConfig) {
         const poolData: PoolData = {
             pool_id: pools[i],
             is_live: fields.is_live,
+            start_ms: fields.start_ms,
             num: Number(fields.num),
             remaining: Number(fields.tails.fields.contents.fields.size),
         };
