@@ -21,19 +21,29 @@ const necklace = "team";
 
     console.log(address);
 
-    const objs = await provider.getOwnedObjects({
+    var result = await provider.getOwnedObjects({
         owner: address,
         options: { showType: true, showContent: true },
     });
-    // console.log(objs);
 
-    const wlTokens = objs.data.filter(
-        (obj) =>
-            // @ts-ignore
-            obj.data?.type?.startsWith(config.NFT_PACKAGE) && obj.data?.content?.fields.for == pool
-    );
+    var datas = result.data;
 
-    // console.log(wlTokens);
+    while (result.hasNextPage) {
+        result = await provider.getOwnedObjects({
+            owner: address,
+            options: { showType: true, showContent: true },
+            cursor: result.nextCursor,
+        });
+        datas = datas.concat(result.data);
+    }
+
+    const wlTokens = datas.filter((data) => {
+        // console.log(data);
+        // @ts-ignore
+        return data.data?.type?.startsWith(config.NFT_PACKAGE) && data.data?.content?.fields.for == pool;
+    });
+
+    console.log(wlTokens.length);
 
     const poolData = await getPool(provider, pool);
 
