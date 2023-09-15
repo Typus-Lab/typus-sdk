@@ -76,7 +76,7 @@ export async function getPoolMap(provider: JsonRpcProvider, nftConfig) {
 export async function getWhitelistMap(nftConfig, wlTokens) {
     let pools: string[] = necklaces.map((necklace) => nftConfig[necklace]);
 
-    console.log(pools);
+    // console.log(pools);
 
     const whitelistMap = new Map<string, string[]>();
 
@@ -86,8 +86,6 @@ export async function getWhitelistMap(nftConfig, wlTokens) {
                 // @ts-ignore
                 wlToken.data?.content?.fields.for == pools[i]
         );
-
-        console.log(tokens);
 
         whitelistMap.set(
             necklace,
