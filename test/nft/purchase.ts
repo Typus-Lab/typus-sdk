@@ -1,19 +1,17 @@
 import "../load_env";
 import config from "../../nft_config.json";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection, TransactionBlock } from "@mysten/sui.js";
-import { getOwnedKiosks, place, purchase, confirmRequest } from "@mysten/kiosk";
-import { getPayRoyaltyTx } from "../../utils/typus-nft/user-entry";
+import { getOwnedKiosks, place, purchase, confirmRequest, resolveRoyaltyRule, resolveKioskLockRule } from "@mysten/kiosk";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 // const client = new SuiClient({ url: config.RPC_ENDPOINT });
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
 const signer = new RawSigner(keypair, provider);
 
-const price = "1000000000";
-const fee = "1000000000";
+const price = "30000000000";
 
-const kiosk_list = "0x51f29e27ffc4f90ef9815cf3d167f220849af3186617e3c0817faa1d98dc896f";
-const itemId = "0x61f5f4c3cf3ec010edc1c7640a8c394bd6a22121ca3400c690cd173ce3239357";
+const kiosk_list = "0x52c1d13502335705968237472156eef43a2dde5919558867c44430f934d39857";
+const itemId = "0x70e12f8c2cc87ea9f9287ef9a7de77467158d79c1226f25cc1b200e6c1d7148e";
 
 (async () => {
     const address = await signer.getAddress();
@@ -27,16 +25,15 @@ const itemId = "0x61f5f4c3cf3ec010edc1c7640a8c394bd6a22121ca3400c690cd173ce32393
         let transactionBlock = new TransactionBlock();
         const itemType = `${config.NFT_PACKAGE}::typus_nft::Tails`;
 
-        const [coin, royalty] = transactionBlock.splitCoins(transactionBlock.gas, [
-            transactionBlock.pure(price),
-            transactionBlock.pure(fee),
-        ]);
+        const [coin] = transactionBlock.splitCoins(transactionBlock.gas, [transactionBlock.pure(price)]);
 
         const [item, request] = purchase(transactionBlock, itemType, kiosk_list, itemId, coin);
 
-        place(transactionBlock, itemType, kiosk.kioskId, kiosk.objectId, item);
+        resolveRoyaltyRule(transactionBlock, itemType, price, config.NFT_TRANSFER_POLICY, request, { env: "mainnet" });
 
-        getPayRoyaltyTx(transactionBlock, config.NFT_PACKAGE, config.NFT_TRANSFER_POLICY, request, royalty);
+        resolveKioskLockRule(transactionBlock, itemType, item, kiosk.kioskId, kiosk.objectId, config.NFT_TRANSFER_POLICY, request, {
+            env: "mainnet",
+        });
 
         confirmRequest(transactionBlock, itemType, config.NFT_TRANSFER_POLICY, request);
 
