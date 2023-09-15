@@ -2930,10 +2930,10 @@ type-fest@^0.8.0:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.8.1.tgz#09e249ebde851d3b1e48d27c105444667f17b83d"
   integrity sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
 
-typed-rpc@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/typed-rpc/-/typed-rpc-3.0.0.tgz#f5a3c62936d3c633f76dfa42ffb510cbeca77de1"
-  integrity sha512-SaejFNKERSBKHLgNybZ+bUylQjqtbLU2Y4DjpGLIzibruTxzzWq0RLw2CYI2HHtGs3k0Q20y1L+ogh8de3Rahg==
+typed-rpc@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/typed-rpc/-/typed-rpc-4.1.0.tgz#b395830990b6238b4540d3418966298bcf545aad"
+  integrity sha512-4ev2BjX7WWTlolRm0+CDs35qeMi4Mq2tY6zL3IWMH9KIiHKTLkEEO0OkSTGoXuCpA0iYWkOd8HxxSTiNIXNl+A==
 
 typedarray-to-buffer@^3.1.5:
   version "3.1.5"
