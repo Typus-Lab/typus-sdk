@@ -1,5 +1,5 @@
 import "../load_env";
-import config from "../../nft_config.json";
+import config from "../../config.json";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import { getTails, getTailsIds } from "../../utils/typus-nft/fetch";
 import { getStakeNftTx } from "../../utils/nft-staking/user-entry";
@@ -23,9 +23,16 @@ const gasBudget = 100000000;
     console.log(tailsIds);
 
     if (tailsIds.length > 0) {
-        let nft = tailsIds[0];
+        let nft = tailsIds[1];
 
-        let transactionBlock = await getStakeNftTx(gasBudget, config.PACKAGE, config.REGISTRY, nft.kiosk, nft.kioskCap, nft.nftId);
+        let transactionBlock = await getStakeNftTx(
+            gasBudget,
+            config.SINGLE_COLLATERAL_PACKAGE,
+            config.SINGLE_COLLATERAL_REGISTRY,
+            nft.kiosk,
+            nft.kioskCap,
+            nft.nftId
+        );
 
         // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
         let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });

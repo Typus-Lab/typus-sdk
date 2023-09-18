@@ -1,5 +1,5 @@
 import "../load_env";
-import config from "../../nft_config.json";
+import config from "../../config.json";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection, TransactionBlock } from "@mysten/sui.js";
 import { getTails, getTailsIds } from "../../utils/typus-nft/fetch";
 import { getOwnedKiosks, list } from "@mysten/kiosk";

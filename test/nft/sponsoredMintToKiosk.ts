@@ -1,5 +1,5 @@
 import "../load_env";
-import config from "../../nft_config.json";
+import config from "../../config.json";
 import { getPool } from "../../utils/typus-nft/fetch";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import { executeSponsorTransactionBlock, getSponsoredMintToKiosk } from "../../utils/sponsorTransaction";

@@ -22,7 +22,7 @@ export async function getStakeNftTx(
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${nftPackageId}::staking::stake_nft`,
+        target: `${nftPackageId}::typus_dov_single::stake_nft`,
         typeArguments: [],
         arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.object(nft_id), tx.object(CLOCK)],
     });
@@ -43,7 +43,7 @@ export async function getUnstakeNftTx(gasBudget: number, nftPackageId: string, r
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${nftPackageId}::staking::unstake_nft`,
+        target: `${nftPackageId}::typus_dov_single::unstake_nft`,
         typeArguments: [],
         arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap)],
     });
@@ -63,7 +63,7 @@ export async function getSnapshotTx(gasBudget: number, nftPackageId: string, reg
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${nftPackageId}::staking::snapshot`,
+        target: `${nftPackageId}::typus_dov_single::snapshot`,
         typeArguments: [],
         arguments: [tx.object(registry), tx.object(CLOCK)],
     });
@@ -76,7 +76,7 @@ export async function getFirstBidTx(gasBudget: number, nftPackageId: string, reg
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${nftPackageId}::staking::first_bid`,
+        target: `${nftPackageId}::typus_dov_single::first_bid`,
         typeArguments: [],
         arguments: [tx.object(registry)],
     });
@@ -89,7 +89,7 @@ export async function getFirstDepositTx(gasBudget: number, nftPackageId: string,
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${nftPackageId}::staking::first_deposit`,
+        target: `${nftPackageId}::typus_dov_single::first_deposit`,
         typeArguments: [],
         arguments: [tx.object(registry)],
     });
@@ -108,7 +108,7 @@ export async function getLevelUpTx(gasBudget: number, nftPackageId: string, regi
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${nftPackageId}::staking::level_up`,
+        target: `${nftPackageId}::typus_dov_single::level_up`,
         typeArguments: [],
         arguments: [tx.object(registry)],
     });

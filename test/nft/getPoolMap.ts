@@ -1,5 +1,5 @@
 import "../load_env";
-import config from "../../nft_config.json";
+import config from "../../config.json";
 import { PoolData, getPoolMap } from "../../utils/typus-nft/fetch";
 import { JsonRpcProvider, Connection } from "@mysten/sui.js";
 

@@ -1,5 +1,5 @@
 import "../load_env";
-import config from "../../nft_config.json";
+import config from "../../config.json";
 import { getPool } from "../../utils/typus-nft/fetch";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import { executeSponsorTransactionBlock, getSponsoredMint } from "../../utils/sponsorTransaction";
@@ -11,7 +11,7 @@ const signer = new RawSigner(keypair, provider);
 
 const gasBudget = 100000000;
 // const address = keypair.toSuiAddress();
-const necklace = "team";
+const necklace = "typus";
 
 (async () => {
     const pool = config[necklace];
@@ -41,12 +41,20 @@ const necklace = "team";
     if (wlTokens.length > 0) {
         const wlToken = wlTokens[0].data?.objectId!;
 
-        const [sponsoredResponse, transactionBlock] = await getSponsoredMint(config.sponsorApi, config.NFT_PACKAGE, pool, wlToken, address);
+        const [sponsoredResponse, transactionBlock] = await getSponsoredMint(
+            config.sponsorApi,
+            config.NFT_PACKAGE_UPGRADE,
+            pool,
+            wlToken,
+            address
+        );
 
         const senderSig = await signer.signTransactionBlock({ transactionBlock: transactionBlock });
 
-        const res = await executeSponsorTransactionBlock(provider, sponsoredResponse, senderSig);
+        console.log(sponsoredResponse);
 
-        console.log(res);
+        // const res = await executeSponsorTransactionBlock(provider, sponsoredResponse, senderSig);
+
+        // console.log(res);
     }
 })();

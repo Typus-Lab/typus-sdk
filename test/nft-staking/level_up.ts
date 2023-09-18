@@ -1,5 +1,5 @@
 import "../load_env";
-import config from "../../nft_config.json";
+import config from "../../config.json";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import { getTailsIds } from "../../utils/typus-nft/fetch";
 import { getLevelUpTx } from "../../utils/nft-staking/user-entry";
@@ -17,7 +17,7 @@ const gasBudget = 100000000;
     const address = await signer.getAddress();
     console.log(address);
 
-    let transactionBlock = await getLevelUpTx(gasBudget, config.PACKAGE, config.REGISTRY);
+    let transactionBlock = await getLevelUpTx(gasBudget, config.SINGLE_COLLATERAL_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY);
 
     // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
     let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
