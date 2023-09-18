@@ -88,9 +88,7 @@ export async function getPortfolioVaults(
     )
         .filter((portfolioVault) => portfolioVault.error == undefined)
         // @ts-ignore
-        .filter((portfolioVault) => !portfolioVault.data.content.type.includes("0x2::balance::Balance"))
-        // @ts-ignore
-        .filter((portfolioVault) => !portfolioVault.data.content.type.includes("0xdba94b126660285d13b3c62b9796e05caaf14df4a9721dd107c746153f0191e8::typus_dov_single::NftExtension"))
+        .filter((portfolioVault) => portfolioVault.data.content.type.includes("PortfolioVault"))
         .reduce(async (promise, portfolioVault) => {
             let map = await promise;
             // @ts-ignore
