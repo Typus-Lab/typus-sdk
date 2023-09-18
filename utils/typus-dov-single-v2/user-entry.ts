@@ -271,16 +271,17 @@ export async function getNewBidTx(
 export async function getExerciseTx(
     gasBudget: number,
     packageId: string,
-    typeArguments: string[],
     registry: string,
-    index: string,
+    requests: [{ typeArguments: string[]; index: string }],
     receipts: string[]
 ) {
     let tx = new TransactionBlock();
-    tx.moveCall({
-        target: `${packageId}::typus_dov_single::exercise`,
-        typeArguments,
-        arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: receipts.map((id) => tx.object(id)) })],
+    requests.forEach((request) => {
+        tx.moveCall({
+            target: `${packageId}::typus_dov_single::exercise`,
+            typeArguments: request.typeArguments,
+            arguments: [tx.pure(registry), tx.pure(request.index), tx.makeMoveVec({ objects: receipts.map((id) => tx.object(id)) })],
+        });
     });
     tx.setGasBudget(gasBudget);
 
@@ -295,10 +296,12 @@ export async function getExerciseTx(
 */
 export async function getRefundTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string) {
     let tx = new TransactionBlock();
-    tx.moveCall({
-        target: `${packageId}::typus_dov_single::refund`,
-        typeArguments,
-        arguments: [tx.pure(registry)],
+    typeArguments.forEach((typeArgument) => {
+        tx.moveCall({
+            target: `${packageId}::typus_dov_single::refund`,
+            typeArguments: [typeArgument],
+            arguments: [tx.pure(registry)],
+        });
     });
     tx.setGasBudget(gasBudget);
 
