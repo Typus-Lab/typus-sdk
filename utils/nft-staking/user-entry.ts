@@ -2,6 +2,37 @@ import { TransactionBlock } from "@mysten/sui.js";
 import { CLOCK } from "../../constants";
 
 /**
+    entry fun transfer_nft(
+        registry: &mut Registry,
+        from_kiosk: &mut Kiosk,
+        from_kiosk_cap: &KioskOwnerCap,
+        id: ID,
+        receiver: address,
+        ctx: &mut TxContext
+    )
+*/
+export async function getTransferNftTx(
+    gasBudget: number,
+    nftPackageId: string,
+    registry: string,
+    kiosk: string,
+    kiosk_cap: string,
+    nft_id: string,
+    receiver: string
+) {
+    let tx = new TransactionBlock();
+
+    tx.moveCall({
+        target: `${nftPackageId}::typus_dov_single::transfer_nft`,
+        typeArguments: [],
+        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.object(nft_id), tx.pure(receiver)],
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
+/**
     public fun stake_nft(
         registry: &mut Registry,
         kiosk: &mut Kiosk,
