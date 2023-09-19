@@ -95,8 +95,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string): Promise
                     BidPaidAsset: b_asset,
                     IncentiveValue: Number(parsedJson.incentive_value) / 10 ** assetToDecimal(asset)!,
                 });
-
-                return txHistory;
             }
+            return txHistory;
         }, Promise.resolve(new Array<TxHistory>()));
 }
