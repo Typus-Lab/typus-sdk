@@ -17,7 +17,7 @@ const gasBudget = 100000000;
     const address = await signer.getAddress();
     console.log(address);
 
-    let transactionBlock = await getSnapshotTx(gasBudget, config.PACKAGE, config.REGISTRY);
+    let transactionBlock = await getSnapshotTx(gasBudget, config.SINGLE_COLLATERAL_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY);
 
     // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
     let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });

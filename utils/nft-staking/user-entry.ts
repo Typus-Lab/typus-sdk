@@ -23,7 +23,7 @@ export async function getTransferNftTx(
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${nftPackageId}::typus_dov_single::transfer_nft`,
+        target: `${nftPackageId}::tails_staking::transfer_nft`,
         typeArguments: [],
         arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.object(nft_id), tx.pure(receiver)],
     });
@@ -45,7 +45,7 @@ export async function getTransferNftsTx(
     var i = 0;
     while (i < kiosks.length) {
         tx.moveCall({
-            target: `${nftPackageId}::typus_dov_single::transfer_nft`,
+            target: `${nftPackageId}::tails_staking::transfer_nft`,
             typeArguments: [],
             arguments: [tx.object(registry), tx.object(kiosks[i]), tx.object(kiosk_caps[i]), tx.object(nft_ids[i]), tx.pure(receiver)],
         });
@@ -77,7 +77,7 @@ export async function getStakeNftTx(
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${nftPackageId}::typus_dov_single::stake_nft`,
+        target: `${nftPackageId}::tails_staking::stake_nft`,
         typeArguments: [],
         arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.object(nft_id), tx.object(CLOCK)],
     });
@@ -98,7 +98,7 @@ export async function getUnstakeNftTx(gasBudget: number, nftPackageId: string, r
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${nftPackageId}::typus_dov_single::unstake_nft`,
+        target: `${nftPackageId}::tails_staking::unstake_nft`,
         typeArguments: [],
         arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap)],
     });
@@ -118,7 +118,7 @@ export async function getSnapshotTx(gasBudget: number, nftPackageId: string, reg
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${nftPackageId}::typus_dov_single::snapshot`,
+        target: `${nftPackageId}::tails_staking::snapshot`,
         typeArguments: [],
         arguments: [tx.object(registry), tx.object(CLOCK)],
     });
@@ -127,27 +127,101 @@ export async function getSnapshotTx(gasBudget: number, nftPackageId: string, reg
     return tx;
 }
 
-export async function getFirstBidTx(gasBudget: number, nftPackageId: string, registry: string) {
+export async function getFirstNewBidTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    additional_config_registry: string,
+    index: string,
+    priceOracle: string,
+    coins: string[],
+    size: string,
+    premium_required: string, // fe float * b_token_decimal
+    usingSponsoredGasCoin = false
+) {
     let tx = new TransactionBlock();
-
-    tx.moveCall({
-        target: `${nftPackageId}::typus_dov_single::first_bid`,
-        typeArguments: [],
-        arguments: [tx.object(registry)],
-    });
+    if (
+        !usingSponsoredGasCoin &&
+        (typeArguments[1] == "0x2::sui::SUI" ||
+            typeArguments[1] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI")
+    ) {
+        let [coin] = tx.splitCoins(tx.gas, [tx.pure(premium_required)]);
+        tx.moveCall({
+            target: `${packageId}::tails_staking::new_bid`,
+            typeArguments,
+            arguments: [
+                tx.pure(registry),
+                tx.pure(additional_config_registry),
+                tx.pure(index),
+                tx.pure(priceOracle),
+                tx.pure("0x6"),
+                tx.makeMoveVec({ objects: [coin] }),
+                tx.pure(size),
+            ],
+        });
+    } else {
+        tx.moveCall({
+            target: `${packageId}::tails_staking::new_bid`,
+            typeArguments,
+            arguments: [
+                tx.pure(registry),
+                tx.pure(additional_config_registry),
+                tx.pure(index),
+                tx.pure(priceOracle),
+                tx.pure("0x6"),
+                tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
+                tx.pure(size),
+            ],
+        });
+    }
     tx.setGasBudget(gasBudget);
 
     return tx;
 }
 
-export async function getFirstDepositTx(gasBudget: number, nftPackageId: string, registry: string) {
+export async function getFirstDepositTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    additional_config_registry: string,
+    index: string,
+    coins: string[],
+    amount: string,
+    usingSponsoredGasCoin = false
+) {
     let tx = new TransactionBlock();
-
-    tx.moveCall({
-        target: `${nftPackageId}::typus_dov_single::first_deposit`,
-        typeArguments: [],
-        arguments: [tx.object(registry)],
-    });
+    if (
+        !usingSponsoredGasCoin &&
+        (typeArguments[0] == "0x2::sui::SUI" ||
+            typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI")
+    ) {
+        let [coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
+        tx.moveCall({
+            target: `${packageId}::tails_staking::deposit`,
+            typeArguments,
+            arguments: [
+                tx.pure(registry),
+                tx.pure(additional_config_registry),
+                tx.pure(index),
+                tx.makeMoveVec({ objects: [coin] }),
+                tx.pure(amount),
+            ],
+        });
+    } else {
+        tx.moveCall({
+            target: `${packageId}::tails_staking::deposit`,
+            typeArguments,
+            arguments: [
+                tx.pure(registry),
+                tx.pure(additional_config_registry),
+                tx.pure(index),
+                tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
+                tx.pure(amount),
+            ],
+        });
+    }
     tx.setGasBudget(gasBudget);
 
     return tx;
@@ -163,7 +237,7 @@ export async function getLevelUpTx(gasBudget: number, nftPackageId: string, regi
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${nftPackageId}::typus_dov_single::level_up`,
+        target: `${nftPackageId}::tails_staking::level_up`,
         typeArguments: [],
         arguments: [tx.object(registry)],
     });

@@ -23,7 +23,7 @@ const gasBudget = 100000000;
     console.log(tailsIds);
 
     if (tailsIds.length > 0) {
-        let nft = tailsIds[1];
+        let nft = tailsIds[0];
 
         let transactionBlock = await getStakeNftTx(
             gasBudget,

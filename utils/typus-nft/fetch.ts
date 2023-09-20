@@ -138,22 +138,37 @@ export async function getTails(provider: JsonRpcProvider, tailsIds: string[]) {
             // @ts-ignore
             const fields = result.data?.content.fields;
 
-            const tails: Tails = {
-                id: fields.id.id,
-                name: fields.name,
-                number: fields.number,
-                url: fields.url,
-                level: fields.level,
-                exp: fields.exp,
-                first_bid: fields.first_bid,
-                first_deposit: fields.first_deposit,
-                first_deposit_nft: fields.first_deposit_nft,
-            };
+            const tails = fieldsToTails(fields);
 
             Tails.push(tails);
         }
     }
     return Tails;
+}
+
+export function fieldsToTails(fields) {
+    // console.log(fields.attributes.fields.contents);
+    const attributes = new Map<string, string>();
+    fields.attributes.fields.contents.forEach((f) => attributes.set(f.fields.key, f.fields.value));
+
+    const u64_padding = new Map<string, string>();
+    fields.u64_padding.fields.contents.forEach((f) => u64_padding.set(f.fields.key, f.fields.value));
+
+    const tails: Tails = {
+        id: fields.id.id,
+        name: fields.name,
+        number: fields.number,
+        url: fields.url,
+        level: fields.level,
+        exp: fields.exp,
+        first_bid: fields.first_bid,
+        first_deposit: fields.first_deposit,
+        first_deposit_nft: fields.first_deposit_nft,
+        attributes,
+        u64_padding,
+    };
+
+    return tails;
 }
 
 export interface Tails {
@@ -166,6 +181,8 @@ export interface Tails {
     first_bid: string;
     first_deposit: string;
     first_deposit_nft: string;
+    attributes: Map<string, string>;
+    u64_padding: Map<string, string>;
 }
 
 export function getLevelExp(level: number): number | undefined {

@@ -21,8 +21,8 @@ const gasBudget = 100000000;
     let res = await getUserStake(provider, config.NFT_TABLE, "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9");
     console.log(res);
 
-    const level = Number(res?.nft.level);
-    const exp = Number(res?.nft.exp);
+    const level = Number(res?.level);
+    const exp = Number(res?.exp);
 
     const next_level_exp = getLevelExp(level + 1);
 
