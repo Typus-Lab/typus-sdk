@@ -32,6 +32,30 @@ export async function getTransferNftTx(
     return tx;
 }
 
+export async function getTransferNftsTx(
+    gasBudget: number,
+    nftPackageId: string,
+    registry: string,
+    kiosks: string[],
+    kiosk_caps: string[],
+    nft_ids: string[],
+    receiver: string
+) {
+    let tx = new TransactionBlock();
+    var i = 0;
+    while (i < kiosks.length) {
+        tx.moveCall({
+            target: `${nftPackageId}::typus_dov_single::transfer_nft`,
+            typeArguments: [],
+            arguments: [tx.object(registry), tx.object(kiosks[i]), tx.object(kiosk_caps[i]), tx.object(nft_ids[i]), tx.pure(receiver)],
+        });
+        i += 1;
+    }
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
 /**
     public fun stake_nft(
         registry: &mut Registry,
