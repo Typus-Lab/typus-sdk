@@ -148,7 +148,7 @@ export async function getFirstNewBidTx(
     ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(premium_required)]);
         tx.moveCall({
-            target: `${packageId}::tails_staking::new_bid`,
+            target: `${packageId}::tails_staking::first_new_bid`,
             typeArguments,
             arguments: [
                 tx.pure(registry),
@@ -162,7 +162,7 @@ export async function getFirstNewBidTx(
         });
     } else {
         tx.moveCall({
-            target: `${packageId}::tails_staking::new_bid`,
+            target: `${packageId}::tails_staking::first_new_bid`,
             typeArguments,
             arguments: [
                 tx.pure(registry),
@@ -199,7 +199,7 @@ export async function getFirstDepositTx(
     ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
         tx.moveCall({
-            target: `${packageId}::tails_staking::deposit`,
+            target: `${packageId}::tails_staking::first_deposit`,
             typeArguments,
             arguments: [
                 tx.pure(registry),
@@ -211,7 +211,7 @@ export async function getFirstDepositTx(
         });
     } else {
         tx.moveCall({
-            target: `${packageId}::tails_staking::deposit`,
+            target: `${packageId}::tails_staking::first_deposit`,
             typeArguments,
             arguments: [
                 tx.pure(registry),
