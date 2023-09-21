@@ -15,7 +15,6 @@ export async function getDepositTx(
     packageId: string,
     typeArguments: string[],
     registry: string,
-    additional_config_registry: string,
     index: string,
     coins: string[],
     amount: string,
@@ -34,7 +33,6 @@ export async function getDepositTx(
             typeArguments,
             arguments: [
                 tx.pure(registry),
-                tx.pure(additional_config_registry),
                 tx.pure(index),
                 tx.makeMoveVec({ objects: [coin] }),
                 tx.pure(amount),
@@ -47,7 +45,6 @@ export async function getDepositTx(
             typeArguments,
             arguments: [
                 tx.pure(registry),
-                tx.pure(additional_config_registry),
                 tx.pure(index),
                 tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
                 tx.pure(amount),
@@ -272,15 +269,18 @@ export async function getExerciseTx(
     gasBudget: number,
     packageId: string,
     registry: string,
-    requests: [{ typeArguments: string[]; index: string }],
-    receipts: string[]
+    requests: [{ typeArguments: string[]; index: string; receipts: string[] }]
 ) {
     let tx = new TransactionBlock();
     requests.forEach((request) => {
         tx.moveCall({
             target: `${packageId}::typus_dov_single::exercise`,
             typeArguments: request.typeArguments,
-            arguments: [tx.pure(registry), tx.pure(request.index), tx.makeMoveVec({ objects: receipts.map((id) => tx.object(id)) })],
+            arguments: [
+                tx.pure(registry),
+                tx.pure(request.index),
+                tx.makeMoveVec({ objects: request.receipts.map((id) => tx.object(id)) }),
+            ],
         });
     });
     tx.setGasBudget(gasBudget);
