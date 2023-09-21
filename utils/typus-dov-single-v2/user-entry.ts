@@ -12,6 +12,7 @@ import { TransactionBlock } from "@mysten/sui.js";
 */
 export async function getDepositTx(
     gasBudget: number,
+    typusFrameworkPackageId: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -36,7 +37,10 @@ export async function getDepositTx(
                 tx.pure(index),
                 tx.makeMoveVec({ objects: [coin] }),
                 tx.pure(amount),
-                tx.makeMoveVec({ objects: receipts.map((id) => tx.object(id)) }),
+                tx.makeMoveVec({
+                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    objects: receipts.map((id) => tx.object(id)),
+                }),
             ],
         });
     } else {
@@ -48,7 +52,10 @@ export async function getDepositTx(
                 tx.pure(index),
                 tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
                 tx.pure(amount),
-                tx.makeMoveVec({ objects: receipts.map((id) => tx.object(id)) }),
+                tx.makeMoveVec({
+                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    objects: receipts.map((id) => tx.object(id)),
+                }),
             ],
         });
     }
@@ -68,6 +75,7 @@ export async function getDepositTx(
 */
 export async function getWithdrawTx(
     gasBudget: number,
+    typusFrameworkPackageId: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -82,7 +90,10 @@ export async function getWithdrawTx(
         arguments: [
             tx.pure(registry),
             tx.pure(index),
-            tx.makeMoveVec({ objects: receipts.map((id) => tx.object(id)) }),
+            tx.makeMoveVec({
+                type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                objects: receipts.map((id) => tx.object(id)),
+            }),
             tx.pure(share ? [share] : []),
         ],
     });
@@ -102,6 +113,7 @@ export async function getWithdrawTx(
 */
 export async function getUnsubscribeTx(
     gasBudget: number,
+    typusFrameworkPackageId: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -116,7 +128,10 @@ export async function getUnsubscribeTx(
         arguments: [
             tx.pure(registry),
             tx.pure(index),
-            tx.makeMoveVec({ objects: receipts.map((id) => tx.object(id)) }),
+            tx.makeMoveVec({
+                type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                objects: receipts.map((id) => tx.object(id)),
+            }),
             tx.pure(share ? [share] : []),
         ],
     });
@@ -135,6 +150,7 @@ export async function getUnsubscribeTx(
 */
 export async function getClaimTx(
     gasBudget: number,
+    typusFrameworkPackageId: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -145,7 +161,14 @@ export async function getClaimTx(
     tx.moveCall({
         target: `${packageId}::typus_dov_single::claim`,
         typeArguments,
-        arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: receipts.map((id) => tx.object(id)) })],
+        arguments: [
+            tx.pure(registry),
+            tx.pure(index),
+            tx.makeMoveVec({
+                type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                objects: receipts.map((id) => tx.object(id)),
+            }),
+        ],
     });
     tx.setGasBudget(gasBudget);
 
@@ -162,6 +185,7 @@ export async function getClaimTx(
 */
 export async function getHarvestTx(
     gasBudget: number,
+    typusFrameworkPackageId: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -172,7 +196,14 @@ export async function getHarvestTx(
     tx.moveCall({
         target: `${packageId}::typus_dov_single::harvest`,
         typeArguments,
-        arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: receipts.map((id) => tx.object(id)) })],
+        arguments: [
+            tx.pure(registry),
+            tx.pure(index),
+            tx.makeMoveVec({
+                type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                objects: receipts.map((id) => tx.object(id)),
+            }),
+        ],
     });
     tx.setGasBudget(gasBudget);
 
@@ -189,6 +220,7 @@ export async function getHarvestTx(
 */
 export async function getCompoundTx(
     gasBudget: number,
+    typusFrameworkPackageId: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -199,7 +231,14 @@ export async function getCompoundTx(
     tx.moveCall({
         target: `${packageId}::typus_dov_single::compound`,
         typeArguments,
-        arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: receipts.map((id) => tx.object(id)) })],
+        arguments: [
+            tx.pure(registry),
+            tx.pure(index),
+            tx.makeMoveVec({
+                type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                objects: receipts.map((id) => tx.object(id)),
+            }),
+        ],
     });
     tx.setGasBudget(gasBudget);
 
@@ -267,6 +306,7 @@ export async function getNewBidTx(
 */
 export async function getExerciseTx(
     gasBudget: number,
+    typusFrameworkPackageId: string,
     packageId: string,
     registry: string,
     requests: [{ typeArguments: string[]; index: string; receipts: string[] }]
@@ -279,7 +319,10 @@ export async function getExerciseTx(
             arguments: [
                 tx.pure(registry),
                 tx.pure(request.index),
-                tx.makeMoveVec({ objects: request.receipts.map((id) => tx.object(id)) }),
+                tx.makeMoveVec({
+                    type: `${typusFrameworkPackageId}::vault::TypusBidReceipt`,
+                    objects: request.receipts.map((id) => tx.object(id)),
+                }),
             ],
         });
     });

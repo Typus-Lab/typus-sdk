@@ -12,13 +12,14 @@ const signer = new RawSigner(keypair, provider);
     let bidToken = "0x2::sui::SUI";
     let oracleToken = "0x2::sui::SUI";
     let gasBudget = 100000000;
+    let typusFrameworkPackageId = config.FRAMEWORK_PACKAGE;
     let packageId = config.PACKAGE;
     let typeArguments = [depositToken, bidToken, oracleToken];
     let registry = config.REGISTRY;
     let index = "0";
     let receipts = [];
 
-    let transactionBlock = await getClaimTx(gasBudget, packageId, typeArguments, registry, index, receipts);
+    let transactionBlock = await getClaimTx(gasBudget, typusFrameworkPackageId, packageId, typeArguments, registry, index, receipts);
     let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
     console.log(res);
 })();

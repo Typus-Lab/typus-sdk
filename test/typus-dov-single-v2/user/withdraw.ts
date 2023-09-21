@@ -12,6 +12,7 @@ const signer = new RawSigner(keypair, provider);
     let bidToken = "0x2::sui::SUI";
     let oracleToken = "0x2::sui::SUI";
     let gasBudget = 100000000;
+    let typusFrameworkPackageId = config.FRAMEWORK_PACKAGE;
     let packageId = config.PACKAGE;
     let typeArguments = [depositToken, bidToken, oracleToken];
     let registry = config.REGISTRY;
@@ -19,7 +20,16 @@ const signer = new RawSigner(keypair, provider);
     let receipts = [];
     let amount = "10000";
 
-    let transactionBlock = await getWithdrawTx(gasBudget, packageId, typeArguments, registry, index, receipts, amount);
+    let transactionBlock = await getWithdrawTx(
+        gasBudget,
+        typusFrameworkPackageId,
+        packageId,
+        typeArguments,
+        registry,
+        index,
+        receipts,
+        amount
+    );
     let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
     console.log(res);
 })();
