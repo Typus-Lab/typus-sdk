@@ -127,7 +127,7 @@ export async function getDailyAttendTx(gasBudget: number, nftPackageId: string, 
     return tx;
 }
 
-export async function getFirstNewBidTx(
+export async function getNewBidWithNftTx(
     gasBudget: number,
     packageId: string,
     typeArguments: string[],
@@ -180,7 +180,7 @@ export async function getFirstNewBidTx(
     return tx;
 }
 
-export async function getFirstDepositTx(
+export async function getDepositWithNftTx(
     gasBudget: number,
     packageId: string,
     typeArguments: string[],
