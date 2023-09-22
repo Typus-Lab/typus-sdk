@@ -108,17 +108,17 @@ export async function getUnstakeNftTx(gasBudget: number, nftPackageId: string, r
 }
 
 /**
-    public fun snapshot(
+    public fun daily_attend(
         registry: &mut Registry,
         clock: &Clock,
         ctx: &mut TxContext
     )
 */
-export async function getSnapshotTx(gasBudget: number, nftPackageId: string, registry: string) {
+export async function getDailyAttendTx(gasBudget: number, nftPackageId: string, registry: string) {
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${nftPackageId}::tails_staking::snapshot`,
+        target: `${nftPackageId}::tails_staking::daily_attend`,
         typeArguments: [],
         arguments: [tx.object(registry), tx.object(CLOCK)],
     });
@@ -148,7 +148,7 @@ export async function getFirstNewBidTx(
     ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(premium_required)]);
         tx.moveCall({
-            target: `${packageId}::tails_staking::first_new_bid`,
+            target: `${packageId}::tails_staking::new_bid_w_nft`,
             typeArguments,
             arguments: [
                 tx.pure(registry),
@@ -162,7 +162,7 @@ export async function getFirstNewBidTx(
         });
     } else {
         tx.moveCall({
-            target: `${packageId}::tails_staking::first_new_bid`,
+            target: `${packageId}::tails_staking::new_bid_w_nft`,
             typeArguments,
             arguments: [
                 tx.pure(registry),
@@ -199,7 +199,7 @@ export async function getFirstDepositTx(
     ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
         tx.moveCall({
-            target: `${packageId}::tails_staking::first_deposit`,
+            target: `${packageId}::tails_staking::deposit_w_nft`,
             typeArguments,
             arguments: [
                 tx.pure(registry),
@@ -211,7 +211,7 @@ export async function getFirstDepositTx(
         });
     } else {
         tx.moveCall({
-            target: `${packageId}::tails_staking::first_deposit`,
+            target: `${packageId}::tails_staking::deposit_w_nft`,
             typeArguments,
             arguments: [
                 tx.pure(registry),
