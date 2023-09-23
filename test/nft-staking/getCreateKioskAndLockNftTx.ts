@@ -2,7 +2,7 @@ import "../load_env";
 import config from "../../config.json";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection, GetOwnedObjectsResponse, TransactionBlock } from "@mysten/sui.js";
 import { getTails, getTailsIds } from "../../utils/typus-nft/fetch";
-import { getStakeNftFromNoKioskTx, getStakeNftTx } from "../../utils/nft-staking/user-entry";
+import { getCreateKioskAndLockNftTx, getStakeNftTx } from "../../utils/nft-staking/user-entry";
 
 import { createKiosk, getOwnedKiosks } from "@mysten/kiosk";
 
@@ -43,12 +43,10 @@ const gasBudget = 100000000;
     if (tailsIds.length > 0) {
         let nft = tailsIds[0];
 
-        let transactionBlock = await getStakeNftFromNoKioskTx(
+        let transactionBlock = await getCreateKioskAndLockNftTx(
             gasBudget,
-            config.SINGLE_COLLATERAL_PACKAGE,
             config.NFT_PACKAGE,
             config.NFT_TRANSFER_POLICY,
-            config.SINGLE_COLLATERAL_REGISTRY,
             nft.data?.objectId!,
             address
         );
