@@ -1,9 +1,9 @@
 {
-    "VERSION": "3.0.2",
+    "VERSION": "3.0.3",
     "DB_NAME": "testnet_3_0_0",
     "RPC_ENDPOINT": "https://api.shinami.com:443/node/v1/sui_testnet_c702de54dad05016124f2cfabc1de7e8",
     "sponsorApi": "https://northamerica-northeast1-aqueous-freedom-378103.cloudfunctions.net/sponsor-testnet",
-    "SINGLE_COLLATERAL_PACKAGE": "0x6529d0c44d89345b3b851f72acc16670e8e08ff30a46df145e23ab7526c35e02",
+    "SINGLE_COLLATERAL_PACKAGE": "0x14be6404c3222346a001386b0eab940b3429a3c904f6a72dab77044ce67f5f60",
     "SINGLE_COLLATERAL_PACKAGE_ORIGIN": "0x0334a2ae4b0c5cd007d3bf44925975726b94c1061eb45d660e8b79ec91c0599e",
     "SINGLE_COLLATERAL_MANAGER_CAP": "0xdc092ced3f08dc31cbbdaa584a937d4e54555cb47a1dca1d756560809d92c0ba",
     "SINGLE_COLLATERAL_REGISTRY": "0xcb757bd17a8daa75c2b12a5c5f19bd88e7e2e96b8a220bbe4cf0605affea7475",

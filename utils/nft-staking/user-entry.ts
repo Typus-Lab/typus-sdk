@@ -91,16 +91,19 @@ export async function getStakeNftTx(
         registry: &mut Registry,
         kiosk: &mut Kiosk,
         kiosk_cap: &KioskOwnerCap,
+        coin: Coin<SUI>,
         ctx: &mut TxContext
     )
 */
 export async function getUnstakeNftTx(gasBudget: number, nftPackageId: string, registry: string, kiosk: string, kiosk_cap: string) {
     let tx = new TransactionBlock();
 
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure(50000000)]);
+
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::unstake_nft`,
         typeArguments: [],
-        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap)],
+        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), coin],
     });
     tx.setGasBudget(gasBudget);
 
