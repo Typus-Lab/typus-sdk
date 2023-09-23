@@ -47,8 +47,10 @@ const gasBudget = 100000000;
             gasBudget,
             config.SINGLE_COLLATERAL_PACKAGE,
             config.NFT_PACKAGE,
+            config.NFT_TRANSFER_POLICY,
             config.SINGLE_COLLATERAL_REGISTRY,
-            nft.data?.objectId!
+            nft.data?.objectId!,
+            address
         );
 
         // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
