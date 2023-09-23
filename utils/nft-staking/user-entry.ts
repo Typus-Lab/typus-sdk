@@ -1,5 +1,6 @@
 import { TransactionBlock } from "@mysten/sui.js";
 import { CLOCK } from "../../constants";
+import { createKiosk, place } from "@mysten/kiosk";
 
 /**
     entry fun transfer_nft(
@@ -81,6 +82,30 @@ export async function getStakeNftTx(
         typeArguments: [],
         arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.object(nft_id), tx.object(CLOCK)],
     });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
+export async function getStakeNftFromNoKioskTx(
+    gasBudget: number,
+    PackageId: string,
+    nftPackageId: string,
+    registry: string,
+    nft_id: string
+) {
+    let tx = new TransactionBlock();
+
+    let [kiosk, kiosk_cap] = createKiosk(tx);
+
+    place(tx, `${nftPackageId}::typus_nft::Tails`, kiosk, kiosk_cap, tx.object(nft_id));
+
+    tx.moveCall({
+        target: `${PackageId}::tails_staking::stake_nft`,
+        typeArguments: [],
+        arguments: [tx.object(registry), kiosk, kiosk_cap, tx.object(nft_id), tx.object(CLOCK)],
+    });
+
     tx.setGasBudget(gasBudget);
 
     return tx;
