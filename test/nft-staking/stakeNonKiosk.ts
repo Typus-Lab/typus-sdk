@@ -36,7 +36,7 @@ const gasBudget = 100000000;
     const tailsIds = datas.filter((data) => {
         // console.log(data);
         // @ts-ignore
-        return data.data?.type! == `${nftConfig.NFT_PACKAGE}::typus_nft::Tails`;
+        return data.data?.type! == `${config.NFT_PACKAGE}::typus_nft::Tails`;
     });
     // console.log(objs);
 
