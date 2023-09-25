@@ -7,7 +7,7 @@ export interface Vault {
     id: string;
     info: Info;
     config: Config;
-    deposit_vault: DepositVault;
+    depositVault: DepositVault;
 }
 export interface Info {
     index: string;
@@ -135,7 +135,7 @@ export async function getVaults(
     packageId: string,
     registry: string,
     indexes: string[]
-): Promise<Map<string, DepositShare>> {
+): Promise<{ [key: string]: Vault }> {
     let transactionBlock = new TransactionBlock();
     let target = `${packageId}::typus_dov_single::get_vault_data_bcs` as any;
     let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(indexes)];
@@ -147,12 +147,11 @@ export async function getVaults(
     let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
-    console.log(JSON.stringify(bytes));
+    // console.log(JSON.stringify(bytes));
     let reader = new BcsReader(new Uint8Array(bytes));
-    let result = Array.from(new Map()).reduce((map, [key, value]) => {
-        map[key] = value;
-        return map;
-    }, {});
+    let result: {
+        [key: string]: Vault;
+    } = {};
     reader.readVec((reader) => {
         reader.read16();
         let id = AddressFromBytes(reader.readBytes(32));
@@ -336,11 +335,10 @@ export async function getVaults(
             id,
             info,
             config,
-            deposit_vault,
-        } as Vault;
+            depositVault: deposit_vault,
+        };
     });
 
-    // @ts-ignore
     return result;
 }
 
