@@ -131,7 +131,6 @@ export interface DepositVault {
 }
 export async function getVaults(
     provider: JsonRpcProvider,
-    typusFrameworkPackageId: string,
     packageId: string,
     registry: string,
     indexes: string[]
@@ -337,6 +336,94 @@ export async function getVaults(
             config,
             depositVault: deposit_vault,
         };
+    });
+
+    return result;
+}
+
+export interface Auction {
+    id: string;
+    index: string;
+    token: string;
+    start_ts_ms: string;
+    end_ts_ms: string;
+    size: string;
+    decay_speed: string;
+    initial_price: string;
+    final_price: string;
+    fee_bp: string;
+    incentive_bp: string;
+    token_decimal: string;
+    size_decimal: string;
+    total_bid_size: string;
+    able_to_remove_bid: boolean;
+    bid_index: string;
+}
+export async function getAuctions(
+    provider: JsonRpcProvider,
+    packageId: string,
+    registry: string,
+    indexes: string[]
+): Promise<{ [key: string]: Auction }> {
+    let transactionBlock = new TransactionBlock();
+    let target = `${packageId}::typus_dov_single::get_auction_bcs` as any;
+    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(indexes)];
+    transactionBlock.moveCall({
+        target,
+        typeArguments: [],
+        arguments: transactionBlockArguments,
+    });
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    // @ts-ignore
+    let bytes = results[results.length - 1].returnValues[0][0];
+    console.log(JSON.stringify(bytes));
+    let reader = new BcsReader(new Uint8Array(bytes));
+    let result: {
+        [key: string]: Auction;
+    } = {};
+    reader.readVec((reader) => {
+        reader.read16();
+        reader.readVec((reader) => {
+            let id = AddressFromBytes(reader.readBytes(32));
+            let index = reader.read64();
+            let token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+            let start_ts_ms = reader.read64();
+            let end_ts_ms = reader.read64();
+            let size = reader.read64();
+            let decay_speed = reader.read64();
+            let initial_price = reader.read64();
+            let final_price = reader.read64();
+            let fee_bp = reader.read64();
+            let incentive_bp = reader.read64();
+            let token_decimal = reader.read64();
+            let size_decimal = reader.read64();
+            let total_bid_size = reader.read64();
+            let able_to_remove_bid = reader.read8() > 0;
+            // skip bids bytes
+            reader.readBytes(32); // id
+            reader.read64(); // slice_count
+            reader.read64(); // slice_size
+            reader.read64(); // length
+            let bid_index = reader.read64();
+            result[index] = {
+                id,
+                index,
+                token,
+                start_ts_ms,
+                end_ts_ms,
+                size,
+                decay_speed,
+                initial_price,
+                final_price,
+                fee_bp,
+                incentive_bp,
+                token_decimal,
+                size_decimal,
+                total_bid_size,
+                able_to_remove_bid,
+                bid_index,
+            };
+        });
     });
 
     return result;

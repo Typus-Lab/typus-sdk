@@ -1,5 +1,5 @@
 import { JsonRpcProvider, Connection } from "@mysten/sui.js";
-import { getVaults } from "../../../utils/typus-dov-single-v2/view-function";
+import { getAuctions } from "../../../utils/typus-dov-single-v2/view-function";
 import config from "../config.json";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
@@ -10,6 +10,6 @@ const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPO
         //
         "1",
     ];
-    let result = await getVaults(provider, config.PACKAGE, config.REGISTRY, indexes);
+    let result = await getAuctions(provider, config.PACKAGE, config.REGISTRY, indexes);
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();
