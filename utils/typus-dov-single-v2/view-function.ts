@@ -11,25 +11,25 @@ export interface Vault {
 }
 export interface Info {
     index: string;
-    option_type: string;
+    optionType: string;
     period: string;
-    activation_ts_ms: string;
-    expiration_ts_ms: string;
-    deposit_token: string;
-    bid_token: string;
-    oracle_token: string;
-    d_token_decimal: string;
-    b_token_decimal: string;
-    o_token_decimal: string;
+    activationTsMs: string;
+    expirationTsMs: string;
+    depositToken: string;
+    bidToken: string;
+    oracleToken: string;
+    dTokenDecimal: string;
+    bTokenDecimal: string;
+    oTokenDecimal: string;
     creator: string;
-    create_ts_ms: string;
+    createTsMs: string;
     round: string;
     status: string;
-    oracle_info: OracleInfo;
-    delivery_infos: DeliveryInfos;
-    settlement_info: SettlementInfo | undefined;
-    u64_padding: string[];
-    bcs_padding: string[];
+    oracleInfo: OracleInfo;
+    deliveryInfos: DeliveryInfos;
+    settlementInfo: SettlementInfo | undefined;
+    u64Padding: string[];
+    bcsPadding: string[];
 }
 export interface OracleInfo {
     price: string;
@@ -38,96 +38,96 @@ export interface OracleInfo {
 
 export interface DeliveryInfos {
     round: string;
-    max_size: string;
-    total_delivery_size: string;
-    total_bidder_bid_value: string;
-    total_bidder_fee: string;
-    total_incentive_bid_value: string;
-    total_incentive_fee: string;
-    delivery_info: DeliveryInfo[];
+    maxSize: string;
+    totalDeliverySize: string;
+    totalBidderBidValue: string;
+    totalBidderFee: string;
+    totalIncentiveBidValue: string;
+    totalIncentiveFee: string;
+    deliveryInfo: DeliveryInfo[];
 }
 export interface DeliveryInfo {
-    delivery_price: string;
-    delivery_size: string;
-    bidder_bid_value: string;
-    bidder_fee: string;
-    incentive_bid_value: string;
-    incentive_fee: string;
-    ts_ms: string;
+    deliveryPrice: string;
+    deliverySize: string;
+    bidderBidValue: string;
+    bidderFee: string;
+    incentiveBidValue: string;
+    incentiveFee: string;
+    tsMs: string;
 }
 export interface SettlementInfo {
     round: string;
-    oracle_price: string;
-    oracle_price_decimal: string;
-    settle_balance: string;
-    settled_balance: string;
-    share_price: string;
-    share_price_decimal: string;
-    ts_ms: string;
+    oraclePrice: string;
+    oraclePriceDecimal: string;
+    settleBalance: string;
+    settledBalance: string;
+    sharePrice: string;
+    sharePriceDecimal: string;
+    tsMs: string;
 }
 export interface Config {
-    oracle_id: string;
-    deposit_lot_size: string;
-    bid_lot_size: string;
-    min_deposit_size: string;
-    min_bid_size: string;
-    deposit_fee_bp: string;
-    deposit_fee_share_bp: string;
-    deposit_shared_fee_pool: string | undefined;
-    bid_fee_bp: string;
-    deposit_incentive_bp: string;
-    bid_incentive_bp: string;
-    auction_delay_ts_ms: string;
-    auction_duration_ts_ms: string;
+    oracleId: string;
+    depositLotSize: string;
+    bidLotSize: string;
+    minDepositSize: string;
+    minBidSize: string;
+    depositFeeBp: string;
+    depositFeeShareBp: string;
+    depositSharedFeePool: string | undefined;
+    bidFeeBp: string;
+    depositIncentiveBp: string;
+    bidIncentiveBp: string;
+    auctionDelayTsMs: string;
+    auctionDurationTsMs: string;
     capacity: string;
     leverage: string;
-    risk_level: string;
-    has_next: boolean;
-    active_vault_config: VaultConfig;
-    warmup_vault_config: VaultConfig;
-    deposit_receipt_display_name: string;
-    deposit_receipt_display_description: string;
-    deposit_receipt_display_image_url: string;
-    bid_receipt_display_name: string;
-    bid_receipt_display_description: string;
-    bid_receipt_display_image_url: string;
-    u64_padding: string[];
-    bcs_padding: string[];
+    riskLevel: string;
+    hasNext: boolean;
+    activeVaultConfig: VaultConfig;
+    warmupVaultConfig: VaultConfig;
+    depositReceiptDisplayName: string;
+    depositReceiptDisplayDescription: string;
+    depositReceiptDisplayImageUrl: string;
+    bidReceiptDisplayName: string;
+    bidReceiptDisplayDescription: string;
+    bidReceiptDisplayImageUrl: string;
+    u64Padding: string[];
+    bcsPadding: string[];
 }
 export interface VaultConfig {
-    payoff_configs: PayoffConfig[];
-    strike_increment: string;
-    decay_speed: string;
-    initial_price: string;
-    final_price: string;
+    payoffConfigs: PayoffConfig[];
+    strikeIncrement: string;
+    decaySpeed: string;
+    initialPrice: string;
+    finalPrice: string;
 }
 export interface PayoffConfig {
-    strike_bp: string;
+    strikeBp: string;
     weight: string;
-    is_buyer: boolean;
+    isBuyer: boolean;
     strike: string | undefined;
 }
 export interface DepositVault {
     id: string;
-    deposit_token: string;
-    bid_token: string;
-    incentive_token: string | undefined;
+    depositToken: string;
+    bidToken: string;
+    incentiveToken: string | undefined;
     index: string;
-    fee_bp: string;
-    fee_share_bp: string;
-    shared_fee_pool: string | undefined;
-    active_share_supply: string;
-    deactivating_share_supply: string; // unsubscribe
-    inactive_share_supply: string; // claim
-    warmup_share_supply: string; // deposit / withdraw
-    premium_share_supply: string; // harvest
-    incentive_share_supply: string; // redeem
-    has_next: boolean;
+    feeBp: string;
+    feeShareBp: string;
+    sharedFeePool: string | undefined;
+    activeShareSupply: string;
+    deactivatingShareSupply: string; // unsubscribe
+    inactiveShareSupply: string; // claim
+    warmupShareSupply: string; // deposit / withdraw
+    premiumShareSupply: string; // harvest
+    incentiveShareSupply: string; // redeem
+    hasNext: boolean;
     name: string;
     description: string;
-    image_url: string;
-    u64_padding: string[];
-    bcs_padding: string[];
+    imageUrl: string;
+    u64Padding: string[];
+    bcsPadding: string[];
 }
 export async function getVaults(
     provider: JsonRpcProvider,
@@ -156,33 +156,33 @@ export async function getVaults(
         let id = AddressFromBytes(reader.readBytes(32));
         let info = {
             index: reader.read64(),
-            option_type: reader.read64(),
+            optionType: reader.read64(),
             period: reader.read8() + "",
-            activation_ts_ms: reader.read64(),
-            expiration_ts_ms: reader.read64(),
-            deposit_token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            bid_token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            oracle_token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            d_token_decimal: reader.read64(),
-            b_token_decimal: reader.read64(),
-            o_token_decimal: reader.read64(),
+            activationTsMs: reader.read64(),
+            expirationTsMs: reader.read64(),
+            depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            oracleToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            dTokenDecimal: reader.read64(),
+            bTokenDecimal: reader.read64(),
+            oTokenDecimal: reader.read64(),
             creator: AddressFromBytes(reader.readBytes(32)),
-            create_ts_ms: reader.read64(),
+            createTsMs: reader.read64(),
             round: reader.read64(),
             status: reader.read64(),
-            oracle_info: {
+            oracleInfo: {
                 price: reader.read64(),
                 decimal: reader.read64(),
             },
-            delivery_infos: {
+            deliveryInfos: {
                 round: reader.read64(),
-                max_size: reader.read64(),
-                total_delivery_size: reader.read64(),
-                total_bidder_bid_value: reader.read64(),
-                total_bidder_fee: reader.read64(),
-                total_incentive_bid_value: reader.read64(),
-                total_incentive_fee: reader.read64(),
-                delivery_info: reader.readVec((reader) => {
+                maxSize: reader.read64(),
+                totalDeliverySize: reader.read64(),
+                totalBidderBidValue: reader.read64(),
+                totalBidderFee: reader.read64(),
+                totalIncentiveBidValue: reader.read64(),
+                totalIncentiveFee: reader.read64(),
+                deliveryInfo: reader.readVec((reader) => {
                     return {
                         delivery_price: reader.read64(),
                         delivery_size: reader.read64(),
@@ -194,55 +194,55 @@ export async function getVaults(
                     };
                 }),
             },
-            settlement_info: reader
+            settlementInfo: reader
                 .readVec((reader) => {
                     return {
                         round: reader.read64(),
-                        oracle_price: reader.read64(),
-                        oracle_price_decimal: reader.read64(),
-                        settle_balance: reader.read64(),
-                        settled_balance: reader.read64(),
-                        share_price: reader.read64(),
-                        share_price_decimal: reader.read64(),
-                        ts_ms: reader.read64(),
+                        oraclePrice: reader.read64(),
+                        oraclePriceDecimal: reader.read64(),
+                        settleBalance: reader.read64(),
+                        settledBalance: reader.read64(),
+                        sharePrice: reader.read64(),
+                        sharePriceDecimal: reader.read64(),
+                        tsMs: reader.read64(),
                     };
                 })
                 .at(0),
-            u64_padding: reader.readVec((reader) => {
+            u64Padding: reader.readVec((reader) => {
                 return reader.read64();
             }),
-            bcs_padding: reader.readVec((reader) => {
+            bcsPadding: reader.readVec((reader) => {
                 return reader.read8();
             }),
         };
         let config = {
-            oracle_id: AddressFromBytes(reader.readBytes(32)),
-            deposit_lot_size: reader.read64(),
-            bid_lot_size: reader.read64(),
-            min_deposit_size: reader.read64(),
-            min_bid_size: reader.read64(),
-            deposit_fee_bp: reader.read64(),
-            deposit_fee_share_bp: reader.read64(),
-            deposit_shared_fee_pool: reader
+            oracleId: AddressFromBytes(reader.readBytes(32)),
+            depositLotSize: reader.read64(),
+            bidLotSize: reader.read64(),
+            minDepositSize: reader.read64(),
+            minBidSize: reader.read64(),
+            depositFeeBp: reader.read64(),
+            depositFeeShareBp: reader.read64(),
+            depositSharedFeePool: reader
                 .readVec((reader) => {
                     return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
                 })
                 .at(0),
-            bid_fee_bp: reader.read64(),
-            deposit_incentive_bp: reader.read64(),
-            bid_incentive_bp: reader.read64(),
-            auction_delay_ts_ms: reader.read64(),
-            auction_duration_ts_ms: reader.read64(),
+            bidFeeBp: reader.read64(),
+            depositIncentiveBp: reader.read64(),
+            bidIncentiveBp: reader.read64(),
+            auctionDelayTsMs: reader.read64(),
+            auctionDurationTsMs: reader.read64(),
             capacity: reader.read64(),
             leverage: reader.read64(),
-            risk_level: reader.read64(),
-            has_next: reader.read8() > 0,
-            active_vault_config: {
-                payoff_configs: reader.readVec((reader) => {
+            riskLevel: reader.read64(),
+            hasNext: reader.read8() > 0,
+            activeVaultConfig: {
+                payoffConfigs: reader.readVec((reader) => {
                     return {
-                        strike_bp: reader.read64(),
+                        strikeBp: reader.read64(),
                         weight: reader.read64(),
-                        is_buyer: reader.read8() > 0,
+                        isBuyer: reader.read8() > 0,
                         strike: reader
                             .readVec((reader) => {
                                 return reader.read64();
@@ -250,17 +250,17 @@ export async function getVaults(
                             .at(0),
                     };
                 }),
-                strike_increment: reader.read64(),
-                decay_speed: reader.read64(),
-                initial_price: reader.read64(),
-                final_price: reader.read64(),
+                strikeIncrement: reader.read64(),
+                decaySpeed: reader.read64(),
+                initialPrice: reader.read64(),
+                finalPrice: reader.read64(),
             },
-            warmup_vault_config: {
-                payoff_configs: reader.readVec((reader) => {
+            warmupVaultConfig: {
+                payoffConfigs: reader.readVec((reader) => {
                     return {
-                        strike_bp: reader.read64(),
+                        strikeBp: reader.read64(),
                         weight: reader.read64(),
-                        is_buyer: reader.read8() > 0,
+                        isBuyer: reader.read8() > 0,
                         strike: reader
                             .readVec((reader) => {
                                 return reader.read64();
@@ -268,21 +268,21 @@ export async function getVaults(
                             .at(0),
                     };
                 }),
-                strike_increment: reader.read64(),
-                decay_speed: reader.read64(),
-                initial_price: reader.read64(),
-                final_price: reader.read64(),
+                strikeIncrement: reader.read64(),
+                decaySpeed: reader.read64(),
+                initialPrice: reader.read64(),
+                finalPrice: reader.read64(),
             },
-            deposit_receipt_display_name: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            deposit_receipt_display_description: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            deposit_receipt_display_image_url: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            bid_receipt_display_name: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            bid_receipt_display_description: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            bid_receipt_display_image_url: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            u64_padding: reader.readVec((reader) => {
+            depositReceiptDisplayName: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            depositReceiptDisplayDescription: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            depositReceiptDisplayImageUrl: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            bidReceiptDisplayName: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            bidReceiptDisplayDescription: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            bidReceiptDisplayImageUrl: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            u64Padding: reader.readVec((reader) => {
                 return reader.read64();
             }),
-            bcs_padding: reader.readVec((reader) => {
+            bcsPadding: reader.readVec((reader) => {
                 return reader.read8();
             }),
         };
@@ -295,37 +295,37 @@ export async function getVaults(
         reader.readVec((reader) => {
             return reader.readBytes(32);
         }); // tail
-        let deposit_vault = {
+        let depositVault = {
             id: AddressFromBytes(reader.readBytes(32)),
-            deposit_token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            bid_token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            incentive_token: reader
+            depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            incentiveToken: reader
                 .readVec((reader) => {
                     return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
                 })
                 .at(0),
             index: reader.read64(),
-            fee_bp: reader.read64(),
-            fee_share_bp: reader.read64(),
-            shared_fee_pool: reader
+            feeBp: reader.read64(),
+            feeShareBp: reader.read64(),
+            sharedFeePool: reader
                 .readVec((reader) => {
                     return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
                 })
                 .at(0),
-            active_share_supply: reader.read64(),
-            deactivating_share_supply: reader.read64(), // unsubscribe
-            inactive_share_supply: reader.read64(), // claim
-            warmup_share_supply: reader.read64(), // deposit / withdraw
-            premium_share_supply: reader.read64(), // harvest
-            incentive_share_supply: reader.read64(), // redeem
-            has_next: reader.read8() > 0,
+            activeShareSupply: reader.read64(),
+            deactivatingShareSupply: reader.read64(), // unsubscribe
+            inactiveShareSupply: reader.read64(), // claim
+            warmupShareSupply: reader.read64(), // deposit / withdraw
+            premiumShareSupply: reader.read64(), // harvest
+            incentiveShareSupply: reader.read64(), // redeem
+            hasNext: reader.read8() > 0,
             name: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
             description: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            image_url: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            u64_padding: reader.readVec((reader) => {
+            imageUrl: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            u64Padding: reader.readVec((reader) => {
                 return reader.read64();
             }),
-            bcs_padding: reader.readVec((reader) => {
+            bcsPadding: reader.readVec((reader) => {
                 return reader.read8();
             }),
         };
@@ -334,7 +334,7 @@ export async function getVaults(
             id,
             info,
             config,
-            depositVault: deposit_vault,
+            depositVault,
         };
     });
 
@@ -345,19 +345,19 @@ export interface Auction {
     id: string;
     index: string;
     token: string;
-    start_ts_ms: string;
-    end_ts_ms: string;
+    startTsMs: string;
+    endTsMs: string;
     size: string;
-    decay_speed: string;
-    initial_price: string;
-    final_price: string;
-    fee_bp: string;
-    incentive_bp: string;
-    token_decimal: string;
-    size_decimal: string;
-    total_bid_size: string;
-    able_to_remove_bid: boolean;
-    bid_index: string;
+    decaySpeed: string;
+    initialPrice: string;
+    finalPrice: string;
+    feeBp: string;
+    incentiveBp: string;
+    tokenDecimal: string;
+    sizeDecimal: string;
+    totalBidSize: string;
+    ableToRemoveBid: boolean;
+    bidIndex: string;
 }
 export async function getAuctions(
     provider: JsonRpcProvider,
@@ -387,41 +387,41 @@ export async function getAuctions(
             let id = AddressFromBytes(reader.readBytes(32));
             let index = reader.read64();
             let token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
-            let start_ts_ms = reader.read64();
-            let end_ts_ms = reader.read64();
+            let startTsMs = reader.read64();
+            let endTsMs = reader.read64();
             let size = reader.read64();
-            let decay_speed = reader.read64();
-            let initial_price = reader.read64();
-            let final_price = reader.read64();
-            let fee_bp = reader.read64();
-            let incentive_bp = reader.read64();
-            let token_decimal = reader.read64();
-            let size_decimal = reader.read64();
-            let total_bid_size = reader.read64();
-            let able_to_remove_bid = reader.read8() > 0;
+            let decaySpeed = reader.read64();
+            let initialPrice = reader.read64();
+            let finalPrice = reader.read64();
+            let feeBp = reader.read64();
+            let incentiveBp = reader.read64();
+            let tokenDecimal = reader.read64();
+            let sizeDecimal = reader.read64();
+            let totalBidSize = reader.read64();
+            let ableToRemoveBid = reader.read8() > 0;
             // skip bids bytes
             reader.readBytes(32); // id
             reader.read64(); // slice_count
             reader.read64(); // slice_size
             reader.read64(); // length
-            let bid_index = reader.read64();
+            let bidIndex = reader.read64();
             result[index] = {
                 id,
                 index,
                 token,
-                start_ts_ms,
-                end_ts_ms,
+                startTsMs,
+                endTsMs,
                 size,
-                decay_speed,
-                initial_price,
-                final_price,
-                fee_bp,
-                incentive_bp,
-                token_decimal,
-                size_decimal,
-                total_bid_size,
-                able_to_remove_bid,
-                bid_index,
+                decaySpeed,
+                initialPrice,
+                finalPrice,
+                feeBp,
+                incentiveBp,
+                tokenDecimal,
+                sizeDecimal,
+                totalBidSize,
+                ableToRemoveBid,
+                bidIndex,
             };
         });
     });
