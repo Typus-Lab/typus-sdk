@@ -429,6 +429,47 @@ export async function getAuctions(
     return result;
 }
 
+export interface Bid {
+    index: string;
+    bidder: string;
+    price: string;
+    size: string;
+    bidderBalance: string;
+    incentiveBalance: string;
+    feeDiscount: string;
+    tsMs: string;
+}
+export async function getAuctionBids(provider: JsonRpcProvider, packageId: string, registry: string, index: string): Promise<Bid[]> {
+    let transactionBlock = new TransactionBlock();
+    let target = `${packageId}::typus_dov_single::get_auction_bids_bcs` as any;
+    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(index)];
+    transactionBlock.moveCall({
+        target,
+        typeArguments: [],
+        arguments: transactionBlockArguments,
+    });
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    // @ts-ignore
+    let bytes = results[results.length - 1].returnValues[0][0];
+    let reader = new BcsReader(new Uint8Array(bytes));
+    let result = reader.readVec((reader, i) => {
+        reader.read8();
+        let bid = {
+            index: reader.read64(),
+            bidder: AddressFromBytes(reader.readBytes(32)),
+            price: reader.read64(),
+            size: reader.read64(),
+            bidderBalance: reader.read64(),
+            incentiveBalance: reader.read64(),
+            feeDiscount: reader.read64(),
+            tsMs: reader.read64(),
+        } as Bid;
+        return bid;
+    });
+
+    return result;
+}
+
 export interface DepositShare {
     index: string;
     activeSubVaultUserShare: string;
