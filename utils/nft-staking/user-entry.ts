@@ -260,6 +260,7 @@ export async function getDepositTx(
                 tx.pure(index),
                 tx.makeMoveVec({ objects: [coin] }),
                 tx.pure(amount),
+                tx.object(CLOCK),
             ],
         });
     } else {
@@ -272,6 +273,7 @@ export async function getDepositTx(
                 tx.pure(index),
                 tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
                 tx.pure(amount),
+                tx.object(CLOCK),
             ],
         });
     }
@@ -285,6 +287,7 @@ export async function getWithdrawTx(
     packageId: string,
     typeArguments: string[],
     registry: string,
+    additional_config_registry: string,
     index: string,
     share?: string
 ) {
@@ -292,7 +295,13 @@ export async function getWithdrawTx(
     tx.moveCall({
         target: `${packageId}::tails_staking::withdraw`,
         typeArguments,
-        arguments: [tx.pure(registry), tx.pure(index), tx.pure(share ? [share] : [])],
+        arguments: [
+            tx.pure(registry),
+            tx.pure(additional_config_registry),
+            tx.pure(index),
+            tx.pure(share ? [share] : []),
+            tx.object(CLOCK),
+        ],
     });
     tx.setGasBudget(gasBudget);
 
@@ -312,7 +321,13 @@ export async function getUnsubscribeTx(
     tx.moveCall({
         target: `${packageId}::tails_staking::unsubscribe`,
         typeArguments,
-        arguments: [tx.pure(registry), tx.pure(additional_config_registry), tx.pure(index), tx.pure(share ? [share] : [])],
+        arguments: [
+            tx.pure(registry),
+            tx.pure(additional_config_registry),
+            tx.pure(index),
+            tx.pure(share ? [share] : []),
+            tx.object(CLOCK),
+        ],
     });
     tx.setGasBudget(gasBudget);
 
