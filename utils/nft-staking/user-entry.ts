@@ -45,10 +45,19 @@ export async function getTransferNftsTx(
     let tx = new TransactionBlock();
     var i = 0;
     while (i < kiosks.length) {
+        let [coin] = tx.splitCoins(tx.gas, [tx.pure(10000000)]);
+
         tx.moveCall({
             target: `${nftPackageId}::tails_staking::transfer_nft`,
             typeArguments: [],
-            arguments: [tx.object(registry), tx.object(kiosks[i]), tx.object(kiosk_caps[i]), tx.object(nft_ids[i]), tx.pure(receiver)],
+            arguments: [
+                tx.object(registry),
+                tx.object(kiosks[i]),
+                tx.object(kiosk_caps[i]),
+                tx.object(nft_ids[i]),
+                tx.pure(receiver),
+                coin,
+            ],
         });
         i += 1;
     }
@@ -77,10 +86,12 @@ export async function getStakeNftTx(
 ) {
     let tx = new TransactionBlock();
 
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure(50000000)]);
+
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::stake_nft`,
         typeArguments: [],
-        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.object(nft_id), tx.object(CLOCK)],
+        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.object(nft_id), tx.object(CLOCK), coin],
     });
     tx.setGasBudget(gasBudget);
 
@@ -119,12 +130,10 @@ export async function getCreateKioskAndLockNftTx(gasBudget: number, nftPackageId
 export async function getUnstakeNftTx(gasBudget: number, nftPackageId: string, registry: string, kiosk: string, kiosk_cap: string) {
     let tx = new TransactionBlock();
 
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure(50000000)]);
-
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::unstake_nft`,
         typeArguments: [],
-        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), coin],
+        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap)],
     });
     tx.setGasBudget(gasBudget);
 
@@ -151,7 +160,27 @@ export async function getDailyAttendTx(gasBudget: number, nftPackageId: string, 
     return tx;
 }
 
-export async function getNewBidWithNftTx(
+/**
+    entry fun snapshot(
+        registry: &mut Registry,
+        clock: &Clock,
+        ctx: &mut TxContext
+    )
+*/
+export async function getSanpshotTx(gasBudget: number, nftPackageId: string, registry: string) {
+    let tx = new TransactionBlock();
+
+    tx.moveCall({
+        target: `${nftPackageId}::tails_staking::snapshot`,
+        typeArguments: [],
+        arguments: [tx.object(registry), tx.object(CLOCK)],
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
+export async function getNewBidTx(
     gasBudget: number,
     packageId: string,
     typeArguments: string[],
@@ -172,7 +201,7 @@ export async function getNewBidWithNftTx(
     ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(premium_required)]);
         tx.moveCall({
-            target: `${packageId}::tails_staking::new_bid_w_nft`,
+            target: `${packageId}::tails_staking::new_bid`,
             typeArguments,
             arguments: [
                 tx.pure(registry),
@@ -186,7 +215,7 @@ export async function getNewBidWithNftTx(
         });
     } else {
         tx.moveCall({
-            target: `${packageId}::tails_staking::new_bid_w_nft`,
+            target: `${packageId}::tails_staking::new_bid`,
             typeArguments,
             arguments: [
                 tx.pure(registry),
@@ -204,7 +233,7 @@ export async function getNewBidWithNftTx(
     return tx;
 }
 
-export async function getDepositWithNftTx(
+export async function getDepositTx(
     gasBudget: number,
     packageId: string,
     typeArguments: string[],
@@ -223,7 +252,7 @@ export async function getDepositWithNftTx(
     ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
         tx.moveCall({
-            target: `${packageId}::tails_staking::deposit_w_nft`,
+            target: `${packageId}::tails_staking::deposit`,
             typeArguments,
             arguments: [
                 tx.pure(registry),
@@ -235,7 +264,7 @@ export async function getDepositWithNftTx(
         });
     } else {
         tx.moveCall({
-            target: `${packageId}::tails_staking::deposit_w_nft`,
+            target: `${packageId}::tails_staking::deposit`,
             typeArguments,
             arguments: [
                 tx.pure(registry),
@@ -246,6 +275,45 @@ export async function getDepositWithNftTx(
             ],
         });
     }
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
+export async function getWithdrawTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string,
+    share?: string
+) {
+    let tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${packageId}::tails_staking::withdraw`,
+        typeArguments,
+        arguments: [tx.pure(registry), tx.pure(index), tx.pure(share ? [share] : [])],
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
+export async function getUnsubscribeTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    additional_config_registry: string,
+    index: string,
+    share?: string
+) {
+    let tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${packageId}::tails_staking::unsubscribe`,
+        typeArguments,
+        arguments: [tx.pure(registry), tx.pure(additional_config_registry), tx.pure(index), tx.pure(share ? [share] : [])],
+    });
     tx.setGasBudget(gasBudget);
 
     return tx;

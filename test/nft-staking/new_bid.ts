@@ -1,7 +1,7 @@
 import "../load_env";
 import config from "../../config.json";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
-import { getNewBidWithNftTx } from "../../utils/nft-staking/user-entry";
+import { getNewBidTx } from "../../utils/nft-staking/user-entry";
 import { getUserStake } from "../../utils/nft-staking/fetch";
 import { getNewBidTx } from "../../utils/typus-dov-single/user-entry";
 import { getPortfolioVaults } from "../../utils/typus-dov-single/portfolio-vault";
@@ -40,7 +40,7 @@ const gasBudget = 100000000;
     let transactionBlock;
 
     if (!staking_nft?.first_bid) {
-        transactionBlock = await getNewBidWithNftTx(
+        transactionBlock = await getNewBidTx(
             gasBudget,
             config.SINGLE_COLLATERAL_PACKAGE,
             portfolioVaults[index].typeArgs,
