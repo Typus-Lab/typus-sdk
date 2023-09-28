@@ -167,7 +167,7 @@ export async function getDailyAttendTx(gasBudget: number, nftPackageId: string, 
         ctx: &mut TxContext
     )
 */
-export async function getSanpshotTx(gasBudget: number, nftPackageId: string, registry: string) {
+export async function getSnapshotTx(gasBudget: number, nftPackageId: string, registry: string) {
     let tx = new TransactionBlock();
 
     tx.moveCall({
