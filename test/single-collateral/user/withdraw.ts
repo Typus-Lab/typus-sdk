@@ -2,7 +2,7 @@ import "../../load_env";
 import { getPortfolioVaults } from "../../../utils/typus-dov-single/portfolio-vault";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import config from "../../../config.json";
-import { getWithdrawTx } from "../../../utils/typus-dov-single/user-entry";
+import { getWithdrawTx } from "../../../utils/nft-staking/user-entry";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -22,8 +22,9 @@ const signer = new RawSigner(keypair, provider);
     let transactionBlock = await getWithdrawTx(
         gasBudget,
         config.SINGLE_COLLATERAL_PACKAGE,
-        portfolioVaults[index].typeArgs.slice(0, 1),
+        portfolioVaults[index].typeArgs,
         config.SINGLE_COLLATERAL_REGISTRY,
+        config.SINGLE_COLLATERAL_AC_REGISTRY,
         portfolioVaults[index].info.index,
         withdrawAmount
     );

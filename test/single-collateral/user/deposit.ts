@@ -1,5 +1,5 @@
 import "../../load_env";
-import { getDepositTx } from "../../../utils/typus-dov-single/user-entry";
+import { getDepositTx } from "../../../utils/nft-staking/user-entry";
 import { getPortfolioVaults } from "../../../utils/typus-dov-single/portfolio-vault";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import config from "../../../config.json";
