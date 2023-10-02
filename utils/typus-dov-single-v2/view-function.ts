@@ -71,6 +71,8 @@ export interface Config {
     bidLotSize: string;
     minDepositSize: string;
     minBidSize: string;
+    maxDepositEntry: string;
+    maxBidEntry: string;
     depositFeeBp: string;
     depositFeeShareBp: string;
     depositSharedFeePool: string | undefined;
@@ -221,6 +223,8 @@ export async function getVaults(
             bidLotSize: reader.read64(),
             minDepositSize: reader.read64(),
             minBidSize: reader.read64(),
+            maxDepositEntry: reader.read64(),
+            maxBidEntry: reader.read64(),
             depositFeeBp: reader.read64(),
             depositFeeShareBp: reader.read64(),
             depositSharedFeePool: reader
