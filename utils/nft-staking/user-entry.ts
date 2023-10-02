@@ -131,6 +131,11 @@ export async function getUnstakeNftTx(gasBudget: number, nftPackageId: string, r
     let tx = new TransactionBlock();
 
     tx.moveCall({
+        target: `${nftPackageId}::tails_staking::snapshot`,
+        typeArguments: [],
+        arguments: [tx.object(registry), tx.object(CLOCK)],
+    });
+    tx.moveCall({
         target: `${nftPackageId}::tails_staking::unstake_nft`,
         typeArguments: [],
         arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap)],
