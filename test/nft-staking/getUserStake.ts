@@ -3,6 +3,7 @@ import config from "../../config.json";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import { getUserStake } from "../../utils/nft-staking/fetch";
 import { getLevelExp } from "../../utils/typus-nft/fetch";
+import { getExpEarn, getExpEarnPerMinute } from "../../utils/nft-staking/calculation";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 // const client = new SuiClient({ url: config.RPC_ENDPOINT });
@@ -35,4 +36,10 @@ const gasBudget = 100000000;
         const need_exp = next_level_exp! - exp;
         console.log(`Need ${need_exp} exp to level up!`);
     }
+
+    const exp_earn = getExpEarn(res?.u64_padding!);
+    console.log(`exp_earn: ${exp_earn}`);
+
+    const exp_earn_per_min = getExpEarnPerMinute(res?.u64_padding!);
+    console.log(`exp_earn_per_min: ${exp_earn_per_min}`);
 })();
