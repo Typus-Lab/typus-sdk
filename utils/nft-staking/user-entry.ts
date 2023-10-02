@@ -282,6 +282,25 @@ export async function getDepositTx(
     return tx;
 }
 
+export async function getCompoundTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    additional_config_registry: string,
+    index: string
+) {
+    let tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${packageId}::tails_staking::compound`,
+        typeArguments,
+        arguments: [tx.pure(registry), tx.pure(additional_config_registry), tx.pure(index), tx.object(CLOCK)],
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
 export async function getWithdrawTx(
     gasBudget: number,
     packageId: string,
