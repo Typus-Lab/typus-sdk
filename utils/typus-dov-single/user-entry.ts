@@ -128,6 +128,33 @@ export async function getBatchClaimTx(
 
     return tx;
 }
+export async function getBatchClaimHarvestTx(
+    gasBudget: number,
+    packageId: string,
+    registry: string,
+    additional_config_registry: string,
+    claimRequests: [{ typeArguments: string[]; index: string }],
+    harvestRequests: [{ typeArguments: string[]; index: string }]
+) {
+    let tx = new TransactionBlock();
+    claimRequests.forEach((request) => {
+        tx.moveCall({
+            target: `${packageId}::typus_dov_single::claim`,
+            typeArguments: request.typeArguments,
+            arguments: [tx.pure(registry), tx.pure(additional_config_registry), tx.pure(request.index)],
+        });
+    });
+    harvestRequests.forEach((request) => {
+        tx.moveCall({
+            target: `${packageId}::typus_dov_single::harvest`,
+            typeArguments: request.typeArguments,
+            arguments: [tx.pure(registry), tx.pure(additional_config_registry), tx.pure(request.index)],
+        });
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
 /**
     public(friend) entry fun harvest<TOKEN>(
         registry: &mut Registry,
