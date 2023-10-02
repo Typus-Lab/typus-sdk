@@ -187,23 +187,23 @@ export async function getHarvestTx(
     gasBudget: number,
     typusFrameworkPackageId: string,
     packageId: string,
-    typeArguments: string[],
     registry: string,
-    index: string,
-    receipts: string[]
+    requests: [{ typeArguments: string[]; index: string; receipts: string[] }]
 ) {
     let tx = new TransactionBlock();
-    tx.moveCall({
-        target: `${packageId}::typus_dov_single::harvest`,
-        typeArguments,
-        arguments: [
-            tx.pure(registry),
-            tx.pure(index),
-            tx.makeMoveVec({
-                type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
-                objects: receipts.map((id) => tx.object(id)),
-            }),
-        ],
+    requests.forEach((request) => {
+        tx.moveCall({
+            target: `${packageId}::typus_dov_single::harvest`,
+            typeArguments: request.typeArguments,
+            arguments: [
+                tx.pure(registry),
+                tx.pure(request.index),
+                tx.makeMoveVec({
+                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    objects: request.receipts.map((id) => tx.object(id)),
+                }),
+            ],
+        });
     });
     tx.setGasBudget(gasBudget);
 
