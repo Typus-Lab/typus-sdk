@@ -5,10 +5,10 @@ export function getExpEarn(u64_padding: Map<string, string>): number {
     const snapshot_ms = Number(u64_padding.get("snapshot_ms"));
     // console.log(`snapshot_ms: ${snapshot_ms}`);
 
-    const minutes = Math.round((new Date().getTime() - snapshot_ms) / 60_000);
+    const minutes = round((new Date().getTime() - snapshot_ms) / 60_000);
     // console.log(`minutes: ${minutes}`);
 
-    const exp_earn = Math.round((usd_in_deposit * minutes) / 6000);
+    const exp_earn = round((usd_in_deposit * minutes) / 6000);
     // console.log(`exp_earn: ${exp_earn}`);
 
     return exp_earn;
@@ -22,4 +22,8 @@ export function getExpEarnPerMinute(u64_padding: Map<string, string>): number {
     // console.log(`exp_earn: ${exp_earn}`);
 
     return exp_earn;
+}
+
+function round(a: number): number {
+    return a - (a % 1);
 }
