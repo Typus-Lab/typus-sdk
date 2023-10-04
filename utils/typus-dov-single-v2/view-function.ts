@@ -17,7 +17,8 @@ export interface Info {
     expirationTsMs: string;
     depositToken: string;
     bidToken: string;
-    oracleToken: string;
+    settlementBase: string;
+    settlementQuote: string;
     dTokenDecimal: string;
     bTokenDecimal: string;
     oTokenDecimal: string;
@@ -81,6 +82,7 @@ export interface Config {
     bidIncentiveBp: string;
     auctionDelayTsMs: string;
     auctionDurationTsMs: string;
+    recoupDelayTsMs: string;
     capacity: string;
     leverage: string;
     riskLevel: string;
@@ -164,7 +166,8 @@ export async function getVaults(
             expirationTsMs: reader.read64(),
             depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
             bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            oracleToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            settlementBase: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            settlementQuote: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
             dTokenDecimal: reader.read64(),
             bTokenDecimal: reader.read64(),
             oTokenDecimal: reader.read64(),
@@ -237,6 +240,7 @@ export async function getVaults(
             bidIncentiveBp: reader.read64(),
             auctionDelayTsMs: reader.read64(),
             auctionDurationTsMs: reader.read64(),
+            recoupDelayTsMs: reader.read64(),
             capacity: reader.read64(),
             leverage: reader.read64(),
             riskLevel: reader.read64(),
