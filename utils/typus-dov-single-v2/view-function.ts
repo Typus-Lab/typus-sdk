@@ -552,7 +552,7 @@ export async function getBidShares(
     let transactionBlockArguments = [
         transactionBlock.pure(registry),
         transactionBlock.makeMoveVec({
-            type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+            type: `${typusFrameworkPackageId}::vault::TypusBidReceipt`,
             objects: receipts.map((id) => transactionBlock.object(id)),
         }),
     ];
