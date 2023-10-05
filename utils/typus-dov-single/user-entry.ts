@@ -141,14 +141,14 @@ export async function getBatchClaimHarvestTx(
         tx.moveCall({
             target: `${packageId}::typus_dov_single::claim`,
             typeArguments: request.typeArguments,
-            arguments: [tx.pure(registry), tx.pure(additional_config_registry), tx.pure(request.index)],
+            arguments: [tx.object(registry), tx.object(additional_config_registry), tx.pure(request.index)],
         });
     });
     harvestRequests.forEach((request) => {
         tx.moveCall({
             target: `${packageId}::typus_dov_single::harvest`,
             typeArguments: request.typeArguments,
-            arguments: [tx.pure(registry), tx.pure(additional_config_registry), tx.pure(request.index)],
+            arguments: [tx.object(registry), tx.object(additional_config_registry), tx.pure(request.index)],
         });
     });
     tx.setGasBudget(gasBudget);
