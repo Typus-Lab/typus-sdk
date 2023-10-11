@@ -114,7 +114,7 @@ export async function getBatchClaimTx(
     packageId: string,
     registry: string,
     additional_config_registry: string,
-    requests: [{ typeArguments: string[]; index: string }]
+    requests: { typeArguments: string[]; index: string }[]
 ) {
     let tx = new TransactionBlock();
     requests.forEach((request) => {
@@ -133,8 +133,8 @@ export async function getBatchClaimHarvestTx(
     packageId: string,
     registry: string,
     additional_config_registry: string,
-    claimRequests: [{ typeArguments: string[]; index: string }],
-    harvestRequests: [{ typeArguments: string[]; index: string }]
+    claimRequests: { typeArguments: string[]; index: string }[],
+    harvestRequests: { typeArguments: string[]; index: string }[]
 ) {
     let tx = new TransactionBlock();
     claimRequests.forEach((request) => {

@@ -315,7 +315,7 @@ export async function getExerciseTx(
     typusFrameworkPackageId: string,
     packageId: string,
     registry: string,
-    requests: [{ typeArguments: string[]; index: string; receipts: string[] }]
+    requests: { typeArguments: string[]; index: string; receipts: string[] }[]
 ) {
     let tx = new TransactionBlock();
     requests.forEach((request) => {
