@@ -2,7 +2,7 @@ import { TransactionBlock } from "@mysten/sui.js";
 import { CLOCK } from "../../constants";
 
 /**
-    public(friend) entry fun deposit<D_TOKEN, B_TOKEN, O_TOKEN>(
+    public(friend) entry fun deposit<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
         coins: vector<Coin<D_TOKEN>>,
@@ -68,7 +68,7 @@ export async function getDepositTx(
 }
 
 /**
-    public(friend) entry fun withdraw<D_TOKEN, B_TOKEN, O_TOKEN>(
+    public(friend) entry fun withdraw<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
         receipts: vector<TypusDepositReceipt>,
@@ -107,7 +107,7 @@ export async function getWithdrawTx(
 }
 
 /**
-    public(friend) entry fun unsubscribe<D_TOKEN, B_TOKEN, O_TOKEN>(
+    public(friend) entry fun unsubscribe<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
         receipts: vector<TypusDepositReceipt>,
@@ -146,7 +146,7 @@ export async function getUnsubscribeTx(
 }
 
 /**
-    public(friend) entry fun claim<D_TOKEN, B_TOKEN, O_TOKEN>(
+    public(friend) entry fun claim<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
         receipts: vector<TypusDepositReceipt>,
@@ -163,7 +163,7 @@ export async function getClaimTx(
     let tx = new TransactionBlock();
     requests.forEach((request) => {
         tx.moveCall({
-            target: `${packageId}::typus_dov_single::claim`,
+            target: `${packageId}::tds_user_entry::claim`,
             typeArguments: request.typeArguments,
             arguments: [
                 tx.object(registry),
@@ -181,7 +181,7 @@ export async function getClaimTx(
 }
 
 /**
-    public(friend) entry fun harvest<D_TOKEN, B_TOKEN, O_TOKEN>(
+    public(friend) entry fun harvest<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
         receipts: vector<TypusDepositReceipt>,
@@ -198,7 +198,7 @@ export async function getHarvestTx(
     let tx = new TransactionBlock();
     requests.forEach((request) => {
         tx.moveCall({
-            target: `${packageId}::typus_dov_single::harvest`,
+            target: `${packageId}::tds_user_entry::harvest`,
             typeArguments: request.typeArguments,
             arguments: [
                 tx.object(registry),
@@ -216,7 +216,7 @@ export async function getHarvestTx(
 }
 
 /**
-    public(friend) entry fun compound<D_TOKEN, B_TOKEN, O_TOKEN>(
+    public(friend) entry fun compound<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
         receipts: vector<TypusDepositReceipt>,
@@ -252,7 +252,7 @@ export async function getCompoundTx(
 }
 
 /**
-    public(friend) entry fun new_bid<D_TOKEN, B_TOKEN, O_TOKEN>(
+    public(friend) entry fun new_bid<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
         coins: vector<Coin<B_TOKEN>>,
@@ -280,13 +280,13 @@ export async function getNewBidTx(
     ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(premium_required)]);
         tx.moveCall({
-            target: `${packageId}::typus_dov_single::new_bid`,
+            target: `${packageId}::tds_user_entry::new_bid`,
             typeArguments,
             arguments: [tx.object(registry), tx.pure(index), tx.makeMoveVec({ objects: [coin] }), tx.pure(size), tx.pure("0x6")],
         });
     } else {
         tx.moveCall({
-            target: `${packageId}::typus_dov_single::new_bid`,
+            target: `${packageId}::tds_user_entry::new_bid`,
             typeArguments,
             arguments: [
                 tx.object(registry),
@@ -303,7 +303,7 @@ export async function getNewBidTx(
 }
 
 /**
-    public(friend) entry fun exercise<D_TOKEN, B_TOKEN, O_TOKEN>(
+    public(friend) entry fun exercise<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
         receipts: vector<TypusBidReceipt>,
@@ -320,7 +320,7 @@ export async function getExerciseTx(
     let tx = new TransactionBlock();
     requests.forEach((request) => {
         tx.moveCall({
-            target: `${packageId}::typus_dov_single::exercise`,
+            target: `${packageId}::tds_user_entry::exercise`,
             typeArguments: request.typeArguments,
             arguments: [
                 tx.object(registry),
@@ -347,7 +347,7 @@ export async function getRefundTx(gasBudget: number, packageId: string, typeArgu
     let tx = new TransactionBlock();
     typeArguments.forEach((typeArgument) => {
         tx.moveCall({
-            target: `${packageId}::typus_dov_single::refund`,
+            target: `${packageId}::tds_user_entry::refund`,
             typeArguments: [typeArgument],
             arguments: [tx.object(registry)],
         });
