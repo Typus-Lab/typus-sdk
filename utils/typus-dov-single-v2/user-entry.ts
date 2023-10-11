@@ -1,4 +1,5 @@
 import { TransactionBlock } from "@mysten/sui.js";
+import { CLOCK } from "../../constants";
 
 /**
     public(friend) entry fun deposit<D_TOKEN, B_TOKEN, O_TOKEN>(
@@ -30,10 +31,10 @@ export async function getDepositTx(
     ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
         tx.moveCall({
-            target: `${packageId}::typus_dov_single::deposit`,
+            target: `${packageId}::tails_staking::deposit`,
             typeArguments,
             arguments: [
-                tx.pure(registry),
+                tx.object(registry),
                 tx.pure(index),
                 tx.makeMoveVec({ objects: [coin] }),
                 tx.pure(amount),
@@ -41,14 +42,15 @@ export async function getDepositTx(
                     type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
                     objects: receipts.map((id) => tx.object(id)),
                 }),
+                tx.pure(CLOCK),
             ],
         });
     } else {
         tx.moveCall({
-            target: `${packageId}::typus_dov_single::deposit`,
+            target: `${packageId}::tails_staking::deposit`,
             typeArguments,
             arguments: [
-                tx.pure(registry),
+                tx.object(registry),
                 tx.pure(index),
                 tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
                 tx.pure(amount),
@@ -56,6 +58,7 @@ export async function getDepositTx(
                     type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
                     objects: receipts.map((id) => tx.object(id)),
                 }),
+                tx.pure(CLOCK),
             ],
         });
     }
@@ -85,16 +88,17 @@ export async function getWithdrawTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::typus_dov_single::withdraw`,
+        target: `${packageId}::tails_staking::withdraw`,
         typeArguments,
         arguments: [
-            tx.pure(registry),
+            tx.object(registry),
             tx.pure(index),
             tx.makeMoveVec({
                 type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
                 objects: receipts.map((id) => tx.object(id)),
             }),
             tx.pure(share ? [share] : []),
+            tx.pure(CLOCK),
         ],
     });
     tx.setGasBudget(gasBudget);
@@ -123,16 +127,17 @@ export async function getUnsubscribeTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::typus_dov_single::unsubscribe`,
+        target: `${packageId}::tails_staking::unsubscribe`,
         typeArguments,
         arguments: [
-            tx.pure(registry),
+            tx.object(registry),
             tx.pure(index),
             tx.makeMoveVec({
                 type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
                 objects: receipts.map((id) => tx.object(id)),
             }),
             tx.pure(share ? [share] : []),
+            tx.pure(CLOCK),
         ],
     });
     tx.setGasBudget(gasBudget);
@@ -153,7 +158,7 @@ export async function getClaimTx(
     typusFrameworkPackageId: string,
     packageId: string,
     registry: string,
-    requests: [{ typeArguments: string[]; index: string; receipts: string[] }]
+    requests: { typeArguments: string[]; index: string; receipts: string[] }[]
 ) {
     let tx = new TransactionBlock();
     requests.forEach((request) => {
@@ -161,7 +166,7 @@ export async function getClaimTx(
             target: `${packageId}::typus_dov_single::claim`,
             typeArguments: request.typeArguments,
             arguments: [
-                tx.pure(registry),
+                tx.object(registry),
                 tx.pure(request.index),
                 tx.makeMoveVec({
                     type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
@@ -188,7 +193,7 @@ export async function getHarvestTx(
     typusFrameworkPackageId: string,
     packageId: string,
     registry: string,
-    requests: [{ typeArguments: string[]; index: string; receipts: string[] }]
+    requests: { typeArguments: string[]; index: string; receipts: string[] }[]
 ) {
     let tx = new TransactionBlock();
     requests.forEach((request) => {
@@ -196,7 +201,7 @@ export async function getHarvestTx(
             target: `${packageId}::typus_dov_single::harvest`,
             typeArguments: request.typeArguments,
             arguments: [
-                tx.pure(registry),
+                tx.object(registry),
                 tx.pure(request.index),
                 tx.makeMoveVec({
                     type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
@@ -223,20 +228,21 @@ export async function getCompoundTx(
     typusFrameworkPackageId: string,
     packageId: string,
     registry: string,
-    requests: [{ typeArguments: string[]; index: string; receipts: string[] }]
+    requests: { typeArguments: string[]; index: string; receipts: string[] }[]
 ) {
     let tx = new TransactionBlock();
     requests.forEach((request) => {
         tx.moveCall({
-            target: `${packageId}::typus_dov_single::compound`,
+            target: `${packageId}::tails_staking::compound`,
             typeArguments: request.typeArguments,
             arguments: [
-                tx.pure(registry),
+                tx.object(registry),
                 tx.pure(request.index),
                 tx.makeMoveVec({
                     type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
                     objects: request.receipts.map((id) => tx.object(id)),
                 }),
+                tx.object(CLOCK),
             ],
         });
     });
@@ -276,14 +282,14 @@ export async function getNewBidTx(
         tx.moveCall({
             target: `${packageId}::typus_dov_single::new_bid`,
             typeArguments,
-            arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: [coin] }), tx.pure(size), tx.pure("0x6")],
+            arguments: [tx.object(registry), tx.pure(index), tx.makeMoveVec({ objects: [coin] }), tx.pure(size), tx.pure("0x6")],
         });
     } else {
         tx.moveCall({
             target: `${packageId}::typus_dov_single::new_bid`,
             typeArguments,
             arguments: [
-                tx.pure(registry),
+                tx.object(registry),
                 tx.pure(index),
                 tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
                 tx.pure(size),
@@ -317,7 +323,7 @@ export async function getExerciseTx(
             target: `${packageId}::typus_dov_single::exercise`,
             typeArguments: request.typeArguments,
             arguments: [
-                tx.pure(registry),
+                tx.object(registry),
                 tx.pure(request.index),
                 tx.makeMoveVec({
                     type: `${typusFrameworkPackageId}::vault::TypusBidReceipt`,
@@ -343,7 +349,7 @@ export async function getRefundTx(gasBudget: number, packageId: string, typeArgu
         tx.moveCall({
             target: `${packageId}::typus_dov_single::refund`,
             typeArguments: [typeArgument],
-            arguments: [tx.pure(registry)],
+            arguments: [tx.object(registry)],
         });
     });
     tx.setGasBudget(gasBudget);

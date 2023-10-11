@@ -10,16 +10,16 @@ const signer = new RawSigner(keypair, provider);
 (async () => {
     let depositToken = "0x2::sui::SUI";
     let bidToken = "0x2::sui::SUI";
-    let oracleToken = "0x2::sui::SUI";
     let gasBudget = 100000000;
     let typusFrameworkPackageId = config.FRAMEWORK_PACKAGE;
     let packageId = config.PACKAGE;
-    let typeArguments = [depositToken, bidToken, oracleToken];
+    let typeArguments = [depositToken, bidToken];
     let registry = config.REGISTRY;
     let index = "0";
     let receipts = [];
+    let request = [{ typeArguments, index, receipts }];
 
-    let transactionBlock = await getClaimTx(gasBudget, typusFrameworkPackageId, packageId, typeArguments, registry, index, receipts);
+    let transactionBlock = await getClaimTx(gasBudget, typusFrameworkPackageId, packageId, registry, request);
     let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
     console.log(res);
 })();
