@@ -19,6 +19,8 @@ export interface Info {
     bidToken: string;
     settlementBase: string;
     settlementQuote: string;
+    settlementBaseName: string;
+    settlementQuoteName: string;
     dTokenDecimal: string;
     bTokenDecimal: string;
     oTokenDecimal: string;
@@ -89,12 +91,6 @@ export interface Config {
     hasNext: boolean;
     activeVaultConfig: VaultConfig;
     warmupVaultConfig: VaultConfig;
-    depositReceiptDisplayName: string;
-    depositReceiptDisplayDescription: string;
-    depositReceiptDisplayImageUrl: string;
-    bidReceiptDisplayName: string;
-    bidReceiptDisplayDescription: string;
-    bidReceiptDisplayImageUrl: string;
     u64Padding: string[];
     bcsPadding: string[];
 }
@@ -127,9 +123,7 @@ export interface DepositVault {
     premiumShareSupply: string; // harvest
     incentiveShareSupply: string; // redeem
     hasNext: boolean;
-    name: string;
-    description: string;
-    imageUrl: string;
+    metadata: string;
     u64Padding: string[];
     bcsPadding: string[];
 }
@@ -140,7 +134,7 @@ export async function getVaults(
     indexes: string[]
 ): Promise<{ [key: string]: Vault }> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::typus_dov_single::get_vault_data_bcs` as any;
+    let target = `${packageId}::tds_view_function::get_vault_data_bcs` as any;
     let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(indexes)];
     transactionBlock.moveCall({
         target,
@@ -168,6 +162,8 @@ export async function getVaults(
             bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
             settlementBase: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
             settlementQuote: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            settlementBaseName: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            settlementQuoteName: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
             dTokenDecimal: reader.read64(),
             bTokenDecimal: reader.read64(),
             oTokenDecimal: reader.read64(),
@@ -281,12 +277,6 @@ export async function getVaults(
                 initialPrice: reader.read64(),
                 finalPrice: reader.read64(),
             },
-            depositReceiptDisplayName: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            depositReceiptDisplayDescription: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            depositReceiptDisplayImageUrl: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            bidReceiptDisplayName: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            bidReceiptDisplayDescription: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            bidReceiptDisplayImageUrl: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
             u64Padding: reader.readVec((reader) => {
                 return reader.read64();
             }),
@@ -327,9 +317,7 @@ export async function getVaults(
             premiumShareSupply: reader.read64(), // harvest
             incentiveShareSupply: reader.read64(), // redeem
             hasNext: reader.read8() > 0,
-            name: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            description: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            imageUrl: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
             u64Padding: reader.readVec((reader) => {
                 return reader.read64();
             }),
@@ -374,7 +362,7 @@ export async function getAuctions(
     indexes: string[]
 ): Promise<{ [key: string]: Auction }> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::typus_dov_single::get_auction_bcs` as any;
+    let target = `${packageId}::tds_view_function::get_auction_bcs` as any;
     let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(indexes)];
     transactionBlock.moveCall({
         target,
@@ -449,7 +437,7 @@ export interface Bid {
 }
 export async function getAuctionBids(provider: JsonRpcProvider, packageId: string, registry: string, index: string): Promise<Bid[]> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::typus_dov_single::get_auction_bids_bcs` as any;
+    let target = `${packageId}::tds_view_function::get_auction_bids_bcs` as any;
     let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(index)];
     transactionBlock.moveCall({
         target,
@@ -495,7 +483,7 @@ export async function getDepositShares(
     receipts: string[]
 ): Promise<{ [key: string]: DepositShare }> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::typus_dov_single::get_deposit_shares_bcs` as any;
+    let target = `${packageId}::tds_view_function::get_deposit_shares_bcs` as any;
     let transactionBlockArguments = [
         transactionBlock.pure(registry),
         transactionBlock.makeMoveVec({
@@ -552,7 +540,7 @@ export async function getBidShares(
     receipts: string[]
 ): Promise<{ [key: string]: BidShare }> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::typus_dov_single::get_bid_shares_bcs` as any;
+    let target = `${packageId}::tds_view_function::get_bid_shares_bcs` as any;
     let transactionBlockArguments = [
         transactionBlock.pure(registry),
         transactionBlock.makeMoveVec({
