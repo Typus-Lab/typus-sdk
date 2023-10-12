@@ -372,7 +372,7 @@ export async function getAuctions(
     let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
-    console.log(JSON.stringify(bytes));
+    // console.log(JSON.stringify(bytes));
     let reader = new BcsReader(new Uint8Array(bytes));
     let result: {
         [key: string]: Auction;
