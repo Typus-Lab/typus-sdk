@@ -280,13 +280,13 @@ export async function getNewBidTx(
     ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(premium_required)]);
         tx.moveCall({
-            target: `${packageId}::tds_user_entry::new_bid`,
+            target: `${packageId}::tails_staking::new_bid`,
             typeArguments,
             arguments: [tx.object(registry), tx.pure(index), tx.makeMoveVec({ objects: [coin] }), tx.pure(size), tx.pure("0x6")],
         });
     } else {
         tx.moveCall({
-            target: `${packageId}::tds_user_entry::new_bid`,
+            target: `${packageId}::tails_staking::new_bid`,
             typeArguments,
             arguments: [
                 tx.object(registry),
