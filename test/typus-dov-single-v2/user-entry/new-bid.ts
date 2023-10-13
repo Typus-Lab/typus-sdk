@@ -8,17 +8,17 @@ const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const signer = new RawSigner(keypair, provider);
 
 (async () => {
-    let depositToken = "0x2::sui::SUI";
-    let bidToken = "0x2::sui::SUI";
+    let depositToken = "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::btc::BTC";
+    let bidToken = "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::btc::BTC";
     let gasBudget = 100000000;
     let packageId = config.PACKAGE;
     let typeArguments = [depositToken, bidToken];
     let registry = config.REGISTRY;
-    let index = "0";
+    let index = "3";
     let coins = (await provider.getCoins({ owner: await signer.getAddress(), coinType: depositToken })).data.map(
         (coin) => coin.coinObjectId
     );
-    let size = "10000";
+    let size = "4";
     let premium_required = "100000000";
 
     let transactionBlock = await getNewBidTx(gasBudget, packageId, typeArguments, registry, index, coins, size, premium_required);
