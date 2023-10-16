@@ -1,6 +1,6 @@
 {
     "RPC_ENDPOINT": "https://api.shinami.com:443/node/v1/sui_testnet_c702de54dad05016124f2cfabc1de7e8",
     "FRAMEWORK_PACKAGE": "0x6c7a28b543793294cef6da951b5bb44c7e817fb146764f826daff6597292dc5d",
-    "PACKAGE": "0x2855ce21188fbffe70c1ee59804b5f3e4754c2e7be0ba17ed72ac68b5238df57",
+    "PACKAGE": "0x6536b5c55f2b8c199e986ec35240192cd885730a999fdbb44c8d6a703c4b616b",
     "REGISTRY": "0x46f596deb52bcbf0e5bfe86664cab11d7dd63d453aa7ee3e596f8a46f0fe2071"
 }
