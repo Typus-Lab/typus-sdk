@@ -1,4 +1,5 @@
 import { TransactionBlock } from "@mysten/sui.js";
+import { CLOCK } from "../../constants";
 
 /**
     public(friend) entry fun deposit<D_TOKEN, B_TOKEN, O_TOKEN>(
@@ -149,6 +150,41 @@ export async function getBatchClaimHarvestTx(
             target: `${packageId}::typus_dov_single::harvest`,
             typeArguments: request.typeArguments,
             arguments: [tx.object(registry), tx.object(additional_config_registry), tx.pure(request.index)],
+        });
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+export async function getBatchClaimHarvestWithdrawTx(
+    gasBudget: number,
+    packageId: string,
+    registry: string,
+    additional_config_registry: string,
+    claimRequests: { typeArguments: string[]; index: string }[],
+    harvestRequests: { typeArguments: string[]; index: string }[],
+    withdrawRequests: { typeArguments: string[]; index: string }[] // D_TOKEN, B_TOKEN, O_TOKEN
+) {
+    let tx = new TransactionBlock();
+    claimRequests.forEach((request) => {
+        tx.moveCall({
+            target: `${packageId}::typus_dov_single::claim`,
+            typeArguments: request.typeArguments,
+            arguments: [tx.object(registry), tx.object(additional_config_registry), tx.pure(request.index)],
+        });
+    });
+    harvestRequests.forEach((request) => {
+        tx.moveCall({
+            target: `${packageId}::typus_dov_single::harvest`,
+            typeArguments: request.typeArguments,
+            arguments: [tx.object(registry), tx.object(additional_config_registry), tx.pure(request.index)],
+        });
+    });
+    withdrawRequests.forEach((request) => {
+        tx.moveCall({
+            target: `${packageId}::tails_staking::withdraw`,
+            typeArguments: request.typeArguments,
+            arguments: [tx.object(registry), tx.object(additional_config_registry), tx.pure(request.index), tx.pure([]), tx.object(CLOCK)],
         });
     });
     tx.setGasBudget(gasBudget);

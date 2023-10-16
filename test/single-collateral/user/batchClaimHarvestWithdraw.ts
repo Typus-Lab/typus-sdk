@@ -2,7 +2,7 @@ import "../../load_env";
 import { getPortfolioVaults } from "../../../utils/typus-dov-single/portfolio-vault";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import config from "../../../config.json";
-import { getClaimAndHarvestTx } from "../../../utils/typus-dov-single/user-entry";
+import { getBatchClaimHarvestWithdrawTx } from "../../../utils/typus-dov-single/user-entry";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -18,13 +18,14 @@ const signer = new RawSigner(keypair, provider);
         config.SINGLE_COLLATERAL_DEPOSIT_VAULT_REGISTRY,
         config.SINGLE_COLLATERAL_BID_VAULT_REGISTRY
     );
-    let transactionBlock = await getClaimAndHarvestTx(
+    let transactionBlock = await getBatchClaimHarvestWithdrawTx(
         gasBudget,
         config.SINGLE_COLLATERAL_PACKAGE,
-        portfolioVaults[index].typeArgs.slice(0, 2),
         config.SINGLE_COLLATERAL_REGISTRY,
         config.SINGLE_COLLATERAL_AC_REGISTRY,
-        portfolioVaults[index].info.index
+        [{ typeArguments: [portfolioVaults[index].typeArgs[0]], index: portfolioVaults[index].info.index }],
+        [{ typeArguments: [portfolioVaults[index].typeArgs[1]], index: portfolioVaults[index].info.index }],
+        [{ typeArguments: portfolioVaults[index].typeArgs, index: portfolioVaults[index].info.index }]
     );
 
     let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
