@@ -379,47 +379,45 @@ export async function getAuctions(
     } = {};
     reader.readVec((reader) => {
         reader.read16();
-        reader.readVec((reader) => {
-            let id = AddressFromBytes(reader.readBytes(32));
-            let index = reader.read64();
-            let token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
-            let startTsMs = reader.read64();
-            let endTsMs = reader.read64();
-            let size = reader.read64();
-            let decaySpeed = reader.read64();
-            let initialPrice = reader.read64();
-            let finalPrice = reader.read64();
-            let feeBp = reader.read64();
-            let incentiveBp = reader.read64();
-            let tokenDecimal = reader.read64();
-            let sizeDecimal = reader.read64();
-            let totalBidSize = reader.read64();
-            let ableToRemoveBid = reader.read8() > 0;
-            // skip bids bytes
-            reader.readBytes(32); // id
-            reader.read64(); // slice_count
-            reader.read64(); // slice_size
-            reader.read64(); // length
-            let bidIndex = reader.read64();
-            result[index] = {
-                id,
-                index,
-                token,
-                startTsMs,
-                endTsMs,
-                size,
-                decaySpeed,
-                initialPrice,
-                finalPrice,
-                feeBp,
-                incentiveBp,
-                tokenDecimal,
-                sizeDecimal,
-                totalBidSize,
-                ableToRemoveBid,
-                bidIndex,
-            };
-        });
+        let id = AddressFromBytes(reader.readBytes(32));
+        let index = reader.read64();
+        let token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+        let startTsMs = reader.read64();
+        let endTsMs = reader.read64();
+        let size = reader.read64();
+        let decaySpeed = reader.read64();
+        let initialPrice = reader.read64();
+        let finalPrice = reader.read64();
+        let feeBp = reader.read64();
+        let incentiveBp = reader.read64();
+        let tokenDecimal = reader.read64();
+        let sizeDecimal = reader.read64();
+        let totalBidSize = reader.read64();
+        let ableToRemoveBid = reader.read8() > 0;
+        // skip bids bytes
+        reader.readBytes(32); // id
+        reader.read64(); // slice_count
+        reader.read64(); // slice_size
+        reader.read64(); // length
+        let bidIndex = reader.read64();
+        result[index] = {
+            id,
+            index,
+            token,
+            startTsMs,
+            endTsMs,
+            size,
+            decaySpeed,
+            initialPrice,
+            finalPrice,
+            feeBp,
+            incentiveBp,
+            tokenDecimal,
+            sizeDecimal,
+            totalBidSize,
+            ableToRemoveBid,
+            bidIndex,
+        };
     });
 
     return result;
