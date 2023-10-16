@@ -9,6 +9,10 @@ const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPO
         "0",
         //
         "1",
+        //
+        "2",
+        //
+        "3",
     ];
     let result = await getAuctions(provider, config.PACKAGE, config.REGISTRY, indexes);
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
