@@ -13,16 +13,24 @@ const gasBudget = 100000000;
     const address = await signer.getAddress();
     console.log(address);
 
-    let tx = new TransactionBlock();
-
-    const dynamicFields = await provider.getDynamicFields({
+    var result = await provider.getDynamicFields({
         parentId: config_v2.NFT_TABLE,
     });
-    console.log(dynamicFields);
 
-    const users = dynamicFields.data?.map((d) => d.name.value);
-    console.log(users);
+    var datas = result.data;
 
+    while (result.hasNextPage) {
+        result = await provider.getDynamicFields({
+            parentId: config_v2.NFT_TABLE,
+            cursor: result.nextCursor,
+        });
+        datas = datas.concat(result.data);
+    }
+
+    const users = datas.map((d) => d.name.value);
+    console.log(users.length);
+
+    let tx = new TransactionBlock();
     tx.moveCall({
         target: `${config_v2.SINGLE_COLLATERAL_PACKAGE}::tails_staking::snapshot_and_calibrate`,
         typeArguments: [],
