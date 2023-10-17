@@ -48,8 +48,10 @@ export interface DeliveryInfos {
     totalIncentiveBidValue: string;
     totalIncentiveFee: string;
     deliveryInfo: DeliveryInfo[];
+    u64Padding: string[];
 }
 export interface DeliveryInfo {
+    auctionType: string;
     deliveryPrice: string;
     deliverySize: string;
     bidderBidValue: string;
@@ -57,6 +59,7 @@ export interface DeliveryInfo {
     incentiveBidValue: string;
     incentiveFee: string;
     tsMs: string;
+    u64Padding: string[];
 }
 export interface SettlementInfo {
     round: string;
@@ -67,6 +70,7 @@ export interface SettlementInfo {
     sharePrice: string;
     sharePriceDecimal: string;
     tsMs: string;
+    u64Padding: string[];
 }
 export interface Config {
     oracleId: string;
@@ -100,12 +104,14 @@ export interface VaultConfig {
     decaySpeed: string;
     initialPrice: string;
     finalPrice: string;
+    u64Padding: string[];
 }
 export interface PayoffConfig {
     strikeBp: string;
     weight: string;
     isBuyer: boolean;
     strike: string | undefined;
+    u64Padding: string[];
 }
 export interface DepositVault {
     id: string;
@@ -185,6 +191,7 @@ export async function getVaults(
                 totalIncentiveFee: reader.read64(),
                 deliveryInfo: reader.readVec((reader) => {
                     return {
+                        auctionType: reader.read64(),
                         deliveryPrice: reader.read64(),
                         deliverySize: reader.read64(),
                         bidderBidValue: reader.read64(),
@@ -192,7 +199,13 @@ export async function getVaults(
                         incentiveBidValue: reader.read64(),
                         incentiveFee: reader.read64(),
                         tsMs: reader.read64(),
+                        u64Padding: reader.readVec((reader) => {
+                            return reader.read64();
+                        }),
                     };
+                }),
+                u64Padding: reader.readVec((reader) => {
+                    return reader.read64();
                 }),
             },
             settlementInfo: reader
@@ -206,6 +219,9 @@ export async function getVaults(
                         sharePrice: reader.read64(),
                         sharePriceDecimal: reader.read64(),
                         tsMs: reader.read64(),
+                        u64Padding: reader.readVec((reader) => {
+                            return reader.read64();
+                        }),
                     };
                 })
                 .at(0),
@@ -252,12 +268,18 @@ export async function getVaults(
                                 return reader.read64();
                             })
                             .at(0),
+                        u64Padding: reader.readVec((reader) => {
+                            return reader.read64();
+                        }),
                     };
                 }),
                 strikeIncrement: reader.read64(),
                 decaySpeed: reader.read64(),
                 initialPrice: reader.read64(),
                 finalPrice: reader.read64(),
+                u64Padding: reader.readVec((reader) => {
+                    return reader.read64();
+                }),
             },
             warmupVaultConfig: {
                 payoffConfigs: reader.readVec((reader) => {
@@ -270,12 +292,18 @@ export async function getVaults(
                                 return reader.read64();
                             })
                             .at(0),
+                        u64Padding: reader.readVec((reader) => {
+                            return reader.read64();
+                        }),
                     };
                 }),
                 strikeIncrement: reader.read64(),
                 decaySpeed: reader.read64(),
                 initialPrice: reader.read64(),
                 finalPrice: reader.read64(),
+                u64Padding: reader.readVec((reader) => {
+                    return reader.read64();
+                }),
             },
             u64Padding: reader.readVec((reader) => {
                 return reader.read64();
@@ -526,49 +554,49 @@ export async function getDepositShares(
     return result;
 }
 
-export interface BidShare {
-    index: string;
-    share: string;
-}
-export async function getBidShares(
-    provider: JsonRpcProvider,
-    typusFrameworkPackageId: string,
-    packageId: string,
-    registry: string,
-    receipts: string[]
-): Promise<{ [key: string]: BidShare }> {
-    let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::tds_view_function::get_bid_shares_bcs` as any;
-    let transactionBlockArguments = [
-        transactionBlock.pure(registry),
-        transactionBlock.makeMoveVec({
-            type: `${typusFrameworkPackageId}::vault::TypusBidReceipt`,
-            objects: receipts.map((id) => transactionBlock.object(id)),
-        }),
-    ];
-    transactionBlock.moveCall({
-        target,
-        typeArguments: [],
-        arguments: transactionBlockArguments,
-    });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
-    // @ts-ignore
-    let bytes = results[results.length - 1].returnValues[0][0];
-    let reader = new BcsReader(new Uint8Array(bytes));
-    let result = Array.from(new Map()).reduce((map, [key, value]) => {
-        map[key] = value;
-        return map;
-    }, {});
-    reader.readVec((reader, i) => {
-        reader.read8();
-        let index = reader.read64();
-        let share = reader.read64();
-        result[index] = {
-            index: reader.read64(),
-            share: reader.read64(),
-        } as BidShare;
-    });
+// export interface BidShare {
+//     index: string;
+//     share: string;
+// }
+// export async function getBidShares(
+//     provider: JsonRpcProvider,
+//     typusFrameworkPackageId: string,
+//     packageId: string,
+//     registry: string,
+//     receipts: string[]
+// ): Promise<{ [key: string]: BidShare }> {
+//     let transactionBlock = new TransactionBlock();
+//     let target = `${packageId}::tds_view_function::get_bid_shares_bcs` as any;
+//     let transactionBlockArguments = [
+//         transactionBlock.pure(registry),
+//         transactionBlock.makeMoveVec({
+//             type: `${typusFrameworkPackageId}::vault::TypusBidReceipt`,
+//             objects: receipts.map((id) => transactionBlock.object(id)),
+//         }),
+//     ];
+//     transactionBlock.moveCall({
+//         target,
+//         typeArguments: [],
+//         arguments: transactionBlockArguments,
+//     });
+//     let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+//     // @ts-ignore
+//     let bytes = results[results.length - 1].returnValues[0][0];
+//     let reader = new BcsReader(new Uint8Array(bytes));
+//     let result = Array.from(new Map()).reduce((map, [key, value]) => {
+//         map[key] = value;
+//         return map;
+//     }, {});
+//     reader.readVec((reader, i) => {
+//         reader.read8();
+//         let index = reader.read64();
+//         let share = reader.read64();
+//         result[index] = {
+//             index: reader.read64(),
+//             share: reader.read64(),
+//         } as BidShare;
+//     });
 
-    // @ts-ignore
-    return result;
-}
+//     // @ts-ignore
+//     return result;
+// }
