@@ -376,3 +376,80 @@ export async function getLevelUpTx(gasBudget: number, nftPackageId: string, regi
 
     return tx;
 }
+
+/**
+    entry fun consume_exp_coin_unstaked<EXP_COIN>(
+        registry: &mut Registry,
+        kiosk: &mut Kiosk,
+        kiosk_cap: &KioskOwnerCap,
+        id: ID,
+        exp_coin: Coin<EXP_COIN>,
+        ctx: &mut TxContext
+    )
+*/
+export async function consumeExpCoinUnstakedTx(
+    gasBudget: number,
+    nftPackageId: string,
+    typeArguments: string[],
+    registry: string,
+    kiosk: string,
+    kiosk_cap: string,
+    nft_id: string,
+    exp_coins: string[]
+) {
+    let tx = new TransactionBlock();
+
+    const coin = exp_coins.pop()!;
+
+    if (exp_coins.length > 0) {
+        tx.mergeCoins(
+            tx.object(coin),
+            exp_coins.map((id) => tx.object(id))
+        );
+    }
+
+    tx.moveCall({
+        target: `${nftPackageId}::tails_staking::consume_exp_coin_unstaked`,
+        typeArguments,
+        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.object(nft_id), tx.object(coin)],
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
+/**
+    entry fun consume_exp_coin_staked<EXP_COIN>(
+        registry: &mut Registry,
+        exp_coin: Coin<EXP_COIN>,
+        ctx: &mut TxContext
+    )
+*/
+export async function consumeExpCoinStakedTx(
+    gasBudget: number,
+    nftPackageId: string,
+    typeArguments: string[],
+    registry: string,
+    exp_coins: string[]
+) {
+    let tx = new TransactionBlock();
+
+    const coin = exp_coins.pop()!;
+
+    if (exp_coins.length > 0) {
+        tx.mergeCoins(
+            tx.object(coin),
+            exp_coins.map((id) => tx.object(id))
+        );
+    }
+
+    tx.moveCall({
+        target: `${nftPackageId}::tails_staking::consume_exp_coin_staked`,
+        typeArguments,
+        arguments: [tx.object(registry), tx.object(coin)],
+    });
+
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
