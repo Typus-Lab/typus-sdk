@@ -8,13 +8,13 @@ import { CLOCK } from "../../constants";
         ctx: &mut TxContext,
     )
 */
-export async function getMintTx(gasBudget: number, nftPackageId: string, pool: string, whitelist_token: string) {
+export async function getMintTx(gasBudget: number, nftPackageId: string, policy: string, pool: string, whitelist_token: string) {
     let tx = new TransactionBlock();
 
     tx.moveCall({
         target: `${nftPackageId}::typus_nft::free_mint`,
         typeArguments: [],
-        arguments: [tx.object(pool), tx.object(whitelist_token), tx.object(CLOCK)],
+        arguments: [tx.object(pool), tx.object(policy), tx.object(whitelist_token), tx.object(CLOCK)],
     });
     tx.setGasBudget(gasBudget);
 
@@ -34,6 +34,7 @@ export async function getMintToKioskTx(
     gasBudget: number,
     nftPackageId: string,
     pool: string,
+    policy: string,
     whitelist_token: string,
     kiosk: string,
     kiosk_cap: string
@@ -43,7 +44,14 @@ export async function getMintToKioskTx(
     tx.moveCall({
         target: `${nftPackageId}::typus_nft::free_mint_into_kiosk`,
         typeArguments: [],
-        arguments: [tx.object(pool), tx.object(whitelist_token), tx.object(kiosk), tx.object(kiosk_cap), tx.object(CLOCK)],
+        arguments: [
+            tx.object(pool),
+            tx.object(policy),
+            tx.object(whitelist_token),
+            tx.object(kiosk),
+            tx.object(kiosk_cap),
+            tx.object(CLOCK),
+        ],
     });
     tx.setGasBudget(gasBudget);
 
