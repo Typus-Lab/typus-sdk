@@ -4,16 +4,7 @@ import config from "../config.json";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
 (async () => {
-    let indexes = [
-        //
-        "0",
-        //
-        "1",
-        //
-        "2",
-        //
-        "3",
-    ];
+    let indexes = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
     let result = await getAuctions(provider, config.PACKAGE, config.REGISTRY, indexes);
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();

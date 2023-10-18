@@ -554,49 +554,77 @@ export async function getDepositShares(
     return result;
 }
 
-// export interface BidShare {
-//     index: string;
-//     share: string;
-// }
-// export async function getBidShares(
-//     provider: JsonRpcProvider,
-//     typusFrameworkPackageId: string,
-//     packageId: string,
-//     registry: string,
-//     receipts: string[]
-// ): Promise<{ [key: string]: BidShare }> {
-//     let transactionBlock = new TransactionBlock();
-//     let target = `${packageId}::tds_view_function::get_bid_shares_bcs` as any;
-//     let transactionBlockArguments = [
-//         transactionBlock.pure(registry),
-//         transactionBlock.makeMoveVec({
-//             type: `${typusFrameworkPackageId}::vault::TypusBidReceipt`,
-//             objects: receipts.map((id) => transactionBlock.object(id)),
-//         }),
-//     ];
-//     transactionBlock.moveCall({
-//         target,
-//         typeArguments: [],
-//         arguments: transactionBlockArguments,
-//     });
-//     let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
-//     // @ts-ignore
-//     let bytes = results[results.length - 1].returnValues[0][0];
-//     let reader = new BcsReader(new Uint8Array(bytes));
-//     let result = Array.from(new Map()).reduce((map, [key, value]) => {
-//         map[key] = value;
-//         return map;
-//     }, {});
-//     reader.readVec((reader, i) => {
-//         reader.read8();
-//         let index = reader.read64();
-//         let share = reader.read64();
-//         result[index] = {
-//             index: reader.read64(),
-//             share: reader.read64(),
-//         } as BidShare;
-//     });
+export interface BidVault {
+    id: string;
+    depositToken: string;
+    bidToken: string;
+    incentiveToken: string | undefined;
+    index: string;
+    shareSupply: string;
+    metadata: string;
+    u64Padding: string[];
+    bcsPadding: string[];
+}
+export interface BidShare {
+    bidVault: BidVault;
+    share: string;
+}
+export async function getMyBids(
+    provider: JsonRpcProvider,
+    typusFrameworkPackageId: string,
+    packageId: string,
+    registry: string,
+    receipts: string[]
+): Promise<{ [key: string]: BidShare }> {
+    let transactionBlock = new TransactionBlock();
+    let target = `${packageId}::tds_view_function::get_my_bids_bcs` as any;
+    let transactionBlockArguments = [
+        transactionBlock.pure(registry),
+        transactionBlock.makeMoveVec({
+            type: `${typusFrameworkPackageId}::vault::TypusBidReceipt`,
+            objects: receipts.map((id) => transactionBlock.object(id)),
+        }),
+    ];
+    transactionBlock.moveCall({
+        target,
+        typeArguments: [],
+        arguments: transactionBlockArguments,
+    });
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    // @ts-ignore
+    let bytes = results[results.length - 1].returnValues[0][0];
+    let reader = new BcsReader(new Uint8Array(bytes));
+    let result = Array.from(new Map()).reduce((map, [key, value]) => {
+        map[key] = value;
+        return map;
+    }, {});
+    reader.readVec((reader, i) => {
+        reader.read16();
+        let bidVault = {
+            id: AddressFromBytes(reader.readBytes(32)),
+            depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            incentiveToken: reader
+                .readVec((reader) => {
+                    return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+                })
+                .at(0),
+            index: reader.read64(),
+            shareSupply: reader.read64(),
+            metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            u64Padding: reader.readVec((reader) => {
+                return reader.read64();
+            }),
+            bcsPadding: reader.readVec((reader) => {
+                return reader.read8();
+            }),
+        } as BidVault;
+        result[bidVault.index] = {
+            bidVault,
+            share: reader.read64(),
+        } as BidShare;
+    });
 
-//     // @ts-ignore
-//     return result;
-// }
+    // @ts-ignore
+    return result;
+}
