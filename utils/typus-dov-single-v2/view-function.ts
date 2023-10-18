@@ -628,3 +628,43 @@ export async function getMyBids(
     // @ts-ignore
     return result;
 }
+
+export async function getRefundShares(
+    provider: JsonRpcProvider,
+    packageId: string,
+    registry: string,
+    user: string,
+    typeArguments: string[]
+): Promise<{ [key: string]: string }> {
+    let transactionBlock = new TransactionBlock();
+    let target = `${packageId}::tds_view_function::get_refund_shares_bcs` as any;
+    let transactionBlockArguments = [transactionBlock.pure(registry)];
+    typeArguments.forEach((typeArgument) => {
+        transactionBlock.moveCall({
+            target,
+            typeArguments: [typeArgument],
+            arguments: transactionBlockArguments,
+        });
+    });
+    let results = (
+        await provider.devInspectTransactionBlock({
+            transactionBlock,
+            sender: user,
+        })
+    ).results;
+    let refundShares = Array.from(new Map()).reduce((map, [key, value]) => {
+        map[key] = value;
+        return map;
+    }, {});
+    // @ts-ignore
+    results.forEach((result) => {
+        // @ts-ignore
+        let bytes = result.returnValues[0][0];
+        let reader = new BcsReader(new Uint8Array(bytes));
+        reader.read8();
+        refundShares[String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())))] = reader.read64();
+    });
+
+    // @ts-ignore
+    return refundShares;
+}

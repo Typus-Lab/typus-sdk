@@ -7,6 +7,7 @@ const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPO
     let receipts = [
         "0xb618954e81c561d5502356b9fd7254ba16b3fad1ed760a05dfd369ad4b867e13",
         "0x58c65af553a3d55019ef402674435321ff23ca6efd4b38d227448c3ea6368575",
+        "0x86e8cc282ec0a518950d5df64671f8a5c523e4ce7ae62c35ec84fca82a29109e",
     ];
     let result = await getMyBids(provider, config.FRAMEWORK_PACKAGE, config.PACKAGE, config.REGISTRY, receipts);
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
