@@ -19,7 +19,7 @@ const signer = new RawSigner(keypair, provider);
     let coins = (await provider.getCoins({ owner: await signer.getAddress(), coinType: depositToken })).data.map(
         (coin) => coin.coinObjectId
     );
-    let amount = "10000";
+    let amount = "10000000000";
     let receipts = [];
 
     let transactionBlock = await getDepositTx(
