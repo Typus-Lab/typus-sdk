@@ -619,7 +619,7 @@ export async function getMyBids(
                 return reader.read8();
             }),
         } as BidVault;
-        result[bidVault.index] = {
+        result[bidVault.index + "-" + bidVault.id] = {
             bidVault,
             share: reader.read64(),
         } as BidShare;
