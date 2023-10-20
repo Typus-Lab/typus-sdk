@@ -137,7 +137,8 @@ export async function getVaults(
     provider: JsonRpcProvider,
     packageId: string,
     registry: string,
-    indexes: string[]
+    indexes: string[],
+    sender = SENDER
 ): Promise<{ [key: string]: Vault }> {
     let transactionBlock = new TransactionBlock();
     let target = `${packageId}::tds_view_function::get_vault_data_bcs` as any;
@@ -147,7 +148,7 @@ export async function getVaults(
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     // console.log(JSON.stringify(bytes));
@@ -387,7 +388,8 @@ export async function getAuctions(
     provider: JsonRpcProvider,
     packageId: string,
     registry: string,
-    indexes: string[]
+    indexes: string[],
+    sender = SENDER
 ): Promise<{ [key: string]: Auction }> {
     let transactionBlock = new TransactionBlock();
     let target = `${packageId}::tds_view_function::get_auction_bcs` as any;
@@ -397,7 +399,7 @@ export async function getAuctions(
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     // console.log(JSON.stringify(bytes));
@@ -461,7 +463,13 @@ export interface Bid {
     feeDiscount: string;
     tsMs: string;
 }
-export async function getAuctionBids(provider: JsonRpcProvider, packageId: string, registry: string, index: string): Promise<Bid[]> {
+export async function getAuctionBids(
+    provider: JsonRpcProvider,
+    packageId: string,
+    registry: string,
+    index: string,
+    sender = SENDER
+): Promise<Bid[]> {
     let transactionBlock = new TransactionBlock();
     let target = `${packageId}::tds_view_function::get_auction_bids_bcs` as any;
     let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(index)];
@@ -470,7 +478,7 @@ export async function getAuctionBids(provider: JsonRpcProvider, packageId: strin
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -506,7 +514,8 @@ export async function getDepositShares(
     typusFrameworkPackageId: string,
     packageId: string,
     registry: string,
-    receipts: string[]
+    receipts: string[],
+    sender = SENDER
 ): Promise<{ [key: string]: DepositShare }> {
     let transactionBlock = new TransactionBlock();
     let target = `${packageId}::tds_view_function::get_deposit_shares_bcs` as any;
@@ -522,7 +531,7 @@ export async function getDepositShares(
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -574,7 +583,8 @@ export async function getMyBids(
     typusFrameworkPackageId: string,
     packageId: string,
     registry: string,
-    receipts: string[]
+    receipts: string[],
+    sender = SENDER
 ): Promise<{ [key: string]: BidShare }> {
     let transactionBlock = new TransactionBlock();
     let target = `${packageId}::tds_view_function::get_my_bids_bcs` as any;
@@ -590,7 +600,7 @@ export async function getMyBids(
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -619,7 +629,7 @@ export async function getMyBids(
                 return reader.read8();
             }),
         } as BidVault;
-        result[bidVault.index] = {
+        result[bidVault.index + "-" + bidVault.id] = {
             bidVault,
             share: reader.read64(),
         } as BidShare;
@@ -633,8 +643,8 @@ export async function getRefundShares(
     provider: JsonRpcProvider,
     packageId: string,
     registry: string,
-    user: string,
-    typeArguments: string[]
+    typeArguments: string[],
+    sender = SENDER
 ): Promise<{ [key: string]: string }> {
     let transactionBlock = new TransactionBlock();
     let target = `${packageId}::tds_view_function::get_refund_shares_bcs` as any;
@@ -649,7 +659,7 @@ export async function getRefundShares(
     let results = (
         await provider.devInspectTransactionBlock({
             transactionBlock,
-            sender: user,
+            sender,
         })
     ).results;
     let refundShares = Array.from(new Map()).reduce((map, [key, value]) => {
