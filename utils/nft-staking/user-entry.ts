@@ -23,10 +23,12 @@ export async function getTransferNftTx(
 ) {
     let tx = new TransactionBlock();
 
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure(10000000)]);
+
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::transfer_nft`,
         typeArguments: [],
-        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.object(nft_id), tx.pure(receiver)],
+        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.pure(nft_id), tx.pure(receiver), coin],
     });
     tx.setGasBudget(gasBudget);
 
@@ -50,14 +52,7 @@ export async function getTransferNftsTx(
         tx.moveCall({
             target: `${nftPackageId}::tails_staking::transfer_nft`,
             typeArguments: [],
-            arguments: [
-                tx.object(registry),
-                tx.object(kiosks[i]),
-                tx.object(kiosk_caps[i]),
-                tx.object(nft_ids[i]),
-                tx.pure(receiver),
-                coin,
-            ],
+            arguments: [tx.object(registry), tx.object(kiosks[i]), tx.object(kiosk_caps[i]), tx.pure(nft_ids[i]), tx.pure(receiver), coin],
         });
         i += 1;
     }
@@ -91,7 +86,7 @@ export async function getStakeNftTx(
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::stake_nft`,
         typeArguments: [],
-        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.object(nft_id), tx.object(CLOCK), coin],
+        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.pure(nft_id), tx.object(CLOCK), coin],
     });
     tx.setGasBudget(gasBudget);
 
@@ -103,7 +98,7 @@ export async function getCreateKioskAndLockNftTx(gasBudget: number, nftPackageId
 
     let [kiosk, kiosk_cap] = createKiosk(tx);
 
-    lock(tx, `${nftPackageId}::typus_nft::Tails`, kiosk, kiosk_cap, tx.object(policy), tx.object(nft_id));
+    lock(tx, `${nftPackageId}::typus_nft::Tails`, kiosk, kiosk_cap, tx.object(policy), tx.pure(nft_id));
 
     tx.moveCall({
         target: `0x2::transfer::public_share_object`,
@@ -411,7 +406,7 @@ export async function consumeExpCoinUnstakedTx(
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::consume_exp_coin_unstaked`,
         typeArguments,
-        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.object(nft_id), tx.object(coin)],
+        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.pure(nft_id), tx.object(coin)],
     });
     tx.setGasBudget(gasBudget);
 

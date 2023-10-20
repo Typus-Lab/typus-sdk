@@ -1,5 +1,5 @@
 import "../load_env";
-import config from "../../config.json";
+import config from "../../config_v2.json";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import { getTails, getTailsIds } from "../../utils/typus-nft/fetch";
 import { getTransferNftTx } from "../../utils/nft-staking/user-entry";
@@ -13,7 +13,7 @@ const signer = new RawSigner(keypair, provider);
 
 const gasBudget = 100000000;
 
-const receiver = "0x2af0e57f4234f64d9e3510278fe68b44498e58386ad486b111eb5b66f4e8c4e2";
+const receiver = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9";
 
 (async () => {
     const address = await signer.getAddress();
