@@ -1,6 +1,6 @@
 import { JsonRpcProvider, SuiEventFilter } from "@mysten/sui.js";
 import { Vault } from "./view-function";
-import { assetToDecimal, typeArgsToAssets } from "../token";
+import { assetToDecimal, typeArgToAsset } from "../token";
 
 export async function getUserHistory(
     provider: JsonRpcProvider,
@@ -42,10 +42,10 @@ interface TxHistory {
 }
 
 async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: { [key: string]: Vault }): Promise<Array<TxHistory>> {
-    return await datas
+    const results = await datas
         .filter((event) => {
             const type: string = event.type;
-            return type.startsWith(originPackage) || type.includes("typus_nft::First");
+            return type.startsWith(originPackage) || type.includes("typus_nft::First") || type.includes("typus_nft::ExpUpEvent");
         })
         .reduce(async (promise, event) => {
             let txHistory: TxHistory[] = await promise;
@@ -124,8 +124,8 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                         Tails = `#${event.parsedJson!.number}`;
                         Exp = event.parsedJson!.exp_earn;
                     } else {
-                        txHistory[i].Exp = event.parsedJson!.exp_earn;
                         txHistory[i].Tails = `#${event.parsedJson!.number}`;
+                        txHistory[i].Exp = event.parsedJson!.exp_earn;
                         return txHistory;
                     }
                     break;
@@ -159,7 +159,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                 case "ClaimEvent":
                 case "HarvestEvent":
                     var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
-                    var token = typeArgsToAssets(["0x" + event.parsedJson!.token.name])[0];
+                    var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
                     var amount = Number(event.parsedJson!.amount) / 10 ** Number(event.parsedJson!.decimal);
                     Action = action.slice(0, action.length - 5);
                     Amount = `${amount} ${token}`;
@@ -169,6 +169,36 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                         txHistory[i].Vault = Vault;
                         txHistory[i].RiskLevel = RiskLevel;
                         return txHistory;
+                    }
+                    break;
+                case "NewBidEvent":
+                    var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
+                    var o_token = typeArgToAsset("0x" + event.parsedJson!.o_token.name);
+                    var b_token = typeArgToAsset("0x" + event.parsedJson!.b_token.name);
+
+                    var size = Number(event.parsedJson!.size) / 10 ** assetToDecimal(o_token)!;
+                    var bidder_balance = Number(event.parsedJson!.bidder_balance) / 10 ** assetToDecimal(b_token)!;
+
+                    Action = action.slice(0, action.length - 5) + ` ${size} ${o_token}`;
+                    Amount = `${bidder_balance} ${b_token}`;
+
+                    if (i != -1) {
+                        txHistory[i].Action = Action;
+                        txHistory[i].Amount = Amount;
+                        txHistory[i].Vault = Vault;
+                        txHistory[i].RiskLevel = RiskLevel;
+                        return txHistory;
+                    }
+                    break;
+                case "ExpUpEvent":
+                    var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
+                    if (i != -1) {
+                        txHistory[i].Tails = `#${event.parsedJson!.number}`;
+                        txHistory[i].Exp = event.parsedJson!.exp_earn;
+                        return txHistory;
+                    } else {
+                        Tails = `#${event.parsedJson!.number}`;
+                        Exp = event.parsedJson!.exp_earn;
                     }
                     break;
                 default:
@@ -187,4 +217,6 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
 
             return txHistory;
         }, Promise.resolve(new Array<TxHistory>()));
+
+    return results.filter((result) => result.Action);
 }
