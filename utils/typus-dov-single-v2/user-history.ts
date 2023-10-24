@@ -60,6 +60,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
             let RiskLevel;
             let Tails;
             let Exp;
+            var o_token;
 
             if (event.parsedJson!.index) {
                 let v = vaults[event.parsedJson!.index];
@@ -105,6 +106,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                         break;
                 }
                 Vault = `${v.info.settlementBaseName} ${period} ${optionType}`;
+                o_token = typeArgToAsset("0x" + v.info.settlementBase);
             }
 
             switch (action) {
@@ -171,9 +173,26 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                         return txHistory;
                     }
                     break;
+                case "ExerciseEvent":
+                    var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
+                    var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
+                    var amount = Number(event.parsedJson!.amount) / 10 ** Number(event.parsedJson!.decimal);
+                    Action = "Exercise";
+                    Amount = `${amount} ${token}`;
+                    if (event.parsedJson!.u64_padding[0]) {
+                        var size = Number(event.parsedJson!.u64_padding[0]) / 10 ** assetToDecimal(o_token)!;
+                        Action = `Exercise ${size} ${o_token}`;
+                    }
+                    break;
+                case "RefundEvent":
+                    var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
+                    var amount = Number(event.parsedJson!.amount) / 10 ** assetToDecimal(token)!;
+                    Action = "Rebate";
+                    Amount = `${amount} ${token}`;
+                    break;
                 case "NewBidEvent":
                     var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
-                    var o_token = typeArgToAsset("0x" + event.parsedJson!.o_token.name);
+                    o_token = typeArgToAsset("0x" + event.parsedJson!.o_token.name);
                     var b_token = typeArgToAsset("0x" + event.parsedJson!.b_token.name);
 
                     var size = Number(event.parsedJson!.size) / 10 ** assetToDecimal(o_token)!;
