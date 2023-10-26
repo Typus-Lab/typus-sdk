@@ -1,5 +1,5 @@
 import "../../load_env";
-import { getRefundTx } from "../../../utils/typus-dov-single-v2/user-entry";
+import { getRebateTx } from "../../../utils/typus-dov-single-v2/user-entry";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import config from "../config.json";
 
@@ -14,7 +14,7 @@ const signer = new RawSigner(keypair, provider);
     let typeArguments = [token];
     let registry = config.REGISTRY;
 
-    let transactionBlock = await getRefundTx(gasBudget, packageId, typeArguments, registry);
+    let transactionBlock = await getRebateTx(gasBudget, packageId, typeArguments, registry);
     let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
     console.log(res);
 })();

@@ -384,11 +384,11 @@ export async function getExerciseTx(
         ctx: &mut TxContext,
     )
 */
-export async function getRefundTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string) {
+export async function getRebateTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string) {
     let tx = new TransactionBlock();
     typeArguments.forEach((typeArgument) => {
         tx.moveCall({
-            target: `${packageId}::tds_user_entry::refund`,
+            target: `${packageId}::tds_user_entry::rebate`,
             typeArguments: [typeArgument],
             arguments: [tx.object(registry)],
         });
