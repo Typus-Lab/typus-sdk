@@ -14,21 +14,23 @@ export function typeArgToAsset(typeArg: string): string {
         case "0xaf8cd5edc19c4512f4259f0bee101a40d41ebed738ade5874359610ef8eeced5":
             return "WETH";
         case "0xb7844e289a8410e50fb3ca48d69eb9cf29e27d223ef90353fe1bd8e27ff8f3f8":
-            return "SOL";
+            return "WSOL";
         case "0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf":
             return "USDC";
         case "0xc060006111016b8a020ad5b33834984a437aaa7d3c74c18e09a95d48aceab08c":
             return "USDT";
         case "0x5d1f47ea69bb0de31c313d7acf89b890dbb8991ea8e03c6c355171f84bb1ba4a":
             return "TURBOS";
-        case config.TOKEN_PACKAGE:
+        case "0x3a5143bb1196e3bcdfab6203d1683ae29edd26294fc8bfeafe4aaa9d2704df37":
+            return "APT";
+        default:
             if (typeArgs[2] == "BTC") {
                 return "WBTC";
             } else if (typeArgs[2] == "ETH") {
                 return "WETH";
+            } else if (typeArgs[2] == "SOL") {
+                return "WSOL";
             }
-            return typeArgs[2];
-        default:
             return typeArgs[2];
     }
 }
@@ -45,6 +47,8 @@ export function assetToDecimal(asset: string): number | undefined {
             return 8;
         case "WETH":
             return 8;
+        case "SOL":
+            return 8;
         case "WSOL":
             return 8;
         case "USDC":
@@ -55,5 +59,7 @@ export function assetToDecimal(asset: string): number | undefined {
             return 9;
         case "TURBOS":
             return 9;
+        case "APT":
+            return 8;
     }
 }
