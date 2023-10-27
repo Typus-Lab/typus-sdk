@@ -303,6 +303,47 @@ export async function getNewBidTx(
 }
 
 /**
+    public(friend) entry fun transfer_bid_receipt<D_TOKEN, B_TOKEN>(
+        registry: &mut Registry,
+        index: u64,
+        receipts: vector<TypusBidReceipt>,
+        share: Option<u64>,
+        recipient: address,
+        ctx: &mut TxContext,
+    ) {
+*/
+export async function getTransferBidReceiptTx(input: {
+    gasBudget: number;
+    typusFrameworkPackageId: string;
+    packageId: string;
+    typeArguments: string[];
+    registry: string;
+    index: string;
+    receipts: string[];
+    share?: string;
+    recipient: string;
+}) {
+    let tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${input.packageId}::tds_user_entry::transfer_bid_receipt`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            tx.object(input.registry),
+            tx.pure(input.index),
+            tx.makeMoveVec({
+                type: `${input.typusFrameworkPackageId}::vault::TypusBidReceipt`,
+                objects: input.receipts.map((id) => tx.object(id)),
+            }),
+            tx.pure(input.share ? [input.share] : []),
+            tx.pure(input.recipient),
+        ],
+    });
+    tx.setGasBudget(input.gasBudget);
+
+    return tx;
+}
+
+/**
     public(friend) entry fun exercise<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
@@ -343,11 +384,11 @@ export async function getExerciseTx(
         ctx: &mut TxContext,
     )
 */
-export async function getRefundTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string) {
+export async function getRebateTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string) {
     let tx = new TransactionBlock();
     typeArguments.forEach((typeArgument) => {
         tx.moveCall({
-            target: `${packageId}::tds_user_entry::refund`,
+            target: `${packageId}::tds_user_entry::rebate`,
             typeArguments: [typeArgument],
             arguments: [tx.object(registry)],
         });

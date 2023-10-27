@@ -108,11 +108,8 @@ export async function getOtcTx(
         ctx: &TxContext,
     ) {
  */
-export async function getUpdateConfigTx(
-    gasBudget: number,
-    packageId: string,
-    registry: string,
-    index: string,
+export interface UpdateConfigRequests {
+    index: string;
     config: {
         oracleId?: string;
         depositLotSize?: string;
@@ -133,35 +130,38 @@ export async function getUpdateConfigTx(
         capacity?: string;
         leverage?: string;
         riskLevel?: string;
-    }
-) {
+    };
+}
+export async function getUpdateConfigTx(gasBudget: number, packageId: string, registry: string, requests: UpdateConfigRequests[]) {
     let tx = new TransactionBlock();
-    tx.moveCall({
-        target: `${packageId}::tds_authorized_entry::update_config`,
-        typeArguments: [],
-        arguments: [
-            tx.object(registry),
-            tx.pure(index),
-            tx.pure(config.oracleId ? [config.oracleId] : []),
-            tx.pure(config.depositLotSize ? [config.depositLotSize] : []),
-            tx.pure(config.bidLotSize ? [config.bidLotSize] : []),
-            tx.pure(config.minDepositSize ? [config.minDepositSize] : []),
-            tx.pure(config.minBidSize ? [config.minBidSize] : []),
-            tx.pure(config.maxDepositEntry ? [config.maxDepositEntry] : []),
-            tx.pure(config.maxBidEntry ? [config.maxBidEntry] : []),
-            tx.pure(config.depositFeeBp ? [config.depositFeeBp] : []),
-            tx.pure(config.depositFeeShareBp ? [config.depositFeeShareBp] : []),
-            tx.pure(config.depositSharedFeePool ? [config.depositSharedFeePool] : []),
-            tx.pure(config.bidFeeBp ? [config.bidFeeBp] : []),
-            tx.pure(config.depositIncentiveBp ? [config.depositIncentiveBp] : []),
-            tx.pure(config.bidIncentiveBp ? [config.bidIncentiveBp] : []),
-            tx.pure(config.auctionDelayTsMs ? [config.auctionDelayTsMs] : []),
-            tx.pure(config.auctionDurationTsMs ? [config.auctionDurationTsMs] : []),
-            tx.pure(config.recoupDelayTsMs ? [config.recoupDelayTsMs] : []),
-            tx.pure(config.capacity ? [config.capacity] : []),
-            tx.pure(config.leverage ? [config.leverage] : []),
-            tx.pure(config.riskLevel ? [config.riskLevel] : []),
-        ],
+    requests.forEach((request) => {
+        tx.moveCall({
+            target: `${packageId}::tds_authorized_entry::update_config`,
+            typeArguments: [],
+            arguments: [
+                tx.object(registry),
+                tx.pure(request.index),
+                tx.pure(request.config.oracleId ? [request.config.oracleId] : []),
+                tx.pure(request.config.depositLotSize ? [request.config.depositLotSize] : []),
+                tx.pure(request.config.bidLotSize ? [request.config.bidLotSize] : []),
+                tx.pure(request.config.minDepositSize ? [request.config.minDepositSize] : []),
+                tx.pure(request.config.minBidSize ? [request.config.minBidSize] : []),
+                tx.pure(request.config.maxDepositEntry ? [request.config.maxDepositEntry] : []),
+                tx.pure(request.config.maxBidEntry ? [request.config.maxBidEntry] : []),
+                tx.pure(request.config.depositFeeBp ? [request.config.depositFeeBp] : []),
+                tx.pure(request.config.depositFeeShareBp ? [request.config.depositFeeShareBp] : []),
+                tx.pure(request.config.depositSharedFeePool ? [request.config.depositSharedFeePool] : []),
+                tx.pure(request.config.bidFeeBp ? [request.config.bidFeeBp] : []),
+                tx.pure(request.config.depositIncentiveBp ? [request.config.depositIncentiveBp] : []),
+                tx.pure(request.config.bidIncentiveBp ? [request.config.bidIncentiveBp] : []),
+                tx.pure(request.config.auctionDelayTsMs ? [request.config.auctionDelayTsMs] : []),
+                tx.pure(request.config.auctionDurationTsMs ? [request.config.auctionDurationTsMs] : []),
+                tx.pure(request.config.recoupDelayTsMs ? [request.config.recoupDelayTsMs] : []),
+                tx.pure(request.config.capacity ? [request.config.capacity] : []),
+                tx.pure(request.config.leverage ? [request.config.leverage] : []),
+                tx.pure(request.config.riskLevel ? [request.config.riskLevel] : []),
+            ],
+        });
     });
     tx.setGasBudget(gasBudget);
 
