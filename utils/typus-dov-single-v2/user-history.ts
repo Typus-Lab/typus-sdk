@@ -119,16 +119,16 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     Action = "Unstake";
                     Tails = `#${event.parsedJson!.number}`;
                     break;
-                case "SnapshotNftEvent":
-                    var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
-                    if (i == -1) {
-                        Action = "Collect EXP";
-                        Tails = `#${event.parsedJson!.number}`;
-                        Exp = event.parsedJson!.exp_earn;
-                    } else {
+                case "ExpUpEvent":
+                    var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest && x.Action != "First Deposit");
+                    if (i != -1) {
                         txHistory[i].Tails = `#${event.parsedJson!.number}`;
                         txHistory[i].Exp = event.parsedJson!.exp_earn;
                         return txHistory;
+                    } else {
+                        Action = "Collect EXP";
+                        Tails = `#${event.parsedJson!.number}`;
+                        Exp = event.parsedJson!.exp_earn;
                     }
                     break;
                 case "TransferNftEvent":
@@ -161,7 +161,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                 case "ClaimEvent":
                 case "CompoundEvent":
                 case "HarvestEvent":
-                    var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
+                    var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest && x.Action == "Collect EXP");
                     var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
                     var amount = Number(event.parsedJson!.amount) / 10 ** Number(event.parsedJson!.decimal);
                     Action = action.slice(0, action.length - 5);
@@ -175,7 +175,6 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     }
                     break;
                 case "ExerciseEvent":
-                    var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
                     var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
                     var amount = Number(event.parsedJson!.amount) / 10 ** Number(event.parsedJson!.decimal);
                     Action = "Exercise";
@@ -208,17 +207,6 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                         txHistory[i].Vault = Vault;
                         txHistory[i].RiskLevel = RiskLevel;
                         return txHistory;
-                    }
-                    break;
-                case "ExpUpEvent":
-                    var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
-                    if (i != -1) {
-                        txHistory[i].Tails = `#${event.parsedJson!.number}`;
-                        txHistory[i].Exp = event.parsedJson!.exp_earn;
-                        return txHistory;
-                    } else {
-                        Tails = `#${event.parsedJson!.number}`;
-                        Exp = event.parsedJson!.exp_earn;
                     }
                     break;
                 default:
