@@ -54,13 +54,13 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
             const action = functionType[2];
             // console.log(action);
 
-            let Action;
-            let Amount;
-            let Vault;
-            let RiskLevel;
-            let Tails;
-            let Exp;
-            var o_token;
+            let Action: string;
+            let Amount: string | undefined;
+            let Vault: string | undefined;
+            let RiskLevel: string | undefined;
+            let Tails: string | undefined;
+            let Exp: string | undefined;
+            var o_token: string | undefined;
 
             if (event.parsedJson!.index) {
                 let v = vaults[event.parsedJson!.index];
@@ -82,10 +82,34 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                 let optionType: string;
                 switch (v.info.optionType) {
                     case "0":
-                        optionType = "Call";
+                        switch (action) {
+                            case "DepositEvent":
+                            case "WithdrawEvent":
+                            case "UnsubscribeEvent":
+                            case "ClaimEvent":
+                            case "CompoundEvent":
+                            case "HarvestEvent":
+                                optionType = "Covered Call";
+                                break;
+                            default:
+                                optionType = "Call";
+                                break;
+                        }
                         break;
                     case "1":
-                        optionType = "Put";
+                        switch (action) {
+                            case "DepositEvent":
+                            case "WithdrawEvent":
+                            case "UnsubscribeEvent":
+                            case "ClaimEvent":
+                            case "CompoundEvent":
+                            case "HarvestEvent":
+                                optionType = "Put Selling";
+                                break;
+                            default:
+                                optionType = "Put";
+                                break;
+                        }
                         break;
                     default:
                         optionType = "";
@@ -180,7 +204,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     Action = "Exercise";
                     Amount = `${amount} ${token}`;
                     if (event.parsedJson!.u64_padding[0]) {
-                        var size = Number(event.parsedJson!.u64_padding[0]) / 10 ** assetToDecimal(o_token)!;
+                        var size = Number(event.parsedJson!.u64_padding[0]) / 10 ** assetToDecimal(o_token!)!;
                         Action = `Exercise ${size} ${o_token}`;
                     }
                     break;
