@@ -159,6 +159,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                 case "WithdrawEvent":
                 case "UnsubscribeEvent":
                 case "ClaimEvent":
+                case "CompoundEvent":
                 case "HarvestEvent":
                     var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
                     var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
