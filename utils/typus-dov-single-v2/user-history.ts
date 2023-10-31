@@ -200,7 +200,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     break;
                 case "TransferBidReceiptEvent":
                     var amount = Number(event.parsedJson!.amount) / 10 ** Number(event.parsedJson!.decimal);
-                    Action = "Transfer Bid Receipt";
+                    Action = "Transfer Receipt";
                     Amount = `${amount} ${o_token}`;
                     break;
                 case "ExerciseEvent":
