@@ -115,10 +115,13 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                             break;
                         case "2":
                             optionType = "Call Spread";
+                            break;
                         case "3":
                             optionType = "Put Spread";
+                            break;
                         case "4":
                             optionType = "Capped Call";
+                            break;
                         default:
                             optionType = "";
                             break;
