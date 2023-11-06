@@ -49,7 +49,7 @@ export interface Playground {
     public_key: string; // Public key used to verify the beacon produced by the back-end.
     num_of_games: string; // use for creating vrf_input
     stake_token: string;
-    opened_games: Map<number, Game>; // <game_id, Game>
+    opened_games: Map<string, Game>; // <address, Game>
     game_config: GameConfig;
     is_active: boolean;
 }

@@ -20,9 +20,9 @@ export async function newGameTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::tails_exp_dice::new_game`,
+        target: `${packageId}::tails_exp::new_game`,
         typeArguments,
-        arguments: [tx.pure(registry), tx.pure(index), tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }), tx.pure(amount)],
+        arguments: [tx.object(registry), tx.pure(index), tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }), tx.pure(amount)],
     });
     tx.setGasBudget(gasBudget);
 
@@ -46,20 +46,74 @@ export async function playGuessTx(
     packageId: string,
     registry: string,
     index: string,
-    game_id: string,
     guess_1: string,
     larger_than_1: boolean,
     guess_2: string,
     larger_than_2: boolean
 ) {
     let tx = new TransactionBlock();
+
     tx.moveCall({
-        target: `${packageId}::tails_exp_dice::play_guess`,
+        target: `${packageId}::tails_exp::play_guess`,
         typeArguments: [],
         arguments: [
-            tx.pure(registry),
+            tx.object(registry),
             tx.pure(index),
-            tx.pure(game_id),
+            tx.pure(guess_1),
+            tx.pure(larger_than_1),
+            tx.pure(guess_2),
+            tx.pure(larger_than_2),
+        ],
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
+export async function newGamePlayGuessTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[], // [TOKEN]
+    registry: string,
+    index: string,
+    coins: string[],
+    amount: string,
+    guess_1: string,
+    larger_than_1: boolean,
+    guess_2: string,
+    larger_than_2: boolean
+) {
+    let tx = new TransactionBlock();
+
+    if (
+        typeArguments[0] == "0x2::sui::SUI" ||
+        typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
+    ) {
+        let [coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
+        tx.moveCall({
+            target: `${packageId}::tails_exp::new_game`,
+            typeArguments,
+            arguments: [tx.object(registry), tx.pure(index), tx.makeMoveVec({ objects: [coin] }), tx.pure(amount)],
+        });
+    } else {
+        tx.moveCall({
+            target: `${packageId}::tails_exp::new_game`,
+            typeArguments,
+            arguments: [
+                tx.object(registry),
+                tx.pure(index),
+                tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
+                tx.pure(amount),
+            ],
+        });
+    }
+
+    tx.moveCall({
+        target: `${packageId}::tails_exp::play_guess`,
+        typeArguments: [],
+        arguments: [
+            tx.object(registry),
+            tx.pure(index),
             tx.pure(guess_1),
             tx.pure(larger_than_1),
             tx.pure(guess_2),
