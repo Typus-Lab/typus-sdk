@@ -77,6 +77,12 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                         case "2":
                             period = "Monthly";
                             break;
+                        case "3":
+                            period = "Hourly";
+                            break;
+                        case "4":
+                            period = "10 Minutes";
+                            break;
                         default:
                             period = "";
                             break;
