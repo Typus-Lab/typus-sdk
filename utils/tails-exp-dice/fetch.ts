@@ -1,11 +1,14 @@
 // import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
 // import { JsonRpcProvider } from "@mysten/sui.js/dist/cjs/providers/json-rpc-provider";
 import { JsonRpcProvider, SuiEventFilter } from "@mysten/sui.js";
+import { assetToDecimal, typeArgToAsset } from "../token";
 
 export async function getPlaygrounds(provider: JsonRpcProvider, diceRegistry: string) {
-    let playgroundIds = (await provider.getDynamicFields({ parentId: diceRegistry })).data.map((x) => x.objectId as string);
+    const playgroundIds = (await provider.getDynamicFields({ parentId: diceRegistry })).data
+        .sort((a, b) => Number(a.name.value) - Number(b.name.value))
+        .map((x) => x.objectId as string);
 
-    let objects = await provider.multiGetObjects({
+    const objects = await provider.multiGetObjects({
         ids: playgroundIds,
         options: { showContent: true },
     });
@@ -75,7 +78,7 @@ export interface Game {
     vrf_input_2: number[] | null;
 }
 
-export async function getHistory(provider: JsonRpcProvider, dicePackage: string): Promise<DrawEvent[]> {
+export async function getHistory(provider: JsonRpcProvider, dicePackage: string, playgrounds: Playground[]): Promise<DrawDisplay[]> {
     const eventFilter: SuiEventFilter = {
         MoveEventType: `${dicePackage}::tails_exp::Draw`,
     };
@@ -83,7 +86,33 @@ export async function getHistory(provider: JsonRpcProvider, dicePackage: string)
     const events = await provider.queryEvents({ query: eventFilter, order: "descending" });
     // console.log(events);
 
-    const result = events.data.map((event) => event.parsedJson as DrawEvent);
+    const result = events.data.map((event) => {
+        const drawEvent = event.parsedJson as DrawEvent;
+
+        const playground = playgrounds[Number(drawEvent.index)];
+
+        const coinType = "0x" + playground.stake_token;
+        const asset = typeArgToAsset(coinType);
+        const decimal = assetToDecimal(asset)!;
+
+        const guess_1 = drawEvent.larger_than_1
+            ? `Roll Over ${Number(drawEvent.guess_1) / 100}`
+            : `Roll Under ${Number(drawEvent.guess_1) / 100}`;
+
+        const guess_2 = drawEvent.larger_than_2
+            ? `Roll Over ${Number(drawEvent.guess_2) / 100}`
+            : `Roll Under ${Number(drawEvent.guess_2) / 100}`;
+
+        const display: DrawDisplay = {
+            player: drawEvent.player,
+            guess_1,
+            guess_2,
+            bet_amount: `${Number(drawEvent.stake_amount) / 10 ** decimal} ${asset}`,
+            exp: `${Number(drawEvent.exp)} EXP`,
+        };
+
+        return display;
+    });
 
     return result;
 }
@@ -106,4 +135,14 @@ interface DrawEvent {
     signature_2: number[];
     signer: string;
     stake_amount: string;
+}
+
+interface DrawDisplay {
+    player: string;
+    guess_1: string;
+    guess_2: string;
+    // larger_than_1: boolean;
+    // larger_than_2: boolean;
+    bet_amount: string;
+    exp: string;
 }
