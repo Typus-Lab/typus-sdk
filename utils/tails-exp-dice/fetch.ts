@@ -1,6 +1,6 @@
 // import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
 // import { JsonRpcProvider } from "@mysten/sui.js/dist/cjs/providers/json-rpc-provider";
-import { JsonRpcProvider } from "@mysten/sui.js";
+import { JsonRpcProvider, SuiEventFilter } from "@mysten/sui.js";
 
 export async function getPlaygrounds(provider: JsonRpcProvider, diceRegistry: string) {
     let playgroundIds = (await provider.getDynamicFields({ parentId: diceRegistry })).data.map((x) => x.objectId as string);
@@ -73,4 +73,37 @@ export interface Game {
     guess_2: string | null;
     larger_than_2: boolean | null;
     vrf_input_2: number[] | null;
+}
+
+export async function getHistory(provider: JsonRpcProvider, dicePackage: string): Promise<DrawEvent[]> {
+    const eventFilter: SuiEventFilter = {
+        MoveEventType: `${dicePackage}::tails_exp::Draw`,
+    };
+
+    const events = await provider.queryEvents({ query: eventFilter, order: "descending" });
+    // console.log(events);
+
+    const result = events.data.map((event) => event.parsedJson as DrawEvent);
+
+    return result;
+}
+
+interface DrawEvent {
+    answer_1: string;
+    answer_2: string;
+    exp: string;
+    game_id: string;
+    guess_1: string;
+    guess_2: string;
+    index: string;
+    larger_than_1: boolean;
+    larger_than_2: boolean;
+    player: string;
+    public_key: number[];
+    result_1: string;
+    result_2: string;
+    signature_1: number[];
+    signature_2: number[];
+    signer: string;
+    stake_amount: string;
 }
