@@ -95,18 +95,39 @@ export async function getHistory(provider: JsonRpcProvider, dicePackage: string,
         const asset = typeArgToAsset(coinType);
         const decimal = assetToDecimal(asset)!;
 
-        const guess_1 = drawEvent.larger_than_1
-            ? `Roll Over ${Number(drawEvent.guess_1) / 100}`
-            : `Roll Under ${Number(drawEvent.guess_1) / 100}`;
-
-        const guess_2 = drawEvent.larger_than_2
-            ? `Roll Over ${Number(drawEvent.guess_2) / 100}`
-            : `Roll Under ${Number(drawEvent.guess_2) / 100}`;
+        const guess_1 = (drawEvent.larger_than_1 ? `> ` : `< `) + `${Number(drawEvent.guess_1) / 100}`;
+        const guess_2 = (drawEvent.larger_than_2 ? `> ` : `< `) + `${Number(drawEvent.guess_2) / 100}`;
+        var result_1 = `${Number(drawEvent.answer_1) / 100}`;
+        switch (drawEvent.result_1) {
+            case "0":
+                result_1 += " W";
+                break;
+            case "1":
+                result_1 += " L";
+                break;
+            case "2":
+                result_1 += " C";
+                break;
+        }
+        var result_2 = `${Number(drawEvent.answer_2) / 100}`;
+        switch (drawEvent.result_2) {
+            case "0":
+                result_2 += " W";
+                break;
+            case "1":
+                result_2 += " L";
+                break;
+            case "2":
+                result_2 += " C";
+                break;
+        }
 
         const display: DrawDisplay = {
             player: drawEvent.player,
             guess_1,
             guess_2,
+            result_1,
+            result_2,
             bet_amount: `${Number(drawEvent.stake_amount) / 10 ** decimal} ${asset}`,
             exp: `${Number(drawEvent.exp)} EXP`,
         };
@@ -129,7 +150,7 @@ interface DrawEvent {
     larger_than_2: boolean;
     player: string;
     public_key: number[];
-    result_1: string;
+    result_1: string; // 0 = win, 1 = lose, 2 = critical hit
     result_2: string;
     signature_1: number[];
     signature_2: number[];
@@ -141,8 +162,8 @@ interface DrawDisplay {
     player: string;
     guess_1: string;
     guess_2: string;
-    // larger_than_1: boolean;
-    // larger_than_2: boolean;
+    result_1: string;
+    result_2: string;
     bet_amount: string;
     exp: string;
 }
