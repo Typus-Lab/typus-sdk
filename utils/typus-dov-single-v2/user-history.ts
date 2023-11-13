@@ -261,7 +261,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     return txHistory;
             }
             txHistory.push({
-                Index: vaults[event.parsedJson!.index].info.index,
+                Index: vaults[event.parsedJson!.index]?.info.index,
                 Action,
                 Amount,
                 Vault,
