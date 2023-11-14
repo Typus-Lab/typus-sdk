@@ -31,9 +31,10 @@ export async function getUserHistory(
     return txHistory;
 }
 
-interface TxHistory {
+export interface TxHistory {
     Index: string;
     Action: string;
+    Period: string | undefined;
     Amount: string | undefined;
     Vault: string | undefined;
     RiskLevel: string | undefined;
@@ -58,6 +59,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
 
             let Action: string;
             let Amount: string | undefined;
+            let Period: string | undefined;
             let Vault: string | undefined;
             let RiskLevel: string | undefined;
             let Tails: string | undefined;
@@ -88,6 +90,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                             period = "";
                             break;
                     }
+                    Period = period;
                     let optionType: string;
                     switch (v.info.optionType) {
                         case "0":
@@ -262,6 +265,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
             }
             txHistory.push({
                 Index: vaults[event.parsedJson!.index]?.info.index,
+                Period,
                 Action,
                 Amount,
                 Vault,
