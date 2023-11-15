@@ -32,7 +32,7 @@ export async function getUserHistory(
 }
 
 export interface TxHistory {
-    Index: string;
+    Index: string | undefined;
     Action: string;
     Period: string | undefined;
     Amount: string | undefined;
@@ -55,10 +55,10 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
             // console.log(event);
             const functionType = new RegExp("^([^::]+)::([^::]+)::([^<]+)").exec(event.type)?.slice(1, 4)!;
             const action = functionType[2];
-            // console.log(action);
 
             let Action: string;
             let Amount: string | undefined;
+            let Index: string | undefined;
             let Period: string | undefined;
             let Vault: string | undefined;
             let RiskLevel: string | undefined;
@@ -66,6 +66,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
             let Exp: string | undefined;
             var o_token: string | undefined;
 
+            Index = event.parsedJson!.index;
             if (event.parsedJson!.index) {
                 let v = vaults[event.parsedJson!.index];
                 if (v) {
@@ -212,11 +213,13 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     var amount = Number(event.parsedJson!.amount) / 10 ** Number(event.parsedJson!.decimal);
                     Action = action.slice(0, action.length - 5);
                     Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                    Index = event.parsedJson!.index;
                     if (i != -1) {
                         txHistory[i].Action = Action;
                         txHistory[i].Amount = Amount;
                         txHistory[i].Vault = Vault;
                         txHistory[i].RiskLevel = RiskLevel;
+                        txHistory[i].Index = Index;
                         return txHistory;
                     }
                     break;
@@ -264,7 +267,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     return txHistory;
             }
             txHistory.push({
-                Index: vaults[event.parsedJson!.index]?.info.index,
+                Index,
                 Period,
                 Action,
                 Amount,
