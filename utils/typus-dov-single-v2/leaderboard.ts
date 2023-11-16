@@ -25,7 +25,7 @@ export async function getDb(startTs, endTs) {
 
 export async function getUsersTvl(startTs, endTs) {
     var result: Tvl[] = await getDb(startTs, endTs);
-    // console.log(result);
+    console.log(result, "getUsersTvl result");
     if (result.length == 0) {
         return new Map<string, number>();
     }
