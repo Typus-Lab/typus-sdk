@@ -26,6 +26,10 @@ export async function getDb(startTs, endTs) {
 export async function getUsersTvl(startTs, endTs) {
     var result: Tvl[] = await getDb(startTs, endTs);
     // console.log(result);
+    if (result.length == 0) {
+        return new Map<string, number>();
+    }
+
     var result = result.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
 
     let firstTs = Number(result.at(0)!.timestamp);
