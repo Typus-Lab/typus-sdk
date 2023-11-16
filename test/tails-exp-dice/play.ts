@@ -1,7 +1,7 @@
 import "../load_env";
 import config from "../../dice_config.json";
 import { JsonRpcProvider, Connection, Ed25519Keypair, RawSigner } from "@mysten/sui.js";
-import { getPlaygrounds } from "../../utils/tails-exp-dice/fetch";
+import { getHistory, getPlaygrounds } from "../../utils/tails-exp-dice/fetch";
 import { newGamePlayGuessTx } from "../../utils/tails-exp-dice/user-entry";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
@@ -42,6 +42,25 @@ const larger_than_2 = true;
         larger_than_2
     );
 
-    let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
+    let res = await signer.signAndExecuteTransactionBlock({ transactionBlock, options: { showEvents: true } });
     console.log(res);
+
+    const game_id = res.events![0].parsedJson!["game_id"];
+    console.log(game_id);
+
+    // waiting for result
+
+    while (true) {
+        const history = await getHistory(provider, config.PACKAGE, playgrounds);
+        // console.log(history);
+        const userHistory = history.filter((h) => h.player == address);
+        // console.log(userHistory);
+        const newest = userHistory[0];
+        if (newest.game_id == game_id) {
+            console.log(newest);
+            break;
+        } else {
+            console.log("Waiting...");
+        }
+    }
 })();

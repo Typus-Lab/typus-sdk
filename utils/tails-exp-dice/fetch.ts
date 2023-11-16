@@ -123,6 +123,7 @@ export async function getHistory(provider: JsonRpcProvider, dicePackage: string,
         }
 
         const display: DrawDisplay = {
+            game_id: drawEvent.game_id,
             player: drawEvent.player,
             guess_1,
             guess_2,
@@ -159,6 +160,7 @@ interface DrawEvent {
 }
 
 interface DrawDisplay {
+    game_id: string;
     player: string;
     guess_1: string;
     guess_2: string;
