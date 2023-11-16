@@ -34,7 +34,7 @@ export async function getUsersTvl(startTs, endTs) {
 
     let firstTs = Number(result.at(0)!.timestamp);
     let lastTs = Number(result.at(-1)!.timestamp);
-    let length = (lastTs - firstTs) / 3600;
+    let length = Math.max((lastTs - firstTs) / 3600, 1);
     // console.log(length.toPrecision(1));
 
     var usersTvl = result.reduce((prev, curr) => {
