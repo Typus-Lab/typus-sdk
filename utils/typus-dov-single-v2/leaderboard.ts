@@ -52,41 +52,20 @@ export async function getUsersTvl(startTs, endTs) {
     return usersTvl;
 }
 
-export async function getUsersBid(
-    provider: JsonRpcProvider,
-    originPackage: string,
-    startTs = 0,
-    endTs = Math.floor(new Date().getTime() / 1000)
-) {
+export async function getUsersBidEvents(provider: JsonRpcProvider, originPackage: string, startTs = 0) {
     const senderFilter: SuiEventFilter = {
         MoveEventType: `${originPackage}::typus_dov_single::NewBidEvent`,
     };
 
-    var usersPremium = new Map<string, number>();
-    var hasNextPage = true;
-    var cursor: any | undefined = undefined;
+    var result = await provider.queryEvents({ query: senderFilter, order: "descending" });
+    var datas = result.data;
+    var hasNextPage = result.hasNextPage;
+    var cursor = result.nextCursor;
 
     while (hasNextPage) {
         var result = await provider.queryEvents({ query: senderFilter, order: "descending", cursor });
         // console.log(result);
-
-        result.data.forEach((data) => {
-            if (Number(data.timestampMs) / 1000 < endTs) {
-                const parsedJson = data.parsedJson!;
-                var bidder_balance = Number(parsedJson.bidder_balance) / 10 ** Number(parsedJson.decimal);
-                var price = 1;
-                if (parsedJson.b_token == parsedJson.o_token) {
-                    price = Number(parsedJson.oracle_info.price) / 10 ** Number(parsedJson.oracle_info.decimal);
-                }
-
-                var acc = 0;
-                if (usersPremium.has(parsedJson.signer)) {
-                    acc = usersPremium.get(parsedJson.signer)!;
-                }
-                acc += bidder_balance * price;
-                usersPremium.set(parsedJson.signer, acc);
-            }
-        });
+        datas = datas.concat(result.data);
 
         if (result.hasNextPage && Number(result.data.at(-1)!.timestampMs) / 1000 < startTs) {
             break;
@@ -95,6 +74,35 @@ export async function getUsersBid(
         hasNextPage = result.hasNextPage;
         cursor = result.nextCursor;
     }
+
+    return datas;
+}
+
+export async function sumUsersBidPremium(datas, vaultIndexes: string[] = [], endTs = Math.floor(new Date().getTime() / 1000)) {
+    var usersPremium = new Map<string, number>();
+
+    datas.forEach((data) => {
+        if (Number(data.timestampMs) / 1000 < endTs) {
+            const parsedJson = data.parsedJson!;
+            if (vaultIndexes.length > 0) {
+                if (!vaultIndexes.includes(parsedJson.index)) {
+                    return;
+                }
+            }
+            var bidder_balance = Number(parsedJson.bidder_balance) / 10 ** Number(parsedJson.decimal);
+            var price = 1;
+            if (parsedJson.b_token == parsedJson.o_token) {
+                price = Number(parsedJson.oracle_info.price) / 10 ** Number(parsedJson.oracle_info.decimal);
+            }
+
+            var acc = 0;
+            if (usersPremium.has(parsedJson.signer)) {
+                acc = usersPremium.get(parsedJson.signer)!;
+            }
+            acc += bidder_balance * price;
+            usersPremium.set(parsedJson.signer, acc);
+        }
+    });
 
     // Convert the Map to an array of key-value pairs
     let mapEntries = Array.from(usersPremium.entries());
