@@ -78,11 +78,11 @@ export async function getUsersBidEvents(provider: JsonRpcProvider, originPackage
     return datas;
 }
 
-export async function sumUsersBidPremium(datas, vaultIndexes: string[] = [], endTs = Math.floor(new Date().getTime() / 1000)) {
+export async function sumUsersBidPremium(datas, vaultIndexes: string[] = [], startTs = 0, endTs = Math.floor(new Date().getTime() / 1000)) {
     var usersPremium = new Map<string, number>();
 
     datas.forEach((data) => {
-        if (Number(data.timestampMs) / 1000 < endTs) {
+        if (Number(data.timestampMs) / 1000 < endTs && Number(data.timestampMs) / 1000 > startTs) {
             const parsedJson = data.parsedJson!;
             if (vaultIndexes.length > 0) {
                 if (!vaultIndexes.includes(parsedJson.index)) {
