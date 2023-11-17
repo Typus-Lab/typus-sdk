@@ -90,9 +90,10 @@ export async function sumUsersBidPremium(datas, vaultIndexes: string[] = [], sta
                 }
             }
             var bidder_balance = Number(parsedJson.bidder_balance) / 10 ** Number(parsedJson.decimal);
-            var price = 1;
-            if (parsedJson.b_token == parsedJson.o_token) {
-                price = Number(parsedJson.oracle_info.price) / 10 ** Number(parsedJson.oracle_info.decimal);
+            var price = Number(parsedJson.oracle_info.price) / 10 ** Number(parsedJson.oracle_info.decimal);
+            const asset = typeArgToAsset("0x" + parsedJson.b_token.name);
+            if (asset.startsWith("USD")) {
+                price = 1;
             }
 
             var acc = 0;
