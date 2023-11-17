@@ -25,7 +25,7 @@ export async function getDb(startTs, endTs) {
 
 export async function getUsersTvl(startTs, endTs) {
     var result: Tvl[] = await getDb(startTs, endTs);
-    console.log(result, "getUsersTvl result");
+    // console.log(result, "getUsersTvl result");
     if (result.length == 0) {
         return new Map<string, number>();
     }
@@ -34,7 +34,7 @@ export async function getUsersTvl(startTs, endTs) {
 
     let firstTs = Number(result.at(0)!.timestamp);
     let lastTs = Number(result.at(-1)!.timestamp);
-    let length = Math.max((lastTs - firstTs) / 3600, 1);
+    let length = Math.max((lastTs - firstTs) / 3600, 0) + 1;
     // console.log(length.toPrecision(1));
 
     var usersTvl = result.reduce((prev, curr) => {
