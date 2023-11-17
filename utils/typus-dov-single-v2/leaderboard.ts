@@ -118,6 +118,16 @@ export async function sumUsersBidPremium(datas, vaultIndexes: string[] = [], sta
 
     return usersPremium;
 }
+export async function getSuiNS(provider: JsonRpcProvider, address: string) {
+    const suiNs = await provider.resolveNameServiceNames({
+        address,
+    });
+    if (suiNs.data.length > 0) {
+        return suiNs.data[0];
+    } else {
+        return address;
+    }
+}
 
 export async function getUsersHarvestCompound(
     provider: JsonRpcProvider,
