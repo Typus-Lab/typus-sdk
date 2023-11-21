@@ -1,12 +1,11 @@
-import "../load_env";
-import config_v2 from "../../config_v2.json";
-import mnemonic from "../../mnemonic.json";
+import "../../load_env";
+import config_v2 from "../../../config_v2.json";
+import mnemonic from "../../../mnemonic.json";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
-import { getTails } from "../../utils/typus-nft/fetch";
-import { getAllocateProfitSharingTx, getSetProfitSharingTx } from "../../utils/nft-staking/authorized-entry";
+import { getTails } from "../../../utils/typus-nft/fetch";
+import { getAllocateProfitSharingTx, getSetProfitSharingTx } from "../../../utils/nft-staking/authorized-entry";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
-// const client = new SuiClient({ url: config.RPC_ENDPOINT });
 const provider = new JsonRpcProvider(new Connection({ fullnode: config_v2.RPC_ENDPOINT }));
 const signer = new RawSigner(keypair, provider);
 
