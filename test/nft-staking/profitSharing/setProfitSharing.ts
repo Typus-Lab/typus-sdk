@@ -11,7 +11,7 @@ const signer = new RawSigner(keypair, provider);
 
 const gasBudget = 100000000;
 
-const levelProfits = [0, 1, 2, 3, 4, 5, 6];
+const levelProfits = [0, 1, 2, 3, 4, 5, 6]; // MIST
 
 (async () => {
     console.assert(levelProfits.length == 7);

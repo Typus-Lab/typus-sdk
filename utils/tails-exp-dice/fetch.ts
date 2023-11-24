@@ -169,3 +169,23 @@ interface DrawDisplay {
     bet_amount: string;
     exp: string;
 }
+
+export interface ProfitSharing {
+    level_profits: string[];
+    level_users: string[];
+    pool: string;
+    remaining: string;
+    total: string;
+}
+
+export async function getProfitSharing(provider: JsonRpcProvider, diceProfitSharing: string) {
+    const object = await provider.getObject({
+        id: diceProfitSharing,
+        options: { showContent: true },
+    });
+
+    // @ts-ignore
+    const result = object.data?.content?.fields.value.fields as ProfitSharing;
+
+    return result;
+}
