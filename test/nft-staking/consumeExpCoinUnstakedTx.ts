@@ -12,6 +12,8 @@ const signer = new RawSigner(keypair, provider);
 
 const gasBudget = 100000000;
 
+const amount = "10";
+
 (async () => {
     const address = await signer.getAddress();
     console.log(address);
@@ -38,7 +40,8 @@ const gasBudget = 100000000;
             nft.kiosk,
             nft.kioskCap,
             nft.nftId,
-            coins
+            coins,
+            amount
         );
 
         // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });

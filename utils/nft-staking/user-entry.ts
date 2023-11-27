@@ -390,7 +390,8 @@ export async function consumeExpCoinUnstakedTx(
     kiosk: string,
     kiosk_cap: string,
     nft_id: string,
-    exp_coins: string[]
+    exp_coins: string[],
+    amount: string
 ) {
     let tx = new TransactionBlock();
 
@@ -403,10 +404,12 @@ export async function consumeExpCoinUnstakedTx(
         );
     }
 
+    let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure(amount)]);
+
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::consume_exp_coin_unstaked`,
         typeArguments,
-        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.pure(nft_id), tx.object(coin)],
+        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.pure(nft_id), input_coin],
     });
     tx.setGasBudget(gasBudget);
 
@@ -425,7 +428,8 @@ export async function consumeExpCoinStakedTx(
     nftPackageId: string,
     typeArguments: string[],
     registry: string,
-    exp_coins: string[]
+    exp_coins: string[],
+    amount: string
 ) {
     let tx = new TransactionBlock();
 
@@ -438,10 +442,12 @@ export async function consumeExpCoinStakedTx(
         );
     }
 
+    let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure(amount)]);
+
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::consume_exp_coin_staked`,
         typeArguments,
-        arguments: [tx.object(registry), tx.object(coin)],
+        arguments: [tx.object(registry), input_coin],
     });
 
     tx.setGasBudget(gasBudget);
