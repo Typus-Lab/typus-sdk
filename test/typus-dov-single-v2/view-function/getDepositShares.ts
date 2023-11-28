@@ -1,13 +1,41 @@
-import { JsonRpcProvider, Connection } from "@mysten/sui.js";
+import { JsonRpcProvider, Connection, Ed25519Keypair, RawSigner } from "@mysten/sui.js";
 import { getDepositShares } from "../../../utils/typus-dov-single-v2/view-function";
-import config from "../config.json";
+import config from "../../../config_v2.json";
 
 const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
+const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+const signer = new RawSigner(keypair, provider);
+
 (async () => {
-    let receipts = [
-        // "0x592d96912d9eda672be8744db7403cc4fc7504239e853d65abdea76eace2ec85",
-        // "0xe51a2388f5fef53a205071fe2624fe31043dc8259c122a734934319009ed9ab6",
-    ];
-    let result = await getDepositShares(provider, config.FRAMEWORK_PACKAGE, config.PACKAGE, config.REGISTRY, receipts);
+    const address = await signer.getAddress();
+
+    var temp = await provider.getOwnedObjects({
+        owner: address,
+        options: { showType: true, showContent: true },
+    });
+
+    var datas = temp.data;
+
+    while (temp.hasNextPage) {
+        temp = await provider.getOwnedObjects({
+            owner: address,
+            options: { showType: true, showContent: true },
+            cursor: temp.nextCursor,
+        });
+        datas = datas.concat(temp.data);
+    }
+
+    const receipts = datas
+        .filter((obj) => obj.data?.type! == `${config.FRAMEWORK_PACKAGE}::vault::TypusDepositReceipt`)
+        .map((obj) => obj.data?.objectId!);
+    // console.log(receipts);
+
+    const result = await getDepositShares(
+        provider,
+        config.FRAMEWORK_PACKAGE,
+        config.SINGLE_COLLATERAL_PACKAGE,
+        config.SINGLE_COLLATERAL_REGISTRY,
+        receipts
+    );
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();
