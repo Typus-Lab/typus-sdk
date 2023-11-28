@@ -215,6 +215,66 @@ export async function getHarvestTx(
     return tx;
 }
 
+export async function getBatchClaimHarvestWithdrawTx(
+    gasBudget: number,
+    typusFrameworkPackageId: string,
+    packageId: string,
+    registry: string,
+    claimRequests: { typeArguments: string[]; index: string; receipts: string[] }[],
+    harvestRequests: { typeArguments: string[]; index: string; receipts: string[] }[],
+    withdrawRequests: { typeArguments: string[]; index: string; receipts: string[] }[]
+) {
+    let tx = new TransactionBlock();
+    claimRequests.forEach((request) => {
+        tx.moveCall({
+            target: `${packageId}::tds_user_entry::claim`,
+            typeArguments: request.typeArguments,
+            arguments: [
+                tx.object(registry),
+                tx.pure(request.index),
+                tx.makeMoveVec({
+                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    objects: request.receipts.map((id) => tx.object(id)),
+                }),
+            ],
+        });
+    });
+    harvestRequests.forEach((request) => {
+        tx.moveCall({
+            target: `${packageId}::tds_user_entry::harvest`,
+            typeArguments: request.typeArguments,
+            arguments: [
+                tx.object(registry),
+                tx.pure(request.index),
+                tx.makeMoveVec({
+                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    objects: request.receipts.map((id) => tx.object(id)),
+                }),
+            ],
+        });
+    });
+    withdrawRequests.forEach((request) => {
+        tx.moveCall({
+            target: `${packageId}::tails_staking::withdraw`,
+            typeArguments: request.typeArguments,
+            arguments: [
+                tx.object(registry),
+                tx.pure(request.index),
+                tx.makeMoveVec({
+                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    objects: request.receipts.map((id) => tx.object(id)),
+                }),
+                tx.pure([]),
+                tx.pure(CLOCK),
+            ],
+        });
+    });
+
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
 /**
     public(friend) entry fun compound<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
