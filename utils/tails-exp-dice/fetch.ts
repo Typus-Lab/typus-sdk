@@ -1,9 +1,9 @@
 // import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
 // import { JsonRpcProvider } from "@mysten/sui.js/dist/cjs/providers/json-rpc-provider";
-import { JsonRpcProvider, SuiEventFilter } from "@mysten/sui.js";
+import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
 import { assetToDecimal, typeArgToAsset } from "../token";
 
-export async function getPlaygrounds(provider: JsonRpcProvider, diceRegistry: string) {
+export async function getPlaygrounds(provider: SuiClient, diceRegistry: string) {
     const playgroundIds = (await provider.getDynamicFields({ parentId: diceRegistry })).data
         .sort((a, b) => Number(a.name.value) - Number(b.name.value))
         .map((x) => x.objectId as string);
@@ -78,7 +78,7 @@ export interface Game {
     vrf_input_2: number[] | null;
 }
 
-export async function getHistory(provider: JsonRpcProvider, dicePackage: string, playgrounds: Playground[]): Promise<DrawDisplay[]> {
+export async function getHistory(provider: SuiClient, dicePackage: string, playgrounds: Playground[]): Promise<DrawDisplay[]> {
     const eventFilter: SuiEventFilter = {
         MoveEventType: `${dicePackage}::tails_exp::Draw`,
     };
@@ -178,7 +178,7 @@ export interface ProfitSharing {
     total: string;
 }
 
-export async function getProfitSharing(provider: JsonRpcProvider, diceProfitSharing: string) {
+export async function getProfitSharing(provider: SuiClient, diceProfitSharing: string) {
     const object = await provider.getObject({
         id: diceProfitSharing,
         options: { showContent: true },

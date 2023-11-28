@@ -1,4 +1,5 @@
-import { JsonRpcProvider, TransactionBlock } from "@mysten/sui.js";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
 import { AddressFromBytes } from "../tools";
 
@@ -134,7 +135,7 @@ export interface DepositVault {
     bcsPadding: string[];
 }
 export async function getVaults(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     registry: string,
     indexes: string[],
@@ -385,7 +386,7 @@ export interface Auction {
     bidIndex: string;
 }
 export async function getAuctions(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     registry: string,
     indexes: string[],
@@ -464,7 +465,7 @@ export interface Bid {
     tsMs: string;
 }
 export async function getAuctionBids(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     registry: string,
     index: string,
@@ -510,7 +511,7 @@ export interface DepositShare {
     performanceFeeSubVaultUserShare: string;
 }
 export async function getDepositShares(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     typusFrameworkPackageId: string,
     packageId: string,
     registry: string,
@@ -579,7 +580,7 @@ export interface BidShare {
     share: string;
 }
 export async function getMyBids(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     typusFrameworkPackageId: string,
     packageId: string,
     registry: string,
@@ -640,7 +641,7 @@ export async function getMyBids(
 }
 
 export async function getRefundShares(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     registry: string,
     typeArguments: string[],

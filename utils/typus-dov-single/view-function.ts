@@ -1,4 +1,5 @@
-import { JsonRpcProvider, TransactionBlock } from "@mysten/sui.js";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
 import { U64FromBytes, AddressFromBytes } from "../tools";
 import { DepositVaultUserShare, BidVaultUserShare } from "../typus-framework/vault";
@@ -51,7 +52,7 @@ export interface AdditionalConfig {
 }
 
 export async function getUserShares(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     registry: string,
     indexes: string[],
@@ -137,7 +138,7 @@ export async function getUserShares(
 }
 
 export async function getAuctionMaxSize(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -166,7 +167,7 @@ export async function getAuctionMaxSize(
 }
 
 export async function getMaxLossPerUnit(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -195,7 +196,7 @@ export async function getMaxLossPerUnit(
 }
 
 export async function getAuctionTotalBidSize(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -216,7 +217,7 @@ export async function getAuctionTotalBidSize(
 }
 
 export async function getAuctionBids(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -264,7 +265,7 @@ export async function getAuctionBids(
 }
 
 export async function getVaultUserShares(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -317,7 +318,7 @@ function parseVaultUserShares(bytes: number[]): VaultUserShare[] {
 }
 
 export async function getAdditionalConfigs(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     typeArguments: string[],
     registry: string,

@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 /**
     public(friend) entry fun authorized_add_portfolio_vault_authorized_user<O_TOKEN, U_TOKEN, B_TOKEN>(

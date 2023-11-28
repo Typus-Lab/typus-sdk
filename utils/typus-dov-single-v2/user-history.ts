@@ -1,10 +1,10 @@
-import { JsonRpcProvider, SuiEventFilter } from "@mysten/sui.js";
+import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
 import { Vault } from "./view-function";
 import { assetToDecimal, typeArgToAsset } from "../token";
 import BigNumber from "bignumber.js";
 
 export async function getUserHistory(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     originPackage: string,
     vaults: { [key: string]: Vault },
     sender: string,

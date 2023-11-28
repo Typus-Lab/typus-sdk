@@ -1,4 +1,4 @@
-import { JsonRpcProvider } from "@mysten/sui.js";
+import { SuiClient } from "@mysten/sui.js/client";
 import { DepositVault, BidVault, parseDepositVault, parseBidVault } from "../typus-framework/vault";
 import { Auction, parseAuction } from "../typus-framework/dutch";
 import { typeArgsToAssets } from "../token";
@@ -75,7 +75,7 @@ export interface PayoffConfig {
 }
 
 export async function getPortfolioVaults(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     registry: string,
     token_deposit_vault_registry: string,
     usd_deposit_vault_registry: string,
@@ -168,7 +168,7 @@ export async function getPortfolioVaults(
                                 weight: x.fields.weight,
                                 isBuyer: x.fields.is_buyer,
                                 strike: x.fields.strike,
-                            } as PayoffConfig)
+                            }) as PayoffConfig
                     ),
                     // @ts-ignore
                     putPayoffConfigs: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.put_payoff_configs.map(
@@ -178,7 +178,7 @@ export async function getPortfolioVaults(
                                 weight: x.fields.weight,
                                 isBuyer: x.fields.is_buyer,
                                 strike: x.fields.strike,
-                            } as PayoffConfig)
+                            }) as PayoffConfig
                     ),
                     // @ts-ignore
                     strikeIncrement: portfolioVault.data.content.fields.config.fields.active_vault_config.fields.strike_increment,
@@ -200,7 +200,7 @@ export async function getPortfolioVaults(
                                 weight: x.fields.weight,
                                 isBuyer: x.fields.is_buyer,
                                 strike: x.fields.strike,
-                            } as PayoffConfig)
+                            }) as PayoffConfig
                     ),
                     // @ts-ignore
                     putPayoffConfigs: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.put_payoff_configs.map(
@@ -210,7 +210,7 @@ export async function getPortfolioVaults(
                                 weight: x.fields.weight,
                                 isBuyer: x.fields.is_buyer,
                                 strike: x.fields.strike,
-                            } as PayoffConfig)
+                            }) as PayoffConfig
                     ),
                     // @ts-ignore
                     strikeIncrement: portfolioVault.data.content.fields.config.fields.warmup_vault_config.fields.strike_increment,
@@ -225,15 +225,17 @@ export async function getPortfolioVaults(
                 } as VaultConfig,
                 upcomingVaultConfig: {
                     // @ts-ignore
-                    callPayoffConfigs: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.call_payoff_configs.map(
-                        (x) =>
-                            ({
-                                strikePct: x.fields.strike_pct,
-                                weight: x.fields.weight,
-                                isBuyer: x.fields.is_buyer,
-                                strike: x.fields.strike,
-                            } as PayoffConfig)
-                    ),
+                    callPayoffConfigs:
+                        // @ts-ignore
+                        portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.call_payoff_configs.map(
+                            (x) =>
+                                ({
+                                    strikePct: x.fields.strike_pct,
+                                    weight: x.fields.weight,
+                                    isBuyer: x.fields.is_buyer,
+                                    strike: x.fields.strike,
+                                }) as PayoffConfig
+                        ),
                     // @ts-ignore
                     putPayoffConfigs: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.put_payoff_configs.map(
                         (x) =>
@@ -242,7 +244,7 @@ export async function getPortfolioVaults(
                                 weight: x.fields.weight,
                                 isBuyer: x.fields.is_buyer,
                                 strike: x.fields.strike,
-                            } as PayoffConfig)
+                            }) as PayoffConfig
                     ),
                     // @ts-ignore
                     strikeIncrement: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.strike_increment,
@@ -253,7 +255,9 @@ export async function getPortfolioVaults(
                     // @ts-ignore
                     finalPrice: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.final_price,
                     // @ts-ignore
-                    auctionDurationInMs: portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.auction_duration_in_ms,
+                    auctionDurationInMs:
+                        // @ts-ignore
+                        portfolioVault.data.content.fields.config.fields.upcoming_vault_config.fields.auction_duration_in_ms,
                 } as VaultConfig,
             };
             // @ts-ignore

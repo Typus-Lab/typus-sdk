@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 /**
     public(friend) entry fun deposit<O_TOKEN, U_TOKEN, B_TOKEN>(
@@ -46,7 +46,14 @@ export async function getDepositTx(
     )
     @param typeArguments [Token Deposit Vault Token, Usd Deposit Vault Token, Bid Vault Token]
 */
-export async function getWithdrawTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string, index: string, share?: string) {
+export async function getWithdrawTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string,
+    share?: string
+) {
     let tx = new TransactionBlock();
     tx.moveCall({
         target: `${packageId}::typus_dov_double::withdraw`,

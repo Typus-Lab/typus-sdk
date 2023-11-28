@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 /**
     public(friend) entry fun new_manager(
@@ -60,7 +60,13 @@ export async function getAddAuthorizedUserTx(gasBudget: number, packageId: strin
         ctx: &TxContext,
     )
 */
-export async function getRemoveAuthorizedUserTx(gasBudget: number, packageId: string, managerCap: string, registry: string, users: string[]) {
+export async function getRemoveAuthorizedUserTx(
+    gasBudget: number,
+    packageId: string,
+    managerCap: string,
+    registry: string,
+    users: string[]
+) {
     let tx = new TransactionBlock();
     tx.moveCall({
         target: `${packageId}::typus_dov_double::remove_authorized_user`,
@@ -455,7 +461,14 @@ export async function getEvolutionTx(
         ctx: &TxContext,
     )
 */
-export async function getCloseTx(gasBudget: number, packageId: string, typeArguments: string[], managerCap: string, registry: string, index: string) {
+export async function getCloseTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[],
+    managerCap: string,
+    registry: string,
+    index: string
+) {
     let tx = new TransactionBlock();
     tx.moveCall({
         target: `${packageId}::typus_dov_double::evolution`,

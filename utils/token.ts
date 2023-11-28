@@ -1,4 +1,4 @@
-import { normalizeSuiAddress } from "@mysten/sui.js";
+import { normalizeSuiAddress } from "@mysten/sui.js/utils";
 import config from "../config.json";
 
 export function typeArgsToAssets(typeArgs: string[]): string[] {
