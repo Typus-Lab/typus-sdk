@@ -189,3 +189,73 @@ export async function getProfitSharing(provider: SuiClient, diceProfitSharing: s
 
     return result;
 }
+
+export function calculateLevelReward(totalRewards: number, levelShares: number[], numOfHolders: number[]): number[] {
+    // Step 1: Calculate original level rewards (per holder)
+    const totalShares: number = levelShares.reduce((acc, share) => acc + share, 0);
+    const originalRewardPerHolder: number[] = levelShares.map((levelShare, index) => {
+        const num: number = numOfHolders[index];
+        const levelRewardPerHolder: number = num > 0 ? (totalRewards * levelShare) / totalShares / num : 0;
+        return Math.floor(levelRewardPerHolder);
+    });
+
+    const originalLevelRewards: number[] = originalRewardPerHolder.map((reward, index) => reward * numOfHolders[index]);
+    const distributedRewards: number = originalLevelRewards.reduce((acc, reward) => acc + reward, 0);
+    const emptyLevelRewards: number = totalRewards - distributedRewards;
+    // console.log("Step 1 - ", originalLevelRewards);
+
+    // Step 2: Distribute rewards from empty levels
+    let scaledRewardPerHolder: number[];
+    if (emptyLevelRewards > 0) {
+        let undistributedRewards: number = emptyLevelRewards;
+        let uncalculatedDistributedRewards: number = distributedRewards;
+        scaledRewardPerHolder = originalRewardPerHolder.map((rewardPerHolder, index) => {
+            const num: number = numOfHolders[index];
+            const scaledRewardPerHolder: number =
+                num > 0
+                    ? uncalculatedDistributedRewards > 0
+                        ? (rewardPerHolder * (uncalculatedDistributedRewards + undistributedRewards)) / uncalculatedDistributedRewards
+                        : rewardPerHolder
+                    : 0;
+
+            undistributedRewards -= (scaledRewardPerHolder - rewardPerHolder) * num;
+            uncalculatedDistributedRewards -= rewardPerHolder * num;
+            return Math.floor(scaledRewardPerHolder);
+        });
+    } else {
+        scaledRewardPerHolder = originalRewardPerHolder.slice();
+    }
+    // console.log("Step 2 - ", scaledRewardPerHolder);
+
+    // Step 3: Capped level reward
+    const cappedRewardPerHolder: number[] = [];
+    let tempHighLevelReward: number = 0;
+    scaledRewardPerHolder.forEach((lowLevelReward, index) => {
+        const highLevelReward: number = scaledRewardPerHolder[index + 1] || 0;
+        if (highLevelReward > 0) {
+            tempHighLevelReward = highLevelReward;
+        }
+        cappedRewardPerHolder.push(Math.min(lowLevelReward, tempHighLevelReward));
+    });
+    // console.log("Step 3 - ", cappedRewardPerHolder);
+
+    // Step 4: Distribute capped reward from Step 3 into each level
+    const distributedRewardsStep4: number = cappedRewardPerHolder.reduce((acc, reward, index) => acc + reward * numOfHolders[index], 0);
+    let undistributedRewardsStep4: number = totalRewards - distributedRewardsStep4;
+    let uncalculatedDistributedRewardsStep4: number = distributedRewardsStep4;
+    const levelReward: number[] = cappedRewardPerHolder.map((rewardPerHolder, index) => {
+        const num: number = numOfHolders[index];
+        const scaledRewardPerHolder: number =
+            uncalculatedDistributedRewardsStep4 > 0
+                ? (rewardPerHolder * (uncalculatedDistributedRewardsStep4 + undistributedRewardsStep4)) /
+                  uncalculatedDistributedRewardsStep4
+                : rewardPerHolder;
+
+        undistributedRewardsStep4 -= (scaledRewardPerHolder - rewardPerHolder) * num;
+        uncalculatedDistributedRewardsStep4 -= rewardPerHolder * num;
+        return Math.floor(scaledRewardPerHolder);
+    });
+    // console.log("Step 4 - ", levelReward);
+
+    return levelReward;
+}
