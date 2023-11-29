@@ -1,4 +1,4 @@
-import { TransactionArgument, TransactionBlock } from "@mysten/sui.js";
+import { TransactionArgument, TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../constants";
 
 /**

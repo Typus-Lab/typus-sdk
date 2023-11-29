@@ -1,8 +1,8 @@
-import { JsonRpcProvider, SuiEventFilter } from "@mysten/sui.js";
+import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
 import { assetToDecimal, typeArgsToAssets } from "../token";
 
 export async function getUserHistory(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     originPackage: string,
     sender: string,
     startTimeMs: number

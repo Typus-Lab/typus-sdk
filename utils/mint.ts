@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 export async function getMintTx(gasBudget: number, packageId: string, registry: string, moduleName: string, amount: number) {
     const tx = new TransactionBlock();

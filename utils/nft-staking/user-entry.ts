@@ -1,6 +1,7 @@
-import { TransactionBlock } from "@mysten/sui.js";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../constants";
-import { KIOSK_TYPE, createKiosk, createKioskAndShare, lock, place } from "@mysten/kiosk";
+import { KIOSK_TYPE, KioskClient, Network, KioskTransaction } from "@mysten/kiosk";
+import { SuiClient } from "@mysten/sui.js/client";
 
 /**
     entry fun transfer_nft(
@@ -93,22 +94,37 @@ export async function getStakeNftTx(
     return tx;
 }
 
-export async function getCreateKioskAndLockNftTx(gasBudget: number, nftPackageId: string, policy: string, nft_id: string, singer: string) {
+export async function getCreateKioskAndLockNftTx(
+    provider: SuiClient,
+    network: Network,
+    gasBudget: number,
+    nftPackageId: string,
+    policy: string,
+    nft_id: string,
+    singer: string
+) {
     let tx = new TransactionBlock();
 
-    let [kiosk, kiosk_cap] = createKiosk(tx);
-
-    lock(tx, `${nftPackageId}::typus_nft::Tails`, kiosk, kiosk_cap, tx.object(policy), tx.pure(nft_id));
-
-    tx.moveCall({
-        target: `0x2::transfer::public_share_object`,
-        typeArguments: [KIOSK_TYPE],
-        arguments: [kiosk],
+    const kioskClient = new KioskClient({
+        client: provider,
+        network,
     });
+    const kioskTx = new KioskTransaction({ transactionBlock: tx, kioskClient });
+    kioskTx.lock({ itemType: `${nftPackageId}::typus_nft::Tails`, itemId: nft_id, policy });
 
-    tx.transferObjects([kiosk_cap], tx.pure(singer));
+    const { kiosk, kioskCap } = kioskTx;
 
-    tx.setGasBudget(gasBudget);
+    if (kiosk && kioskCap) {
+        tx.moveCall({
+            target: `0x2::transfer::public_share_object`,
+            typeArguments: [KIOSK_TYPE],
+            arguments: [kiosk],
+        });
+        tx.transferObjects([kioskCap], tx.pure(singer));
+        tx.setGasBudget(gasBudget);
+    } else {
+        console.error("Fail to Create Kiosk Tx!!");
+    }
 
     return tx;
 }

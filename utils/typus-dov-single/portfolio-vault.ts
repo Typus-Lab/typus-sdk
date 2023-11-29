@@ -1,4 +1,4 @@
-import { JsonRpcProvider } from "@mysten/sui.js";
+import { SuiClient } from "@mysten/sui.js/client";
 import { DepositVault, BidVault, parseDepositVault, parseBidVault } from "../typus-framework/vault";
 import { Auction, parseAuction } from "../typus-framework/dutch";
 import { typeArgsToAssets } from "../token";
@@ -68,7 +68,7 @@ export interface PayoffConfig {
 }
 
 export async function getPortfolioVaults(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     registry: string,
     deposit_vault_registry: string,
     bid_vault_registry: string,
@@ -273,7 +273,7 @@ export async function getPortfolioVaults(
     return portfolioVaults;
 }
 
-export async function getPortfolioVaultAuctionDelayTsMs(provider: JsonRpcProvider, portfolio_vault: PortfolioVault): Promise<string> {
+export async function getPortfolioVaultAuctionDelayTsMs(provider: SuiClient, portfolio_vault: PortfolioVault): Promise<string> {
     let auctionDelayTsMs = "0";
     await provider
         .getDynamicFieldObject({

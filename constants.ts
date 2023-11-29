@@ -1,4 +1,4 @@
-import { Connection } from "@mysten/sui.js";
+import { SuiClient } from "@mysten/sui.js/client";
 
 export const CLOCK = "0x6";
 export const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
@@ -16,9 +16,8 @@ export const TOKEN_NAME_TO_MODULE = {
     USDC: "usdc",
 };
 
-export const testnetConnection = new Connection({
-    fullnode: "https://fullnode.testnet.sui.io:443/",
-    faucet: "https://faucet.testnet.sui.io/gas",
+export const testnetConnection = new SuiClient({
+    url: "https://fullnode.testnet.sui.io:443/",
 });
 
 export const ACTIVE_SUB_VAULT_TAG: number = 0;

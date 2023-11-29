@@ -1,4 +1,5 @@
-import { JsonRpcProvider, TransactionBlock } from "@mysten/sui.js";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient } from "@mysten/sui.js/client";
 import { U64FromBytes } from "../tools";
 import { DepositVaultUserShare, BidVaultUserShare } from "../typus-framework/vault";
 import { CLOCK, SENDER } from "../../constants";
@@ -11,7 +12,7 @@ export interface UserShare {
 }
 
 export async function getUserShares(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     registry: string,
     indexes: string[],
@@ -121,7 +122,7 @@ export async function getUserShares(
 }
 
 export async function getAuctionMaxSize(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -142,7 +143,7 @@ export async function getAuctionMaxSize(
 }
 
 export async function getMaxLossPerUnit(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     packageId: string,
     typeArguments: string[],
     registry: string,

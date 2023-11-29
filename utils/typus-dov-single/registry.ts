@@ -1,4 +1,4 @@
-import { JsonRpcProvider } from "@mysten/sui.js";
+import { SuiClient } from "@mysten/sui.js/client";
 import { U64FromBytes } from "../tools";
 
 export interface Registry {
@@ -13,7 +13,7 @@ export interface Registry {
     authority: string[];
 }
 
-export async function getRegistry(provider: JsonRpcProvider, registry: string): Promise<Registry> {
+export async function getRegistry(provider: SuiClient, registry: string): Promise<Registry> {
     let result = await provider.getObject({ id: registry, options: { showContent: true } });
 
     return {
@@ -48,7 +48,7 @@ export async function getRegistry(provider: JsonRpcProvider, registry: string): 
     } as Registry;
 }
 
-export async function getPackageVersion(provider: JsonRpcProvider, packageId: string): Promise<bigint> {
+export async function getPackageVersion(provider: SuiClient, packageId: string): Promise<bigint> {
     let packageData = await provider.getObject({
         id: packageId,
         options: {

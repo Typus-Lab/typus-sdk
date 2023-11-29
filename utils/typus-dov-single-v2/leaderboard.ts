@@ -1,4 +1,4 @@
-import { JsonRpcProvider, SuiEventFilter } from "@mysten/sui.js";
+import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
 import { typeArgToAsset } from "../token";
 
 const apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/mongodb";
@@ -52,7 +52,7 @@ export async function getUsersTvl(startTs, endTs) {
     return usersTvl;
 }
 
-export async function getUsersBidEvents(provider: JsonRpcProvider, originPackage: string, startTs = 0) {
+export async function getUsersBidEvents(provider: SuiClient, originPackage: string, startTs = 0) {
     const senderFilter: SuiEventFilter = {
         MoveEventType: `${originPackage}::typus_dov_single::NewBidEvent`,
     };
@@ -118,7 +118,7 @@ export async function sumUsersBidPremium(datas, vaultIndexes: string[] = [], sta
 
     return usersPremium;
 }
-export async function getSuiNS(provider: JsonRpcProvider, address: string) {
+export async function getSuiNS(provider: SuiClient, address: string) {
     const suiNs = await provider.resolveNameServiceNames({
         address,
     });
@@ -130,7 +130,7 @@ export async function getSuiNS(provider: JsonRpcProvider, address: string) {
 }
 
 export async function getUsersHarvestCompound(
-    provider: JsonRpcProvider,
+    provider: SuiClient,
     originPackage: string,
     startTs = 0,
     endTs = Math.floor(new Date().getTime() / 1000)
@@ -151,18 +151,24 @@ export async function getUsersHarvestCompound(
         result.data.forEach((data) => {
             if (Number(data.timestampMs) / 1000 < endTs) {
                 const parsedJson = data.parsedJson!;
+                // @ts-ignore
                 var amount = Number(parsedJson.amount) / 10 ** Number(parsedJson.decimal);
+                // @ts-ignore
                 var price = Number(parsedJson.oracle_info.price) / 10 ** Number(parsedJson.oracle_info.decimal);
+                // @ts-ignore
                 const asset = typeArgToAsset("0x" + parsedJson.token.name);
                 if (asset.startsWith("USD")) {
                     price = 1;
                 }
 
                 var acc = 0;
+                // @ts-ignore
                 if (usersHarvestCompound.has(parsedJson.signer)) {
+                    // @ts-ignore
                     acc = usersHarvestCompound.get(parsedJson.signer)!;
                 }
                 acc += amount * price;
+                // @ts-ignore
                 usersHarvestCompound.set(parsedJson.signer, acc);
             }
         });
@@ -189,18 +195,25 @@ export async function getUsersHarvestCompound(
         result.data.forEach((data) => {
             if (Number(data.timestampMs) / 1000 < endTs) {
                 const parsedJson = data.parsedJson!;
+                // @ts-ignore
                 var amount = Number(parsedJson.amount) / 10 ** Number(parsedJson.decimal);
+                // @ts-ignore
                 var price = Number(parsedJson.oracle_info.price) / 10 ** Number(parsedJson.oracle_info.decimal);
+
+                // @ts-ignore
                 const asset = typeArgToAsset("0x" + parsedJson.token.name);
                 if (asset.startsWith("USD")) {
                     price = 1;
                 }
 
                 var acc = 0;
+                // @ts-ignore
                 if (usersHarvestCompound.has(parsedJson.signer)) {
+                    // @ts-ignore
                     acc = usersHarvestCompound.get(parsedJson.signer)!;
                 }
                 acc += amount * price;
+                // @ts-ignore
                 usersHarvestCompound.set(parsedJson.signer, acc);
             }
         });

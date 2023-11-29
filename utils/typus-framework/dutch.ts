@@ -1,4 +1,4 @@
-import { JsonRpcProvider } from "@mysten/sui.js";
+import { SuiClient } from "@mysten/sui.js/client";
 
 export interface Auction {
     startTsMs: string;
@@ -42,7 +42,7 @@ export function parseAuction(auction): Auction {
     };
 }
 
-export async function getBids(provider: JsonRpcProvider, auction: Auction): Promise<Bid[]> {
+export async function getBids(provider: SuiClient, auction: Auction): Promise<Bid[]> {
     let bidIds = (await provider.getDynamicFields({ parentId: auction.bids })).data.map((x) => x.objectId);
 
     return (

@@ -1,9 +1,10 @@
 // import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
 // import { JsonRpcProvider } from "@mysten/sui.js/dist/cjs/providers/json-rpc-provider";
-import { JsonRpcProvider, TransactionBlock } from "@mysten/sui.js";
-import { fetchKiosk, OwnedKiosks } from "@mysten/kiosk";
+// import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient } from "@mysten/sui.js/client";
+import { OwnedKiosks, KioskClient, Network } from "@mysten/kiosk";
 
-export async function getPool(provider: JsonRpcProvider, pool: string) {
+export async function getPool(provider: SuiClient, pool: string) {
     const res = await provider.getObject({ id: pool, options: { showContent: true } });
 
     // @ts-ignore
@@ -46,7 +47,7 @@ export const necklaces = [
     "nft_vault",
 ];
 
-export async function getPoolMap(provider: JsonRpcProvider, nftConfig) {
+export async function getPoolMap(provider: SuiClient, nftConfig) {
     let pools: string[] = necklaces.map((necklace) => nftConfig[necklace]);
 
     const res = await provider.multiGetObjects({ ids: pools, options: { showContent: true } });
@@ -102,13 +103,17 @@ interface TailsId {
     kioskCap: string;
 }
 
-export async function getTailsIds(provider: JsonRpcProvider, nftConfig, kiosks: OwnedKiosks) {
+export async function getTailsIds(provider: SuiClient, network: Network, nftConfig, kiosks: OwnedKiosks) {
     let Tails: TailsId[] = [];
+    const kioskClient = new KioskClient({
+        client: provider,
+        network,
+    });
 
     for (let kioskOwnerCap of kiosks.kioskOwnerCaps) {
-        const res = await fetchKiosk(provider, kioskOwnerCap.kioskId, {}, {});
+        const res = await kioskClient.getKiosk({ id: kioskOwnerCap.objectId });
         // console.log(res);
-        const tails: TailsId[] = res.data.items
+        const tails: TailsId[] = res.items
             .filter((item) => item.type == `${nftConfig.NFT_PACKAGE}::typus_nft::Tails`)
             .map((item) => {
                 let t: TailsId = {
@@ -126,7 +131,7 @@ export async function getTailsIds(provider: JsonRpcProvider, nftConfig, kiosks: 
     return Tails;
 }
 
-export async function getTails(provider: JsonRpcProvider, tailsIds: string[]) {
+export async function getTails(provider: SuiClient, tailsIds: string[]) {
     let Tails: Tails[] = [];
 
     while (tailsIds.length > 0) {
