@@ -11,6 +11,8 @@ const signer = new RawSigner(keypair, provider);
 
 const gasBudget = 100000000;
 
+const amount = "10";
+
 (async () => {
     const address = await signer.getAddress();
     console.log(address);
@@ -29,7 +31,8 @@ const gasBudget = 100000000;
             config.SINGLE_COLLATERAL_PACKAGE,
             [config.NFT_EXP_TOKEN],
             config.SINGLE_COLLATERAL_REGISTRY,
-            coins
+            coins,
+            amount
         );
 
         // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
