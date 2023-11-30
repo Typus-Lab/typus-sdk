@@ -1,23 +1,26 @@
 import "../load_env";
-import config from "../../config.json";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
-import { getTailsIds } from "../../utils/typus-nft/fetch";
+import config from "../../config_v2.json";
+import { KioskClient, Network } from "@mysten/kiosk";
+import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getUnstakeNftTx } from "../../utils/nft-staking/user-entry";
 
-import { getOwnedKiosks } from "@mysten/kiosk";
-
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-// const client = new SuiClient({ url: config.RPC_ENDPOINT });
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const signer = new RawSigner(keypair, provider);
-
+const keypair = Ed25519Keypair.deriveKeypair("");
+const provider = new SuiClient({
+    url: getFullnodeUrl("testnet"),
+});
 const gasBudget = 100000000;
 
 (async () => {
-    const address = await signer.getAddress();
+    const address = await keypair.toSuiAddress();
     console.log(address);
 
-    const kiosks = await getOwnedKiosks(provider, address);
+    const kioskClient = new KioskClient({
+        client: provider,
+        network: Network.MAINNET,
+    });
+
+    const kiosks = await kioskClient.getOwnedKiosks({ address });
 
     if (kiosks.kioskOwnerCaps.length > 0) {
         let kioskOwnerCap = kiosks.kioskOwnerCaps[0];
@@ -30,8 +33,7 @@ const gasBudget = 100000000;
             kioskOwnerCap.objectId
         );
 
-        // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
-        let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
+        let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
 
         console.log(res);
     }

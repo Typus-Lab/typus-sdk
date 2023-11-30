@@ -101,26 +101,32 @@ interface TailsId {
     nftId: string;
     kiosk: string;
     kioskCap: string;
+    tails: Tails;
 }
 
-export async function getTailsIds(provider: SuiClient, network: Network, nftConfig, kiosks: OwnedKiosks) {
+export async function getTailsIds(kioskClient: KioskClient, nftConfig, address: string) {
+    let kiosks = await kioskClient.getOwnedKiosks({ address });
+    // let data = kiosks.kioskOwnerCaps;
+    // console.log(kiosks);
+
     let Tails: TailsId[] = [];
-    const kioskClient = new KioskClient({
-        client: provider,
-        network,
-    });
 
     for (let kioskOwnerCap of kiosks.kioskOwnerCaps) {
-        const res = await kioskClient.getKiosk({ id: kioskOwnerCap.objectId });
+        const res = await kioskClient.getKiosk({ id: kioskOwnerCap.kioskId, options: { withKioskFields: true, withObjects: true } });
         // console.log(res);
         const tails: TailsId[] = res.items
             .filter((item) => item.type == `${nftConfig.NFT_PACKAGE}::typus_nft::Tails`)
             .map((item) => {
+                // console.log(item.data);
+                // @ts-ignore
+                const tails = item.data as Tails;
                 let t: TailsId = {
                     nftId: item.objectId,
                     kiosk: kioskOwnerCap.kioskId,
                     kioskCap: kioskOwnerCap.objectId,
+                    tails,
                 };
+
                 return t;
             });
         // console.log(tails);
@@ -129,51 +135,6 @@ export async function getTailsIds(provider: SuiClient, network: Network, nftConf
     }
 
     return Tails;
-}
-
-export async function getTails(provider: SuiClient, tailsIds: string[]) {
-    let Tails: Tails[] = [];
-
-    while (tailsIds.length > 0) {
-        let len = tailsIds.length > 50 ? 50 : tailsIds.length;
-
-        const results = await provider.multiGetObjects({ ids: tailsIds.splice(0, len), options: { showContent: true } });
-
-        for (let result of results) {
-            // @ts-ignore
-            const fields = result.data?.content.fields;
-
-            const tails = fieldsToTails(fields);
-
-            Tails.push(tails);
-        }
-    }
-    return Tails;
-}
-
-export function fieldsToTails(fields) {
-    // console.log(fields.attributes.fields.contents);
-    const attributes = new Map<string, string>();
-    fields.attributes.fields.contents.forEach((f) => attributes.set(f.fields.key, f.fields.value));
-
-    const u64_padding = new Map<string, string>();
-    fields.u64_padding.fields.contents.forEach((f) => u64_padding.set(f.fields.key, f.fields.value));
-
-    const tails: Tails = {
-        id: fields.id.id,
-        name: fields.name,
-        number: fields.number,
-        url: fields.url,
-        level: fields.level,
-        exp: fields.exp,
-        first_bid: fields.first_bid,
-        first_deposit: fields.first_deposit,
-        first_deposit_nft: fields.first_deposit_nft,
-        attributes,
-        u64_padding,
-    };
-
-    return tails;
 }
 
 export interface Tails {
