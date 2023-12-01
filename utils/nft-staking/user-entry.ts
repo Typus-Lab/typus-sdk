@@ -95,8 +95,7 @@ export async function getStakeNftTx(
 }
 
 export async function getCreateKioskAndLockNftTx(
-    provider: SuiClient,
-    network: Network,
+    kioskClient: KioskClient,
     gasBudget: number,
     nftPackageId: string,
     policy: string,
@@ -105,11 +104,8 @@ export async function getCreateKioskAndLockNftTx(
 ) {
     let tx = new TransactionBlock();
 
-    const kioskClient = new KioskClient({
-        client: provider,
-        network,
-    });
     const kioskTx = new KioskTransaction({ transactionBlock: tx, kioskClient });
+    kioskTx.create();
     kioskTx.lock({ itemType: `${nftPackageId}::typus_nft::Tails`, itemId: nft_id, policy });
 
     const { kiosk, kioskCap } = kioskTx;
