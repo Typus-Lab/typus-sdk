@@ -1,12 +1,12 @@
 import "../load_env";
-import config from "../../config_v2.json";
+import config from "../../mainnet.json";
 import { KioskClient, Network } from "@mysten/kiosk";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getCreateKioskAndLockNftTx } from "../../utils/nft-staking/user-entry";
 
-const network = "testnet";
-const keypair = Ed25519Keypair.deriveKeypair("");
+const network = "mainnet";
+const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const provider = new SuiClient({
     url: getFullnodeUrl(network),
 });

@@ -6,7 +6,7 @@ import { getFullnodeUrl, SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 
 // Generate a new Ed25519 Keypair
-const keypair = Ed25519Keypair.deriveKeypair("");
+const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const provider = new SuiClient({
     url: getFullnodeUrl("testnet"),
 });

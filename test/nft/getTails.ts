@@ -5,7 +5,7 @@ import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { getTailsIds } from "../../utils/typus-nft/fetch";
 // import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 
-// const keypair = Ed25519Keypair.deriveKeypair("");
+// const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const provider = new SuiClient({
     url: getFullnodeUrl("testnet"),
 });
