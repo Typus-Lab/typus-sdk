@@ -1,13 +1,17 @@
-import { JsonRpcProvider, Connection, Ed25519Keypair, RawSigner } from "@mysten/sui.js";
+import config from "../config.json";
+import { SuiClient } from "@mysten/sui.js/client";
 import { getDepositShares } from "../../../utils/typus-dov-single-v2/view-function";
-import config from "../../../config_v2.json";
 
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
+const provider = new SuiClient({
+    url: config.RPC_ENDPOINT,
+});
+
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const signer = new RawSigner(keypair, provider);
 
 (async () => {
-    const address = await signer.getAddress();
+    const address = keypair.toSuiAddress();
+    console.log(address);
 
     var temp = await provider.getOwnedObjects({
         owner: address,
@@ -30,12 +34,6 @@ const signer = new RawSigner(keypair, provider);
         .map((obj) => obj.data?.objectId!);
     // console.log(receipts);
 
-    const result = await getDepositShares(
-        provider,
-        config.FRAMEWORK_PACKAGE,
-        config.SINGLE_COLLATERAL_PACKAGE,
-        config.SINGLE_COLLATERAL_REGISTRY,
-        receipts
-    );
+    const result = await getDepositShares(provider, config.FRAMEWORK_PACKAGE, config.PACKAGE, config.REGISTRY, receipts);
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();
