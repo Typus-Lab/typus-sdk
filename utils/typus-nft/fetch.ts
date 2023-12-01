@@ -137,6 +137,26 @@ export async function getTailsIds(kioskClient: KioskClient, nftConfig, address: 
     return Tails;
 }
 
+export async function getTails(provider: SuiClient, tailsIds: string[]) {
+    let Tails: Tails[] = [];
+
+    while (tailsIds.length > 0) {
+        let len = tailsIds.length > 50 ? 50 : tailsIds.length;
+
+        const results = await provider.multiGetObjects({ ids: tailsIds.splice(0, len), options: { showContent: true } });
+
+        for (let result of results) {
+            // @ts-ignore
+            const fields = result.data?.content.fields;
+
+            const tails = fieldsToTails(fields);
+
+            Tails.push(tails);
+        }
+    }
+    return Tails;
+}
+
 export function fieldsToTails(fields) {
     // console.log(fields.attributes.fields.contents);
     const attributes = new Map<string, string>();
