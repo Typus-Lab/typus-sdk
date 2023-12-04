@@ -94,6 +94,28 @@ export async function getStakeNftTx(
     return tx;
 }
 
+export async function getSwitchNftTx(
+    gasBudget: number,
+    nftPackageId: string,
+    registry: string,
+    kiosk: string,
+    kiosk_cap: string,
+    nft_id: string
+) {
+    let tx = new TransactionBlock();
+
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure(50000000)]);
+
+    tx.moveCall({
+        target: `${nftPackageId}::tails_staking::switch_nft`,
+        typeArguments: [],
+        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.pure(nft_id), tx.object(CLOCK), coin],
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
 export async function getCreateKioskAndLockNftTx(
     kioskClient: KioskClient,
     gasBudget: number,
