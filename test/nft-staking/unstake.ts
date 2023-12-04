@@ -23,7 +23,7 @@ const gasBudget = 100000000;
     const kiosks = await kioskClient.getOwnedKiosks({ address });
 
     if (kiosks.kioskOwnerCaps.length > 0) {
-        let kioskOwnerCap = kiosks.kioskOwnerCaps[0];
+        let kioskOwnerCap = kiosks.kioskOwnerCaps.filter((k) => !k.isPersonal!)[0];
 
         let transactionBlock = await getUnstakeNftTx(
             gasBudget,
