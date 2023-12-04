@@ -164,6 +164,11 @@ export async function getUnstakeNftTx(gasBudget: number, nftPackageId: string, r
         typeArguments: [],
         arguments: [tx.object(registry), tx.object(CLOCK)],
     });
+    // tx.moveCall({
+    //     target: `${nftPackageId}::tails_staking::claim_profit_sharing`,
+    //     typeArguments: ["0x2::sui::SUI"],
+    //     arguments: [tx.object(registry)],
+    // });
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::unstake_nft`,
         typeArguments: [],
@@ -486,5 +491,18 @@ export async function consumeExpCoinStakedTx(
 
     tx.setGasBudget(gasBudget);
 
+    return tx;
+}
+
+export async function getClaimProfitSharingTx(gasBudget: number, packageId: string, registry: string) {
+    let tx = new TransactionBlock();
+
+    tx.moveCall({
+        target: `${packageId}::tails_staking::claim_profit_sharing`,
+        typeArguments: ["0x2::sui::SUI"],
+        arguments: [tx.object(registry)],
+    });
+
+    tx.setGasBudget(gasBudget);
     return tx;
 }
