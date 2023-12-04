@@ -6,7 +6,7 @@
     "dependencies": {
         "@mysten/bcs": "^0.7.3",
         "@mysten/kiosk": "0.7.11",
-        "@mysten/sui.js": "0.47.0",
+        "@mysten/sui.js": "^0.47.0",
         "@types/node": "^20.5.7",
         "bignumber.js": "^9.1.1",
         "bs58": "^5.0.0",
