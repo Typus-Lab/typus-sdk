@@ -84,10 +84,22 @@ export async function getHistory(provider: SuiClient, dicePackage: string, playg
         MoveEventType: `${dicePackage}::tails_exp::Draw`,
     };
 
-    const events = await provider.queryEvents({ query: eventFilter, order: "descending" });
-    // console.log(events);
+    var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
+    // console.log(result);
 
-    const result = events.data.map((event) => {
+    var history = await parseHistory(result.data, playgrounds);
+
+    while (result.hasNextPage) {
+        result = await provider.queryEvents({ query: eventFilter, order: "descending", cursor: result.nextCursor });
+        const nextPage = await parseHistory(result.data, playgrounds);
+        history = history.concat(nextPage);
+    }
+
+    return history;
+}
+
+export async function parseHistory(datas, playgrounds: Playground[]): Promise<DrawDisplay[]> {
+    const result = datas.map((event) => {
         const drawEvent = event.parsedJson as DrawEvent;
 
         const playground = playgrounds[Number(drawEvent.index)];
@@ -169,6 +181,32 @@ interface DrawDisplay {
     result_2: string;
     bet_amount: string;
     exp: string;
+}
+
+export interface LeaderBoard {
+    player: string;
+    total_bet_amount: number;
+    total_earn_exp: number;
+}
+
+export async function getLeaderBoard(drawDisplays: DrawDisplay[]): Promise<LeaderBoard[]> {
+    let leaderBoard: LeaderBoard[] = [];
+
+    for (let drawDisplay of drawDisplays) {
+        let i = leaderBoard.findIndex((x) => x.player == drawDisplay.player);
+        if (i == -1) {
+            leaderBoard.push({
+                player: drawDisplay.player,
+                total_bet_amount: Number(drawDisplay.bet_amount.split(" ")[0]),
+                total_earn_exp: Number(drawDisplay.exp.split(" ")[0]),
+            } as LeaderBoard);
+        } else {
+            leaderBoard[i].total_bet_amount += Number(drawDisplay.bet_amount.split(" ")[0]);
+            leaderBoard[i].total_earn_exp += Number(drawDisplay.exp.split(" ")[0]);
+        }
+    }
+
+    return leaderBoard;
 }
 
 export interface ProfitSharing {
