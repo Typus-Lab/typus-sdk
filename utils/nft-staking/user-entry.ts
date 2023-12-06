@@ -105,7 +105,16 @@ export async function getSwitchNftTx(
     let tx = new TransactionBlock();
 
     let [coin] = tx.splitCoins(tx.gas, [tx.pure(50000000)]);
-
+    tx.moveCall({
+        target: `${nftPackageId}::tails_staking::snapshot`,
+        typeArguments: [],
+        arguments: [tx.object(registry), tx.object(CLOCK)],
+    });
+    tx.moveCall({
+        target: `${nftPackageId}::tails_staking::claim_profit_sharing`,
+        typeArguments: ["0x2::sui::SUI"],
+        arguments: [tx.object(registry)],
+    });
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::switch_nft`,
         typeArguments: [],
