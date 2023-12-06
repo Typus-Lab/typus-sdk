@@ -1,11 +1,26 @@
 import "../load_env";
 import config from "../../dice_config.json";
-import { getHistory, getPlaygrounds } from "../../utils/tails-exp-dice/fetch";
+import { waitHistory, getPlaygrounds, parseHistory } from "../../utils/tails-exp-dice/fetch";
 import { newGamePlayGuessTx } from "../../utils/tails-exp-dice/user-entry";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient, SuiHTTPTransport, getFullnodeUrl } from "@mysten/sui.js/client";
+import { WebSocket } from "ws";
+
+// const provider = new SuiClient({
+//     url: config.RPC_ENDPOINT,
+// });
+
+// const client = new SuiClient({
+//     transport:
+//         network in Network && network === Network.MAINNET ? new SentryHttpTransport(networkUrl) : new SuiHTTPTransport({ url: networkUrl }),
+// });
+
+// const provider = new SuiClient({ url: getFullnodeUrl("testnet") });
 
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    transport: new SuiHTTPTransport({
+        url: config.RPC_ENDPOINT,
+        WebSocketConstructor: WebSocket as never,
+    }),
 });
 
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
@@ -52,18 +67,17 @@ const larger_than_2 = true;
     console.log("game_id : " + game_id);
 
     // waiting for result
+    console.log("Waiting...");
 
-    while (true) {
-        const history = await getHistory(provider, config.PACKAGE_ORIGIN, playgrounds);
-        // console.log(history);
-        const userHistory = history.filter((h) => h.player == address);
-        // console.log(userHistory);
-        const newest = userHistory[0];
-        if (newest.game_id == game_id) {
-            console.log(newest);
-            break;
-        } else {
-            console.log("Waiting...");
-        }
-    }
+    const onMessage = async (event) => {
+        // console.log(event);
+        const result = await parseHistory([event], playgrounds);
+        console.log(result[0]);
+    };
+
+    const unsubscribe = await waitHistory(provider, config.PACKAGE_ORIGIN, onMessage);
+
+    setTimeout(async () => {
+        await unsubscribe();
+    }, 5000);
 })();

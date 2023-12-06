@@ -98,6 +98,18 @@ export async function getHistory(provider: SuiClient, dicePackage: string, playg
     return history;
 }
 
+export async function waitHistory(provider: SuiClient, dicePackage: string, onMessage) {
+    const eventFilter: SuiEventFilter = {
+        MoveEventType: `${dicePackage}::tails_exp::Draw`,
+    };
+    const unsubscribe = await provider.subscribeEvent({
+        filter: eventFilter,
+        onMessage,
+    });
+
+    return unsubscribe;
+}
+
 export async function parseHistory(datas, playgrounds: Playground[]): Promise<DrawDisplay[]> {
     const result = datas.map((event) => {
         const drawEvent = event.parsedJson as DrawEvent;
