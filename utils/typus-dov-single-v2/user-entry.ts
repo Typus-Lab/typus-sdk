@@ -215,14 +215,15 @@ export async function getHarvestTx(
     return tx;
 }
 
-export async function getBatchClaimHarvestWithdrawTx(
+export async function getBatchClaimHarvestWithdrawRedeemTx(
     gasBudget: number,
     typusFrameworkPackageId: string,
     packageId: string,
     registry: string,
     claimRequests: { typeArguments: string[]; index: string; receipts: string[] }[],
     harvestRequests: { typeArguments: string[]; index: string; receipts: string[] }[],
-    withdrawRequests: { typeArguments: string[]; index: string; receipts: string[] }[]
+    withdrawRequests: { typeArguments: string[]; index: string; receipts: string[] }[],
+    redeemRequests: { typeArguments: string[]; index: string; receipts: string[] }[]
 ) {
     let tx = new TransactionBlock();
     claimRequests.forEach((request) => {
@@ -265,6 +266,21 @@ export async function getBatchClaimHarvestWithdrawTx(
                     objects: request.receipts.map((id) => tx.object(id)),
                 }),
                 tx.pure([]),
+                tx.pure(CLOCK),
+            ],
+        });
+    });
+    redeemRequests.forEach((request) => {
+        tx.moveCall({
+            target: `${packageId}::tds_user_entry::redeem`,
+            typeArguments: request.typeArguments,
+            arguments: [
+                tx.object(registry),
+                tx.pure(request.index),
+                tx.makeMoveVec({
+                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    objects: request.receipts.map((id) => tx.object(id)),
+                }),
                 tx.pure(CLOCK),
             ],
         });

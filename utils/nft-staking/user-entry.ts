@@ -94,9 +94,30 @@ export async function getStakeNftTx(
     return tx;
 }
 
+export async function getSwitchNftTx(
+    gasBudget: number,
+    nftPackageId: string,
+    registry: string,
+    kiosk: string,
+    kiosk_cap: string,
+    nft_id: string
+) {
+    let tx = new TransactionBlock();
+
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure(50000000)]);
+
+    tx.moveCall({
+        target: `${nftPackageId}::tails_staking::switch_nft`,
+        typeArguments: [],
+        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.pure(nft_id), tx.object(CLOCK), coin],
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
 export async function getCreateKioskAndLockNftTx(
-    provider: SuiClient,
-    network: Network,
+    kioskClient: KioskClient,
     gasBudget: number,
     nftPackageId: string,
     policy: string,
@@ -105,11 +126,8 @@ export async function getCreateKioskAndLockNftTx(
 ) {
     let tx = new TransactionBlock();
 
-    const kioskClient = new KioskClient({
-        client: provider,
-        network,
-    });
     const kioskTx = new KioskTransaction({ transactionBlock: tx, kioskClient });
+    kioskTx.create();
     kioskTx.lock({ itemType: `${nftPackageId}::typus_nft::Tails`, itemId: nft_id, policy });
 
     const { kiosk, kioskCap } = kioskTx;
@@ -145,6 +163,11 @@ export async function getUnstakeNftTx(gasBudget: number, nftPackageId: string, r
         target: `${nftPackageId}::tails_staking::snapshot`,
         typeArguments: [],
         arguments: [tx.object(registry), tx.object(CLOCK)],
+    });
+    tx.moveCall({
+        target: `${nftPackageId}::tails_staking::claim_profit_sharing`,
+        typeArguments: ["0x2::sui::SUI"],
+        arguments: [tx.object(registry)],
     });
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::unstake_nft`,
@@ -468,5 +491,18 @@ export async function consumeExpCoinStakedTx(
 
     tx.setGasBudget(gasBudget);
 
+    return tx;
+}
+
+export async function getClaimProfitSharingTx(gasBudget: number, packageId: string, registry: string) {
+    let tx = new TransactionBlock();
+
+    tx.moveCall({
+        target: `${packageId}::tails_staking::claim_profit_sharing`,
+        typeArguments: ["0x2::sui::SUI"],
+        arguments: [tx.object(registry)],
+    });
+
+    tx.setGasBudget(gasBudget);
     return tx;
 }

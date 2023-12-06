@@ -101,26 +101,32 @@ interface TailsId {
     nftId: string;
     kiosk: string;
     kioskCap: string;
+    tails: Tails;
 }
 
-export async function getTailsIds(provider: SuiClient, network: Network, nftConfig, kiosks: OwnedKiosks) {
+export async function getTailsIds(kioskClient: KioskClient, nftConfig, address: string) {
+    let kiosks = await kioskClient.getOwnedKiosks({ address });
+    // let data = kiosks.kioskOwnerCaps;
+    // console.log(kiosks);
+
     let Tails: TailsId[] = [];
-    const kioskClient = new KioskClient({
-        client: provider,
-        network,
-    });
 
     for (let kioskOwnerCap of kiosks.kioskOwnerCaps) {
-        const res = await kioskClient.getKiosk({ id: kioskOwnerCap.objectId });
+        const res = await kioskClient.getKiosk({ id: kioskOwnerCap.kioskId, options: { withKioskFields: true, withObjects: true } });
         // console.log(res);
         const tails: TailsId[] = res.items
             .filter((item) => item.type == `${nftConfig.NFT_PACKAGE}::typus_nft::Tails`)
             .map((item) => {
+                // console.log(item.data);
+                // @ts-ignore
+                const tails = item.data as Tails;
                 let t: TailsId = {
                     nftId: item.objectId,
                     kiosk: kioskOwnerCap.kioskId,
                     kioskCap: kioskOwnerCap.objectId,
+                    tails,
                 };
+
                 return t;
             });
         // console.log(tails);

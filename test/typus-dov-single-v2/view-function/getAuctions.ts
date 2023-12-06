@@ -1,8 +1,11 @@
-import { JsonRpcProvider, Connection } from "@mysten/sui.js";
-import { getAuctions } from "../../../utils/typus-dov-single-v2/view-function";
 import config from "../config.json";
+import { SuiClient } from "@mysten/sui.js/client";
+import { getAuctions } from "../../../utils/typus-dov-single-v2/view-function";
 
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
+const provider = new SuiClient({
+    url: config.RPC_ENDPOINT,
+});
+
 (async () => {
     let indexes = [];
     let result = await getAuctions(provider, config.PACKAGE, config.REGISTRY, indexes);

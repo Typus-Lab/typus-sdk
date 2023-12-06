@@ -40,6 +40,7 @@ export async function getPlaygrounds(provider: SuiClient, diceRegistry: string) 
                 game_config,
                 is_active: fields.is_active,
             };
+            // console.log(playground);
             return playground;
         });
 
@@ -83,10 +84,22 @@ export async function getHistory(provider: SuiClient, dicePackage: string, playg
         MoveEventType: `${dicePackage}::tails_exp::Draw`,
     };
 
-    const events = await provider.queryEvents({ query: eventFilter, order: "descending" });
-    // console.log(events);
+    var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
+    // console.log(result);
 
-    const result = events.data.map((event) => {
+    var history = await parseHistory(result.data, playgrounds);
+
+    while (result.hasNextPage) {
+        result = await provider.queryEvents({ query: eventFilter, order: "descending", cursor: result.nextCursor });
+        const nextPage = await parseHistory(result.data, playgrounds);
+        history = history.concat(nextPage);
+    }
+
+    return history;
+}
+
+export async function parseHistory(datas, playgrounds: Playground[]): Promise<DrawDisplay[]> {
+    const result = datas.map((event) => {
         const drawEvent = event.parsedJson as DrawEvent;
 
         const playground = playgrounds[Number(drawEvent.index)];
@@ -170,6 +183,32 @@ interface DrawDisplay {
     exp: string;
 }
 
+export interface LeaderBoard {
+    player: string;
+    total_bet_amount: number;
+    total_earn_exp: number;
+}
+
+export async function getLeaderBoard(drawDisplays: DrawDisplay[]): Promise<LeaderBoard[]> {
+    let leaderBoard: LeaderBoard[] = [];
+
+    for (let drawDisplay of drawDisplays) {
+        let i = leaderBoard.findIndex((x) => x.player == drawDisplay.player);
+        if (i == -1) {
+            leaderBoard.push({
+                player: drawDisplay.player,
+                total_bet_amount: Number(drawDisplay.bet_amount.split(" ")[0]),
+                total_earn_exp: Number(drawDisplay.exp.split(" ")[0]),
+            } as LeaderBoard);
+        } else {
+            leaderBoard[i].total_bet_amount += Number(drawDisplay.bet_amount.split(" ")[0]);
+            leaderBoard[i].total_earn_exp += Number(drawDisplay.exp.split(" ")[0]);
+        }
+    }
+
+    return leaderBoard;
+}
+
 export interface ProfitSharing {
     level_profits: string[];
     level_users: string[];
@@ -188,4 +227,93 @@ export async function getProfitSharing(provider: SuiClient, diceProfitSharing: s
     const result = object.data?.content?.fields.value.fields as ProfitSharing;
 
     return result;
+}
+
+export function calculateLevelReward(totalRewards: number, levelShares: number[], numOfHolders: number[]): number[] {
+    // Step 1: Calculate original level rewards (per holder)
+    const totalShares: number = levelShares.reduce((acc, share) => acc + share, 0);
+    const originalRewardPerHolder: number[] = levelShares.map((levelShare, index) => {
+        const num: number = numOfHolders[index];
+        const levelRewardPerHolder: number = num > 0 ? (totalRewards * levelShare) / totalShares / num : 0;
+        return Math.floor(levelRewardPerHolder);
+    });
+
+    const originalLevelRewards: number[] = originalRewardPerHolder.map((reward, index) => reward * numOfHolders[index]);
+    const distributedRewards: number = originalLevelRewards.reduce((acc, reward) => acc + reward, 0);
+    const emptyLevelRewards: number = totalRewards - distributedRewards;
+    // console.log("Step 1 - ", originalRewardPerHolder);
+
+    // Step 2: Distribute rewards from empty levels
+    let reversedOriginalRewardPerHolder: number[] = originalRewardPerHolder.slice().reverse();
+    let reversedNumOfHolders: number[] = numOfHolders.slice().reverse();
+    let reversedScaledRewardPerHolder: number[] = [];
+    if (emptyLevelRewards > 0) {
+        let undistributedRewards: number = emptyLevelRewards;
+        let uncalculatedDistributedRewards: number = distributedRewards;
+        reversedScaledRewardPerHolder = reversedOriginalRewardPerHolder.map((rewardPerHolder, index) => {
+            const num: number = reversedNumOfHolders[index];
+            const scaledRewardPerHolder: number =
+                num > 0
+                    ? uncalculatedDistributedRewards > 0
+                        ? (rewardPerHolder * (uncalculatedDistributedRewards + undistributedRewards)) / uncalculatedDistributedRewards
+                        : rewardPerHolder
+                    : 0;
+
+            undistributedRewards -= (scaledRewardPerHolder - rewardPerHolder) * num;
+            uncalculatedDistributedRewards -= rewardPerHolder * num;
+            return Math.floor(scaledRewardPerHolder);
+        });
+    } else {
+        reversedScaledRewardPerHolder = reversedOriginalRewardPerHolder.slice();
+    }
+    // let scaledRewardPerHolder: number[] = reversedScaledRewardPerHolder.slice().reverse();
+    // console.log("Step 2 - ", scaledRewardPerHolder);
+
+    // Step 3: Capped level reward
+    let reversedCappedRewardPerHolder: number[] = [reversedOriginalRewardPerHolder[0]];
+    var tempHighLevelReward: number = 0;
+    reversedScaledRewardPerHolder.forEach((highLevelReward, index) => {
+        const lowLevelReward: number = reversedScaledRewardPerHolder[index + 1] || 0;
+        tempHighLevelReward =
+            highLevelReward > 0
+                ? tempHighLevelReward > 0
+                    ? Math.min(highLevelReward, tempHighLevelReward)
+                    : highLevelReward
+                : tempHighLevelReward;
+        reversedCappedRewardPerHolder.push(tempHighLevelReward > 0 ? Math.min(lowLevelReward, tempHighLevelReward) : lowLevelReward);
+    });
+    reversedCappedRewardPerHolder.pop();
+    let cappedRewardPerHolder: number[] = reversedCappedRewardPerHolder.slice().reverse();
+    // console.log("Step 3 - ", cappedRewardPerHolder);
+
+    // Step 4: Distribute capped reward from Step 3 into each level
+    const distributedRewardsStep4: number = reversedCappedRewardPerHolder.reduce(
+        (acc, reward, index) => acc + reward * reversedNumOfHolders[index],
+        0
+    );
+    var undistributedRewardsStep4: number = totalRewards - distributedRewardsStep4;
+    var uncalculatedDistributedRewardsStep4: number = distributedRewardsStep4;
+
+    // console.log(distributedRewardsStep4);
+
+    // console.log(totalRewards);
+    // console.log(undistributedRewardsStep4);
+    // console.log(uncalculatedDistributedRewardsStep4);
+
+    var levelReward: number[] = cappedRewardPerHolder.map((rewardPerHolder, index) => {
+        const num: number = reversedNumOfHolders[index];
+        const scaledRewardPerHolder: number =
+            uncalculatedDistributedRewardsStep4 > 0
+                ? (rewardPerHolder * (uncalculatedDistributedRewardsStep4 + undistributedRewardsStep4)) /
+                  uncalculatedDistributedRewardsStep4
+                : rewardPerHolder;
+
+        undistributedRewardsStep4 -= (scaledRewardPerHolder - rewardPerHolder) * num;
+        uncalculatedDistributedRewardsStep4 -= rewardPerHolder * num;
+        // console.log(undistributedRewardsStep4);
+        return Math.floor(scaledRewardPerHolder);
+    });
+    // console.log("Step 4 - ", levelReward);
+
+    return levelReward;
 }

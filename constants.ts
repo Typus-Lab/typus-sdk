@@ -16,6 +16,10 @@ export const TOKEN_NAME_TO_MODULE = {
     USDC: "usdc",
 };
 
+export const mainnetConnection = new SuiClient({
+    url: "https://fullnode.mainnet.sui.io:443/",
+});
+
 export const testnetConnection = new SuiClient({
     url: "https://fullnode.testnet.sui.io:443/",
 });

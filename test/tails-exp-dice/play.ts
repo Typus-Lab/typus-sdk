@@ -1,15 +1,18 @@
 import "../load_env";
 import config from "../../dice_config.json";
-import { JsonRpcProvider, Connection, Ed25519Keypair, RawSigner } from "@mysten/sui.js";
 import { getHistory, getPlaygrounds } from "../../utils/tails-exp-dice/fetch";
 import { newGamePlayGuessTx } from "../../utils/tails-exp-dice/user-entry";
+import { SuiClient } from "@mysten/sui.js/client";
 
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
+const provider = new SuiClient({
+    url: config.RPC_ENDPOINT,
+});
+
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const signer = new RawSigner(keypair, provider);
 
 const gasBudget = 50000000;
-const index = 1;
+const index = 0;
 const amount = "10000000";
 const guess_1 = "5000";
 const larger_than_1 = true;
@@ -17,7 +20,7 @@ const guess_2 = "5000";
 const larger_than_2 = true;
 
 (async () => {
-    const address = await signer.getAddress();
+    const address = keypair.toSuiAddress();
     console.log(address);
 
     const playgrounds = await getPlaygrounds(provider, config.REGISTRY);
@@ -26,7 +29,7 @@ const larger_than_2 = true;
 
     const coinType = "0x" + playground.stake_token;
 
-    let coins = (await provider.getCoins({ owner: await signer.getAddress(), coinType })).data.map((coin) => coin.coinObjectId);
+    let coins = (await provider.getCoins({ owner: address, coinType })).data.map((coin) => coin.coinObjectId);
 
     let transactionBlock = await newGamePlayGuessTx(
         gasBudget,
@@ -42,16 +45,16 @@ const larger_than_2 = true;
         larger_than_2
     );
 
-    let res = await signer.signAndExecuteTransactionBlock({ transactionBlock, options: { showEvents: true } });
+    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock, options: { showEvents: true } });
     console.log(res);
 
     const game_id = res.events![0].parsedJson!["game_id"];
-    console.log(game_id);
+    console.log("game_id : " + game_id);
 
     // waiting for result
 
     while (true) {
-        const history = await getHistory(provider, config.PACKAGE, playgrounds);
+        const history = await getHistory(provider, config.PACKAGE_ORIGIN, playgrounds);
         // console.log(history);
         const userHistory = history.filter((h) => h.player == address);
         // console.log(userHistory);

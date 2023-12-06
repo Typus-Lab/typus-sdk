@@ -1,6 +1,7 @@
 {
     "VERSION": "1.0.0",
-    "RPC_ENDPOINT": "https://api.shinami.com:443/node/v1/sui_testnet_c702de54dad05016124f2cfabc1de7e8",
-    "PACKAGE": "0x528e8aa1eb427cff2b60196d4912e68778b3db902ecec241890d12af6b1c27c0",
-    "REGISTRY": "0x0f8f33e676cd93cc5efddd70a0449007d068908bcbeb0eed25fd29c521b55c78"
+    "RPC_ENDPOINT": "https://fullnode.mainnet.sui.io:443",
+    "PACKAGE": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
+    "PACKAGE_ORIGIN": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
+    "REGISTRY": "0x7679ab7157f13ec945579e3098ba589eb8b4eec841c775799d2aa22b565187c7"
 }

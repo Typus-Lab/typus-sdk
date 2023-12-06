@@ -1,20 +1,19 @@
 import "../load_env";
-import config from "../../config.json";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection, GetOwnedObjectsResponse, TransactionBlock } from "@mysten/sui.js";
-import { getTails, getTailsIds } from "../../utils/typus-nft/fetch";
-import { getCreateKioskAndLockNftTx, getStakeNftTx } from "../../utils/nft-staking/user-entry";
+import config from "../../mainnet.json";
+import { KioskClient, Network } from "@mysten/kiosk";
+import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { getCreateKioskAndLockNftTx } from "../../utils/nft-staking/user-entry";
 
-import { createKiosk, getOwnedKiosks } from "@mysten/kiosk";
-
+const network = "mainnet";
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-// const client = new SuiClient({ url: config.RPC_ENDPOINT });
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const signer = new RawSigner(keypair, provider);
-
+const provider = new SuiClient({
+    url: getFullnodeUrl(network),
+});
 const gasBudget = 100000000;
 
 (async () => {
-    const address = await signer.getAddress();
+    const address = keypair.toSuiAddress();
     console.log(address);
 
     var result = await provider.getOwnedObjects({
@@ -43,7 +42,13 @@ const gasBudget = 100000000;
     if (tailsIds.length > 0) {
         let nft = tailsIds[0];
 
+        const kioskClient = new KioskClient({
+            client: provider,
+            network: network as Network,
+        });
+
         let transactionBlock = await getCreateKioskAndLockNftTx(
+            kioskClient,
             gasBudget,
             config.NFT_PACKAGE,
             config.NFT_TRANSFER_POLICY,
@@ -51,8 +56,7 @@ const gasBudget = 100000000;
             address
         );
 
-        // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
-        let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
+        let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
 
         console.log(res);
     }

@@ -1,27 +1,29 @@
 import "../load_env";
 import config from "../../config_v2.json";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
-import { getTails, getTailsIds } from "../../utils/typus-nft/fetch";
+import { KioskClient, Network } from "@mysten/kiosk";
+import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
+import { getTailsIds } from "../../utils/typus-nft/fetch";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getTransferNftTx } from "../../utils/nft-staking/user-entry";
 
-import { getOwnedKiosks } from "@mysten/kiosk";
-
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-// const client = new SuiClient({ url: config.RPC_ENDPOINT });
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const signer = new RawSigner(keypair, provider);
-
+const provider = new SuiClient({
+    url: getFullnodeUrl("testnet"),
+});
 const gasBudget = 100000000;
 
 const receiver = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9";
 
 (async () => {
-    const address = await signer.getAddress();
+    const address = await keypair.toSuiAddress();
     console.log(address);
 
-    const kiosks = await getOwnedKiosks(provider, address);
+    const kioskClient = new KioskClient({
+        client: provider,
+        network: Network.MAINNET,
+    });
 
-    const tailsIds = await getTailsIds(provider, config, kiosks);
+    const tailsIds = await getTailsIds(kioskClient, config, address);
     console.log(tailsIds);
 
     if (tailsIds.length > 0) {
@@ -37,8 +39,7 @@ const receiver = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3
             receiver
         );
 
-        // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
-        let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
+        let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
 
         console.log(res);
     }

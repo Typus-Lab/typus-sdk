@@ -1,8 +1,11 @@
-import { JsonRpcProvider, Connection } from "@mysten/sui.js";
-import { getMyBids } from "../../../utils/typus-dov-single-v2/view-function";
 import config from "../config.json";
+import { SuiClient } from "@mysten/sui.js/client";
+import { getMyBids } from "../../../utils/typus-dov-single-v2/view-function";
 
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
+const provider = new SuiClient({
+    url: config.RPC_ENDPOINT,
+});
+
 (async () => {
     let receipts = [
         "0xc6c6d33ef8d1bb4cae380a8dff90f871f7bafde31351f9fa6ad107a6ed06c2e8", // SUI-19OCT23-0.349-Put

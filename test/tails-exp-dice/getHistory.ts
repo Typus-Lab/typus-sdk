@@ -1,18 +1,17 @@
-import { JsonRpcProvider, Connection } from "@mysten/sui.js";
 import config from "../../dice_config.json";
-import { getPlaygrounds, getHistory } from "../../utils/tails-exp-dice/fetch";
+import { getHistory, getLeaderBoard, getPlaygrounds } from "../../utils/tails-exp-dice/fetch";
+import { SuiClient } from "@mysten/sui.js/client";
 
-const index = 0;
-const user = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9";
+const provider = new SuiClient({
+    url: config.RPC_ENDPOINT,
+});
 
 (async () => {
-    const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-
     const playgrounds = await getPlaygrounds(provider, config.REGISTRY);
 
     const history = await getHistory(provider, config.PACKAGE, playgrounds);
-    console.log(history);
+    console.log(history.length);
 
-    const userHistory = history.filter((h) => h.player == user);
-    console.log(userHistory);
+    const leaderBoard = await getLeaderBoard(history);
+    console.log(leaderBoard.sort((a, b) => b.total_bet_amount - a.total_bet_amount));
 })();
