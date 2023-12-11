@@ -1,4 +1,4 @@
-import config from "../../../config_v2.json";
+import config from "../../../mainnet.json";
 import { KioskClient, Network } from "@mysten/kiosk";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { getTailsIds, getTails } from "../../../utils/typus-nft/fetch";
@@ -8,16 +8,15 @@ import { getAllocateProfitSharingTx, getSetProfitSharingTx } from "../../../util
 import { getProfitSharing, ProfitSharing, calculateLevelReward } from "../../../utils/tails-exp-dice/fetch";
 
 import mnemonic from "../../../mnemonic.json";
-import { assert } from "console";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 const provider = new SuiClient({
-    url: getFullnodeUrl("testnet"),
+    url: config.RPC_ENDPOINT,
 });
 const gasBudget = 100000000;
 
-const totalRewards = 36_000000000;
-const levelShares = [0, 0.1, 0.2, 0.3, 0.4, 0, 0];
+const totalRewards = 3000_000000000;
+const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
 
 (async () => {
     const address = keypair.toSuiAddress();
@@ -42,7 +41,7 @@ const levelShares = [0, 0.1, 0.2, 0.3, 0.4, 0, 0];
         provider,
         datas.map((data) => data.objectId)
     );
-    console.log(tails);
+    // console.log(tails);
 
     const levelUsers = [0, 0, 0, 0, 0, 0, 0];
     tails.forEach((tail) => (levelUsers[Number(tail.level) - 1] += 1));
@@ -53,7 +52,7 @@ const levelShares = [0, 0.1, 0.2, 0.3, 0.4, 0, 0];
 
     const sum = levelUsers.reduce((sum, user, i) => (sum += user * levelProfits[i]), 0);
     console.log("Sum Profits: ", sum);
-    assert(totalRewards > sum);
+    console.assert(totalRewards >= sum);
 
     const users = datas.map((d) => d.name.value as string);
     console.log("users.length: " + users.length);
