@@ -173,7 +173,9 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     Tails = `#${event.parsedJson!.number}`;
                     break;
                 case "ExpUpEvent":
-                    var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest && x.Action != "First Deposit");
+                    var i = txHistory.findIndex(
+                        (x) => x.txDigest == event.id.txDigest && x.Action != "First Deposit" && x.Action != "Stake"
+                    );
                     if (i != -1) {
                         txHistory[i].Tails = `#${event.parsedJson!.number}`;
                         txHistory[i].Exp = event.parsedJson!.exp_earn;
