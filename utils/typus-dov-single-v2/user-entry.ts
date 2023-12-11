@@ -473,3 +473,83 @@ export async function getRebateTx(gasBudget: number, packageId: string, typeArgu
 
     return tx;
 }
+/**
+    entry fun new_strategy<B_TOKEN>(
+        strategy_pool: &mut StrategyPool,
+        vault_index: u64,
+        signal_index: u64,
+        size: u64,
+        price_percentage: u64,
+        max_times: u64,
+        target_rounds: vector<u64>,
+        coin: Coin<B_TOKEN>,
+        ctx: &mut TxContext
+    )
+*/
+
+export async function getNewStrategyTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[], // B_TOKEN
+    strategy_pool: string,
+    vault_index: string,
+    signal_index: string,
+    coins: string[],
+    amount: string,
+    size: string,
+    price_percentage: string,
+    max_times: string,
+    target_rounds: string[]
+) {
+    let tx = new TransactionBlock();
+
+    if (
+        typeArguments[0] == "0x2::sui::SUI" ||
+        typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
+    ) {
+        let [input_coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
+        tx.moveCall({
+            target: `${packageId}::auto_bid::new_strategy`,
+            typeArguments,
+            arguments: [
+                tx.object(strategy_pool),
+                tx.pure(vault_index),
+                tx.pure(signal_index),
+                tx.pure(size),
+                tx.pure(price_percentage),
+                tx.pure(max_times),
+                tx.pure(target_rounds),
+                input_coin,
+            ],
+        });
+    } else {
+        const coin = coins.pop()!;
+
+        if (coins.length > 0) {
+            tx.mergeCoins(
+                tx.object(coin),
+                coins.map((id) => tx.object(id))
+            );
+        }
+
+        let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure(amount)]);
+
+        tx.moveCall({
+            target: `${packageId}::auto_bid::new_strategy`,
+            typeArguments,
+            arguments: [
+                tx.object(strategy_pool),
+                tx.pure(vault_index),
+                tx.pure(signal_index),
+                tx.pure(size),
+                tx.pure(price_percentage),
+                tx.pure(max_times),
+                tx.pure(target_rounds),
+                input_coin,
+            ],
+        });
+    }
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
