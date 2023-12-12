@@ -209,7 +209,7 @@ export async function convertGroupEventToVaultHistory(groupEvent: GroupEvent): P
     }
 }
 
-interface VaultHistory {
+export interface VaultHistory {
     vaultIndex: string;
     round: string;
 

@@ -1,13 +1,11 @@
-import config from "../../config_v2.json";
-import { getVaultHistoryEvents, parseGroupEvents, parseVaultHistory } from "../../utils/typus-dov-single-v2/vault-history";
+import config from "../../mainnet.json";
+import { getVaultHistoryEvents, parseGroupEvents, parseVaultHistory, VaultHistory } from "../../utils/typus-dov-single-v2/vault-history";
 import { getVaults } from "../../utils/typus-dov-single-v2/view-function";
-import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui.js/client";
 
 const provider = new SuiClient({
-    url: getFullnodeUrl("testnet"),
+    url: config.RPC_ENDPOINT,
 });
-
-const sender = "0xdc72506f269feb89822c13e66b282bc52c5724c27e575a04cbec949a13671d13";
 
 (async () => {
     const vaults = await getVaults(provider, config.SINGLE_COLLATERAL_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY, []);
@@ -15,4 +13,23 @@ const sender = "0xdc72506f269feb89822c13e66b282bc52c5724c27e575a04cbec949a13671d
     const groupEvents = await parseGroupEvents(datas);
     const vaultHistory = await parseVaultHistory(groupEvents);
     console.log(vaultHistory);
+
+    writeResultToJson(vaultHistory, "vaultHistory.json");
 })();
+
+import * as fs from "fs";
+
+function writeResultToJson(result: Map<string, Map<string, VaultHistory | undefined>>, filePath: string): void {
+    const resultObject: { [key: string]: { [key: string]: VaultHistory | undefined } } = {};
+    result.forEach((innerMap, outerKey) => {
+        const innerObject: { [key: string]: VaultHistory | undefined } = {};
+
+        innerMap.forEach((vaultHistory, innerKey) => {
+            innerObject[innerKey] = vaultHistory;
+        });
+
+        resultObject[outerKey] = innerObject;
+    });
+    const jsonString = JSON.stringify(resultObject, null, 2);
+    fs.writeFileSync(filePath, jsonString, "utf-8");
+}
