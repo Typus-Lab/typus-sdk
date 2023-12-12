@@ -48,6 +48,7 @@ export async function parseGroupEvents(datas: SuiEvent[]): Promise<Map<string, M
 
         const parsedJson: any = event.parsedJson;
         // console.log(parsedJson);
+        parsedJson.timestampMs = event.timestampMs;
 
         const index: string = parsedJson.index.toString();
         const round: string = parsedJson.round.toString();
@@ -145,6 +146,7 @@ interface ActivateEvent {
     o_token_decimal: string;
     oracle_info: OracleInfo;
     u64_padding: string[];
+    timestampMs: string | null | undefined;
 }
 
 interface NewAuctionEvent {
@@ -157,6 +159,7 @@ interface NewAuctionEvent {
     vault_config: VaultConfig;
     oracle_info: OracleInfo;
     u64_padding: string[];
+    timestampMs: string | null | undefined;
 }
 
 interface DeliveryEvent {
@@ -178,6 +181,7 @@ interface DeliveryEvent {
     fixed_incentive_amount: string;
     max_size: string;
     u64_padding: string[];
+    timestampMs: string | null | undefined;
 }
 
 interface RecoupEvent {
@@ -188,6 +192,7 @@ interface RecoupEvent {
     deactivating_amount: string;
     d_token_decimal: string;
     u64_padding: string[];
+    timestampMs: string | null | undefined;
 }
 
 interface SettleEvent {
@@ -202,4 +207,5 @@ interface SettleEvent {
     d_token: string;
     share_price: string;
     u64_padding: string[];
+    timestampMs: string | null | undefined;
 }
