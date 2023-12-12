@@ -62,5 +62,6 @@
     "nft_vault": "0x9a5bca0fb698734481d6cd51ad1a186d0620ada11163ff7ab55e3fc0ca5f71a5",
     "sui_network": "0xed5f3eebda1be7cd74ebb883852738996ea4b7d651eb1b5a77bb5d7f221b5b2a",
     "mysten_labs": "0x985a37095c597ecfa072b0f389df689ee4d9c99bcf4b175aa53be52e2e5f25b8",
-    "none": "0x88dba869e789d0725ae55fbb446f6e38065b67e1f26b10ec57322b18f4de9892"
+    "none": "0x88dba869e789d0725ae55fbb446f6e38065b67e1f26b10ec57322b18f4de9892",
+    "diceProfitSharing": "0x42ba35a057e38baf19e916b0f9ad5d98bb23b7fc246b4d659fc21c608790e872"
 }
