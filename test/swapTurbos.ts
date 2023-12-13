@@ -1,6 +1,6 @@
 import "./load_env";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { Network, TurbosSdk } from "turbos-clmm-sdk";
+import { Decimal, Network, TurbosSdk } from "turbos-clmm-sdk";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 
 // Choose one way
@@ -12,20 +12,22 @@ const USDC = "0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf
 const FUD = "0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1::fud::FUD";
 
 (async () => {
-    const sdk = new TurbosSdk(Network.mainnet);
-    const pools = await sdk.pool.getPools();
-    const targetPools = pools
-        .filter((pool) => pool.types.includes("0x2::sui::SUI") && pool.types.includes(FUD))
-        .sort((a, b) => Number(b.liquidity) - Number(a.liquidity));
-    console.log(pools.length + " " + targetPools.length);
-    const fudPool = targetPools[0];
-    console.log(JSON.stringify(fudPool));
-    await Promise.all([
-        // swapTurbos(FUD, clientMnemonic, "5000000000000", "10"),
-        // swapTurbos(FUD, typusMnemonic, "29800000000000", "10"),
-        // swapTurbos(USDC, mnemonic1, "1000000000", "1"),
-        // swapTurbos(USDC, mnemonic2, "1000000000", "1"),
-    ]);
+    // const sdk = new TurbosSdk(Network.mainnet);
+    // const pools = await sdk.pool.getPools();
+    // const targetPools = pools
+    //     .filter((pool) => pool.types.includes("0x2::sui::SUI") && pool.types.includes(FUD))
+    //     .sort((a, b) => Number(b.liquidity) - Number(a.liquidity));
+    // console.log(pools.length + " " + targetPools.length);
+    // const targetPool = targetPools[0];
+    // console.log(JSON.stringify(targetPool));
+    while (true) {
+        await Promise.all([
+            swapTurbos(FUD, clientMnemonic, "5000000000000", "10"),
+            swapTurbos(FUD, typusMnemonic, "29800000000000", "10"),
+            // swapTurbos(USDC, mnemonic1, "1000000000", "1"),
+            // swapTurbos(USDC, mnemonic2, "1000000000", "1"),
+        ]);
+    }
 })();
 
 export async function swapTurbos(targetCoin, mnemonic, amount, slippage) {
@@ -50,15 +52,17 @@ export async function swapTurbos(targetCoin, mnemonic, amount, slippage) {
         .sort((a, b) => Number(b.liquidity) - Number(a.liquidity));
     result += targetPools.length + "\n";
 
-    const fudPool = targetPools[0];
-    result += JSON.stringify(fudPool) + "\n";
+    const targetPool = targetPools[0];
+    result += JSON.stringify(targetPool) + "\n";
 
-    if (fudPool) {
-        const pool = fudPool?.id.id;
+    let avaliableAmount = (await sdk.provider.getBalance({ owner: address, coinType: "0x2::sui::SUI" })).totalBalance;
+
+    if (targetPool && BigInt(avaliableAmount) > BigInt(amount)) {
+        const pool = targetPool?.id.id;
 
         var a2b = true;
         var amountSpecifiedIsInput = true;
-        if (fudPool?.types[1] == "0x2::sui::SUI") {
+        if (targetPool?.types[1] == "0x2::sui::SUI") {
             a2b = false;
             amountSpecifiedIsInput = false;
         }
@@ -77,8 +81,8 @@ export async function swapTurbos(targetCoin, mnemonic, amount, slippage) {
 
         const transactionBlock = await sdk.trade.swap({
             routes: [{ pool, a2b, nextTickIndex: sdk.math.bitsToNumber(swapResult[0].tick_current_index.bits) }],
-            coinTypeA: fudPool?.types[0],
-            coinTypeB: fudPool?.types[1],
+            coinTypeA: targetPool?.types[0],
+            coinTypeB: targetPool?.types[1],
             address,
             amountA: swapResult[0].amount_a,
             amountB: swapResult[0].amount_b,
