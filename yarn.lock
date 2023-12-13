@@ -341,7 +341,7 @@
     superstruct "^1.0.3"
     tweetnacl "^1.0.3"
 
-"@mysten/sui.js@^0.48.0", "@mysten/sui.js@>=0.38.0":
+"@mysten/sui.js@^0.48.1", "@mysten/sui.js@>=0.38.0":
   version "0.48.1"
   resolved "https://registry.npmjs.org/@mysten/sui.js/-/sui.js-0.48.1.tgz"
   integrity sha512-OoVNwMZGfMIpM78B/t5RHxKbK+5C3+dMvsiZNuRQlQhZJWqVhoO2TaXzICqmxJx2NmL+m3a35e8Wbmc3tknK4w==
