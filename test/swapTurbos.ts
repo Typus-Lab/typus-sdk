@@ -10,6 +10,7 @@ const mnemonic1 = String(process.env.MNEMONIC1); // 0x603272d1e61de086a187514826
 const mnemonic2 = String(process.env.MNEMONIC2); // 0x134e0e062e3445787fb6246d893ec4545eb675f30827bcba89f3727a4e0c705f
 const USDC = "0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf::coin::COIN";
 const FUD = "0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1::fud::FUD";
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 (async () => {
     // const sdk = new TurbosSdk(Network.mainnet);
@@ -21,12 +22,14 @@ const FUD = "0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1:
     // const targetPool = targetPools[0];
     // console.log(JSON.stringify(targetPool));
     while (true) {
+        console.log(new Date());
         await Promise.all([
             swapTurbos(FUD, clientMnemonic, "5000000000000", "10"),
             swapTurbos(FUD, typusMnemonic, "29800000000000", "10"),
             // swapTurbos(USDC, mnemonic1, "1000000000", "1"),
             // swapTurbos(USDC, mnemonic2, "1000000000", "1"),
         ]);
+        await sleep(1000);
     }
 })();
 
@@ -56,6 +59,7 @@ export async function swapTurbos(targetCoin, mnemonic, amount, slippage) {
     result += JSON.stringify(targetPool) + "\n";
 
     let avaliableAmount = (await sdk.provider.getBalance({ owner: address, coinType: "0x2::sui::SUI" })).totalBalance;
+    result += avaliableAmount + " " + amount + "\n";
 
     if (targetPool && BigInt(avaliableAmount) > BigInt(amount)) {
         const pool = targetPool?.id.id;
