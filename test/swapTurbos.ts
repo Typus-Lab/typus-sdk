@@ -24,8 +24,8 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     while (true) {
         console.log(new Date());
         await Promise.all([
-            swapTurbos(FUD, clientMnemonic, "5000000000000", "10"),
-            swapTurbos(FUD, typusMnemonic, "29800000000000", "10"),
+            swapTurbos(FUD, clientMnemonic, "10"),
+            swapTurbos(FUD, typusMnemonic, "10", "19800000000000"),
             // swapTurbos(USDC, mnemonic1, "1000000000", "1"),
             // swapTurbos(USDC, mnemonic2, "1000000000", "1"),
         ]);
@@ -33,7 +33,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     }
 })();
 
-export async function swapTurbos(targetCoin, mnemonic, amount, slippage) {
+export async function swapTurbos(targetCoin, mnemonic, slippage, locked_amount = "0") {
     var result = "";
 
     const sdk = new TurbosSdk(Network.mainnet);
@@ -58,8 +58,11 @@ export async function swapTurbos(targetCoin, mnemonic, amount, slippage) {
     const targetPool = targetPools[0];
     result += JSON.stringify(targetPool) + "\n";
 
-    let avaliableAmount = (await sdk.provider.getBalance({ owner: address, coinType: "0x2::sui::SUI" })).totalBalance;
-    result += avaliableAmount + " " + amount + "\n";
+    let avaliableAmount =
+        BigInt((await sdk.provider.getBalance({ owner: address, coinType: "0x2::sui::SUI" })).totalBalance) - BigInt(locked_amount);
+
+    let amount = ((BigInt(avaliableAmount) / BigInt(Math.pow(10, 10))) * BigInt(Math.pow(10, 10))).toString();
+    result += avaliableAmount + " " + amount + " " + locked_amount + "\n";
 
     if (targetPool && BigInt(avaliableAmount) > BigInt(amount)) {
         const pool = targetPool?.id.id;
