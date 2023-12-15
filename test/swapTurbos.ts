@@ -64,7 +64,7 @@ export async function swapTurbos(targetCoin, mnemonic, slippage, locked_amount =
     let amount = ((BigInt(avaliableAmount) / BigInt(Math.pow(10, 10))) * BigInt(Math.pow(10, 10))).toString();
     result += avaliableAmount + " " + amount + " " + locked_amount + "\n";
 
-    if (targetPool && BigInt(avaliableAmount) > BigInt(amount)) {
+    if (targetPool && BigInt(avaliableAmount) > BigInt(amount) && BigInt(amount) > BigInt(0)) {
         const pool = targetPool?.id.id;
 
         var a2b = true;
