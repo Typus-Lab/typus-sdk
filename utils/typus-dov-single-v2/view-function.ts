@@ -508,7 +508,7 @@ export interface DepositShare {
     inactiveSubVaultUserShare: string;
     warmupSubVaultUserShare: string;
     premiumSubVaultUserShare: string;
-    performanceFeeSubVaultUserShare: string;
+    incentiveShare: string;
 }
 export async function getDepositShares(
     provider: SuiClient,
@@ -548,7 +548,7 @@ export async function getDepositShares(
         let inactiveSubVaultUserShare = reader.read64();
         let warmupSubVaultUserShare = reader.read64();
         let premiumSubVaultUserShare = reader.read64();
-        let performanceFeeSubVaultUserShare = reader.read64();
+        let incentiveShare = reader.read64();
         result[index] = {
             index,
             activeSubVaultUserShare,
@@ -556,7 +556,7 @@ export async function getDepositShares(
             inactiveSubVaultUserShare,
             warmupSubVaultUserShare,
             premiumSubVaultUserShare,
-            performanceFeeSubVaultUserShare,
+            incentiveShare,
         } as DepositShare;
     });
 
