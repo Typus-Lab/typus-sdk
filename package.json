@@ -6,8 +6,9 @@
     "dependencies": {
         "@mysten/bcs": "^0.7.3",
         "@mysten/kiosk": "0.7.12",
-        "@mysten/sui.js": "^0.48.0",
+        "@mysten/sui.js": "^0.48.1",
         "@types/node": "^20.5.7",
+        "aftermath-ts-sdk": "^1.1.14",
         "bignumber.js": "^9.1.1",
         "bs58": "^5.0.0",
         "builtin-modules": "^3.3.0",
@@ -50,6 +51,7 @@
         "ts-mocha": "^10.0.0",
         "tslib": "^2.6.0",
         "tsutils": "^3.21.0",
+        "turbos-clmm-sdk": "^2.0.3",
         "typed-rpc": "^4.1.0",
         "wrappy": "^1.0.2",
         "ws": "^8.11.0",
