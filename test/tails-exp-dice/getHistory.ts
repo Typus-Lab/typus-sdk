@@ -9,8 +9,8 @@ const provider = new SuiClient({
 (async () => {
     const playgrounds = await getPlaygrounds(provider, config.REGISTRY);
 
-    const history = await getHistory(provider, config.PACKAGE, playgrounds);
-    console.log(history.length);
+    const history = await getHistory(provider, config.PACKAGE_ORIGIN, playgrounds);
+    console.log(history);
 
     const leaderBoard = await getLeaderBoard(history);
     console.log(leaderBoard.sort((a, b) => b.total_bet_amount - a.total_bet_amount));
