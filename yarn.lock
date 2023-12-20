@@ -308,6 +308,13 @@
   dependencies:
     bs58 "^5.0.0"
 
+"@mysten/bcs@0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@mysten/bcs/-/bcs-0.9.0.tgz#d95c13d822647d0ce5a1ff24b5cb4732e5f95727"
+  integrity sha512-h56essa8oSS4/J0Dby8k8stMoOSt+QZIEIeZNtgTOWh9HeV69yFg2BUg/+Rk7jzfWzvUmw9lFyKNipXcD5QOTw==
+  dependencies:
+    bs58 "^5.0.0"
+
 "@mysten/bcs@0.9.1":
   version "0.9.1"
   resolved "https://registry.npmjs.org/@mysten/bcs/-/bcs-0.9.1.tgz"
@@ -329,7 +336,21 @@
   dependencies:
     "@mysten/sui.js" "0.48.1"
 
-"@mysten/sui.js@0.48.1", "@mysten/sui.js@^0.48.0":
+"@mysten/sui.js@0.48.0":
+  version "0.48.0"
+  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.48.0.tgz#a119a0b4019082f03168f2bd7bf30b967a97f4ca"
+  integrity sha512-kGeV5F3IYThiliVbIou3YOOGAr8TdNyub4hGY2gevnphFQF8SukwQk8cyzuEEsAVSDUt0rsA9xxpncSgX+RjMA==
+  dependencies:
+    "@mysten/bcs" "0.9.0"
+    "@noble/curves" "^1.1.0"
+    "@noble/hashes" "^1.3.1"
+    "@scure/bip32" "^1.3.1"
+    "@scure/bip39" "^1.2.1"
+    "@suchipi/femver" "^1.0.0"
+    superstruct "^1.0.3"
+    tweetnacl "^1.0.3"
+
+"@mysten/sui.js@0.48.1":
   version "0.48.1"
   resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.48.1.tgz#6371aa597cff85276f0759ec4e57ba231699ea25"
   integrity sha512-OoVNwMZGfMIpM78B/t5RHxKbK+5C3+dMvsiZNuRQlQhZJWqVhoO2TaXzICqmxJx2NmL+m3a35e8Wbmc3tknK4w==
