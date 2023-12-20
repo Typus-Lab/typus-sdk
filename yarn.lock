@@ -315,13 +315,6 @@
   dependencies:
     bs58 "^5.0.0"
 
-"@mysten/bcs@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.npmjs.org/@mysten/bcs/-/bcs-0.9.1.tgz"
-  integrity sha512-44tLlv8tfuq1OiNjeIXK78jc4PdzxKHb+LJHaQZHNjX0JdQKaW0swBAKsKATvYZxXKqIzivdu2H+cotg4A3deA==
-  dependencies:
-    bs58 "^5.0.0"
-
 "@mysten/bcs@^0.7.3":
   version "0.7.3"
   resolved "https://registry.npmjs.org/@mysten/bcs/-/bcs-0.7.3.tgz"
@@ -329,12 +322,12 @@
   dependencies:
     bs58 "^5.0.0"
 
-"@mysten/kiosk@0.7.13":
-  version "0.7.13"
-  resolved "https://registry.yarnpkg.com/@mysten/kiosk/-/kiosk-0.7.13.tgz#55f942ad3ecc1649fa2e3aad105c4daef89bb671"
-  integrity sha512-EO/Ah+BS9XY6B8yxr5wj77n8LzWWGekDY9FnlEY8sDkxOIGO/ZhFIJg+rxqtMhIhy47WPwN88TnJSBwNSS256Q==
+"@mysten/kiosk@0.7.12":
+  version "0.7.12"
+  resolved "https://registry.yarnpkg.com/@mysten/kiosk/-/kiosk-0.7.12.tgz#2b3f8d92fb6f38ac4d0ff24c0d5e08fa9d3d08fe"
+  integrity sha512-16hl5hfMge107H5G0Jn0U9g840qAg2MrCxV8pmRh45rDxvJeIx2Fn9CiBfFpwm73Va0fMx2rhHxtepZbTr421g==
   dependencies:
-    "@mysten/sui.js" "0.48.1"
+    "@mysten/sui.js" "0.48.0"
 
 "@mysten/sui.js@0.48.0":
   version "0.48.0"
@@ -342,20 +335,6 @@
   integrity sha512-kGeV5F3IYThiliVbIou3YOOGAr8TdNyub4hGY2gevnphFQF8SukwQk8cyzuEEsAVSDUt0rsA9xxpncSgX+RjMA==
   dependencies:
     "@mysten/bcs" "0.9.0"
-    "@noble/curves" "^1.1.0"
-    "@noble/hashes" "^1.3.1"
-    "@scure/bip32" "^1.3.1"
-    "@scure/bip39" "^1.2.1"
-    "@suchipi/femver" "^1.0.0"
-    superstruct "^1.0.3"
-    tweetnacl "^1.0.3"
-
-"@mysten/sui.js@0.48.1":
-  version "0.48.1"
-  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.48.1.tgz#6371aa597cff85276f0759ec4e57ba231699ea25"
-  integrity sha512-OoVNwMZGfMIpM78B/t5RHxKbK+5C3+dMvsiZNuRQlQhZJWqVhoO2TaXzICqmxJx2NmL+m3a35e8Wbmc3tknK4w==
-  dependencies:
-    "@mysten/bcs" "0.9.1"
     "@noble/curves" "^1.1.0"
     "@noble/hashes" "^1.3.1"
     "@scure/bip32" "^1.3.1"
