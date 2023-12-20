@@ -1,6 +1,0 @@
-{
-    "RPC_ENDPOINT": "https://sui-testnet.public.blastapi.io/",
-    "FRAMEWORK_PACKAGE": "0x850a30d27aeb7ecc8c09dee676792813355df043420138fe28fae79412e8d4e9",
-    "PACKAGE": "0x4fdaa4fd439b29cae2791651b853575a110ee9c939f2034c06ce8ddd7ffdf8ed",
-    "REGISTRY": "0xab38e28deede7c50995b8d97bf19f69543e850fc34265e13a8021b7e85845e80"
-}

@@ -12,7 +12,8 @@ import { CLOCK } from "../../constants";
     )
 */
 export async function getDepositTx(
-    gasBudget: number,
+    tx: TransactionBlock,
+    typusFrameworkOriginPackageId: string,
     typusFrameworkPackageId: string,
     packageId: string,
     typeArguments: string[],
@@ -21,16 +22,16 @@ export async function getDepositTx(
     coins: string[],
     amount: string,
     receipts: string[],
+    user: string,
     usingSponsoredGasCoin = false
 ) {
-    let tx = new TransactionBlock();
     if (
         !usingSponsoredGasCoin &&
         (typeArguments[0] == "0x2::sui::SUI" ||
             typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI")
     ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
-        tx.moveCall({
+        let result = tx.moveCall({
             target: `${packageId}::tails_staking::deposit`,
             typeArguments,
             arguments: [
@@ -39,14 +40,20 @@ export async function getDepositTx(
                 tx.makeMoveVec({ objects: [coin] }),
                 tx.pure(amount),
                 tx.makeMoveVec({
-                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                     objects: receipts.map((id) => tx.object(id)),
                 }),
                 tx.pure(CLOCK),
             ],
         });
-    } else {
         tx.moveCall({
+            target: `${typusFrameworkPackageId}::utils::transfer_coins`,
+            typeArguments: [typeArguments[0]],
+            arguments: [tx.object(result[0]), tx.pure(user)],
+        });
+        tx.transferObjects([tx.object(result[1])], user);
+    } else {
+        let result = tx.moveCall({
             target: `${packageId}::tails_staking::deposit`,
             typeArguments,
             arguments: [
@@ -55,14 +62,19 @@ export async function getDepositTx(
                 tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
                 tx.pure(amount),
                 tx.makeMoveVec({
-                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                     objects: receipts.map((id) => tx.object(id)),
                 }),
                 tx.pure(CLOCK),
             ],
         });
+        tx.moveCall({
+            target: `${typusFrameworkPackageId}::utils::transfer_coins`,
+            typeArguments: [typeArguments[0]],
+            arguments: [tx.object(result[0]), tx.pure(user)],
+        });
+        tx.transferObjects([tx.object(result[1])], user);
     }
-    tx.setGasBudget(gasBudget);
 
     return tx;
 }

@@ -1,6 +1,16 @@
 {
-    "RPC_ENDPOINT": "https://sui-mainnet.public.blastapi.io/",
-    "FRAMEWORK_PACKAGE": "0xb4f25230ba74837d8299e92951306100c4a532e8c48cc3d8828abe9b91c8b274",
-    "PACKAGE": "0xed62277c06c99419004179125edde888d599e5754b1db4c8fee45340d25a843b",
-    "REGISTRY": "0x3d70b09359e3ca8301ae0abeda4f2fdf72ce313ba58c919ce568e5f535fd2ea8"
+    "MAINNET": {
+        "RPC_ENDPOINT": "https://sui-mainnet.public.blastapi.io/",
+        "FRAMEWORK_PACKAGE_ORIGIN": "0xb4f25230ba74837d8299e92951306100c4a532e8c48cc3d8828abe9b91c8b274",
+        "FRAMEWORK_PACKAGE": "0xb4f25230ba74837d8299e92951306100c4a532e8c48cc3d8828abe9b91c8b274",
+        "PACKAGE": "0x772d8b13a4fe0ebdb5e72983033f5a19062942db95c1c05bef01f77986c8cb84",
+        "REGISTRY": "0x3d70b09359e3ca8301ae0abeda4f2fdf72ce313ba58c919ce568e5f535fd2ea8"
+    },
+    "TESTNET": {
+        "RPC_ENDPOINT": "https://sui-testnet.public.blastapi.io/",
+        "FRAMEWORK_PACKAGE_ORIGIN": "0x850a30d27aeb7ecc8c09dee676792813355df043420138fe28fae79412e8d4e9",
+        "FRAMEWORK_PACKAGE": "0x047999196a6ebece80a0368550519b06f49ba2eb150caf1f2753bbdea5814134",
+        "PACKAGE": "0x96cbd0a7c2bd6a425406d68fb66e05a28f259b82f316ba6554f721b6a9586a08",
+        "REGISTRY": "0xab38e28deede7c50995b8d97bf19f69543e850fc34265e13a8021b7e85845e80"
+    }
 }
