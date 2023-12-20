@@ -1,5 +1,4 @@
 import { normalizeSuiAddress } from "@mysten/sui.js/utils";
-import config from "../config.json";
 
 export function typeArgsToAssets(typeArgs: string[]): string[] {
     let assets = typeArgs.map((x) => typeArgToAsset(x));
@@ -60,6 +59,14 @@ export function assetToDecimal(asset: string): number | undefined {
         case "TURBOS":
             return 9;
         case "APT":
+            return 8;
+        case "FUD":
+            return 5;
+        case "MFUD":
+            return 3;
+        case "INJ":
+            return 8;
+        case "SEI":
             return 8;
     }
 }
