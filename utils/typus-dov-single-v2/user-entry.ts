@@ -89,31 +89,41 @@ export async function getDepositTx(
     )
 */
 export async function getWithdrawTx(
-    gasBudget: number,
+    tx: TransactionBlock,
+    typusFrameworkOriginPackageId: string,
     typusFrameworkPackageId: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
     index: string,
     receipts: string[],
+    user: string,
     share?: string
 ) {
-    let tx = new TransactionBlock();
-    tx.moveCall({
+    let result = tx.moveCall({
         target: `${packageId}::tails_staking::withdraw`,
         typeArguments,
         arguments: [
             tx.object(registry),
             tx.pure(index),
             tx.makeMoveVec({
-                type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                 objects: receipts.map((id) => tx.object(id)),
             }),
             tx.pure(share ? [share] : []),
             tx.pure(CLOCK),
         ],
     });
-    tx.setGasBudget(gasBudget);
+    tx.moveCall({
+        target: `${typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [typeArguments[0]],
+        arguments: [tx.object(result[0]), tx.pure(user)],
+    });
+    tx.moveCall({
+        target: `${typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
+        typeArguments: [],
+        arguments: [tx.object(result[1]), tx.pure(user)],
+    });
 
     return tx;
 }
@@ -129,7 +139,7 @@ export async function getWithdrawTx(
 */
 export async function getUnsubscribeTx(
     gasBudget: number,
-    typusFrameworkPackageId: string,
+    typusFrameworkOriginPackageId: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -145,7 +155,7 @@ export async function getUnsubscribeTx(
             tx.object(registry),
             tx.pure(index),
             tx.makeMoveVec({
-                type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                 objects: receipts.map((id) => tx.object(id)),
             }),
             tx.pure(share ? [share] : []),
@@ -167,7 +177,7 @@ export async function getUnsubscribeTx(
 */
 export async function getClaimTx(
     gasBudget: number,
-    typusFrameworkPackageId: string,
+    typusFrameworkOriginPackageId: string,
     packageId: string,
     registry: string,
     requests: { typeArguments: string[]; index: string; receipts: string[] }[]
@@ -181,7 +191,7 @@ export async function getClaimTx(
                 tx.object(registry),
                 tx.pure(request.index),
                 tx.makeMoveVec({
-                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                     objects: request.receipts.map((id) => tx.object(id)),
                 }),
             ],
@@ -202,7 +212,7 @@ export async function getClaimTx(
 */
 export async function getHarvestTx(
     gasBudget: number,
-    typusFrameworkPackageId: string,
+    typusFrameworkOriginPackageId: string,
     packageId: string,
     registry: string,
     requests: { typeArguments: string[]; index: string; receipts: string[] }[]
@@ -216,7 +226,7 @@ export async function getHarvestTx(
                 tx.object(registry),
                 tx.pure(request.index),
                 tx.makeMoveVec({
-                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                     objects: request.receipts.map((id) => tx.object(id)),
                 }),
             ],
@@ -229,7 +239,7 @@ export async function getHarvestTx(
 
 export async function getBatchClaimHarvestWithdrawRedeemTx(
     gasBudget: number,
-    typusFrameworkPackageId: string,
+    typusFrameworkOriginPackageId: string,
     packageId: string,
     registry: string,
     claimRequests: { typeArguments: string[]; index: string; receipts: string[] }[],
@@ -246,7 +256,7 @@ export async function getBatchClaimHarvestWithdrawRedeemTx(
                 tx.object(registry),
                 tx.pure(request.index),
                 tx.makeMoveVec({
-                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                     objects: request.receipts.map((id) => tx.object(id)),
                 }),
             ],
@@ -260,7 +270,7 @@ export async function getBatchClaimHarvestWithdrawRedeemTx(
                 tx.object(registry),
                 tx.pure(request.index),
                 tx.makeMoveVec({
-                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                     objects: request.receipts.map((id) => tx.object(id)),
                 }),
             ],
@@ -274,7 +284,7 @@ export async function getBatchClaimHarvestWithdrawRedeemTx(
                 tx.object(registry),
                 tx.pure(request.index),
                 tx.makeMoveVec({
-                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                     objects: request.receipts.map((id) => tx.object(id)),
                 }),
                 tx.pure([]),
@@ -290,7 +300,7 @@ export async function getBatchClaimHarvestWithdrawRedeemTx(
                 tx.object(registry),
                 tx.pure(request.index),
                 tx.makeMoveVec({
-                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                     objects: request.receipts.map((id) => tx.object(id)),
                 }),
                 tx.pure(CLOCK),
@@ -313,7 +323,7 @@ export async function getBatchClaimHarvestWithdrawRedeemTx(
 */
 export async function getCompoundTx(
     gasBudget: number,
-    typusFrameworkPackageId: string,
+    typusFrameworkOriginPackageId: string,
     packageId: string,
     registry: string,
     requests: { typeArguments: string[]; index: string; receipts: string[] }[]
@@ -327,7 +337,7 @@ export async function getCompoundTx(
                 tx.object(registry),
                 tx.pure(request.index),
                 tx.makeMoveVec({
-                    type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
+                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                     objects: request.receipts.map((id) => tx.object(id)),
                 }),
                 tx.object(CLOCK),
@@ -402,7 +412,7 @@ export async function getNewBidTx(
 */
 export async function getTransferBidReceiptTx(input: {
     gasBudget: number;
-    typusFrameworkPackageId: string;
+    typusFrameworkOriginPackageId: string;
     packageId: string;
     typeArguments: string[];
     registry: string;
@@ -419,7 +429,7 @@ export async function getTransferBidReceiptTx(input: {
             tx.object(input.registry),
             tx.pure(input.index),
             tx.makeMoveVec({
-                type: `${input.typusFrameworkPackageId}::vault::TypusBidReceipt`,
+                type: `${input.typusFrameworkOriginPackageId}::vault::TypusBidReceipt`,
                 objects: input.receipts.map((id) => tx.object(id)),
             }),
             tx.pure(input.share ? [input.share] : []),
@@ -441,7 +451,7 @@ export async function getTransferBidReceiptTx(input: {
 */
 export async function getExerciseTx(
     gasBudget: number,
-    typusFrameworkPackageId: string,
+    typusFrameworkOriginPackageId: string,
     packageId: string,
     registry: string,
     requests: { typeArguments: string[]; index: string; receipts: string[] }[]
@@ -455,7 +465,7 @@ export async function getExerciseTx(
                 tx.object(registry),
                 tx.pure(request.index),
                 tx.makeMoveVec({
-                    type: `${typusFrameworkPackageId}::vault::TypusBidReceipt`,
+                    type: `${typusFrameworkOriginPackageId}::vault::TypusBidReceipt`,
                     objects: request.receipts.map((id) => tx.object(id)),
                 }),
             ],

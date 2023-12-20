@@ -1,34 +1,42 @@
 import "../../load_env";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getWithdrawTx } from "../../../utils/typus-dov-single-v2/user-entry";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
-import config from "../config.json";
+import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
+import configs from "../config.json";
 
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const signer = new RawSigner(keypair, provider);
+const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+const user = signer.toSuiAddress();
+const provider = new SuiClient({ url: getFullnodeUrl("testnet") });
 
 (async () => {
+    let config = configs.TESTNET;
     let depositToken = "0x2::sui::SUI";
     let bidToken = "0x2::sui::SUI";
-    let gasBudget = 100000000;
+    let typusFrameworkOriginPackageId = config.FRAMEWORK_PACKAGE_ORIGIN;
     let typusFrameworkPackageId = config.FRAMEWORK_PACKAGE;
     let packageId = config.PACKAGE;
     let typeArguments = [depositToken, bidToken];
     let registry = config.REGISTRY;
-    let index = "0";
-    let receipts = [];
-    let amount = "10000";
+    let index = "19";
+    let receipts = ["0x26483636482c6c8a8db77f7d0367e4e2c42983eba8d721b44f8c1dc242497f89"];
+    let amount = "10000000000";
 
-    let transactionBlock = await getWithdrawTx(
-        gasBudget,
+    let transactionBlock = new TransactionBlock();
+    transactionBlock = await getWithdrawTx(
+        transactionBlock,
+        typusFrameworkOriginPackageId,
         typusFrameworkPackageId,
         packageId,
         typeArguments,
         registry,
         index,
         receipts,
+        user,
         amount
     );
-    let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
+    transactionBlock.setGasBudget(100000000);
+    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+
     console.log(res);
 })();

@@ -13,7 +13,6 @@ const provider = new SuiClient({ url: getFullnodeUrl("testnet") });
     let config = configs.TESTNET;
     let depositToken = "0x2::sui::SUI";
     let bidToken = "0x2::sui::SUI";
-    let gasBudget = 100000000;
     let typusFrameworkOriginPackageId = config.FRAMEWORK_PACKAGE_ORIGIN;
     let typusFrameworkPackageId = config.FRAMEWORK_PACKAGE;
     let packageId = config.PACKAGE;
