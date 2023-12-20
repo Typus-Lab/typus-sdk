@@ -329,7 +329,7 @@
   dependencies:
     "@mysten/sui.js" "0.48.1"
 
-"@mysten/sui.js@0.48.1", "@mysten/sui.js@^0.48.1":
+"@mysten/sui.js@0.48.1", "@mysten/sui.js@^0.48.0":
   version "0.48.1"
   resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.48.1.tgz#6371aa597cff85276f0759ec4e57ba231699ea25"
   integrity sha512-OoVNwMZGfMIpM78B/t5RHxKbK+5C3+dMvsiZNuRQlQhZJWqVhoO2TaXzICqmxJx2NmL+m3a35e8Wbmc3tknK4w==
