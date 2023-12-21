@@ -23,7 +23,7 @@ const provider = new SuiClient({ url: getFullnodeUrl("testnet") });
     let amount = "10000000000";
 
     let transactionBlock = new TransactionBlock();
-    transactionBlock = await getWithdrawTx(
+    transactionBlock = getWithdrawTx(
         transactionBlock,
         typusFrameworkOriginPackageId,
         typusFrameworkPackageId,

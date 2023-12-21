@@ -24,7 +24,7 @@ const provider = new SuiClient({ url: getFullnodeUrl("testnet") });
     let receipts = [];
 
     let transactionBlock = new TransactionBlock();
-    transactionBlock = await getDepositTx(
+    transactionBlock = getDepositTx(
         transactionBlock,
         typusFrameworkOriginPackageId,
         typusFrameworkPackageId,

@@ -12,7 +12,7 @@ import { CLOCK } from "../../constants";
         ctx: &mut TxContext,
     )
 */
-export async function getDepositTx(
+export function getDepositTx(
     tx: TransactionBlock,
     typusFrameworkOriginPackageId: string,
     typusFrameworkPackageId: string,
@@ -90,7 +90,7 @@ export async function getDepositTx(
         ctx: &mut TxContext,
     )
 */
-export async function getWithdrawTx(
+export function getWithdrawTx(
     tx: TransactionBlock,
     typusFrameworkOriginPackageId: string,
     typusFrameworkPackageId: string,
@@ -139,7 +139,7 @@ export async function getWithdrawTx(
         ctx: &mut TxContext,
     )
 */
-export async function getUnsubscribeTx(
+export function getUnsubscribeTx(
     tx: TransactionBlock,
     typusFrameworkOriginPackageId: string,
     typusFrameworkPackageId: string,
@@ -182,7 +182,7 @@ export async function getUnsubscribeTx(
         ctx: &mut TxContext,
     )
 */
-export async function getCompoundTx(
+export function getCompoundTx(
     tx: TransactionBlock,
     typusFrameworkOriginPackageId: string,
     typusFrameworkPackageId: string,
@@ -222,7 +222,7 @@ export async function getCompoundTx(
         ctx: &mut TxContext,
     )
 */
-export async function getClaimTx(
+export function getClaimTx(
     tx: TransactionBlock,
     typusFrameworkOriginPackageId: string,
     typusFrameworkPackageId: string,
@@ -266,7 +266,7 @@ export async function getClaimTx(
         ctx: &mut TxContext,
     )
 */
-export async function getHarvestTx(
+export function getHarvestTx(
     tx: TransactionBlock,
     typusFrameworkOriginPackageId: string,
     typusFrameworkPackageId: string,
@@ -310,7 +310,7 @@ export async function getHarvestTx(
         ctx: &mut TxContext,
     )
 */
-export async function getRedeemTx(
+export function getRedeemTx(
     tx: TransactionBlock,
     typusFrameworkOriginPackageId: string,
     typusFrameworkPackageId: string,
@@ -356,8 +356,8 @@ export async function getRedeemTx(
         ctx: &mut TxContext,
     )
 */
-export async function getNewBidTx(
-    gasBudget: number,
+export function getNewBidTx(
+    tx: TransactionBlock,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -365,22 +365,23 @@ export async function getNewBidTx(
     coins: string[],
     size: string,
     premium_required: string, // fe float * b_token_decimal
+    user: string,
     usingSponsoredGasCoin = false
 ) {
-    let tx = new TransactionBlock();
     if (
         !usingSponsoredGasCoin &&
         (typeArguments[1] == "0x2::sui::SUI" ||
             typeArguments[1] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI")
     ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(premium_required)]);
-        tx.moveCall({
+        let result = tx.moveCall({
             target: `${packageId}::tails_staking::new_bid`,
             typeArguments,
             arguments: [tx.object(registry), tx.pure(index), tx.makeMoveVec({ objects: [coin] }), tx.pure(size), tx.pure("0x6")],
         });
+        tx.transferObjects([tx.object(result[0])], user);
     } else {
-        tx.moveCall({
+        let result = tx.moveCall({
             target: `${packageId}::tails_staking::new_bid`,
             typeArguments,
             arguments: [
@@ -391,8 +392,48 @@ export async function getNewBidTx(
                 tx.pure("0x6"),
             ],
         });
+        tx.transferObjects([tx.object(result[0])], user);
     }
-    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
+
+/**
+    public(friend) entry fun exercise<D_TOKEN, B_TOKEN>(
+        registry: &mut Registry,
+        index: u64,
+        receipts: vector<TypusBidReceipt>,
+        ctx: &mut TxContext,
+    )
+*/
+export function getExerciseTx(
+    tx: TransactionBlock,
+    typusFrameworkOriginPackageId: string,
+    typusFrameworkPackageId: string,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string,
+    receipts: string[],
+    user: string
+) {
+    let result = tx.moveCall({
+        target: `${packageId}::tds_user_entry::exercise`,
+        typeArguments: typeArguments,
+        arguments: [
+            tx.object(registry),
+            tx.pure(index),
+            tx.makeMoveVec({
+                type: `${typusFrameworkOriginPackageId}::vault::TypusBidReceipt`,
+                objects: receipts.map((id) => tx.object(id)),
+            }),
+        ],
+    });
+    tx.moveCall({
+        target: `${typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [typeArguments[0]],
+        arguments: [tx.object(result[0]), tx.pure(user)],
+    });
 
     return tx;
 }
@@ -407,7 +448,7 @@ export async function getNewBidTx(
         ctx: &mut TxContext,
     ) {
 */
-export async function getTransferBidReceiptTx(input: {
+export function getTransferBidReceiptTx(input: {
     gasBudget: number;
     typusFrameworkOriginPackageId: string;
     packageId: string;
@@ -439,47 +480,12 @@ export async function getTransferBidReceiptTx(input: {
 }
 
 /**
-    public(friend) entry fun exercise<D_TOKEN, B_TOKEN>(
-        registry: &mut Registry,
-        index: u64,
-        receipts: vector<TypusBidReceipt>,
-        ctx: &mut TxContext,
-    )
-*/
-export async function getExerciseTx(
-    gasBudget: number,
-    typusFrameworkOriginPackageId: string,
-    packageId: string,
-    registry: string,
-    requests: { typeArguments: string[]; index: string; receipts: string[] }[]
-) {
-    let tx = new TransactionBlock();
-    requests.forEach((request) => {
-        tx.moveCall({
-            target: `${packageId}::tds_user_entry::exercise`,
-            typeArguments: request.typeArguments,
-            arguments: [
-                tx.object(registry),
-                tx.pure(request.index),
-                tx.makeMoveVec({
-                    type: `${typusFrameworkOriginPackageId}::vault::TypusBidReceipt`,
-                    objects: request.receipts.map((id) => tx.object(id)),
-                }),
-            ],
-        });
-    });
-    tx.setGasBudget(gasBudget);
-
-    return tx;
-}
-
-/**
     public(friend) entry fun refund<TOKEN>(
         registry: &mut Registry,
         ctx: &mut TxContext,
     )
 */
-export async function getRebateTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string) {
+export function getRebateTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string) {
     let tx = new TransactionBlock();
     typeArguments.forEach((typeArgument) => {
         tx.moveCall({
@@ -506,7 +512,7 @@ export async function getRebateTx(gasBudget: number, packageId: string, typeArgu
     )
 */
 
-export async function getNewStrategyTx(
+export function getNewStrategyTx(
     gasBudget: number,
     packageId: string,
     typeArguments: string[], // B_TOKEN
