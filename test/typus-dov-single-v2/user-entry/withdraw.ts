@@ -19,7 +19,7 @@ const provider = new SuiClient({ url: getFullnodeUrl("testnet") });
     let typeArguments = [depositToken, bidToken];
     let registry = config.REGISTRY;
     let index = "19";
-    let receipts = ["0x26483636482c6c8a8db77f7d0367e4e2c42983eba8d721b44f8c1dc242497f89"];
+    let receipts = [];
     let amount = "10000000000";
 
     let transactionBlock = new TransactionBlock();

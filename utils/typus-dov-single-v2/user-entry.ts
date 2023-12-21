@@ -2,12 +2,13 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../constants";
 
 /**
-    public(friend) entry fun deposit<D_TOKEN, B_TOKEN>(
+    public fun deposit<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
         coins: vector<Coin<D_TOKEN>>,
         amount: u64,
         receipts: vector<TypusDepositReceipt>,
+        clock: &Clock,
         ctx: &mut TxContext,
     )
 */
@@ -80,11 +81,12 @@ export async function getDepositTx(
 }
 
 /**
-    public(friend) entry fun withdraw<D_TOKEN, B_TOKEN>(
+    public fun withdraw<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
         receipts: vector<TypusDepositReceipt>,
         share: Option<u64>,
+        clock: &Clock,
         ctx: &mut TxContext,
     )
 */
@@ -121,7 +123,6 @@ export async function getWithdrawTx(
     });
     tx.moveCall({
         target: `${typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
-        typeArguments: [],
         arguments: [tx.object(result[1]), tx.pure(user)],
     });
 
@@ -129,26 +130,28 @@ export async function getWithdrawTx(
 }
 
 /**
-    public(friend) entry fun unsubscribe<D_TOKEN, B_TOKEN>(
+    public fun unsubscribe<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
         receipts: vector<TypusDepositReceipt>,
         share: Option<u64>,
+        clock: &Clock,
         ctx: &mut TxContext,
     )
 */
 export async function getUnsubscribeTx(
-    gasBudget: number,
+    tx: TransactionBlock,
     typusFrameworkOriginPackageId: string,
+    typusFrameworkPackageId: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
     index: string,
     receipts: string[],
+    user: string,
     share?: string
 ) {
-    let tx = new TransactionBlock();
-    tx.moveCall({
+    let result = tx.moveCall({
         target: `${packageId}::tails_staking::unsubscribe`,
         typeArguments,
         arguments: [
@@ -162,13 +165,57 @@ export async function getUnsubscribeTx(
             tx.pure(CLOCK),
         ],
     });
-    tx.setGasBudget(gasBudget);
+    tx.moveCall({
+        target: `${typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
+        arguments: [tx.object(result[0]), tx.pure(user)],
+    });
 
     return tx;
 }
 
 /**
-    public(friend) entry fun claim<D_TOKEN, B_TOKEN>(
+    public fun compound<D_TOKEN, B_TOKEN>(
+        registry: &mut Registry,
+        index: u64,
+        receipts: vector<TypusDepositReceipt>,
+        clock: &Clock,
+        ctx: &mut TxContext,
+    )
+*/
+export async function getCompoundTx(
+    tx: TransactionBlock,
+    typusFrameworkOriginPackageId: string,
+    typusFrameworkPackageId: string,
+    packageId: string,
+    typeArguments: string[],
+    registry: string,
+    index: string,
+    receipts: string[],
+    user: string
+) {
+    let result = tx.moveCall({
+        target: `${packageId}::tails_staking::compound`,
+        typeArguments: typeArguments,
+        arguments: [
+            tx.object(registry),
+            tx.pure(index),
+            tx.makeMoveVec({
+                type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                objects: receipts.map((id) => tx.object(id)),
+            }),
+            tx.object(CLOCK),
+        ],
+    });
+    tx.moveCall({
+        target: `${typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
+        arguments: [tx.object(result[0]), tx.pure(user)],
+    });
+
+    return tx;
+}
+
+/**
+    public fun claim<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
         receipts: vector<TypusDepositReceipt>,
@@ -176,34 +223,43 @@ export async function getUnsubscribeTx(
     )
 */
 export async function getClaimTx(
-    gasBudget: number,
+    tx: TransactionBlock,
     typusFrameworkOriginPackageId: string,
+    typusFrameworkPackageId: string,
     packageId: string,
+    typeArguments: string[],
     registry: string,
-    requests: { typeArguments: string[]; index: string; receipts: string[] }[]
+    index: string,
+    receipts: string[],
+    user: string
 ) {
-    let tx = new TransactionBlock();
-    requests.forEach((request) => {
-        tx.moveCall({
-            target: `${packageId}::tds_user_entry::claim`,
-            typeArguments: request.typeArguments,
-            arguments: [
-                tx.object(registry),
-                tx.pure(request.index),
-                tx.makeMoveVec({
-                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                    objects: request.receipts.map((id) => tx.object(id)),
-                }),
-            ],
-        });
+    let result = tx.moveCall({
+        target: `${packageId}::tds_user_entry::claim`,
+        typeArguments,
+        arguments: [
+            tx.object(registry),
+            tx.pure(index),
+            tx.makeMoveVec({
+                type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                objects: receipts.map((id) => tx.object(id)),
+            }),
+        ],
     });
-    tx.setGasBudget(gasBudget);
+    tx.moveCall({
+        target: `${typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [typeArguments[0]],
+        arguments: [tx.object(result[0]), tx.pure(user)],
+    });
+    tx.moveCall({
+        target: `${typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
+        arguments: [tx.object(result[1]), tx.pure(user)],
+    });
 
     return tx;
 }
 
 /**
-    public(friend) entry fun harvest<D_TOKEN, B_TOKEN>(
+    public fun harvest<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
         receipts: vector<TypusDepositReceipt>,
@@ -211,140 +267,81 @@ export async function getClaimTx(
     )
 */
 export async function getHarvestTx(
-    gasBudget: number,
+    tx: TransactionBlock,
     typusFrameworkOriginPackageId: string,
+    typusFrameworkPackageId: string,
     packageId: string,
+    typeArguments: string[],
     registry: string,
-    requests: { typeArguments: string[]; index: string; receipts: string[] }[]
+    index: string,
+    receipts: string[],
+    user: string
 ) {
-    let tx = new TransactionBlock();
-    requests.forEach((request) => {
-        tx.moveCall({
-            target: `${packageId}::tds_user_entry::harvest`,
-            typeArguments: request.typeArguments,
-            arguments: [
-                tx.object(registry),
-                tx.pure(request.index),
-                tx.makeMoveVec({
-                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                    objects: request.receipts.map((id) => tx.object(id)),
-                }),
-            ],
-        });
+    let result = tx.moveCall({
+        target: `${packageId}::tds_user_entry::harvest`,
+        typeArguments: typeArguments,
+        arguments: [
+            tx.object(registry),
+            tx.pure(index),
+            tx.makeMoveVec({
+                type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                objects: receipts.map((id) => tx.object(id)),
+            }),
+        ],
     });
-    tx.setGasBudget(gasBudget);
-
-    return tx;
-}
-
-export async function getBatchClaimHarvestWithdrawRedeemTx(
-    gasBudget: number,
-    typusFrameworkOriginPackageId: string,
-    packageId: string,
-    registry: string,
-    claimRequests: { typeArguments: string[]; index: string; receipts: string[] }[],
-    harvestRequests: { typeArguments: string[]; index: string; receipts: string[] }[],
-    withdrawRequests: { typeArguments: string[]; index: string; receipts: string[] }[],
-    redeemRequests: { typeArguments: string[]; index: string; receipts: string[] }[]
-) {
-    let tx = new TransactionBlock();
-    claimRequests.forEach((request) => {
-        tx.moveCall({
-            target: `${packageId}::tds_user_entry::claim`,
-            typeArguments: request.typeArguments,
-            arguments: [
-                tx.object(registry),
-                tx.pure(request.index),
-                tx.makeMoveVec({
-                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                    objects: request.receipts.map((id) => tx.object(id)),
-                }),
-            ],
-        });
+    tx.moveCall({
+        target: `${typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [typeArguments[1]],
+        arguments: [tx.object(result[0]), tx.pure(user)],
     });
-    harvestRequests.forEach((request) => {
-        tx.moveCall({
-            target: `${packageId}::tds_user_entry::harvest`,
-            typeArguments: request.typeArguments,
-            arguments: [
-                tx.object(registry),
-                tx.pure(request.index),
-                tx.makeMoveVec({
-                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                    objects: request.receipts.map((id) => tx.object(id)),
-                }),
-            ],
-        });
+    tx.moveCall({
+        target: `${typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
+        arguments: [tx.object(result[1]), tx.pure(user)],
     });
-    withdrawRequests.forEach((request) => {
-        tx.moveCall({
-            target: `${packageId}::tails_staking::withdraw`,
-            typeArguments: request.typeArguments,
-            arguments: [
-                tx.object(registry),
-                tx.pure(request.index),
-                tx.makeMoveVec({
-                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                    objects: request.receipts.map((id) => tx.object(id)),
-                }),
-                tx.pure([]),
-                tx.pure(CLOCK),
-            ],
-        });
-    });
-    redeemRequests.forEach((request) => {
-        tx.moveCall({
-            target: `${packageId}::tds_user_entry::redeem`,
-            typeArguments: request.typeArguments,
-            arguments: [
-                tx.object(registry),
-                tx.pure(request.index),
-                tx.makeMoveVec({
-                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                    objects: request.receipts.map((id) => tx.object(id)),
-                }),
-                tx.pure(CLOCK),
-            ],
-        });
-    });
-
-    tx.setGasBudget(gasBudget);
 
     return tx;
 }
 
 /**
-    public(friend) entry fun compound<D_TOKEN, B_TOKEN>(
+    public fun redeem<D_TOKEN, B_TOKEN, I_TOKEN>(
         registry: &mut Registry,
         index: u64,
         receipts: vector<TypusDepositReceipt>,
         ctx: &mut TxContext,
     )
 */
-export async function getCompoundTx(
-    gasBudget: number,
+export async function getRedeemTx(
+    tx: TransactionBlock,
     typusFrameworkOriginPackageId: string,
+    typusFrameworkPackageId: string,
     packageId: string,
+    typeArguments: string[],
     registry: string,
-    requests: { typeArguments: string[]; index: string; receipts: string[] }[]
+    index: string,
+    receipts: string[],
+    user: string
 ) {
-    let tx = new TransactionBlock();
-    requests.forEach((request) => {
-        tx.moveCall({
-            target: `${packageId}::tails_staking::compound`,
-            typeArguments: request.typeArguments,
-            arguments: [
-                tx.object(registry),
-                tx.pure(request.index),
-                tx.makeMoveVec({
-                    type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                    objects: request.receipts.map((id) => tx.object(id)),
-                }),
-                tx.object(CLOCK),
-            ],
-        });
+    let result = tx.moveCall({
+        target: `${packageId}::tds_user_entry::redeem`,
+        typeArguments: typeArguments,
+        arguments: [
+            tx.object(registry),
+            tx.pure(index),
+            tx.makeMoveVec({
+                type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                objects: receipts.map((id) => tx.object(id)),
+            }),
+        ],
     });
-    tx.setGasBudget(gasBudget);
+    tx.moveCall({
+        target: `${typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [typeArguments[2]],
+        arguments: [tx.object(result[0]), tx.pure(user)],
+    });
+    tx.moveCall({
+        target: `${typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
+        arguments: [tx.object(result[1]), tx.pure(user)],
+    });
 
     return tx;
 }
