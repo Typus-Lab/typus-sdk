@@ -142,7 +142,6 @@ export function getWithdrawTx(
 export function getUnsubscribeTx(
     tx: TransactionBlock,
     typusFrameworkOriginPackageId: string,
-    typusFrameworkPackageId: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -165,10 +164,7 @@ export function getUnsubscribeTx(
             tx.pure(CLOCK),
         ],
     });
-    tx.moveCall({
-        target: `${typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
-        arguments: [tx.object(result[0]), tx.pure(user)],
-    });
+    tx.transferObjects([tx.object(result[0])], user);
 
     return tx;
 }
@@ -185,7 +181,6 @@ export function getUnsubscribeTx(
 export function getCompoundTx(
     tx: TransactionBlock,
     typusFrameworkOriginPackageId: string,
-    typusFrameworkPackageId: string,
     packageId: string,
     typeArguments: string[],
     registry: string,
@@ -206,10 +201,7 @@ export function getCompoundTx(
             tx.object(CLOCK),
         ],
     });
-    tx.moveCall({
-        target: `${typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
-        arguments: [tx.object(result[0]), tx.pure(user)],
-    });
+    tx.transferObjects([tx.object(result[0])], user);
 
     return tx;
 }
