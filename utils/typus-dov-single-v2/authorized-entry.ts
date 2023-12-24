@@ -130,6 +130,7 @@ export interface UpdateConfigRequests {
         capacity?: string;
         leverage?: string;
         riskLevel?: string;
+        depositIncentiveBpDivisorDecimal?: string;
     };
 }
 export async function getUpdateConfigTx(gasBudget: number, packageId: string, registry: string, requests: UpdateConfigRequests[]) {
@@ -160,6 +161,7 @@ export async function getUpdateConfigTx(gasBudget: number, packageId: string, re
                 tx.pure(request.config.capacity ? [request.config.capacity] : []),
                 tx.pure(request.config.leverage ? [request.config.leverage] : []),
                 tx.pure(request.config.riskLevel ? [request.config.riskLevel] : []),
+                tx.pure(request.config.depositIncentiveBpDivisorDecimal ? [request.config.depositIncentiveBpDivisorDecimal] : []),
             ],
         });
     });

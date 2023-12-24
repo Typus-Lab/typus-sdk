@@ -1,9 +1,9 @@
-import "../../load_env";
+import "../../../load_env";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getWithdrawTx } from "../../../utils/typus-dov-single-v2/user-entry";
-import { SuiClient } from "@mysten/sui.js/client";
+import { getDepositTx } from "../../../../utils/typus-dov-single-v2/mfud-user-entry";
+import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import configs from "../config.json";
+import configs from "../../config.json";
 
 const config = configs.TESTNET;
 const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -11,28 +11,27 @@ const user = signer.toSuiAddress();
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 (async () => {
-    let depositToken = config.SUI_TOKEN;
-    let bidToken = config.SUI_TOKEN;
-    let typusFrameworkOriginPackageId = config.FRAMEWORK_PACKAGE_ORIGIN;
-    let typusFrameworkPackageId = config.FRAMEWORK_PACKAGE;
-    let packageId = config.DOV_SINGLE_PACKAGE;
+    let depositToken = config.MFUD_TOKEN;
+    let bidToken = config.MFUD_TOKEN;
     let typeArguments = [depositToken, bidToken];
-    let registry = config.DOV_SINGLE_REGISTRY;
-    let index = "19";
+    let index = "34";
+    let coins = (await provider.getCoins({ owner: user, coinType: config.FUD_TOKEN })).data.map((coin) => coin.coinObjectId);
+    let amount = "10";
     let receipts = [];
-    let amount = "10000000000";
 
     let transactionBlock = new TransactionBlock();
-    transactionBlock = getWithdrawTx(
+    transactionBlock = getDepositTx(
         transactionBlock,
-        typusFrameworkOriginPackageId,
-        typusFrameworkPackageId,
-        packageId,
+        config.FRAMEWORK_PACKAGE_ORIGIN,
+        config.DOV_SINGLE_PACKAGE,
         typeArguments,
-        registry,
+        config.DOV_SINGLE_REGISTRY,
         index,
         receipts,
         user,
+        config.MFUD_PACKAGE,
+        config.MFUD_REGISTRY,
+        coins,
         amount
     );
     transactionBlock.setGasBudget(100000000);

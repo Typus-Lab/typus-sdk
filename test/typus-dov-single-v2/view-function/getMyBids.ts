@@ -1,7 +1,8 @@
-import config from "../config.json";
+import configs from "../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getMyBids } from "../../../utils/typus-dov-single-v2/view-function";
 
+const config = configs.TESTNET;
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });
@@ -14,6 +15,6 @@ const provider = new SuiClient({
         "0xe8abbb1200bfbee1d8c4202751ea34f18eef620d967419e365c3daed40ddc1e4", // SUI-20OCT23-0.188-Put
         "0x72a1b50f18dca9bc1501211c9e3d696bb84e7855668c53ba7e0a4d17d9159e2b", // SUI-20OCT23-0.188-Put
     ];
-    let result = await getMyBids(provider, config.FRAMEWORK_PACKAGE, config.PACKAGE, config.REGISTRY, receipts);
+    let result = await getMyBids(provider, config.FRAMEWORK_PACKAGE, config.DOV_SINGLE_PACKAGE, config.DOV_SINGLE_REGISTRY, receipts);
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();

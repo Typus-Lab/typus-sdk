@@ -1,23 +1,23 @@
 import "../../load_env";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getDepositTx } from "../../../utils/typus-dov-single-v2/user-entry";
-import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import configs from "../config.json";
 
+const config = configs.TESTNET;
 const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const user = signer.toSuiAddress();
-const provider = new SuiClient({ url: getFullnodeUrl("testnet") });
+const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 (async () => {
-    let config = configs.TESTNET;
-    let depositToken = "0x2::sui::SUI";
-    let bidToken = "0x2::sui::SUI";
+    let depositToken = config.SUI_TOKEN;
+    let bidToken = config.SUI_TOKEN;
     let typusFrameworkOriginPackageId = config.FRAMEWORK_PACKAGE_ORIGIN;
     let typusFrameworkPackageId = config.FRAMEWORK_PACKAGE;
-    let packageId = config.PACKAGE;
+    let packageId = config.DOV_SINGLE_PACKAGE;
     let typeArguments = [depositToken, bidToken];
-    let registry = config.REGISTRY;
+    let registry = config.DOV_SINGLE_REGISTRY;
     let index = "19";
     let coins = (await provider.getCoins({ owner: user, coinType: depositToken })).data.map((coin) => coin.coinObjectId);
     let amount = "10000000000";
