@@ -1,6 +1,6 @@
 import "../../../load_env";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getDepositTx } from "../../../../utils/typus-dov-single-v2/mfud-user-entry";
+import { getWithdrawTx } from "../../../../utils/typus-dov-single-v2/mfud-user-entry";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import configs from "../../config.json";
@@ -12,19 +12,19 @@ const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 (async () => {
     let transactionBlock = new TransactionBlock();
-    transactionBlock = getDepositTx({
+    transactionBlock = getWithdrawTx({
         tx: transactionBlock,
         typusFrameworkOriginPackageId: config.FRAMEWORK_PACKAGE_ORIGIN,
+        typusFrameworkPackageId: config.FRAMEWORK_PACKAGE,
         typusDovSinglePackageId: config.DOV_SINGLE_PACKAGE,
         typusDovSingleRegistry: config.DOV_SINGLE_REGISTRY,
         mfudPackageId: config.MFUD_PACKAGE,
         mfudRegistry: config.MFUD_REGISTRY,
-        mfudAmount: "10",
         typeArguments: [config.MFUD_TOKEN, config.MFUD_TOKEN],
         index: "34",
         receipts: [],
         user,
-        fudCoins: (await provider.getCoins({ owner: user, coinType: config.FUD_TOKEN })).data.map((coin) => coin.coinObjectId),
+        amount: "10",
     });
     transactionBlock.setGasBudget(100000000);
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
