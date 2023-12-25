@@ -90,43 +90,43 @@ export function getDepositTx(input: {
         ctx: &mut TxContext,
     )
 */
-export function getWithdrawTx(
-    tx: TransactionBlock,
-    typusFrameworkOriginPackageId: string,
-    typusFrameworkPackageId: string,
-    packageId: string,
-    typeArguments: string[],
-    registry: string,
-    index: string,
-    receipts: string[] | TransactionObjectArgument[],
-    user: string,
-    share?: string
-) {
-    let result = tx.moveCall({
-        target: `${packageId}::tails_staking::withdraw`,
-        typeArguments,
+export function getWithdrawTx(input: {
+    tx: TransactionBlock;
+    typusFrameworkOriginPackageId: string;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    user: string;
+    share?: string;
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusDovSinglePackageId}::tails_staking::withdraw`,
+        typeArguments: input.typeArguments,
         arguments: [
-            tx.object(registry),
-            tx.pure(index),
-            tx.makeMoveVec({
-                type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                objects: receipts.map((receipt) => tx.object(receipt)),
+            input.tx.object(input.typusDovSingleRegistry),
+            input.tx.pure(input.index),
+            input.tx.makeMoveVec({
+                type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                objects: input.receipts.map((receipt) => input.tx.object(receipt)),
             }),
-            tx.pure(share ? [share] : []),
-            tx.pure(CLOCK),
+            input.tx.pure(input.share ? [input.share] : []),
+            input.tx.pure(CLOCK),
         ],
     });
-    tx.moveCall({
-        target: `${typusFrameworkPackageId}::utils::transfer_balance`,
-        typeArguments: [typeArguments[0]],
-        arguments: [tx.object(result[0]), tx.pure(user)],
+    input.tx.moveCall({
+        target: `${input.typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [input.typeArguments[0]],
+        arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
     });
-    tx.moveCall({
-        target: `${typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
-        arguments: [tx.object(result[1]), tx.pure(user)],
+    input.tx.moveCall({
+        target: `${input.typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
+        arguments: [input.tx.object(result[1]), input.tx.pure(input.user)],
     });
 
-    return tx;
+    return input.tx;
 }
 
 /**
@@ -139,34 +139,34 @@ export function getWithdrawTx(
         ctx: &mut TxContext,
     )
 */
-export function getUnsubscribeTx(
-    tx: TransactionBlock,
-    typusFrameworkOriginPackageId: string,
-    packageId: string,
-    typeArguments: string[],
-    registry: string,
-    index: string,
-    receipts: string[] | TransactionObjectArgument[],
-    user: string,
-    share?: string
-) {
-    let result = tx.moveCall({
-        target: `${packageId}::tails_staking::unsubscribe`,
-        typeArguments,
+export function getUnsubscribeTx(input: {
+    tx: TransactionBlock;
+    typusFrameworkOriginPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    user: string;
+    share?: string;
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusDovSinglePackageId}::tails_staking::unsubscribe`,
+        typeArguments: input.typeArguments,
         arguments: [
-            tx.object(registry),
-            tx.pure(index),
-            tx.makeMoveVec({
-                type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                objects: receipts.map((receipt) => tx.object(receipt)),
+            input.tx.object(input.typusDovSingleRegistry),
+            input.tx.pure(input.index),
+            input.tx.makeMoveVec({
+                type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                objects: input.receipts.map((receipt) => input.tx.object(receipt)),
             }),
-            tx.pure(share ? [share] : []),
-            tx.pure(CLOCK),
+            input.tx.pure(input.share ? [input.share] : []),
+            input.tx.pure(CLOCK),
         ],
     });
-    tx.transferObjects([tx.object(result[0])], user);
+    input.tx.transferObjects([input.tx.object(result[0])], input.user);
 
-    return tx;
+    return input.tx;
 }
 
 /**
@@ -178,49 +178,49 @@ export function getUnsubscribeTx(
         ctx: &mut TxContext,
     )
 */
-export function getCompoundTx(
-    tx: TransactionBlock,
-    typusFrameworkOriginPackageId: string,
-    typusFrameworkPackageId: string,
-    packageId: string,
-    typeArguments: string[],
-    registry: string,
-    index: string,
-    receipts: string[] | TransactionObjectArgument[],
-    user: string,
-    incentiveToken?: string
-) {
-    let result = tx.moveCall({
-        target: `${packageId}::tails_staking::compound`,
-        typeArguments: typeArguments,
+export function getCompoundTx(input: {
+    tx: TransactionBlock;
+    typusFrameworkOriginPackageId: string;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    user: string;
+    incentiveToken?: string;
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusDovSinglePackageId}::tails_staking::compound`,
+        typeArguments: input.typeArguments,
         arguments: [
-            tx.object(registry),
-            tx.pure(index),
-            tx.makeMoveVec({
-                type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                objects: receipts.map((receipt) => tx.object(receipt)),
+            input.tx.object(input.typusDovSingleRegistry),
+            input.tx.pure(input.index),
+            input.tx.makeMoveVec({
+                type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                objects: input.receipts.map((receipt) => input.tx.object(receipt)),
             }),
-            tx.object(CLOCK),
+            input.tx.object(CLOCK),
         ],
     });
-    if (incentiveToken) {
-        typeArguments.push(incentiveToken);
-        tx = getRedeemTx(
-            tx,
-            typusFrameworkOriginPackageId,
-            typusFrameworkPackageId,
-            packageId,
-            typeArguments,
-            registry,
-            index,
-            [tx.object(result[0])],
-            user
-        );
+    if (input.incentiveToken) {
+        input.typeArguments.push(input.incentiveToken);
+        input.tx = getRedeemTx({
+            tx: input.tx,
+            typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
+            typusFrameworkPackageId: input.typusFrameworkPackageId,
+            typusDovSinglePackageId: input.typusDovSinglePackageId,
+            typusDovSingleRegistry: input.typusDovSingleRegistry,
+            typeArguments: input.typeArguments,
+            index: input.index,
+            receipts: [input.tx.object(result[0])],
+            user: input.user,
+        });
     } else {
-        tx.transferObjects([tx.object(result[0])], user);
+        input.tx.transferObjects([input.tx.object(result[0])], input.user);
     }
 
-    return tx;
+    return input.tx;
 }
 
 /**
@@ -231,40 +231,40 @@ export function getCompoundTx(
         ctx: &mut TxContext,
     )
 */
-export function getClaimTx(
-    tx: TransactionBlock,
-    typusFrameworkOriginPackageId: string,
-    typusFrameworkPackageId: string,
-    packageId: string,
-    typeArguments: string[],
-    registry: string,
-    index: string,
-    receipts: string[] | TransactionObjectArgument[],
-    user: string
-) {
-    let result = tx.moveCall({
-        target: `${packageId}::tds_user_entry::claim`,
-        typeArguments,
+export function getClaimTx(input: {
+    tx: TransactionBlock;
+    typusFrameworkOriginPackageId: string;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    user: string;
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::claim`,
+        typeArguments: input.typeArguments,
         arguments: [
-            tx.object(registry),
-            tx.pure(index),
-            tx.makeMoveVec({
-                type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                objects: receipts.map((receipt) => tx.object(receipt)),
+            input.tx.object(input.typusDovSingleRegistry),
+            input.tx.pure(input.index),
+            input.tx.makeMoveVec({
+                type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                objects: input.receipts.map((receipt) => input.tx.object(receipt)),
             }),
         ],
     });
-    tx.moveCall({
-        target: `${typusFrameworkPackageId}::utils::transfer_balance`,
-        typeArguments: [typeArguments[0]],
-        arguments: [tx.object(result[0]), tx.pure(user)],
+    input.tx.moveCall({
+        target: `${input.typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [input.typeArguments[0]],
+        arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
     });
-    tx.moveCall({
-        target: `${typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
-        arguments: [tx.object(result[1]), tx.pure(user)],
+    input.tx.moveCall({
+        target: `${input.typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
+        arguments: [input.tx.object(result[1]), input.tx.pure(input.user)],
     });
 
-    return tx;
+    return input.tx;
 }
 
 /**
@@ -275,60 +275,60 @@ export function getClaimTx(
         ctx: &mut TxContext,
     )
 */
-export function getHarvestTx(
-    tx: TransactionBlock,
-    typusFrameworkOriginPackageId: string,
-    typusFrameworkPackageId: string,
-    packageId: string,
-    typeArguments: string[],
-    registry: string,
-    index: string,
-    receipts: string[] | TransactionObjectArgument[],
-    user: string,
-    incentiveToken?: string
-) {
-    let result = tx.moveCall({
-        target: `${packageId}::tds_user_entry::harvest`,
-        typeArguments: typeArguments,
+export function getHarvestTx(input: {
+    tx: TransactionBlock;
+    typusFrameworkOriginPackageId: string;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    user: string;
+    incentiveToken?: string;
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::harvest`,
+        typeArguments: input.typeArguments,
         arguments: [
-            tx.object(registry),
-            tx.pure(index),
-            tx.makeMoveVec({
-                type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                objects: receipts.map((receipt) => tx.object(receipt)),
+            input.tx.object(input.typusDovSingleRegistry),
+            input.tx.pure(input.index),
+            input.tx.makeMoveVec({
+                type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                objects: input.receipts.map((receipt) => input.tx.object(receipt)),
             }),
         ],
     });
-    tx.moveCall({
-        target: `${typusFrameworkPackageId}::utils::transfer_balance`,
-        typeArguments: [typeArguments[1]],
-        arguments: [tx.object(result[0]), tx.pure(user)],
+    input.tx.moveCall({
+        target: `${input.typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [input.typeArguments[1]],
+        arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
     });
-    if (incentiveToken) {
-        typeArguments.push(incentiveToken);
-        let receipt = tx.moveCall({
+    if (input.incentiveToken) {
+        input.typeArguments.push(input.incentiveToken);
+        let receipt = input.tx.moveCall({
             target: `0x1::option::destroy_some`,
-            arguments: [tx.object(result[1])],
+            arguments: [input.tx.object(result[1])],
         });
-        tx = getRedeemTx(
-            tx,
-            typusFrameworkOriginPackageId,
-            typusFrameworkPackageId,
-            packageId,
-            typeArguments,
-            registry,
-            index,
-            [tx.object(receipt)],
-            user
-        );
+        input.tx = getRedeemTx({
+            tx: input.tx,
+            typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
+            typusFrameworkPackageId: input.typusFrameworkPackageId,
+            typusDovSinglePackageId: input.typusDovSinglePackageId,
+            typusDovSingleRegistry: input.typusDovSingleRegistry,
+            typeArguments: input.typeArguments,
+            index: input.index,
+            receipts: [input.tx.object(receipt)],
+            user: input.user,
+        });
     } else {
-        tx.moveCall({
-            target: `${typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
-            arguments: [tx.object(result[1]), tx.pure(user)],
+        input.tx.moveCall({
+            target: `${input.typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
+            arguments: [input.tx.object(result[1]), input.tx.pure(input.user)],
         });
     }
 
-    return tx;
+    return input.tx;
 }
 
 /**
@@ -339,40 +339,40 @@ export function getHarvestTx(
         ctx: &mut TxContext,
     )
 */
-export function getRedeemTx(
-    tx: TransactionBlock,
-    typusFrameworkOriginPackageId: string,
-    typusFrameworkPackageId: string,
-    packageId: string,
-    typeArguments: string[],
-    registry: string,
-    index: string,
-    receipts: string[] | TransactionObjectArgument[],
-    user: string
-) {
-    let result = tx.moveCall({
-        target: `${packageId}::tds_user_entry::redeem`,
-        typeArguments: typeArguments,
+export function getRedeemTx(input: {
+    tx: TransactionBlock;
+    typusFrameworkOriginPackageId: string;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    user: string;
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::redeem`,
+        typeArguments: input.typeArguments,
         arguments: [
-            tx.object(registry),
-            tx.pure(index),
-            tx.makeMoveVec({
-                type: `${typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                objects: receipts.map((receipt) => tx.object(receipt)),
+            input.tx.object(input.typusDovSingleRegistry),
+            input.tx.pure(input.index),
+            input.tx.makeMoveVec({
+                type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                objects: input.receipts.map((receipt) => input.tx.object(receipt)),
             }),
         ],
     });
-    tx.moveCall({
-        target: `${typusFrameworkPackageId}::utils::transfer_balance`,
-        typeArguments: [typeArguments[2]],
-        arguments: [tx.object(result[0]), tx.pure(user)],
+    input.tx.moveCall({
+        target: `${input.typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [input.typeArguments[2]],
+        arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
     });
-    tx.moveCall({
-        target: `${typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
-        arguments: [tx.object(result[1]), tx.pure(user)],
+    input.tx.moveCall({
+        target: `${input.typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
+        arguments: [input.tx.object(result[1]), input.tx.pure(input.user)],
     });
 
-    return tx;
+    return input.tx;
 }
 
 /**
@@ -385,46 +385,52 @@ export function getRedeemTx(
         ctx: &mut TxContext,
     )
 */
-export function getNewBidTx(
-    tx: TransactionBlock,
-    packageId: string,
-    typeArguments: string[],
-    registry: string,
-    index: string,
-    coins: string[],
-    size: string,
-    premium_required: string, // fe float * b_token_decimal
-    user: string,
-    usingSponsoredGasCoin = false
-) {
+export function getNewBidTx(input: {
+    tx: TransactionBlock;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    index: string;
+    coins: string[];
+    size: string;
+    premium_required: string; // fe float * b_token_decimal
+    user: string;
+    usingSponsoredGasCoin?: boolean;
+}) {
     if (
-        !usingSponsoredGasCoin &&
-        (typeArguments[1] == "0x2::sui::SUI" ||
-            typeArguments[1] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI")
+        !input.usingSponsoredGasCoin &&
+        (input.typeArguments[1] == "0x2::sui::SUI" ||
+            input.typeArguments[1] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI")
     ) {
-        let [coin] = tx.splitCoins(tx.gas, [tx.pure(premium_required)]);
-        let result = tx.moveCall({
-            target: `${packageId}::tails_staking::new_bid`,
-            typeArguments,
-            arguments: [tx.object(registry), tx.pure(index), tx.makeMoveVec({ objects: [coin] }), tx.pure(size), tx.pure("0x6")],
-        });
-        tx.transferObjects([tx.object(result[0])], user);
-    } else {
-        let result = tx.moveCall({
-            target: `${packageId}::tails_staking::new_bid`,
-            typeArguments,
+        let [coin] = input.tx.splitCoins(input.tx.gas, [input.tx.pure(input.premium_required)]);
+        let result = input.tx.moveCall({
+            target: `${input.typusDovSinglePackageId}::tails_staking::new_bid`,
+            typeArguments: input.typeArguments,
             arguments: [
-                tx.object(registry),
-                tx.pure(index),
-                tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
-                tx.pure(size),
-                tx.pure("0x6"),
+                input.tx.object(input.typusDovSingleRegistry),
+                input.tx.pure(input.index),
+                input.tx.makeMoveVec({ objects: [coin] }),
+                input.tx.pure(input.size),
+                input.tx.pure("0x6"),
             ],
         });
-        tx.transferObjects([tx.object(result[0])], user);
+        input.tx.transferObjects([input.tx.object(result[0])], input.user);
+    } else {
+        let result = input.tx.moveCall({
+            target: `${input.typusDovSinglePackageId}::tails_staking::new_bid`,
+            typeArguments: input.typeArguments,
+            arguments: [
+                input.tx.object(input.typusDovSingleRegistry),
+                input.tx.pure(input.index),
+                input.tx.makeMoveVec({ objects: input.coins.map((coin) => input.tx.object(coin)) }),
+                input.tx.pure(input.size),
+                input.tx.pure("0x6"),
+            ],
+        });
+        input.tx.transferObjects([input.tx.object(result[0])], input.user);
     }
 
-    return tx;
+    return input.tx;
 }
 
 /**
@@ -435,36 +441,36 @@ export function getNewBidTx(
         ctx: &mut TxContext,
     )
 */
-export function getExerciseTx(
-    tx: TransactionBlock,
-    typusFrameworkOriginPackageId: string,
-    typusFrameworkPackageId: string,
-    packageId: string,
-    typeArguments: string[],
-    registry: string,
-    index: string,
-    receipts: string[] | TransactionObjectArgument[],
-    user: string
-) {
-    let result = tx.moveCall({
-        target: `${packageId}::tds_user_entry::exercise`,
-        typeArguments: typeArguments,
+export function getExerciseTx(input: {
+    tx: TransactionBlock;
+    typusFrameworkOriginPackageId: string;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    user: string;
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::exercise`,
+        typeArguments: input.typeArguments,
         arguments: [
-            tx.object(registry),
-            tx.pure(index),
-            tx.makeMoveVec({
-                type: `${typusFrameworkOriginPackageId}::vault::TypusBidReceipt`,
-                objects: receipts.map((receipt) => tx.object(receipt)),
+            input.tx.object(input.typusDovSingleRegistry),
+            input.tx.pure(input.index),
+            input.tx.makeMoveVec({
+                type: `${input.typusFrameworkOriginPackageId}::vault::TypusBidReceipt`,
+                objects: input.receipts.map((receipt) => input.tx.object(receipt)),
             }),
         ],
     });
-    tx.moveCall({
-        target: `${typusFrameworkPackageId}::utils::transfer_balance`,
-        typeArguments: [typeArguments[0]],
-        arguments: [tx.object(result[0]), tx.pure(user)],
+    input.tx.moveCall({
+        target: `${input.typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [input.typeArguments[0]],
+        arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
     });
 
-    return tx;
+    return input.tx;
 }
 
 /**
@@ -478,34 +484,32 @@ export function getExerciseTx(
     ) {
 */
 export function getTransferBidReceiptTx(input: {
-    gasBudget: number;
+    tx: TransactionBlock;
     typusFrameworkOriginPackageId: string;
-    packageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
     typeArguments: string[];
-    registry: string;
     index: string;
     receipts: string[];
     share?: string;
     recipient: string;
 }) {
-    let tx = new TransactionBlock();
-    tx.moveCall({
-        target: `${input.packageId}::tds_user_entry::transfer_bid_receipt`,
+    input.tx.moveCall({
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::transfer_bid_receipt`,
         typeArguments: input.typeArguments,
         arguments: [
-            tx.object(input.registry),
-            tx.pure(input.index),
-            tx.makeMoveVec({
+            input.tx.object(input.typusDovSingleRegistry),
+            input.tx.pure(input.index),
+            input.tx.makeMoveVec({
                 type: `${input.typusFrameworkOriginPackageId}::vault::TypusBidReceipt`,
-                objects: input.receipts.map((receipt) => tx.object(receipt)),
+                objects: input.receipts.map((receipt) => input.tx.object(receipt)),
             }),
-            tx.pure(input.share ? [input.share] : []),
-            tx.pure(input.recipient),
+            input.tx.pure(input.share ? [input.share] : []),
+            input.tx.pure(input.recipient),
         ],
     });
-    tx.setGasBudget(input.gasBudget);
 
-    return tx;
+    return input.tx;
 }
 
 /**
@@ -514,18 +518,19 @@ export function getTransferBidReceiptTx(input: {
         ctx: &mut TxContext,
     )
 */
-export function getRebateTx(gasBudget: number, packageId: string, typeArguments: string[], registry: string) {
-    let tx = new TransactionBlock();
-    typeArguments.forEach((typeArgument) => {
-        tx.moveCall({
-            target: `${packageId}::tds_user_entry::rebate`,
-            typeArguments: [typeArgument],
-            arguments: [tx.object(registry)],
-        });
+export function getRebateTx(input: {
+    tx: TransactionBlock;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArgument: string;
+}) {
+    input.tx.moveCall({
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::rebate`,
+        typeArguments: [input.typeArgument],
+        arguments: [input.tx.object(input.typusDovSingleRegistry)],
     });
-    tx.setGasBudget(gasBudget);
 
-    return tx;
+    return input.tx;
 }
 /**
     entry fun new_strategy<B_TOKEN>(

@@ -11,32 +11,20 @@ const user = signer.toSuiAddress();
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 (async () => {
-    let depositToken = config.SUI_TOKEN;
-    let bidToken = config.SUI_TOKEN;
-    let typusFrameworkOriginPackageId = config.FRAMEWORK_PACKAGE_ORIGIN;
-    let typusFrameworkPackageId = config.FRAMEWORK_PACKAGE;
-    let packageId = config.DOV_SINGLE_PACKAGE;
-    let typeArguments = [depositToken, bidToken];
-    let registry = config.DOV_SINGLE_REGISTRY;
-    let index = "19";
-    let coins = (await provider.getCoins({ owner: user, coinType: depositToken })).data.map((coin) => coin.coinObjectId);
-    let amount = "10000000000";
-    let receipts = [];
-
     let transactionBlock = new TransactionBlock();
-    transactionBlock = getDepositTx(
-        transactionBlock,
-        typusFrameworkOriginPackageId,
-        typusFrameworkPackageId,
-        packageId,
-        typeArguments,
-        registry,
-        index,
-        coins,
-        amount,
-        receipts,
-        user
-    );
+    transactionBlock = getDepositTx({
+        tx: transactionBlock,
+        typusFrameworkOriginPackageId: config.FRAMEWORK_PACKAGE_ORIGIN,
+        typusFrameworkPackageId: config.FRAMEWORK_PACKAGE,
+        typusDovSinglePackageId: config.DOV_SINGLE_PACKAGE,
+        typusDovSingleRegistry: config.DOV_SINGLE_REGISTRY,
+        typeArguments: [config.SUI_TOKEN, config.SUI_TOKEN],
+        index: "19",
+        coins: (await provider.getCoins({ owner: user, coinType: config.SUI_TOKEN })).data.map((coin) => coin.coinObjectId),
+        amount: "10000000000",
+        receipts: [],
+        user,
+    });
     transactionBlock.setGasBudget(100000000);
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
 
