@@ -1,4 +1,4 @@
-import config from "../../../mainnet.json";
+import config from "../../../config_v2.json";
 import { KioskClient, Network } from "@mysten/kiosk";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { getTailsIds, getTails } from "../../../utils/typus-nft/fetch";
@@ -15,7 +15,7 @@ const provider = new SuiClient({
 });
 const gasBudget = 100000000;
 
-const totalRewards = 3000_000000000;
+const totalRewards = 6666666666_00000;
 const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
 
 (async () => {
@@ -59,12 +59,17 @@ const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
 
     // STEP 1
 
+    let typeArguments = [""];
+    let coins = (await provider.getCoins({ owner: address, coinType: typeArguments[0] })).data.map((coin) => coin.coinObjectId);
+
     var transactionBlock = await getSetProfitSharingTx(
         gasBudget,
         config.SINGLE_COLLATERAL_PACKAGE,
         config.SINGLE_COLLATERAL_REGISTRY,
         levelProfits,
-        sum
+        sum,
+        coins,
+        typeArguments
     );
 
     var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
@@ -77,7 +82,8 @@ const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
         gasBudget,
         config.SINGLE_COLLATERAL_PACKAGE,
         config.SINGLE_COLLATERAL_REGISTRY,
-        users
+        users,
+        typeArguments
     );
 
     var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });

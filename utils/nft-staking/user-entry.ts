@@ -503,12 +503,12 @@ export async function consumeExpCoinStakedTx(
     return tx;
 }
 
-export async function getClaimProfitSharingTx(gasBudget: number, packageId: string, registry: string) {
+export async function getClaimProfitSharingTx(gasBudget: number, packageId: string, registry: string, typeArguments: string[]) {
     let tx = new TransactionBlock();
 
     tx.moveCall({
         target: `${packageId}::tails_staking::claim_profit_sharing`,
-        typeArguments: ["0x2::sui::SUI"],
+        typeArguments,
         arguments: [tx.object(registry)],
     });
 
