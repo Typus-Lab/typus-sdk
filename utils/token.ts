@@ -22,6 +22,10 @@ export function typeArgToAsset(typeArg: string): string {
             return "TURBOS";
         case "0x3a5143bb1196e3bcdfab6203d1683ae29edd26294fc8bfeafe4aaa9d2704df37":
             return "APT";
+        case "0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1":
+            return "FUD";
+        case "0xf325ce1300e8dac124071d3152c5c5ee6174914f8bc2161e88329cf579246efc":
+            return "AFSUI";
         default:
             if (typeArgs[2] == "BTC") {
                 return "WBTC";
