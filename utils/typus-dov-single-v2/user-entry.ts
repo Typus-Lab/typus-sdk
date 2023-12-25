@@ -60,7 +60,7 @@ export function getDepositTx(input: {
             arguments: [
                 input.tx.object(input.typusDovSingleRegistry),
                 input.tx.pure(input.index),
-                input.tx.makeMoveVec({ objects: input.coins.map((id) => input.tx.object(id)) }),
+                input.tx.makeMoveVec({ objects: input.coins.map((coin) => input.tx.object(coin)) }),
                 input.tx.pure(input.amount),
                 input.tx.makeMoveVec({
                     type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
@@ -587,7 +587,7 @@ export function getNewStrategyTx(
         if (coins.length > 0) {
             tx.mergeCoins(
                 tx.object(coin),
-                coins.map((id) => tx.object(id))
+                coins.map((coin) => tx.object(coin))
             );
         }
 
