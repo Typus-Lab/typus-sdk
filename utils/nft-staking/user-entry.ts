@@ -165,7 +165,14 @@ export async function getCreateKioskAndLockNftTx(
         ctx: &mut TxContext
     )
 */
-export async function getUnstakeNftTx(gasBudget: number, nftPackageId: string, registry: string, kiosk: string, kiosk_cap: string) {
+export async function getUnstakeNftTx(
+    gasBudget: number,
+    nftPackageId: string,
+    registry: string,
+    kiosk: string,
+    kiosk_cap: string,
+    typeArguments: string[]
+) {
     let tx = new TransactionBlock();
 
     tx.moveCall({
@@ -175,7 +182,7 @@ export async function getUnstakeNftTx(gasBudget: number, nftPackageId: string, r
     });
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::claim_profit_sharing`,
-        typeArguments: ["0x2::sui::SUI"],
+        typeArguments,
         arguments: [tx.object(registry)],
     });
     tx.moveCall({
