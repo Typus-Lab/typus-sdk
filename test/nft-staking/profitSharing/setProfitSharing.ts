@@ -15,6 +15,8 @@ const provider = new SuiClient({
 });
 const gasBudget = 100000000;
 
+const typeArgumentsRemove = ["0x2::sui::SUI"];
+const typeArguments = ["0x461efa7ee5aa1b27e44450d79e2104e7fc0991461e9eb1c2a3fc1f44cd554856::fud::FUD"];
 const totalRewards = 6666666666_00000;
 const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
 
@@ -59,7 +61,6 @@ const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
 
     // STEP 1
 
-    let typeArguments = [""];
     let coins = (await provider.getCoins({ owner: address, coinType: typeArguments[0] })).data.map((coin) => coin.coinObjectId);
 
     var transactionBlock = await getSetProfitSharingTx(
@@ -69,7 +70,8 @@ const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
         levelProfits,
         sum,
         coins,
-        typeArguments
+        typeArguments,
+        typeArgumentsRemove
     );
 
     var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });

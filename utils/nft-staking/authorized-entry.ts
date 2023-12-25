@@ -7,9 +7,16 @@ export async function getSetProfitSharingTx(
     level_profits: number[],
     amount: number,
     coins: string[],
-    typeArguments: string[]
+    typeArguments: string[],
+    typeArgumentsRemove: string[]
 ) {
     let tx = new TransactionBlock();
+
+    tx.moveCall({
+        target: `${packageId}::tails_staking::remove_profit_sharing`,
+        typeArguments: typeArgumentsRemove,
+        arguments: [tx.object(registry)],
+    });
 
     if (
         typeArguments[0] == "0x2::sui::SUI" ||
