@@ -230,6 +230,7 @@ export interface ProfitSharing {
     pool: string;
     remaining: string;
     total: string;
+    tokenType: string;
 }
 
 export async function getProfitSharing(provider: SuiClient, diceProfitSharing: string) {
@@ -239,7 +240,12 @@ export async function getProfitSharing(provider: SuiClient, diceProfitSharing: s
     });
 
     // @ts-ignore
+    const type: string = object.data?.content.type;
+    const tokenType = type.split("<").at(-1)?.replace(">>", "")!;
+
+    // @ts-ignore
     const result = object.data?.content?.fields.value.fields as ProfitSharing;
+    result.tokenType = tokenType;
 
     return result;
 }
