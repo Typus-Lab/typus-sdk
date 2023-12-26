@@ -359,15 +359,33 @@ export function getExerciseTx(input: {
 
 export function getRebateTx(input: {
     tx: TransactionBlock;
+    typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
+    mfudPackageId: string;
+    mfudRegistry: string;
     typeArgument: string;
+    user: string;
 }) {
-    input.tx.moveCall({
+    let result = input.tx.moveCall({
         target: `${input.typusDovSinglePackageId}::tds_user_entry::rebate`,
         typeArguments: [input.typeArgument],
         arguments: [input.tx.object(input.typusDovSingleRegistry)],
     });
+    let balance = input.tx.moveCall({
+        target: `0x1::option::destroy_some`,
+        arguments: [input.tx.object(result[0])],
+    });
+    let mfud_coin = input.tx.moveCall({
+        target: `0x2::coin::from_balance`,
+        typeArguments: [input.typeArgument],
+        arguments: [input.tx.object(balance)],
+    });
+    let fud_coin = input.tx.moveCall({
+        target: `${input.mfudPackageId}::mfud::burn`,
+        arguments: [input.tx.object(input.mfudRegistry), input.tx.object(mfud_coin)],
+    });
+    input.tx.transferObjects([input.tx.object(fud_coin)], input.user);
 
     return input.tx;
 }
