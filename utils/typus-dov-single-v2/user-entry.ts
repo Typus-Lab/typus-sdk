@@ -520,14 +520,25 @@ export function getTransferBidReceiptTx(input: {
 */
 export function getRebateTx(input: {
     tx: TransactionBlock;
+    typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
     typeArgument: string;
+    user: string;
 }) {
-    input.tx.moveCall({
+    let result = input.tx.moveCall({
         target: `${input.typusDovSinglePackageId}::tds_user_entry::rebate`,
         typeArguments: [input.typeArgument],
         arguments: [input.tx.object(input.typusDovSingleRegistry)],
+    });
+    let balance = input.tx.moveCall({
+        target: `0x1::option::destroy_some`,
+        arguments: [input.tx.object(result[0])],
+    });
+    input.tx.moveCall({
+        target: `${input.typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [input.typeArgument],
+        arguments: [input.tx.object(balance), input.tx.pure(input.user)],
     });
 
     return input.tx;
