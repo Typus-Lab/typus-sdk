@@ -375,6 +375,119 @@ export function getRedeemTx(input: {
     return input.tx;
 }
 
+export function getWithdrawHarvestClaimTx(input: {
+    tx: TransactionBlock;
+    typusFrameworkOriginPackageId: string;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    user: string;
+    withdraw: boolean;
+    harvest: boolean;
+    claim: boolean;
+    incentiveToken?: string;
+}) {
+    let result = input.withdraw
+        ? input.tx.moveCall({
+              target: `${input.typusDovSinglePackageId}::tails_staking::withdraw`,
+              typeArguments: input.typeArguments,
+              arguments: [
+                  input.tx.object(input.typusDovSingleRegistry),
+                  input.tx.pure(input.index),
+                  input.tx.makeMoveVec({
+                      type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                      objects: input.receipts.map((receipt) => input.tx.object(receipt)),
+                  }),
+                  input.tx.pure([]),
+                  input.tx.pure(CLOCK),
+              ],
+          })
+        : undefined;
+    if (input.withdraw) {
+        input.tx.moveCall({
+            target: `${input.typusFrameworkPackageId}::utils::transfer_balance`,
+            typeArguments: [input.typeArguments[0]],
+            arguments: [input.tx.object(result![0]), input.tx.pure(input.user)],
+        });
+    }
+    result = input.harvest
+        ? input.tx.moveCall({
+              target: `${input.typusDovSinglePackageId}::tds_user_entry::harvest`,
+              typeArguments: input.typeArguments,
+              arguments: [
+                  input.tx.object(input.typusDovSingleRegistry),
+                  input.tx.pure(input.index),
+                  input.tx.makeMoveVec({
+                      type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                      objects: result ? [result[1]] : input.receipts.map((receipt) => input.tx.object(receipt)),
+                  }),
+              ],
+          })
+        : result;
+    if (input.harvest) {
+        input.tx.moveCall({
+            target: `${input.typusFrameworkPackageId}::utils::transfer_balance`,
+            typeArguments: [input.typeArguments[1]],
+            arguments: [input.tx.object(result![0]), input.tx.pure(input.user)],
+        });
+    }
+    result = input.claim
+        ? input.tx.moveCall({
+              target: `${input.typusDovSinglePackageId}::tds_user_entry::claim`,
+              typeArguments: input.typeArguments,
+              arguments: [
+                  input.tx.object(input.typusDovSingleRegistry),
+                  input.tx.pure(input.index),
+                  input.tx.makeMoveVec({
+                      type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                      objects: result ? [result[1]] : input.receipts.map((receipt) => input.tx.object(receipt)),
+                  }),
+              ],
+          })
+        : result;
+    if (input.claim) {
+        input.tx.moveCall({
+            target: `${input.typusFrameworkPackageId}::utils::transfer_balance`,
+            typeArguments: [input.typeArguments[0]],
+            arguments: [input.tx.object(result![0]), input.tx.pure(input.user)],
+        });
+    }
+    if (input.incentiveToken) {
+        input.typeArguments.push(input.incentiveToken);
+        let receipts = result
+            ? [
+                  input.tx.object(
+                      input.tx.moveCall({
+                          target: `0x1::option::destroy_some`,
+                          arguments: [input.tx.object(result[1])],
+                      })
+                  ),
+              ]
+            : input.receipts.map((receipt) => input.tx.object(receipt));
+        input.tx = getRedeemTx({
+            tx: input.tx,
+            typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
+            typusFrameworkPackageId: input.typusFrameworkPackageId,
+            typusDovSinglePackageId: input.typusDovSinglePackageId,
+            typusDovSingleRegistry: input.typusDovSingleRegistry,
+            typeArguments: input.typeArguments,
+            index: input.index,
+            receipts,
+            user: input.user,
+        });
+    } else {
+        input.tx.moveCall({
+            target: `${input.typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
+            arguments: [input.tx.object(result![1]), input.tx.pure(input.user)],
+        });
+    }
+
+    return input.tx;
+}
+
 /**
     public(friend) entry fun new_bid<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
