@@ -100,7 +100,8 @@ export async function getSwitchNftTx(
     registry: string,
     kiosk: string,
     kiosk_cap: string,
-    nft_id: string
+    nft_id: string,
+    typeArguments: string[]
 ) {
     let tx = new TransactionBlock();
 
@@ -112,7 +113,7 @@ export async function getSwitchNftTx(
     });
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::claim_profit_sharing`,
-        typeArguments: ["0x2::sui::SUI"],
+        typeArguments,
         arguments: [tx.object(registry)],
     });
     tx.moveCall({
