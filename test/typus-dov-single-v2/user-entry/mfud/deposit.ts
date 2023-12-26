@@ -24,7 +24,7 @@ const provider = new SuiClient({ url: config.RPC_ENDPOINT });
         index: "34",
         receipts: [],
         user,
-        fudCoins: (await provider.getCoins({ owner: user, coinType: config.FUD_TOKEN })).data.map((coin) => coin.coinObjectId),
+        coins: (await provider.getCoins({ owner: user, coinType: config.FUD_TOKEN })).data.map((coin) => coin.coinObjectId),
     });
     transactionBlock.setGasBudget(100000000);
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
