@@ -1,32 +1,38 @@
-import "../../../load_env";
-import config from "../../../../config_v2.json";
+import "../load_env";
+import config from "../../config_v2.json";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getNewStrategyTx } from "../../../../utils/typus-dov-single-v2/user-entry";
+import { getNewStrategyTx } from "../../utils/auto-bid/user-entry";
 
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+// const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+
+import mnemonic from "../../mnemonic.json";
+
+const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+
 const provider = new SuiClient({
     url: getFullnodeUrl("testnet"),
 });
 const gasBudget = 100000000;
 
 (async () => {
+    let depositToken = "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC";
     let bidToken = "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC";
     let gasBudget = 100000000;
 
     let packageId = config.SINGLE_COLLATERAL_PACKAGE;
-    let typeArguments = [bidToken];
-    let strategy_pool = "0xc74a4d3b7207bbd6c38b380f338cb3532db4144b86db114bc6d3b5ffd8027e4b";
+    let typeArguments = [depositToken, bidToken];
+    let strategy_pool = "0x6e62ea389e67302a49aa4bf19850456ec732045c1e0776323588576a6071da7d";
 
     let vault_index = "22";
     let signal_index = "0";
 
     let coins = (await provider.getCoins({ owner: keypair.toSuiAddress(), coinType: bidToken })).data.map((coin) => coin.coinObjectId);
-    let amount = "1000000000";
+    let amount = "10000000";
     let size = "100000000000";
-    let price_percentage = "80";
+    let price_percentage = "20";
     let max_times = "10";
-    let target_rounds = [];
+    let target_rounds = ["964"];
 
     let transactionBlock = await getNewStrategyTx(
         gasBudget,
