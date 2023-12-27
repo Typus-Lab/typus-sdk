@@ -374,6 +374,7 @@ export function getRebateTx(input: {
     });
     let balance = input.tx.moveCall({
         target: `0x1::option::destroy_some`,
+        typeArguments: ["0x2::balance::Balance<" + input.typeArgument + ">"],
         arguments: [input.tx.object(result[0])],
     });
     let mfud_coin = input.tx.moveCall({
