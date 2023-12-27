@@ -68,13 +68,15 @@ export async function getUserStrategies(provider: SuiClient, packageId: string, 
 
     // @ts-ignore
     let objBCS = results[0].returnValues[0][0];
-    console.log(objBCS.length);
-    console.log(objBCS.toString());
+    // console.log(objBCS.length);
+    // console.log(objBCS.toString());
 
     // let strategies = bcs.de("vector<StrategyV2>", objBCS.toString(), "base64");
     // console.log(strategies);
 
     let reader = new BcsReader(new Uint8Array(objBCS));
+
+    var strategies: StrategyV2[] = [];
 
     reader.readVec((reader, i) => {
         reader.read16();
@@ -113,10 +115,12 @@ export async function getUserStrategies(provider: SuiClient, packageId: string, 
             accumulated_profit: reader.read64(),
             strategy_index: reader.read64(),
         } as unknown as StrategyV2;
-        console.log(strategy);
+        // console.log(strategy);
+
+        strategies.push(strategy);
     });
 
-    // return order.value.value;
+    return strategies;
 }
 
 export async function getVaults(provider: SuiClient, strategyPool: string) {

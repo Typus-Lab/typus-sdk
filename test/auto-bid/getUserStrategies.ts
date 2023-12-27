@@ -16,5 +16,6 @@ const gasBudget = 100000000;
     let user = keypair.toSuiAddress();
     // let user = "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd";
 
-    await getUserStrategies(provider, config.SINGLE_COLLATERAL_PACKAGE, strategy_pool, user);
+    let strategies = await getUserStrategies(provider, config.SINGLE_COLLATERAL_PACKAGE, strategy_pool, user);
+    console.log(strategies);
 })();
