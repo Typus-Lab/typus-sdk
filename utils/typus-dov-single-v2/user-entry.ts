@@ -308,6 +308,7 @@ export function getHarvestTx(input: {
         input.typeArguments.push(input.incentiveToken);
         let receipt = input.tx.moveCall({
             target: `0x1::option::destroy_some`,
+            typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`],
             arguments: [input.tx.object(result[1])],
         });
         input.tx = getRedeemTx({
@@ -646,7 +647,7 @@ export function getRebateTx(input: {
     });
     let balance = input.tx.moveCall({
         target: `0x1::option::destroy_some`,
-        typeArguments: ["0x2::balance::Balance<" + input.typeArgument + ">"],
+        typeArguments: [`0x2::balance::Balance<${input.typeArgument}>`],
         arguments: [input.tx.object(result[0])],
     });
     input.tx.moveCall({
