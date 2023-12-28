@@ -1,25 +1,31 @@
 import "../../load_env";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getHarvestTx } from "../../../utils/typus-dov-single-v2/user-entry";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
-import config from "../config.json";
+import { SuiClient } from "@mysten/sui.js/client";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
+import configs from "../config.json";
 
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const signer = new RawSigner(keypair, provider);
+const config = configs.TESTNET;
+const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+const user = signer.toSuiAddress();
+const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 (async () => {
-    let depositToken = "0x2::sui::SUI";
-    let bidToken = "0x2::sui::SUI";
-    let gasBudget = 100000000;
-    let typusFrameworkPackageId = config.FRAMEWORK_PACKAGE;
-    let packageId = config.PACKAGE;
-    let typeArguments = [depositToken, bidToken];
-    let registry = config.REGISTRY;
-    let index = "0";
-    let receipts = [];
-    let request = [{ typeArguments, index, receipts }];
+    let transactionBlock = new TransactionBlock();
+    transactionBlock = getHarvestTx({
+        tx: transactionBlock,
+        typusFrameworkOriginPackageId: config.FRAMEWORK_PACKAGE_ORIGIN,
+        typusFrameworkPackageId: config.FRAMEWORK_PACKAGE,
+        typusDovSinglePackageId: config.DOV_SINGLE_PACKAGE,
+        typusDovSingleRegistry: config.DOV_SINGLE_REGISTRY,
+        typeArguments: [config.USDT_TOKEN, config.USDT_TOKEN],
+        index: "31",
+        receipts: ["0x93809ac72a6eae1d17dc1777d490af77971a00423a933b061ff96a8fe2cecf85"],
+        user,
+        incentiveToken: config.SUI_TOKEN,
+    });
+    transactionBlock.setGasBudget(100000000);
+    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
 
-    let transactionBlock = await getHarvestTx(gasBudget, typusFrameworkPackageId, packageId, registry, request);
-    let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
     console.log(res);
 })();
