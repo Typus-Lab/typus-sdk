@@ -5,11 +5,11 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { getLatestPriceUSD } from "../utils/price";
 import { getUserStake } from "../utils/nft-staking/fetch";
 
-(async () => {
-    const user = "0xdc72506f269feb89822c13e66b282bc52c5724c27e575a04cbec949a13671d13";
-    const res = await recap2023(user);
-    console.log(res);
-})();
+// (async () => {
+//     const user = "0xdc72506f269feb89822c13e66b282bc52c5724c27e575a04cbec949a13671d13";
+//     const res = await recap2023(user);
+//     console.log(res);
+// })();
 
 export async function recap2023(user: string) {
     const provider = new SuiClient({
