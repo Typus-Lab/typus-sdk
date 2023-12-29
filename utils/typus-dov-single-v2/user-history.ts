@@ -252,6 +252,13 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     Action = "Rebate";
                     Amount = `${BigNumber(amount).toFixed()} ${token}`;
                     break;
+                case "ClaimProfitSharingEvent":
+                    var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
+                    var amount = Number(event.parsedJson!.value) / 10 ** assetToDecimal(token)!;
+                    Action = "Claim Profit Sharing";
+                    Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                    Tails = `#${event.parsedJson!.number}`;
+                    break;
                 case "NewBidEvent":
                     var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
                     o_token = typeArgToAsset("0x" + event.parsedJson!.o_token.name);
