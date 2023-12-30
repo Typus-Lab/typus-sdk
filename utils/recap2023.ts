@@ -60,5 +60,5 @@ export async function recap2023(user: string) {
     let res_1 = await getUserStake(provider, config.NFT_TABLE, user);
     // console.log(res_1!.number); // null
 
-    return [sum, res_1?.url];
+    return [sum, res_1];
 }
