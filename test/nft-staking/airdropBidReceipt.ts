@@ -18,66 +18,70 @@ const gasBudget = 100000000;
     const address = keypair.toSuiAddress();
     console.log(address);
 
-    // var result = await provider.getDynamicFields({
-    //     parentId: config.NFT_TABLE,
-    // });
+    var result = await provider.getDynamicFields({
+        parentId: config.NFT_TABLE,
+    });
 
-    // var datas = result.data;
+    var datas = result.data;
 
-    // while (result.hasNextPage) {
-    //     result = await provider.getDynamicFields({
-    //         parentId: config.NFT_TABLE,
-    //         cursor: result.nextCursor,
-    //     });
-    //     datas = datas.concat(result.data);
-    // }
-    // // console.log(datas);
+    while (result.hasNextPage) {
+        result = await provider.getDynamicFields({
+            parentId: config.NFT_TABLE,
+            cursor: result.nextCursor,
+        });
+        datas = datas.concat(result.data);
+    }
+    // console.log(datas);
 
-    // const tails: Tails[] = await getTails(
-    //     provider,
-    //     datas.map((data) => data.objectId)
-    // );
-    // // console.log(tails);
+    const tails: Tails[] = await getTails(
+        provider,
+        datas.map((data) => data.objectId)
+    );
+    // console.log(tails);
 
-    // const users = datas.map((d) => d.name.value as string);
-    // console.log("users.length: " + users.length);
+    const users = datas.map((d) => d.name.value as string);
+    console.log("users.length: " + users.length);
 
-    // const levelUsers = [0, 0, 0, 0, 0, 0, 0];
-    // tails.forEach((tail) => (levelUsers[Number(tail.level) - 1] += 1));
-    // console.log("Level Users: ", levelUsers);
+    const levelUsers = [0, 0, 0, 0, 0, 0, 0];
+    tails.forEach((tail) => (levelUsers[Number(tail.level) - 1] += 1));
+    console.log("Level Users: ", levelUsers);
 
-    // const shareByLevel = [1, 10, 20, 100, 300, 500, 5000];
-    // const sum = levelUsers.reduce((sum, user, i) => (sum += user * shareByLevel[i]), 0);
-    // console.log("Sum Shares: ", sum);
+    const shareByLevel = [1, 10, 20, 100, 300, 500, 5000];
+    const sum = levelUsers.reduce((sum, user, i) => (sum += user * shareByLevel[i]), 0);
+    console.log("Sum Shares: ", sum);
 
-    // const currentTimestampMs: number = Math.floor(new Date().getTime());
-    // const startTimeMs = currentTimestampMs - 24 * 60 * 60 * 1000;
-    // console.log(startTimeMs);
-    // const newStake = await getStakeEvents(provider, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, startTimeMs);
-    // console.log(newStake);
-
-    let recipients = ["0x29d9b41ce1917985e23e59f6566d0acb2624812b29da4acce05b0976849415ad"];
-
-    let share = "100000000000";
+    const currentTimestampMs: number = Math.floor(new Date().getTime());
+    const startTimeMs = currentTimestampMs - 24 * 60 * 60 * 1000;
+    console.log(startTimeMs);
+    const newStake = await getStakeEvents(provider, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, startTimeMs);
+    console.log(newStake);
 
     var temp = await provider.getOwnedObjects({
         owner: address,
         options: { showType: true, showContent: true },
     });
-    var datas = temp.data;
+    var receipts_datas = temp.data;
     while (temp.hasNextPage) {
         temp = await provider.getOwnedObjects({
             owner: address,
             options: { showType: true, showContent: true },
             cursor: temp.nextCursor,
         });
-        datas = datas.concat(temp.data);
+        receipts_datas = receipts_datas.concat(temp.data);
     }
-    var receipts = datas
+    var receipts = receipts_datas
         .filter((obj) => obj.data?.type! == `${config.FRAMEWORK_PACKAGE}::vault::TypusBidReceipt`)
         .map((obj) => obj.data?.objectId!);
 
-    for (let recipient of recipients) {
+    var n = 0;
+
+    for (let tail of tails) {
+        let share = shareByLevel[Number(tail.level) - 1].toString();
+        let recipient = users[n];
+        // check
+        console.assert((datas[n].name.value as string) == recipient);
+        console.assert(datas[n].objectId == tail.id);
+
         let transactionBlock = new TransactionBlock();
         getTransferBidReceiptTx({
             tx: transactionBlock,
@@ -96,7 +100,7 @@ const gasBudget = 100000000;
             transactionBlock,
             options: { showObjectChanges: true },
         });
-        console.log(res.digest);
+        console.log(`${n} ${recipient} ${res.digest}`);
 
         receipts = res.objectChanges
             // @ts-ignore
