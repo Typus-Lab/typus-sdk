@@ -625,6 +625,32 @@ export function getTransferBidReceiptTx(input: {
 
     return input.tx;
 }
+export function getSplitBidReceiptTx(input: {
+    tx: TransactionBlock;
+    typusFrameworkOriginPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[];
+    share?: string;
+}) {
+    const result = input.tx.moveCall({
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::split_bid_receipt`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            input.tx.object(input.typusDovSingleRegistry),
+            input.tx.pure(input.index),
+            input.tx.makeMoveVec({
+                type: `${input.typusFrameworkOriginPackageId}::vault::TypusBidReceipt`,
+                objects: input.receipts.map((receipt) => input.tx.object(receipt)),
+            }),
+            input.tx.pure(input.share ? [input.share] : []),
+        ],
+    });
+
+    return [input.tx, result];
+}
 
 /**
     public(friend) entry fun refund<TOKEN>(
