@@ -107,6 +107,8 @@ const gasBudget = 100000000;
             ?.filter((objectChange) => objectChange.type == "created" && objectChange.owner.AddressOwner == address)
             // @ts-ignore
             .map((objectChange) => objectChange.objectId as string)!;
+
+        n += 1;
     }
 })();
 
