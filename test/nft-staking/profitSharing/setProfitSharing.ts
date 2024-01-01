@@ -1,4 +1,4 @@
-import config from "../../../config_v2.json";
+import config from "../../../mainnet.json";
 import { KioskClient, Network } from "@mysten/kiosk";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { getTailsIds, getTails } from "../../../utils/typus-nft/fetch";
@@ -15,9 +15,9 @@ const provider = new SuiClient({
 });
 const gasBudget = 100000000;
 
-const typeArgumentsRemove = ["0x2::sui::SUI"];
-const typeArguments = ["0x461efa7ee5aa1b27e44450d79e2104e7fc0991461e9eb1c2a3fc1f44cd554856::fud::FUD"];
-const totalRewards = 6666666666_00000;
+const typeArgumentsRemove = ["0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1::fud::FUD"];
+const typeArguments = ["0x2::sui::SUI"];
+const totalRewards = 6666_000000000;
 const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
 
 (async () => {
