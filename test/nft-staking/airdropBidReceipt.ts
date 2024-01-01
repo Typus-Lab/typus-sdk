@@ -46,7 +46,7 @@ const gasBudget = 100000000;
     tails.forEach((tail) => (levelUsers[Number(tail.level) - 1] += 1));
     console.log("Level Users: ", levelUsers);
 
-    const shareByLevel = [1, 10, 20, 100, 300, 500, 5000];
+    const shareByLevel = [1, 10, 20, 100, 300, 0, 0];
     const sum = levelUsers.reduce((sum, user, i) => (sum += user * shareByLevel[i]), 0);
     console.log("Sum Shares: ", sum);
 
@@ -54,7 +54,7 @@ const gasBudget = 100000000;
     const startTimeMs = currentTimestampMs - 24 * 60 * 60 * 1000;
     console.log(startTimeMs);
     const newStake = await getStakeEvents(provider, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, startTimeMs);
-    console.log(newStake);
+    // console.log("newStake: " + newStake);
 
     var temp = await provider.getOwnedObjects({
         owner: address,
@@ -73,15 +73,26 @@ const gasBudget = 100000000;
         .filter((obj) => obj.data?.type! == `${config.FRAMEWORK_PACKAGE}::vault::TypusBidReceipt`)
         .map((obj) => obj.data?.objectId!);
 
-    var n = 0;
+    // console.log("receipts: " + receipts);
 
-    for (let tail of tails) {
+    var n = 584;
+    var total = 0;
+
+    while (n < tails.length) {
+        let tail = tails[n];
         let share = (shareByLevel[Number(tail.level) - 1] * 1_000000000).toString();
         let recipient = users[n];
+
+        total += Number(share);
         console.log(`${n} ${recipient} ${share}`);
-        if (share) {
+        if (newStake.includes(tail.id)) {
+        } else if (Number(share) > 0) {
             // check
+            // console.log(datas[n].name.value as string);
+            // console.log(recipient);
             console.assert((datas[n].name.value as string) == recipient);
+            // console.log(datas[n].objectId);
+            // console.log(tail.id);
             console.assert(datas[n].objectId == tail.id);
 
             let transactionBlock = new TransactionBlock();
@@ -112,6 +123,7 @@ const gasBudget = 100000000;
         }
         n += 1;
     }
+    console.log(total);
 })();
 
 async function getStakeEvents(provider: SuiClient, PackageOrigin: string, startTimeMs: number) {
