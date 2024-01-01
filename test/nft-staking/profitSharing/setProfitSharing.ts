@@ -80,15 +80,19 @@ const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
 
     // STEP 2
 
-    var transactionBlock = await getAllocateProfitSharingTx(
-        gasBudget,
-        config.SINGLE_COLLATERAL_PACKAGE,
-        config.SINGLE_COLLATERAL_REGISTRY,
-        users,
-        typeArguments
-    );
+    while (users.length > 0) {
+        const input = users.splice(0, 350);
+        console.log(input.length);
+        var transactionBlock = await getAllocateProfitSharingTx(
+            gasBudget,
+            config.SINGLE_COLLATERAL_PACKAGE,
+            config.SINGLE_COLLATERAL_REGISTRY,
+            input,
+            typeArguments
+        );
 
-    var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
-    console.log(`getAllocateProfitSharingTx:`);
-    console.log(res);
+        var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
+        console.log(`getAllocateProfitSharingTx:`);
+        console.log(res);
+    }
 })();
