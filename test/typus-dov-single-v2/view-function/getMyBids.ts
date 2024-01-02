@@ -2,19 +2,35 @@ import configs from "../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getMyBids } from "../../../utils/typus-dov-single-v2/view-function";
 
-const config = configs.TESTNET;
+const config = configs.MAINNET;
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });
 
 (async () => {
-    let receipts = [
-        "0xc6c6d33ef8d1bb4cae380a8dff90f871f7bafde31351f9fa6ad107a6ed06c2e8", // SUI-19OCT23-0.349-Put
-        "0x2d55481c30de761d88d1b3d50b2253feed842162251b6701524aeb7edb30d99d", // SUI-19OCT23-0.349-Put
-        "0x5dd76b586897e1aab0045df620c60fcf9356d1f4dd2f11f44972533523c19730", // SUI-19OCT23-0.362-Put
-        "0xe8abbb1200bfbee1d8c4202751ea34f18eef620d967419e365c3daed40ddc1e4", // SUI-20OCT23-0.188-Put
-        "0x72a1b50f18dca9bc1501211c9e3d696bb84e7855668c53ba7e0a4d17d9159e2b", // SUI-20OCT23-0.188-Put
-    ];
+    const user = "0xe6b6849126c345010c93022f038ff1f6fb9a759dd7848e4d9e22f68c764377e7";
+
+    var temp = await provider.getOwnedObjects({
+        owner: user,
+        options: { showType: true, showContent: true },
+    });
+
+    var datas = temp.data;
+
+    while (temp.hasNextPage) {
+        temp = await provider.getOwnedObjects({
+            owner: user,
+            options: { showType: true, showContent: true },
+            cursor: temp.nextCursor,
+        });
+        datas = datas.concat(temp.data);
+    }
+
+    const receipts = datas
+        .filter((obj) => obj.data?.type! == `${config.FRAMEWORK_PACKAGE_ORIGIN}::vault::TypusBidReceipt`)
+        .map((obj) => obj.data?.objectId!);
+    // console.log(receipts);
+
     let result = await getMyBids(provider, config.FRAMEWORK_PACKAGE, config.DOV_SINGLE_PACKAGE, config.DOV_SINGLE_REGISTRY, receipts);
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();

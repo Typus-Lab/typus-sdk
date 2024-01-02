@@ -2,13 +2,13 @@ import configs from "../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getDepositShares } from "../../../utils/typus-dov-single-v2/view-function";
 
-const config = configs.TESTNET;
+const config = configs.MAINNET;
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });
 
 (async () => {
-    const user = "0x95f26ce574fc9ace2608807648d99a4dce17f1be8964613d5b972edc82849e9e";
+    const user = "0x0ba70693c0c721629cdd2ca7dfa5615d96b76d6c8f9727890291c46dbec0e18c";
 
     var temp = await provider.getOwnedObjects({
         owner: user,

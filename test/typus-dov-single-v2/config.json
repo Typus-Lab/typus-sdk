@@ -1,6 +1,6 @@
 {
     "MAINNET": {
-        "RPC_ENDPOINT": "https://sui-mainnet.public.blastapi.io/",
+        "RPC_ENDPOINT": "https://fullnode.mainnet.sui.io:443",
         "SUI_TOKEN": "0x2::sui::SUI",
         "FRAMEWORK_PACKAGE_ORIGIN": "0xb4f25230ba74837d8299e92951306100c4a532e8c48cc3d8828abe9b91c8b274",
         "FRAMEWORK_PACKAGE": "0xb4f25230ba74837d8299e92951306100c4a532e8c48cc3d8828abe9b91c8b274",
@@ -13,7 +13,7 @@
         "MFUD_TOKEN": ""
     },
     "TESTNET": {
-        "RPC_ENDPOINT": "https://sui-testnet.public.blastapi.io/",
+        "RPC_ENDPOINT": "https://fullnode.testnet.sui.io:443",
         "SUI_TOKEN": "0x2::sui::SUI",
         "FRAMEWORK_PACKAGE_ORIGIN": "0x850a30d27aeb7ecc8c09dee676792813355df043420138fe28fae79412e8d4e9",
         "FRAMEWORK_PACKAGE": "0x6708efcb9a76a9ad5b75894471d3115b1a3fda362bf07fbf0565bd9934309537",

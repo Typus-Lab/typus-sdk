@@ -1,15 +1,24 @@
-import { JsonRpcProvider, Connection } from "@mysten/sui.js";
-import config from "./config.json";
+import "../load_env";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui.js/client";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
+import configs from "./config.json";
+
+const config = configs.TESTNET;
+const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+const user = signer.toSuiAddress();
+const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 (async () => {
-    const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-    let data = (await provider.getDynamicFields({ parentId: "0x8a30889c5b1c670e0569fb17c192b560db15d6ed2d606b3d8a7d6d2d5c1963bc" })).data
-        .filter((x) => x.objectType.includes("Balance"))
-        .map((x) => x.objectId as string);
-    let result = await provider.multiGetObjects({
-        ids: data,
-        options: { showContent: true },
+    let transactionBlock = new TransactionBlock();
+    let target = `0x2::clock::timestamp_ms` as any;
+    transactionBlock.moveCall({
+        target,
+        typeArguments: [],
+        arguments: [transactionBlock.pure("0x6")],
     });
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: user })).results;
 
-    console.log(JSON.stringify(result, null, 2));
+    console.log(JSON.stringify(results));
+    // console.log(JSON.stringify(results, null, 2));
 })();
