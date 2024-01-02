@@ -1,9 +1,8 @@
-import { getTransferBidReceiptTx } from "../../utils/typus-dov-single-v2/user-entry";
-import config from "../../mainnet.json";
+import { getMultiTransferBidReceiptTx } from "../../utils/typus-dov-single-v2/user-entry";
+import config from "../../config_v2.json";
 import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
 import { Tails, getTails } from "../../utils/typus-nft/fetch";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getAllocateProfitSharingTx, getSetProfitSharingTx } from "../../utils/nft-staking/authorized-entry";
 
 import mnemonic from "../../mnemonic.json";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
@@ -70,60 +69,53 @@ const gasBudget = 100000000;
         receipts_datas = receipts_datas.concat(temp.data);
     }
     var receipts = receipts_datas
-        .filter((obj) => obj.data?.type! == `${config.FRAMEWORK_PACKAGE}::vault::TypusBidReceipt`)
+        .filter((obj) => obj.data?.type! == `${config.FRAMEWORK_PACKAGE_ORIGIN}::vault::TypusBidReceipt`)
         .map((obj) => obj.data?.objectId!);
 
-    // console.log("receipts: " + receipts);
+    console.log("receipts: " + receipts);
 
-    var n = 584;
+    var n = 0;
     var total = 0;
+
+    const shares: string[] = [];
+    const recipients: string[] = [];
 
     while (n < tails.length) {
         let tail = tails[n];
         let share = (shareByLevel[Number(tail.level) - 1] * 1_000000000).toString();
         let recipient = users[n];
-
-        total += Number(share);
-        console.log(`${n} ${recipient} ${share}`);
         if (newStake.includes(tail.id)) {
         } else if (Number(share) > 0) {
-            // check
-            // console.log(datas[n].name.value as string);
-            // console.log(recipient);
-            console.assert((datas[n].name.value as string) == recipient);
-            // console.log(datas[n].objectId);
-            // console.log(tail.id);
-            console.assert(datas[n].objectId == tail.id);
-
-            let transactionBlock = new TransactionBlock();
-            getTransferBidReceiptTx({
-                tx: transactionBlock,
-                typusFrameworkOriginPackageId: config.FRAMEWORK_PACKAGE,
-                typusDovSinglePackageId: config.SINGLE_COLLATERAL_PACKAGE,
-                typusDovSingleRegistry: config.SINGLE_COLLATERAL_REGISTRY,
-                typeArguments: ["0x2::sui::SUI", "0x2::sui::SUI"],
-                index: "1",
-                receipts,
-                share,
-                recipient,
-            });
-            transactionBlock.setGasBudget(gasBudget);
-            var res = await provider.signAndExecuteTransactionBlock({
-                signer: keypair,
-                transactionBlock,
-                options: { showObjectChanges: true },
-            });
-            console.log(res.digest);
-
-            receipts = res.objectChanges
-                // @ts-ignore
-                ?.filter((objectChange) => objectChange.type == "created" && objectChange.owner.AddressOwner == address)
-                // @ts-ignore
-                .map((objectChange) => objectChange.objectId as string)!;
+            console.log(`${n} ${recipient} ${share}`);
+            total += Number(share);
+            shares.push(share);
+            recipients.push(recipient);
         }
         n += 1;
     }
-    console.log(total);
+
+    const transactionBlock = getMultiTransferBidReceiptTx({
+        typusFrameworkPackageId: config.FRAMEWORK_PACKAGE,
+        typusFrameworkOriginPackageId: config.FRAMEWORK_PACKAGE_ORIGIN,
+        typusDovSinglePackageId: config.SINGLE_COLLATERAL_PACKAGE,
+        typusDovSingleRegistry: config.SINGLE_COLLATERAL_REGISTRY,
+        typeArguments: [
+            "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC",
+            "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC",
+        ],
+        index: "22",
+        receipts,
+        shares,
+        recipients,
+        sender: address,
+    });
+
+    var res = await provider.signAndExecuteTransactionBlock({
+        signer: keypair,
+        transactionBlock,
+        options: { showObjectChanges: true },
+    });
+    console.log(res.digest);
 })();
 
 async function getStakeEvents(provider: SuiClient, PackageOrigin: string, startTimeMs: number) {

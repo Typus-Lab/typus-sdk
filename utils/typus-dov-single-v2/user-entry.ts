@@ -625,31 +625,58 @@ export function getTransferBidReceiptTx(input: {
 
     return input.tx;
 }
-export function getSplitBidReceiptTx(input: {
-    tx: TransactionBlock;
+export function getMultiTransferBidReceiptTx(input: {
+    typusFrameworkPackageId: string;
     typusFrameworkOriginPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
     typeArguments: string[];
     index: string;
     receipts: string[];
-    share?: string;
+    shares: string[];
+    recipients: string[];
+    sender: string;
 }) {
-    const result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tds_user_entry::split_bid_receipt`,
-        typeArguments: input.typeArguments,
-        arguments: [
-            input.tx.object(input.typusDovSingleRegistry),
-            input.tx.pure(input.index),
-            input.tx.makeMoveVec({
-                type: `${input.typusFrameworkOriginPackageId}::vault::TypusBidReceipt`,
-                objects: input.receipts.map((receipt) => input.tx.object(receipt)),
-            }),
-            input.tx.pure(input.share ? [input.share] : []),
-        ],
-    });
+    let tx = new TransactionBlock();
+    console.assert(input.shares.length == input.recipients.length, "shares.length != recipients.length");
 
-    return [input.tx, result];
+    var receipts = {
+        // type: `${input.typusFrameworkOriginPackageId}::vault::TypusBidReceipt`,
+        objects: input.receipts.map((receipt) => tx.object(receipt)),
+    };
+
+    var i = 0;
+    while (i < input.shares.length) {
+        const share = input.shares[i];
+        const recipient = input.recipients[i];
+        const result = tx.moveCall({
+            target: `${input.typusDovSinglePackageId}::tds_user_entry::public_transfer_bid_receipt`,
+            typeArguments: input.typeArguments,
+            arguments: [
+                tx.object(input.typusDovSingleRegistry),
+                tx.pure(input.index),
+                tx.makeMoveVec(receipts),
+                tx.pure([share]),
+                tx.pure(recipient),
+            ],
+        });
+
+        const unwrap = tx.moveCall({
+            target: `0x1::option::destroy_some`,
+            typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusBidReceipt`],
+            arguments: [tx.object(result[0])],
+        });
+
+        receipts = { objects: [unwrap] };
+
+        i += 1;
+        if (i == input.shares.length) {
+            tx.transferObjects([tx.object(unwrap)], input.sender);
+        }
+    }
+
+    tx.setGasBudget(100000000);
+    return tx;
 }
 
 /**
