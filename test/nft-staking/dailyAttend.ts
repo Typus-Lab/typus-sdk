@@ -1,23 +1,25 @@
 import "../load_env";
-import config from "../../config.json";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
+import config from "../../config_v2.json";
 import { getDailyAttendTx } from "../../utils/nft-staking/user-entry";
+import { getDailyAttendExp } from "../../utils/nft-staking/fetch";
+import { SuiClient } from "@mysten/sui.js/client";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-// const client = new SuiClient({ url: config.RPC_ENDPOINT });
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const signer = new RawSigner(keypair, provider);
-
+const provider = new SuiClient({
+    url: config.RPC_ENDPOINT,
+});
 const gasBudget = 100000000;
 
 (async () => {
-    const address = await signer.getAddress();
+    const address = keypair.toSuiAddress();
     console.log(address);
+
+    let dailyAttendExp = await getDailyAttendExp(provider, config.dailyAttendExp);
+    console.log("Earn Exp: " + dailyAttendExp);
 
     let transactionBlock = await getDailyAttendTx(gasBudget, config.SINGLE_COLLATERAL_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY);
 
-    // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
-    let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
-
+    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
     console.log(res);
 })();

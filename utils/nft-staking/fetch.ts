@@ -25,3 +25,15 @@ export async function getUserStake(provider: SuiClient, nft_table: string, user:
 
     return tails;
 }
+
+export async function getDailyAttendExp(provider: SuiClient, dailyAttendExp: string) {
+    const object = await provider.getObject({
+        id: dailyAttendExp,
+        options: { showContent: true },
+    });
+
+    // @ts-ignore
+    const result = object.data?.content?.fields.value;
+
+    return result;
+}
