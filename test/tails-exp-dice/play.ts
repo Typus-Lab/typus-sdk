@@ -5,6 +5,7 @@ import { newGamePlayGuessTx } from "../../utils/tails-exp-dice/user-entry";
 import { SuiClient, SuiHTTPTransport, getFullnodeUrl } from "@mysten/sui.js/client";
 import { WebSocket } from "ws";
 import { simulateGame } from "../../utils/tails-exp-dice/view-function";
+import drawKeys from "../../drawKeys.json";
 
 // const provider = new SuiClient({
 //     url: config.RPC_ENDPOINT,
@@ -81,7 +82,8 @@ const larger_than_2 = true;
         guess_2,
         larger_than_2,
         vrf_input_1,
-        vrf_input_2
+        vrf_input_2,
+        drawKeys
     );
 
     console.log(drawResult);

@@ -2,7 +2,6 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { BcsReader } from "@mysten/bcs";
-import drawKeys from "../../drawKeys.json";
 import loadBls from "bls-signatures";
 
 export interface DrawResult {
@@ -25,6 +24,7 @@ export async function simulateGame(
     larger_than_2: boolean,
     vrf_input_1: number[],
     vrf_input_2: number[],
+    drawKeys,
     sender = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9"
 ): Promise<DrawResult> {
     const provider = new SuiClient({ url: getFullnodeUrl(network) });

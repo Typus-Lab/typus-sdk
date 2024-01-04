@@ -4,6 +4,7 @@ import { waitHistory, getPlaygrounds, parseHistory } from "../../utils/tails-exp
 import { simulateGame } from "../../utils/tails-exp-dice/view-function";
 import { SuiClient, SuiHTTPTransport, getFullnodeUrl } from "@mysten/sui.js/client";
 import { WebSocket } from "ws";
+import drawKeys from "../../drawKeys.json";
 
 // const provider = new SuiClient({
 //     url: config.RPC_ENDPOINT,
@@ -57,7 +58,8 @@ const vrf_input_2 = [
         guess_2,
         larger_than_2,
         vrf_input_1,
-        vrf_input_2
+        vrf_input_2,
+        drawKeys
     );
 
     console.log(result);
