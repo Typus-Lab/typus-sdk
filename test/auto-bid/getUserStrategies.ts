@@ -2,7 +2,7 @@ import "../load_env";
 import config from "../../config_v2.json";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getUserStrategies } from "../../utils/auto-bid/view-function";
+import { getUserStrategies, getVaults } from "../../utils/auto-bid/view-function";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const provider = new SuiClient({
@@ -18,4 +18,7 @@ const gasBudget = 100000000;
 
     let strategies = await getUserStrategies(provider, config.SINGLE_COLLATERAL_PACKAGE, strategy_pool, user);
     console.log(strategies);
+
+    // let vaults = await getVaults(provider, strategy_pool);
+    // console.log(vaults);
 })();
