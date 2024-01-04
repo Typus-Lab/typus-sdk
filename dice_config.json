@@ -1,7 +1,7 @@
 {
     "VERSION": "1.0.0",
-    "RPC_ENDPOINT": "https://fullnode.mainnet.sui.io:443",
-    "PACKAGE": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-    "PACKAGE_ORIGIN": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-    "REGISTRY": "0x7679ab7157f13ec945579e3098ba589eb8b4eec841c775799d2aa22b565187c7"
+    "RPC_ENDPOINT": "https://fullnode.testnet.sui.io:443",
+    "PACKAGE": "0x5ccd2230fff6943bf331a6bd9c228385d47009d3d3b974feb6f6b4ad165343c8",
+    "PACKAGE_ORIGIN": "0x9b43ee208a3b235810c145bca1161d1a71d08bfe76b1e55bb3db319ea95d0149",
+    "REGISTRY": "0x37e0c8c80a5099d5dfe1b0aeae62e3f01916be73935090efb9c95279b7bb1ce7"
 }
