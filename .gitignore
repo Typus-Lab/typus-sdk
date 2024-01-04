@@ -7,3 +7,4 @@ sui.log.*
 mnemonic.json
 _local/
 cloudFunctions
+drawKeys.json
