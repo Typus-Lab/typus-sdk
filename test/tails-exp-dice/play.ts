@@ -4,6 +4,7 @@ import { waitHistory, getPlaygrounds, parseHistory } from "../../utils/tails-exp
 import { newGamePlayGuessTx } from "../../utils/tails-exp-dice/user-entry";
 import { SuiClient, SuiHTTPTransport, getFullnodeUrl } from "@mysten/sui.js/client";
 import { WebSocket } from "ws";
+import { simulateGame } from "../../utils/tails-exp-dice/view-function";
 
 // const provider = new SuiClient({
 //     url: config.RPC_ENDPOINT,
@@ -27,8 +28,8 @@ import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
 const gasBudget = 50000000;
-const index = 0;
-const amount = "10000000";
+const index = 1;
+const amount = "1000000000000";
 const guess_1 = "5000";
 const larger_than_1 = true;
 const guess_2 = "5000";
@@ -60,24 +61,28 @@ const larger_than_2 = true;
         larger_than_2
     );
 
+    // Send Play
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock, options: { showEvents: true } });
     console.log(res);
-
-    const game_id = res.events![0].parsedJson!["game_id"];
+    const game_id = res.events![1].parsedJson!["game_id"];
     console.log("game_id : " + game_id);
 
-    // waiting for result
-    console.log("Waiting...");
+    const vrf_input_1 = res.events![1].parsedJson!["vrf_input_1"];
+    const vrf_input_2 = res.events![1].parsedJson!["vrf_input_2"];
 
-    const onMessage = async (event) => {
-        // console.log(event);
-        const result = await parseHistory([event], playgrounds);
-        console.log(result[0]);
-    };
+    const drawResult = await simulateGame(
+        provider,
+        config.PACKAGE,
+        config.REGISTRY,
+        index.toString(),
+        amount,
+        guess_1,
+        larger_than_1,
+        guess_2,
+        larger_than_2,
+        Uint8Array.from(vrf_input_1),
+        Uint8Array.from(vrf_input_2)
+    );
 
-    const unsubscribe = await waitHistory(provider, config.PACKAGE_ORIGIN, onMessage);
-
-    setTimeout(async () => {
-        await unsubscribe();
-    }, 5000);
+    console.log(drawResult);
 })();

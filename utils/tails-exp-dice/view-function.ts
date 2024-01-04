@@ -2,10 +2,11 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { BcsReader } from "@mysten/bcs";
+import drawKeys from "../../drawKeys.json";
+import loadBls from "bls-signatures";
 
 const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const SENDER = signer.toSuiAddress();
-const PRIVATE_KEY = Uint8Array.from([]); // your draw key. TODO: use env for cloud function
 
 export interface DrawResult {
     answer_1: string;
@@ -32,8 +33,8 @@ export async function simulateGame(
     let transactionBlock = new TransactionBlock();
     let target = `${packageId}::tails_exp::simulate_game` as any;
 
-    var loadBls = require("bls-signatures");
     var BLS = await loadBls();
+    const PRIVATE_KEY = Uint8Array.from(drawKeys["testnet"][index]); // your draw key. TODO: use env for cloud function
     let draw_private_key = BLS.PrivateKey.from_bytes(PRIVATE_KEY, true);
 
     let bls_signature_1 = BLS.BasicSchemeMPL.sign(draw_private_key, vrf_input_1).serialize();
@@ -90,20 +91,20 @@ function uint8ArrayToBCSStringArray(uint8Array: Uint8Array): string[] {
     const result: string[] = [];
 
     for (let i = 0; i < uint8Array.length; i++) {
-      // Assume each byte is a UTF-8 character
-      const character = String.fromCharCode(uint8Array[i]);
+        // Assume each byte is a UTF-8 character
+        const character = String.fromCharCode(uint8Array[i]);
 
-      // Convert character to its BCS representation (you need to implement this part)
-      const bcsRepresentation = encodeToBCS(character);
+        // Convert character to its BCS representation (you need to implement this part)
+        const bcsRepresentation = encodeToBCS(character);
 
-      // Add BCS representation to the result array
-      result.push(bcsRepresentation);
+        // Add BCS representation to the result array
+        result.push(bcsRepresentation);
     }
 
     return result;
-  }
+}
 
-  // Function to encode a character to its BCS representation
+// Function to encode a character to its BCS representation
 function encodeToBCS(character: string): string {
     // You need to implement this part based on BCS encoding rules
     // This is a placeholder; the actual implementation depends on BCS specifications
