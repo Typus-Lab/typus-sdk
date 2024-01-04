@@ -428,6 +428,7 @@ export function getWithdrawHarvestClaimTx(input: {
                                 input.tx.object(
                                     input.tx.moveCall({
                                         target: `0x1::option::destroy_some`,
+                                        typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`],
                                         arguments: [input.tx.object(result[1])],
                                     })
                                 ),
@@ -458,6 +459,7 @@ export function getWithdrawHarvestClaimTx(input: {
                                 input.tx.object(
                                     input.tx.moveCall({
                                         target: `0x1::option::destroy_some`,
+                                        typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`],
                                         arguments: [input.tx.object(result[1])],
                                     })
                                 ),
@@ -481,6 +483,7 @@ export function getWithdrawHarvestClaimTx(input: {
                   input.tx.object(
                       input.tx.moveCall({
                           target: `0x1::option::destroy_some`,
+                          typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`],
                           arguments: [input.tx.object(result[1])],
                       })
                   ),
