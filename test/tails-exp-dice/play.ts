@@ -5,6 +5,8 @@ import { newGamePlayGuessTx } from "../../utils/tails-exp-dice/user-entry";
 import { SuiClient, SuiHTTPTransport, getFullnodeUrl } from "@mysten/sui.js/client";
 import { WebSocket } from "ws";
 import { simulateGame } from "../../utils/tails-exp-dice/view-function";
+import { getDrawResult } from "../../utils/tails-exp-dice/api";
+
 import drawKeys from "../../drawKeys.json";
 
 // const provider = new SuiClient({
@@ -71,7 +73,7 @@ const larger_than_2 = true;
     const vrf_input_1 = res.events![1].parsedJson!["vrf_input_1"];
     const vrf_input_2 = res.events![1].parsedJson!["vrf_input_2"];
 
-    const drawResult = await simulateGame(
+    const drawResult = await getDrawResult(
         "testnet",
         config.PACKAGE,
         config.REGISTRY,
@@ -82,8 +84,7 @@ const larger_than_2 = true;
         guess_2,
         larger_than_2,
         vrf_input_1,
-        vrf_input_2,
-        drawKeys
+        vrf_input_2
     );
 
     console.log(drawResult);
