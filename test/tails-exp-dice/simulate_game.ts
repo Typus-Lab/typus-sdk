@@ -56,8 +56,8 @@ const vrf_input_2 = [
         larger_than_1,
         guess_2,
         larger_than_2,
-        Uint8Array.from(vrf_input_1),
-        Uint8Array.from(vrf_input_2)
+        vrf_input_1,
+        vrf_input_2
     );
 
     console.log(result);

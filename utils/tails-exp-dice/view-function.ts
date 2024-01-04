@@ -5,9 +5,6 @@ import { BcsReader } from "@mysten/bcs";
 import drawKeys from "../../drawKeys.json";
 import loadBls from "bls-signatures";
 
-const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const SENDER = signer.toSuiAddress();
-
 export interface DrawResult {
     answer_1: string;
     result_1: string;
@@ -26,9 +23,9 @@ export async function simulateGame(
     larger_than_1: boolean,
     guess_2: string,
     larger_than_2: boolean,
-    vrf_input_1: Uint8Array,
-    vrf_input_2: Uint8Array,
-    sender = SENDER
+    vrf_input_1: number[],
+    vrf_input_2: number[],
+    sender = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9"
 ): Promise<DrawResult> {
     const provider = new SuiClient({ url: getFullnodeUrl(network) });
 
@@ -39,8 +36,8 @@ export async function simulateGame(
     const PRIVATE_KEY = Uint8Array.from(drawKeys[network][index]); // your draw key. TODO: use env for cloud function
     let draw_private_key = BLS.PrivateKey.from_bytes(PRIVATE_KEY, true);
 
-    let bls_signature_1 = BLS.BasicSchemeMPL.sign(draw_private_key, vrf_input_1).serialize();
-    let bls_signature_2 = BLS.BasicSchemeMPL.sign(draw_private_key, vrf_input_2).serialize();
+    let bls_signature_1 = BLS.BasicSchemeMPL.sign(draw_private_key, Uint8Array.from(vrf_input_1)).serialize();
+    let bls_signature_2 = BLS.BasicSchemeMPL.sign(draw_private_key, Uint8Array.from(vrf_input_2)).serialize();
 
     let transactionBlockArguments = [
         transactionBlock.object(registry),
@@ -50,8 +47,8 @@ export async function simulateGame(
         transactionBlock.pure(larger_than_1),
         transactionBlock.pure(guess_2),
         transactionBlock.pure(larger_than_2),
-        transactionBlock.pure(uint8ArrayToBCSStringArray(vrf_input_1)),
-        transactionBlock.pure(uint8ArrayToBCSStringArray(vrf_input_2)),
+        transactionBlock.pure(uint8ArrayToBCSStringArray(Uint8Array.from(vrf_input_1))),
+        transactionBlock.pure(uint8ArrayToBCSStringArray(Uint8Array.from(vrf_input_2))),
         transactionBlock.pure(uint8ArrayToBCSStringArray(bls_signature_1)),
         transactionBlock.pure(uint8ArrayToBCSStringArray(bls_signature_2)),
     ];
