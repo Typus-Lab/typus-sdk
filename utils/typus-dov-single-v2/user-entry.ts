@@ -423,7 +423,16 @@ export function getWithdrawHarvestClaimTx(input: {
                   input.tx.pure(input.index),
                   input.tx.makeMoveVec({
                       type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                      objects: result ? [result[1]] : input.receipts.map((receipt) => input.tx.object(receipt)),
+                      objects: result
+                          ? [
+                                input.tx.object(
+                                    input.tx.moveCall({
+                                        target: `0x1::option::destroy_some`,
+                                        arguments: [input.tx.object(result[1])],
+                                    })
+                                ),
+                            ]
+                          : input.receipts.map((receipt) => input.tx.object(receipt)),
                   }),
               ],
           })
@@ -444,7 +453,16 @@ export function getWithdrawHarvestClaimTx(input: {
                   input.tx.pure(input.index),
                   input.tx.makeMoveVec({
                       type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                      objects: result ? [result[1]] : input.receipts.map((receipt) => input.tx.object(receipt)),
+                      objects: result
+                          ? [
+                                input.tx.object(
+                                    input.tx.moveCall({
+                                        target: `0x1::option::destroy_some`,
+                                        arguments: [input.tx.object(result[1])],
+                                    })
+                                ),
+                            ]
+                          : input.receipts.map((receipt) => input.tx.object(receipt)),
                   }),
               ],
           })
