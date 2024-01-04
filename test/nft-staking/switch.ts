@@ -5,6 +5,7 @@ import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { getTailsIds } from "../../utils/typus-nft/fetch";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getSwitchNftTx } from "../../utils/nft-staking/user-entry";
+import { getProfitSharing } from "../../utils/tails-exp-dice/fetch";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const provider = new SuiClient({
@@ -26,13 +27,16 @@ const gasBudget = 100000000;
     if (tailsIds.length > 0) {
         let nft = tailsIds[0];
 
+        let res_1 = await getProfitSharing(provider, config.diceProfitSharing);
+
         let transactionBlock = await getSwitchNftTx(
             gasBudget,
             config.SINGLE_COLLATERAL_PACKAGE,
             config.SINGLE_COLLATERAL_REGISTRY,
             nft.kiosk,
             nft.kioskCap,
-            nft.nftId
+            nft.nftId,
+            [res_1.tokenType]
         );
 
         const result = await provider.signAndExecuteTransactionBlock({
