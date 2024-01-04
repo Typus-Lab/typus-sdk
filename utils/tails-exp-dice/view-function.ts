@@ -1,5 +1,5 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { BcsReader } from "@mysten/bcs";
 import drawKeys from "../../drawKeys.json";
@@ -17,7 +17,7 @@ export interface DrawResult {
 }
 
 export async function simulateGame(
-    provider: SuiClient,
+    network: "mainnet" | "testnet",
     packageId: string,
     registry: string,
     index: string,
@@ -30,11 +30,13 @@ export async function simulateGame(
     vrf_input_2: Uint8Array,
     sender = SENDER
 ): Promise<DrawResult> {
+    const provider = new SuiClient({ url: getFullnodeUrl(network) });
+
     let transactionBlock = new TransactionBlock();
     let target = `${packageId}::tails_exp::simulate_game` as any;
 
-    var BLS = await loadBls();
-    const PRIVATE_KEY = Uint8Array.from(drawKeys["testnet"][index]); // your draw key. TODO: use env for cloud function
+    const BLS = await loadBls();
+    const PRIVATE_KEY = Uint8Array.from(drawKeys[network][index]); // your draw key. TODO: use env for cloud function
     let draw_private_key = BLS.PrivateKey.from_bytes(PRIVATE_KEY, true);
 
     let bls_signature_1 = BLS.BasicSchemeMPL.sign(draw_private_key, vrf_input_1).serialize();

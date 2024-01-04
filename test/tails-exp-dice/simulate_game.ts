@@ -33,15 +33,21 @@ const guess_1 = "5000";
 const larger_than_1 = true;
 const guess_2 = "5000";
 const larger_than_2 = true;
-const vrf_input_1 = [242, 86, 250, 33, 188, 46, 133, 120, 183, 176, 215, 135, 194, 166, 236, 76, 157, 40, 169, 113, 104, 199, 122, 229, 154, 227, 253, 95, 93, 99, 68, 248, 12, 0, 0, 0, 0, 0, 0, 0];
-const vrf_input_2 = [124, 28, 58, 22, 27, 13, 70, 182, 72, 217, 145, 227, 42, 194, 247, 226, 108, 10, 133, 214, 9, 58, 119, 211, 223, 109, 245, 115, 63, 223, 204, 239, 12, 0, 0, 0, 0, 0, 0, 0];
+const vrf_input_1 = [
+    242, 86, 250, 33, 188, 46, 133, 120, 183, 176, 215, 135, 194, 166, 236, 76, 157, 40, 169, 113, 104, 199, 122, 229, 154, 227, 253, 95,
+    93, 99, 68, 248, 12, 0, 0, 0, 0, 0, 0, 0,
+];
+const vrf_input_2 = [
+    124, 28, 58, 22, 27, 13, 70, 182, 72, 217, 145, 227, 42, 194, 247, 226, 108, 10, 133, 214, 9, 58, 119, 211, 223, 109, 245, 115, 63, 223,
+    204, 239, 12, 0, 0, 0, 0, 0, 0, 0,
+];
 
 (async () => {
     const address = keypair.toSuiAddress();
     console.log(address);
 
     let result = await simulateGame(
-        provider,
+        "testnet",
         config.PACKAGE,
         config.REGISTRY,
         index.toString(),
@@ -51,7 +57,7 @@ const vrf_input_2 = [124, 28, 58, 22, 27, 13, 70, 182, 72, 217, 145, 227, 42, 19
         guess_2,
         larger_than_2,
         Uint8Array.from(vrf_input_1),
-        Uint8Array.from(vrf_input_2),
+        Uint8Array.from(vrf_input_2)
     );
 
     console.log(result);

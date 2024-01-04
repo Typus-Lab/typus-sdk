@@ -71,7 +71,7 @@ const larger_than_2 = true;
     const vrf_input_2 = res.events![1].parsedJson!["vrf_input_2"];
 
     const drawResult = await simulateGame(
-        provider,
+        "testnet",
         config.PACKAGE,
         config.REGISTRY,
         index.toString(),
