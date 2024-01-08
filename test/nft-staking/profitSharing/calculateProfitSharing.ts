@@ -1,13 +1,13 @@
 import "../../load_env";
 import config_v2 from "../../../mainnet.json";
-import { getProfitSharing, ProfitSharing, calculateLevelReward } from "../../../utils/tails-exp-dice/fetch";
+import { calculateLevelReward } from "../../../utils/tails-exp-dice/fetch";
 import { getTails } from "../../../utils/typus-nft/fetch";
 import { SuiClient } from "@mysten/sui.js/client";
 
 const provider = new SuiClient({ url: config_v2.RPC_ENDPOINT });
 
-const totalRewards = 6666666666;
-const levelShares = [0, 0.01, 0.02, 0.05, 0.08, 0.3, 0.54];
+const totalRewards = 6666666666_00000;
+const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
 
 (async () => {
     // Estimation
