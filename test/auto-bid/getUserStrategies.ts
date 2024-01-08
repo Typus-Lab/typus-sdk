@@ -18,7 +18,4 @@ const gasBudget = 100000000;
 
     let strategies = await getUserStrategies(provider, config.SINGLE_COLLATERAL_PACKAGE, strategy_pool, user);
     console.log(strategies);
-
-    // let vaults = await getVaults(provider, strategy_pool);
-    // console.log(vaults);
 })();
