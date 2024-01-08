@@ -131,11 +131,11 @@ export async function getVaults(provider: SuiClient, strategyPool: string) {
     // console.log(pool.strategies.fields.contents.fields);
 
     let vaults = pool.strategies.fields.contents;
-    console.log(vaults);
 
     for (let vault of vaults) {
         let signals = vault.fields.value.fields.contents;
-        console.log(signals);
+        console.log("vault: ", vault);
+        console.log("signals: ", signals);
 
         for (let signal of signals) {
             let strategyTable = signal.fields.value.fields.contents;

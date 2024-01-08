@@ -84,7 +84,7 @@ const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
     // STEP 2
 
     while (users.length > 0) {
-        const input = users.splice(0, 350);
+        const input = users.splice(0, 300);
         console.log(input.length);
         var transactionBlock = await getAllocateProfitSharingTx(
             gasBudget,
