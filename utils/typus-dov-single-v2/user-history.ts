@@ -23,6 +23,7 @@ export async function getUserHistory(
         result = await provider.queryEvents({ query: senderFilter, cursor: result.nextCursor });
         const nextPage = await parseTxHistory(result.data, originPackage, vaults);
         txHistory = txHistory.concat(nextPage);
+        break;
         if (result.hasNextPage && Number(result.data[24].timestampMs) < startTimeMs) {
             break;
         }
@@ -48,7 +49,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
     const results = await datas
         .filter((event) => {
             const type: string = event.type;
-            return type.startsWith(originPackage) || type.includes("typus_nft::First") || type.includes("typus_nft::ExpUpEvent");
+            return event.packageId == originPackage || type.includes("typus_nft::First") || type.includes("typus_nft::ExpUpEvent");
         })
         .reduce(async (promise, event) => {
             let txHistory: TxHistory[] = await promise;
