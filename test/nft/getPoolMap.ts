@@ -1,10 +1,11 @@
 import "../load_env";
-import config from "../../config.json";
+import config from "../../mainnet.json";
 import { PoolData, getPoolMap } from "../../utils/typus-nft/fetch";
-import { JsonRpcProvider, Connection } from "@mysten/sui.js";
+import { SuiClient } from "@mysten/sui.js/client";
 
-// const client = new SuiClient({ url: config.RPC_ENDPOINT });
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
+const provider = new SuiClient({
+    url: config.RPC_ENDPOINT,
+});
 
 (async () => {
     const poolMap = await getPoolMap(provider, config);
