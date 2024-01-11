@@ -522,6 +522,7 @@ export function getWithdrawHarvestClaimTx(input: {
 */
 export function getNewBidTx(input: {
     tx: TransactionBlock;
+    typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
     typeArguments: string[];
@@ -551,13 +552,26 @@ export function getNewBidTx(input: {
         });
         input.tx.transferObjects([input.tx.object(result[0])], input.user);
     } else {
+        let balance = input.tx.moveCall({
+            target: `${input.typusFrameworkPackageId}::utils::extract_balance`,
+            typeArguments: [input.typeArguments[1]],
+            arguments: [
+                input.tx.makeMoveVec({ objects: input.coins.map((coin) => input.tx.object(coin)) }),
+                input.tx.pure(input.premium_required),
+            ],
+        });
+        let coin = input.tx.moveCall({
+            target: `0x2::coin::from_balance`,
+            typeArguments: [input.typeArguments[1]],
+            arguments: [input.tx.object(balance)],
+        });
         let result = input.tx.moveCall({
             target: `${input.typusDovSinglePackageId}::tails_staking::new_bid`,
             typeArguments: input.typeArguments,
             arguments: [
                 input.tx.object(input.typusDovSingleRegistry),
                 input.tx.pure(input.index),
-                input.tx.makeMoveVec({ objects: input.coins.map((coin) => input.tx.object(coin)) }),
+                input.tx.makeMoveVec({ objects: [coin] }),
                 input.tx.pure(input.size),
                 input.tx.pure("0x6"),
             ],
