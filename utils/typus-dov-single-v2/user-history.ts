@@ -103,6 +103,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                                 case "ClaimEvent":
                                 case "CompoundEvent":
                                 case "HarvestEvent":
+                                case "RedeemEvent":
                                     optionType = "Covered Call";
                                     break;
                                 default:
@@ -118,6 +119,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                                 case "ClaimEvent":
                                 case "CompoundEvent":
                                 case "HarvestEvent":
+                                case "RedeemEvent":
                                     optionType = "Put Selling";
                                     break;
                                 default:
@@ -231,6 +233,13 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                         txHistory[i].Index = Index;
                         return txHistory;
                     }
+                    break;
+                case "RedeemEvent":
+                    var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
+                    var amount = Number(event.parsedJson!.amount) / 10 ** assetToDecimal(token)!;
+                    Action = "Harvest";
+                    Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                    Index = event.parsedJson!.index;
                     break;
                 case "TransferBidReceiptEvent":
                     var amount = Number(event.parsedJson!.amount) / 10 ** Number(event.parsedJson!.decimal);
