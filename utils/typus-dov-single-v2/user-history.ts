@@ -23,7 +23,6 @@ export async function getUserHistory(
         result = await provider.queryEvents({ query: senderFilter, cursor: result.nextCursor });
         const nextPage = await parseTxHistory(result.data, originPackage, vaults);
         txHistory = txHistory.concat(nextPage);
-        break;
         if (result.hasNextPage && Number(result.data[24].timestampMs) < startTimeMs) {
             break;
         }
