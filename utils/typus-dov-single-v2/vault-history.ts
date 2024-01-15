@@ -316,3 +316,61 @@ interface SettleEvent {
     timestampMs: string | null | undefined;
     txDigest: string;
 }
+
+export async function parseBidEvents(datas: SuiEvent[], end_ts_ms): Promise<Map<string, NewBidEvent[]>> {
+    const results = await datas.reduce(async (promise, event) => {
+        let map: Map<string, NewBidEvent[]> = await promise;
+
+        // console.log(event);
+
+        const functionType = new RegExp("^([^::]+)::([^::]+)::([^<]+)").exec(event.type)!;
+        const action = functionType[3];
+        // console.log(action);
+
+        if (action != "NewBidEvent") {
+            return map;
+        }
+
+        const parsedJson: any = event.parsedJson;
+        // console.log(parsedJson);
+        parsedJson.timestampMs = event.timestampMs;
+        parsedJson.txDigest = event.id.txDigest;
+
+        const index: string = parsedJson.index.toString();
+
+        let bid_event = parsedJson as NewBidEvent;
+        // console.log(bid_event);
+
+        let o_token = typeArgToAsset("0x" + parsedJson.o_token.name);
+        let size = Number(parsedJson.size) / 10 ** assetToDecimal(o_token)!;
+        bid_event.size = size.toString();
+
+        if (Number(bid_event.ts_ms) > end_ts_ms) {
+            return map;
+        }
+
+        let bid_events: NewBidEvent[];
+        if (map.has(index)) {
+            bid_events = map.get(index)!;
+            bid_events.push(bid_event);
+        } else {
+            bid_events = [bid_event];
+        }
+        map.set(index, bid_events);
+
+        return map;
+    }, Promise.resolve(new Map<string, NewBidEvent[]>()));
+
+    // console.log(results);
+
+    return results;
+}
+
+interface NewBidEvent {
+    signer: string;
+    index: string;
+    size: string;
+    ts_ms: string;
+    timestampMs: string | null | undefined;
+    txDigest: string;
+}
