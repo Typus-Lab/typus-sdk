@@ -2,7 +2,7 @@ import config from "../../../mainnet.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getTails } from "../../../utils/typus-nft/fetch";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getAllocateProfitSharingTx, getSetProfitSharingTx } from "../../../utils/nft-staking/authorized-entry";
+import { getAllocateProfitSharingTx, getSetProfitSharingTx, getRemoveProfitSharingTx } from "../../../utils/nft-staking/authorized-entry";
 import { calculateLevelReward } from "../../../utils/tails-exp-dice/fetch";
 
 import mnemonic from "../../../mnemonic.json";
@@ -21,7 +21,9 @@ const totalRewards = 6666666666_00000;
 // const typeArguments = ["0x2::sui::SUI"];
 // const totalRewards = 6666_000000000;
 
-const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
+const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 (async () => {
     const address = keypair.toSuiAddress();
@@ -62,7 +64,21 @@ const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
     const users = datas.map((d) => d.name.value as string);
     console.log("users.length: " + users.length);
 
-    // STEP 1
+    // STEP 1: Remove
+
+    var transactionBlock = await getRemoveProfitSharingTx(
+        gasBudget,
+        config.SINGLE_COLLATERAL_PACKAGE,
+        config.SINGLE_COLLATERAL_REGISTRY,
+        typeArgumentsRemove
+    );
+
+    var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
+    console.log(`getRemoveProfitSharingTx:`);
+    console.log(res);
+    await sleep(1000);
+
+    // STEP 2: Set
 
     let coins = (await provider.getCoins({ owner: address, coinType: typeArguments[0] })).data.map((coin) => coin.coinObjectId);
 
@@ -73,15 +89,15 @@ const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
         levelProfits,
         sum,
         coins,
-        typeArguments,
-        typeArgumentsRemove
+        typeArguments
     );
 
     var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
     console.log(`getSetProfitSharingTx:`);
     console.log(res);
+    await sleep(1000);
 
-    // STEP 2
+    // STEP 3: Allocate
 
     while (users.length > 0) {
         const input = users.splice(0, 300);
@@ -97,5 +113,6 @@ const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
         var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
         console.log(`getAllocateProfitSharingTx:`);
         console.log(res);
+        await sleep(1000);
     }
 })();
