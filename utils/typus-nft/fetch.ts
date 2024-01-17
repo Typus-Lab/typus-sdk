@@ -16,6 +16,7 @@ export async function getPool(provider: SuiClient, pool: string) {
         start_ms: fields.start_ms,
         num: Number(fields.num),
         remaining: Number(fields.tails.fields.contents.fields.size),
+        table: fields.tails.fields.contents.fields.id.id,
     };
 
     return poolData;
@@ -27,6 +28,7 @@ export interface PoolData {
     start_ms: string;
     num: number;
     remaining: number;
+    table: string;
 }
 
 export const necklaces = [
@@ -66,6 +68,7 @@ export async function getPoolMap(provider: SuiClient, nftConfig) {
             start_ms: fields.start_ms,
             num: Number(fields.num),
             remaining: Number(fields.tails.fields.contents.fields.size),
+            table: fields.tails.fields.contents.fields.id.id,
         };
 
         poolMap.set(necklace, poolData);
@@ -158,6 +161,10 @@ export async function getTails(provider: SuiClient, tailsIds: string[]) {
 }
 
 export function fieldsToTails(fields) {
+    let id = fields.id.id;
+    if (fields.value) {
+        fields = fields.value.fields;
+    }
     // console.log(fields.attributes.fields.contents);
     const attributes = new Map<string, string>();
     fields.attributes.fields.contents.forEach((f) => attributes.set(f.fields.key, f.fields.value));
@@ -166,7 +173,7 @@ export function fieldsToTails(fields) {
     fields.u64_padding.fields.contents.forEach((f) => u64_padding.set(f.fields.key, f.fields.value));
 
     const tails: Tails = {
-        id: fields.id.id,
+        id,
         name: fields.name,
         number: fields.number,
         url: fields.url,
@@ -216,3 +223,28 @@ export function getLevelExp(level: number): number | undefined {
 }
 
 export const LevelExpVec = [0, 0, 1_000, 50_000, 250_000, 1_000_000, 5_000_000, 20_000_000];
+
+export async function getTableTails(provider: SuiClient, parentId: string): Promise<Tails[]> {
+    var result = await provider.getDynamicFields({
+        parentId,
+    });
+    var datas = result.data;
+    while (result.hasNextPage) {
+        result = await provider.getDynamicFields({
+            parentId,
+            cursor: result.nextCursor,
+        });
+        datas = datas.concat(result.data);
+    }
+    // console.log(datas);
+    const tails: Tails[] = await getTails(
+        provider,
+        datas.map((data) => data.objectId)
+    );
+    // console.log(tails);
+    const levelUsers = [0, 0, 0, 0, 0, 0, 0];
+    tails.forEach((tail) => (levelUsers[Number(tail.level) - 1] += 1));
+    console.log("Level Users: ", levelUsers);
+
+    return tails;
+}

@@ -1,6 +1,6 @@
 import "../load_env";
 import config from "../../mainnet.json";
-import { PoolData, getPoolMap } from "../../utils/typus-nft/fetch";
+import { PoolData, getPoolMap, getTableTails } from "../../utils/typus-nft/fetch";
 import { SuiClient } from "@mysten/sui.js/client";
 
 const provider = new SuiClient({
@@ -11,9 +11,14 @@ const provider = new SuiClient({
     const poolMap = await getPoolMap(provider, config);
     console.log(poolMap);
 
-    let [num, remaining] = await name(poolMap);
-    console.log(num);
-    console.log(remaining);
+    for (let [name, pool] of poolMap.entries()) {
+        console.log(name);
+        await getTableTails(provider, pool.table);
+    }
+
+    // let [num, remaining] = await name(poolMap);
+    // console.log(num);
+    // console.log(remaining);
 })();
 
 async function name(poolMap: Map<string, PoolData>) {
