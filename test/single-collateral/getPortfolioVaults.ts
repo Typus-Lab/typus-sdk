@@ -1,8 +1,11 @@
-import { JsonRpcProvider, Connection } from "@mysten/sui.js";
 import { getPortfolioVaults } from "../../utils/typus-dov-single/portfolio-vault";
 import config from "../../config.json";
+import { SuiClient } from "@mysten/sui.js/client";
 
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
+const provider = new SuiClient({
+    url: config.RPC_ENDPOINT,
+});
+
 (async () => {
     let result = await getPortfolioVaults(
         provider,
