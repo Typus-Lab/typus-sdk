@@ -1,5 +1,6 @@
 import { TransactionBlock, TransactionObjectArgument } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../constants";
+import { getRedeemTx as originGetRedeemTx } from "./user-entry";
 
 export function getDepositTx(input: {
     tx: TransactionBlock;
@@ -127,12 +128,16 @@ export function getUnsubscribeTx(input: {
 export function getCompoundTx(input: {
     tx: TransactionBlock;
     typusFrameworkOriginPackageId: string;
+    typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
+    mfudPackageId: string;
+    mfudRegistry: string;
     typeArguments: string[];
     index: string;
     receipts: string[] | TransactionObjectArgument[];
     user: string;
+    incentiveToken?: string;
 }) {
     let result = input.tx.moveCall({
         target: `${input.typusDovSinglePackageId}::tails_staking::compound`,
@@ -147,7 +152,48 @@ export function getCompoundTx(input: {
             input.tx.object(CLOCK),
         ],
     });
-    input.tx.transferObjects([input.tx.object(result[0])], input.user);
+    if (input.incentiveToken) {
+        input.typeArguments.push(input.incentiveToken);
+        if (input.incentiveToken == `${input.mfudPackageId}::mfud::MFUD`) {
+            let receipt = input.tx.moveCall({
+                target: `0x1::option::destroy_some`,
+                typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`],
+                arguments: [input.tx.object(result[1])],
+            });
+            input.tx = getRedeemTx({
+                tx: input.tx,
+                typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
+                typusFrameworkPackageId: input.typusFrameworkPackageId,
+                typusDovSinglePackageId: input.typusDovSinglePackageId,
+                typusDovSingleRegistry: input.typusDovSingleRegistry,
+                mfudPackageId: input.mfudPackageId,
+                mfudRegistry: input.mfudRegistry,
+                typeArguments: input.typeArguments,
+                index: input.index,
+                receipts: [input.tx.object(receipt)],
+                user: input.user,
+            });
+        } else {
+            let receipt = input.tx.moveCall({
+                target: `0x1::option::destroy_some`,
+                typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`],
+                arguments: [input.tx.object(result[1])],
+            });
+            input.tx = originGetRedeemTx({
+                tx: input.tx,
+                typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
+                typusFrameworkPackageId: input.typusFrameworkPackageId,
+                typusDovSinglePackageId: input.typusDovSinglePackageId,
+                typusDovSingleRegistry: input.typusDovSingleRegistry,
+                typeArguments: input.typeArguments,
+                index: input.index,
+                receipts: [input.tx.object(receipt)],
+                user: input.user,
+            });
+        }
+    } else {
+        input.tx.transferObjects([input.tx.object(result[0])], input.user);
+    }
 
     return input.tx;
 }
@@ -207,6 +253,7 @@ export function getHarvestTx(input: {
     index: string;
     receipts: string[] | TransactionObjectArgument[];
     user: string;
+    incentiveToken?: string;
 }) {
     let result = input.tx.moveCall({
         target: `${input.typusDovSinglePackageId}::tds_user_entry::harvest`,
@@ -230,10 +277,51 @@ export function getHarvestTx(input: {
         arguments: [input.tx.object(input.mfudRegistry), input.tx.object(mfud_coin)],
     });
     input.tx.transferObjects([input.tx.object(fud_coin)], input.user);
-    input.tx.moveCall({
-        target: `${input.typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
-        arguments: [input.tx.object(result[1]), input.tx.pure(input.user)],
-    });
+    if (input.incentiveToken) {
+        input.typeArguments.push(input.incentiveToken);
+        if (input.incentiveToken == `${input.mfudPackageId}::mfud::MFUD`) {
+            let receipt = input.tx.moveCall({
+                target: `0x1::option::destroy_some`,
+                typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`],
+                arguments: [input.tx.object(result[1])],
+            });
+            input.tx = getRedeemTx({
+                tx: input.tx,
+                typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
+                typusFrameworkPackageId: input.typusFrameworkPackageId,
+                typusDovSinglePackageId: input.typusDovSinglePackageId,
+                typusDovSingleRegistry: input.typusDovSingleRegistry,
+                mfudPackageId: input.mfudPackageId,
+                mfudRegistry: input.mfudRegistry,
+                typeArguments: input.typeArguments,
+                index: input.index,
+                receipts: [input.tx.object(receipt)],
+                user: input.user,
+            });
+        } else {
+            let receipt = input.tx.moveCall({
+                target: `0x1::option::destroy_some`,
+                typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`],
+                arguments: [input.tx.object(result[1])],
+            });
+            input.tx = originGetRedeemTx({
+                tx: input.tx,
+                typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
+                typusFrameworkPackageId: input.typusFrameworkPackageId,
+                typusDovSinglePackageId: input.typusDovSinglePackageId,
+                typusDovSingleRegistry: input.typusDovSingleRegistry,
+                typeArguments: input.typeArguments,
+                index: input.index,
+                receipts: [input.tx.object(receipt)],
+                user: input.user,
+            });
+        }
+    } else {
+        input.tx.moveCall({
+            target: `${input.typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
+            arguments: [input.tx.object(result[1]), input.tx.pure(input.user)],
+        });
+    }
 
     return input.tx;
 }
