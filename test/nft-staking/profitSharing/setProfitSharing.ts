@@ -13,13 +13,13 @@ const provider = new SuiClient({
 });
 const gasBudget = 100000000;
 
-const typeArgumentsRemove = ["0x2::sui::SUI"];
-const typeArguments = ["0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1::fud::FUD"];
-const totalRewards = 6666666666_00000;
+// const typeArgumentsRemove = ["0x2::sui::SUI"];
+// const typeArguments = ["0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1::fud::FUD"];
+// const totalRewards = 6666666666_00000;
 
-// const typeArgumentsRemove = ["0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1::fud::FUD"];
-// const typeArguments = ["0x2::sui::SUI"];
-// const totalRewards = 6666_000000000;
+const typeArgumentsRemove = ["0x2::sui::SUI"];
+const typeArguments = ["0x2::sui::SUI"];
+const totalRewards = 8888_000000000;
 
 const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
 
