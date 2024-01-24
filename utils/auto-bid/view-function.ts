@@ -126,23 +126,34 @@ export async function getUserStrategies(provider: SuiClient, packageId: string, 
 export async function getVaults(provider: SuiClient, strategyPool: string) {
     // @ts-ignore
     const pool = (await provider.getObject({ id: strategyPool, options: { showContent: true } })).data?.content.fields;
-    console.log(pool);
+    // console.log(pool);
 
     // console.log(pool.strategies.fields.contents.fields);
 
     let vaults = pool.strategies.fields.contents;
+    // console.log("vaults: ", vaults);
+
+    let strategies = new Map<string, Map<string, StrategyV2[]>>();
 
     for (let vault of vaults) {
-        let signals = vault.fields.value.fields.contents;
-        console.log("vault: ", vault);
-        console.log("signals: ", signals);
+        let signals = new Map<string, StrategyV2[]>();
 
-        for (let signal of signals) {
-            let strategyTable = signal.fields.value.fields.contents;
-            console.log(strategyTable);
+        for (let signal of vault.fields.value.fields.contents) {
+            // let strategyTable = signal.fields.value.fields.contents;
+            // console.log(strategyTable);
             // dynamic fields
+            signals.set(signal.fields.key, []);
         }
+        strategies.set(vault.fields.key, signals);
     }
+
+    let strategy_pool: StrategyPoolV2 = {
+        id: pool.id.id,
+        strategies,
+        authority: pool.authority,
+    };
+
+    return strategy_pool;
 }
 
 export interface StrategyPoolV2 {
