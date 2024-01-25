@@ -1,25 +1,22 @@
 import "../load_env";
-import config from "../../config.json";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
+import config from "../../config_v2.json";
+import { SuiClient } from "@mysten/sui.js/client";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getUserStake } from "../../utils/nft-staking/fetch";
 import { getLevelExp } from "../../utils/typus-nft/fetch";
 import { getExpEarn, getExpEarnPerMinute } from "../../utils/nft-staking/calculation";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-// const client = new SuiClient({ url: config.RPC_ENDPOINT });
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const signer = new RawSigner(keypair, provider);
-
-const gasBudget = 100000000;
+const client = new SuiClient({ url: config.RPC_ENDPOINT });
 
 (async () => {
-    const address = await signer.getAddress();
+    const address = keypair.toSuiAddress();
     console.log(address);
 
-    let res_1 = await getUserStake(provider, config.NFT_TABLE, "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd");
+    let res_1 = await getUserStake(client, config.NFT_TABLE, "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd");
     console.log(res_1); // null
 
-    let res = await getUserStake(provider, config.NFT_TABLE, "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9");
+    let res = await getUserStake(client, config.NFT_TABLE, "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9");
     console.log(res);
 
     const level = Number(res?.level);
