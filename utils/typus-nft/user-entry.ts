@@ -74,3 +74,27 @@ export async function getPayRoyaltyTx(tx: TransactionBlock, nftPackageId: string
 
     return tx;
 }
+
+/**
+    entry fun request_mint(
+        pool: &mut Pool,
+        seed: u64, // 0, 1, 2
+        coin: Coin<SUI>,
+        clock: &Clock,
+        ctx: & TxContext
+    )
+*/
+export async function getRequestMintTx(gasBudget: number, nftPackageId: string, pool: string, seed: string, price: string) {
+    let tx = new TransactionBlock();
+
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure(price)]);
+
+    tx.moveCall({
+        target: `${nftPackageId}::discount_mint::request_mint`,
+        typeArguments: [],
+        arguments: [tx.object(pool), tx.pure(seed), coin, tx.object(CLOCK)],
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}

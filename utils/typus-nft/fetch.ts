@@ -248,3 +248,25 @@ export async function getTableTails(provider: SuiClient, parentId: string): Prom
 
     return tails;
 }
+
+export async function getDiscountPool(provider: SuiClient, pool: string) {
+    const res = await provider.getObject({ id: pool, options: { showContent: true } });
+
+    // @ts-ignore
+    const poolData = res.data?.content.fields as DiscountPoolData;
+
+    return poolData;
+}
+
+export interface DiscountPoolData {
+    id: string;
+    num: string;
+    price: string; // SUI decimal 9
+    start_ms: string;
+    end_ms: string;
+    authority: string;
+    public_key: number[];
+    discount_pcts: string[]; // decimal 2
+    is_live: boolean;
+    balance: string;
+}
