@@ -21,7 +21,7 @@ const gasBudget = 100000000;
 
     let packageId = config.SINGLE_COLLATERAL_PACKAGE;
     let typeArguments = [depositToken, bidToken];
-    let strategy_pool = "0x6e62ea389e67302a49aa4bf19850456ec732045c1e0776323588576a6071da7d";
+    let strategy_pool = config.STRATEGY_POOL;
 
     let vault_index = "31";
     let signal_index = "0";
@@ -38,6 +38,7 @@ const gasBudget = 100000000;
         gasBudget,
         packageId,
         typeArguments,
+        config.SINGLE_COLLATERAL_REGISTRY,
         strategy_pool,
         vault_index,
         signal_index,

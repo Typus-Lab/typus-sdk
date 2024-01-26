@@ -18,6 +18,7 @@ export function getNewStrategyTx(
     gasBudget: number,
     packageId: string,
     typeArguments: string[], // D_TOKEN, B_TOKEN
+    registry: string,
     strategy_pool: string,
     vault_index: string,
     signal_index: string,
@@ -40,6 +41,7 @@ export function getNewStrategyTx(
             target: `${packageId}::auto_bid::new_strategy`,
             typeArguments,
             arguments: [
+                tx.object(registry),
                 tx.object(strategy_pool),
                 tx.pure(vault_index),
                 tx.pure(signal_index),
@@ -66,6 +68,7 @@ export function getNewStrategyTx(
             target: `${packageId}::auto_bid::new_strategy`,
             typeArguments,
             arguments: [
+                tx.object(registry),
                 tx.object(strategy_pool),
                 tx.pure(vault_index),
                 tx.pure(signal_index),
@@ -96,6 +99,7 @@ export function getCloseStrategyTx(
     gasBudget: number,
     packageId: string,
     typeArguments: string[], // D_TOKEN, B_TOKEN
+    registry: string,
     strategy_pool: string,
     vault_index: string,
     signal_index: string,
@@ -105,7 +109,7 @@ export function getCloseStrategyTx(
     tx.moveCall({
         target: `${packageId}::auto_bid::close_strategy`,
         typeArguments,
-        arguments: [tx.object(strategy_pool), tx.pure(vault_index), tx.pure(signal_index), tx.pure(strategy_index)],
+        arguments: [tx.object(registry), tx.object(strategy_pool), tx.pure(vault_index), tx.pure(signal_index), tx.pure(strategy_index)],
     });
 
     tx.setGasBudget(gasBudget);
@@ -132,6 +136,7 @@ export function getUpdateStrategyTx(
     gasBudget: number,
     packageId: string,
     typeArguments: string[], // D_TOKEN, B_TOKEN
+    registry: string,
     strategy_pool: string,
     vault_index: string,
     signal_index: string,
@@ -156,6 +161,7 @@ export function getUpdateStrategyTx(
             target: `${packageId}::auto_bid::update_strategy`,
             typeArguments,
             arguments: [
+                tx.object(registry),
                 tx.object(strategy_pool),
                 tx.pure(vault_index),
                 tx.pure(signal_index),
@@ -183,6 +189,7 @@ export function getUpdateStrategyTx(
             target: `${packageId}::auto_bid::update_strategy`,
             typeArguments,
             arguments: [
+                tx.object(registry),
                 tx.object(strategy_pool),
                 tx.pure(vault_index),
                 tx.pure(signal_index),

@@ -11,11 +11,9 @@ const provider = new SuiClient({
 const gasBudget = 100000000;
 
 (async () => {
-    let strategy_pool = "0x6e62ea389e67302a49aa4bf19850456ec732045c1e0776323588576a6071da7d";
-
-    let user = keypair.toSuiAddress();
-    // let user = "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd";
-
+    let strategy_pool = config.STRATEGY_POOL;
+    // let user = keypair.toSuiAddress();
+    let user = "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd";
     let strategies = await getUserStrategies(provider, config.SINGLE_COLLATERAL_PACKAGE, strategy_pool, user);
     console.log(strategies);
 })();
