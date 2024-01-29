@@ -1,7 +1,7 @@
 // import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
 // import { JsonRpcProvider } from "@mysten/sui.js/dist/cjs/providers/json-rpc-provider";
 // import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
 import { OwnedKiosks, KioskClient, Network } from "@mysten/kiosk";
 
 export async function getPool(provider: SuiClient, pool: string) {
@@ -255,6 +255,10 @@ export async function getDiscountPool(provider: SuiClient, pool: string) {
     // @ts-ignore
     const poolData = res.data?.content.fields as DiscountPoolData;
 
+    // @ts-ignore
+    const remaining = poolData.tails.fields.contents.fields.size - poolData.requests.length;
+    poolData.remaining = remaining;
+
     return poolData;
 }
 
@@ -269,4 +273,30 @@ export interface DiscountPoolData {
     discount_pcts: string[]; // decimal 2
     is_live: boolean;
     balance: string;
+    remaining: number;
+}
+
+export async function getMintHistory(provider: SuiClient, NFT_PACKAGE_UPGRADE: string, vrf_input) {
+    const eventFilter: SuiEventFilter = {
+        MoveEventType: `${NFT_PACKAGE_UPGRADE}::discount_mint::DiscountEventV2`,
+    };
+
+    var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
+    // console.log(result);
+
+    // @ts-ignore
+    // result.data.forEach((d) => console.log(d.parsedJson.vrf_input));
+
+    // @ts-ignore
+    const res = result.data.filter((d) => d.parsedJson.vrf_input.toString() == vrf_input.toString());
+
+    if (res.length > 0) {
+        const eventFilter: SuiEventFilter = {
+            Transaction: res[0].id.txDigest,
+        };
+
+        var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
+        // console.log(result);
+        return result;
+    }
 }

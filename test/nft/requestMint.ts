@@ -1,7 +1,7 @@
 import "../load_env";
 import config from "../../config_v2.json";
 import { getRequestMintTx } from "../../utils/typus-nft/user-entry";
-import { getDiscountPool } from "../../utils/typus-nft/fetch";
+import { getDiscountPool, getMintHistory } from "../../utils/typus-nft/fetch";
 import { getFullnodeUrl, SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 
@@ -47,28 +47,3 @@ const gasBudget = 100000000;
         await sleep(5000);
     }
 })();
-
-export async function getMintHistory(provider: SuiClient, NFT_PACKAGE_UPGRADE: string, vrf_input) {
-    const eventFilter: SuiEventFilter = {
-        MoveEventType: `${NFT_PACKAGE_UPGRADE}::discount_mint::DiscountEventV2`,
-    };
-
-    var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
-    // console.log(result);
-
-    // @ts-ignore
-    // result.data.forEach((d) => console.log(d.parsedJson.vrf_input));
-
-    // @ts-ignore
-    const res = result.data.filter((d) => d.parsedJson.vrf_input.toString() == vrf_input.toString());
-
-    if (res.length > 0) {
-        const eventFilter: SuiEventFilter = {
-            Transaction: res[0].id.txDigest,
-        };
-
-        var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
-        // console.log(result);
-        return result;
-    }
-}
