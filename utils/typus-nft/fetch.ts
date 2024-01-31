@@ -251,6 +251,7 @@ export async function getTableTails(provider: SuiClient, parentId: string): Prom
 
 export async function getDiscountPool(provider: SuiClient, pool: string) {
     const res = await provider.getObject({ id: pool, options: { showContent: true } });
+    // console.log(res);
 
     // @ts-ignore
     const poolData = res.data?.content.fields as DiscountPoolData;
@@ -259,12 +260,21 @@ export async function getDiscountPool(provider: SuiClient, pool: string) {
     const inventory = poolData.tails.fields.contents.fields.size - poolData.requests.length;
     poolData.inventory = inventory;
 
+    const dynamicField = await provider.getDynamicFieldObject({
+        parentId: pool,
+        name: { type: "0x1::string::String", value: "total" },
+    });
+    // @ts-ignore
+    const total = dynamicField.data?.content.fields.value;
+    poolData.total = total;
+
     return poolData;
 }
 
 export interface DiscountPoolData {
     id: string;
     num: string;
+    total: string;
     price: string; // SUI decimal 9
     start_ms: string;
     end_ms: string;
