@@ -2,7 +2,7 @@ import "../load_env";
 import config from "../../config_v2.json";
 import { getRequestMintTx } from "../../utils/typus-nft/user-entry";
 import { getDiscountPool, getMintHistory } from "../../utils/typus-nft/fetch";
-import { getFullnodeUrl, SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 
 // Generate a new Ed25519 Keypair
@@ -14,13 +14,16 @@ const provider = new SuiClient({
 const gasBudget = 100000000;
 
 (async () => {
-    const pool = "0x6268d1737c236de6e9b4516013d77255ddbd0ad3cbd49d349dab273c59877e78";
+    const pool = "0x7e3172a59cdde0ba50abd57ca82bd4dd9427b1a5ae3b3d386da0db251402aaae";
 
     const address = keypair.toSuiAddress();
     console.log(address);
 
     const poolData = await getDiscountPool(provider, pool);
     console.log(poolData);
+
+    const remaining = poolData.num;
+    console.log("remaining: " + remaining);
 
     const seed = "2"; // 0,1,2
 
@@ -33,17 +36,21 @@ const gasBudget = 100000000;
     });
     console.log({ result });
 
-    const vrf_input = result.events![0].parsedJson!["vrf_input"];
-    console.log(vrf_input);
+    if (result.events!.length > 0) {
+        const vrf_input = result.events![0].parsedJson!["vrf_input"];
+        console.log(vrf_input);
 
-    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+        const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-    while (true) {
-        const res = await getMintHistory(provider, config.NFT_PACKAGE_UPGRADE, vrf_input);
-        if (res) {
-            console.log(res);
-            break;
+        while (true) {
+            const res = await getMintHistory(provider, "0x8a08d583d4cf41a80de2cdb752a4ec22811fc388907c0a07d039fa34d2489257", vrf_input);
+            if (res) {
+                console.log(res);
+                break;
+            }
+            await sleep(5000);
         }
-        await sleep(5000);
+    } else {
+        console.log("Mint Failed");
     }
 })();

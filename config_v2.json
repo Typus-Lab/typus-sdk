@@ -49,8 +49,9 @@
     "GAS_BUDGET": 1000000000,
     "FOLDER": "/Users/waynekuo/Documents/GitHub/tails-by-typus-renderer-private/tails_by_typus_renderer/data",
     "METADATA": "/home/metadata",
+    "NFT_VERSION": "1.2.2",
+    "NFT_PACKAGE_UPGRADE": "0xecd2510af500faca3f6f52a6fac2f84354f3fabd2f0418ea40b949707c8063a7",
     "NFT_PACKAGE": "0x5cfd0819411be98034cba544cbffab192c2c35674a05ff57f4f1c5042875b828",
-    "NFT_PACKAGE_UPGRADE": "0x8a08d583d4cf41a80de2cdb752a4ec22811fc388907c0a07d039fa34d2489257",
     "NFT_MANAGER_CAP": "0xf02cfb741434e40e861f038c05f0c3cadae69ed07b089284afbd70870d145ddd",
     "NFT_TRANSFER_POLICY": "0x1c62271ecc443c3d92a8fe8f5662e877856d26b971d967f66937a65f55160831",
     "NFT_ROYALTY": "0xdca4c28f5c8d3654c99ad7cfad69bfa6ec457e6af6626a515537ff0c4b9c998d",
@@ -69,5 +70,9 @@
     "nft_vault": "0x452744db33daa95567e5a98d1aa442c60aea40ed49ccf7ac7e633abf304a5ebe",
     "sui_network": "0x1bef7b18be7d240f4370579236f64d4ac9685edc59df8ffda576cfc36c17d30c",
     "mysten_labs": "0xf235242d2506bdb187033966e6f874d10b83a0cfaf11c0b0f574576c555c0ee7",
-    "none": "0x1af80eea9cc8c0de7b3aa547a39a78c95db5fc4efa2b21cb9c26d16463e873da"
+    "none": "0x1af80eea9cc8c0de7b3aa547a39a78c95db5fc4efa2b21cb9c26d16463e873da",
+
+    "TYPUS_TOKEN_PACKAGE": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c",
+    "TYPUS_TOKEN_PACKAGE_ORIGIN": "0xa4ed45439e2e049ec6aa5025f768f8e379a119e113a8bdce1bb0dcee0b246d16",
+    "TYPUS_TOKEN_MFUD_REGISTRY": "0x7ad87901531693f1baa541712947860dcc543617e11b14993ad70d20daf159c6"
 }

@@ -256,8 +256,8 @@ export async function getDiscountPool(provider: SuiClient, pool: string) {
     const poolData = res.data?.content.fields as DiscountPoolData;
 
     // @ts-ignore
-    const remaining = poolData.tails.fields.contents.fields.size - poolData.requests.length;
-    poolData.remaining = remaining;
+    const inventory = poolData.tails.fields.contents.fields.size - poolData.requests.length;
+    poolData.inventory = inventory;
 
     return poolData;
 }
@@ -273,7 +273,7 @@ export interface DiscountPoolData {
     discount_pcts: string[]; // decimal 2
     is_live: boolean;
     balance: string;
-    remaining: number;
+    inventory: number;
 }
 
 export async function getMintHistory(provider: SuiClient, NFT_PACKAGE_UPGRADE: string, vrf_input) {
