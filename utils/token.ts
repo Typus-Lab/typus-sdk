@@ -69,8 +69,8 @@ export function assetToDecimal(asset: string): number | undefined {
         case "MFUD":
             return 6;
         case "INJ":
-            return 8;
         case "SEI":
+        case "JUP":
             return 8;
         case "BUCK":
             return 9;
