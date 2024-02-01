@@ -43,7 +43,7 @@ const gasBudget = 100000000;
         const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
         while (true) {
-            const res = await getMintHistory(provider, "0x8a08d583d4cf41a80de2cdb752a4ec22811fc388907c0a07d039fa34d2489257", vrf_input);
+            const res = await getMintHistory(provider, config.DiscountEvent_PACKAGE, vrf_input);
             if (res) {
                 console.log(res);
                 break;
