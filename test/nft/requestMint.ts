@@ -1,6 +1,6 @@
 import "../load_env";
 import config from "../../config_v2.json";
-import { getRequestMintTx } from "../../utils/typus-nft/user-entry";
+import { getIsWhitelistTx, getRequestMintTx } from "../../utils/typus-nft/user-entry";
 import { getDiscountPool, getMintHistory } from "../../utils/typus-nft/fetch";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
@@ -25,9 +25,15 @@ const gasBudget = 100000000;
     const remaining = poolData.num;
     console.log("remaining: " + remaining);
 
+    var transactionBlock = await getIsWhitelistTx(gasBudget, config.NFT_PACKAGE_UPGRADE, pool, address);
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: address })).results;
+    // @ts-ignore
+    const isWhitelist = results![0].returnValues[0][0] == 1;
+    console.log("isWhitelist: " + isWhitelist);
+
     const seed = "2"; // 0,1,2
 
-    let transactionBlock = await getRequestMintTx(gasBudget, config.NFT_PACKAGE_UPGRADE, pool, seed, poolData.price);
+    var transactionBlock = await getRequestMintTx(gasBudget, config.NFT_PACKAGE_UPGRADE, pool, seed, poolData.price);
 
     const result = await provider.signAndExecuteTransactionBlock({
         signer: keypair,

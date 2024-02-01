@@ -288,7 +288,7 @@ export interface DiscountPoolData {
 
 export async function getMintHistory(provider: SuiClient, NFT_PACKAGE_UPGRADE: string, vrf_input) {
     const eventFilter: SuiEventFilter = {
-        MoveEventType: `${NFT_PACKAGE_UPGRADE}::discount_mint::DiscountEventV2`,
+        MoveEventType: `${NFT_PACKAGE_UPGRADE}::discount_mint::DiscountEventV3`,
     };
 
     var result = await provider.queryEvents({ query: eventFilter, order: "descending" });

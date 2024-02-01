@@ -98,3 +98,16 @@ export async function getRequestMintTx(gasBudget: number, nftPackageId: string, 
 
     return tx;
 }
+
+export async function getIsWhitelistTx(gasBudget: number, nftPackageId: string, pool: string, user: string) {
+    let tx = new TransactionBlock();
+
+    tx.moveCall({
+        target: `${nftPackageId}::discount_mint::is_whitelist`,
+        typeArguments: [],
+        arguments: [tx.object(pool), tx.pure(user)],
+    });
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
