@@ -8,3 +8,4 @@ mnemonic.json
 _local/
 cloudFunctions
 drawKeys.json
+*.csv
