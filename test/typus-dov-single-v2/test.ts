@@ -1,26 +1,47 @@
 // @ts-nocheck
 import "../load_env";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { getVaults } from "../../utils/typus-dov-single-v2/view-function";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import configs from "./config.json";
-import { getVaults } from "../../utils/typus-dov-single-v2/view-function";
+import * as fs from "fs";
+import { array } from "superstruct";
 
 const config = configs.MAINNET;
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 async function i() {
-    let user = "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd";
+    const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let gasBudget = 1000000000;
+    let packageId = "0xb6f8dcaaa66119503ced9cef9362f9162d03d1f6fcd37e49bb456ea0aa26ab60";
+    let module = "typus_fs";
+    let registry = "0x9340fbdfe6ce5c8094e41cf26afcce65fcf4b0b312db23ab91522d50592ca7e2";
+    let key = "avif";
     let transactionBlock = new TransactionBlock();
-    let target = `0x2::clock::timestamp_ms` as any;
     transactionBlock.moveCall({
-        target,
+        target: `${packageId}::${module}::add`,
         typeArguments: [],
-        arguments: [transactionBlock.pure("0x6")],
+        arguments: [transactionBlock.pure(registry), transactionBlock.pure(key)],
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: user })).results;
-
-    console.log(JSON.stringify(results));
-    // console.log(JSON.stringify(results, null, 2));
+    transactionBlock.setGasBudget(gasBudget);
+    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+    console.log(res);
+    let image = fs.readFileSync(`/Users/starj/Downloads/${key}.txt`, "utf-8");
+    let pieces = image.match(/.{1,10240}/g);
+    let reverse_string = (str: string): string => [...str].reverse().join("");
+    for (let i in pieces) {
+        await new Promise((f) => setTimeout(f, 1000));
+        let transactionBlock = new TransactionBlock();
+        transactionBlock.moveCall({
+            target: `${packageId}::${module}::reverse_extend`,
+            typeArguments: [],
+            arguments: [transactionBlock.pure(registry), transactionBlock.pure(key), transactionBlock.pure(reverse_string(pieces[i]))],
+        });
+        transactionBlock.setGasBudget(gasBudget);
+        let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+        console.log(res);
+    }
 }
 
 async function ii() {
@@ -103,6 +124,76 @@ async function iii() {
     console.log(JSON.stringify(result, null, 2));
 }
 
+async function iv() {
+    export interface Tails {
+        id: string;
+        number: string;
+        level: string;
+        exp: string;
+        necklace: string;
+        previousTransaction: string;
+        owner: string;
+    }
+    let tails = {};
+    let transactions = {};
+    let ids = fs.readFileSync(`/Users/starj/Documents/alphabit/tails.txt`, "utf-8").split("\n");
+
+    for (let i = 0; i < ids.length; i += 50) {
+        console.log(i);
+        let slice = ids.slice(i, i + 50);
+        let data = await provider.multiGetObjects({
+            ids: slice,
+            options: {
+                showContent: true,
+                showPreviousTransaction: true,
+            },
+        });
+        data.forEach((x) => {
+            tails[x.data.content.fields.id.id] = {
+                id: x.data.content.fields.id.id,
+                number: x.data.content.fields.number,
+                level: x.data.content.fields.level,
+                exp: x.data.content.fields.exp,
+                necklace: x.data.content.fields.attributes.fields.contents[3].fields.value,
+                previousTransaction: x.data.previousTransaction,
+            } as Tails;
+        });
+        let data = await provider.multiGetTransactionBlocks({
+            digests: [...new Set(data.map((x) => x.data.previousTransaction))],
+            options: { showInput: true },
+        });
+        data.forEach((x) => {
+            transactions[x.digest] = x.transaction.data.sender;
+        });
+        slice.forEach((x) => {
+            tails[x].owner = transactions[tails[x].previousTransaction];
+        });
+    }
+
+    let result = Object.values(tails);
+    result.sort((a, b) => a.owner.localeCompare(b.owner));
+    let csv = "";
+    result.forEach((x) => {
+        csv =
+            csv +
+            x.id +
+            "," +
+            x.number +
+            "," +
+            x.level +
+            "," +
+            x.exp +
+            "," +
+            x.necklace +
+            "," +
+            x.previousTransaction +
+            "," +
+            x.owner +
+            "\n";
+    });
+    fs.writeFileSync("./tails.csv", csv);
+}
+
 (async () => {
-    await ii();
+    await iv();
 })();
