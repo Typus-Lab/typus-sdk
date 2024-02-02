@@ -160,6 +160,94 @@ export async function getTails(provider: SuiClient, tailsIds: string[]) {
     return Tails;
 }
 
+export async function getTailsDynamicField(provider: SuiClient, tailsIds: string[]): Promise<[Tails[], Map<string, string>]> {
+    let Tails: Tails[] = [];
+
+    let tailsToDynamicField = new Map<string, string>();
+    // let DynamicFieldToKiosk = new Map<string, string>();
+    // let KioskToOwner = new Map<string, string>();
+
+    while (tailsIds.length > 0) {
+        let len = tailsIds.length > 50 ? 50 : tailsIds.length;
+
+        const results = await provider.multiGetObjects({ ids: tailsIds.splice(0, len), options: { showContent: true, showOwner: true } });
+
+        for (let result of results) {
+            // @ts-ignore
+            const owner = result.data?.owner.ObjectOwner;
+
+            // @ts-ignore
+            const fields = result.data?.content.fields;
+
+            const tails = fieldsToTails(fields);
+
+            Tails.push(tails);
+
+            if (owner) {
+                tailsToDynamicField.set(tails.id, owner);
+            }
+        }
+    }
+    return [Tails, tailsToDynamicField];
+}
+
+export async function getTailsKiosk(provider: SuiClient, tailsToDynamicField: Map<string, string>) {
+    let DynamicFieldToKiosk = new Map<string, string>();
+    // let KioskToOwner = new Map<string, string>();
+
+    const dynamicFields = Array.from(tailsToDynamicField.values());
+
+    var i = 0;
+
+    while (dynamicFields.length > 0) {
+        let len = dynamicFields.length > 50 ? 50 : dynamicFields.length;
+
+        const results = await provider.multiGetObjects({
+            ids: dynamicFields.splice(0, len),
+            options: { showOwner: true },
+        });
+
+        for (let result of results) {
+            // @ts-ignore
+            const owner = result.data?.owner.ObjectOwner;
+
+            DynamicFieldToKiosk.set(dynamicFields.at(i)!, owner);
+            i += 1;
+        }
+    }
+    return DynamicFieldToKiosk;
+}
+
+export async function getKioskOwner(provider: SuiClient, DynamicFieldToKiosk: Map<string, string>) {
+    let KioskToOwner = new Map<string, string>();
+
+    const kiosks = Array.from(DynamicFieldToKiosk.values());
+
+    const uniqueKiosks = kiosks.filter((value, index, self) => {
+        return self.findIndex((obj) => obj === value) === index;
+    });
+
+    var i = 0;
+
+    while (uniqueKiosks.length > 0) {
+        let len = uniqueKiosks.length > 50 ? 50 : uniqueKiosks.length;
+
+        const results = await provider.multiGetObjects({
+            ids: uniqueKiosks.splice(0, len),
+            options: { showContent: true },
+        });
+
+        for (let result of results) {
+            // @ts-ignore
+            const owner = result.data?.content.fields.owner;
+
+            KioskToOwner.set(uniqueKiosks.at(i)!, owner);
+            i += 1;
+        }
+    }
+    return KioskToOwner;
+}
+
 export function fieldsToTails(fields) {
     let id = fields.id.id;
     if (fields.value) {

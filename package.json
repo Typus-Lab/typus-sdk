@@ -32,6 +32,7 @@
         "js-sha3": "^0.8.0",
         "js-tokens": "^8.0.1",
         "js-yaml": "^4.1.0",
+        "json2csv": "^6.0.0-alpha.2",
         "math-erf": "^1.0.0",
         "minimatch": "^9.0.3",
         "minimist": "^1.2.5",
