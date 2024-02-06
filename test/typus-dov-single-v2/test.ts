@@ -1,14 +1,16 @@
 // @ts-nocheck
 import "../load_env";
+import { AddressFromBytes } from "../../utils/tools";
+import { BcsReader } from "@mysten/bcs";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getVaults } from "../../utils/typus-dov-single-v2/view-function";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import configs from "./config.json";
 import * as fs from "fs";
-import { array } from "superstruct";
+import configs from "./config.json";
 
-const config = configs.MAINNET;
+const config = configs.TESTNET;
+const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 async function i() {
@@ -194,6 +196,103 @@ async function iv() {
     fs.writeFileSync("./tails.csv", csv);
 }
 
+async function v() {
+    let packageId = "0xb6295caa301e2eb4e7bfe78eff1e3c0477b4f7538a2c7a1b09928d27316026a7";
+    let module = "typus_dov_single";
+    let registry = "0xab38e28deede7c50995b8d97bf19f69543e850fc34265e13a8021b7e85845e80";
+    let transactionBlock = new TransactionBlock();
+    transactionBlock.moveCall({
+        target: `${packageId}::${module}::health_check`,
+        typeArguments: [],
+        arguments: [transactionBlock.pure(registry), transactionBlock.pure("0x6")],
+    });
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    let bytes = results[results.length - 1].returnValues[0][0];
+    let reader = new BcsReader(new Uint8Array(bytes));
+    reader.readVec((reader, i) => {
+        if (i == 0) {
+            reader.read8();
+            console.log(reader.read64());
+        } else {
+            reader.read16();
+            console.log({
+                index: reader.read64(),
+                optionType: reader.read64(),
+                period: reader.read8() + "",
+                activationTsMs: reader.read64(),
+                expirationTsMs: reader.read64(),
+                depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                settlementBase: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                settlementQuote: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                settlementBaseName: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                settlementQuoteName: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                dTokenDecimal: reader.read64(),
+                bTokenDecimal: reader.read64(),
+                oTokenDecimal: reader.read64(),
+                creator: AddressFromBytes(reader.readBytes(32)),
+                createTsMs: reader.read64(),
+                round: reader.read64(),
+                status: reader.read64(),
+                oracleInfo: {
+                    price: reader.read64(),
+                    decimal: reader.read64(),
+                },
+                deliveryInfos: {
+                    round: reader.read64(),
+                    maxSize: reader.read64(),
+                    totalDeliverySize: reader.read64(),
+                    totalBidderBidValue: reader.read64(),
+                    totalBidderFee: reader.read64(),
+                    totalIncentiveBidValue: reader.read64(),
+                    totalIncentiveFee: reader.read64(),
+                    deliveryInfo: reader.readVec((reader) => {
+                        return {
+                            auctionType: reader.read64(),
+                            deliveryPrice: reader.read64(),
+                            deliverySize: reader.read64(),
+                            bidderBidValue: reader.read64(),
+                            bidderFee: reader.read64(),
+                            incentiveBidValue: reader.read64(),
+                            incentiveFee: reader.read64(),
+                            tsMs: reader.read64(),
+                            u64Padding: reader.readVec((reader) => {
+                                return reader.read64();
+                            }),
+                        };
+                    }),
+                    u64Padding: reader.readVec((reader) => {
+                        return reader.read64();
+                    }),
+                },
+                settlementInfo: reader
+                    .readVec((reader) => {
+                        return {
+                            round: reader.read64(),
+                            oraclePrice: reader.read64(),
+                            oraclePriceDecimal: reader.read64(),
+                            settleBalance: reader.read64(),
+                            settledBalance: reader.read64(),
+                            sharePrice: reader.read64(),
+                            sharePriceDecimal: reader.read64(),
+                            tsMs: reader.read64(),
+                            u64Padding: reader.readVec((reader) => {
+                                return reader.read64();
+                            }),
+                        };
+                    })
+                    .at(0),
+                u64Padding: reader.readVec((reader) => {
+                    return reader.read64();
+                }),
+                bcsPadding: reader.readVec((reader) => {
+                    return reader.read8();
+                }),
+            });
+        }
+    });
+}
+
 (async () => {
-    await iv();
+    await v();
 })();
