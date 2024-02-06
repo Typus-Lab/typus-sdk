@@ -4,6 +4,7 @@ import { getKioskOwner, getTailsDynamicField, getTailsKiosk } from "../../../uti
 import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
 import * as fs from "fs";
 import * as json2csv from "json2csv";
+import { normalizeSuiAddress } from "@mysten/sui.js/utils";
 
 const provider = new SuiClient({ url: config_v2.RPC_ENDPOINT });
 
@@ -27,7 +28,7 @@ const provider = new SuiClient({ url: config_v2.RPC_ENDPOINT });
 
     const result = tailsToDynamicFieldArray.map((x) => {
         const owner = idToOwner.get(x.id)!;
-        x.owner = owner;
+        x.owner = normalizeSuiAddress(owner);
         return x;
     });
 
