@@ -103,15 +103,17 @@ export function getCloseStrategyTx(
     strategy_pool: string,
     vault_index: string,
     signal_index: string,
-    strategy_index: string
+    strategy_index: string,
+    sender: string
 ) {
     let tx = new TransactionBlock();
-    tx.moveCall({
+    let [d_token, b_token] = tx.moveCall({
         target: `${packageId}::auto_bid::close_strategy`,
         typeArguments,
         arguments: [tx.object(registry), tx.object(strategy_pool), tx.pure(vault_index), tx.pure(signal_index), tx.pure(strategy_index)],
     });
 
+    tx.transferObjects([d_token, b_token], sender);
     tx.setGasBudget(gasBudget);
 
     return tx;

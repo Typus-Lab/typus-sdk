@@ -1,8 +1,8 @@
-import "../load_env";
-import config from "../../config_v2.json";
+import "../../load_env";
+import config from "../../../config_v2.json";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getNewStrategyTx } from "../../utils/auto-bid/user-entry";
+import { getNewStrategyTx, getUpdateStrategyTx } from "../../../utils/typus-dov-single-v2/mfud-user-entry";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
@@ -16,21 +16,24 @@ const provider = new SuiClient({
 const gasBudget = 100000000;
 
 (async () => {
-    let depositToken = "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC";
-    let bidToken = "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC";
-    let gasBudget = 100000000;
+    let fudToken = "0x461efa7ee5aa1b27e44450d79e2104e7fc0991461e9eb1c2a3fc1f44cd554856::fud::FUD";
+    let mFudToken = "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c::mfud::MFUD";
+
     let packageId = config.SINGLE_COLLATERAL_PACKAGE;
-    let typeArguments = [depositToken, bidToken];
+    let typeArguments = [mFudToken, mFudToken];
     let strategy_pool = config.STRATEGY_POOL;
-    let vault_index = "40";
+
+    let vault_index = "38";
     let signal_index = "0";
-    let coins = (await provider.getCoins({ owner: keypair.toSuiAddress(), coinType: bidToken })).data.map((coin) => coin.coinObjectId);
-    let amount = "10000000000";
-    let size = "30000000000";
+
+    let coins = (await provider.getCoins({ owner: keypair.toSuiAddress(), coinType: fudToken })).data.map((coin) => coin.coinObjectId);
+    let amount = "100000000";
+    let size = "100000000";
     let price_percentage = "40";
     let max_times = "10";
     let target_rounds = [];
-    let transactionBlock = await getNewStrategyTx(
+
+    var transactionBlock = getNewStrategyTx(
         gasBudget,
         packageId,
         typeArguments,
@@ -39,12 +42,14 @@ const gasBudget = 100000000;
         vault_index,
         signal_index,
         coins,
+        config.TYPUS_TOKEN_PACKAGE,
+        config.TYPUS_TOKEN_MFUD_REGISTRY,
         amount,
         size,
         price_percentage,
         max_times,
         target_rounds
     );
-    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
+    var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
     console.log(res);
 })();

@@ -3,6 +3,7 @@ import { assetToDecimal, typeArgToAsset } from "../token";
 import { BCS, BcsReader, fromB58, fromB64, getSuiMoveConfig } from "@mysten/bcs";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { AddressFromBytes } from "../tools";
+import { BidShare, BidVault } from "../typus-dov-single-v2/view-function";
 
 let bcs = new BCS(getSuiMoveConfig());
 bcs.registerStructType("StrategyV2", {
@@ -55,10 +56,17 @@ bcs.registerStructType("TypusBidReceipt", {
     u64_padding: "vector<u64>",
 });
 
-export async function getUserStrategies(provider: SuiClient, packageId: string, strategyPool: string, user: string) {
+export async function getUserStrategies(
+    provider: SuiClient,
+    packageId: string,
+    registry: string,
+    strategyPool: string,
+    user: string
+    // typeArguments: string[] // [D_TOKEN, B_TOKEN]
+) {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::auto_bid::get_user_strategies` as any;
-    let transactionBlockArguments = [transactionBlock.pure(strategyPool), transactionBlock.pure(user)];
+    let target = `${packageId}::auto_bid::view_user_strategies` as any;
+    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(strategyPool), transactionBlock.pure(user)];
     transactionBlock.moveCall({
         target,
         typeArguments: [],
@@ -114,7 +122,43 @@ export async function getUserStrategies(provider: SuiClient, packageId: string, 
             }),
             accumulated_profit: reader.read64(),
             strategy_index: reader.read64(),
+            // remaining_balance: reader.read64(),
+            // gain_to_harvest: reader.read64(),
         } as unknown as StrategyV2;
+
+        let my_bids = Array.from(new Map()).reduce((map, [key, value]) => {
+            map[key] = value;
+            return map;
+        }, {});
+        reader.readVec((reader, i) => {
+            reader.read16();
+            let bidVault = {
+                id: AddressFromBytes(reader.readBytes(32)),
+                depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                incentiveToken: reader
+                    .readVec((reader) => {
+                        return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+                    })
+                    .at(0),
+                index: reader.read64(),
+                shareSupply: reader.read64(),
+                metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                u64Padding: reader.readVec((reader) => {
+                    return reader.read64();
+                }),
+                bcsPadding: reader.readVec((reader) => {
+                    return reader.read8();
+                }),
+            } as BidVault;
+            my_bids[bidVault.index + "-" + bidVault.id] = {
+                bidVault,
+                share: reader.read64(),
+            } as BidShare;
+        });
+        // console.log(my_bids);
+        strategy.my_bids = my_bids;
+
         // console.log(strategy);
 
         strategies.push(strategy);
@@ -182,6 +226,9 @@ export interface StrategyV2 {
     bid_ts_ms: string;
     bid_rounds: string[];
     accumulated_profit: string;
+    remaining_balance: string;
+    gain_to_harvest: string;
+    my_bids: { [key: string]: BidShare };
 }
 
 export interface TypusBidReceipt {
