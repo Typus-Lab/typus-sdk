@@ -9,7 +9,7 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import * as fs from "fs";
 import configs from "./config.json";
 
-const config = configs.TESTNET;
+const config = configs.MAINNET;
 const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
@@ -197,9 +197,9 @@ async function iv() {
 }
 
 async function v() {
-    let packageId = "0xb6295caa301e2eb4e7bfe78eff1e3c0477b4f7538a2c7a1b09928d27316026a7";
+    let packageId = config.DOV_SINGLE_PACKAGE;
     let module = "typus_dov_single";
-    let registry = "0xab38e28deede7c50995b8d97bf19f69543e850fc34265e13a8021b7e85845e80";
+    let registry = config.DOV_SINGLE_REGISTRY;
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${packageId}::${module}::health_check`,
