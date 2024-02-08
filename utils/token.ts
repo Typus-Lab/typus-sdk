@@ -76,5 +76,7 @@ export function assetToDecimal(asset: string): number | undefined {
             return 9;
         case "AFSUI":
             return 9;
+        case "NAVX":
+            return 9;
     }
 }
