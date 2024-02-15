@@ -185,6 +185,8 @@ export async function getTailsDynamicField(provider: SuiClient, tailsIds: string
 
             if (owner) {
                 tailsToDynamicField.set(tails.id, owner);
+            } else {
+                tailsToDynamicField.set(tails.id, "");
             }
         }
     }
