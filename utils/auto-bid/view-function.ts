@@ -122,8 +122,6 @@ export async function getUserStrategies(
             }),
             accumulated_profit: reader.read64(),
             strategy_index: reader.read64(),
-            // remaining_balance: reader.read64(),
-            // gain_to_harvest: reader.read64(),
         } as unknown as StrategyV2;
 
         let my_bids = Array.from(new Map()).reduce((map, [key, value]) => {
@@ -158,6 +156,17 @@ export async function getUserStrategies(
         });
         // console.log(my_bids);
         strategy.my_bids = my_bids;
+
+        strategy.remaining_balance = strategy.u64_padding.at(0);
+        strategy.gain_to_harvest = strategy.u64_padding.at(1);
+
+        if (strategy.bid_times == strategy.max_times) {
+            strategy.status = "finished";
+        } else if (!strategy.active) {
+            strategy.status = "insufficient balance";
+        } else {
+            strategy.status = "active";
+        }
 
         // console.log(strategy);
 
@@ -211,24 +220,23 @@ export interface StrategyV2 {
     vault_index: string;
     signal_index: string;
     user: string;
-    // balance: Balance<B_TOKEN>,
-    // profit: Balance<D_TOKEN>,
     price_percentage: string;
     size: string;
     max_times: string;
     target_rounds: string[];
     receipts: TypusBidReceipt[];
     active: boolean;
-    string_padding: string[];
+    u64_padding: string[];
     // log
     bid_times: string;
     bid_round: string;
     bid_ts_ms: string;
     bid_rounds: string[];
     accumulated_profit: string;
-    remaining_balance: string;
-    gain_to_harvest: string;
+    remaining_balance: string | undefined;
+    gain_to_harvest: string | undefined;
     my_bids: { [key: string]: BidShare };
+    status: "active" | "insufficient balance" | "finished";
 }
 
 export interface TypusBidReceipt {
