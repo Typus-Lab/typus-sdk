@@ -138,7 +138,7 @@ export async function getCreateKioskAndLockNftTx(
 
     const kioskTx = new KioskTransaction({ transactionBlock: tx, kioskClient });
     kioskTx.create();
-    kioskTx.lock({ itemType: `${nftPackageId}::typus_nft::Tails`, itemId: nft_id, policy });
+    kioskTx.lock({ itemType: `${nftPackageId}::typus_nft::Tails`, itemId: nft_id, policy, item: nft_id });
 
     const { kiosk, kioskCap } = kioskTx;
 
