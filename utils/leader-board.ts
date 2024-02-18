@@ -195,7 +195,40 @@ interface LeaderBoard {
     score: number;
 }
 
+interface ExpEarn {
+    address: string;
+    total_exp_earn: number;
+}
+
+export async function getExpLeaderBoard(startTimestamp: string): Promise<ExpEarn[]> {
+    const apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
+
+    const headers = {
+        "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
+        "Content-Type": "application/json",
+    };
+
+    const requestData = {
+        sqlQuery: {
+            sql: `SELECT S.distinct_id as address, SUM(E.exp_earn) as total_exp_earn\nFROM ExpUp E\nJOIN StakeNft S ON E.number = S.number\nWHERE timestamp >= ${startTimestamp}\nGROUP BY address\nORDER BY total_exp_earn DESC;`,
+            size: 1000,
+        },
+    };
+
+    const jsonData = JSON.stringify(requestData);
+
+    let response = await fetch(apiUrl, {
+        method: "POST",
+        headers,
+        body: jsonData,
+    });
+
+    let data = await response.json();
+
+    return data.result.rows as ExpEarn[];
+}
+
 (async () => {
-    // console.log(await getDepositorLeaderBoard("1684886400"));
+    // console.log(await getExpLeaderBoard("1707721200"));
     // console.log(await getBidderLeaderBoard("1684886400"));
 })();
