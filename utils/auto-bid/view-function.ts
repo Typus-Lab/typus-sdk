@@ -160,7 +160,7 @@ export async function getUserStrategies(
         strategy.remaining_balance = strategy.u64_padding.at(0);
         strategy.gain_to_harvest = strategy.u64_padding.at(1);
 
-        if (strategy.bid_times == strategy.max_times) {
+        if (Number(strategy.bid_times) >= Number(strategy.max_times)) {
             strategy.status = "finished";
         } else if (!strategy.active) {
             strategy.status = "insufficient balance";
