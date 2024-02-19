@@ -1,5 +1,11 @@
 import config from "../../mainnet.json";
-import { getVaultHistoryEvents, parseGroupEvents, parseVaultHistory, VaultHistory } from "../../utils/typus-dov-single-v2/vault-history";
+import {
+    getVaultHistoryEvents,
+    parseGroupEvents,
+    parseVaultHistory,
+    getVaultHistoryFromDB,
+    VaultHistory,
+} from "../../utils/typus-dov-single-v2/vault-history";
 import { SuiClient } from "@mysten/sui.js/client";
 
 const provider = new SuiClient({
@@ -7,12 +13,17 @@ const provider = new SuiClient({
 });
 
 (async () => {
-    const datas = await getVaultHistoryEvents(provider, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, 1702278000000);
-    const groupEvents = await parseGroupEvents(datas);
-    const vaultHistory = await parseVaultHistory(groupEvents);
+    // const datas = await getVaultHistoryEvents(provider, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, 1702278000000);
+    // const groupEvents = await parseGroupEvents(datas);
+    // const vaultHistory = await parseVaultHistory(groupEvents);
+
+    const index = undefined;
+    const startTs = "1708300420000";
+    const endTs = "1708340420000";
+    const vaultHistory = await getVaultHistoryFromDB(index, startTs, endTs);
     console.log(vaultHistory);
 
-    writeResultToJson(vaultHistory, "vaultHistory.json");
+    // writeResultToJson(vaultHistory, "vaultHistory.json");
 })();
 
 import * as fs from "fs";

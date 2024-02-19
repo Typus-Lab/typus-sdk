@@ -149,6 +149,77 @@ export async function parseVaultHistory(
     return result;
 }
 
+export async function getVaultHistoryFromDB(index?: string, startTs?: string, endTs?: string) {
+    const apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/vault-history";
+
+    const queryParams = new URLSearchParams();
+
+    if (index) {
+        queryParams.append("index", index);
+    }
+
+    if (startTs) {
+        queryParams.append("startTs", startTs);
+    }
+
+    if (endTs) {
+        queryParams.append("endTs", endTs);
+    }
+
+    // Append the query parameters to the URL
+    const apiUrlWithParams = `${apiUrl}?${queryParams.toString()}`;
+
+    let response = await fetch(apiUrlWithParams, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    });
+
+    const map = new Map<string, Map<string, VaultHistory | undefined>>();
+
+    if (response.ok) {
+        let datas = await response.json();
+
+        for (let data of datas) {
+            const index = data.index;
+            const round = data.round;
+
+            let vaultHistory: VaultHistory = {
+                vaultIndex: index,
+                round: round,
+                ActivationDate: new Date(Number(data.activation_date) / 1000),
+                MaxSize: data.max_size,
+                SettlementTime: new Date(Number(data.settle_date) / 1000),
+                StrikePrice: data.strikes || undefined,
+                SettlePrice: data.settle_price,
+                Return: data.return,
+                Filled: Number(data.delivery_size) == 0 ? 0 : Number(data.delivery_size) / Number(data.max_size),
+                DeliverySize: data.delivery_size,
+                DeliveryPrice: data.delivery_price,
+                PaidToDepositors: data.paid_to_depositors,
+                PaidToBidders: data.paid_to_bidders,
+                EarnedByDepositors: data.paid_to_depositors - data.paid_to_bidders,
+                ActivateTx: data.activation_tx,
+                NewAuctionTx: data.new_auction_tx,
+                DeliveryTx: data.delivery_tx,
+                RecoupTx: data.recoup_tx,
+                SettleTx: data.settle_tx,
+            };
+
+            if (map.has(index)) {
+                let round_events = map.get(index)!;
+                round_events.set(round, vaultHistory);
+                map.set(index, round_events);
+            } else {
+                let round_events = new Map<string, VaultHistory>();
+                round_events.set(round, vaultHistory);
+                map.set(index, round_events);
+            }
+        }
+
+        return map;
+    }
+}
+
 export async function convertGroupEventToVaultHistory(groupEvent: GroupEvent): Promise<VaultHistory | undefined> {
     let ActivationMs = Number(groupEvent.activateEvent?.timestampMs!);
     let SettlementTsMs = Number(groupEvent.settleEvent?.timestampMs!);
