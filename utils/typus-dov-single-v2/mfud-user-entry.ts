@@ -616,3 +616,39 @@ export function getCloseStrategyTx(
 
     return tx;
 }
+
+export function getWithdrawProfitStrategyTx(
+    gasBudget: number,
+    packageId: string,
+    typeArguments: string[], // D_TOKEN, B_TOKEN
+    registry: string,
+    strategy_pool: string,
+    vault_index: string,
+    signal_index: string,
+    strategy_index: string,
+    mfudPackageId: string,
+    mfudRegistry: string,
+    sender: string
+) {
+    let tx = new TransactionBlock();
+
+    let d_token = tx.moveCall({
+        target: `${packageId}::auto_bid::withdraw_profit`,
+        typeArguments,
+        arguments: [tx.object(registry), tx.object(strategy_pool), tx.pure(vault_index), tx.pure(signal_index), tx.pure(strategy_index)],
+    });
+
+    if (typeArguments[0].endsWith("MFUD")) {
+        let fud_coin = tx.moveCall({
+            target: `${mfudPackageId}::mfud::burn`,
+            arguments: [tx.object(mfudRegistry), d_token],
+        });
+        tx.transferObjects([tx.object(fud_coin)], sender);
+    } else {
+        tx.transferObjects([d_token], sender);
+    }
+
+    tx.setGasBudget(gasBudget);
+
+    return tx;
+}
