@@ -1,6 +1,5 @@
 import config from "../../mainnet.json";
 import { getVaultHistoryEvents, parseGroupEvents, parseVaultHistory, VaultHistory } from "../../utils/typus-dov-single-v2/vault-history";
-import { getVaults } from "../../utils/typus-dov-single-v2/view-function";
 import { SuiClient } from "@mysten/sui.js/client";
 
 const provider = new SuiClient({
@@ -8,7 +7,6 @@ const provider = new SuiClient({
 });
 
 (async () => {
-    const vaults = await getVaults(provider, config.SINGLE_COLLATERAL_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY, []);
     const datas = await getVaultHistoryEvents(provider, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, 1702278000000);
     const groupEvents = await parseGroupEvents(datas);
     const vaultHistory = await parseVaultHistory(groupEvents);
