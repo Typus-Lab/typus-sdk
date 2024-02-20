@@ -8,9 +8,8 @@ const provider = new SuiClient({
 
 (async () => {
     const playgrounds = await getPlaygrounds(provider, config.TYPUS_DICE_REGISTRY);
-    console.log(config.RPC_ENDPOINT);
 
-    const history = await getHistory(provider, config.PACKAGE_ORIGIN, playgrounds);
+    const history = await getHistory(provider, config.TYPUS_DICE_EVENT_PACKAGE, playgrounds);
     console.log(history);
 
     const leaderBoard = await getLeaderBoard(history);

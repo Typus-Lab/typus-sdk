@@ -159,6 +159,8 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
         const stake_amount = Number(drawEvent.stake_amount) / 10 ** decimal;
         const amount = stake_amount > 1000000 ? `${stake_amount / 1000000}m` : stake_amount;
 
+        const reward = Number(drawEvent.reward) / 10 ** decimal;
+
         const display: DrawDisplay = {
             game_id: drawEvent.game_id,
             player: drawEvent.player,
@@ -167,7 +169,7 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
             result_1,
             result_2,
             bet_amount: `${amount} ${asset}`,
-            reward: `${Number(drawEvent.reward)} EXP`,
+            reward: `${reward} ${asset}`,
             exp: `${Number(drawEvent.exp_amount)} EXP`,
         };
 
