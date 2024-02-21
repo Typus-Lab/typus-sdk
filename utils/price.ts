@@ -25,7 +25,10 @@ export async function getLatestPrice(pair: string): Promise<string> {
     const currentTimestampInSeconds: number = Math.floor(new Date().getTime() / 1000);
     const minuteAgo = currentTimestampInSeconds - 60;
     let res: any[] = await getPairPrices(pair, minuteAgo.toString(), currentTimestampInSeconds.toString());
-    return res.at(-1).price;
+    if (res.at(-1)) {
+        return res.at(-1).price;
+    }
+    return "0";
 }
 
 export async function getPythLatestPrice() {
