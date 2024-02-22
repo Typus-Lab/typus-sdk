@@ -28,6 +28,7 @@ export async function getDepositorCashFlows(userHistory: TxHistory[]) {
                     totalWithdraw: 0,
                     totalClaim: 0,
                     totalCompound: 0,
+                    netDeposit: undefined,
                     totalHarvest,
                 };
                 depositorCashFlows.set(index, depositorCashFlow);
@@ -46,6 +47,7 @@ export async function getDepositorCashFlows(userHistory: TxHistory[]) {
                     totalWithdraw: 0,
                     totalClaim: 0,
                     totalCompound: 0,
+                    netDeposit: undefined,
                     totalHarvest: new Map(),
                 };
                 depositorCashFlows.set(index, depositorCashFlow);
@@ -64,6 +66,7 @@ export async function getDepositorCashFlows(userHistory: TxHistory[]) {
                     totalWithdraw: Number(amount),
                     totalClaim: 0,
                     totalCompound: 0,
+                    netDeposit: undefined,
                     totalHarvest: new Map(),
                 };
                 depositorCashFlows.set(index, depositorCashFlow);
@@ -82,6 +85,7 @@ export async function getDepositorCashFlows(userHistory: TxHistory[]) {
                     totalWithdraw: 0,
                     totalClaim: Number(amount),
                     totalCompound: 0,
+                    netDeposit: undefined,
                     totalHarvest: new Map(),
                 };
                 depositorCashFlows.set(index, depositorCashFlow);
@@ -100,13 +104,19 @@ export async function getDepositorCashFlows(userHistory: TxHistory[]) {
                     totalWithdraw: 0,
                     totalClaim: 0,
                     totalCompound: Number(amount),
+                    netDeposit: undefined,
                     totalHarvest: new Map(),
                 };
                 depositorCashFlows.set(index, depositorCashFlow);
             }
         }
     }
-    console.log(depositorCashFlows);
+    // console.log(depositorCashFlows);
+
+    for (let [index, share] of depositorCashFlows.entries()) {
+        share.netDeposit = share.totalDeposit + share.totalCompound - share.totalWithdraw - share.totalClaim;
+        depositorCashFlows.set(index, share);
+    }
 
     return depositorCashFlows;
 }
@@ -117,16 +127,6 @@ interface DepositorCashFlow {
     totalWithdraw: number;
     totalClaim: number;
     totalCompound: number;
+    netDeposit: number | undefined;
     totalHarvest: Map<string, number>;
-}
-
-export async function calculateNetDeposit(depositorCashFlows: Map<string, DepositorCashFlow>) {
-    let netDeposits = new Map<string, number>();
-
-    for (let [index, share] of depositorCashFlows.entries()) {
-        let netDeposit = share.totalDeposit + share.totalCompound - share.totalWithdraw - share.totalClaim;
-        netDeposits.set(index, netDeposit);
-    }
-
-    return netDeposits;
 }

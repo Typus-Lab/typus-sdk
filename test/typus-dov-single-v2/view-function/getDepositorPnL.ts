@@ -1,4 +1,4 @@
-import config from "../../../config_v2.json";
+import config from "../../../mainnet.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { DepositShare, getDepositShares, getVaults } from "../../../utils/typus-dov-single-v2/view-function";
 import { getUserHistory } from "../../../utils/typus-dov-single-v2/user-history";
