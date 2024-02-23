@@ -181,24 +181,43 @@ export function getUpdateStrategyTx(
         typeArguments[1] == "0x2::sui::SUI" ||
         typeArguments[1] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
     ) {
-        const [input_coin] = amount ? tx.splitCoins(tx.gas, [tx.pure(amount)]) : [tx.pure([])];
+        if (amount) {
+            const [input_coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
 
-        tx.moveCall({
-            target: `${packageId}::auto_bid::update_strategy`,
-            typeArguments,
-            arguments: [
-                tx.object(registry),
-                tx.object(strategy_pool),
-                tx.pure(vault_index),
-                tx.pure(signal_index),
-                tx.pure(strategy_index),
-                tx.pure(size ? [size] : []),
-                tx.pure(price_percentage ? [price_percentage] : []),
-                tx.pure(max_times ? [max_times] : []),
-                tx.pure(target_rounds),
-                input_coin,
-            ],
-        });
+            tx.moveCall({
+                target: `${packageId}::auto_bid::update_strategy`,
+                typeArguments,
+                arguments: [
+                    tx.object(registry),
+                    tx.object(strategy_pool),
+                    tx.pure(vault_index),
+                    tx.pure(signal_index),
+                    tx.pure(strategy_index),
+                    tx.pure(size ? [size] : []),
+                    tx.pure(price_percentage ? [price_percentage] : []),
+                    tx.pure(max_times ? [max_times] : []),
+                    tx.pure(target_rounds),
+                    tx.makeMoveVec({ objects: [input_coin] }),
+                ],
+            });
+        } else {
+            tx.moveCall({
+                target: `${packageId}::auto_bid::update_strategy`,
+                typeArguments,
+                arguments: [
+                    tx.object(registry),
+                    tx.object(strategy_pool),
+                    tx.pure(vault_index),
+                    tx.pure(signal_index),
+                    tx.pure(strategy_index),
+                    tx.pure(size ? [size] : []),
+                    tx.pure(price_percentage ? [price_percentage] : []),
+                    tx.pure(max_times ? [max_times] : []),
+                    tx.pure(target_rounds),
+                    tx.makeMoveVec({ objects: [] }),
+                ],
+            });
+        }
     } else {
         const coin = coins.pop()!;
 
