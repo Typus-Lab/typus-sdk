@@ -186,16 +186,15 @@ export async function getVaults(provider: SuiClient, strategyPool: string) {
     let vaults = pool.strategies.fields.contents;
     // console.log("vaults: ", vaults);
 
-    let strategies = new Map<string, Map<string, StrategyV2[]>>();
+    let strategies = new Map<string, Map<string, string>>();
 
     for (let vault of vaults) {
-        let signals = new Map<string, StrategyV2[]>();
+        let signals = new Map<string, string>();
 
         for (let signal of vault.fields.value.fields.contents) {
-            // let strategyTable = signal.fields.value.fields.contents;
+            let strategyTable = signal.fields.value.fields.contents;
             // console.log(strategyTable);
-            // dynamic fields
-            signals.set(signal.fields.key, []);
+            signals.set(signal.fields.key, strategyTable.fields.id.id);
         }
         strategies.set(vault.fields.key, signals);
     }
@@ -211,7 +210,7 @@ export async function getVaults(provider: SuiClient, strategyPool: string) {
 
 export interface StrategyPoolV2 {
     id: string;
-    strategies: Map<string, Map<string, StrategyV2[]>>;
+    strategies: Map<string, Map<string, string>>;
     authority: string[];
 }
 
@@ -245,4 +244,40 @@ export interface TypusBidReceipt {
     index: string;
     metadata: string;
     u64_padding: string[];
+}
+
+export async function getStrategies(provider: SuiClient, strategyIds: string[]) {
+    let strategies = new Map<string, StrategyV2>();
+
+    while (strategyIds.length > 0) {
+        let len = strategyIds.length > 50 ? 50 : strategyIds.length;
+
+        const results = await provider.multiGetObjects({ ids: strategyIds.splice(0, len), options: { showContent: true } });
+
+        for (let result of results) {
+            // @ts-ignore
+            const fields = result.data?.content.fields;
+            // console.log(fields);
+            strategies.set(fields.name, fields.value.fields as StrategyV2);
+        }
+    }
+    return strategies;
+}
+
+export async function getStrategyIds(provider: SuiClient, parentId: string) {
+    var result = await provider.getDynamicFields({
+        parentId,
+    });
+
+    var datas = result.data;
+
+    while (result.hasNextPage) {
+        result = await provider.getDynamicFields({
+            parentId,
+            cursor: result.nextCursor,
+        });
+        datas = datas.concat(result.data);
+    }
+
+    return datas.map((data) => data.objectId);
 }
