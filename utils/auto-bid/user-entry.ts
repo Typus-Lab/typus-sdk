@@ -104,9 +104,11 @@ export function getCloseStrategyTx(
     vault_index: string,
     signal_index: string,
     strategy_index: string,
-    sender: string
+    sender: string,
+    txBlock?: TransactionBlock
 ) {
-    let tx = new TransactionBlock();
+    let tx = txBlock ? txBlock : new TransactionBlock();
+
     let [d_token, b_token] = tx.moveCall({
         target: `${packageId}::auto_bid::close_strategy`,
         typeArguments,
