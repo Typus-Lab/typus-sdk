@@ -14,6 +14,8 @@ import { CLOCK } from "../../constants";
 */
 export function getDepositTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string,
+    tailsStakingRegistry: string,
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
@@ -33,9 +35,11 @@ export function getDepositTx(input: {
     ) {
         let [coin] = input.tx.splitCoins(input.tx.gas, [input.tx.pure(input.amount)]);
         let result = input.tx.moveCall({
-            target: `${input.typusDovSinglePackageId}::tails_staking::deposit`,
+            target: `${input.typusDovSinglePackageId}::tds_user_entry::public_deposit`,
             typeArguments: input.typeArguments,
             arguments: [
+                input.tx.object(input.typusEcosystemVersion),
+                input.tx.object(input.tailsStakingRegistry),
                 input.tx.object(input.typusDovSingleRegistry),
                 input.tx.pure(input.index),
                 input.tx.makeMoveVec({ objects: [coin] }),
