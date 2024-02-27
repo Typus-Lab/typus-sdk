@@ -225,6 +225,8 @@ export function getCompoundTx(input: {
         input.typeArguments.push(input.incentiveToken);
         input.tx = getRedeemTx({
             tx: input.tx,
+            typusEcosystemVersion: input.typusEcosystemVersion,
+            tailsStakingRegistry: input.tailsStakingRegistry,
             typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
             typusFrameworkPackageId: input.typusFrameworkPackageId,
             typusDovSinglePackageId: input.typusDovSinglePackageId,
@@ -339,6 +341,8 @@ export function getHarvestTx(input: {
         });
         input.tx = getRedeemTx({
             tx: input.tx,
+            typusEcosystemVersion: input.typusEcosystemVersion,
+            tailsStakingRegistry: input.tailsStakingRegistry,
             typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
             typusFrameworkPackageId: input.typusFrameworkPackageId,
             typusDovSinglePackageId: input.typusDovSinglePackageId,
@@ -368,6 +372,8 @@ export function getHarvestTx(input: {
 */
 export function getRedeemTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string,
+    tailsStakingRegistry: string,
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
@@ -378,9 +384,11 @@ export function getRedeemTx(input: {
     user: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tds_user_entry::redeem`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_redeem`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
@@ -404,6 +412,8 @@ export function getRedeemTx(input: {
 
 export function getWithdrawHarvestClaimTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string,
+    tailsStakingRegistry: string,
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
@@ -517,6 +527,8 @@ export function getWithdrawHarvestClaimTx(input: {
             : input.receipts.map((receipt) => input.tx.object(receipt));
         input.tx = getRedeemTx({
             tx: input.tx,
+            typusEcosystemVersion: input.typusEcosystemVersion,
+            tailsStakingRegistry: input.tailsStakingRegistry,
             typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
             typusFrameworkPackageId: input.typusFrameworkPackageId,
             typusDovSinglePackageId: input.typusDovSinglePackageId,
