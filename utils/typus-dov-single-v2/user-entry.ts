@@ -151,6 +151,8 @@ export function getWithdrawTx(input: {
 */
 export function getUnsubscribeTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string,
+    tailsStakingRegistry: string,
     typusFrameworkOriginPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
@@ -161,9 +163,11 @@ export function getUnsubscribeTx(input: {
     share?: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tds_user_entry::unsubscribe`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_unsubscribe`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
