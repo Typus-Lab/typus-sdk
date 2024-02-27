@@ -566,6 +566,8 @@ export function getWithdrawHarvestClaimTx(input: {
 */
 export function getNewBidTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    tailsStakingRegistry: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
@@ -584,9 +586,11 @@ export function getNewBidTx(input: {
     ) {
         let [coin] = input.tx.splitCoins(input.tx.gas, [input.tx.pure(input.premium_required)]);
         let result = input.tx.moveCall({
-            target: `${input.typusDovSinglePackageId}::tds_user_entry::new_bid`,
+            target: `${input.typusDovSinglePackageId}::tds_user_entry::public_new_bid`,
             typeArguments: input.typeArguments,
             arguments: [
+                input.tx.object(input.typusEcosystemVersion),
+                input.tx.object(input.tailsStakingRegistry),
                 input.tx.object(input.typusDovSingleRegistry),
                 input.tx.pure(input.index),
                 input.tx.makeMoveVec({ objects: [coin] }),
@@ -613,6 +617,8 @@ export function getNewBidTx(input: {
             target: `${input.typusDovSinglePackageId}::tds_user_entry::new_bid`,
             typeArguments: input.typeArguments,
             arguments: [
+                input.tx.object(input.typusEcosystemVersion),
+                input.tx.object(input.tailsStakingRegistry),
                 input.tx.object(input.typusDovSingleRegistry),
                 input.tx.pure(input.index),
                 input.tx.makeMoveVec({ objects: [coin] }),
