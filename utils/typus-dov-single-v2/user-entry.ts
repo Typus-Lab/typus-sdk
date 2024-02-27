@@ -251,6 +251,8 @@ export function getCompoundTx(input: {
 */
 export function getClaimTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string,
+    tailsStakingRegistry: string,
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
@@ -261,9 +263,11 @@ export function getClaimTx(input: {
     user: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tds_user_entry::claim`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_claim`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
