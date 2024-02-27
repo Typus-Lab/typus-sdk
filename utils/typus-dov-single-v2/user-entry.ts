@@ -59,9 +59,11 @@ export function getDepositTx(input: {
         input.tx.transferObjects([input.tx.object(result[1])], input.user);
     } else {
         let result = input.tx.moveCall({
-            target: `${input.typusDovSinglePackageId}::tails_staking::deposit`,
+            target: `${input.typusDovSinglePackageId}::tds_user_entry::deposit`,
             typeArguments: input.typeArguments,
             arguments: [
+                input.tx.object(input.typusEcosystemVersion),
+                input.tx.object(input.tailsStakingRegistry),
                 input.tx.object(input.typusDovSingleRegistry),
                 input.tx.pure(input.index),
                 input.tx.makeMoveVec({ objects: input.coins.map((coin) => input.tx.object(coin)) }),
@@ -96,6 +98,8 @@ export function getDepositTx(input: {
 */
 export function getWithdrawTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string,
+    tailsStakingRegistry: string,
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
@@ -107,9 +111,11 @@ export function getWithdrawTx(input: {
     share?: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tails_staking::withdraw`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_withdraw`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
@@ -155,7 +161,7 @@ export function getUnsubscribeTx(input: {
     share?: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tails_staking::unsubscribe`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::unsubscribe`,
         typeArguments: input.typeArguments,
         arguments: [
             input.tx.object(input.typusDovSingleRegistry),
@@ -195,7 +201,7 @@ export function getCompoundTx(input: {
     incentiveToken?: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tails_staking::compound`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::compound`,
         typeArguments: input.typeArguments,
         arguments: [
             input.tx.object(input.typusDovSingleRegistry),
@@ -397,7 +403,7 @@ export function getWithdrawHarvestClaimTx(input: {
 }) {
     let result = input.withdraw
         ? input.tx.moveCall({
-              target: `${input.typusDovSinglePackageId}::tails_staking::withdraw`,
+              target: `${input.typusDovSinglePackageId}::tds_user_entry::withdraw`,
               typeArguments: input.typeArguments,
               arguments: [
                   input.tx.object(input.typusDovSingleRegistry),
@@ -544,7 +550,7 @@ export function getNewBidTx(input: {
     ) {
         let [coin] = input.tx.splitCoins(input.tx.gas, [input.tx.pure(input.premium_required)]);
         let result = input.tx.moveCall({
-            target: `${input.typusDovSinglePackageId}::tails_staking::new_bid`,
+            target: `${input.typusDovSinglePackageId}::tds_user_entry::new_bid`,
             typeArguments: input.typeArguments,
             arguments: [
                 input.tx.object(input.typusDovSingleRegistry),
@@ -570,7 +576,7 @@ export function getNewBidTx(input: {
             arguments: [input.tx.object(balance)],
         });
         let result = input.tx.moveCall({
-            target: `${input.typusDovSinglePackageId}::tails_staking::new_bid`,
+            target: `${input.typusDovSinglePackageId}::tds_user_entry::new_bid`,
             typeArguments: input.typeArguments,
             arguments: [
                 input.tx.object(input.typusDovSingleRegistry),
