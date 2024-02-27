@@ -642,6 +642,8 @@ export function getNewBidTx(input: {
 */
 export function getExerciseTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    tailsStakingRegistry: string;
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
@@ -652,15 +654,18 @@ export function getExerciseTx(input: {
     user: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tds_user_entry::exercise`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_exercise`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
                 type: `${input.typusFrameworkOriginPackageId}::vault::TypusBidReceipt`,
                 objects: input.receipts.map((receipt) => input.tx.object(receipt)),
             }),
+            input.tx.pure(input.user),
         ],
     });
     input.tx.moveCall({
