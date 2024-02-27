@@ -299,6 +299,8 @@ export function getClaimTx(input: {
 */
 export function getHarvestTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string,
+    tailsStakingRegistry: string,
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
@@ -310,9 +312,11 @@ export function getHarvestTx(input: {
     incentiveToken?: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tds_user_entry::harvest`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_harvest`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
