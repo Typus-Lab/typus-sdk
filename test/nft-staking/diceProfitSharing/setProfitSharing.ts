@@ -23,6 +23,8 @@ const totalRewards = 8888_000000000;
 
 const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
 
+const NAME = "dice_profit_sharing";
+
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 (async () => {
@@ -70,6 +72,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
         gasBudget,
         config.SINGLE_COLLATERAL_PACKAGE,
         config.SINGLE_COLLATERAL_REGISTRY,
+        NAME,
         typeArgumentsRemove
     );
 
@@ -86,6 +89,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
         gasBudget,
         config.SINGLE_COLLATERAL_PACKAGE,
         config.SINGLE_COLLATERAL_REGISTRY,
+        NAME,
         levelProfits,
         sum,
         coins,

@@ -26,22 +26,44 @@ const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
     }
     // console.log(datas);
 
+    fs.writeFileSync(
+        "stake_holder",
+        JSON.stringify(
+            datas.map((d) => d.name.value),
+            null,
+            2
+        ),
+        "utf-8"
+    );
+
     const tails = await getTails(
         provider,
         datas.map((data) => data.objectId)
     );
     // console.log(tails);
 
-    const users = datas.map((d) => d.name.value);
-    console.log("users.length: " + users.length);
+    fs.writeFileSync(
+        "tails_level",
+        JSON.stringify(
+            tails.map((d) => d.level),
+            null,
+            2
+        ),
+        "utf-8"
+    );
 
-    console.log("total profit sharing: " + totalRewards);
+    // const users = datas.map((d) => d.name.value);
+    // console.log("users.length: " + users.length);
 
-    var level_users = [0, 0, 0, 0, 0, 0, 0];
-    tails.forEach((tail) => (level_users[Number(tail.level) - 1] += 1));
-    console.log("level_users: " + level_users);
+    // console.log("total profit sharing: " + totalRewards);
 
-    // calculation
-    const rewards = calculateLevelReward(totalRewards, levelShares, level_users).map((x) => x);
-    console.log("level_profits: ", rewards);
+    // var level_users = [0, 0, 0, 0, 0, 0, 0];
+    // tails.forEach((tail) => (level_users[Number(tail.level) - 1] += 1));
+    // console.log("level_users: " + level_users);
+
+    // // calculation
+    // const rewards = calculateLevelReward(totalRewards, levelShares, level_users).map((x) => x);
+    // console.log("level_profits: ", rewards);
 })();
+
+import * as fs from "fs";

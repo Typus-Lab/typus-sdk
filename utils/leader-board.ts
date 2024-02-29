@@ -213,7 +213,7 @@ export async function getExpLeaderBoard(startTimestamp: string, endTimestamp?: s
     const requestData = {
         sqlQuery: {
             sql: `SELECT S.distinct_id as address, SUM(E.exp_earn) as total_exp_earn\nFROM ExpUp E\nJOIN StakeNft S ON E.number = S.number\nWHERE  timestamp < ${_endTimestamp} && timestamp >= ${startTimestamp}\nGROUP BY address\nORDER BY total_exp_earn DESC;`,
-            size: 1000,
+            size: 100,
         },
     };
 

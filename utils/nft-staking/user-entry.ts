@@ -512,13 +512,19 @@ export async function consumeExpCoinStakedTx(
     return tx;
 }
 
-export async function getClaimProfitSharingTx(gasBudget: number, packageId: string, registry: string, typeArguments: string[]) {
+export async function getClaimProfitSharingTx(
+    gasBudget: number,
+    packageId: string,
+    registry: string,
+    name: string,
+    typeArguments: string[]
+) {
     let tx = new TransactionBlock();
 
     tx.moveCall({
         target: `${packageId}::tails_staking::claim_profit_sharing`,
         typeArguments,
-        arguments: [tx.object(registry)],
+        arguments: [tx.object(registry), tx.pure(name)],
     });
 
     tx.setGasBudget(gasBudget);
