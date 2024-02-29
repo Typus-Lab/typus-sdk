@@ -4,11 +4,15 @@ import { getRedeemTx as originGetRedeemTx } from "./user-entry";
 
 export function getDepositTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    tailsStakingRegistry: string;
     typusFrameworkOriginPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
-    mfudPackageId: string;
-    mfudRegistry: string;
+    swapPackageId: string;
+    swapModuleName: string;
+    swapTokenName: string;
+    swapRegistry: string;
     mfudAmount: string;
     typeArguments: string[];
     index: string;
@@ -17,17 +21,19 @@ export function getDepositTx(input: {
     coins: string[];
 }) {
     let mfud = input.tx.moveCall({
-        target: `${input.mfudPackageId}::mfud::mint`,
+        target: `${input.swapPackageId}::${input.swapTokenName}::mint`,
         arguments: [
-            input.tx.object(input.mfudRegistry),
+            input.tx.object(input.swapRegistry),
             input.tx.makeMoveVec({ objects: input.coins.map((id) => input.tx.object(id)) }),
             input.tx.pure(input.mfudAmount),
         ],
     });
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tails_staking::deposit`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_deposit`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({ objects: [mfud] }),
@@ -51,12 +57,16 @@ export function getDepositTx(input: {
 
 export function getWithdrawTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    tailsStakingRegistry: string;
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
-    mfudPackageId: string;
-    mfudRegistry: string;
+    swapPackageId: string;
+    swapModuleName: string;
+    swapTokenName: string;
+    swapRegistry: string;
     typeArguments: string[];
     index: string;
     receipts: string[] | TransactionObjectArgument[];
@@ -64,9 +74,11 @@ export function getWithdrawTx(input: {
     amount?: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tails_staking::withdraw`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_withdraw`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
@@ -83,8 +95,8 @@ export function getWithdrawTx(input: {
         arguments: [input.tx.object(result[0])],
     });
     let fud_coin = input.tx.moveCall({
-        target: `${input.mfudPackageId}::mfud::burn`,
-        arguments: [input.tx.object(input.mfudRegistry), input.tx.object(mfud_coin)],
+        target: `${input.swapPackageId}::${input.swapTokenName}::burn`,
+        arguments: [input.tx.object(input.swapRegistry), input.tx.object(mfud_coin)],
     });
     input.tx.transferObjects([input.tx.object(fud_coin)], input.user);
     input.tx.moveCall({
@@ -97,6 +109,8 @@ export function getWithdrawTx(input: {
 
 export function getUnsubscribeTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    tailsStakingRegistry: string;
     typusFrameworkOriginPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
@@ -107,9 +121,11 @@ export function getUnsubscribeTx(input: {
     amount?: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tails_staking::unsubscribe`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_unsubscribe`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
@@ -127,12 +143,16 @@ export function getUnsubscribeTx(input: {
 
 export function getCompoundTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    tailsStakingRegistry: string;
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
-    mfudPackageId: string;
-    mfudRegistry: string;
+    swapPackageId: string;
+    swapModuleName: string;
+    swapTokenName: string;
+    swapRegistry: string;
     typeArguments: string[];
     index: string;
     receipts: string[] | TransactionObjectArgument[];
@@ -140,9 +160,11 @@ export function getCompoundTx(input: {
     incentiveToken?: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tails_staking::compound`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_compound`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
@@ -154,7 +176,7 @@ export function getCompoundTx(input: {
     });
     if (input.incentiveToken) {
         input.typeArguments.push(input.incentiveToken);
-        if (input.incentiveToken == `${input.mfudPackageId}::mfud::MFUD`) {
+        if (input.incentiveToken == `${input.swapPackageId}::${input.swapTokenName}::${input.swapTokenName}`) {
             let receipt = input.tx.moveCall({
                 target: `0x1::option::destroy_some`,
                 typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`],
@@ -162,12 +184,16 @@ export function getCompoundTx(input: {
             });
             input.tx = getRedeemTx({
                 tx: input.tx,
+                typusEcosystemVersion: input.typusEcosystemVersion,
+                tailsStakingRegistry: input.tailsStakingRegistry,
                 typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
                 typusFrameworkPackageId: input.typusFrameworkPackageId,
                 typusDovSinglePackageId: input.typusDovSinglePackageId,
                 typusDovSingleRegistry: input.typusDovSingleRegistry,
-                mfudPackageId: input.mfudPackageId,
-                mfudRegistry: input.mfudRegistry,
+                swapPackageId: input.swapPackageId,
+                swapModuleName: input.swapModuleName,
+                swapTokenName: input.swapTokenName,
+                swapRegistry: input.swapRegistry,
                 typeArguments: input.typeArguments,
                 index: input.index,
                 receipts: [input.tx.object(receipt)],
@@ -181,6 +207,8 @@ export function getCompoundTx(input: {
             });
             input.tx = originGetRedeemTx({
                 tx: input.tx,
+                typusEcosystemVersion: input.typusEcosystemVersion,
+                tailsStakingRegistry: input.tailsStakingRegistry,
                 typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
                 typusFrameworkPackageId: input.typusFrameworkPackageId,
                 typusDovSinglePackageId: input.typusDovSinglePackageId,
@@ -200,21 +228,27 @@ export function getCompoundTx(input: {
 
 export function getClaimTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    tailsStakingRegistry: string;
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
-    mfudPackageId: string;
-    mfudRegistry: string;
+    swapPackageId: string;
+    swapModuleName: string;
+    swapTokenName: string;
+    swapRegistry: string;
     typeArguments: string[];
     index: string;
     receipts: string[] | TransactionObjectArgument[];
     user: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tds_user_entry::claim`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_claim`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
@@ -229,8 +263,8 @@ export function getClaimTx(input: {
         arguments: [input.tx.object(result[0])],
     });
     let fud_coin = input.tx.moveCall({
-        target: `${input.mfudPackageId}::mfud::burn`,
-        arguments: [input.tx.object(input.mfudRegistry), input.tx.object(mfud_coin)],
+        target: `${input.swapPackageId}::${input.swapTokenName}::burn`,
+        arguments: [input.tx.object(input.swapRegistry), input.tx.object(mfud_coin)],
     });
     input.tx.transferObjects([input.tx.object(fud_coin)], input.user);
     input.tx.moveCall({
@@ -243,12 +277,16 @@ export function getClaimTx(input: {
 
 export function getHarvestTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    tailsStakingRegistry: string;
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
-    mfudPackageId: string;
-    mfudRegistry: string;
+    swapPackageId: string;
+    swapModuleName: string;
+    swapTokenName: string;
+    swapRegistry: string;
     typeArguments: string[];
     index: string;
     receipts: string[] | TransactionObjectArgument[];
@@ -256,9 +294,11 @@ export function getHarvestTx(input: {
     incentiveToken?: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tds_user_entry::harvest`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_harvest`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
@@ -273,13 +313,13 @@ export function getHarvestTx(input: {
         arguments: [input.tx.object(result[0])],
     });
     let fud_coin = input.tx.moveCall({
-        target: `${input.mfudPackageId}::mfud::burn`,
-        arguments: [input.tx.object(input.mfudRegistry), input.tx.object(mfud_coin)],
+        target: `${input.swapPackageId}::${input.swapTokenName}::burn`,
+        arguments: [input.tx.object(input.swapRegistry), input.tx.object(mfud_coin)],
     });
     input.tx.transferObjects([input.tx.object(fud_coin)], input.user);
     if (input.incentiveToken) {
         input.typeArguments.push(input.incentiveToken);
-        if (input.incentiveToken == `${input.mfudPackageId}::mfud::MFUD`) {
+        if (input.incentiveToken == `${input.swapPackageId}::${input.swapTokenName}::${input.swapTokenName}`) {
             let receipt = input.tx.moveCall({
                 target: `0x1::option::destroy_some`,
                 typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`],
@@ -287,12 +327,16 @@ export function getHarvestTx(input: {
             });
             input.tx = getRedeemTx({
                 tx: input.tx,
+                typusEcosystemVersion: input.typusEcosystemVersion,
+                tailsStakingRegistry: input.tailsStakingRegistry,
                 typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
                 typusFrameworkPackageId: input.typusFrameworkPackageId,
                 typusDovSinglePackageId: input.typusDovSinglePackageId,
                 typusDovSingleRegistry: input.typusDovSingleRegistry,
-                mfudPackageId: input.mfudPackageId,
-                mfudRegistry: input.mfudRegistry,
+                swapPackageId: input.swapPackageId,
+                swapModuleName: input.swapModuleName,
+                swapTokenName: input.swapTokenName,
+                swapRegistry: input.swapRegistry,
                 typeArguments: input.typeArguments,
                 index: input.index,
                 receipts: [input.tx.object(receipt)],
@@ -306,6 +350,8 @@ export function getHarvestTx(input: {
             });
             input.tx = originGetRedeemTx({
                 tx: input.tx,
+                typusEcosystemVersion: input.typusEcosystemVersion,
+                tailsStakingRegistry: input.tailsStakingRegistry,
                 typusFrameworkOriginPackageId: input.typusFrameworkOriginPackageId,
                 typusFrameworkPackageId: input.typusFrameworkPackageId,
                 typusDovSinglePackageId: input.typusDovSinglePackageId,
@@ -328,21 +374,27 @@ export function getHarvestTx(input: {
 
 export function getRedeemTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    tailsStakingRegistry: string;
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
-    mfudPackageId: string;
-    mfudRegistry: string;
+    swapPackageId: string;
+    swapModuleName: string;
+    swapTokenName: string;
+    swapRegistry: string;
     typeArguments: string[];
     index: string;
     receipts: string[] | TransactionObjectArgument[];
     user: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tds_user_entry::redeem`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_redeem`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
@@ -357,8 +409,8 @@ export function getRedeemTx(input: {
         arguments: [input.tx.object(result[0])],
     });
     let fud_coin = input.tx.moveCall({
-        target: `${input.mfudPackageId}::mfud::burn`,
-        arguments: [input.tx.object(input.mfudRegistry), input.tx.object(mfud_coin)],
+        target: `${input.swapPackageId}::${input.swapTokenName}::burn`,
+        arguments: [input.tx.object(input.swapRegistry), input.tx.object(mfud_coin)],
     });
     input.tx.transferObjects([input.tx.object(fud_coin)], input.user);
     input.tx.moveCall({
@@ -371,10 +423,14 @@ export function getRedeemTx(input: {
 
 export function getNewBidTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    tailsStakingRegistry: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
-    mfudPackageId: string;
-    mfudRegistry: string;
+    swapPackageId: string;
+    swapModuleName: string;
+    swapTokenName: string;
+    swapRegistry: string;
     typeArguments: string[];
     index: string;
     coins: string[];
@@ -383,17 +439,19 @@ export function getNewBidTx(input: {
     user: string;
 }) {
     let mfud = input.tx.moveCall({
-        target: `${input.mfudPackageId}::mfud::mint`,
+        target: `${input.swapPackageId}::${input.swapTokenName}::mint`,
         arguments: [
-            input.tx.object(input.mfudRegistry),
+            input.tx.object(input.swapRegistry),
             input.tx.makeMoveVec({ objects: input.coins.map((id) => input.tx.object(id)) }),
             input.tx.pure(input.premium_required),
         ],
     });
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tails_staking::new_bid`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_new_bid`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({ objects: [mfud] }),
@@ -408,21 +466,29 @@ export function getNewBidTx(input: {
 
 export function getExerciseTx(input: {
     tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    tailsStakingRegistry: string;
+    typusPointRegistry: string;
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
-    mfudPackageId: string;
-    mfudRegistry: string;
+    swapPackageId: string;
+    swapModuleName: string;
+    swapTokenName: string;
+    swapRegistry: string;
     typeArguments: string[];
     index: string;
     receipts: string[] | TransactionObjectArgument[];
     user: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tds_user_entry::exercise`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_exercise`,
         typeArguments: input.typeArguments,
         arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
+            input.tx.object(input.typusPointRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
@@ -437,8 +503,8 @@ export function getExerciseTx(input: {
         arguments: [input.tx.object(result[0])],
     });
     let fud_coin = input.tx.moveCall({
-        target: `${input.mfudPackageId}::mfud::burn`,
-        arguments: [input.tx.object(input.mfudRegistry), input.tx.object(mfud_coin)],
+        target: `${input.swapPackageId}::${input.swapTokenName}::burn`,
+        arguments: [input.tx.object(input.swapRegistry), input.tx.object(mfud_coin)],
     });
     input.tx.transferObjects([input.tx.object(fud_coin)], input.user);
 
@@ -450,8 +516,10 @@ export function getRebateTx(input: {
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
-    mfudPackageId: string;
-    mfudRegistry: string;
+    swapPackageId: string;
+    swapModuleName: string;
+    swapTokenName: string;
+    swapRegistry: string;
     typeArgument: string;
     user: string;
 }) {
@@ -471,8 +539,8 @@ export function getRebateTx(input: {
         arguments: [input.tx.object(balance)],
     });
     let fud_coin = input.tx.moveCall({
-        target: `${input.mfudPackageId}::mfud::burn`,
-        arguments: [input.tx.object(input.mfudRegistry), input.tx.object(mfud_coin)],
+        target: `${input.swapPackageId}::${input.swapTokenName}::burn`,
+        arguments: [input.tx.object(input.swapRegistry), input.tx.object(mfud_coin)],
     });
     input.tx.transferObjects([input.tx.object(fud_coin)], input.user);
 

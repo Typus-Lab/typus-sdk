@@ -644,6 +644,7 @@ export function getExerciseTx(input: {
     tx: TransactionBlock;
     typusEcosystemVersion: string;
     tailsStakingRegistry: string;
+    typusPointRegistry: string;
     typusFrameworkOriginPackageId: string;
     typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
@@ -659,6 +660,7 @@ export function getExerciseTx(input: {
         arguments: [
             input.tx.object(input.typusEcosystemVersion),
             input.tx.object(input.tailsStakingRegistry),
+            input.tx.object(input.typusPointRegistry),
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
             input.tx.makeMoveVec({
