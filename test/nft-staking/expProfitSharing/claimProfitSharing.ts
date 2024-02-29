@@ -14,7 +14,7 @@ const provider = new SuiClient({
 
 const gasBudget = 100000000;
 
-const NAME = "dice_profit";
+const NAME = "exp_profit";
 
 (async () => {
     const address = keypair.toSuiAddress();

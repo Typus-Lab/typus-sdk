@@ -1,9 +1,10 @@
-import config from "../../../mainnet.json";
+import config from "../../../config_v2.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getTails } from "../../../utils/typus-nft/fetch";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getAllocateProfitSharingTx, getSetProfitSharingTx, getRemoveProfitSharingTx } from "../../../utils/nft-staking/authorized-entry";
 import { calculateLevelReward } from "../../../utils/tails-exp-dice/fetch";
+import { getProfitSharing } from "../../../utils/tails-exp-dice/fetch";
 
 import mnemonic from "../../../mnemonic.json";
 
@@ -13,13 +14,8 @@ const provider = new SuiClient({
 });
 const gasBudget = 100000000;
 
-// const typeArgumentsRemove = ["0x2::sui::SUI"];
-// const typeArguments = ["0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1::fud::FUD"];
-// const totalRewards = 6666666666_00000;
-
-const typeArgumentsRemove = ["0x2::sui::SUI"];
 const typeArguments = ["0x2::sui::SUI"];
-const totalRewards = 8888_000000000;
+const totalRewards = 1_000000000;
 
 const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
 
@@ -30,6 +26,10 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 (async () => {
     const address = keypair.toSuiAddress();
     console.log(address);
+
+    let lastRound = await getProfitSharing(provider, config.diceProfitSharing);
+    // console.log(lastRound.tokenType);
+    const typeArgumentsRemove = [lastRound.tokenType];
 
     var result = await provider.getDynamicFields({
         parentId: config.NFT_TABLE,
