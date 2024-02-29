@@ -628,9 +628,10 @@ export function getWithdrawProfitStrategyTx(
     strategy_index: string,
     mfudPackageId: string,
     mfudRegistry: string,
-    sender: string
+    sender: string,
+    txBlock?: TransactionBlock
 ) {
-    let tx = new TransactionBlock();
+    let tx = txBlock ? txBlock : new TransactionBlock();
 
     let d_token = tx.moveCall({
         target: `${packageId}::auto_bid::withdraw_profit`,
