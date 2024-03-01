@@ -509,6 +509,7 @@ export interface DepositShare {
     warmupSubVaultUserShare: string;
     premiumSubVaultUserShare: string;
     incentiveShare: string;
+    point: string;
 }
 export async function getDepositShares(
     provider: SuiClient,
@@ -541,7 +542,7 @@ export async function getDepositShares(
         return map;
     }, {});
     reader.readVec((reader, i) => {
-        reader.read8();
+        reader.read16();
         let index = reader.read64();
         let activeSubVaultUserShare = reader.read64();
         let deactivatingSubVaultUserShare = reader.read64();
@@ -549,6 +550,7 @@ export async function getDepositShares(
         let warmupSubVaultUserShare = reader.read64();
         let premiumSubVaultUserShare = reader.read64();
         let incentiveShare = reader.read64();
+        let point = reader.read64();
         result[index] = {
             index,
             activeSubVaultUserShare,
@@ -557,6 +559,7 @@ export async function getDepositShares(
             warmupSubVaultUserShare,
             premiumSubVaultUserShare,
             incentiveShare,
+            point,
         } as DepositShare;
     });
 
@@ -578,6 +581,7 @@ export interface BidVault {
 export interface BidShare {
     bidVault: BidVault;
     share: string;
+    point: string;
 }
 export async function getMyBids(
     provider: SuiClient,
@@ -633,6 +637,7 @@ export async function getMyBids(
         result[bidVault.index + "-" + bidVault.id] = {
             bidVault,
             share: reader.read64(),
+            point: reader.read64(),
         } as BidShare;
     });
 
