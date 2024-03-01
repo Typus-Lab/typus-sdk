@@ -4,7 +4,7 @@ export async function getSetProfitSharingTx(
     gasBudget: number,
     packageId: string,
     registry: string,
-    name: string,
+    name: "dice_profit_sharing" | "exp_profit_sharing",
     level_profits: number[],
     amount: number,
     coins: string[],
@@ -88,7 +88,7 @@ export async function getRemoveProfitSharingTx(
     gasBudget: number,
     packageId: string,
     registry: string,
-    name: string,
+    name: "dice_profit_sharing" | "exp_profit_sharing",
     typeArgumentsRemove: string[]
 ) {
     let tx = new TransactionBlock();

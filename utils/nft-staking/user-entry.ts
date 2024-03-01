@@ -516,7 +516,7 @@ export async function getClaimProfitSharingTx(
     gasBudget: number,
     packageId: string,
     registry: string,
-    name: string,
+    name: "dice_profit" | "exp_profit",
     typeArguments: string[]
 ) {
     let tx = new TransactionBlock();
