@@ -201,7 +201,7 @@ export interface ExpLeaderBoard {
     owner: string | undefined;
 }
 
-export async function getExpLeaderBoardWithOwner(expLeaderBoard: ExpLeaderBoard[], ownerMap: Map<string, string>) {
+export function getExpLeaderBoardWithOwner(expLeaderBoard: ExpLeaderBoard[], ownerMap: Map<string, string>) {
     return expLeaderBoard.map((l) => {
         l.owner = ownerMap.get(l.nft_id);
         return l;
@@ -258,8 +258,3 @@ export async function getExpLeaderBoard(startTimestamp: string, endTimestamp?: s
 
     return data.result.rows as ExpLeaderBoard[];
 }
-
-(async () => {
-    let res = await getExpLeaderBoard("1709539200", "1709625600");
-    console.log(res);
-})();
