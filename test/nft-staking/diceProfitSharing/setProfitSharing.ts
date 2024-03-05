@@ -7,6 +7,7 @@ import { calculateLevelReward } from "../../../utils/tails-exp-dice/fetch";
 import { getProfitSharing } from "../../../utils/tails-exp-dice/fetch";
 
 import mnemonic from "../../../mnemonic.json";
+import { getNftTable } from "../../../utils/nft-staking/fetch";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 const provider = new SuiClient({
@@ -31,19 +32,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     // console.log(lastRound.tokenType);
     const typeArgumentsRemove = [lastRound.tokenType];
 
-    var result = await provider.getDynamicFields({
-        parentId: config.NFT_TABLE,
-    });
-
-    var datas = result.data;
-
-    while (result.hasNextPage) {
-        result = await provider.getDynamicFields({
-            parentId: config.NFT_TABLE,
-            cursor: result.nextCursor,
-        });
-        datas = datas.concat(result.data);
-    }
+    const datas = await getNftTable(provider, config.NFT_TABLE);
     // console.log(datas);
 
     const tails = await getTails(

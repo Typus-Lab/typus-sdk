@@ -195,12 +195,20 @@ interface LeaderBoard {
     score: number;
 }
 
-interface ExpEarn {
-    address: string;
+export interface ExpLeaderBoard {
+    nft_id: string;
     total_exp_earn: number;
+    owner: string | undefined;
 }
 
-export async function getExpLeaderBoard(startTimestamp: string, endTimestamp?: string): Promise<ExpEarn[]> {
+export async function getExpLeaderBoardWithOwner(expLeaderBoard: ExpLeaderBoard[], ownerMap: Map<string, string>) {
+    return expLeaderBoard.map((l) => {
+        l.owner = ownerMap.get(l.nft_id);
+        return l;
+    });
+}
+
+export async function getExpLeaderBoard(startTimestamp: string, endTimestamp?: string): Promise<ExpLeaderBoard[]> {
     const apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
 
     const headers = {
@@ -208,25 +216,33 @@ export async function getExpLeaderBoard(startTimestamp: string, endTimestamp?: s
         "Content-Type": "application/json",
     };
 
-    const _endTimestamp = endTimestamp ? endTimestamp : "99999999999";
+    const _endTimestamp = endTimestamp ? endTimestamp : "9999999999";
 
     const requestData = {
         sqlQuery: {
-            sql: `SELECT S.distinct_id AS address, SUM(E.exp_earn) AS total_exp_earn
-                    FROM ExpUp E
-                    JOIN (
-                        SELECT number, distinct_id
-                        FROM StakeNft
-                        WHERE (number, timestamp) IN (
-                            SELECT number, MAX(timestamp) AS max_timestamp
-                            FROM StakeNft
-                            GROUP BY number
-                        )
-                    ) S ON E.number = S.number
-                    WHERE E.timestamp >= ${startTimestamp} && E.timestamp < ${endTimestamp}
-                    GROUP BY address
-                    ORDER BY total_exp_earn DESC;`,
-            size: 100,
+            // sql: `SELECT S.distinct_id AS owner, SUM(E.exp_earn) AS total_exp_earn
+            //         FROM ExpUp E
+            //         JOIN (
+            //             SELECT number, distinct_id
+            //             FROM StakeNft
+            //             WHERE (number, timestamp) IN (
+            //                 SELECT number, MAX(timestamp) AS max_timestamp
+            //                 FROM StakeNft
+            //                 GROUP BY number
+            //             )
+            //         ) S ON E.number = S.number
+            //         WHERE E.timestamp >= ${startTimestamp} && E.timestamp < ${_endTimestamp}
+            //         GROUP BY owner
+            //         ORDER BY total_exp_earn DESC;`,
+
+            sql: `
+                SELECT E.nft_id as nft_id, SUM(E.exp_earn) as total_exp_earn
+                FROM ExpUp E
+                WHERE E.timestamp >= ${startTimestamp} && E.timestamp < ${_endTimestamp}
+                GROUP BY nft_id
+                ORDER BY total_exp_earn DESC;
+            `,
+            size: 200,
         },
     };
 
@@ -240,10 +256,10 @@ export async function getExpLeaderBoard(startTimestamp: string, endTimestamp?: s
 
     let data = await response.json();
 
-    return data.result.rows as ExpEarn[];
+    return data.result.rows as ExpLeaderBoard[];
 }
 
-// (async () => {
-//     let res = await getExpLeaderBoard("1709539200", "1709625600");
-//     console.log(res);
-// })();
+(async () => {
+    let res = await getExpLeaderBoard("1709539200", "1709625600");
+    console.log(res);
+})();

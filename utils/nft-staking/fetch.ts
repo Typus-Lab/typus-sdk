@@ -26,6 +26,30 @@ export async function getUserStake(provider: SuiClient, nft_table: string, user:
     return tails;
 }
 
+interface Stake {
+    owner: string;
+    nft_id: string;
+}
+
+export async function getNftTable(provider: SuiClient, nft_table: string) {
+    var result = await provider.getDynamicFields({
+        parentId: nft_table,
+    });
+
+    var datas = result.data;
+
+    while (result.hasNextPage) {
+        result = await provider.getDynamicFields({
+            parentId: nft_table,
+            cursor: result.nextCursor,
+        });
+        datas = datas.concat(result.data);
+    }
+    // console.log(datas);
+
+    return datas;
+}
+
 export async function getDailyAttendExp(provider: SuiClient, dailyAttendExp: string) {
     const object = await provider.getObject({
         id: dailyAttendExp,
