@@ -242,3 +242,8 @@ export async function getExpLeaderBoard(startTimestamp: string, endTimestamp?: s
 
     return data.result.rows as ExpEarn[];
 }
+
+// (async () => {
+//     let res = await getExpLeaderBoard("1709539200", "1709625600");
+//     console.log(res);
+// })();
