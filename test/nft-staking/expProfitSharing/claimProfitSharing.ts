@@ -1,5 +1,5 @@
 import "../../load_env";
-import config_v2 from "../../../config_v2.json";
+import config_v2 from "../../../mainnet.json";
 import { getClaimProfitSharingTx } from "../../../utils/nft-staking/user-entry";
 import { getUserStake } from "../../../utils/nft-staking/fetch";
 import { getFullnodeUrl, SuiClient } from "@mysten/sui.js/client";
@@ -23,7 +23,7 @@ const NAME = "exp_profit";
     let res_1 = await getUserStake(provider, config_v2.NFT_TABLE, address);
 
     // Already Set
-    let res_2 = await getProfitSharing(provider, config_v2.diceProfitSharing);
+    let res_2 = await getProfitSharing(provider, config_v2.expProfitSharing);
     console.log(res_2);
 
     console.log(`Able to claim ${NAME}: ` + res_1?.u64_padding.get(NAME)); // null
