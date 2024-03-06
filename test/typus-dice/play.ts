@@ -1,22 +1,10 @@
 import "../load_env";
 import config from "../../dice_config.json";
-import { waitHistory, getPlaygrounds, parseHistory } from "../../utils/typus-dice/fetch";
+import { getPlaygrounds } from "../../utils/typus-dice/fetch";
 import { newGamePlayGuessTx } from "../../utils/typus-dice/user-entry";
-import { SuiClient, SuiHTTPTransport, getFullnodeUrl } from "@mysten/sui.js/client";
+import { SuiClient, SuiHTTPTransport } from "@mysten/sui.js/client";
 import { WebSocket } from "ws";
-import { simulateGame } from "../../utils/tails-exp-dice/view-function";
 import { getDrawResult } from "../../utils/typus-dice/api";
-
-// const provider = new SuiClient({
-//     url: config.RPC_ENDPOINT,
-// });
-
-// const client = new SuiClient({
-//     transport:
-//         network in Network && network === Network.MAINNET ? new SentryHttpTransport(networkUrl) : new SuiHTTPTransport({ url: networkUrl }),
-// });
-
-// const provider = new SuiClient({ url: getFullnodeUrl("testnet") });
 
 const provider = new SuiClient({
     transport: new SuiHTTPTransport({

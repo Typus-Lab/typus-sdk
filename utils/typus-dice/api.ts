@@ -1,4 +1,4 @@
-const apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/draw-result-1";
+const apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/draw-result-2";
 
 export async function getDrawResult(
     network: "mainnet" | "testnet",
