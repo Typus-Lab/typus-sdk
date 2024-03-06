@@ -4,6 +4,7 @@ export async function getSetProfitSharingTx(
     gasBudget: number,
     packageId: string,
     registry: string,
+    name: "dice_profit_sharing" | "exp_profit_sharing",
     level_profits: number[],
     amount: number,
     coins: string[],
@@ -19,7 +20,7 @@ export async function getSetProfitSharingTx(
         tx.moveCall({
             target: `${packageId}::tails_staking::set_profit_sharing`,
             typeArguments,
-            arguments: [tx.object(registry), tx.pure(level_profits), input_coin],
+            arguments: [tx.object(registry), tx.pure(name), tx.pure(level_profits), input_coin],
         });
     } else {
         const coin = coins.pop()!;
@@ -36,7 +37,7 @@ export async function getSetProfitSharingTx(
         tx.moveCall({
             target: `${packageId}::tails_staking::set_profit_sharing`,
             typeArguments,
-            arguments: [tx.object(registry), tx.pure(level_profits), input_coin],
+            arguments: [tx.object(registry), tx.pure(name), tx.pure(level_profits), input_coin],
         });
     }
 
@@ -63,13 +64,39 @@ export async function getAllocateProfitSharingTx(
     return tx;
 }
 
-export async function getRemoveProfitSharingTx(gasBudget: number, packageId: string, registry: string, typeArgumentsRemove: string[]) {
+export async function getAllocateProfitSharingValueTx(
+    gasBudget: number,
+    packageId: string,
+    registry: string,
+    users: string[],
+    values: string[],
+    typeArguments: string[]
+) {
+    let tx = new TransactionBlock();
+
+    tx.moveCall({
+        target: `${packageId}::tails_staking::allocate_profit_sharing_w_value`,
+        typeArguments,
+        arguments: [tx.object(registry), tx.pure(users), tx.pure(values)],
+    });
+
+    tx.setGasBudget(gasBudget);
+    return tx;
+}
+
+export async function getRemoveProfitSharingTx(
+    gasBudget: number,
+    packageId: string,
+    registry: string,
+    name: "dice_profit_sharing" | "exp_profit_sharing",
+    typeArgumentsRemove: string[]
+) {
     let tx = new TransactionBlock();
 
     tx.moveCall({
         target: `${packageId}::tails_staking::remove_profit_sharing`,
         typeArguments: typeArgumentsRemove,
-        arguments: [tx.object(registry)],
+        arguments: [tx.object(registry), tx.pure(name)],
     });
 
     tx.setGasBudget(gasBudget);

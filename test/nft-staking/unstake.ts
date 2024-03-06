@@ -21,6 +21,7 @@ const gasBudget = 100000000;
     });
 
     const kiosks = await kioskClient.getOwnedKiosks({ address });
+    const typeArguments = ["0x2::sui::SUI"];
 
     if (kiosks.kioskOwnerCaps.length > 0) {
         let kioskOwnerCap = kiosks.kioskOwnerCaps.filter((k) => !k.isPersonal!)[0];
@@ -30,7 +31,8 @@ const gasBudget = 100000000;
             config.SINGLE_COLLATERAL_PACKAGE,
             config.SINGLE_COLLATERAL_REGISTRY,
             kioskOwnerCap.kioskId,
-            kioskOwnerCap.objectId
+            kioskOwnerCap.objectId,
+            typeArguments
         );
 
         let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });

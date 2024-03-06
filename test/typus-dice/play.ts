@@ -1,22 +1,10 @@
 import "../load_env";
 import config from "../../dice_config.json";
-import { waitHistory, getPlaygrounds, parseHistory } from "../../utils/tails-exp-dice/fetch";
-import { newGamePlayGuessTx } from "../../utils/tails-exp-dice/user-entry";
-import { SuiClient, SuiHTTPTransport, getFullnodeUrl } from "@mysten/sui.js/client";
+import { getPlaygrounds } from "../../utils/typus-dice/fetch";
+import { newGamePlayGuessTx } from "../../utils/typus-dice/user-entry";
+import { SuiClient, SuiHTTPTransport } from "@mysten/sui.js/client";
 import { WebSocket } from "ws";
-import { simulateGame } from "../../utils/tails-exp-dice/view-function";
-import { getDrawResult } from "../../utils/tails-exp-dice/api";
-
-// const provider = new SuiClient({
-//     url: config.RPC_ENDPOINT,
-// });
-
-// const client = new SuiClient({
-//     transport:
-//         network in Network && network === Network.MAINNET ? new SentryHttpTransport(networkUrl) : new SuiHTTPTransport({ url: networkUrl }),
-// });
-
-// const provider = new SuiClient({ url: getFullnodeUrl("testnet") });
+import { getDrawResult } from "../../utils/typus-dice/api";
 
 const provider = new SuiClient({
     transport: new SuiHTTPTransport({
@@ -29,8 +17,8 @@ import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
 const gasBudget = 50000000;
-const index = 1;
-const amount = "1000000000000";
+const index = 0;
+const amount = "10000000";
 const guess_1 = "5000";
 const larger_than_1 = true;
 const guess_2 = "5000";
@@ -40,7 +28,7 @@ const larger_than_2 = true;
     const address = keypair.toSuiAddress();
     console.log(address);
 
-    const playgrounds = await getPlaygrounds(provider, config.REGISTRY);
+    const playgrounds = await getPlaygrounds(provider, config.TYPUS_DICE_REGISTRY);
     const playground = playgrounds[index];
     console.log(playground);
 
@@ -52,6 +40,7 @@ const larger_than_2 = true;
         gasBudget,
         config.PACKAGE,
         [coinType],
+        config.TYPUS_DICE_REGISTRY,
         config.REGISTRY,
         index.toString(),
         coins,
@@ -74,7 +63,7 @@ const larger_than_2 = true;
     const drawResult = await getDrawResult(
         "testnet",
         config.PACKAGE,
-        config.REGISTRY,
+        config.TYPUS_DICE_REGISTRY,
         index.toString(),
         amount,
         guess_1,
