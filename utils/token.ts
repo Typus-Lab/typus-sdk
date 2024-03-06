@@ -58,6 +58,8 @@ export function assetToDecimal(asset: string): number | undefined {
             return 6;
         case "USDT":
             return 6;
+        case "USDY":
+            return 6;
         case "CETUS":
             return 9;
         case "TURBOS":
