@@ -115,7 +115,7 @@ export async function getTailsIds(kioskClient: KioskClient, nftConfig, address: 
     let Tails: TailsId[] = [];
 
     for (let kioskOwnerCap of kiosks.kioskOwnerCaps) {
-        const res = await kioskClient.getKiosk({ id: kioskOwnerCap.kioskId, options: { withKioskFields: true, withObjects: true } });
+        const res = await kioskClient.getKiosk({ id: kioskOwnerCap.kioskId });
         // console.log(res);
         const tails: TailsId[] = res.items
             .filter((item) => item.type == `${nftConfig.NFT_PACKAGE}::typus_nft::Tails`)
