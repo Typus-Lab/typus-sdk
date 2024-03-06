@@ -114,7 +114,12 @@ export async function getSwitchNftTx(
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::claim_profit_sharing`,
         typeArguments,
-        arguments: [tx.object(registry)],
+        arguments: [tx.object(registry), tx.pure("dice_profit")],
+    });
+    tx.moveCall({
+        target: `${nftPackageId}::tails_staking::claim_profit_sharing`,
+        typeArguments,
+        arguments: [tx.object(registry), tx.pure("exp_profit")],
     });
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::switch_nft`,
@@ -185,7 +190,12 @@ export async function getUnstakeNftTx(
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::claim_profit_sharing`,
         typeArguments,
-        arguments: [tx.object(registry)],
+        arguments: [tx.object(registry), tx.pure("dice_profit")],
+    });
+    tx.moveCall({
+        target: `${nftPackageId}::tails_staking::claim_profit_sharing`,
+        typeArguments,
+        arguments: [tx.object(registry), tx.pure("exp_profit")],
     });
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::unstake_nft`,
