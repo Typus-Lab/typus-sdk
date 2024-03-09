@@ -26,6 +26,10 @@ export function typeArgToAsset(typeArg: string): string {
             return "FUD";
         case "0xf325ce1300e8dac124071d3152c5c5ee6174914f8bc2161e88329cf579246efc":
             return "AFSUI";
+        case "0x7016aae72cfc67f2fadf55769c0a7dd54291a583b63051a5ed71081cce836ac6":
+            return "SCA";
+        case "0x960b531667636f39e85867775f52f6b1f220a058c4de786905bdf761e06a56bb":
+            return "USDY";
         default:
             if (typeArgs[2] == "BTC") {
                 return "WBTC";
@@ -79,6 +83,8 @@ export function assetToDecimal(asset: string): number | undefined {
         case "AFSUI":
             return 9;
         case "NAVX":
+            return 9;
+        case "SCA":
             return 9;
     }
 }
