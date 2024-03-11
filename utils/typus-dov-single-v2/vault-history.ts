@@ -186,9 +186,9 @@ export async function getVaultHistoryFromDB(index?: string, startTs?: string, en
             let vaultHistory: VaultHistory = {
                 vaultIndex: index,
                 round: round,
-                ActivationDate: new Date(Number(data.activation_date) / 1000),
+                ActivationDate: new Date(Number(data.activation_date)),
                 MaxSize: data.max_size,
-                SettlementTime: new Date(Number(data.settle_date) / 1000),
+                SettlementTime: new Date(Number(data.settle_date)),
                 StrikePrice: data.strikes || undefined,
                 SettlePrice: data.settle_price,
                 Return: data.return,
