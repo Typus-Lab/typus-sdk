@@ -1,4 +1,4 @@
-import config from "../../../config_v2.json";
+import config from "../../../mainnet.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getTails } from "../../../utils/typus-nft/fetch";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
@@ -16,7 +16,7 @@ const provider = new SuiClient({
 const gasBudget = 100000000;
 
 const typeArguments = ["0x2::sui::SUI"];
-const totalRewards = 1_000000000;
+const totalRewards = 3333_000000000;
 
 const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
 

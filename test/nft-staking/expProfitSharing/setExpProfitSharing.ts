@@ -20,7 +20,7 @@ const gasBudget = 100000000;
 
 const typeArgumentsRemove = ["0x2::sui::SUI"];
 const typeArguments = ["0x2::sui::SUI"];
-const totalRewards = 1_000000000;
+const totalRewards = 3333_000000000;
 
 const NAME = "exp_profit_sharing";
 
@@ -33,16 +33,16 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     const now: number = Math.floor(new Date().getTime() / 1000);
     const secsInHour = 60 * 60;
     const secsInDay = 60 * 60 * 24;
-    const thisMonday8AM = now - (now % (7 * secsInDay)) + 8 * secsInHour - secsInDay * 3;
-    console.log(thisMonday8AM);
+    const lastMonday8AM = now - (now % (7 * secsInDay)) + 8 * secsInHour - secsInDay * 3;
+    console.log(lastMonday8AM);
 
     const datas = await getNftTable(provider, config.NFT_TABLE);
 
     // datas to owner map
     const ownerMap = datas.reduce((map, d) => map.set(d.objectId, d.name.value as string), new Map<string, string>());
-    console.log(ownerMap);
+    // console.log(ownerMap);
 
-    const expLeaderBoard = await getExpLeaderBoard((thisMonday8AM - 7 * secsInDay).toString(), thisMonday8AM.toString());
+    const expLeaderBoard = await getExpLeaderBoard(lastMonday8AM.toString(), (lastMonday8AM + 7 * secsInDay).toString());
     var expLeaderBoardWithOwner = await getExpLeaderBoardWithOwner(expLeaderBoard, ownerMap);
     // filter unstake
     expLeaderBoardWithOwner = expLeaderBoardWithOwner.filter((e) => e.owner);
@@ -110,7 +110,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     // STEP 3: Allocate
 
-    if (leaderboard.length == 100) {
+    if (leaderboard.length >= 100) {
         const users: string[] = [];
         const values: string[] = [];
         var total = 0;
