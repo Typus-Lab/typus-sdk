@@ -149,7 +149,7 @@ export async function parseVaultHistory(
     return result;
 }
 
-export async function getVaultHistoryFromDB(index?: string, startTs?: string, endTs?: string) {
+export async function getVaultHistoryFromDB(index?: string, startTs?: string, endTs?: string, rounds?: number[]) {
     const apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/vault-history";
 
     const queryParams = new URLSearchParams();
@@ -167,7 +167,14 @@ export async function getVaultHistoryFromDB(index?: string, startTs?: string, en
     }
 
     // Append the query parameters to the URL
-    const apiUrlWithParams = `${apiUrl}?${queryParams.toString()}`;
+    var apiUrlWithParams = `${apiUrl}?${queryParams.toString()}`;
+
+    if (rounds) {
+        const _rounds = JSON.stringify(rounds);
+        apiUrlWithParams += `&rounds=${_rounds}`;
+    }
+
+    console.log(apiUrlWithParams);
 
     let response = await fetch(apiUrlWithParams, {
         method: "GET",
