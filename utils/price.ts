@@ -64,12 +64,18 @@ export async function getPythLatestPrice() {
 export async function getLatestPriceUSD() {
     let prices = (await getPythLatestPrice())!;
 
-    for (let pair of ["SUIFUD", "SUIBUCK", "SUIAFSUI"]) {
+    for (let pair of ["SUIFUD", "SUIBUCK", "SUIAFSUI", "SCASUI"]) {
         const currentTimestampInSeconds: number = Math.floor(new Date().getTime() / 1000);
         const minuteAgo = currentTimestampInSeconds - 300;
         let res: any[] = await getPairPrices(pair, minuteAgo.toString(), currentTimestampInSeconds.toString());
         let price = res.at(-1).price;
-        prices.set(pair.replace("SUI", ""), prices.get("SUI")! / Number(price));
+        let result;
+        if (pair.startsWith("SUI")) {
+            result = prices.get("SUI")! / Number(price);
+        } else {
+            result = prices.get("SUI")! * Number(price);
+        }
+        prices.set(pair.replace("SUI", ""), result);
     }
 
     return prices;
