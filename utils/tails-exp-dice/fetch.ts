@@ -113,6 +113,7 @@ export async function waitHistory(provider: SuiClient, dicePackage: string, onMe
 export async function parseHistory(datas, playgrounds: Playground[]): Promise<DrawDisplay[]> {
     const result = datas.map((event) => {
         const drawEvent = event.parsedJson as DrawEvent;
+        drawEvent.timestampMs = event.timestampMs;
 
         const playground = playgrounds[Number(drawEvent.index)];
 
@@ -159,6 +160,7 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
             result_2,
             bet_amount: `${amount} ${asset}`,
             exp: `${Number(drawEvent.exp)} EXP`,
+            timestampMs: drawEvent.timestampMs,
         };
 
         return display;
@@ -167,7 +169,7 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
     return result;
 }
 
-interface DrawEvent {
+export interface DrawEvent {
     answer_1: string;
     answer_2: string;
     exp: string;
@@ -185,9 +187,10 @@ interface DrawEvent {
     signature_2: number[];
     signer: string;
     stake_amount: string;
+    timestampMs: string;
 }
 
-interface DrawDisplay {
+export interface DrawDisplay {
     game_id: string;
     player: string;
     guess_1: string;
@@ -196,6 +199,7 @@ interface DrawDisplay {
     result_2: string;
     bet_amount: string;
     exp: string;
+    timestampMs: string;
 }
 
 export interface LeaderBoard {

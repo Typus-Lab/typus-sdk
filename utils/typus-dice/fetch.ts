@@ -20,7 +20,7 @@ export async function getPlaygrounds(provider: SuiClient, diceRegistry: string) 
             // @ts-ignore
             const fields = object.data?.content.fields;
 
-            const opened_games: Game[] = fields.opened_games.map((item: { fields: Game; }) => item.fields as Game);
+            const opened_games: Game[] = fields.opened_games.map((item: { fields: Game }) => item.fields as Game);
             const game_config = fields.game_config.fields as GameConfig;
             const exp_config = fields.exp_config.fields as ExpConfig;
 
@@ -120,8 +120,10 @@ export async function waitHistory(provider: SuiClient, dicePackage: string, onMe
 }
 
 export async function parseHistory(datas, playgrounds: Playground[]): Promise<DrawDisplay[]> {
-    const result = datas.map((event: { parsedJson: DrawEvent; }) => {
+    const result = datas.map((event) => {
         const drawEvent = event.parsedJson as DrawEvent;
+        drawEvent.timestampMs = event.timestampMs;
+        // console.log(drawEvent);
 
         const playground = playgrounds[Number(drawEvent.index)];
 
@@ -171,6 +173,7 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
             bet_amount: `${amount} ${asset}`,
             reward: `${reward} ${asset}`,
             exp: `${Number(drawEvent.exp_amount)} EXP`,
+            timestampMs: drawEvent.timestampMs,
         };
 
         return display;
@@ -198,6 +201,7 @@ interface DrawEvent {
     signature_2: number[];
     signer: string;
     stake_amount: string;
+    timestampMs: string;
 }
 
 interface DrawDisplay {
@@ -210,6 +214,7 @@ interface DrawDisplay {
     bet_amount: string;
     reward: string;
     exp: string;
+    timestampMs: string;
 }
 
 export interface LeaderBoard {
