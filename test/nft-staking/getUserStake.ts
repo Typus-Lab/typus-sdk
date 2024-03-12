@@ -4,7 +4,7 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getUserStake } from "../../utils/nft-staking/fetch";
 import { getLevelExp } from "../../utils/typus-nft/fetch";
-import { getExpEarn, getExpEarnPerMinute } from "../../utils/nft-staking/calculation";
+import { getExpEarn, getExpEarnPerMinute, getHourlyExpPerUSD } from "../../utils/nft-staking/calculation";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const client = new SuiClient({ url: config.RPC_ENDPOINT });
@@ -39,4 +39,7 @@ const client = new SuiClient({ url: config.RPC_ENDPOINT });
 
     const exp_earn_per_min = getExpEarnPerMinute(res?.u64_padding!);
     console.log(`exp_earn_per_min: ${exp_earn_per_min}`);
+
+    const exp_hourly_per_usd = getHourlyExpPerUSD();
+    console.log(`exp_hourly_per_usd: ${exp_hourly_per_usd}`);
 })();
