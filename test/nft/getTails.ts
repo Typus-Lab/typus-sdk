@@ -2,7 +2,7 @@ import "../load_env";
 import config from "../../mainnet.json";
 import { KioskClient, Network } from "@mysten/kiosk";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
-import { getTailsIds, kioskOwnerCap } from "../../utils/typus-nft/fetch";
+import { getTails, getTailsIds, kioskOwnerCap } from "../../utils/typus-nft/fetch";
 // import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 
 // const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -50,4 +50,14 @@ const provider = new SuiClient({
 
     const tailsIds = await getTailsIds(kioskClient, config, address, kioskOwnerCaps);
     console.log(tailsIds);
+    console.log(tailsIds.length);
+
+    // Get Tails Detail
+
+    // const tails = await getTails(
+    //     provider,
+    //     tailsIds.map((x) => x.nftId)
+    // );
+    // console.log(tails);
+    // console.log(tails.length);
 })();
