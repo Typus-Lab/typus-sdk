@@ -1,8 +1,5 @@
-// import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
-// import { JsonRpcProvider } from "@mysten/sui.js/dist/cjs/providers/json-rpc-provider";
-// import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
-import { OwnedKiosks, KioskClient, Network } from "@mysten/kiosk";
+import { KioskClient } from "@mysten/kiosk";
 
 export async function getPool(provider: SuiClient, pool: string) {
     const res = await provider.getObject({ id: pool, options: { showContent: true } });
@@ -107,14 +104,15 @@ interface TailsId {
     tails: Tails;
 }
 
-export async function getTailsIds(kioskClient: KioskClient, nftConfig, address: string) {
-    let kiosks = await kioskClient.getOwnedKiosks({ address });
-    // let data = kiosks.kioskOwnerCaps;
-    // console.log(kiosks);
+export interface kioskOwnerCap {
+    objectId: string;
+    kioskId: string;
+}
 
+export async function getTailsIds(kioskClient: KioskClient, nftConfig, address: string, kioskOwnerCaps: kioskOwnerCap[]) {
     let Tails: TailsId[] = [];
 
-    for (let kioskOwnerCap of kiosks.kioskOwnerCaps) {
+    for (let kioskOwnerCap of kioskOwnerCaps) {
         const res = await kioskClient.getKiosk({ id: kioskOwnerCap.kioskId });
         // console.log(res);
         const tails: TailsId[] = res.items
