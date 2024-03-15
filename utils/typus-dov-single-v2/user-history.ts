@@ -64,11 +64,13 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
             let RiskLevel: string | undefined;
             let Tails: string | undefined;
             let Exp: string | undefined;
+            var d_token: string | undefined;
+            var b_token: string | undefined;
             var o_token: string | undefined;
 
-            Index = event.parsedJson!.index;
-            if (event.parsedJson!.index) {
-                let v = vaults[event.parsedJson!.index];
+            Index = event.parsedJson!.index || event.parsedJson!.vault_index;
+            if (Index) {
+                let v = vaults[Index];
                 if (v) {
                     let period: string;
                     switch (v.info.period) {
@@ -160,6 +162,8 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                             break;
                     }
                     Vault = `${v.info.settlementBaseName} ${period} ${optionType}`;
+                    d_token = typeArgToAsset("0x" + v.info.depositToken);
+                    b_token = typeArgToAsset("0x" + v.info.bidToken);
                     o_token = typeArgToAsset("0x" + v.info.settlementBase);
                 }
             }
@@ -210,8 +214,12 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     break;
                 case "LevelUpEvent":
                     Action = `Level Up to Level ${event.parsedJson!.level}`;
-                    Tails = `#${event.parsedJson!.number}`;
-                    break;
+                    if (event.parsedJson!.number) {
+                        Tails = `#${event.parsedJson!.number}`;
+                        break;
+                    } else {
+                        return txHistory;
+                    }
                 case "DepositEvent":
                 case "WithdrawEvent":
                 case "UnsubscribeEvent":
@@ -222,8 +230,11 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
                     var amount = Number(event.parsedJson!.amount) / 10 ** Number(event.parsedJson!.decimal);
                     Action = action.slice(0, action.length - 5);
+                    if (Action == "Harvest") {
+                        Action = "Harvest Reward";
+                    }
                     Amount = `${BigNumber(amount).toFixed()} ${token}`;
-                    Index = event.parsedJson!.index;
+                    Index = Index;
                     if (i != -1) {
                         txHistory[i].Action = Action;
                         txHistory[i].Amount = Amount;
@@ -233,12 +244,35 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                         return txHistory;
                     }
                     break;
+                case "NewStrategyEventV2":
+                    Action = "Create Strategy";
+                    var deposit_amount = Number(event.parsedJson!.deposit_amount) / 10 ** assetToDecimal(b_token!)!;
+                    Amount = `${BigNumber(deposit_amount).toFixed()} ${b_token!}`;
+                    break;
+                case "UpdateStrategyEvent":
+                    Action = "Update Strategy";
+                    var deposit_amount = Number(event.parsedJson!.deposit_amount) / 10 ** assetToDecimal(b_token!)!;
+                    Amount = `${BigNumber(deposit_amount).toFixed()} ${b_token!}`;
+                    break;
+                case "CloseStrategyEventV2":
+                    Action = "Close Strategy";
+                    if (b_token == d_token) {
+                        var balance =
+                            (Number(event.parsedJson!.u64_padding[0]) + Number(event.parsedJson!.u64_padding[1])) /
+                            10 ** assetToDecimal(b_token!)!;
+                        Amount = `${BigNumber(balance).toFixed()} ${b_token!}`;
+                    } else {
+                        var balance = Number(event.parsedJson!.u64_padding[0]) / 10 ** assetToDecimal(b_token!)!;
+                        var profit = Number(event.parsedJson!.u64_padding[1]) / 10 ** assetToDecimal(d_token!)!;
+                        Amount = `${BigNumber(balance).toFixed()} ${b_token!}\n${BigNumber(profit).toFixed()} ${d_token!}`;
+                    }
+                    break;
                 case "RedeemEvent":
                     var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
                     var amount = Number(event.parsedJson!.amount) / 10 ** assetToDecimal(token)!;
                     Action = "Harvest";
                     Amount = `${BigNumber(amount).toFixed()} ${token}`;
-                    Index = event.parsedJson!.index;
+                    Index = Index;
                     break;
                 case "TransferBidReceiptEvent":
                     var amount = Number(event.parsedJson!.amount) / 10 ** Number(event.parsedJson!.decimal);
@@ -271,7 +305,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                 case "NewBidEvent":
                     var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
                     o_token = typeArgToAsset("0x" + event.parsedJson!.o_token.name);
-                    var b_token = typeArgToAsset("0x" + event.parsedJson!.b_token.name);
+                    b_token = typeArgToAsset("0x" + event.parsedJson!.b_token.name);
 
                     var size = Number(event.parsedJson!.size) / 10 ** assetToDecimal(o_token)!;
                     var bidder_balance = Number(event.parsedJson!.bidder_balance) / 10 ** assetToDecimal(b_token)!;
@@ -280,6 +314,8 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     Amount = `${BigNumber(bidder_balance).toFixed()} ${b_token}`;
 
                     if (i != -1) {
+                        txHistory[i].Index = Index;
+                        txHistory[i].Period = Period;
                         txHistory[i].Action = Action;
                         txHistory[i].Amount = Amount;
                         txHistory[i].Vault = Vault;
