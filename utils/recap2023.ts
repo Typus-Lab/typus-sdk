@@ -23,16 +23,16 @@ export async function recap2023(user: string) {
     for (let history of userHistory) {
         let token = "";
         let amount = "";
-        if (history.Action.startsWith("Harvest")) {
+        if (history.Action!.startsWith("Harvest")) {
             [amount, token] = history.Amount?.split(" ")!;
             // console.log(`Harvest ${amount} ${token}`);
-        } else if (history.Action.startsWith("Compound")) {
+        } else if (history.Action!.startsWith("Compound")) {
             [amount, token] = history.Amount?.split(" ")!;
             // console.log(`Compound ${amount} ${token}`);
-        } else if (history.Action.startsWith("Exercise")) {
+        } else if (history.Action!.startsWith("Exercise")) {
             [amount, token] = history.Amount?.split(" ")!;
             // console.log(`Exercise ${amount} ${token}`);
-        } else if (history.Action.startsWith("Claim Profit Sharing")) {
+        } else if (history.Action!.startsWith("Claim Profit Sharing")) {
             [amount, token] = history.Amount?.split(" ")!;
             // console.log(`Claim Profit Sharing ${amount} ${token}`);
         }

@@ -20,16 +20,16 @@ const sender = "0xd15f079d5f60b8fdfdcf3ca66c0d3473790c758b04b6418929d5d2991c5443
     for (let history of userHistory) {
         let token = "";
         let amount = "";
-        if (history.Action.startsWith("Harvest")) {
+        if (history.Action!.startsWith("Harvest")) {
             [amount, token] = history.Amount?.split(" ")!;
             console.log(`Harvest ${amount} ${token}`);
-        } else if (history.Action.startsWith("Compound")) {
+        } else if (history.Action!.startsWith("Compound")) {
             [amount, token] = history.Amount?.split(" ")!;
             console.log(`Compound ${amount} ${token}`);
-        } else if (history.Action.startsWith("Exercise")) {
+        } else if (history.Action!.startsWith("Exercise")) {
             [amount, token] = history.Amount?.split(" ")!;
             console.log(`Exercise ${amount} ${token}`);
-        } else if (history.Action.startsWith("Claim Profit Sharing")) {
+        } else if (history.Action!.startsWith("Claim Profit Sharing")) {
             [amount, token] = history.Amount?.split(" ")!;
             console.log(`Claim Profit Sharing ${amount} ${token}`);
         }

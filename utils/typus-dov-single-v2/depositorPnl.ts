@@ -6,7 +6,7 @@ export async function getDepositorCashFlows(userHistory: TxHistory[]) {
     for (let history of userHistory) {
         const index = history.Index!;
 
-        if (history.Action.startsWith("Harvest")) {
+        if (history.Action!.startsWith("Harvest")) {
             const [amount, token] = history.Amount?.split(" ")!;
             if (depositorCashFlows.has(index)) {
                 let depositorCashFlow = depositorCashFlows.get(index)!;
@@ -33,7 +33,7 @@ export async function getDepositorCashFlows(userHistory: TxHistory[]) {
                 };
                 depositorCashFlows.set(index, depositorCashFlow);
             }
-        } else if (history.Action.startsWith("Deposit")) {
+        } else if (history.Action!.startsWith("Deposit")) {
             const [amount, token] = history.Amount?.split(" ")!;
             if (depositorCashFlows.has(index)) {
                 let depositorCashFlow = depositorCashFlows.get(index)!;
@@ -52,7 +52,7 @@ export async function getDepositorCashFlows(userHistory: TxHistory[]) {
                 };
                 depositorCashFlows.set(index, depositorCashFlow);
             }
-        } else if (history.Action.startsWith("Withdraw")) {
+        } else if (history.Action!.startsWith("Withdraw")) {
             const [amount, token] = history.Amount?.split(" ")!;
             if (depositorCashFlows.has(index)) {
                 let depositorCashFlow = depositorCashFlows.get(index)!;
@@ -71,7 +71,7 @@ export async function getDepositorCashFlows(userHistory: TxHistory[]) {
                 };
                 depositorCashFlows.set(index, depositorCashFlow);
             }
-        } else if (history.Action == "Claim") {
+        } else if (history.Action! == "Claim") {
             const [amount, token] = history.Amount?.split(" ")!;
             if (depositorCashFlows.has(index)) {
                 let depositorCashFlow = depositorCashFlows.get(index)!;
@@ -90,7 +90,7 @@ export async function getDepositorCashFlows(userHistory: TxHistory[]) {
                 };
                 depositorCashFlows.set(index, depositorCashFlow);
             }
-        } else if (history.Action == "Compound") {
+        } else if (history.Action! == "Compound") {
             const [amount, token] = history.Amount?.split(" ")!;
             if (depositorCashFlows.has(index)) {
                 let depositorCashFlow = depositorCashFlows.get(index)!;
