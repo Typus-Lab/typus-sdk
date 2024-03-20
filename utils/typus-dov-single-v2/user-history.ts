@@ -1,4 +1,4 @@
-import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
+import { SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
 import { Vault } from "./view-function";
 import { assetToDecimal, typeArgToAsset } from "../token";
 import BigNumber from "bignumber.js";
@@ -10,30 +10,96 @@ export async function getUserHistory(
     sender: string,
     startTimeMs: number
 ): Promise<TxHistory[]> {
-    const senderFilter: SuiEventFilter = {
-        Sender: sender,
-    };
+    const datas1 = await getUserEvents(provider, sender, startTimeMs);
 
-    var result = await provider.queryEvents({ query: senderFilter, order: "descending" });
-    // console.log(result);
+    const datas2 = await getAutoBidEvents(provider, originPackage, startTimeMs);
 
-    var txHistory = await parseTxHistory(result.data, originPackage, vaults);
+    const datas = datas1.concat(
+        datas2.filter((x) => {
+            // @ts-ignore
+            if (x.parsedJson.signer) {
+                // @ts-ignore
+                return x.parsedJson.signer == sender;
+            } else if (x.type.endsWith("ExpUpEvent")) {
+                return true;
+            } else {
+                return false;
+            }
+        })
+    );
 
-    while (result.hasNextPage) {
-        result = await provider.queryEvents({ query: senderFilter, cursor: result.nextCursor });
-        const nextPage = await parseTxHistory(result.data, originPackage, vaults);
-        txHistory = txHistory.concat(nextPage);
-        if (result.hasNextPage && Number(result.data[24].timestampMs) < startTimeMs) {
-            break;
-        }
-    }
+    const txHistory = await parseTxHistory(datas, originPackage, vaults);
 
     return txHistory;
 }
 
+export async function getUserEvents(provider: SuiClient, sender: string, startTimeMs: number): Promise<SuiEvent[]> {
+    const senderFilter: SuiEventFilter = {
+        Sender: sender,
+    };
+
+    var hasNextPage = true;
+    var cursor: any | undefined = undefined;
+
+    const datas: SuiEvent[] = [];
+
+    while (hasNextPage) {
+        const result = await provider.queryEvents({
+            query: senderFilter,
+            order: "descending",
+            cursor,
+        });
+        // console.log(result);
+
+        hasNextPage = result.hasNextPage;
+        cursor = result.nextCursor;
+
+        // @ts-ignore
+        datas = datas.concat(result.data);
+
+        if (hasNextPage && Number(result.data[result.data.length - 1].timestampMs) < startTimeMs) {
+            break;
+        }
+    }
+
+    return datas;
+}
+
+export async function getAutoBidEvents(provider: SuiClient, originPackage: string, startTimeMs: number): Promise<SuiEvent[]> {
+    const moduleFilter: SuiEventFilter = {
+        MoveModule: { package: originPackage, module: "auto_bid" },
+    };
+
+    var hasNextPage = true;
+    var cursor: any | undefined = undefined;
+
+    const datas: SuiEvent[] = [];
+
+    while (hasNextPage) {
+        const result = await provider.queryEvents({
+            query: moduleFilter,
+            order: "descending",
+            cursor,
+        });
+        // console.log(result);
+
+        hasNextPage = result.hasNextPage;
+        cursor = result.nextCursor;
+
+        // @ts-ignore
+        datas = datas.concat(result.data);
+
+        if (hasNextPage && Number(result.data[result.data.length - 1].timestampMs) < startTimeMs) {
+            break;
+        }
+    }
+
+    return datas;
+}
+
 export interface TxHistory {
     Index: string | undefined;
-    Action: string;
+    Action: string | undefined;
     Period: string | undefined;
     Amount: string | undefined;
     Vault: string | undefined;
@@ -56,7 +122,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
             const functionType = new RegExp("^([^::]+)::([^::]+)::([^<]+)").exec(event.type)?.slice(1, 4)!;
             const action = functionType[2];
 
-            let Action: string;
+            let Action: string | undefined;
             let Amount: string | undefined;
             let Index: string | undefined;
             let Period: string | undefined;
@@ -183,11 +249,18 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                         (x) => x.txDigest == event.id.txDigest && x.Action != "First Deposit" && x.Action != "Stake"
                     );
                     if (i != -1) {
+                        if (txHistory[i].Tails) {
+                            return txHistory;
+                        }
                         txHistory[i].Tails = `#${event.parsedJson!.number}`;
                         txHistory[i].Exp = event.parsedJson!.exp_earn;
                         return txHistory;
-                    } else {
+                    } else if (event.id.eventSeq == 0) {
                         Action = "Collect EXP";
+                        Tails = `#${event.parsedJson!.number}`;
+                        Exp = event.parsedJson!.exp_earn;
+                    } else {
+                        // Action = undefined;
                         Tails = `#${event.parsedJson!.number}`;
                         Exp = event.parsedJson!.exp_earn;
                     }
@@ -288,6 +361,9 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                         var size = Number(event.parsedJson!.u64_padding[0]) / 10 ** assetToDecimal(o_token!)!;
                         Action = `Exercise ${size} ${o_token}`;
                     }
+                    if (event.sender != event.parsedJson!.signer) {
+                        Action = "Auto " + Action;
+                    }
                     break;
                 case "RefundEvent":
                     var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
@@ -313,6 +389,9 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     Action = action.slice(0, action.length - 5) + ` ${size} ${o_token}`;
                     Amount = `${BigNumber(bidder_balance).toFixed()} ${b_token}`;
 
+                    if (event.sender != event.parsedJson!.signer) {
+                        Action = "Auto " + Action;
+                    }
                     if (i != -1) {
                         txHistory[i].Index = Index;
                         txHistory[i].Period = Period;
@@ -343,4 +422,37 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
         }, Promise.resolve(new Array<TxHistory>()));
 
     return results.filter((result) => result.Action);
+}
+
+export async function getUserBid(startTimestamp: string, userAddress: string): Promise<any[]> {
+    const apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
+
+    const headers = {
+        "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
+        "Content-Type": "application/json",
+    };
+
+    const requestData = {
+        sqlQuery: {
+            sql: `
+                SELECT *
+                FROM NewBid
+                WHERE distinct_id = "${userAddress}" && timestamp >= ${startTimestamp}
+                ORDER BY timestamp DESC;
+            `,
+            size: 1000,
+        },
+    };
+
+    const jsonData = JSON.stringify(requestData);
+
+    let response = await fetch(apiUrl, {
+        method: "POST",
+        headers,
+        body: jsonData,
+    });
+
+    let data = await response.json();
+
+    return data.result.rows as any[];
 }
