@@ -402,6 +402,11 @@ export function getNewBidTx(input: {
         ],
     });
     input.tx.transferObjects([input.tx.object(result[0])], input.user);
+    let fud_coin = input.tx.moveCall({
+        target: `${input.mfudPackageId}::mfud::burn`,
+        arguments: [input.tx.object(input.mfudRegistry), input.tx.object(result[1])],
+    });
+    input.tx.transferObjects([input.tx.object(fud_coin)], input.user);
 
     return input.tx;
 }
