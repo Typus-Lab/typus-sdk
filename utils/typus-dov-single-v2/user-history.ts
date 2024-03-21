@@ -344,6 +344,11 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                         Amount = `${BigNumber(balance).toFixed()} ${b_token!}\n${BigNumber(profit).toFixed()} ${d_token!}`;
                     }
                     break;
+                case "WithdrawProfitEvent":
+                    Action = "Harvest Gain";
+                    var profit = Number(event.parsedJson!.profit) / 10 ** assetToDecimal(d_token!)!;
+                    Amount = `${BigNumber(profit).toFixed()} ${d_token!}`;
+                    break;
                 case "RedeemEvent":
                     var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
                     var amount = Number(event.parsedJson!.amount) / 10 ** assetToDecimal(token)!;
