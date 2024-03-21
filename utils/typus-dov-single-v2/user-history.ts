@@ -424,7 +424,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
     return results.filter((result) => result.Action);
 }
 
-export async function getUserBid(startTimestamp: string, userAddress: string): Promise<any[]> {
+export async function getFromSentio(event: string, userAddress: string, startTimestamp: string): Promise<any[]> {
     const apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
 
     const headers = {
@@ -436,7 +436,7 @@ export async function getUserBid(startTimestamp: string, userAddress: string): P
         sqlQuery: {
             sql: `
                 SELECT *
-                FROM NewBid
+                FROM ${event}
                 WHERE distinct_id = "${userAddress}" && timestamp >= ${startTimestamp}
                 ORDER BY timestamp DESC;
             `,
@@ -455,4 +455,8 @@ export async function getUserBid(startTimestamp: string, userAddress: string): P
     let data = await response.json();
 
     return data.result.rows as any[];
+}
+
+async function getUserHistoryFromSentio(vaults: { [key: string]: Vault }, sender: string, startTimeMs: number) {
+    // WIP
 }
