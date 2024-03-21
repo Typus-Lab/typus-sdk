@@ -121,7 +121,7 @@ export function getDepositorCashFlows(userHistory: TxHistory[]) {
     return depositorCashFlows;
 }
 
-interface DepositorCashFlow {
+export interface DepositorCashFlow {
     D_TOKEN: string | undefined;
     totalDeposit: number;
     totalWithdraw: number;
