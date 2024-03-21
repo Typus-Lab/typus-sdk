@@ -28,7 +28,11 @@ export async function getUserHistory(
         })
     );
 
-    const txHistory = await parseTxHistory(datas, originPackage, vaults);
+    const txHistory = await parseTxHistory(
+        datas.sort((a, b) => Number(b.timestampMs) - Number(a.timestampMs)),
+        originPackage,
+        vaults
+    );
 
     return txHistory;
 }
