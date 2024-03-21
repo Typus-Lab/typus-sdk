@@ -1,6 +1,6 @@
 import { TxHistory } from "../../utils/typus-dov-single-v2/user-history";
 
-export async function getDepositorCashFlows(userHistory: TxHistory[]) {
+export function getDepositorCashFlows(userHistory: TxHistory[]) {
     let depositorCashFlows = new Map<string, DepositorCashFlow>();
 
     for (let history of userHistory) {
