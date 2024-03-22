@@ -28,11 +28,7 @@ export async function getUserHistory(
         })
     );
 
-    const txHistory = await parseTxHistory(
-        datas.sort((a, b) => Number(b.timestampMs) - Number(a.timestampMs)),
-        originPackage,
-        vaults
-    );
+    const txHistory = await parseTxHistory(datas, originPackage, vaults);
 
     return txHistory;
 }
@@ -120,6 +116,14 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
             const type: string = event.type;
             return event.packageId == originPackage || type.includes("typus_nft::First") || type.includes("typus_nft::ExpUpEvent");
         })
+        .sort((a, b) => {
+            // From Old to New!
+            if (a.timestampMs == b.timestampMs) {
+                return Number(a.id.eventSeq) - Number(b.id.eventSeq);
+            } else {
+                return Number(a.timestampMs) - Number(b.timestampMs);
+            }
+        })
         .reduce(async (promise, event) => {
             let txHistory: TxHistory[] = await promise;
             // console.log(event);
@@ -132,7 +136,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
             let Period: string | undefined;
             let Vault: string | undefined;
             let RiskLevel: string | undefined;
-            let Tails: string | undefined;
+            var Tails: string | undefined = undefined;
             let Exp: string | undefined;
             var d_token: string | undefined;
             var b_token: string | undefined;
@@ -252,10 +256,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     var i = txHistory.findIndex(
                         (x) => x.txDigest == event.id.txDigest && x.Action != "First Deposit" && x.Action != "Stake"
                     );
-                    if (i != -1) {
-                        if (txHistory[i].Tails) {
-                            return txHistory;
-                        }
+                    if (i != -1 && txHistory[i].Tails == undefined) {
                         txHistory[i].Tails = `#${event.parsedJson!.number}`;
                         txHistory[i].Exp = event.parsedJson!.exp_earn;
                         return txHistory;
@@ -264,9 +265,7 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                         Tails = `#${event.parsedJson!.number}`;
                         Exp = event.parsedJson!.exp_earn;
                     } else {
-                        // Action = undefined;
-                        Tails = `#${event.parsedJson!.number}`;
-                        Exp = event.parsedJson!.exp_earn;
+                        return txHistory;
                     }
                     break;
                 case "TransferNftEvent":
@@ -388,7 +387,6 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
                     Tails = `#${event.parsedJson!.number}`;
                     break;
                 case "NewBidEvent":
-                    var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest);
                     o_token = typeArgToAsset("0x" + event.parsedJson!.o_token.name);
                     b_token = typeArgToAsset("0x" + event.parsedJson!.b_token.name);
 
@@ -400,15 +398,6 @@ async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: 
 
                     if (event.sender != event.parsedJson!.signer) {
                         Action = "Auto " + Action;
-                    }
-                    if (i != -1) {
-                        txHistory[i].Index = Index;
-                        txHistory[i].Period = Period;
-                        txHistory[i].Action = Action;
-                        txHistory[i].Amount = Amount;
-                        txHistory[i].Vault = Vault;
-                        txHistory[i].RiskLevel = RiskLevel;
-                        return txHistory;
                     }
                     break;
                 default:
