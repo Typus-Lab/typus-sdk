@@ -1,52 +1,25 @@
-import { SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
+import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
 import { Vault } from "./view-function";
 import { assetToDecimal, typeArgToAsset } from "../token";
 import BigNumber from "bignumber.js";
 
-export async function getUserHistory(
+export async function getUserEvents(
     provider: SuiClient,
-    originPackage: string,
-    vaults: { [key: string]: Vault },
     sender: string,
-    startTimeMs: number
-): Promise<TxHistory[]> {
-    const datas1 = await getUserEvents(provider, sender, startTimeMs);
-
-    const datas2 = await getAutoBidEvents(provider, originPackage, startTimeMs);
-
-    const datas = datas1.concat(
-        datas2.filter((x) => {
-            // @ts-ignore
-            if (x.parsedJson.signer) {
-                // @ts-ignore
-                return x.parsedJson.signer == sender;
-            } else if (x.type.endsWith("ExpUpEvent")) {
-                return true;
-            } else {
-                return false;
-            }
-        })
-    );
-
-    const txHistory = await parseTxHistory(datas, originPackage, vaults);
-
-    return txHistory;
-}
-
-export async function getUserEvents(provider: SuiClient, sender: string, startTimeMs: number): Promise<SuiEvent[]> {
+    cursor?: EventId | null
+): Promise<[SuiEvent[], EventId | null | undefined]> {
     const senderFilter: SuiEventFilter = {
         Sender: sender,
     };
 
     var hasNextPage = true;
-    var cursor: any | undefined = undefined;
 
     const datas: SuiEvent[] = [];
 
     while (hasNextPage) {
         const result = await provider.queryEvents({
             query: senderFilter,
-            order: "descending",
+            order: "ascending",
             cursor,
         });
         // console.log(result);
@@ -56,13 +29,9 @@ export async function getUserEvents(provider: SuiClient, sender: string, startTi
 
         // @ts-ignore
         datas = datas.concat(result.data);
-
-        if (hasNextPage && Number(result.data[result.data.length - 1].timestampMs) < startTimeMs) {
-            break;
-        }
     }
 
-    return datas;
+    return [datas, cursor];
 }
 
 export async function getAutoBidEvents(provider: SuiClient, originPackage: string, startTimeMs: number): Promise<SuiEvent[]> {
@@ -110,7 +79,11 @@ export interface TxHistory {
     txDigest: string;
 }
 
-async function parseTxHistory(datas: Array<any>, originPackage: string, vaults: { [key: string]: Vault }): Promise<Array<TxHistory>> {
+export async function parseTxHistory(
+    datas: Array<any>,
+    originPackage: string,
+    vaults: { [key: string]: Vault }
+): Promise<Array<TxHistory>> {
     const results = await datas
         .filter((event) => {
             const type: string = event.type;

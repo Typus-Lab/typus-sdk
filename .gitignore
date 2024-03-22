@@ -9,3 +9,4 @@ _local/
 cloudFunctions
 drawKeys.json
 *.csv
+localCacheEvents.json
