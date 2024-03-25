@@ -408,11 +408,6 @@ export function getNewBidTx(input: {
         arguments: [input.tx.object(input.mfudRegistry), input.tx.object(result[1])],
     });
     input.tx.transferObjects([input.tx.object(fud_coin)], input.user);
-    input.tx.moveCall({
-        target: `${input.typusFrameworkPackageId}::utils::transfer_coins`,
-        typeArguments: [input.typeArguments[1]],
-        arguments: [input.tx.makeMoveVec({ objects: [input.tx.object(result[1])] }), input.tx.pure(input.user)],
-    });
     return input.tx;
 }
 
