@@ -1,5 +1,5 @@
 import config from "../../mainnet.json";
-import { getUserEvents, getAutoBidEvents, parseTxHistory } from "../../utils/typus-dov-single-v2/user-history";
+import { getUserEvents, getAutoBidEvents, parseTxHistory, getNewBidFromSentio } from "../../utils/typus-dov-single-v2/user-history";
 import { getVaults } from "../../utils/typus-dov-single-v2/view-function";
 import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
 import * as fs from "fs";
@@ -57,24 +57,35 @@ const sender = "0xd15f079d5f60b8fdfdcf3ca66c0d3473790c758b04b6418929d5d2991c5443
     console.log(cursor);
 
     // 2. Get AutoBid Events
-    const datas2 = await getAutoBidEvents(provider, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, 0);
-    console.log(datas2.length);
+    // const datas2 = await getAutoBidEvents(provider, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, 1710892800000);
+    // console.log(datas2.length);
 
     // 3. Parese User History
-    const datas = localCacheEvents.concat(
-        datas2.filter((x) => {
-            // @ts-ignore
-            if (x.parsedJson.signer) {
-                // @ts-ignore
-                return x.parsedJson.signer == sender;
-            } else if (x.type.endsWith("ExpUpEvent")) {
-                return true;
-            } else {
-                return false;
-            }
-        })
-    );
+    // const datas = localCacheEvents.concat(
+    //     datas2.filter((x) => {
+    //         // @ts-ignore
+    //         if (x.parsedJson.signer) {
+    //             // @ts-ignore
+    //             return x.parsedJson.signer == sender;
+    //         } else if (x.type.endsWith("ExpUpEvent")) {
+    //             return true;
+    //         } else {
+    //             return false;
+    //         }
+    //     })
+    // );
+
+    const datas = localCacheEvents;
 
     const txHistory = await parseTxHistory(datas, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, vaults);
-    console.log(txHistory.reverse());
+    // console.log(txHistory.reverse());
+
+    const newBidHistory = await getNewBidFromSentio(vaults, sender, 0);
+    // console.log(newBidHistory);
+
+    const concatHistory = txHistory
+        .concat(newBidHistory.filter((x) => txHistory.findIndex((y) => y.txDigest == x.txDigest) == -1))
+        .sort((a, b) => Number(b.Date) - Number(a.Date));
+
+    console.log(concatHistory.filter((h) => h.Action?.includes("Bid") && h.Date.getMonth() == 2));
 })();

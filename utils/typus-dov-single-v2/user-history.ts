@@ -117,102 +117,7 @@ export async function parseTxHistory(
 
             Index = event.parsedJson!.index || event.parsedJson!.vault_index;
             if (Index) {
-                let v = vaults[Index];
-                if (v) {
-                    let period: string;
-                    switch (v.info.period) {
-                        case "0":
-                            period = "Daily";
-                            break;
-                        case "1":
-                            period = "Weekly";
-                            break;
-                        case "2":
-                            period = "Monthly";
-                            break;
-                        case "3":
-                            period = "Hourly";
-                            break;
-                        case "4":
-                            period = "10 Minutes";
-                            break;
-                        default:
-                            period = "";
-                            break;
-                    }
-                    Period = period;
-                    let optionType: string;
-                    switch (v.info.optionType) {
-                        case "0":
-                            switch (action) {
-                                case "DepositEvent":
-                                case "WithdrawEvent":
-                                case "UnsubscribeEvent":
-                                case "ClaimEvent":
-                                case "CompoundEvent":
-                                case "HarvestEvent":
-                                case "RedeemEvent":
-                                    optionType = "Covered Call";
-                                    break;
-                                default:
-                                    optionType = "Call";
-                                    break;
-                            }
-                            break;
-                        case "1":
-                            switch (action) {
-                                case "DepositEvent":
-                                case "WithdrawEvent":
-                                case "UnsubscribeEvent":
-                                case "ClaimEvent":
-                                case "CompoundEvent":
-                                case "HarvestEvent":
-                                case "RedeemEvent":
-                                    optionType = "Put Selling";
-                                    break;
-                                default:
-                                    optionType = "Put";
-                                    break;
-                            }
-                            break;
-                        case "2":
-                            optionType = "Call Spread";
-                            break;
-                        case "3":
-                            optionType = "Put Spread";
-                            break;
-                        case "4":
-                            optionType = "Capped Call";
-                            break;
-                        case "5":
-                            optionType = "Capped Put";
-                            break;
-                        case "6":
-                            optionType = "Capped Call";
-                            break;
-                        default:
-                            optionType = "";
-                            break;
-                    }
-                    switch (v.config.riskLevel) {
-                        case "1":
-                            RiskLevel = "Conservative";
-                            break;
-                        case "2":
-                            RiskLevel = "Moderate";
-                            break;
-                        case "3":
-                            RiskLevel = "Aggressive";
-                            break;
-                        default:
-                            RiskLevel = "";
-                            break;
-                    }
-                    Vault = `${v.info.settlementBaseName} ${period} ${optionType}`;
-                    d_token = typeArgToAsset("0x" + v.info.depositToken);
-                    b_token = typeArgToAsset("0x" + v.info.bidToken);
-                    o_token = typeArgToAsset("0x" + v.info.settlementBase);
-                }
+                [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, Index, action);
             }
 
             switch (action) {
@@ -428,6 +333,163 @@ export async function getFromSentio(event: string, userAddress: string, startTim
     return data.result.rows as any[];
 }
 
-async function getUserHistoryFromSentio(vaults: { [key: string]: Vault }, sender: string, startTimeMs: number) {
-    // WIP
+export async function getNewBidFromSentio(vaults: { [key: string]: Vault }, userAddress: string, startTimestamp: number) {
+    const apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
+
+    const headers = {
+        "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
+        "Content-Type": "application/json",
+    };
+
+    const requestData = {
+        sqlQuery: {
+            sql: `
+                SELECT *
+                FROM NewBid N
+                JOIN (
+                    SELECT number, distinct_id, exp_earn, transaction_hash, log_index
+                    FROM ExpUp
+                ) S ON N.transaction_hash = S.transaction_hash && N.log_index + 1 = S.log_index
+                WHERE N.distinct_id = "${userAddress}" && N.timestamp >= ${startTimestamp}
+                ORDER BY N.timestamp DESC;
+            `,
+            size: 1000,
+        },
+    };
+
+    const jsonData = JSON.stringify(requestData);
+
+    let response = await fetch(apiUrl, {
+        method: "POST",
+        headers,
+        body: jsonData,
+    });
+
+    let data = await response.json();
+
+    return data.result.rows.map((x) => {
+        let [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, x.index, "NewBidEvent");
+
+        let txHistory: TxHistory = {
+            Index: x.index,
+            Period,
+            Vault,
+            RiskLevel,
+            Action: "Auto Bid" + ` ${x.size} ${x.o_token}`,
+            Amount: x.bidder_balance + ` ${x.b_token}`,
+            Tails: x.number,
+            Exp: x.exp_earn,
+            Date: new Date(Number(x.ts_ms)),
+            txDigest: x.transaction_hash,
+        };
+
+        return txHistory;
+    });
+}
+
+function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action: string) {
+    let v = vaults[Index];
+
+    let Period: string | undefined;
+    let Vault: string | undefined;
+    let RiskLevel: string | undefined;
+    var d_token: string | undefined;
+    var b_token: string | undefined;
+    var o_token: string | undefined;
+
+    let period: string;
+    switch (v.info.period) {
+        case "0":
+            period = "Daily";
+            break;
+        case "1":
+            period = "Weekly";
+            break;
+        case "2":
+            period = "Monthly";
+            break;
+        case "3":
+            period = "Hourly";
+            break;
+        case "4":
+            period = "10 Minutes";
+            break;
+        default:
+            period = "";
+            break;
+    }
+    Period = period;
+    let optionType: string;
+    switch (v.info.optionType) {
+        case "0":
+            switch (action) {
+                case "DepositEvent":
+                case "WithdrawEvent":
+                case "UnsubscribeEvent":
+                case "ClaimEvent":
+                case "CompoundEvent":
+                case "HarvestEvent":
+                case "RedeemEvent":
+                    optionType = "Covered Call";
+                    break;
+                default:
+                    optionType = "Call";
+                    break;
+            }
+            break;
+        case "1":
+            switch (action) {
+                case "DepositEvent":
+                case "WithdrawEvent":
+                case "UnsubscribeEvent":
+                case "ClaimEvent":
+                case "CompoundEvent":
+                case "HarvestEvent":
+                case "RedeemEvent":
+                    optionType = "Put Selling";
+                    break;
+                default:
+                    optionType = "Put";
+                    break;
+            }
+            break;
+        case "2":
+            optionType = "Call Spread";
+            break;
+        case "3":
+            optionType = "Put Spread";
+            break;
+        case "4":
+            optionType = "Capped Call";
+            break;
+        case "5":
+            optionType = "Capped Put";
+            break;
+        case "6":
+            optionType = "Capped Call";
+            break;
+        default:
+            optionType = "";
+            break;
+    }
+    switch (v.config.riskLevel) {
+        case "1":
+            RiskLevel = "Conservative";
+            break;
+        case "2":
+            RiskLevel = "Moderate";
+            break;
+        case "3":
+            RiskLevel = "Aggressive";
+            break;
+        default:
+            RiskLevel = "";
+            break;
+    }
+    Vault = `${v.info.settlementBaseName} ${period} ${optionType}`;
+    d_token = typeArgToAsset("0x" + v.info.depositToken);
+    b_token = typeArgToAsset("0x" + v.info.bidToken);
+    o_token = typeArgToAsset("0x" + v.info.settlementBase);
+
+    return [Period, Vault, RiskLevel, d_token, b_token, o_token];
 }
