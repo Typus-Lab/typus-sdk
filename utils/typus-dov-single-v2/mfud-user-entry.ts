@@ -371,6 +371,7 @@ export function getRedeemTx(input: {
 
 export function getNewBidTx(input: {
     tx: TransactionBlock;
+    typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
     mfudPackageId: string;
@@ -391,7 +392,7 @@ export function getNewBidTx(input: {
         ],
     });
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tails_staking::new_bid`,
+        target: `${input.typusDovSinglePackageId}::tails_staking::new_bid_v2`,
         typeArguments: input.typeArguments,
         arguments: [
             input.tx.object(input.typusDovSingleRegistry),
@@ -407,7 +408,11 @@ export function getNewBidTx(input: {
         arguments: [input.tx.object(input.mfudRegistry), input.tx.object(result[1])],
     });
     input.tx.transferObjects([input.tx.object(fud_coin)], input.user);
-
+    input.tx.moveCall({
+        target: `${input.typusFrameworkPackageId}::utils::transfer_coins`,
+        typeArguments: [input.typeArguments[1]],
+        arguments: [input.tx.makeMoveVec({ objects: [input.tx.object(result[1])] }), input.tx.pure(input.user)],
+    });
     return input.tx;
 }
 

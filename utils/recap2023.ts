@@ -1,5 +1,4 @@
 import config from "../mainnet.json";
-import { getUserHistory } from "../utils/typus-dov-single-v2/user-history";
 import { getVaults } from "../utils/typus-dov-single-v2/view-function";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getLatestPriceUSD } from "../utils/price";
@@ -16,7 +15,8 @@ export async function recap2023(user: string) {
         url: config.RPC_ENDPOINT,
     });
     const vaults = await getVaults(provider, config.SINGLE_COLLATERAL_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY, []);
-    const userHistory = await getUserHistory(provider, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, vaults, user, 0);
+    // const userHistory = await getUserHistory(provider, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, vaults, user, 0);
+    const userHistory: any[] = [];
     console.log(userHistory);
 
     let earn = new Map<string, number>();
