@@ -554,7 +554,7 @@ export function getNewBidTx(input: {
         input.tx.moveCall({
             target: `${input.typusFrameworkPackageId}::utils::transfer_coins`,
             typeArguments: [input.typeArguments[1]],
-            arguments: [input.tx.object(result[1]), input.tx.pure(input.user)],
+            arguments: [input.tx.makeMoveVec({ objects: [input.tx.object(result[1])] }), input.tx.pure(input.user)],
         });
     } else {
         let balance = input.tx.moveCall({
@@ -585,7 +585,7 @@ export function getNewBidTx(input: {
         input.tx.moveCall({
             target: `${input.typusFrameworkPackageId}::utils::transfer_coins`,
             typeArguments: [input.typeArguments[1]],
-            arguments: [input.tx.object(result[1]), input.tx.pure(input.user)],
+            arguments: [input.tx.makeMoveVec({ objects: [input.tx.object(result[1])] }), input.tx.pure(input.user)],
         });
     }
 
