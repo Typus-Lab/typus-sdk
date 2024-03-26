@@ -9,27 +9,31 @@ const provider = new SuiClient({
 });
 
 const sender = "0xd15f079d5f60b8fdfdcf3ca66c0d3473790c758b04b6418929d5d2991c5443ee";
+const fileName = "mainnetLocalCacheEvents.json";
 
 (async () => {
     const vaults = await getVaults(provider, config.SINGLE_COLLATERAL_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY, []);
 
     // 1. Get User Events
-    const localCacheFile = fs.readFileSync("localCacheEvents.json", "utf-8");
-    const localCache = JSON.parse(localCacheFile);
-    const localCacheMap: Map<string, [SuiEvent[], EventId | null | undefined]> = localCache.reduce((map, obj) => {
-        map.set(obj.user, [obj.events, obj.cursor]);
-        return map;
-    }, new Map<string, [SuiEvent[], EventId | null | undefined]>());
-
     var localCacheEvents: SuiEvent[] = [];
     var cursor: EventId | null | undefined = undefined;
+    var localCacheMap = new Map<string, [SuiEvent[], EventId | null | undefined]>();
 
-    const userCache = localCacheMap.get(sender);
-    if (userCache) {
-        localCacheEvents = userCache[0];
-        cursor = userCache[1];
-        console.log("Load from cache...");
-    }
+    try {
+        const localCacheFile = fs.readFileSync(fileName, "utf-8");
+        const localCache = JSON.parse(localCacheFile);
+        localCacheMap = localCache.reduce((map, obj) => {
+            map.set(obj.user, [obj.events, obj.cursor]);
+            return map;
+        }, new Map<string, [SuiEvent[], EventId | null | undefined]>());
+
+        const userCache = localCacheMap.get(sender);
+        if (userCache) {
+            localCacheEvents = userCache[0];
+            cursor = userCache[1];
+            console.log("Load from cache...");
+        }
+    } catch {}
 
     const [datas1, cursor1] = await getUserEvents(provider, sender, cursor);
 
@@ -41,7 +45,7 @@ const sender = "0xd15f079d5f60b8fdfdcf3ca66c0d3473790c758b04b6418929d5d2991c5443
     const localCacheArray = Array.from(localCacheMap.entries());
 
     fs.writeFileSync(
-        "localCacheEvents.json",
+        fileName,
         JSON.stringify(
             localCacheArray.map(([k, v]) => {
                 let t = { user: k, events: v[0], cursor: v[1] };
@@ -87,5 +91,5 @@ const sender = "0xd15f079d5f60b8fdfdcf3ca66c0d3473790c758b04b6418929d5d2991c5443
         .concat(newBidHistory.filter((x) => txHistory.findIndex((y) => y.txDigest == x.txDigest) == -1))
         .sort((a, b) => Number(b.Date) - Number(a.Date));
 
-    console.log(concatHistory.filter((h) => h.Action?.includes("Bid") && h.Date.getMonth() == 2));
+    console.log(concatHistory.filter((h) => h.Action?.includes("Withdraw")));
 })();
