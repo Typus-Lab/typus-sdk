@@ -109,7 +109,7 @@ export interface kioskOwnerCap {
     kioskId: string;
 }
 
-export async function getTailsIds(kioskClient: KioskClient, nftConfig, address: string, kioskOwnerCaps: kioskOwnerCap[]) {
+export async function getTailsIds(kioskClient: KioskClient, nftConfig, kioskOwnerCaps: kioskOwnerCap[]) {
     let Tails: TailsId[] = [];
 
     for (let kioskOwnerCap of kioskOwnerCaps) {
@@ -138,8 +138,12 @@ export async function getTailsIds(kioskClient: KioskClient, nftConfig, address: 
     return Tails;
 }
 
+export interface TailsWithType extends Tails {
+    type: string | null | undefined;
+}
+
 export async function getTails(provider: SuiClient, tailsIds: string[]) {
-    let Tails: Tails[] = [];
+    let Tails: TailsWithType[] = [];
 
     while (tailsIds.length > 0) {
         let len = tailsIds.length > 50 ? 50 : tailsIds.length;
@@ -152,14 +156,14 @@ export async function getTails(provider: SuiClient, tailsIds: string[]) {
 
             const tails = fieldsToTails(fields);
 
-            Tails.push(tails);
+            Tails.push({ ...tails, type: result.data?.type });
         }
     }
     return Tails;
 }
 
 export async function getTailsDynamicField(provider: SuiClient, tailsIds: string[]): Promise<[Tails[], Map<string, string>]> {
-    let Tails: Tails[] = [];
+    let Tails: TailsWithType[] = [];
 
     let tailsToDynamicField = new Map<string, string>();
     // let DynamicFieldToKiosk = new Map<string, string>();
@@ -179,7 +183,7 @@ export async function getTailsDynamicField(provider: SuiClient, tailsIds: string
 
             const tails = fieldsToTails(fields);
 
-            Tails.push(tails);
+            Tails.push({ ...tails, type: result.data?.type });
 
             if (owner) {
                 tailsToDynamicField.set(tails.id, owner);
@@ -312,7 +316,7 @@ export function getLevelExp(level: number): number | undefined {
 
 export const LevelExpVec = [0, 0, 1_000, 50_000, 250_000, 1_000_000, 5_000_000, 20_000_000];
 
-export async function getTableTails(provider: SuiClient, parentId: string): Promise<Tails[]> {
+export async function getTableTails(provider: SuiClient, parentId: string): Promise<TailsWithType[]> {
     var result = await provider.getDynamicFields({
         parentId,
     });
@@ -325,7 +329,7 @@ export async function getTableTails(provider: SuiClient, parentId: string): Prom
         datas = datas.concat(result.data);
     }
     // console.log(datas);
-    const tails: Tails[] = await getTails(
+    const tails: TailsWithType[] = await getTails(
         provider,
         datas.map((data) => data.objectId)
     );
