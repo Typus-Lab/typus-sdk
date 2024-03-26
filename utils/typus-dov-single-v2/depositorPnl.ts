@@ -6,7 +6,7 @@ export function getDepositorCashFlows(userHistory: TxHistory[]) {
     for (let history of userHistory) {
         const index = history.Index!;
 
-        if (history.Action!.startsWith("Harvest")) {
+        if (history.Action!.startsWith("Harvest Reward")) {
             const [amount, token] = history.Amount?.split(" ")!;
             if (depositorCashFlows.has(index)) {
                 let depositorCashFlow = depositorCashFlows.get(index)!;
