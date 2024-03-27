@@ -91,5 +91,6 @@ const fileName = "mainnetLocalCacheEvents.json";
         .concat(newBidHistory.filter((x) => txHistory.findIndex((y) => y.txDigest == x.txDigest) == -1))
         .sort((a, b) => Number(b.Date) - Number(a.Date));
 
-    console.log(concatHistory.filter((h) => h.Action?.includes("Withdraw")));
+    // console.log(concatHistory.filter((h) => h.Action?.includes("Withdraw")));
+    // console.log(concatHistory.filter((h) => Math.round(h.Date?.getTime() / 24 / 3600000) == Math.round(Date.now() / 24 / 3600000)));
 })();
