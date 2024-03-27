@@ -486,14 +486,14 @@ export async function getAuctionBids(
     let result = reader.readVec((reader, i) => {
         reader.read8();
         let bid = {
-            index: reader.read64(),
+            tsMs: reader.read64(),
             bidder: AddressFromBytes(reader.readBytes(32)),
             price: reader.read64(),
             size: reader.read64(),
             bidderBalance: reader.read64(),
             incentiveBalance: reader.read64(),
             feeDiscount: reader.read64(),
-            tsMs: reader.read64(),
+            index: reader.read64(),
         } as Bid;
         return bid;
     });
