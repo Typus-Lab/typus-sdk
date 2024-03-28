@@ -387,6 +387,63 @@ export async function getNewBidFromSentio(vaults: { [key: string]: Vault }, user
     });
 }
 
+export async function getExerciseFromSentio(vaults: { [key: string]: Vault }, userAddress: string, startTimestamp: number) {
+    const apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
+
+    const headers = {
+        "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
+        "Content-Type": "application/json",
+    };
+
+    const requestData = {
+        sqlQuery: {
+            sql: `
+                SELECT *
+                FROM Exercise N
+                WHERE N.distinct_id = "${userAddress}" && N.timestamp >= ${startTimestamp}
+                ORDER BY N.timestamp DESC;
+            `,
+            size: 1000,
+        },
+    };
+
+    const jsonData = JSON.stringify(requestData);
+
+    let response = await fetch(apiUrl, {
+        method: "POST",
+        headers,
+        body: jsonData,
+    });
+
+    let data = await response.json();
+
+    return data.result.rows.map((x) => {
+        let [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, x.index, "ExerciseEvent");
+
+        // console.log(x);
+        var Action = "Auto Exercise";
+        if (x.raw_share) {
+            var size = Number(x.raw_share) / 10 ** assetToDecimal(o_token!)!;
+            Action = `Auto Exercise ${size} ${o_token}`;
+        }
+
+        let txHistory: TxHistory = {
+            Index: x.index,
+            Period,
+            Vault,
+            RiskLevel,
+            Action,
+            Amount: `${x.amount} ${x.coin_symbol}`,
+            Tails: x.number,
+            Exp: x.exp_earn,
+            Date: new Date(x.timestamp),
+            txDigest: x.transaction_hash,
+        };
+
+        return txHistory;
+    });
+}
+
 function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action: string) {
     let v = vaults[Index];
 

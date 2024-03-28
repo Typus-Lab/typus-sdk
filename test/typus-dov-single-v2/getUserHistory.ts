@@ -1,5 +1,11 @@
 import config from "../../mainnet.json";
-import { getUserEvents, getAutoBidEvents, parseTxHistory, getNewBidFromSentio } from "../../utils/typus-dov-single-v2/user-history";
+import {
+    getUserEvents,
+    getAutoBidEvents,
+    parseTxHistory,
+    getNewBidFromSentio,
+    getExerciseFromSentio,
+} from "../../utils/typus-dov-single-v2/user-history";
 import { getVaults } from "../../utils/typus-dov-single-v2/view-function";
 import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
 import * as fs from "fs";
@@ -87,10 +93,14 @@ const fileName = "mainnetLocalCacheEvents.json";
     const newBidHistory = await getNewBidFromSentio(vaults, sender, 0);
     // console.log(newBidHistory);
 
+    const exerciseHistory = await getExerciseFromSentio(vaults, sender, 0);
+    // console.log(exerciseHistory);
+
     const concatHistory = txHistory
         .concat(newBidHistory.filter((x) => txHistory.findIndex((y) => y.txDigest == x.txDigest) == -1))
+        .concat(exerciseHistory.filter((x) => txHistory.findIndex((y) => y.txDigest == x.txDigest) == -1))
         .sort((a, b) => Number(b.Date) - Number(a.Date));
 
-    // console.log(concatHistory.filter((h) => h.Action?.includes("Withdraw")));
+    // console.log(concatHistory.filter((h) => h.Action?.includes("Exercise")));
     // console.log(concatHistory.filter((h) => Math.round(h.Date?.getTime() / 24 / 3600000) == Math.round(Date.now() / 24 / 3600000)));
 })();
