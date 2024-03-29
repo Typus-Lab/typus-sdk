@@ -10,3 +10,4 @@ cloudFunctions
 drawKeys.json
 *.csv
 localCacheEvents.json
+*LocalCacheEvents.json
