@@ -2,13 +2,13 @@ import "../load_env";
 import config from "../../config_v2.json";
 import { KioskClient, Network } from "@mysten/kiosk";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
-import { getTailsIds } from "../../utils/typus-nft/fetch";
+import { getTailsIds, getkioskOwnerCaps } from "../../utils/typus-nft/fetch";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getStakeNftTx } from "../../utils/nft-staking/user-entry";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const provider = new SuiClient({
-    url: getFullnodeUrl("testnet"),
+    url: config.RPC_ENDPOINT,
 });
 const gasBudget = 100000000;
 
@@ -16,13 +16,36 @@ const gasBudget = 100000000;
     const address = await keypair.toSuiAddress();
     console.log(address);
 
+    var result = await provider.getOwnedObjects({
+        owner: address,
+        options: { showType: true, showContent: true },
+    });
+
+    var datas = result.data;
+
+    while (result.hasNextPage) {
+        result = await provider.getOwnedObjects({
+            owner: address,
+            options: { showType: true, showContent: true },
+            cursor: result.nextCursor,
+        });
+        datas = datas.concat(result.data);
+    }
+
+    const kioskOwnerCaps = getkioskOwnerCaps(datas);
+    // console.log(kioskOwnerCaps);
+
     const kioskClient = new KioskClient({
         client: provider,
         network: Network.MAINNET,
     });
 
-    const tailsIds = await getTailsIds(kioskClient, config, address);
+    const personalKioskRulePackageId = kioskClient.getRulePackageId("personalKioskRulePackageId");
+
+    const tailsIds = await getTailsIds(kioskClient, config, kioskOwnerCaps);
     console.log(tailsIds);
+    console.log(tailsIds.length);
+
     if (tailsIds.length > 0) {
         let nft = tailsIds[0];
 
@@ -30,9 +53,8 @@ const gasBudget = 100000000;
             gasBudget,
             config.SINGLE_COLLATERAL_PACKAGE,
             config.SINGLE_COLLATERAL_REGISTRY,
-            nft.kiosk,
-            nft.kioskCap,
-            nft.nftId
+            personalKioskRulePackageId,
+            nft
         );
 
         const result = await provider.signAndExecuteTransactionBlock({

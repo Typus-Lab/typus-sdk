@@ -2,6 +2,7 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../constants";
 import { KIOSK_TYPE, KioskClient, Network, KioskTransaction } from "@mysten/kiosk";
 import { SuiClient } from "@mysten/sui.js/client";
+import { TailsId } from "../typus-nft/fetch";
 
 /**
     entry fun transfer_nft(
@@ -17,20 +18,43 @@ export async function getTransferNftTx(
     gasBudget: number,
     nftPackageId: string,
     registry: string,
-    kiosk: string,
-    kiosk_cap: string,
-    nft_id: string,
+    personalKioskPackageId: string,
+    tails_id: TailsId,
     receiver: string
 ) {
     let tx = new TransactionBlock();
 
     let [coin] = tx.splitCoins(tx.gas, [tx.pure(10000000)]);
 
-    tx.moveCall({
-        target: `${nftPackageId}::tails_staking::transfer_nft`,
-        typeArguments: [],
-        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.pure(nft_id), tx.pure(receiver), coin],
-    });
+    if (tails_id.isPersonal) {
+        const [personalKioskCap, borrow] = tx.moveCall({
+            target: `${personalKioskPackageId}::personal_kiosk::borrow_val`,
+            arguments: [tx.object(tails_id.kioskCap)],
+        });
+        tx.moveCall({
+            target: `${nftPackageId}::tails_staking::transfer_nft`,
+            typeArguments: [],
+            arguments: [tx.object(registry), tx.object(tails_id.kiosk), personalKioskCap, tx.pure(tails_id.nftId), tx.pure(receiver), coin],
+        });
+        tx.moveCall({
+            target: `${personalKioskPackageId}::personal_kiosk::return_val`,
+            arguments: [tx.object(tails_id.kioskCap), personalKioskCap, borrow],
+        });
+    } else {
+        tx.moveCall({
+            target: `${nftPackageId}::tails_staking::transfer_nft`,
+            typeArguments: [],
+            arguments: [
+                tx.object(registry),
+                tx.object(tails_id.kiosk),
+                tx.object(tails_id.kioskCap),
+                tx.pure(tails_id.nftId),
+                tx.pure(receiver),
+                coin,
+            ],
+        });
+    }
+
     tx.setGasBudget(gasBudget);
 
     return tx;
@@ -76,19 +100,41 @@ export async function getStakeNftTx(
     gasBudget: number,
     nftPackageId: string,
     registry: string,
-    kiosk: string,
-    kiosk_cap: string,
-    nft_id: string
+    personalKioskPackageId: string,
+    tails_id: TailsId
 ) {
     let tx = new TransactionBlock();
 
     let [coin] = tx.splitCoins(tx.gas, [tx.pure(50000000)]);
 
-    tx.moveCall({
-        target: `${nftPackageId}::tails_staking::stake_nft`,
-        typeArguments: [],
-        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.pure(nft_id), tx.object(CLOCK), coin],
-    });
+    if (tails_id.isPersonal) {
+        const [personalKioskCap, borrow] = tx.moveCall({
+            target: `${personalKioskPackageId}::personal_kiosk::borrow_val`,
+            arguments: [tx.object(tails_id.kioskCap)],
+        });
+        tx.moveCall({
+            target: `${nftPackageId}::tails_staking::stake_nft`,
+            typeArguments: [],
+            arguments: [tx.object(registry), tx.object(tails_id.kiosk), personalKioskCap, tx.pure(tails_id.nftId), tx.object(CLOCK), coin],
+        });
+        tx.moveCall({
+            target: `${personalKioskPackageId}::personal_kiosk::return_val`,
+            arguments: [tx.object(tails_id.kioskCap), personalKioskCap, borrow],
+        });
+    } else {
+        tx.moveCall({
+            target: `${nftPackageId}::tails_staking::stake_nft`,
+            typeArguments: [],
+            arguments: [
+                tx.object(registry),
+                tx.object(tails_id.kiosk),
+                tx.object(tails_id.kioskCap),
+                tx.pure(tails_id.nftId),
+                tx.object(CLOCK),
+                coin,
+            ],
+        });
+    }
     tx.setGasBudget(gasBudget);
 
     return tx;
@@ -98,9 +144,8 @@ export async function getSwitchNftTx(
     gasBudget: number,
     nftPackageId: string,
     registry: string,
-    kiosk: string,
-    kiosk_cap: string,
-    nft_id: string,
+    personalKioskPackageId: string,
+    tails_id: TailsId,
     typeArguments: string[]
 ) {
     let tx = new TransactionBlock();
@@ -121,11 +166,36 @@ export async function getSwitchNftTx(
         typeArguments,
         arguments: [tx.object(registry), tx.pure("exp_profit")],
     });
-    tx.moveCall({
-        target: `${nftPackageId}::tails_staking::switch_nft`,
-        typeArguments: [],
-        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.pure(nft_id), tx.object(CLOCK), coin],
-    });
+
+    if (tails_id.isPersonal) {
+        const [personalKioskCap, borrow] = tx.moveCall({
+            target: `${personalKioskPackageId}::personal_kiosk::borrow_val`,
+            arguments: [tx.object(tails_id.kioskCap)],
+        });
+        tx.moveCall({
+            target: `${nftPackageId}::tails_staking::switch_nft`,
+            typeArguments: [],
+            arguments: [tx.object(registry), tx.object(tails_id.kiosk), personalKioskCap, tx.pure(tails_id.nftId), tx.object(CLOCK), coin],
+        });
+        tx.moveCall({
+            target: `${personalKioskPackageId}::personal_kiosk::return_val`,
+            arguments: [tx.object(tails_id.kioskCap), personalKioskCap, borrow],
+        });
+    } else {
+        tx.moveCall({
+            target: `${nftPackageId}::tails_staking::switch_nft`,
+            typeArguments: [],
+            arguments: [
+                tx.object(registry),
+                tx.object(tails_id.kiosk),
+                tx.object(tails_id.kioskCap),
+                tx.pure(tails_id.nftId),
+                tx.object(CLOCK),
+                coin,
+            ],
+        });
+    }
+
     tx.setGasBudget(gasBudget);
 
     return tx;
@@ -454,9 +524,8 @@ export async function consumeExpCoinUnstakedTx(
     nftPackageId: string,
     typeArguments: string[],
     registry: string,
-    kiosk: string,
-    kiosk_cap: string,
-    nft_id: string,
+    personalKioskPackageId: string,
+    tails_id: TailsId,
     exp_coins: string[],
     amount: string
 ) {
@@ -473,11 +542,28 @@ export async function consumeExpCoinUnstakedTx(
 
     let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure(amount)]);
 
-    tx.moveCall({
-        target: `${nftPackageId}::tails_staking::consume_exp_coin_unstaked`,
-        typeArguments,
-        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap), tx.pure(nft_id), input_coin],
-    });
+    if (tails_id.isPersonal) {
+        const [personalKioskCap, borrow] = tx.moveCall({
+            target: `${personalKioskPackageId}::personal_kiosk::borrow_val`,
+            arguments: [tx.object(tails_id.kioskCap)],
+        });
+        tx.moveCall({
+            target: `${nftPackageId}::tails_staking::consume_exp_coin_unstaked`,
+            typeArguments,
+            arguments: [tx.object(registry), tx.object(tails_id.kiosk), personalKioskCap, tx.pure(tails_id.nftId), input_coin],
+        });
+
+        tx.moveCall({
+            target: `${personalKioskPackageId}::personal_kiosk::return_val`,
+            arguments: [tx.object(tails_id.kioskCap), personalKioskCap, borrow],
+        });
+    } else {
+        tx.moveCall({
+            target: `${nftPackageId}::tails_staking::consume_exp_coin_unstaked`,
+            typeArguments,
+            arguments: [tx.object(registry), tx.object(tails_id.kiosk), tx.object(tails_id.kioskCap), tx.pure(tails_id.nftId), input_coin],
+        });
+    }
     tx.setGasBudget(gasBudget);
 
     return tx;

@@ -1,4 +1,4 @@
-import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
+import { SuiClient, SuiEventFilter, SuiObjectResponse } from "@mysten/sui.js/client";
 import { KioskClient } from "@mysten/kiosk";
 
 export async function getPool(provider: SuiClient, pool: string) {
@@ -97,16 +97,37 @@ export async function getWhitelistMap(nftConfig, wlTokens) {
     return whitelistMap;
 }
 
-interface TailsId {
+export interface TailsId {
     nftId: string;
     kiosk: string;
     kioskCap: string;
     tails: Tails;
+    isPersonal: boolean;
 }
 
 export interface kioskOwnerCap {
-    objectId: string;
     kioskId: string;
+    objectId: string;
+    isPersonal: boolean;
+}
+
+export function getkioskOwnerCaps(datas: SuiObjectResponse[]): kioskOwnerCap[] {
+    const kioskOwnerCaps: kioskOwnerCap[] = [];
+
+    for (let data of datas) {
+        if (data.data?.type == "0x2::kiosk::KioskOwnerCap") {
+            // console.log(data.data?.content);
+            // @ts-ignore
+            const fields = data.data.content.fields;
+            kioskOwnerCaps.push({ objectId: fields.id.id, kioskId: fields.for, isPersonal: false });
+        } else if (data.data?.type?.endsWith("personal_kiosk::PersonalKioskCap")) {
+            // @ts-ignore
+            const fields = data.data.content.fields;
+            kioskOwnerCaps.push({ objectId: fields.id.id, kioskId: fields.cap.fields.for, isPersonal: true });
+        }
+    }
+
+    return kioskOwnerCaps;
 }
 
 export async function getTailsIds(kioskClient: KioskClient, nftConfig, kioskOwnerCaps: kioskOwnerCap[]) {
@@ -116,15 +137,16 @@ export async function getTailsIds(kioskClient: KioskClient, nftConfig, kioskOwne
         const res = await kioskClient.getKiosk({ id: kioskOwnerCap.kioskId });
         // console.log(res);
         const tails: TailsId[] = res.items
-            .filter((item) => item.type == `${nftConfig.NFT_PACKAGE}::typus_nft::Tails`)
+            .filter((item) => item.type == `${nftConfig.NFT_PACKAGE_ORIGIN}::typus_nft::Tails`)
             .map((item) => {
                 // console.log(item.data);
                 // @ts-ignore
                 const tails = item.data as Tails;
                 let t: TailsId = {
-                    nftId: item.objectId,
                     kiosk: kioskOwnerCap.kioskId,
                     kioskCap: kioskOwnerCap.objectId,
+                    isPersonal: kioskOwnerCap.isPersonal,
+                    nftId: item.objectId,
                     tails,
                 };
 
@@ -378,9 +400,9 @@ export interface DiscountPoolData {
     inventory: number;
 }
 
-export async function getMintHistory(provider: SuiClient, NFT_PACKAGE_UPGRADE: string, vrf_input) {
+export async function getMintHistory(provider: SuiClient, NFT_PACKAGE: string, vrf_input) {
     const eventFilter: SuiEventFilter = {
-        MoveEventType: `${NFT_PACKAGE_UPGRADE}::discount_mint::DiscountEventV3`,
+        MoveEventType: `${NFT_PACKAGE}::discount_mint::DiscountEventV3`,
     };
 
     var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
