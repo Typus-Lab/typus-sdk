@@ -152,9 +152,11 @@ export async function parseTxHistory(
                     Tails = `#${event.parsedJson!.number}`;
                     break;
                 case "DailyAttendEvent":
-                    Action = "Check In";
-                    Tails = `#${event.parsedJson!.number}`;
-                    Exp = "10";
+                    var i = txHistory.findIndex((x) => x.txDigest == event.id.txDigest && x.Action == "Collect EXP");
+                    if (i != -1) {
+                        txHistory[i].Action = "Check In";
+                        return txHistory;
+                    }
                     break;
                 case "FirstDepositEvent":
                     Action = "First Deposit";
