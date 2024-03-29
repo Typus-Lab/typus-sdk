@@ -63,22 +63,51 @@ export async function getTransferNftTx(
 export async function getTransferNftsTx(
     gasBudget: number,
     nftPackageId: string,
+    personalKioskPackageId: string,
     registry: string,
-    kiosks: string[],
-    kiosk_caps: string[],
-    nft_ids: string[],
+    tailsIds: TailsId[],
     receiver: string
 ) {
     let tx = new TransactionBlock();
     var i = 0;
-    while (i < kiosks.length) {
+    while (i < tailsIds.length) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(10000000)]);
 
-        tx.moveCall({
-            target: `${nftPackageId}::tails_staking::transfer_nft`,
-            typeArguments: [],
-            arguments: [tx.object(registry), tx.object(kiosks[i]), tx.object(kiosk_caps[i]), tx.pure(nft_ids[i]), tx.pure(receiver), coin],
-        });
+        if (tailsIds[i].isPersonal) {
+            const [personalKioskCap, borrow] = tx.moveCall({
+                target: `${personalKioskPackageId}::personal_kiosk::borrow_val`,
+                arguments: [tx.object(tailsIds[i].kioskCap)],
+            });
+            tx.moveCall({
+                target: `${nftPackageId}::tails_staking::transfer_nft`,
+                typeArguments: [],
+                arguments: [
+                    tx.object(registry),
+                    tx.object(tailsIds[i].kiosk),
+                    personalKioskCap,
+                    tx.pure(tailsIds[i].nftId),
+                    tx.pure(receiver),
+                    coin,
+                ],
+            });
+            tx.moveCall({
+                target: `${personalKioskPackageId}::personal_kiosk::return_val`,
+                arguments: [tx.object(tailsIds[i].kioskCap), personalKioskCap, borrow],
+            });
+        } else {
+            tx.moveCall({
+                target: `${nftPackageId}::tails_staking::transfer_nft`,
+                typeArguments: [],
+                arguments: [
+                    tx.object(registry),
+                    tx.object(tailsIds[i].kiosk),
+                    tx.object(tailsIds[i].kioskCap),
+                    tx.pure(tailsIds[i].nftId),
+                    tx.pure(receiver),
+                    coin,
+                ],
+            });
+        }
         i += 1;
     }
     tx.setGasBudget(gasBudget);
