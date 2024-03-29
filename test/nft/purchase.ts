@@ -23,7 +23,7 @@ const itemId = "0x70e12f8c2cc87ea9f9287ef9a7de77467158d79c1226f25cc1b200e6c1d714
         const kiosk = kiosks.kioskOwnerCaps[0];
 
         let transactionBlock = new TransactionBlock();
-        const itemType = `${config.NFT_PACKAGE}::typus_nft::Tails`;
+        const itemType = `${config.NFT_PACKAGE_ORIGIN}::typus_nft::Tails`;
 
         const [coin] = transactionBlock.splitCoins(transactionBlock.gas, [transactionBlock.pure(price)]);
 

@@ -25,7 +25,7 @@ const gasBudget = 100000000;
     const remaining = poolData.num;
     console.log("remaining: " + remaining);
 
-    var transactionBlock = await getIsWhitelistTx(gasBudget, config.NFT_PACKAGE_UPGRADE, pool, address);
+    var transactionBlock = await getIsWhitelistTx(gasBudget, config.NFT_PACKAGE, pool, address);
     let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: address })).results;
     // @ts-ignore
     const isWhitelist = results![0].returnValues[0][0] == 1;
@@ -33,7 +33,7 @@ const gasBudget = 100000000;
 
     const seed = "2"; // 0,1,2
 
-    var transactionBlock = await getRequestMintTx(gasBudget, config.NFT_PACKAGE_UPGRADE, pool, seed, poolData.price);
+    var transactionBlock = await getRequestMintTx(gasBudget, config.NFT_PACKAGE, pool, seed, poolData.price);
 
     const result = await provider.signAndExecuteTransactionBlock({
         signer: keypair,

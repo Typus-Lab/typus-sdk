@@ -29,7 +29,7 @@ const necklace = "typus";
     const wlTokens = objs.data.filter(
         (obj) =>
             // @ts-ignore
-            obj.data?.type?.startsWith(config.NFT_PACKAGE) && obj.data?.content?.fields.for == pool
+            obj.data?.type?.startsWith(config.NFT_PACKAGE_ORIGIN) && obj.data?.content?.fields.for == pool
     );
 
     // console.log(wlTokens);
@@ -41,7 +41,7 @@ const necklace = "typus";
     if (wlTokens.length > 0) {
         const wlToken = wlTokens[0].data?.objectId!;
 
-        let transactionBlock = await getMintTx(gasBudget, config.NFT_PACKAGE, config.NFT_TRANSFER_POLICY, pool, wlToken);
+        let transactionBlock = await getMintTx(gasBudget, config.NFT_PACKAGE_ORIGIN, config.NFT_TRANSFER_POLICY, pool, wlToken);
 
         const result = await provider.signAndExecuteTransactionBlock({
             signer: keypair,

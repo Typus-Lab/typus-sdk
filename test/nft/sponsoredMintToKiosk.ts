@@ -40,7 +40,7 @@ const necklace = "team";
     const wlTokens = datas.filter((data) => {
         // console.log(data);
         // @ts-ignore
-        return data.data?.type?.startsWith(config.NFT_PACKAGE) && data.data?.content?.fields.for == pool;
+        return data.data?.type?.startsWith(config.NFT_PACKAGE_ORIGIN) && data.data?.content?.fields.for == pool;
     });
 
     console.log(wlTokens.length);
@@ -57,7 +57,7 @@ const necklace = "team";
 
         const [sponsoredResponse, transactionBlock] = await getSponsoredMintToKiosk(
             config.sponsorApi,
-            config.NFT_PACKAGE,
+            config.NFT_PACKAGE_ORIGIN,
             pool,
             wlTokens[0].data?.objectId!,
             kiosk,

@@ -18,7 +18,7 @@ const signer = new RawSigner(keypair, provider);
     });
     // console.log(objs);
 
-    const wlTokens = objs.data.filter((obj) => obj.data?.type! == `${config.NFT_PACKAGE}::typus_nft::Whitelist`);
+    const wlTokens = objs.data.filter((obj) => obj.data?.type! == `${config.NFT_PACKAGE_ORIGIN}::typus_nft::Whitelist`);
     // console.log(wlTokens);
 
     const wlTokensFor = await getWhitelistMap(config, wlTokens);

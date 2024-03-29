@@ -35,7 +35,7 @@ const gasBudget = 100000000;
     const tailsIds = datas.filter((data) => {
         // console.log(data);
         // @ts-ignore
-        return data.data?.type! == `${config.NFT_PACKAGE}::typus_nft::Tails`;
+        return data.data?.type! == `${config.NFT_PACKAGE_ORIGIN}::typus_nft::Tails`;
     });
     // console.log(objs);
 
@@ -50,7 +50,7 @@ const gasBudget = 100000000;
         let transactionBlock = await getCreateKioskAndLockNftTx(
             kioskClient,
             gasBudget,
-            config.NFT_PACKAGE,
+            config.NFT_PACKAGE_ORIGIN,
             config.NFT_TRANSFER_POLICY,
             nft.data?.objectId!,
             address

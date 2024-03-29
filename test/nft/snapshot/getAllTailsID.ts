@@ -14,7 +14,7 @@ const provider = new SuiClient({ url: config_v2.RPC_ENDPOINT });
 
     while (hasNextPage) {
         var result = await provider.queryEvents({
-            query: { MoveEventType: `${config_v2.NFT_PACKAGE}::typus_nft::MintEvent` },
+            query: { MoveEventType: `${config_v2.NFT_PACKAGE_ORIGIN}::typus_nft::MintEvent` },
             order: "descending",
             cursor,
         });

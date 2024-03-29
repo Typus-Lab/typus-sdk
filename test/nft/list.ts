@@ -28,7 +28,7 @@ const price = "1000000000";
 
     if (tailsIds.length > 0) {
         let transactionBlock = new TransactionBlock();
-        const itemType = `${config.NFT_PACKAGE}::typus_nft::Tails`;
+        const itemType = `${config.NFT_PACKAGE_ORIGIN}::typus_nft::Tails`;
         list(transactionBlock, itemType, tailsIds[0].kiosk, tailsIds[0].kioskCap, tailsIds[0].nftId, price);
         let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
         console.log(res);
