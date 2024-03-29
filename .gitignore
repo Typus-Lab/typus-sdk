@@ -11,3 +11,4 @@ drawKeys.json
 *.csv
 localCacheEvents.json
 *LocalCacheEvents.json
+vaultHistory.json
