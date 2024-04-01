@@ -259,10 +259,25 @@ export async function parseTxHistory(
                     Action = "Rebate";
                     Amount = `${BigNumber(amount).toFixed()} ${token}`;
                     break;
-                case "ClaimProfitSharingEvent":
+                // case "ClaimProfitSharingEvent":
+                //     var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
+                //     var amount = Number(event.parsedJson!.value) / 10 ** assetToDecimal(token)!;
+                //     Action = "Claim Profit Sharing";
+                //     Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                //     Tails = `#${event.parsedJson!.number}`;
+                //     break;
+                case "ClaimProfitSharingEventV2":
                     var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
                     var amount = Number(event.parsedJson!.value) / 10 ** assetToDecimal(token)!;
-                    Action = "Claim Profit Sharing";
+                    // dice_profit, exp_profit
+                    switch (event.parsedJson!.name) {
+                        case "dice_profit":
+                            Action = "Harvest Dice Profit";
+                            break;
+                        case "exp_profit":
+                            Action = "Harvest Leaderboard Prize";
+                            break;
+                    }
                     Amount = `${BigNumber(amount).toFixed()} ${token}`;
                     Tails = `#${event.parsedJson!.number}`;
                     break;
