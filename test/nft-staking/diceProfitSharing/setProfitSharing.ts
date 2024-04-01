@@ -16,7 +16,7 @@ const provider = new SuiClient({
 const gasBudget = 100000000;
 
 const typeArguments = ["0x2::sui::SUI"];
-const totalRewards = 3333_000000000;
+const totalRewards = 2222_000000000;
 
 const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
 
