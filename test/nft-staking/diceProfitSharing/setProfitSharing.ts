@@ -55,6 +55,8 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     const users = datas.map((d) => d.name.value as string);
     console.log("users.length: " + users.length);
 
+    // process.exit();
+
     // STEP 1: Remove
 
     var transactionBlock = await getRemoveProfitSharingTx(

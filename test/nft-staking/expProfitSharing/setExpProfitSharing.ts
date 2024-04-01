@@ -73,6 +73,8 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     // const leaderboardThisWeek = await getExpLeaderBoard(thisMonday8AM.toString());
     // console.log(leaderboardThisWeek);
 
+    // process.exit();
+
     // STEP 1: Remove
 
     var transactionBlock = await getRemoveProfitSharingTx(
