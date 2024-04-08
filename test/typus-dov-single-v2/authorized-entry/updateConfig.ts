@@ -5,7 +5,7 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import configs from "../config.json";
 
-const config = configs.TESTNET;
+const config = configs.MAINNET;
 const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const user = signer.toSuiAddress();
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });
@@ -15,7 +15,7 @@ const provider = new SuiClient({ url: config.RPC_ENDPOINT });
     let packageId = config.DOV_SINGLE_PACKAGE;
     let registry = config.DOV_SINGLE_REGISTRY;
     let requests: UpdateConfigRequests[] = [];
-    requests.push({ index: "34", config: { depositLotSize: "10", bidLotSize: "10", minDepositSize: "10", minBidSize: "10" } });
+    requests.push({ index: "21", config: { capacity: "2100000000000000" } });
 
     let transactionBlock = await getUpdateConfigTx(gasBudget, packageId, registry, requests);
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });

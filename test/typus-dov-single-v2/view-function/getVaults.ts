@@ -8,7 +8,7 @@ const provider = new SuiClient({
 });
 
 (async () => {
-    let indexes = [];
+    let indexes = ["21"];
     let result = await getVaults(provider, config.DOV_SINGLE_PACKAGE, config.DOV_SINGLE_REGISTRY, indexes);
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();

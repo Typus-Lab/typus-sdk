@@ -294,5 +294,5 @@ async function v() {
 }
 
 (async () => {
-    await v();
+    await ii();
 })();
