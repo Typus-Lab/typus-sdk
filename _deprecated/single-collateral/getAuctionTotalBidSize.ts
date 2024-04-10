@@ -1,0 +1,23 @@
+import { JsonRpcProvider, Connection } from "@mysten/sui.js";
+import config from "../../config.json";
+import { getAuctionTotalBidSize } from "../typus-dov-single/view-function";
+import { getPortfolioVaults } from "../typus-dov-single/portfolio-vault";
+
+const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
+(async () => {
+    let index = "5";
+    let portfolioVaults = await getPortfolioVaults(
+        provider,
+        config.SINGLE_COLLATERAL_REGISTRY,
+        config.SINGLE_COLLATERAL_DEPOSIT_VAULT_REGISTRY,
+        config.SINGLE_COLLATERAL_BID_VAULT_REGISTRY
+    );
+    let result = await getAuctionTotalBidSize(
+        provider,
+        config.SINGLE_COLLATERAL_PACKAGE,
+        portfolioVaults[index].typeArgs,
+        config.SINGLE_COLLATERAL_REGISTRY,
+        index
+    );
+    console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
+})();

@@ -9,7 +9,7 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import * as fs from "fs";
 import configs from "./config.json";
 
-const config = configs.MAINNET;
+const config = configs.TESTNET;
 const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
@@ -293,6 +293,43 @@ async function v() {
     });
 }
 
+async function vi() {
+    let packageId = "0xf5204275d1994be559ef5d84a43379899caad87fd09a50550615dc6be15bd637";
+    let module = "leaderboard";
+    let transactionBlock = new TransactionBlock();
+    transactionBlock.moveCall({
+        target: `${packageId}::${module}::get_rankings`,
+        typeArguments: [],
+        arguments: [
+            transactionBlock.pure("0xfd1a0a05ee1ecbf98157f625a4db7f359735b0b71eef5d2e56f46691ca898236"),
+            transactionBlock.pure("0x0bdf39b3f8c04cf90d80aeb47fea83a38974cd24d3122ffc1f0e67d1f4429cc7"),
+            transactionBlock.pure("test_leaderboard"),
+            transactionBlock.pure("0x47d8b655ecb2381b902d558c96318497788a07a6a222c40e1c2d11b2b510406b"),
+            transactionBlock.pure(100),
+            transactionBlock.pure("0xfdfc223abec70fccf517642b22ab26f13abadf7650211d56c123d1c941104434"),
+            transactionBlock.pure(true),
+        ],
+    });
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    let bytes = results[results.length - 1].returnValues[0][0];
+    let reader = new BcsReader(new Uint8Array(bytes));
+    let result = reader.readVec((reader, i) => {
+        if (i == 0) {
+            reader.readULEB();
+            return reader.read64();
+        } else {
+            reader.readULEB();
+            return {
+                score: reader.read64(),
+                users: reader.readVec((reader) => {
+                    return AddressFromBytes(reader.readBytes(32));
+                }),
+            };
+        }
+    });
+    console.log(result);
+}
+
 (async () => {
-    await ii();
+    await vi();
 })();
