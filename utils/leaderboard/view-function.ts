@@ -6,7 +6,7 @@ import { AddressFromBytes } from "../tools";
 export const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 export async function getRankings(input: {
     provider: SuiClient;
-    packageId: string;
+    typusPackageId: string;
     typusEcosystemVersion: string;
     typusLeaderboardRegistry: string;
     key: string;
@@ -17,7 +17,7 @@ export async function getRankings(input: {
 }) {
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
-        target: `${input.packageId}::leaderboard::get_rankings`,
+        target: `${input.typusPackageId}::leaderboard::get_rankings`,
         typeArguments: [],
         arguments: [
             transactionBlock.pure(input.typusEcosystemVersion),
