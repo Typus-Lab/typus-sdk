@@ -7,18 +7,16 @@ export async function getAirdrop(input: {
     provider: SuiClient;
     typusPackageId: string;
     typusEcosystemVersion: string;
-    typusAirdropRegistry: string;
-    key: string;
+    typusUserRegistry: string;
     user: string;
-}): Promise<string> {
+}): Promise<string[]> {
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
-        target: `${input.typusPackageId}::airdrop::get_airdrop`,
+        target: `${input.typusPackageId}::user::get_user_metadata`,
         typeArguments: [],
         arguments: [
             transactionBlock.pure(input.typusEcosystemVersion),
-            transactionBlock.pure(input.typusAirdropRegistry),
-            transactionBlock.pure(input.key),
+            transactionBlock.pure(input.typusUserRegistry),
             transactionBlock.pure(input.user),
         ],
     });
@@ -26,5 +24,7 @@ export async function getAirdrop(input: {
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
-    return reader.read64();
+    return reader.readVec((reader) => {
+        return reader.read64();
+    });
 }

@@ -327,7 +327,11 @@ async function vi() {
             };
         }
     });
-    console.log(result);
+
+    console.log({
+        user_score: result[0],
+        leaderboard: result.slice(1),
+    });
 }
 
 (async () => {

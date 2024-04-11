@@ -4,6 +4,14 @@ import { BcsReader } from "@mysten/bcs";
 import { AddressFromBytes } from "../tools";
 
 export const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+export interface Rankings {
+    user_score: string;
+    leaderboard: Ranks[];
+}
+export interface Ranks {
+    score: string;
+    users: string[];
+}
 export async function getRankings(input: {
     provider: SuiClient;
     typusPackageId: string;
@@ -14,7 +22,7 @@ export async function getRankings(input: {
     ranks: number;
     user: string;
     active: boolean;
-}) {
+}): Promise<Rankings> {
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${input.typusPackageId}::leaderboard::get_rankings`,
@@ -47,5 +55,8 @@ export async function getRankings(input: {
             };
         }
     });
-    console.log(result);
+    return {
+        user_score: result[0],
+        leaderboard: result.slice(1),
+    } as Rankings;
 }
