@@ -10,7 +10,7 @@ export async function getAirdrop(input: {
     typusAirdropRegistry: string;
     key: string;
     user: string;
-}): Promise<string> {
+}): Promise<string[]> {
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${input.typusPackageId}::airdrop::get_airdrop`,
@@ -26,5 +26,7 @@ export async function getAirdrop(input: {
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
-    return reader.read64();
+    return reader.readVec((reader) => {
+        return reader.read64();
+    });
 }
