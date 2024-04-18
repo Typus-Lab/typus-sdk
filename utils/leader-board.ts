@@ -258,7 +258,100 @@ export async function getExpLeaderBoard(startTimestamp: string, endTimestamp?: s
     return data.result.rows as ExpLeaderBoard[];
 }
 
+export async function getTotalDepositorIncentive(): Promise<number> {
+    const apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
+
+    const headers = {
+        "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
+        "Content-Type": "application/json",
+    };
+
+    const requestData = {
+        sqlQuery: {
+            sql: `
+                SELECT SUM(E.depositor_incentive_value) as incentive
+                FROM Delivery E
+            `,
+            size: 2000000,
+        },
+    };
+
+    const jsonData = JSON.stringify(requestData);
+
+    let response = await fetch(apiUrl, {
+        method: "POST",
+        headers,
+        body: jsonData,
+    });
+
+    let data = await response.json();
+
+    return data.result.rows[0].incentive;
+}
+
+export async function getTotalPremium(): Promise<number> {
+    const apiUrl = "https://app.sentio.xyz/api/v1/insights/typus/typus_v2/query";
+
+    const headers = {
+        "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
+        "Content-Type": "application/json",
+    };
+
+    const requestData = {
+        timeRange: {
+            start: "now",
+            end: "now",
+            step: 3600,
+            timezone: "Europe/Paris",
+        },
+        limit: 1,
+        queries: [
+            {
+                metricsQuery: {
+                    query: "PremiumUSD",
+                    alias: "",
+                    id: "a",
+                    labelSelector: {},
+                    aggregate: {
+                        op: "SUM",
+                        grouping: ["chain"],
+                    },
+                    functions: [
+                        {
+                            name: "sum_over_time",
+                            arguments: [
+                                {
+                                    durationValue: {
+                                        value: 520,
+                                        unit: "w",
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                    disabled: false,
+                },
+                dataSource: "METRICS",
+                sourceName: "",
+            },
+        ],
+        formulas: [],
+    };
+
+    const jsonData = JSON.stringify(requestData);
+
+    let response = await fetch(apiUrl, {
+        method: "POST",
+        headers,
+        body: jsonData,
+    });
+
+    let data = await response.json();
+
+    return data.results[0].matrix.samples[0].values[0].value;
+}
+
 // (async () => {
-//     let res = await getExpLeaderBoard("1709539200", "1709625600");
+//     let res = await getTotalPremium();
 //     console.log(res);
 // })();
