@@ -4,6 +4,7 @@ import { AddressFromBytes } from "../../utils/tools";
 import { BcsReader } from "@mysten/bcs";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getVaults } from "../../utils/typus-dov-single-v2/view-function";
+import { getRankings } from "../../utils/leaderboard/view-function";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import * as fs from "fs";
@@ -294,44 +295,19 @@ async function v() {
 }
 
 async function vi() {
-    let packageId = "0xf5204275d1994be559ef5d84a43379899caad87fd09a50550615dc6be15bd637";
-    let module = "leaderboard";
-    let transactionBlock = new TransactionBlock();
-    transactionBlock.moveCall({
-        target: `${packageId}::${module}::get_rankings`,
-        typeArguments: [],
-        arguments: [
-            transactionBlock.pure("0xfd1a0a05ee1ecbf98157f625a4db7f359735b0b71eef5d2e56f46691ca898236"),
-            transactionBlock.pure("0x0bdf39b3f8c04cf90d80aeb47fea83a38974cd24d3122ffc1f0e67d1f4429cc7"),
-            transactionBlock.pure("test_leaderboard"),
-            transactionBlock.pure("0x47d8b655ecb2381b902d558c96318497788a07a6a222c40e1c2d11b2b510406b"),
-            transactionBlock.pure(100),
-            transactionBlock.pure("0xfdfc223abec70fccf517642b22ab26f13abadf7650211d56c123d1c941104434"),
-            transactionBlock.pure(true),
-        ],
-    });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
-    let bytes = results[results.length - 1].returnValues[0][0];
-    let reader = new BcsReader(new Uint8Array(bytes));
-    let result = reader.readVec((reader, i) => {
-        if (i == 0) {
-            reader.readULEB();
-            return reader.read64();
-        } else {
-            reader.readULEB();
-            return {
-                score: reader.read64(),
-                users: reader.readVec((reader) => {
-                    return AddressFromBytes(reader.readBytes(32));
-                }),
-            };
-        }
-    });
-
-    console.log({
-        user_score: result[0],
-        leaderboard: result.slice(1),
-    });
+    console.log(
+        await getRankings({
+            provider,
+            typusPackageId: config.PACKAGE.TYPUS_PACKAGE,
+            typusEcosystemVersion: config.TYPUS_VERSION,
+            typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD_REGISTRY,
+            key: "bidding_leaderboard",
+            id: "0xc94f5b3a1f237925a517e8406080aae523fef744e432bd72cb904f619aced583",
+            ranks: 100,
+            user: "0x692a5563ad3cede2da561f473eb37efdbbb94f8d041dfef7524dda857c609ba3",
+            active: true,
+        })
+    );
 }
 
 (async () => {
