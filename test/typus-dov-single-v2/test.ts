@@ -47,7 +47,7 @@ async function i() {
 }
 
 async function ii() {
-    let vaults = Object.values(await getVaults(provider, config.DOV_SINGLE_PACKAGE, config.DOV_SINGLE_REGISTRY, []));
+    let vaults = Object.values(await getVaults(provider, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE, []));
     for (let i = 0; i < vaults.length; i++) {
         // let indexes = [23, 27, 28];
         // if (!indexes.includes(i)) {
@@ -197,9 +197,9 @@ async function iv() {
 }
 
 async function v() {
-    let packageId = config.DOV_SINGLE_PACKAGE;
+    let packageId = config.PACKAGE.DOV_SINGLE;
     let module = "typus_dov_single";
-    let registry = config.DOV_SINGLE_REGISTRY;
+    let registry = config.REGISTRY.DOV_SINGLE;
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${packageId}::${module}::health_check`,

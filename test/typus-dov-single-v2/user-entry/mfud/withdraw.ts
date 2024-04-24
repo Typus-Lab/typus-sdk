@@ -14,10 +14,10 @@ const provider = new SuiClient({ url: config.RPC_ENDPOINT });
     let transactionBlock = new TransactionBlock();
     transactionBlock = getWithdrawTx({
         tx: transactionBlock,
-        typusFrameworkOriginPackageId: config.FRAMEWORK_PACKAGE_ORIGIN,
+        typusFrameworkOriginPackageId: config.PACKAGE_ORIGIN.FRAMEWORK,
         typusFrameworkPackageId: config.FRAMEWORK_PACKAGE,
-        typusDovSinglePackageId: config.DOV_SINGLE_PACKAGE,
-        typusDovSingleRegistry: config.DOV_SINGLE_REGISTRY,
+        typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
+        typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
         mfudPackageId: config.MFUD_PACKAGE,
         mfudRegistry: config.MFUD_REGISTRY,
         typeArguments: [config.MFUD_TOKEN, config.MFUD_TOKEN],
