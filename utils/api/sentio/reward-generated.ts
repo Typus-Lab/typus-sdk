@@ -147,6 +147,7 @@ export async function getTotalProfitSharing(provider: SuiClient): Promise<TokenA
 
         const amount = value / 10 ** assetToDecimal(token)!;
 
+        // const week = Math.round(Number(data.timestampMs) / 24 / 3600 / 1000);
         if (tokenAmountMap.has(token)) {
             let sum = tokenAmountMap.get(token)!;
             tokenAmountMap.set(token, sum + Number(amount));
@@ -177,10 +178,10 @@ import { assetToDecimal, typeArgToAsset } from "../../token";
     // console.log(res1);
     // const res2 = await getTotalPremium();
     // console.log(res2);
-    // const res3 = await getTotalProfitSharingClaimed();
-    // console.log(res3);
-    // const config = configs.MAINNET;
-    // const provider = new SuiClient({ url: config.RPC_ENDPOINT });
-    // const res4 = await getTotalProfitSharing(provider);
-    // console.log(res4);
+    const res3 = await getTotalProfitSharingClaimed();
+    console.log(res3);
+    const config = configs.MAINNET;
+    const provider = new SuiClient({ url: config.RPC_ENDPOINT });
+    const res4 = await getTotalProfitSharing(provider);
+    console.log(res4);
 })();
