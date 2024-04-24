@@ -363,7 +363,7 @@ export async function getNewBidFromSentio(vaults: { [key: string]: Vault }, user
             sql: `
                 SELECT *
                 FROM NewBid N
-                JOIN (
+                LEFT JOIN (
                     SELECT number, distinct_id, exp_earn, transaction_hash, log_index
                     FROM ExpUp
                 ) S ON N.transaction_hash = S.transaction_hash && N.log_index + 1 = S.log_index
@@ -386,6 +386,11 @@ export async function getNewBidFromSentio(vaults: { [key: string]: Vault }, user
 
     return data.result.rows.map((x) => {
         let [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, x.index, "NewBidEvent");
+
+        if (x.number == "0" && x.exp_earn == "0") {
+            x.number = undefined;
+            x.exp_earn = undefined;
+        }
 
         let txHistory: TxHistory = {
             Index: x.index,
