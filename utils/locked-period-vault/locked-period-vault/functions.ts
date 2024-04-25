@@ -1,6 +1,7 @@
 import { PUBLISHED_AT } from "..";
+import { CLOCK } from "../../../constants";
 import { ObjectArg, obj, pure } from "../../_framework/util";
-import { TransactionArgument, TransactionBlock } from "@mysten/sui.js/transactions";
+import { TransactionArgument, TransactionBlock, TransactionObjectArgument } from "@mysten/sui.js/transactions";
 
 export function init(txb: TransactionBlock) {
     return txb.moveCall({ target: `${PUBLISHED_AT}::locked_period_vault::init`, arguments: [] });
@@ -97,6 +98,93 @@ export function lockReceipt(txb: TransactionBlock, args: LockReceiptArgs) {
             obj(txb, args.clock),
         ],
     });
+}
+
+export function depositAndLockReceipt(input: {
+    tx: TransactionBlock;
+    typusFrameworkOriginPackageId: string;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    index: string;
+    coins: string[];
+    amount: string;
+    receipts: string[] | TransactionObjectArgument[];
+    user: string;
+    lockedVaultRegistry: string;
+    lockActiveShare: string;
+    lockWarmupShare: string;
+}) {
+    if (
+        input.typeArguments[0] == "0x2::sui::SUI" ||
+        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
+    ) {
+        const [coin] = input.tx.splitCoins(input.tx.gas, [input.tx.pure(input.amount)]);
+        const result = input.tx.moveCall({
+            target: `${input.typusDovSinglePackageId}::tails_staking::deposit`,
+            typeArguments: input.typeArguments,
+            arguments: [
+                input.tx.object(input.typusDovSingleRegistry),
+                input.tx.pure(input.index),
+                input.tx.makeMoveVec({ objects: [coin] }),
+                input.tx.pure(input.amount),
+                input.tx.makeMoveVec({
+                    type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                    objects: input.receipts.map((receipt) => input.tx.object(receipt)),
+                }),
+                input.tx.object(CLOCK),
+            ],
+        });
+        input.tx.moveCall({
+            target: `${input.typusFrameworkPackageId}::utils::transfer_coins`,
+            typeArguments: [input.typeArguments[0]],
+            arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
+        });
+        const receipt = lockReceipt(input.tx, {
+            registry: input.typusDovSingleRegistry,
+            lockedVaultRegistry: input.lockedVaultRegistry,
+            index: input.tx.pure(input.index),
+            receipt: input.tx.object(result[1]),
+            splitActiveShare: input.tx.pure(input.lockActiveShare),
+            splitWarmupShare: input.tx.pure(input.lockWarmupShare),
+            clock: input.tx.object(CLOCK),
+        });
+        input.tx.transferObjects([input.tx.object(receipt)], input.user);
+    } else {
+        const result = input.tx.moveCall({
+            target: `${input.typusDovSinglePackageId}::tails_staking::deposit`,
+            typeArguments: input.typeArguments,
+            arguments: [
+                input.tx.object(input.typusDovSingleRegistry),
+                input.tx.pure(input.index),
+                input.tx.makeMoveVec({ objects: input.coins.map((coin) => input.tx.object(coin)) }),
+                input.tx.pure(input.amount),
+                input.tx.makeMoveVec({
+                    type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                    objects: input.receipts.map((receipt) => input.tx.object(receipt)),
+                }),
+                input.tx.pure(CLOCK),
+            ],
+        });
+        input.tx.moveCall({
+            target: `${input.typusFrameworkPackageId}::utils::transfer_coins`,
+            typeArguments: [input.typeArguments[0]],
+            arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
+        });
+        const receipt = lockReceipt(input.tx, {
+            registry: input.typusDovSingleRegistry,
+            lockedVaultRegistry: input.lockedVaultRegistry,
+            index: input.tx.pure(input.index),
+            receipt: input.tx.object(result[1]),
+            splitActiveShare: input.tx.pure(input.lockActiveShare),
+            splitWarmupShare: input.tx.pure(input.lockWarmupShare),
+            clock: CLOCK,
+        });
+        input.tx.transferObjects([input.tx.object(receipt)], input.user);
+    }
+
+    return input.tx;
 }
 
 export interface NewLockedVaultArgs {
