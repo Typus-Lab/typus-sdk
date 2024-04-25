@@ -1,2 +1,3 @@
 export const PACKAGE_ID = "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8";
 export const PUBLISHED_AT = "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8";
+export const REGISTRY = "0xdcced74f55056a8d661b5861a3616f1cebd940700fce3316c0ddf5f09b1fd166";
