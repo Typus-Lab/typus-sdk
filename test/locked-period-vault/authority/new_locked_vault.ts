@@ -1,4 +1,4 @@
-import config from "../../../config.json";
+import configs from "../../../config.json";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { newLockedVault } from "../../../utils/locked-period-vault/locked-period-vault/functions";
@@ -7,6 +7,8 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 import mnemonic from "../../../mnemonic.json";
 const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+
+const config = configs.TESTNET;
 
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,

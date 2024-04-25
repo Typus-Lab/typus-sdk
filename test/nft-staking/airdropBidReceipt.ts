@@ -95,7 +95,7 @@ const gasBudget = 100000000;
     }
 
     const transactionBlock = getMultiTransferBidReceiptTx({
-        typusFrameworkPackageId: config.FRAMEWORK_PACKAGE,
+        typusFrameworkPackageId: config.PACKAGE.FRAMEWORK,
         typusFrameworkOriginPackageId: config.PACKAGE_ORIGIN.FRAMEWORK,
         typusDovSinglePackageId: config.SINGLE_COLLATERAL_PACKAGE,
         typusDovSingleRegistry: config.SINGLE_COLLATERAL_REGISTRY,

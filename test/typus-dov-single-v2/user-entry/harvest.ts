@@ -15,14 +15,14 @@ const provider = new SuiClient({ url: config.RPC_ENDPOINT });
     transactionBlock = getHarvestTx({
         tx: transactionBlock,
         typusFrameworkOriginPackageId: config.PACKAGE_ORIGIN.FRAMEWORK,
-        typusFrameworkPackageId: config.FRAMEWORK_PACKAGE,
+        typusFrameworkPackageId: config.PACKAGE.FRAMEWORK,
         typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
         typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
         typeArguments: [config.USDT_TOKEN, config.USDT_TOKEN],
         index: "31",
         receipts: ["0x93809ac72a6eae1d17dc1777d490af77971a00423a933b061ff96a8fe2cecf85"],
         user,
-        incentiveToken: config.SUI_TOKEN,
+        incentiveToken: config.TOKEN.SUI,
     });
     transactionBlock.setGasBudget(100000000);
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });

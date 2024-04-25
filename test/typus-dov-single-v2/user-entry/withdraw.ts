@@ -15,10 +15,10 @@ const provider = new SuiClient({ url: config.RPC_ENDPOINT });
     transactionBlock = getWithdrawTx({
         tx: transactionBlock,
         typusFrameworkOriginPackageId: config.PACKAGE_ORIGIN.FRAMEWORK,
-        typusFrameworkPackageId: config.FRAMEWORK_PACKAGE,
+        typusFrameworkPackageId: config.PACKAGE.FRAMEWORK,
         typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
         typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
-        typeArguments: [config.SUI_TOKEN, config.SUI_TOKEN],
+        typeArguments: [config.TOKEN.SUI, config.TOKEN.SUI],
         index: "19",
         receipts: [],
         user,

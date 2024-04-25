@@ -14,10 +14,10 @@ const provider = new SuiClient({ url: config.RPC_ENDPOINT });
     let transactionBlock = new TransactionBlock();
     transactionBlock = getRebateTx({
         tx: transactionBlock,
-        typusFrameworkPackageId: config.FRAMEWORK_PACKAGE,
+        typusFrameworkPackageId: config.PACKAGE.FRAMEWORK,
         typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
         typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
-        typeArgument: config.SUI_TOKEN,
+        typeArgument: config.TOKEN.SUI,
         user,
     });
     transactionBlock.setGasBudget(100000000);
