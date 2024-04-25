@@ -76,10 +76,9 @@ export class CritbitTree<V extends TypeArgument> implements StructClass {
     static reified<V extends Reified<TypeArgument, any>>(V: V): CritbitTreeReified<ToTypeArgument<V>> {
         return {
             typeName: CritbitTree.$typeName,
-            fullTypeName: composeSuiType(
-                CritbitTree.$typeName,
-                ...[extractType(V)]
-            ) as `0x0::critbit::CritbitTree<${ToTypeStr<ToTypeArgument<V>>}>`,
+            fullTypeName: composeSuiType(CritbitTree.$typeName, ...[extractType(V)]) as `0x0::critbit::CritbitTree<${ToTypeStr<
+                ToTypeArgument<V>
+            >}>`,
             typeArgs: [extractType(V)] as [ToTypeStr<ToTypeArgument<V>>],
             reifiedTypeArgs: [V],
             fromFields: (fields: Record<string, any>) => CritbitTree.fromFields(V, fields),
