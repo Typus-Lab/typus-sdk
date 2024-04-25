@@ -85,7 +85,7 @@
             "TGLD": "0x4213e12a2220f15f1837a76897110d2260786558169bd8d0847f21e9b551f277::tgld::TGLD",
             "USDT": "0xa38dad920880f81ea514de6db007d3a84e9116a29c60b3e69bbe418c2d9f553c::usdt::USDT"
         },
-        "ORACLES": {
+        "ORACLE": {
             "AFSUI": "0xacd75f051b8be445226f92d873fbf9bbc26fe25cec5708b1aeec44286dbbef5b",
             "APT": "0x984e79d6cf30cc518e5e69dacacfa8db3e5f0674535c533061a7990c8a714c48",
             "BUCK": "0x22ef75c17468f6ed24574f26011f7fcf61a7b983009c9ba6cacc28ae24ff1782",
@@ -101,6 +101,55 @@
             "USDY": "0x604408004efddc03323cd6f6a72b98695dbdced57a630ca2622e6b96fc94a3f6",
             "WBTC": "0xaa72a2b370cf45a7b1363a2b9e3f0c57c05863375b984e2ca0928973574404f2",
             "WETH": "0x0ac9f9275eb0ac33b7f59741b1df67a6783af2db6d2a4e5aba8ce350d5b6b260"
+        }
+    },
+    "MOVEMENT": {
+        "RPC_ENDPOINT": "https://sui.devnet.m2.movementlabs.xyz:443",
+        "TYPUS_VERSION": "0x78f91a4142a62881bc5ac6f84d43144e02ba32ddec3e0bb2985f6980d044032a",
+        "PACKAGE_ORIGIN": {
+            "DOV_SINGLE": "0x773fbd026bcdffa6ca746c995a440b711e4b55fb220a6552e12041ede12a5b6b",
+            "FRAMEWORK": "0x421b30b0ebf1a60834adaa946cbb8fd0595c42d90c99bfac79a7f450b55c1a44",
+            "ORACLE": "0xbf0ff0490f2c33fe0dfea8407cca4c4d4be30a877f5dbffcbad1a078673845da",
+            "TOKEN": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e",
+            "TYPUS": "0xc7dc8f963a06a3675d9d423435d65c1144b0df1a17aa67b2ec7acabad96be2a4"
+        },
+        "PACKAGE": {
+            "DOV_SINGLE": "0x773fbd026bcdffa6ca746c995a440b711e4b55fb220a6552e12041ede12a5b6b",
+            "FRAMEWORK": "0x421b30b0ebf1a60834adaa946cbb8fd0595c42d90c99bfac79a7f450b55c1a44",
+            "ORACLE": "0xbf0ff0490f2c33fe0dfea8407cca4c4d4be30a877f5dbffcbad1a078673845da",
+            "TOKEN": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e",
+            "TYPUS": "0xc7dc8f963a06a3675d9d423435d65c1144b0df1a17aa67b2ec7acabad96be2a4"
+        },
+        "REGISTRY": {
+            "AIRDROP": "0x4300030cda3b3c4774f2bf108fc0461e9d48f6ab91ddd38da80cd4e51f509303",
+            "DOV_SINGLE": "0x2cdcf02854b3d75bb3abd2589a20f1288e2b80a4e7021fd8ade30c765d4b477b",
+            "LEADERBOARD": "0xf7991a4cbd5ec7977c9950d77ee0e944e8e84b768048ca9c3296acd7226cdcf9"
+        },
+        "TOKEN_REGISTRY": {
+            "BTC": "0x811bed2a13066c606638d71e695799022752291c94e46c334511a837cee7603f",
+            "ETH": "0x07323910600d887a12694c8c5dd3c61d919d711a8f34236d385d88a4881b08b5",
+            "SOL": "0x10dcc6468670b773e0ab1cbdb57e5e0fd79f29ec259bdbd45ba81a7b9675106c",
+            "USDC": "0x6ad27e79cd914de17e68a4cd2a564de65e9cce4b57798c93e96354d8a00e965e",
+            "USDT": "0xf9a3d1334132dd916e65abf23680d618b39de0fed6c92a338f30895fe0b134fe"
+        },
+        "TOKEN": {
+            "SUI": "0x2::sui::SUI",
+            "BTC": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e::btc::BTC",
+            "ETH": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e::eth::ETH",
+            "SOL": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e::sol::SOL",
+            "USDC": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e::usdc::USDC",
+            "USDT": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e::usdt::USDT"
+        },
+        "ORACLE_MANAGER_CAP": {
+            "SUIUSDC": "0xcda9da5c6fc39bde7adae554b192d9a50c5ff65b8e0c815d646623ab065d63b4",
+            "SUIUSDT": "0xcda9da5c6fc39bde7adae554b192d9a50c5ff65b8e0c815d646623ab065d63b4"
+        },
+        "ORACLE": {
+            "SUIUSDC": "0xf7d081223650168e7e7ea02fc2289e6e0795decdbeddb951c1609937b9dfe0cf",
+            "SUIUSDT": "0xf26ff14cc14e9342139d6a6c45775f98f006f8d39c8e8dee0aadf8127ce9118f"
+        },
+        "VAULT": {
+            "0": "2hkoQrhPcvch8CMtVx3XkwPDjDDEwr89bkn8Qq5VAg24"
         }
     }
 }
