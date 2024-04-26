@@ -63,18 +63,18 @@
             "TYPUS": "0x4213e12a2220f15f1837a76897110d2260786558169bd8d0847f21e9b551f277"
         },
         "PACKAGE": {
-            "DOV_SINGLE": "0xad40e09fd50dc4cc21ca6f37c8f9d4d423ec91e12c80c5181ef69c72f789fe9d",
-            "FRAMEWORK": "0xcb7b215d23002fa62f3e69f1fac534af36fa6cd046e197e37cbbffe691451821",
+            "DOV_SINGLE": "0xbbf2e2662033fceead636974e50221ec04a0dfd082cd1a32e3b1f90c11ed7aa5",
+            "FRAMEWORK": "0xa304e225551b619b07c06d8965462b268138b2c5774fd22ad8853ef91fbb9771",
             "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c",
-            "ORACLE": "0x480ba5f45433f5589cec0f8dbbfc04d523d7182725cf896dce9090e56b34f4b8",
-            "TYPUS": "0xd985d521f031273a1bf8b0d2857a3675386b006a54c106279a82823fceac052c"
+            "NFT": "0x0f5162014f18686640b8d0adefd60c3fe5b377413ec4f1e77001c67d96f8501a",
+            "ORACLE": "0x71fbc7acaf513561dabdeb846e7dd5288108e56edb0b6de8d4999c4dfce21f66",
+            "TYPUS": "0xc0d2e234cd1211a0f7b0bac8798d6e8fa8ab5db29d779245c4c4280eb6d16b94"
         },
         "REGISTRY": {
             "AIRDROP": "0xfb2fbf261f6050d100bcd026ffa0076e088506b1bec26313947239303e2a0224",
             "DOV_SINGLE": "0x0285cbf4aa8585be6c978235d11d06fa35773266ede040d38d34e1d79b049460",
             "LEADERBOARD": "0x4faabe5a4a509a145fc9bae95761d34c11571da4cb25d681f06ffcbadbc355e7",
             "MFUD": "0x7ad87901531693f1baa541712947860dcc543617e11b14993ad70d20daf159c6",
-            "NFT": "0x5cfd0819411be98034cba544cbffab192c2c35674a05ff57f4f1c5042875b828",
             "TGLD": "0x2118b4056c89d90a6dc40d198fbe239cb8e83f7ea20daaf4ea53341c7fdb043c",
             "USER": "0x5f1894a3680949111a7530d63ceda6857d31521ab2de625e9f826cae17c9a7f3"
         },
