@@ -224,6 +224,10 @@ export function getCumulativeFundingRate(txb: TransactionBlock, args: GetCumulat
     });
 }
 
+export function getFundingRateDecimal(txb: TransactionBlock) {
+    return txb.moveCall({ target: `${PUBLISHED_AT}::lp_pool::get_funding_rate_decimal`, arguments: [] });
+}
+
 export interface GetLiquidityAmountArgs {
     registry: ObjectArg;
     index: bigint | TransactionArgument;
@@ -376,6 +380,38 @@ export function putCollateral(txb: TransactionBlock, typeArg: string, args: PutC
         arguments: [
             obj(txb, args.liquidityPool),
             obj(txb, args.collateral),
+            pure(txb, args.collateralOraclePrice, `u64`),
+            pure(txb, args.collateralOraclePriceDecimal, `u64`),
+        ],
+    });
+}
+
+export interface PutReceiptCollateralArgs {
+    liquidityPool: ObjectArg;
+    bidReceipt: ObjectArg;
+}
+
+export function putReceiptCollateral(txb: TransactionBlock, args: PutReceiptCollateralArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::lp_pool::put_receipt_collateral`,
+        arguments: [obj(txb, args.liquidityPool), obj(txb, args.bidReceipt)],
+    });
+}
+
+export interface RequestCollateralArgs {
+    liquidityPool: ObjectArg;
+    collateralAmount: bigint | TransactionArgument;
+    collateralOraclePrice: bigint | TransactionArgument;
+    collateralOraclePriceDecimal: bigint | TransactionArgument;
+}
+
+export function requestCollateral(txb: TransactionBlock, typeArg: string, args: RequestCollateralArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::lp_pool::request_collateral`,
+        typeArguments: [typeArg],
+        arguments: [
+            obj(txb, args.liquidityPool),
+            pure(txb, args.collateralAmount, `u64`),
             pure(txb, args.collateralOraclePrice, `u64`),
             pure(txb, args.collateralOraclePriceDecimal, `u64`),
         ],

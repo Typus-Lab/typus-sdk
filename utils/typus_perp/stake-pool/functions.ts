@@ -21,6 +21,52 @@ export function harvest(txb: TransactionBlock, typeArg: string, args: HarvestArg
     });
 }
 
+export interface StakeArgs {
+    version: ObjectArg;
+    registry: ObjectArg;
+    index: bigint | TransactionArgument;
+    lpToken: ObjectArg;
+    lockedUpPeriodTsMs: bigint | TransactionArgument;
+    clock: ObjectArg;
+}
+
+export function stake(txb: TransactionBlock, typeArg: string, args: StakeArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::stake_pool::stake`,
+        typeArguments: [typeArg],
+        arguments: [
+            obj(txb, args.version),
+            obj(txb, args.registry),
+            pure(txb, args.index, `u64`),
+            obj(txb, args.lpToken),
+            pure(txb, args.lockedUpPeriodTsMs, `u64`),
+            obj(txb, args.clock),
+        ],
+    });
+}
+
+export interface UnstakeArgs {
+    version: ObjectArg;
+    registry: ObjectArg;
+    index: bigint | TransactionArgument;
+    userShareId: bigint | TransactionArgument;
+    clock: ObjectArg;
+}
+
+export function unstake(txb: TransactionBlock, typeArg: string, args: UnstakeArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::stake_pool::unstake`,
+        typeArguments: [typeArg],
+        arguments: [
+            obj(txb, args.version),
+            obj(txb, args.registry),
+            pure(txb, args.index, `u64`),
+            pure(txb, args.userShareId, `u64`),
+            obj(txb, args.clock),
+        ],
+    });
+}
+
 export interface ActivateIncentiveTokenArgs {
     version: ObjectArg;
     registry: ObjectArg;
@@ -323,30 +369,6 @@ export function restake(txb: TransactionBlock, typeArg: string, args: RestakeArg
     });
 }
 
-export interface StakeArgs {
-    version: ObjectArg;
-    registry: ObjectArg;
-    index: bigint | TransactionArgument;
-    balance: ObjectArg;
-    lockedUpPeriodTsMs: bigint | TransactionArgument;
-    clock: ObjectArg;
-}
-
-export function stake(txb: TransactionBlock, typeArg: string, args: StakeArgs) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::stake`,
-        typeArguments: [typeArg],
-        arguments: [
-            obj(txb, args.version),
-            obj(txb, args.registry),
-            pure(txb, args.index, `u64`),
-            obj(txb, args.balance),
-            pure(txb, args.lockedUpPeriodTsMs, `u64`),
-            obj(txb, args.clock),
-        ],
-    });
-}
-
 export interface StoreUserSharesArgs {
     id: ObjectArg;
     user: string | TransactionArgument;
@@ -357,28 +379,6 @@ export function storeUserShares(txb: TransactionBlock, args: StoreUserSharesArgs
     return txb.moveCall({
         target: `${PUBLISHED_AT}::stake_pool::store_user_shares`,
         arguments: [obj(txb, args.id), pure(txb, args.user, `address`), vector(txb, `0x0::stake_pool::LpUserShare`, args.userShares)],
-    });
-}
-
-export interface UnstakeArgs {
-    version: ObjectArg;
-    registry: ObjectArg;
-    index: bigint | TransactionArgument;
-    userShareId: bigint | TransactionArgument;
-    clock: ObjectArg;
-}
-
-export function unstake(txb: TransactionBlock, typeArg: string, args: UnstakeArgs) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::unstake`,
-        typeArguments: [typeArg],
-        arguments: [
-            obj(txb, args.version),
-            obj(txb, args.registry),
-            pure(txb, args.index, `u64`),
-            pure(txb, args.userShareId, `u64`),
-            obj(txb, args.clock),
-        ],
     });
 }
 

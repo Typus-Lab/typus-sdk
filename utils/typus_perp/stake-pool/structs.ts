@@ -19,6 +19,182 @@ import { FieldsWithTypes, composeSuiType, compressSuiType } from "../../_framewo
 import { bcs, fromB64, fromHEX, toHEX } from "@mysten/bcs";
 import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
+/* ============================== HarvestEvent =============================== */
+
+export function isHarvestEvent(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x0::stake_pool::HarvestEvent";
+}
+
+export interface HarvestEventFields {
+    sender: ToField<"address">;
+    index: ToField<"u64">;
+    incentiveTokenType: ToField<TypeName>;
+    harvestAmount: ToField<"u64">;
+    fromUserShareIds: ToField<Vector<"u64">>;
+    u64Padding: ToField<Vector<"u64">>;
+}
+
+export type HarvestEventReified = Reified<HarvestEvent, HarvestEventFields>;
+
+export class HarvestEvent implements StructClass {
+    static readonly $typeName = "0x0::stake_pool::HarvestEvent";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = HarvestEvent.$typeName;
+
+    readonly $fullTypeName: "0x0::stake_pool::HarvestEvent";
+
+    readonly $typeArgs: [];
+
+    readonly sender: ToField<"address">;
+    readonly index: ToField<"u64">;
+    readonly incentiveTokenType: ToField<TypeName>;
+    readonly harvestAmount: ToField<"u64">;
+    readonly fromUserShareIds: ToField<Vector<"u64">>;
+    readonly u64Padding: ToField<Vector<"u64">>;
+
+    private constructor(typeArgs: [], fields: HarvestEventFields) {
+        this.$fullTypeName = composeSuiType(HarvestEvent.$typeName, ...typeArgs) as "0x0::stake_pool::HarvestEvent";
+        this.$typeArgs = typeArgs;
+
+        this.sender = fields.sender;
+        this.index = fields.index;
+        this.incentiveTokenType = fields.incentiveTokenType;
+        this.harvestAmount = fields.harvestAmount;
+        this.fromUserShareIds = fields.fromUserShareIds;
+        this.u64Padding = fields.u64Padding;
+    }
+
+    static reified(): HarvestEventReified {
+        return {
+            typeName: HarvestEvent.$typeName,
+            fullTypeName: composeSuiType(HarvestEvent.$typeName, ...[]) as "0x0::stake_pool::HarvestEvent",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => HarvestEvent.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => HarvestEvent.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => HarvestEvent.fromBcs(data),
+            bcs: HarvestEvent.bcs,
+            fromJSONField: (field: any) => HarvestEvent.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => HarvestEvent.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => HarvestEvent.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => HarvestEvent.fetch(client, id),
+            new: (fields: HarvestEventFields) => {
+                return new HarvestEvent([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return HarvestEvent.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<HarvestEvent>> {
+        return phantom(HarvestEvent.reified());
+    }
+    static get p() {
+        return HarvestEvent.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("HarvestEvent", {
+            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            index: bcs.u64(),
+            incentive_token_type: TypeName.bcs,
+            harvest_amount: bcs.u64(),
+            from_user_share_ids: bcs.vector(bcs.u64()),
+            u64_padding: bcs.vector(bcs.u64()),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): HarvestEvent {
+        return HarvestEvent.reified().new({
+            sender: decodeFromFields("address", fields.sender),
+            index: decodeFromFields("u64", fields.index),
+            incentiveTokenType: decodeFromFields(TypeName.reified(), fields.incentive_token_type),
+            harvestAmount: decodeFromFields("u64", fields.harvest_amount),
+            fromUserShareIds: decodeFromFields(reified.vector("u64"), fields.from_user_share_ids),
+            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): HarvestEvent {
+        if (!isHarvestEvent(item.type)) {
+            throw new Error("not a HarvestEvent type");
+        }
+
+        return HarvestEvent.reified().new({
+            sender: decodeFromFieldsWithTypes("address", item.fields.sender),
+            index: decodeFromFieldsWithTypes("u64", item.fields.index),
+            incentiveTokenType: decodeFromFieldsWithTypes(TypeName.reified(), item.fields.incentive_token_type),
+            harvestAmount: decodeFromFieldsWithTypes("u64", item.fields.harvest_amount),
+            fromUserShareIds: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.from_user_share_ids),
+            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): HarvestEvent {
+        return HarvestEvent.fromFields(HarvestEvent.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            sender: this.sender,
+            index: this.index.toString(),
+            incentiveTokenType: this.incentiveTokenType.toJSONField(),
+            harvestAmount: this.harvestAmount.toString(),
+            fromUserShareIds: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.fromUserShareIds),
+            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): HarvestEvent {
+        return HarvestEvent.reified().new({
+            sender: decodeFromJSONField("address", field.sender),
+            index: decodeFromJSONField("u64", field.index),
+            incentiveTokenType: decodeFromJSONField(TypeName.reified(), field.incentiveTokenType),
+            harvestAmount: decodeFromJSONField("u64", field.harvestAmount),
+            fromUserShareIds: decodeFromJSONField(reified.vector("u64"), field.fromUserShareIds),
+            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): HarvestEvent {
+        if (json.$typeName !== HarvestEvent.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return HarvestEvent.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): HarvestEvent {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isHarvestEvent(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a HarvestEvent object`);
+        }
+        return HarvestEvent.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<HarvestEvent> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching HarvestEvent object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isHarvestEvent(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a HarvestEvent object`);
+        }
+        return HarvestEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
 /* ============================== ActivateIncentiveTokenEvent =============================== */
 
 export function isActivateIncentiveTokenEvent(type: string): boolean {
@@ -689,182 +865,6 @@ export class DepositIncentiveEvent implements StructClass {
             throw new Error(`object at id ${id} is not a DepositIncentiveEvent object`);
         }
         return DepositIncentiveEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
-    }
-}
-
-/* ============================== HarvestEvent =============================== */
-
-export function isHarvestEvent(type: string): boolean {
-    type = compressSuiType(type);
-    return type === "0x0::stake_pool::HarvestEvent";
-}
-
-export interface HarvestEventFields {
-    sender: ToField<"address">;
-    index: ToField<"u64">;
-    incentiveTokenType: ToField<TypeName>;
-    harvestAmount: ToField<"u64">;
-    fromUserShareIds: ToField<Vector<"u64">>;
-    u64Padding: ToField<Vector<"u64">>;
-}
-
-export type HarvestEventReified = Reified<HarvestEvent, HarvestEventFields>;
-
-export class HarvestEvent implements StructClass {
-    static readonly $typeName = "0x0::stake_pool::HarvestEvent";
-    static readonly $numTypeParams = 0;
-
-    readonly $typeName = HarvestEvent.$typeName;
-
-    readonly $fullTypeName: "0x0::stake_pool::HarvestEvent";
-
-    readonly $typeArgs: [];
-
-    readonly sender: ToField<"address">;
-    readonly index: ToField<"u64">;
-    readonly incentiveTokenType: ToField<TypeName>;
-    readonly harvestAmount: ToField<"u64">;
-    readonly fromUserShareIds: ToField<Vector<"u64">>;
-    readonly u64Padding: ToField<Vector<"u64">>;
-
-    private constructor(typeArgs: [], fields: HarvestEventFields) {
-        this.$fullTypeName = composeSuiType(HarvestEvent.$typeName, ...typeArgs) as "0x0::stake_pool::HarvestEvent";
-        this.$typeArgs = typeArgs;
-
-        this.sender = fields.sender;
-        this.index = fields.index;
-        this.incentiveTokenType = fields.incentiveTokenType;
-        this.harvestAmount = fields.harvestAmount;
-        this.fromUserShareIds = fields.fromUserShareIds;
-        this.u64Padding = fields.u64Padding;
-    }
-
-    static reified(): HarvestEventReified {
-        return {
-            typeName: HarvestEvent.$typeName,
-            fullTypeName: composeSuiType(HarvestEvent.$typeName, ...[]) as "0x0::stake_pool::HarvestEvent",
-            typeArgs: [] as [],
-            reifiedTypeArgs: [],
-            fromFields: (fields: Record<string, any>) => HarvestEvent.fromFields(fields),
-            fromFieldsWithTypes: (item: FieldsWithTypes) => HarvestEvent.fromFieldsWithTypes(item),
-            fromBcs: (data: Uint8Array) => HarvestEvent.fromBcs(data),
-            bcs: HarvestEvent.bcs,
-            fromJSONField: (field: any) => HarvestEvent.fromJSONField(field),
-            fromJSON: (json: Record<string, any>) => HarvestEvent.fromJSON(json),
-            fromSuiParsedData: (content: SuiParsedData) => HarvestEvent.fromSuiParsedData(content),
-            fetch: async (client: SuiClient, id: string) => HarvestEvent.fetch(client, id),
-            new: (fields: HarvestEventFields) => {
-                return new HarvestEvent([], fields);
-            },
-            kind: "StructClassReified",
-        };
-    }
-
-    static get r() {
-        return HarvestEvent.reified();
-    }
-
-    static phantom(): PhantomReified<ToTypeStr<HarvestEvent>> {
-        return phantom(HarvestEvent.reified());
-    }
-    static get p() {
-        return HarvestEvent.phantom();
-    }
-
-    static get bcs() {
-        return bcs.struct("HarvestEvent", {
-            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
-            index: bcs.u64(),
-            incentive_token_type: TypeName.bcs,
-            harvest_amount: bcs.u64(),
-            from_user_share_ids: bcs.vector(bcs.u64()),
-            u64_padding: bcs.vector(bcs.u64()),
-        });
-    }
-
-    static fromFields(fields: Record<string, any>): HarvestEvent {
-        return HarvestEvent.reified().new({
-            sender: decodeFromFields("address", fields.sender),
-            index: decodeFromFields("u64", fields.index),
-            incentiveTokenType: decodeFromFields(TypeName.reified(), fields.incentive_token_type),
-            harvestAmount: decodeFromFields("u64", fields.harvest_amount),
-            fromUserShareIds: decodeFromFields(reified.vector("u64"), fields.from_user_share_ids),
-            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
-        });
-    }
-
-    static fromFieldsWithTypes(item: FieldsWithTypes): HarvestEvent {
-        if (!isHarvestEvent(item.type)) {
-            throw new Error("not a HarvestEvent type");
-        }
-
-        return HarvestEvent.reified().new({
-            sender: decodeFromFieldsWithTypes("address", item.fields.sender),
-            index: decodeFromFieldsWithTypes("u64", item.fields.index),
-            incentiveTokenType: decodeFromFieldsWithTypes(TypeName.reified(), item.fields.incentive_token_type),
-            harvestAmount: decodeFromFieldsWithTypes("u64", item.fields.harvest_amount),
-            fromUserShareIds: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.from_user_share_ids),
-            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
-        });
-    }
-
-    static fromBcs(data: Uint8Array): HarvestEvent {
-        return HarvestEvent.fromFields(HarvestEvent.bcs.parse(data));
-    }
-
-    toJSONField() {
-        return {
-            sender: this.sender,
-            index: this.index.toString(),
-            incentiveTokenType: this.incentiveTokenType.toJSONField(),
-            harvestAmount: this.harvestAmount.toString(),
-            fromUserShareIds: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.fromUserShareIds),
-            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
-        };
-    }
-
-    toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
-    }
-
-    static fromJSONField(field: any): HarvestEvent {
-        return HarvestEvent.reified().new({
-            sender: decodeFromJSONField("address", field.sender),
-            index: decodeFromJSONField("u64", field.index),
-            incentiveTokenType: decodeFromJSONField(TypeName.reified(), field.incentiveTokenType),
-            harvestAmount: decodeFromJSONField("u64", field.harvestAmount),
-            fromUserShareIds: decodeFromJSONField(reified.vector("u64"), field.fromUserShareIds),
-            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
-        });
-    }
-
-    static fromJSON(json: Record<string, any>): HarvestEvent {
-        if (json.$typeName !== HarvestEvent.$typeName) {
-            throw new Error("not a WithTwoGenerics json object");
-        }
-
-        return HarvestEvent.fromJSONField(json);
-    }
-
-    static fromSuiParsedData(content: SuiParsedData): HarvestEvent {
-        if (content.dataType !== "moveObject") {
-            throw new Error("not an object");
-        }
-        if (!isHarvestEvent(content.type)) {
-            throw new Error(`object at ${(content.fields as any).id} is not a HarvestEvent object`);
-        }
-        return HarvestEvent.fromFieldsWithTypes(content);
-    }
-
-    static async fetch(client: SuiClient, id: string): Promise<HarvestEvent> {
-        const res = await client.getObject({ id, options: { showBcs: true } });
-        if (res.error) {
-            throw new Error(`error fetching HarvestEvent object at id ${id}: ${res.error.code}`);
-        }
-        if (res.data?.bcs?.dataType !== "moveObject" || !isHarvestEvent(res.data.bcs.type)) {
-            throw new Error(`object at id ${id} is not a HarvestEvent object`);
-        }
-        return HarvestEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
     }
 }
 

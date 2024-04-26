@@ -48,11 +48,11 @@ export function registerClasses(loader: StructClassLoader) {
     loader.register(position.OrderFilledEvent);
     loader.register(position.Position);
     loader.register(position.TradingOrder);
+    loader.register(stakePool.HarvestEvent);
     loader.register(stakePool.ActivateIncentiveTokenEvent);
     loader.register(stakePool.AddIncentiveTokenEvent);
     loader.register(stakePool.DeactivateIncentiveTokenEvent);
     loader.register(stakePool.DepositIncentiveEvent);
-    loader.register(stakePool.HarvestEvent);
     loader.register(stakePool.HarvestPerUserShareEvent);
     loader.register(stakePool.Incentive);
     loader.register(stakePool.IncentiveConfig);
@@ -72,7 +72,9 @@ export function registerClasses(loader: StructClassLoader) {
     loader.register(stakePool.WithdrawIncentiveEvent);
     loader.register(trading.AddTradingSymbolEvent);
     loader.register(trading.CancelTradingOrderEvent);
+    loader.register(trading.CancelTradingOrderWithBidReceiptsEvent);
     loader.register(trading.CreateTradingOrderEvent);
+    loader.register(trading.CreateTradingOrderWithBidReceiptsEvent);
     loader.register(trading.LiquidateEvent);
     loader.register(trading.MarketConfig);
     loader.register(trading.MarketInfo);
@@ -90,4 +92,5 @@ export function registerClasses(loader: StructClassLoader) {
     loader.register(trading.UpdateMarketConfigEvent);
     loader.register(trading.UserOrders);
     loader.register(trading.UserPositions);
+    loader.register(trading.WithdrawReferralRebateEvent);
 }

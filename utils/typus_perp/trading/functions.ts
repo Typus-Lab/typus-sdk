@@ -6,6 +6,48 @@ export function init(txb: TransactionBlock) {
     return txb.moveCall({ target: `${PUBLISHED_AT}::trading::init`, arguments: [] });
 }
 
+export interface ReduceOptionCollateralPositionSizeArgs {
+    version: ObjectArg;
+    registry: ObjectArg;
+    poolRegistry: ObjectArg;
+    dovRegistry: ObjectArg;
+    typusOracle: ObjectArg;
+    marketIndex: bigint | TransactionArgument;
+    poolIndex: bigint | TransactionArgument;
+    pythState: ObjectArg;
+    oracleCToken: ObjectArg;
+    oracleTradingSymbol: ObjectArg;
+    clock: ObjectArg;
+    positionId: bigint | TransactionArgument;
+    orderSize: bigint | TransactionArgument | TransactionArgument | null;
+}
+
+export function reduceOptionCollateralPositionSize(
+    txb: TransactionBlock,
+    typeArgs: [string, string, string],
+    args: ReduceOptionCollateralPositionSizeArgs
+) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::trading::reduce_option_collateral_position_size`,
+        typeArguments: typeArgs,
+        arguments: [
+            obj(txb, args.version),
+            obj(txb, args.registry),
+            obj(txb, args.poolRegistry),
+            obj(txb, args.dovRegistry),
+            obj(txb, args.typusOracle),
+            pure(txb, args.marketIndex, `u64`),
+            pure(txb, args.poolIndex, `u64`),
+            obj(txb, args.pythState),
+            obj(txb, args.oracleCToken),
+            obj(txb, args.oracleTradingSymbol),
+            obj(txb, args.clock),
+            pure(txb, args.positionId, `u64`),
+            pure(txb, args.orderSize, `0x1::option::Option<u64>`),
+        ],
+    });
+}
+
 export interface AddTradingSymbolArgs {
     version: ObjectArg;
     registry: ObjectArg;
@@ -60,12 +102,43 @@ export function cancelTradingOrder(txb: TransactionBlock, typeArgs: [string, str
     });
 }
 
+export interface CancelTradingOrderWithBidReceiptsArgs {
+    version: ObjectArg;
+    registry: ObjectArg;
+    marketIndex: bigint | TransactionArgument;
+    orderId: bigint | TransactionArgument;
+    triggerPrice: bigint | TransactionArgument | TransactionArgument | null;
+}
+
+export function cancelTradingOrderWithBidReceipts(
+    txb: TransactionBlock,
+    typeArgs: [string, string],
+    args: CancelTradingOrderWithBidReceiptsArgs
+) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::trading::cancel_trading_order_with_bid_receipts`,
+        typeArguments: typeArgs,
+        arguments: [
+            obj(txb, args.version),
+            obj(txb, args.registry),
+            pure(txb, args.marketIndex, `u64`),
+            pure(txb, args.orderId, `u64`),
+            pure(txb, args.triggerPrice, `0x1::option::Option<u64>`),
+        ],
+    });
+}
+
 export interface CreateTradingOrderArgs {
     version: ObjectArg;
     registry: ObjectArg;
     poolRegistry: ObjectArg;
+    dovRegistry: ObjectArg;
+    typusOracle: ObjectArg;
     marketIndex: bigint | TransactionArgument;
     poolIndex: bigint | TransactionArgument;
+    invitedFrom: string | TransactionArgument | TransactionArgument | null;
+    feeRebateBp: bigint | TransactionArgument | TransactionArgument | null;
+    feeReductionBp: bigint | TransactionArgument | TransactionArgument | null;
     pythState: ObjectArg;
     oracleCToken: ObjectArg;
     oracleTradingSymbol: ObjectArg;
@@ -81,7 +154,7 @@ export interface CreateTradingOrderArgs {
     triggerPrice: bigint | TransactionArgument;
 }
 
-export function createTradingOrder(txb: TransactionBlock, typeArgs: [string, string], args: CreateTradingOrderArgs) {
+export function createTradingOrder(txb: TransactionBlock, typeArgs: [string, string, string], args: CreateTradingOrderArgs) {
     return txb.moveCall({
         target: `${PUBLISHED_AT}::trading::create_trading_order`,
         typeArguments: typeArgs,
@@ -89,8 +162,13 @@ export function createTradingOrder(txb: TransactionBlock, typeArgs: [string, str
             obj(txb, args.version),
             obj(txb, args.registry),
             obj(txb, args.poolRegistry),
+            obj(txb, args.dovRegistry),
+            obj(txb, args.typusOracle),
             pure(txb, args.marketIndex, `u64`),
             pure(txb, args.poolIndex, `u64`),
+            pure(txb, args.invitedFrom, `0x1::option::Option<address>`),
+            pure(txb, args.feeRebateBp, `0x1::option::Option<u64>`),
+            pure(txb, args.feeReductionBp, `0x1::option::Option<u64>`),
             obj(txb, args.pythState),
             obj(txb, args.oracleCToken),
             obj(txb, args.oracleTradingSymbol),
@@ -108,8 +186,73 @@ export function createTradingOrder(txb: TransactionBlock, typeArgs: [string, str
     });
 }
 
+export interface CreateTradingOrderWithBidReceiptsArgs {
+    version: ObjectArg;
+    registry: ObjectArg;
+    poolRegistry: ObjectArg;
+    dovRegistry: ObjectArg;
+    typusOracle: ObjectArg;
+    marketIndex: bigint | TransactionArgument;
+    poolIndex: bigint | TransactionArgument;
+    invitedFrom: string | TransactionArgument | TransactionArgument | null;
+    feeRebateBp: bigint | TransactionArgument | TransactionArgument | null;
+    feeReductionBp: bigint | TransactionArgument | TransactionArgument | null;
+    pythState: ObjectArg;
+    oracleCToken: ObjectArg;
+    oracleTradingSymbol: ObjectArg;
+    clock: ObjectArg;
+    collateralBidReceipts: Array<ObjectArg> | TransactionArgument;
+    dovIndex: bigint | TransactionArgument;
+    reduceOnly: boolean | TransactionArgument;
+    isLong: boolean | TransactionArgument;
+    isStopOrder: boolean | TransactionArgument;
+    size: bigint | TransactionArgument;
+    triggerPrice: bigint | TransactionArgument;
+}
+
+export function createTradingOrderWithBidReceipts(
+    txb: TransactionBlock,
+    typeArgs: [string, string, string],
+    args: CreateTradingOrderWithBidReceiptsArgs
+) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::trading::create_trading_order_with_bid_receipts`,
+        typeArguments: typeArgs,
+        arguments: [
+            obj(txb, args.version),
+            obj(txb, args.registry),
+            obj(txb, args.poolRegistry),
+            obj(txb, args.dovRegistry),
+            obj(txb, args.typusOracle),
+            pure(txb, args.marketIndex, `u64`),
+            pure(txb, args.poolIndex, `u64`),
+            pure(txb, args.invitedFrom, `0x1::option::Option<address>`),
+            pure(txb, args.feeRebateBp, `0x1::option::Option<u64>`),
+            pure(txb, args.feeReductionBp, `0x1::option::Option<u64>`),
+            obj(txb, args.pythState),
+            obj(txb, args.oracleCToken),
+            obj(txb, args.oracleTradingSymbol),
+            obj(txb, args.clock),
+            vector(
+                txb,
+                `0xa2de2f04907b77ef03800a8969bb4f88c821737ee133aba4bc0485b267ad2118::vault::TypusBidReceipt`,
+                args.collateralBidReceipts
+            ),
+            pure(txb, args.dovIndex, `u64`),
+            pure(txb, args.reduceOnly, `bool`),
+            pure(txb, args.isLong, `bool`),
+            pure(txb, args.isStopOrder, `bool`),
+            pure(txb, args.size, `u64`),
+            pure(txb, args.triggerPrice, `u64`),
+        ],
+    });
+}
+
 export interface ExecuteOrder_Args {
     version: ObjectArg;
+    referrals: ObjectArg;
+    dovRegistry: ObjectArg;
+    typusOracle: ObjectArg;
     symbolMarket: ObjectArg;
     liquidityPool: ObjectArg;
     order: ObjectArg;
@@ -120,12 +263,15 @@ export interface ExecuteOrder_Args {
     clock: ObjectArg;
 }
 
-export function executeOrder_(txb: TransactionBlock, typeArg: string, args: ExecuteOrder_Args) {
+export function executeOrder_(txb: TransactionBlock, typeArgs: [string, string], args: ExecuteOrder_Args) {
     return txb.moveCall({
         target: `${PUBLISHED_AT}::trading::execute_order_`,
-        typeArguments: [typeArg],
+        typeArguments: typeArgs,
         arguments: [
             obj(txb, args.version),
+            obj(txb, args.referrals),
+            obj(txb, args.dovRegistry),
+            obj(txb, args.typusOracle),
             obj(txb, args.symbolMarket),
             obj(txb, args.liquidityPool),
             obj(txb, args.order),
@@ -175,6 +321,8 @@ export interface LiquidateArgs {
     version: ObjectArg;
     registry: ObjectArg;
     poolRegistry: ObjectArg;
+    dovRegistry: ObjectArg;
+    typusOracle: ObjectArg;
     marketIndex: bigint | TransactionArgument;
     poolIndex: bigint | TransactionArgument;
     pythState: ObjectArg;
@@ -184,7 +332,7 @@ export interface LiquidateArgs {
     positionId: bigint | TransactionArgument;
 }
 
-export function liquidate(txb: TransactionBlock, typeArgs: [string, string], args: LiquidateArgs) {
+export function liquidate(txb: TransactionBlock, typeArgs: [string, string, string], args: LiquidateArgs) {
     return txb.moveCall({
         target: `${PUBLISHED_AT}::trading::liquidate`,
         typeArguments: typeArgs,
@@ -192,6 +340,8 @@ export function liquidate(txb: TransactionBlock, typeArgs: [string, string], arg
             obj(txb, args.version),
             obj(txb, args.registry),
             obj(txb, args.poolRegistry),
+            obj(txb, args.dovRegistry),
+            obj(txb, args.typusOracle),
             pure(txb, args.marketIndex, `u64`),
             pure(txb, args.poolIndex, `u64`),
             obj(txb, args.pythState),
@@ -207,16 +357,18 @@ export interface MatchTradingOrderArgs {
     version: ObjectArg;
     registry: ObjectArg;
     poolRegistry: ObjectArg;
-    marketIndex: bigint | TransactionArgument;
-    poolIndex: bigint | TransactionArgument;
+    dovRegistry: ObjectArg;
+    typusOracle: ObjectArg;
     pythState: ObjectArg;
     oracleCToken: ObjectArg;
     oracleTradingSymbol: ObjectArg;
+    marketIndex: bigint | TransactionArgument;
+    poolIndex: bigint | TransactionArgument;
     clock: ObjectArg;
     maxOperationCount: bigint | TransactionArgument;
 }
 
-export function matchTradingOrder(txb: TransactionBlock, typeArgs: [string, string], args: MatchTradingOrderArgs) {
+export function matchTradingOrder(txb: TransactionBlock, typeArgs: [string, string, string], args: MatchTradingOrderArgs) {
     return txb.moveCall({
         target: `${PUBLISHED_AT}::trading::match_trading_order`,
         typeArguments: typeArgs,
@@ -224,11 +376,13 @@ export function matchTradingOrder(txb: TransactionBlock, typeArgs: [string, stri
             obj(txb, args.version),
             obj(txb, args.registry),
             obj(txb, args.poolRegistry),
-            pure(txb, args.marketIndex, `u64`),
-            pure(txb, args.poolIndex, `u64`),
+            obj(txb, args.dovRegistry),
+            obj(txb, args.typusOracle),
             obj(txb, args.pythState),
             obj(txb, args.oracleCToken),
             obj(txb, args.oracleTradingSymbol),
+            pure(txb, args.marketIndex, `u64`),
+            pure(txb, args.poolIndex, `u64`),
             obj(txb, args.clock),
             pure(txb, args.maxOperationCount, `u64`),
         ],
@@ -245,6 +399,20 @@ export function newMarkets(txb: TransactionBlock, typeArgs: [string, string], ar
         target: `${PUBLISHED_AT}::trading::new_markets`,
         typeArguments: typeArgs,
         arguments: [obj(txb, args.version), obj(txb, args.registry)],
+    });
+}
+
+export interface PutReferralRebateArgs {
+    referrals: ObjectArg;
+    balance: ObjectArg;
+    toUser: string | TransactionArgument;
+}
+
+export function putReferralRebate(txb: TransactionBlock, typeArg: string, args: PutReferralRebateArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::trading::put_referral_rebate`,
+        typeArguments: [typeArg],
+        arguments: [obj(txb, args.referrals), obj(txb, args.balance), pure(txb, args.toUser, `address`)],
     });
 }
 
@@ -370,5 +538,37 @@ export function updateMarketConfig(txb: TransactionBlock, typeArg: string, args:
             pure(txb, args.tradingFeeRate, `0x1::option::Option<u64>`),
             pure(txb, args.tradingFeeDecimal, `0x1::option::Option<u64>`),
         ],
+    });
+}
+
+export interface UpdateReferralsArgs {
+    referrals: ObjectArg;
+    invitedFrom: string | TransactionArgument | TransactionArgument | null;
+    feeRebateBp: bigint | TransactionArgument | TransactionArgument | null;
+    feeReductionBp: bigint | TransactionArgument | TransactionArgument | null;
+}
+
+export function updateReferrals(txb: TransactionBlock, args: UpdateReferralsArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::trading::update_referrals`,
+        arguments: [
+            obj(txb, args.referrals),
+            pure(txb, args.invitedFrom, `0x1::option::Option<address>`),
+            pure(txb, args.feeRebateBp, `0x1::option::Option<u64>`),
+            pure(txb, args.feeReductionBp, `0x1::option::Option<u64>`),
+        ],
+    });
+}
+
+export interface WithdrawReferralRebateArgs {
+    version: ObjectArg;
+    registry: ObjectArg;
+}
+
+export function withdrawReferralRebate(txb: TransactionBlock, typeArg: string, args: WithdrawReferralRebateArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::trading::withdraw_referral_rebate`,
+        typeArguments: [typeArg],
+        arguments: [obj(txb, args.version), obj(txb, args.registry)],
     });
 }

@@ -267,7 +267,8 @@ export interface PositionFields {
     averagePrice: ToField<"u64">;
     entryFundingIndex: ToField<"u64">;
     realizedHasProfit: ToField<"bool">;
-    realizedPnl: ToField<"u64">;
+    unrealizedCost: ToField<"u64">;
+    unrealizedRebate: ToField<"u64">;
     u64Padding: ToField<Vector<"u64">>;
 }
 
@@ -298,7 +299,8 @@ export class Position implements StructClass {
     readonly averagePrice: ToField<"u64">;
     readonly entryFundingIndex: ToField<"u64">;
     readonly realizedHasProfit: ToField<"bool">;
-    readonly realizedPnl: ToField<"u64">;
+    readonly unrealizedCost: ToField<"u64">;
+    readonly unrealizedRebate: ToField<"u64">;
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: PositionFields) {
@@ -320,7 +322,8 @@ export class Position implements StructClass {
         this.averagePrice = fields.averagePrice;
         this.entryFundingIndex = fields.entryFundingIndex;
         this.realizedHasProfit = fields.realizedHasProfit;
-        this.realizedPnl = fields.realizedPnl;
+        this.unrealizedCost = fields.unrealizedCost;
+        this.unrealizedRebate = fields.unrealizedRebate;
         this.u64Padding = fields.u64Padding;
     }
 
@@ -373,7 +376,8 @@ export class Position implements StructClass {
             average_price: bcs.u64(),
             entry_funding_index: bcs.u64(),
             realized_has_profit: bcs.bool(),
-            realized_pnl: bcs.u64(),
+            unrealized_cost: bcs.u64(),
+            unrealized_rebate: bcs.u64(),
             u64_padding: bcs.vector(bcs.u64()),
         });
     }
@@ -395,7 +399,8 @@ export class Position implements StructClass {
             averagePrice: decodeFromFields("u64", fields.average_price),
             entryFundingIndex: decodeFromFields("u64", fields.entry_funding_index),
             realizedHasProfit: decodeFromFields("bool", fields.realized_has_profit),
-            realizedPnl: decodeFromFields("u64", fields.realized_pnl),
+            unrealizedCost: decodeFromFields("u64", fields.unrealized_cost),
+            unrealizedRebate: decodeFromFields("u64", fields.unrealized_rebate),
             u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
         });
     }
@@ -421,7 +426,8 @@ export class Position implements StructClass {
             averagePrice: decodeFromFieldsWithTypes("u64", item.fields.average_price),
             entryFundingIndex: decodeFromFieldsWithTypes("u64", item.fields.entry_funding_index),
             realizedHasProfit: decodeFromFieldsWithTypes("bool", item.fields.realized_has_profit),
-            realizedPnl: decodeFromFieldsWithTypes("u64", item.fields.realized_pnl),
+            unrealizedCost: decodeFromFieldsWithTypes("u64", item.fields.unrealized_cost),
+            unrealizedRebate: decodeFromFieldsWithTypes("u64", item.fields.unrealized_rebate),
             u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
         });
     }
@@ -447,7 +453,8 @@ export class Position implements StructClass {
             averagePrice: this.averagePrice.toString(),
             entryFundingIndex: this.entryFundingIndex.toString(),
             realizedHasProfit: this.realizedHasProfit,
-            realizedPnl: this.realizedPnl.toString(),
+            unrealizedCost: this.unrealizedCost.toString(),
+            unrealizedRebate: this.unrealizedRebate.toString(),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
         };
     }
@@ -473,7 +480,8 @@ export class Position implements StructClass {
             averagePrice: decodeFromJSONField("u64", field.averagePrice),
             entryFundingIndex: decodeFromJSONField("u64", field.entryFundingIndex),
             realizedHasProfit: decodeFromJSONField("bool", field.realizedHasProfit),
-            realizedPnl: decodeFromJSONField("u64", field.realizedPnl),
+            unrealizedCost: decodeFromJSONField("u64", field.unrealizedCost),
+            unrealizedRebate: decodeFromJSONField("u64", field.unrealizedRebate),
             u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
         });
     }
