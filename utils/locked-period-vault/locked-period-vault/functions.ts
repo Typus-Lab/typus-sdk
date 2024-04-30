@@ -116,72 +116,82 @@ export function depositAndLockReceipt(input: {
     lockActiveShare: string;
     lockWarmupShare: string;
 }) {
-    if (
-        input.typeArguments[0] == "0x2::sui::SUI" ||
-        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-    ) {
-        const [coin] = input.tx.splitCoins(input.tx.gas, [input.tx.pure(input.amount)]);
-        const result = input.tx.moveCall({
-            target: `${input.typusDovSinglePackageId}::tails_staking::deposit`,
-            typeArguments: input.typeArguments,
-            arguments: [
-                input.tx.object(input.typusDovSingleRegistry),
-                input.tx.pure(input.index),
-                input.tx.makeMoveVec({ objects: [coin] }),
-                input.tx.pure(input.amount),
-                input.tx.makeMoveVec({
-                    type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                    objects: input.receipts.map((receipt) => input.tx.object(receipt)),
-                }),
-                input.tx.object(CLOCK),
-            ],
-        });
-        input.tx.moveCall({
-            target: `${input.typusFrameworkPackageId}::utils::transfer_coins`,
-            typeArguments: [input.typeArguments[0]],
-            arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
-        });
-        const receipt = lockReceipt(input.tx, {
+    if (Number(input.amount) == 0) {
+        lockReceipt(input.tx, {
             registry: input.typusDovSingleRegistry,
             lockedVaultRegistry: input.lockedVaultRegistry,
             index: input.tx.pure(input.index),
-            receipt: input.tx.object(result[1]),
+            receipt: input.tx.object(input.receipts[0]), // WARN: assumes only one receipt
             splitActiveShare: input.tx.pure(input.lockActiveShare),
             splitWarmupShare: input.tx.pure(input.lockWarmupShare),
             clock: input.tx.object(CLOCK),
         });
-        input.tx.transferObjects([input.tx.object(receipt)], input.user);
     } else {
-        const result = input.tx.moveCall({
-            target: `${input.typusDovSinglePackageId}::tails_staking::deposit`,
-            typeArguments: input.typeArguments,
-            arguments: [
-                input.tx.object(input.typusDovSingleRegistry),
-                input.tx.pure(input.index),
-                input.tx.makeMoveVec({ objects: input.coins.map((coin) => input.tx.object(coin)) }),
-                input.tx.pure(input.amount),
-                input.tx.makeMoveVec({
-                    type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
-                    objects: input.receipts.map((receipt) => input.tx.object(receipt)),
-                }),
-                input.tx.pure(CLOCK),
-            ],
-        });
-        input.tx.moveCall({
-            target: `${input.typusFrameworkPackageId}::utils::transfer_coins`,
-            typeArguments: [input.typeArguments[0]],
-            arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
-        });
-        const receipt = lockReceipt(input.tx, {
-            registry: input.typusDovSingleRegistry,
-            lockedVaultRegistry: input.lockedVaultRegistry,
-            index: input.tx.pure(input.index),
-            receipt: input.tx.object(result[1]),
-            splitActiveShare: input.tx.pure(input.lockActiveShare),
-            splitWarmupShare: input.tx.pure(input.lockWarmupShare),
-            clock: CLOCK,
-        });
-        input.tx.transferObjects([input.tx.object(receipt)], input.user);
+        if (
+            input.typeArguments[0] == "0x2::sui::SUI" ||
+            input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
+        ) {
+            const [coin] = input.tx.splitCoins(input.tx.gas, [input.tx.pure(input.amount)]);
+            const result = input.tx.moveCall({
+                target: `${input.typusDovSinglePackageId}::tails_staking::deposit`,
+                typeArguments: input.typeArguments,
+                arguments: [
+                    input.tx.object(input.typusDovSingleRegistry),
+                    input.tx.pure(input.index),
+                    input.tx.makeMoveVec({ objects: [coin] }),
+                    input.tx.pure(input.amount),
+                    input.tx.makeMoveVec({
+                        type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                        objects: input.receipts.map((receipt) => input.tx.object(receipt)),
+                    }),
+                    input.tx.object(CLOCK),
+                ],
+            });
+            input.tx.moveCall({
+                target: `${input.typusFrameworkPackageId}::utils::transfer_coins`,
+                typeArguments: [input.typeArguments[0]],
+                arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
+            });
+            lockReceipt(input.tx, {
+                registry: input.typusDovSingleRegistry,
+                lockedVaultRegistry: input.lockedVaultRegistry,
+                index: input.tx.pure(input.index),
+                receipt: input.tx.object(result[1]),
+                splitActiveShare: input.tx.pure(input.lockActiveShare),
+                splitWarmupShare: input.tx.pure(input.lockWarmupShare),
+                clock: input.tx.object(CLOCK),
+            });
+        } else {
+            const result = input.tx.moveCall({
+                target: `${input.typusDovSinglePackageId}::tails_staking::deposit`,
+                typeArguments: input.typeArguments,
+                arguments: [
+                    input.tx.object(input.typusDovSingleRegistry),
+                    input.tx.pure(input.index),
+                    input.tx.makeMoveVec({ objects: input.coins.map((coin) => input.tx.object(coin)) }),
+                    input.tx.pure(input.amount),
+                    input.tx.makeMoveVec({
+                        type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                        objects: input.receipts.map((receipt) => input.tx.object(receipt)),
+                    }),
+                    input.tx.pure(CLOCK),
+                ],
+            });
+            input.tx.moveCall({
+                target: `${input.typusFrameworkPackageId}::utils::transfer_coins`,
+                typeArguments: [input.typeArguments[0]],
+                arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
+            });
+            lockReceipt(input.tx, {
+                registry: input.typusDovSingleRegistry,
+                lockedVaultRegistry: input.lockedVaultRegistry,
+                index: input.tx.pure(input.index),
+                receipt: input.tx.object(result[1]),
+                splitActiveShare: input.tx.pure(input.lockActiveShare),
+                splitWarmupShare: input.tx.pure(input.lockWarmupShare),
+                clock: CLOCK,
+            });
+        }
     }
 
     return input.tx;
@@ -194,6 +204,8 @@ export interface NewLockedVaultArgs {
     lockPeriodMs: bigint | TransactionArgument;
     incentivePpm: bigint | TransactionArgument;
     incentivePeriodMs: bigint | TransactionArgument;
+    capacity: bigint | TransactionArgument;
+    clock: ObjectArg;
 }
 
 export function newLockedVault(txb: TransactionBlock, typeArg: string, args: NewLockedVaultArgs) {
@@ -207,6 +219,8 @@ export function newLockedVault(txb: TransactionBlock, typeArg: string, args: New
             pure(txb, args.lockPeriodMs, `u64`),
             pure(txb, args.incentivePpm, `u64`),
             pure(txb, args.incentivePeriodMs, `u64`),
+            pure(txb, args.capacity, `u64`),
+            obj(txb, args.clock),
         ],
     });
 }
@@ -250,6 +264,77 @@ export function unlockReceipt(txb: TransactionBlock, args: UnlockReceiptArgs) {
     return txb.moveCall({
         target: `${PUBLISHED_AT}::locked_period_vault::unlock_receipt`,
         arguments: [obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`)],
+    });
+}
+
+export interface UpdateCapacityArgs {
+    lockedVaultRegistry: ObjectArg;
+    index: bigint | TransactionArgument;
+    capacity: bigint | TransactionArgument;
+}
+
+export function updateCapacity(txb: TransactionBlock, args: UpdateCapacityArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::locked_period_vault::update_capacity`,
+        arguments: [obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`), pure(txb, args.capacity, `u64`)],
+    });
+}
+
+export interface UpdateIncentivePpmArgs {
+    lockedVaultRegistry: ObjectArg;
+    index: bigint | TransactionArgument;
+    incentivePpm: bigint | TransactionArgument;
+}
+
+export function updateIncentivePpm(txb: TransactionBlock, args: UpdateIncentivePpmArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::locked_period_vault::update_incentive_ppm`,
+        arguments: [obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`), pure(txb, args.incentivePpm, `u64`)],
+    });
+}
+
+export interface UpdateTsMsArgs {
+    lockedVaultRegistry: ObjectArg;
+    index: bigint | TransactionArgument;
+    tsMs: bigint | TransactionArgument;
+}
+
+export function updateTsMs(txb: TransactionBlock, args: UpdateTsMsArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::locked_period_vault::update_ts_ms`,
+        arguments: [obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`), pure(txb, args.tsMs, `u64`)],
+    });
+}
+
+export interface ViewUserArgs {
+    registry: ObjectArg;
+    lockedVaultRegistry: ObjectArg;
+    user: string | TransactionArgument;
+}
+
+export function viewUser(txb: TransactionBlock, args: ViewUserArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::locked_period_vault::view_user`,
+        arguments: [obj(txb, args.registry), obj(txb, args.lockedVaultRegistry), pure(txb, args.user, `address`)],
+    });
+}
+
+export interface ViewUserReceiptArgs {
+    registry: ObjectArg;
+    lockedVaultRegistry: ObjectArg;
+    index: bigint | TransactionArgument;
+    user: string | TransactionArgument;
+}
+
+export function viewUserReceipt(txb: TransactionBlock, args: ViewUserReceiptArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::locked_period_vault::view_user_receipt`,
+        arguments: [
+            obj(txb, args.registry),
+            obj(txb, args.lockedVaultRegistry),
+            pure(txb, args.index, `u64`),
+            pure(txb, args.user, `address`),
+        ],
     });
 }
 

@@ -5,6 +5,7 @@ import { depositAndLockReceipt, lockReceipt } from "../../../utils/locked-period
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../../constants";
 import "../../load_env";
+import { getDepositShares } from "../../../utils/typus-dov-single-v2/view-function";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
@@ -19,6 +20,8 @@ const gasBudget = 100000000;
     const user = keypair.toSuiAddress();
     console.log(user);
 
+    const receipts = ["0x7cf027e30df5604ad9cb1b7292439c8fea9c26820ce3c8b8f41b4bac57cf87ad"];
+
     let tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
@@ -29,14 +32,14 @@ const gasBudget = 100000000;
         typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
         typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
         typeArguments: [config.TOKEN.SUI, config.TOKEN.SUI],
-        index: "0",
+        index: "9",
         coins: (await provider.getCoins({ owner: user, coinType: config.TOKEN.SUI })).data.map((coin) => coin.coinObjectId),
-        amount: "10000000000",
-        receipts: [],
+        amount: "0",
+        receipts,
         user,
         lockedVaultRegistry: config.REGISTRY.LOCKED_VAULT,
-        lockActiveShare: "0",
-        lockWarmupShare: "1000000000",
+        lockActiveShare: "100000000",
+        lockWarmupShare: "0",
     });
 
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });

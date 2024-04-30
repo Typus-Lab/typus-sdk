@@ -1,12 +1,13 @@
 import configs from "../../../config.json";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { leave } from "../../../utils/locked-period-vault/locked-period-vault/functions";
+import { updateCapacity } from "../../../utils/locked-period-vault/locked-period-vault/functions";
+import { REGISTRY, PUBLISHED_AT } from "../../../utils/locked-period-vault/index";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../../constants";
-import "../../load_env";
 
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+import mnemonic from "../../../mnemonic.json";
+const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 
 const config = configs.TESTNET;
 
@@ -16,16 +17,16 @@ const provider = new SuiClient({
 const gasBudget = 100000000;
 
 (async () => {
-    const user = keypair.toSuiAddress();
-    console.log(user);
+    const address = keypair.toSuiAddress();
+    console.log(address);
 
     let tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
-    leave(tx, {
+    updateCapacity(tx, {
         lockedVaultRegistry: config.REGISTRY.LOCKED_VAULT,
-        index: BigInt(0), // 0 Sui Hourly Call, 9 Sui Hourly Put
-        clock: CLOCK,
+        index: BigInt(0),
+        capacity: BigInt(0),
     });
 
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });

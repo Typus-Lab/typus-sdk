@@ -61,7 +61,7 @@
             "NFT": "0x5cfd0819411be98034cba544cbffab192c2c35674a05ff57f4f1c5042875b828",
             "ORACLE": "0x1d17058789bd1e1e79f1a92424519a88146f191f58a06cc4d9ab23d17d46ab73",
             "TYPUS": "0x4213e12a2220f15f1837a76897110d2260786558169bd8d0847f21e9b551f277",
-            "LOCKED_VAULT": "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8"
+            "LOCKED_VAULT": "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22"
         },
         "PACKAGE": {
             "DOV_SINGLE": "0xad40e09fd50dc4cc21ca6f37c8f9d4d423ec91e12c80c5181ef69c72f789fe9d",
@@ -69,7 +69,7 @@
             "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c",
             "ORACLE": "0x480ba5f45433f5589cec0f8dbbfc04d523d7182725cf896dce9090e56b34f4b8",
             "TYPUS": "0xd985d521f031273a1bf8b0d2857a3675386b006a54c106279a82823fceac052c",
-            "LOCKED_VAULT": "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8"
+            "LOCKED_VAULT": "0x1e3d9b8f5966a6b79de9e4ba90e2c49fd287db8832d990f187d8d700f5706b02"
         },
         "REGISTRY": {
             "AIRDROP": "0xfb2fbf261f6050d100bcd026ffa0076e088506b1bec26313947239303e2a0224",
@@ -79,7 +79,7 @@
             "NFT": "0x5cfd0819411be98034cba544cbffab192c2c35674a05ff57f4f1c5042875b828",
             "TGLD": "0x2118b4056c89d90a6dc40d198fbe239cb8e83f7ea20daaf4ea53341c7fdb043c",
             "USER": "0x5f1894a3680949111a7530d63ceda6857d31521ab2de625e9f826cae17c9a7f3",
-            "LOCKED_VAULT": "0xdcced74f55056a8d661b5861a3616f1cebd940700fce3316c0ddf5f09b1fd166"
+            "LOCKED_VAULT": "0x50f1fc44c907f8738b098abf2b594e523739df7d40df8164154cfe6f60513302"
         },
         "TOKEN": {
             "FUD": "0x461efa7ee5aa1b27e44450d79e2104e7fc0991461e9eb1c2a3fc1f44cd554856::fud::FUD",

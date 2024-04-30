@@ -22,11 +22,323 @@ import { FieldsWithTypes, composeSuiType, compressSuiType } from "../../_framewo
 import { bcs, fromB64, fromHEX, toHEX } from "@mysten/bcs";
 import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
+/* ============================== AddIncentiveEvent =============================== */
+
+export function isAddIncentiveEvent(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x0::locked_period_vault::AddIncentiveEvent";
+}
+
+export interface AddIncentiveEventFields {
+    index: ToField<"u64">;
+    value: ToField<"u64">;
+    u64Padding: ToField<Vector<"u64">>;
+}
+
+export type AddIncentiveEventReified = Reified<AddIncentiveEvent, AddIncentiveEventFields>;
+
+export class AddIncentiveEvent implements StructClass {
+    static readonly $typeName = "0x0::locked_period_vault::AddIncentiveEvent";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = AddIncentiveEvent.$typeName;
+
+    readonly $fullTypeName: "0x0::locked_period_vault::AddIncentiveEvent";
+
+    readonly $typeArgs: [];
+
+    readonly index: ToField<"u64">;
+    readonly value: ToField<"u64">;
+    readonly u64Padding: ToField<Vector<"u64">>;
+
+    private constructor(typeArgs: [], fields: AddIncentiveEventFields) {
+        this.$fullTypeName = composeSuiType(AddIncentiveEvent.$typeName, ...typeArgs) as "0x0::locked_period_vault::AddIncentiveEvent";
+        this.$typeArgs = typeArgs;
+
+        this.index = fields.index;
+        this.value = fields.value;
+        this.u64Padding = fields.u64Padding;
+    }
+
+    static reified(): AddIncentiveEventReified {
+        return {
+            typeName: AddIncentiveEvent.$typeName,
+            fullTypeName: composeSuiType(AddIncentiveEvent.$typeName, ...[]) as "0x0::locked_period_vault::AddIncentiveEvent",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => AddIncentiveEvent.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => AddIncentiveEvent.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => AddIncentiveEvent.fromBcs(data),
+            bcs: AddIncentiveEvent.bcs,
+            fromJSONField: (field: any) => AddIncentiveEvent.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => AddIncentiveEvent.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => AddIncentiveEvent.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => AddIncentiveEvent.fetch(client, id),
+            new: (fields: AddIncentiveEventFields) => {
+                return new AddIncentiveEvent([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return AddIncentiveEvent.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<AddIncentiveEvent>> {
+        return phantom(AddIncentiveEvent.reified());
+    }
+    static get p() {
+        return AddIncentiveEvent.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("AddIncentiveEvent", {
+            index: bcs.u64(),
+            value: bcs.u64(),
+            u64_padding: bcs.vector(bcs.u64()),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): AddIncentiveEvent {
+        return AddIncentiveEvent.reified().new({
+            index: decodeFromFields("u64", fields.index),
+            value: decodeFromFields("u64", fields.value),
+            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): AddIncentiveEvent {
+        if (!isAddIncentiveEvent(item.type)) {
+            throw new Error("not a AddIncentiveEvent type");
+        }
+
+        return AddIncentiveEvent.reified().new({
+            index: decodeFromFieldsWithTypes("u64", item.fields.index),
+            value: decodeFromFieldsWithTypes("u64", item.fields.value),
+            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): AddIncentiveEvent {
+        return AddIncentiveEvent.fromFields(AddIncentiveEvent.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            index: this.index.toString(),
+            value: this.value.toString(),
+            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): AddIncentiveEvent {
+        return AddIncentiveEvent.reified().new({
+            index: decodeFromJSONField("u64", field.index),
+            value: decodeFromJSONField("u64", field.value),
+            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): AddIncentiveEvent {
+        if (json.$typeName !== AddIncentiveEvent.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return AddIncentiveEvent.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): AddIncentiveEvent {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isAddIncentiveEvent(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a AddIncentiveEvent object`);
+        }
+        return AddIncentiveEvent.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<AddIncentiveEvent> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching AddIncentiveEvent object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isAddIncentiveEvent(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a AddIncentiveEvent object`);
+        }
+        return AddIncentiveEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
+/* ============================== CrankLeaveEvent =============================== */
+
+export function isCrankLeaveEvent(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x0::locked_period_vault::CrankLeaveEvent";
+}
+
+export interface CrankLeaveEventFields {
+    index: ToField<"u64">;
+    unlockTsMs: ToField<"u64">;
+    tsMs: ToField<"u64">;
+    u64Padding: ToField<Vector<"u64">>;
+}
+
+export type CrankLeaveEventReified = Reified<CrankLeaveEvent, CrankLeaveEventFields>;
+
+export class CrankLeaveEvent implements StructClass {
+    static readonly $typeName = "0x0::locked_period_vault::CrankLeaveEvent";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = CrankLeaveEvent.$typeName;
+
+    readonly $fullTypeName: "0x0::locked_period_vault::CrankLeaveEvent";
+
+    readonly $typeArgs: [];
+
+    readonly index: ToField<"u64">;
+    readonly unlockTsMs: ToField<"u64">;
+    readonly tsMs: ToField<"u64">;
+    readonly u64Padding: ToField<Vector<"u64">>;
+
+    private constructor(typeArgs: [], fields: CrankLeaveEventFields) {
+        this.$fullTypeName = composeSuiType(CrankLeaveEvent.$typeName, ...typeArgs) as "0x0::locked_period_vault::CrankLeaveEvent";
+        this.$typeArgs = typeArgs;
+
+        this.index = fields.index;
+        this.unlockTsMs = fields.unlockTsMs;
+        this.tsMs = fields.tsMs;
+        this.u64Padding = fields.u64Padding;
+    }
+
+    static reified(): CrankLeaveEventReified {
+        return {
+            typeName: CrankLeaveEvent.$typeName,
+            fullTypeName: composeSuiType(CrankLeaveEvent.$typeName, ...[]) as "0x0::locked_period_vault::CrankLeaveEvent",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => CrankLeaveEvent.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => CrankLeaveEvent.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => CrankLeaveEvent.fromBcs(data),
+            bcs: CrankLeaveEvent.bcs,
+            fromJSONField: (field: any) => CrankLeaveEvent.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => CrankLeaveEvent.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => CrankLeaveEvent.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => CrankLeaveEvent.fetch(client, id),
+            new: (fields: CrankLeaveEventFields) => {
+                return new CrankLeaveEvent([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return CrankLeaveEvent.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<CrankLeaveEvent>> {
+        return phantom(CrankLeaveEvent.reified());
+    }
+    static get p() {
+        return CrankLeaveEvent.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("CrankLeaveEvent", {
+            index: bcs.u64(),
+            unlock_ts_ms: bcs.u64(),
+            ts_ms: bcs.u64(),
+            u64_padding: bcs.vector(bcs.u64()),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): CrankLeaveEvent {
+        return CrankLeaveEvent.reified().new({
+            index: decodeFromFields("u64", fields.index),
+            unlockTsMs: decodeFromFields("u64", fields.unlock_ts_ms),
+            tsMs: decodeFromFields("u64", fields.ts_ms),
+            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): CrankLeaveEvent {
+        if (!isCrankLeaveEvent(item.type)) {
+            throw new Error("not a CrankLeaveEvent type");
+        }
+
+        return CrankLeaveEvent.reified().new({
+            index: decodeFromFieldsWithTypes("u64", item.fields.index),
+            unlockTsMs: decodeFromFieldsWithTypes("u64", item.fields.unlock_ts_ms),
+            tsMs: decodeFromFieldsWithTypes("u64", item.fields.ts_ms),
+            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): CrankLeaveEvent {
+        return CrankLeaveEvent.fromFields(CrankLeaveEvent.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            index: this.index.toString(),
+            unlockTsMs: this.unlockTsMs.toString(),
+            tsMs: this.tsMs.toString(),
+            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): CrankLeaveEvent {
+        return CrankLeaveEvent.reified().new({
+            index: decodeFromJSONField("u64", field.index),
+            unlockTsMs: decodeFromJSONField("u64", field.unlockTsMs),
+            tsMs: decodeFromJSONField("u64", field.tsMs),
+            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): CrankLeaveEvent {
+        if (json.$typeName !== CrankLeaveEvent.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return CrankLeaveEvent.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): CrankLeaveEvent {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isCrankLeaveEvent(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a CrankLeaveEvent object`);
+        }
+        return CrankLeaveEvent.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<CrankLeaveEvent> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching CrankLeaveEvent object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isCrankLeaveEvent(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a CrankLeaveEvent object`);
+        }
+        return CrankLeaveEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
 /* ============================== HotPotato =============================== */
 
 export function isHotPotato(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::HotPotato";
+    return type === "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::HotPotato";
 }
 
 export interface HotPotatoFields {
@@ -36,12 +348,12 @@ export interface HotPotatoFields {
 export type HotPotatoReified = Reified<HotPotato, HotPotatoFields>;
 
 export class HotPotato implements StructClass {
-    static readonly $typeName = "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::HotPotato";
+    static readonly $typeName = "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::HotPotato";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = HotPotato.$typeName;
 
-    readonly $fullTypeName: "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::HotPotato";
+    readonly $fullTypeName: "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::HotPotato";
 
     readonly $typeArgs: [];
 
@@ -51,7 +363,7 @@ export class HotPotato implements StructClass {
         this.$fullTypeName = composeSuiType(
             HotPotato.$typeName,
             ...typeArgs
-        ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::HotPotato";
+        ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::HotPotato";
         this.$typeArgs = typeArgs;
 
         this.dummyField = fields.dummyField;
@@ -63,7 +375,7 @@ export class HotPotato implements StructClass {
             fullTypeName: composeSuiType(
                 HotPotato.$typeName,
                 ...[]
-            ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::HotPotato",
+            ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::HotPotato",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => HotPotato.fromFields(fields),
@@ -158,11 +470,203 @@ export class HotPotato implements StructClass {
     }
 }
 
+/* ============================== IncentiviseEvent =============================== */
+
+export function isIncentiviseEvent(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x0::locked_period_vault::IncentiviseEvent";
+}
+
+export interface IncentiviseEventFields {
+    index: ToField<"u64">;
+    incentiveTsMs: ToField<"u64">;
+    tsMs: ToField<"u64">;
+    incentivePpm: ToField<"u64">;
+    ppmAdjustment: ToField<"u64">;
+    totalLocked: ToField<"u64">;
+    totalIncentive: ToField<"u64">;
+    u64Padding: ToField<Vector<"u64">>;
+}
+
+export type IncentiviseEventReified = Reified<IncentiviseEvent, IncentiviseEventFields>;
+
+export class IncentiviseEvent implements StructClass {
+    static readonly $typeName = "0x0::locked_period_vault::IncentiviseEvent";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = IncentiviseEvent.$typeName;
+
+    readonly $fullTypeName: "0x0::locked_period_vault::IncentiviseEvent";
+
+    readonly $typeArgs: [];
+
+    readonly index: ToField<"u64">;
+    readonly incentiveTsMs: ToField<"u64">;
+    readonly tsMs: ToField<"u64">;
+    readonly incentivePpm: ToField<"u64">;
+    readonly ppmAdjustment: ToField<"u64">;
+    readonly totalLocked: ToField<"u64">;
+    readonly totalIncentive: ToField<"u64">;
+    readonly u64Padding: ToField<Vector<"u64">>;
+
+    private constructor(typeArgs: [], fields: IncentiviseEventFields) {
+        this.$fullTypeName = composeSuiType(IncentiviseEvent.$typeName, ...typeArgs) as "0x0::locked_period_vault::IncentiviseEvent";
+        this.$typeArgs = typeArgs;
+
+        this.index = fields.index;
+        this.incentiveTsMs = fields.incentiveTsMs;
+        this.tsMs = fields.tsMs;
+        this.incentivePpm = fields.incentivePpm;
+        this.ppmAdjustment = fields.ppmAdjustment;
+        this.totalLocked = fields.totalLocked;
+        this.totalIncentive = fields.totalIncentive;
+        this.u64Padding = fields.u64Padding;
+    }
+
+    static reified(): IncentiviseEventReified {
+        return {
+            typeName: IncentiviseEvent.$typeName,
+            fullTypeName: composeSuiType(IncentiviseEvent.$typeName, ...[]) as "0x0::locked_period_vault::IncentiviseEvent",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => IncentiviseEvent.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => IncentiviseEvent.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => IncentiviseEvent.fromBcs(data),
+            bcs: IncentiviseEvent.bcs,
+            fromJSONField: (field: any) => IncentiviseEvent.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => IncentiviseEvent.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => IncentiviseEvent.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => IncentiviseEvent.fetch(client, id),
+            new: (fields: IncentiviseEventFields) => {
+                return new IncentiviseEvent([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return IncentiviseEvent.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<IncentiviseEvent>> {
+        return phantom(IncentiviseEvent.reified());
+    }
+    static get p() {
+        return IncentiviseEvent.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("IncentiviseEvent", {
+            index: bcs.u64(),
+            incentive_ts_ms: bcs.u64(),
+            ts_ms: bcs.u64(),
+            incentive_ppm: bcs.u64(),
+            ppm_adjustment: bcs.u64(),
+            total_locked: bcs.u64(),
+            total_incentive: bcs.u64(),
+            u64_padding: bcs.vector(bcs.u64()),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): IncentiviseEvent {
+        return IncentiviseEvent.reified().new({
+            index: decodeFromFields("u64", fields.index),
+            incentiveTsMs: decodeFromFields("u64", fields.incentive_ts_ms),
+            tsMs: decodeFromFields("u64", fields.ts_ms),
+            incentivePpm: decodeFromFields("u64", fields.incentive_ppm),
+            ppmAdjustment: decodeFromFields("u64", fields.ppm_adjustment),
+            totalLocked: decodeFromFields("u64", fields.total_locked),
+            totalIncentive: decodeFromFields("u64", fields.total_incentive),
+            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): IncentiviseEvent {
+        if (!isIncentiviseEvent(item.type)) {
+            throw new Error("not a IncentiviseEvent type");
+        }
+
+        return IncentiviseEvent.reified().new({
+            index: decodeFromFieldsWithTypes("u64", item.fields.index),
+            incentiveTsMs: decodeFromFieldsWithTypes("u64", item.fields.incentive_ts_ms),
+            tsMs: decodeFromFieldsWithTypes("u64", item.fields.ts_ms),
+            incentivePpm: decodeFromFieldsWithTypes("u64", item.fields.incentive_ppm),
+            ppmAdjustment: decodeFromFieldsWithTypes("u64", item.fields.ppm_adjustment),
+            totalLocked: decodeFromFieldsWithTypes("u64", item.fields.total_locked),
+            totalIncentive: decodeFromFieldsWithTypes("u64", item.fields.total_incentive),
+            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): IncentiviseEvent {
+        return IncentiviseEvent.fromFields(IncentiviseEvent.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            index: this.index.toString(),
+            incentiveTsMs: this.incentiveTsMs.toString(),
+            tsMs: this.tsMs.toString(),
+            incentivePpm: this.incentivePpm.toString(),
+            ppmAdjustment: this.ppmAdjustment.toString(),
+            totalLocked: this.totalLocked.toString(),
+            totalIncentive: this.totalIncentive.toString(),
+            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): IncentiviseEvent {
+        return IncentiviseEvent.reified().new({
+            index: decodeFromJSONField("u64", field.index),
+            incentiveTsMs: decodeFromJSONField("u64", field.incentiveTsMs),
+            tsMs: decodeFromJSONField("u64", field.tsMs),
+            incentivePpm: decodeFromJSONField("u64", field.incentivePpm),
+            ppmAdjustment: decodeFromJSONField("u64", field.ppmAdjustment),
+            totalLocked: decodeFromJSONField("u64", field.totalLocked),
+            totalIncentive: decodeFromJSONField("u64", field.totalIncentive),
+            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): IncentiviseEvent {
+        if (json.$typeName !== IncentiviseEvent.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return IncentiviseEvent.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): IncentiviseEvent {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isIncentiviseEvent(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a IncentiviseEvent object`);
+        }
+        return IncentiviseEvent.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<IncentiviseEvent> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching IncentiviseEvent object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isIncentiviseEvent(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a IncentiviseEvent object`);
+        }
+        return IncentiviseEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
 /* ============================== LeaveEvent =============================== */
 
 export function isLeaveEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LeaveEvent";
+    return type === "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LeaveEvent";
 }
 
 export interface LeaveEventFields {
@@ -174,12 +678,12 @@ export interface LeaveEventFields {
 export type LeaveEventReified = Reified<LeaveEvent, LeaveEventFields>;
 
 export class LeaveEvent implements StructClass {
-    static readonly $typeName = "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LeaveEvent";
+    static readonly $typeName = "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LeaveEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LeaveEvent.$typeName;
 
-    readonly $fullTypeName: "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LeaveEvent";
+    readonly $fullTypeName: "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LeaveEvent";
 
     readonly $typeArgs: [];
 
@@ -191,7 +695,7 @@ export class LeaveEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             LeaveEvent.$typeName,
             ...typeArgs
-        ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LeaveEvent";
+        ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LeaveEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -205,7 +709,7 @@ export class LeaveEvent implements StructClass {
             fullTypeName: composeSuiType(
                 LeaveEvent.$typeName,
                 ...[]
-            ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LeaveEvent",
+            ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LeaveEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LeaveEvent.fromFields(fields),
@@ -320,7 +824,7 @@ export class LeaveEvent implements StructClass {
 
 export function isLockReceiptEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockReceiptEvent";
+    return type === "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockReceiptEvent";
 }
 
 export interface LockReceiptEventFields {
@@ -335,12 +839,12 @@ export interface LockReceiptEventFields {
 export type LockReceiptEventReified = Reified<LockReceiptEvent, LockReceiptEventFields>;
 
 export class LockReceiptEvent implements StructClass {
-    static readonly $typeName = "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockReceiptEvent";
+    static readonly $typeName = "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockReceiptEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LockReceiptEvent.$typeName;
 
-    readonly $fullTypeName: "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockReceiptEvent";
+    readonly $fullTypeName: "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockReceiptEvent";
 
     readonly $typeArgs: [];
 
@@ -355,7 +859,7 @@ export class LockReceiptEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             LockReceiptEvent.$typeName,
             ...typeArgs
-        ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockReceiptEvent";
+        ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockReceiptEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -372,7 +876,7 @@ export class LockReceiptEvent implements StructClass {
             fullTypeName: composeSuiType(
                 LockReceiptEvent.$typeName,
                 ...[]
-            ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockReceiptEvent",
+            ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockReceiptEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LockReceiptEvent.fromFields(fields),
@@ -502,11 +1006,12 @@ export class LockReceiptEvent implements StructClass {
 
 export function isLockedReceipt(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedReceipt";
+    return type === "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedReceipt";
 }
 
 export interface LockedReceiptFields {
     id: ToField<UID>;
+    index: ToField<"u64">;
     user: ToField<"address">;
     receipts: ToField<Vector<TypusDepositReceipt>>;
     leave: ToField<"bool">;
@@ -522,16 +1027,17 @@ export interface LockedReceiptFields {
 export type LockedReceiptReified = Reified<LockedReceipt, LockedReceiptFields>;
 
 export class LockedReceipt implements StructClass {
-    static readonly $typeName = "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedReceipt";
+    static readonly $typeName = "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedReceipt";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LockedReceipt.$typeName;
 
-    readonly $fullTypeName: "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedReceipt";
+    readonly $fullTypeName: "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedReceipt";
 
     readonly $typeArgs: [];
 
     readonly id: ToField<UID>;
+    readonly index: ToField<"u64">;
     readonly user: ToField<"address">;
     readonly receipts: ToField<Vector<TypusDepositReceipt>>;
     readonly leave: ToField<"bool">;
@@ -547,10 +1053,11 @@ export class LockedReceipt implements StructClass {
         this.$fullTypeName = composeSuiType(
             LockedReceipt.$typeName,
             ...typeArgs
-        ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedReceipt";
+        ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedReceipt";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
+        this.index = fields.index;
         this.user = fields.user;
         this.receipts = fields.receipts;
         this.leave = fields.leave;
@@ -569,7 +1076,7 @@ export class LockedReceipt implements StructClass {
             fullTypeName: composeSuiType(
                 LockedReceipt.$typeName,
                 ...[]
-            ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedReceipt",
+            ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedReceipt",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LockedReceipt.fromFields(fields),
@@ -601,6 +1108,7 @@ export class LockedReceipt implements StructClass {
     static get bcs() {
         return bcs.struct("LockedReceipt", {
             id: UID.bcs,
+            index: bcs.u64(),
             user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
             receipts: bcs.vector(TypusDepositReceipt.bcs),
             leave: bcs.bool(),
@@ -617,6 +1125,7 @@ export class LockedReceipt implements StructClass {
     static fromFields(fields: Record<string, any>): LockedReceipt {
         return LockedReceipt.reified().new({
             id: decodeFromFields(UID.reified(), fields.id),
+            index: decodeFromFields("u64", fields.index),
             user: decodeFromFields("address", fields.user),
             receipts: decodeFromFields(reified.vector(TypusDepositReceipt.reified()), fields.receipts),
             leave: decodeFromFields("bool", fields.leave),
@@ -637,6 +1146,7 @@ export class LockedReceipt implements StructClass {
 
         return LockedReceipt.reified().new({
             id: decodeFromFieldsWithTypes(UID.reified(), item.fields.id),
+            index: decodeFromFieldsWithTypes("u64", item.fields.index),
             user: decodeFromFieldsWithTypes("address", item.fields.user),
             receipts: decodeFromFieldsWithTypes(reified.vector(TypusDepositReceipt.reified()), item.fields.receipts),
             leave: decodeFromFieldsWithTypes("bool", item.fields.leave),
@@ -657,6 +1167,7 @@ export class LockedReceipt implements StructClass {
     toJSONField() {
         return {
             id: this.id,
+            index: this.index.toString(),
             user: this.user,
             receipts: fieldToJSON<Vector<TypusDepositReceipt>>(
                 `vector<0x908a10789a1a6953e0b73a997c10e3552f7ce4e2907afd00a334ed74bd973ded::vault::TypusDepositReceipt>`,
@@ -680,6 +1191,7 @@ export class LockedReceipt implements StructClass {
     static fromJSONField(field: any): LockedReceipt {
         return LockedReceipt.reified().new({
             id: decodeFromJSONField(UID.reified(), field.id),
+            index: decodeFromJSONField("u64", field.index),
             user: decodeFromJSONField("address", field.user),
             receipts: decodeFromJSONField(reified.vector(TypusDepositReceipt.reified()), field.receipts),
             leave: decodeFromJSONField("bool", field.leave),
@@ -727,7 +1239,7 @@ export class LockedReceipt implements StructClass {
 
 export function isLockedVault(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedVault";
+    return type === "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedVault";
 }
 
 export interface LockedVaultFields {
@@ -742,18 +1254,20 @@ export interface LockedVaultFields {
     incentivePpm: ToField<"u64">;
     incentivePeriodMs: ToField<"u64">;
     tsMs: ToField<"u64">;
+    capacity: ToField<"u64">;
+    totalLocked: ToField<"u64">;
     u64Padding: ToField<Vector<"u64">>;
 }
 
 export type LockedVaultReified = Reified<LockedVault, LockedVaultFields>;
 
 export class LockedVault implements StructClass {
-    static readonly $typeName = "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedVault";
+    static readonly $typeName = "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedVault";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LockedVault.$typeName;
 
-    readonly $fullTypeName: "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedVault";
+    readonly $fullTypeName: "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedVault";
 
     readonly $typeArgs: [];
 
@@ -768,13 +1282,15 @@ export class LockedVault implements StructClass {
     readonly incentivePpm: ToField<"u64">;
     readonly incentivePeriodMs: ToField<"u64">;
     readonly tsMs: ToField<"u64">;
+    readonly capacity: ToField<"u64">;
+    readonly totalLocked: ToField<"u64">;
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: LockedVaultFields) {
         this.$fullTypeName = composeSuiType(
             LockedVault.$typeName,
             ...typeArgs
-        ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedVault";
+        ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedVault";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -788,6 +1304,8 @@ export class LockedVault implements StructClass {
         this.incentivePpm = fields.incentivePpm;
         this.incentivePeriodMs = fields.incentivePeriodMs;
         this.tsMs = fields.tsMs;
+        this.capacity = fields.capacity;
+        this.totalLocked = fields.totalLocked;
         this.u64Padding = fields.u64Padding;
     }
 
@@ -797,7 +1315,7 @@ export class LockedVault implements StructClass {
             fullTypeName: composeSuiType(
                 LockedVault.$typeName,
                 ...[]
-            ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedVault",
+            ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedVault",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LockedVault.fromFields(fields),
@@ -839,6 +1357,8 @@ export class LockedVault implements StructClass {
             incentive_ppm: bcs.u64(),
             incentive_period_ms: bcs.u64(),
             ts_ms: bcs.u64(),
+            capacity: bcs.u64(),
+            total_locked: bcs.u64(),
             u64_padding: bcs.vector(bcs.u64()),
         });
     }
@@ -856,6 +1376,8 @@ export class LockedVault implements StructClass {
             incentivePpm: decodeFromFields("u64", fields.incentive_ppm),
             incentivePeriodMs: decodeFromFields("u64", fields.incentive_period_ms),
             tsMs: decodeFromFields("u64", fields.ts_ms),
+            capacity: decodeFromFields("u64", fields.capacity),
+            totalLocked: decodeFromFields("u64", fields.total_locked),
             u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
         });
     }
@@ -880,6 +1402,8 @@ export class LockedVault implements StructClass {
             incentivePpm: decodeFromFieldsWithTypes("u64", item.fields.incentive_ppm),
             incentivePeriodMs: decodeFromFieldsWithTypes("u64", item.fields.incentive_period_ms),
             tsMs: decodeFromFieldsWithTypes("u64", item.fields.ts_ms),
+            capacity: decodeFromFieldsWithTypes("u64", item.fields.capacity),
+            totalLocked: decodeFromFieldsWithTypes("u64", item.fields.total_locked),
             u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
         });
     }
@@ -901,6 +1425,8 @@ export class LockedVault implements StructClass {
             incentivePpm: this.incentivePpm.toString(),
             incentivePeriodMs: this.incentivePeriodMs.toString(),
             tsMs: this.tsMs.toString(),
+            capacity: this.capacity.toString(),
+            totalLocked: this.totalLocked.toString(),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
         };
     }
@@ -922,6 +1448,8 @@ export class LockedVault implements StructClass {
             incentivePpm: decodeFromJSONField("u64", field.incentivePpm),
             incentivePeriodMs: decodeFromJSONField("u64", field.incentivePeriodMs),
             tsMs: decodeFromJSONField("u64", field.tsMs),
+            capacity: decodeFromJSONField("u64", field.capacity),
+            totalLocked: decodeFromJSONField("u64", field.totalLocked),
             u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
         });
     }
@@ -960,7 +1488,7 @@ export class LockedVault implements StructClass {
 
 export function isLockedVaultRegistry(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedVaultRegistry";
+    return type === "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedVaultRegistry";
 }
 
 export interface LockedVaultRegistryFields {
@@ -975,12 +1503,12 @@ export type LockedVaultRegistryReified = Reified<LockedVaultRegistry, LockedVaul
 
 export class LockedVaultRegistry implements StructClass {
     static readonly $typeName =
-        "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedVaultRegistry";
+        "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedVaultRegistry";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LockedVaultRegistry.$typeName;
 
-    readonly $fullTypeName: "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedVaultRegistry";
+    readonly $fullTypeName: "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedVaultRegistry";
 
     readonly $typeArgs: [];
 
@@ -994,7 +1522,7 @@ export class LockedVaultRegistry implements StructClass {
         this.$fullTypeName = composeSuiType(
             LockedVaultRegistry.$typeName,
             ...typeArgs
-        ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedVaultRegistry";
+        ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedVaultRegistry";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -1010,7 +1538,7 @@ export class LockedVaultRegistry implements StructClass {
             fullTypeName: composeSuiType(
                 LockedVaultRegistry.$typeName,
                 ...[]
-            ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::LockedVaultRegistry",
+            ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedVaultRegistry",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LockedVaultRegistry.fromFields(fields),
@@ -1133,11 +1661,358 @@ export class LockedVaultRegistry implements StructClass {
     }
 }
 
+/* ============================== NewLockedVaultEvent =============================== */
+
+export function isNewLockedVaultEvent(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x0::locked_period_vault::NewLockedVaultEvent";
+}
+
+export interface NewLockedVaultEventFields {
+    index: ToField<"u64">;
+    unlockTsMs: ToField<"u64">;
+    lockPeriodMs: ToField<"u64">;
+    incentivePpm: ToField<"u64">;
+    incentivePeriodMs: ToField<"u64">;
+    tsMs: ToField<"u64">;
+    capacity: ToField<"u64">;
+    u64Padding: ToField<Vector<"u64">>;
+}
+
+export type NewLockedVaultEventReified = Reified<NewLockedVaultEvent, NewLockedVaultEventFields>;
+
+export class NewLockedVaultEvent implements StructClass {
+    static readonly $typeName = "0x0::locked_period_vault::NewLockedVaultEvent";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = NewLockedVaultEvent.$typeName;
+
+    readonly $fullTypeName: "0x0::locked_period_vault::NewLockedVaultEvent";
+
+    readonly $typeArgs: [];
+
+    readonly index: ToField<"u64">;
+    readonly unlockTsMs: ToField<"u64">;
+    readonly lockPeriodMs: ToField<"u64">;
+    readonly incentivePpm: ToField<"u64">;
+    readonly incentivePeriodMs: ToField<"u64">;
+    readonly tsMs: ToField<"u64">;
+    readonly capacity: ToField<"u64">;
+    readonly u64Padding: ToField<Vector<"u64">>;
+
+    private constructor(typeArgs: [], fields: NewLockedVaultEventFields) {
+        this.$fullTypeName = composeSuiType(NewLockedVaultEvent.$typeName, ...typeArgs) as "0x0::locked_period_vault::NewLockedVaultEvent";
+        this.$typeArgs = typeArgs;
+
+        this.index = fields.index;
+        this.unlockTsMs = fields.unlockTsMs;
+        this.lockPeriodMs = fields.lockPeriodMs;
+        this.incentivePpm = fields.incentivePpm;
+        this.incentivePeriodMs = fields.incentivePeriodMs;
+        this.tsMs = fields.tsMs;
+        this.capacity = fields.capacity;
+        this.u64Padding = fields.u64Padding;
+    }
+
+    static reified(): NewLockedVaultEventReified {
+        return {
+            typeName: NewLockedVaultEvent.$typeName,
+            fullTypeName: composeSuiType(NewLockedVaultEvent.$typeName, ...[]) as "0x0::locked_period_vault::NewLockedVaultEvent",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => NewLockedVaultEvent.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => NewLockedVaultEvent.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => NewLockedVaultEvent.fromBcs(data),
+            bcs: NewLockedVaultEvent.bcs,
+            fromJSONField: (field: any) => NewLockedVaultEvent.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => NewLockedVaultEvent.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => NewLockedVaultEvent.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => NewLockedVaultEvent.fetch(client, id),
+            new: (fields: NewLockedVaultEventFields) => {
+                return new NewLockedVaultEvent([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return NewLockedVaultEvent.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<NewLockedVaultEvent>> {
+        return phantom(NewLockedVaultEvent.reified());
+    }
+    static get p() {
+        return NewLockedVaultEvent.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("NewLockedVaultEvent", {
+            index: bcs.u64(),
+            unlock_ts_ms: bcs.u64(),
+            lock_period_ms: bcs.u64(),
+            incentive_ppm: bcs.u64(),
+            incentive_period_ms: bcs.u64(),
+            ts_ms: bcs.u64(),
+            capacity: bcs.u64(),
+            u64_padding: bcs.vector(bcs.u64()),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): NewLockedVaultEvent {
+        return NewLockedVaultEvent.reified().new({
+            index: decodeFromFields("u64", fields.index),
+            unlockTsMs: decodeFromFields("u64", fields.unlock_ts_ms),
+            lockPeriodMs: decodeFromFields("u64", fields.lock_period_ms),
+            incentivePpm: decodeFromFields("u64", fields.incentive_ppm),
+            incentivePeriodMs: decodeFromFields("u64", fields.incentive_period_ms),
+            tsMs: decodeFromFields("u64", fields.ts_ms),
+            capacity: decodeFromFields("u64", fields.capacity),
+            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): NewLockedVaultEvent {
+        if (!isNewLockedVaultEvent(item.type)) {
+            throw new Error("not a NewLockedVaultEvent type");
+        }
+
+        return NewLockedVaultEvent.reified().new({
+            index: decodeFromFieldsWithTypes("u64", item.fields.index),
+            unlockTsMs: decodeFromFieldsWithTypes("u64", item.fields.unlock_ts_ms),
+            lockPeriodMs: decodeFromFieldsWithTypes("u64", item.fields.lock_period_ms),
+            incentivePpm: decodeFromFieldsWithTypes("u64", item.fields.incentive_ppm),
+            incentivePeriodMs: decodeFromFieldsWithTypes("u64", item.fields.incentive_period_ms),
+            tsMs: decodeFromFieldsWithTypes("u64", item.fields.ts_ms),
+            capacity: decodeFromFieldsWithTypes("u64", item.fields.capacity),
+            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): NewLockedVaultEvent {
+        return NewLockedVaultEvent.fromFields(NewLockedVaultEvent.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            index: this.index.toString(),
+            unlockTsMs: this.unlockTsMs.toString(),
+            lockPeriodMs: this.lockPeriodMs.toString(),
+            incentivePpm: this.incentivePpm.toString(),
+            incentivePeriodMs: this.incentivePeriodMs.toString(),
+            tsMs: this.tsMs.toString(),
+            capacity: this.capacity.toString(),
+            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): NewLockedVaultEvent {
+        return NewLockedVaultEvent.reified().new({
+            index: decodeFromJSONField("u64", field.index),
+            unlockTsMs: decodeFromJSONField("u64", field.unlockTsMs),
+            lockPeriodMs: decodeFromJSONField("u64", field.lockPeriodMs),
+            incentivePpm: decodeFromJSONField("u64", field.incentivePpm),
+            incentivePeriodMs: decodeFromJSONField("u64", field.incentivePeriodMs),
+            tsMs: decodeFromJSONField("u64", field.tsMs),
+            capacity: decodeFromJSONField("u64", field.capacity),
+            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): NewLockedVaultEvent {
+        if (json.$typeName !== NewLockedVaultEvent.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return NewLockedVaultEvent.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): NewLockedVaultEvent {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isNewLockedVaultEvent(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a NewLockedVaultEvent object`);
+        }
+        return NewLockedVaultEvent.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<NewLockedVaultEvent> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching NewLockedVaultEvent object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isNewLockedVaultEvent(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a NewLockedVaultEvent object`);
+        }
+        return NewLockedVaultEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
+/* ============================== RemoveIncentiveEvent =============================== */
+
+export function isRemoveIncentiveEvent(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x0::locked_period_vault::RemoveIncentiveEvent";
+}
+
+export interface RemoveIncentiveEventFields {
+    index: ToField<"u64">;
+    value: ToField<"u64">;
+    u64Padding: ToField<Vector<"u64">>;
+}
+
+export type RemoveIncentiveEventReified = Reified<RemoveIncentiveEvent, RemoveIncentiveEventFields>;
+
+export class RemoveIncentiveEvent implements StructClass {
+    static readonly $typeName = "0x0::locked_period_vault::RemoveIncentiveEvent";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = RemoveIncentiveEvent.$typeName;
+
+    readonly $fullTypeName: "0x0::locked_period_vault::RemoveIncentiveEvent";
+
+    readonly $typeArgs: [];
+
+    readonly index: ToField<"u64">;
+    readonly value: ToField<"u64">;
+    readonly u64Padding: ToField<Vector<"u64">>;
+
+    private constructor(typeArgs: [], fields: RemoveIncentiveEventFields) {
+        this.$fullTypeName = composeSuiType(
+            RemoveIncentiveEvent.$typeName,
+            ...typeArgs
+        ) as "0x0::locked_period_vault::RemoveIncentiveEvent";
+        this.$typeArgs = typeArgs;
+
+        this.index = fields.index;
+        this.value = fields.value;
+        this.u64Padding = fields.u64Padding;
+    }
+
+    static reified(): RemoveIncentiveEventReified {
+        return {
+            typeName: RemoveIncentiveEvent.$typeName,
+            fullTypeName: composeSuiType(RemoveIncentiveEvent.$typeName, ...[]) as "0x0::locked_period_vault::RemoveIncentiveEvent",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => RemoveIncentiveEvent.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => RemoveIncentiveEvent.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => RemoveIncentiveEvent.fromBcs(data),
+            bcs: RemoveIncentiveEvent.bcs,
+            fromJSONField: (field: any) => RemoveIncentiveEvent.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => RemoveIncentiveEvent.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => RemoveIncentiveEvent.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => RemoveIncentiveEvent.fetch(client, id),
+            new: (fields: RemoveIncentiveEventFields) => {
+                return new RemoveIncentiveEvent([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return RemoveIncentiveEvent.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<RemoveIncentiveEvent>> {
+        return phantom(RemoveIncentiveEvent.reified());
+    }
+    static get p() {
+        return RemoveIncentiveEvent.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("RemoveIncentiveEvent", {
+            index: bcs.u64(),
+            value: bcs.u64(),
+            u64_padding: bcs.vector(bcs.u64()),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): RemoveIncentiveEvent {
+        return RemoveIncentiveEvent.reified().new({
+            index: decodeFromFields("u64", fields.index),
+            value: decodeFromFields("u64", fields.value),
+            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): RemoveIncentiveEvent {
+        if (!isRemoveIncentiveEvent(item.type)) {
+            throw new Error("not a RemoveIncentiveEvent type");
+        }
+
+        return RemoveIncentiveEvent.reified().new({
+            index: decodeFromFieldsWithTypes("u64", item.fields.index),
+            value: decodeFromFieldsWithTypes("u64", item.fields.value),
+            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): RemoveIncentiveEvent {
+        return RemoveIncentiveEvent.fromFields(RemoveIncentiveEvent.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            index: this.index.toString(),
+            value: this.value.toString(),
+            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): RemoveIncentiveEvent {
+        return RemoveIncentiveEvent.reified().new({
+            index: decodeFromJSONField("u64", field.index),
+            value: decodeFromJSONField("u64", field.value),
+            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): RemoveIncentiveEvent {
+        if (json.$typeName !== RemoveIncentiveEvent.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return RemoveIncentiveEvent.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): RemoveIncentiveEvent {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isRemoveIncentiveEvent(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a RemoveIncentiveEvent object`);
+        }
+        return RemoveIncentiveEvent.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<RemoveIncentiveEvent> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching RemoveIncentiveEvent object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isRemoveIncentiveEvent(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a RemoveIncentiveEvent object`);
+        }
+        return RemoveIncentiveEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
 /* ============================== UnlockReceiptEvent =============================== */
 
 export function isUnlockReceiptEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::UnlockReceiptEvent";
+    return type === "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::UnlockReceiptEvent";
 }
 
 export interface UnlockReceiptEventFields {
@@ -1157,12 +2032,12 @@ export type UnlockReceiptEventReified = Reified<UnlockReceiptEvent, UnlockReceip
 
 export class UnlockReceiptEvent implements StructClass {
     static readonly $typeName =
-        "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::UnlockReceiptEvent";
+        "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::UnlockReceiptEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UnlockReceiptEvent.$typeName;
 
-    readonly $fullTypeName: "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::UnlockReceiptEvent";
+    readonly $fullTypeName: "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::UnlockReceiptEvent";
 
     readonly $typeArgs: [];
 
@@ -1181,7 +2056,7 @@ export class UnlockReceiptEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             UnlockReceiptEvent.$typeName,
             ...typeArgs
-        ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::UnlockReceiptEvent";
+        ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::UnlockReceiptEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -1202,7 +2077,7 @@ export class UnlockReceiptEvent implements StructClass {
             fullTypeName: composeSuiType(
                 UnlockReceiptEvent.$typeName,
                 ...[]
-            ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::UnlockReceiptEvent",
+            ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::UnlockReceiptEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UnlockReceiptEvent.fromFields(fields),
@@ -1352,7 +2227,7 @@ export class UnlockReceiptEvent implements StructClass {
 
 export function isWithdrawIncentiveEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::WithdrawIncentiveEvent";
+    return type === "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::WithdrawIncentiveEvent";
 }
 
 export interface WithdrawIncentiveEventFields {
@@ -1366,12 +2241,12 @@ export type WithdrawIncentiveEventReified = Reified<WithdrawIncentiveEvent, With
 
 export class WithdrawIncentiveEvent implements StructClass {
     static readonly $typeName =
-        "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::WithdrawIncentiveEvent";
+        "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::WithdrawIncentiveEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = WithdrawIncentiveEvent.$typeName;
 
-    readonly $fullTypeName: "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::WithdrawIncentiveEvent";
+    readonly $fullTypeName: "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::WithdrawIncentiveEvent";
 
     readonly $typeArgs: [];
 
@@ -1384,7 +2259,7 @@ export class WithdrawIncentiveEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             WithdrawIncentiveEvent.$typeName,
             ...typeArgs
-        ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::WithdrawIncentiveEvent";
+        ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::WithdrawIncentiveEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -1399,7 +2274,7 @@ export class WithdrawIncentiveEvent implements StructClass {
             fullTypeName: composeSuiType(
                 WithdrawIncentiveEvent.$typeName,
                 ...[]
-            ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::WithdrawIncentiveEvent",
+            ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::WithdrawIncentiveEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => WithdrawIncentiveEvent.fromFields(fields),
@@ -1519,7 +2394,7 @@ export class WithdrawIncentiveEvent implements StructClass {
 
 export function isWithdrawPremiumEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::WithdrawPremiumEvent";
+    return type === "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::WithdrawPremiumEvent";
 }
 
 export interface WithdrawPremiumEventFields {
@@ -1532,12 +2407,12 @@ export type WithdrawPremiumEventReified = Reified<WithdrawPremiumEvent, Withdraw
 
 export class WithdrawPremiumEvent implements StructClass {
     static readonly $typeName =
-        "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::WithdrawPremiumEvent";
+        "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::WithdrawPremiumEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = WithdrawPremiumEvent.$typeName;
 
-    readonly $fullTypeName: "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::WithdrawPremiumEvent";
+    readonly $fullTypeName: "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::WithdrawPremiumEvent";
 
     readonly $typeArgs: [];
 
@@ -1549,7 +2424,7 @@ export class WithdrawPremiumEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             WithdrawPremiumEvent.$typeName,
             ...typeArgs
-        ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::WithdrawPremiumEvent";
+        ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::WithdrawPremiumEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -1563,7 +2438,7 @@ export class WithdrawPremiumEvent implements StructClass {
             fullTypeName: composeSuiType(
                 WithdrawPremiumEvent.$typeName,
                 ...[]
-            ) as "0x715ff0148b901aa0e709b23c9b9eb2fde52325c868fe4bce0db9fff408608ad8::locked_period_vault::WithdrawPremiumEvent",
+            ) as "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::WithdrawPremiumEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => WithdrawPremiumEvent.fromFields(fields),

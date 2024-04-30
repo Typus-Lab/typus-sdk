@@ -1,9 +1,8 @@
 import configs from "../../../config.json";
-import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { leave } from "../../../utils/locked-period-vault/locked-period-vault/functions";
+import { viewUser } from "../../../utils/locked-period-vault/locked-period-vault/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../../constants";
 import "../../load_env";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -22,13 +21,13 @@ const gasBudget = 100000000;
     let tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
-    leave(tx, {
+    viewUser(tx, {
+        registry: config.REGISTRY.DOV_SINGLE,
         lockedVaultRegistry: config.REGISTRY.LOCKED_VAULT,
-        index: BigInt(0), // 0 Sui Hourly Call, 9 Sui Hourly Put
-        clock: CLOCK,
+        user,
     });
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
+    let res = await provider.devInspectTransactionBlock({ sender: user, transactionBlock: tx });
 
-    console.log(res);
+    console.log(res.results);
 })();

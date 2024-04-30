@@ -1,9 +1,10 @@
 import configs from "../../../config.json";
-import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { newLockedVault } from "../../../utils/locked-period-vault/locked-period-vault/functions";
-import { REGISTRY, PUBLISHED_AT } from "../../../utils/locked-period-vault/index";
+import { REGISTRY } from "../../../utils/locked-period-vault/index";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { CLOCK } from "../../../constants";
 
 import mnemonic from "../../../mnemonic.json";
 const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
@@ -25,10 +26,12 @@ const gasBudget = 100000000;
     newLockedVault(tx, "0x2::sui::SUI", {
         lockedVaultRegistry: REGISTRY,
         index: BigInt(0), // 0 Sui Hourly Call, 9 Sui Hourly Put
-        unlockTsMs: BigInt(1714118400000), // this Friday
+        unlockTsMs: BigInt(1714723200000), // this Friday
         lockPeriodMs: BigInt(1000 * 24 * 3600 * 7), // a week
         incentivePpm: BigInt(100),
-        incentivePeriodMs: BigInt(1000 * 3600), // every hour
+        incentivePeriodMs: BigInt(1000 * 3600),
+        capacity: BigInt(1000000000),
+        clock: CLOCK,
     });
 
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
