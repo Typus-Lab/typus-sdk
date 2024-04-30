@@ -1,4 +1,4 @@
-import configs from "../config.json";
+import configs from "../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getDepositShares } from "../../../utils/typus-dov-single-v2/view-function";
 
@@ -27,15 +27,15 @@ const provider = new SuiClient({
     }
 
     const receipts = datas
-        .filter((obj) => obj.data?.type! == `${config.FRAMEWORK_PACKAGE_ORIGIN}::vault::TypusDepositReceipt`)
+        .filter((obj) => obj.data?.type! == `${config.PACKAGE_ORIGIN.FRAMEWORK}::vault::TypusDepositReceipt`)
         .map((obj) => obj.data?.objectId!);
     // console.log(receipts);
 
     const result = await getDepositShares(
         provider,
-        config.FRAMEWORK_PACKAGE_ORIGIN,
-        config.DOV_SINGLE_PACKAGE,
-        config.DOV_SINGLE_REGISTRY,
+        config.PACKAGE_ORIGIN.FRAMEWORK,
+        config.PACKAGE.DOV_SINGLE,
+        config.REGISTRY.DOV_SINGLE,
         receipts
     );
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));

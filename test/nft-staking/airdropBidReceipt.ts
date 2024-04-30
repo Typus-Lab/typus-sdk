@@ -69,7 +69,7 @@ const gasBudget = 100000000;
         receipts_datas = receipts_datas.concat(temp.data);
     }
     var receipts = receipts_datas
-        .filter((obj) => obj.data?.type! == `${config.FRAMEWORK_PACKAGE_ORIGIN}::vault::TypusBidReceipt`)
+        .filter((obj) => obj.data?.type! == `${config.PACKAGE_ORIGIN.FRAMEWORK}::vault::TypusBidReceipt`)
         .map((obj) => obj.data?.objectId!);
 
     console.log("receipts: " + receipts);
@@ -96,7 +96,7 @@ const gasBudget = 100000000;
 
     const transactionBlock = getMultiTransferBidReceiptTx({
         typusFrameworkPackageId: config.FRAMEWORK_PACKAGE,
-        typusFrameworkOriginPackageId: config.FRAMEWORK_PACKAGE_ORIGIN,
+        typusFrameworkOriginPackageId: config.PACKAGE_ORIGIN.FRAMEWORK,
         typusDovSinglePackageId: config.SINGLE_COLLATERAL_PACKAGE,
         typusDovSingleRegistry: config.SINGLE_COLLATERAL_REGISTRY,
         typeArguments: [

@@ -14,9 +14,9 @@ const provider = new SuiClient({ url: config.RPC_ENDPOINT });
     let transactionBlock = new TransactionBlock();
     transactionBlock = getDepositTx({
         tx: transactionBlock,
-        typusFrameworkOriginPackageId: config.FRAMEWORK_PACKAGE_ORIGIN,
-        typusDovSinglePackageId: config.DOV_SINGLE_PACKAGE,
-        typusDovSingleRegistry: config.DOV_SINGLE_REGISTRY,
+        typusFrameworkOriginPackageId: config.PACKAGE_ORIGIN.FRAMEWORK,
+        typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
+        typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
         mfudPackageId: config.MFUD_PACKAGE,
         mfudRegistry: config.MFUD_REGISTRY,
         mfudAmount: "10",
