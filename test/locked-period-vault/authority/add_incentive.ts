@@ -1,8 +1,7 @@
 import configs from "../../../config.json";
-import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { addIncentive } from "../../../utils/locked-period-vault/locked-period-vault/functions";
-import { REGISTRY, PUBLISHED_AT } from "../../../utils/locked-period-vault/index";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 import mnemonic from "../../../mnemonic.json";
@@ -24,8 +23,8 @@ const gasBudget = 100000000;
 
     let [coin] = tx.splitCoins(tx.gas, [tx.pure(10000000000)]);
 
-    addIncentive(tx, "0x2::sui::SUI", {
-        lockedVaultRegistry: REGISTRY,
+    addIncentive(config.PACKAGE.LOCKED_VAULT, tx, "0x2::sui::SUI", {
+        lockedVaultRegistry: config.REGISTRY.LOCKED_VAULT,
         index: BigInt(0), // 0 Sui Hourly Call, 9 Sui Hourly Put
         coin,
     });

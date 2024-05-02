@@ -2,8 +2,6 @@ import configs from "../../../config.json";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { LockedVaultRegistry } from "../../../utils/locked-period-vault/locked-period-vault/structs";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../../constants";
 
 import mnemonic from "../../../mnemonic.json";
 const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));

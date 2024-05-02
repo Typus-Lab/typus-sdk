@@ -23,7 +23,7 @@ const gasBudget = 100000000;
     let tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
-    updateCapacity(tx, {
+    updateCapacity(config.PACKAGE.LOCKED_VAULT, tx, {
         lockedVaultRegistry: config.REGISTRY.LOCKED_VAULT,
         index: BigInt(0),
         capacity: BigInt(0),

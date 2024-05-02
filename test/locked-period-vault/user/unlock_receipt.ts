@@ -22,7 +22,7 @@ const gasBudget = 100000000;
     let tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
-    const receipt = unlockReceipt(tx, {
+    const receipt = unlockReceipt(config.PACKAGE.LOCKED_VAULT, tx, {
         lockedVaultRegistry: config.REGISTRY.LOCKED_VAULT,
         index: BigInt(0), // 0 Sui Hourly Call, 9 Sui Hourly Put
     });

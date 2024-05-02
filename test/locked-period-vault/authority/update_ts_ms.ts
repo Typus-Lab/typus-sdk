@@ -23,7 +23,7 @@ const gasBudget = 100000000;
     let tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
-    updateTsMs(tx, {
+    updateTsMs(config.PACKAGE.LOCKED_VAULT, tx, {
         lockedVaultRegistry: config.REGISTRY.LOCKED_VAULT,
         index: BigInt(0),
         tsMs: BigInt(1714460400000),

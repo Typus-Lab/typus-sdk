@@ -1,10 +1,9 @@
-import { PUBLISHED_AT } from "..";
 import { CLOCK } from "../../../constants";
 import { ObjectArg, obj, pure } from "../../_framework/util";
 import { TransactionArgument, TransactionBlock, TransactionObjectArgument } from "@mysten/sui.js/transactions";
 
-export function init(txb: TransactionBlock) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::locked_period_vault::init`, arguments: [] });
+export function init(lockedVaultPackage: string, txb: TransactionBlock) {
+    return txb.moveCall({ target: `${lockedVaultPackage}::locked_period_vault::init`, arguments: [] });
 }
 
 export interface AddIncentiveArgs {
@@ -13,9 +12,9 @@ export interface AddIncentiveArgs {
     coin: ObjectArg;
 }
 
-export function addIncentive(txb: TransactionBlock, typeArg: string, args: AddIncentiveArgs) {
+export function addIncentive(lockedVaultPackage: string, txb: TransactionBlock, typeArg: string, args: AddIncentiveArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::add_incentive`,
+        target: `${lockedVaultPackage}::locked_period_vault::add_incentive`,
         typeArguments: [typeArg],
         arguments: [obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`), obj(txb, args.coin)],
     });
@@ -28,9 +27,9 @@ export interface CrankLeaveArgs {
     clock: ObjectArg;
 }
 
-export function crankLeave(txb: TransactionBlock, typeArgs: [string, string], args: CrankLeaveArgs) {
+export function crankLeave(lockedVaultPackage: string, txb: TransactionBlock, typeArgs: [string, string], args: CrankLeaveArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::crank_leave`,
+        target: `${lockedVaultPackage}::locked_period_vault::crank_leave`,
         typeArguments: typeArgs,
         arguments: [obj(txb, args.registry), obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`), obj(txb, args.clock)],
     });
@@ -41,9 +40,9 @@ export interface FindLockedReceiptArgs {
     user: string | TransactionArgument;
 }
 
-export function findLockedReceipt(txb: TransactionBlock, args: FindLockedReceiptArgs) {
+export function findLockedReceipt(lockedVaultPackage: string, txb: TransactionBlock, args: FindLockedReceiptArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::find_locked_receipt`,
+        target: `${lockedVaultPackage}::locked_period_vault::find_locked_receipt`,
         arguments: [obj(txb, args.lockedVault), pure(txb, args.user, `address`)],
     });
 }
@@ -55,9 +54,9 @@ export interface IncentiviseArgs {
     clock: ObjectArg;
 }
 
-export function incentivise(txb: TransactionBlock, args: IncentiviseArgs) {
+export function incentivise(lockedVaultPackage: string, txb: TransactionBlock, args: IncentiviseArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::incentivise`,
+        target: `${lockedVaultPackage}::locked_period_vault::incentivise`,
         arguments: [obj(txb, args.registry), obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`), obj(txb, args.clock)],
     });
 }
@@ -68,9 +67,9 @@ export interface LeaveArgs {
     clock: ObjectArg;
 }
 
-export function leave(txb: TransactionBlock, args: LeaveArgs) {
+export function leave(lockedVaultPackage: string, txb: TransactionBlock, args: LeaveArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::leave`,
+        target: `${lockedVaultPackage}::locked_period_vault::leave`,
         arguments: [obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`), obj(txb, args.clock)],
     });
 }
@@ -85,9 +84,9 @@ export interface LockReceiptArgs {
     clock: ObjectArg;
 }
 
-export function lockReceipt(txb: TransactionBlock, args: LockReceiptArgs) {
+export function lockReceipt(lockedVaultPackage: string, txb: TransactionBlock, args: LockReceiptArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::lock_receipt`,
+        target: `${lockedVaultPackage}::locked_period_vault::lock_receipt`,
         arguments: [
             obj(txb, args.registry),
             obj(txb, args.lockedVaultRegistry),
@@ -112,12 +111,13 @@ export function depositAndLockReceipt(input: {
     amount: string;
     receipts: string[] | TransactionObjectArgument[];
     user: string;
+    lockedVaultPackage: string;
     lockedVaultRegistry: string;
     lockActiveShare: string;
     lockWarmupShare: string;
 }) {
     if (Number(input.amount) == 0) {
-        lockReceipt(input.tx, {
+        lockReceipt(input.lockedVaultPackage, input.tx, {
             registry: input.typusDovSingleRegistry,
             lockedVaultRegistry: input.lockedVaultRegistry,
             index: input.tx.pure(input.index),
@@ -152,7 +152,7 @@ export function depositAndLockReceipt(input: {
                 typeArguments: [input.typeArguments[0]],
                 arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
             });
-            lockReceipt(input.tx, {
+            lockReceipt(input.lockedVaultPackage, input.tx, {
                 registry: input.typusDovSingleRegistry,
                 lockedVaultRegistry: input.lockedVaultRegistry,
                 index: input.tx.pure(input.index),
@@ -182,7 +182,7 @@ export function depositAndLockReceipt(input: {
                 typeArguments: [input.typeArguments[0]],
                 arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
             });
-            lockReceipt(input.tx, {
+            lockReceipt(input.lockedVaultPackage, input.tx, {
                 registry: input.typusDovSingleRegistry,
                 lockedVaultRegistry: input.lockedVaultRegistry,
                 index: input.tx.pure(input.index),
@@ -208,9 +208,9 @@ export interface NewLockedVaultArgs {
     clock: ObjectArg;
 }
 
-export function newLockedVault(txb: TransactionBlock, typeArg: string, args: NewLockedVaultArgs) {
+export function newLockedVault(lockedVaultPackage: string, txb: TransactionBlock, typeArg: string, args: NewLockedVaultArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::new_locked_vault`,
+        target: `${lockedVaultPackage}::locked_period_vault::new_locked_vault`,
         typeArguments: [typeArg],
         arguments: [
             obj(txb, args.lockedVaultRegistry),
@@ -230,9 +230,9 @@ export interface RemoveIncentiveArgs {
     index: bigint | TransactionArgument;
 }
 
-export function removeIncentive(txb: TransactionBlock, typeArg: string, args: RemoveIncentiveArgs) {
+export function removeIncentive(lockedVaultPackage: string, txb: TransactionBlock, typeArg: string, args: RemoveIncentiveArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::remove_incentive`,
+        target: `${lockedVaultPackage}::locked_period_vault::remove_incentive`,
         typeArguments: [typeArg],
         arguments: [obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`)],
     });
@@ -244,15 +244,15 @@ export interface ReturnReceiptArgs {
     hotPotato: ObjectArg;
 }
 
-export function returnReceipt(txb: TransactionBlock, args: ReturnReceiptArgs) {
+export function returnReceipt(lockedVaultPackage: string, txb: TransactionBlock, args: ReturnReceiptArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::return_receipt`,
+        target: `${lockedVaultPackage}::locked_period_vault::return_receipt`,
         arguments: [obj(txb, args.lockedReceipt), obj(txb, args.receipt), obj(txb, args.hotPotato)],
     });
 }
 
-export function takeReceipt(txb: TransactionBlock, lockedReceipt: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::locked_period_vault::take_receipt`, arguments: [obj(txb, lockedReceipt)] });
+export function takeReceipt(lockedVaultPackage: string, txb: TransactionBlock, lockedReceipt: ObjectArg) {
+    return txb.moveCall({ target: `${lockedVaultPackage}::locked_period_vault::take_receipt`, arguments: [obj(txb, lockedReceipt)] });
 }
 
 export interface UnlockReceiptArgs {
@@ -260,9 +260,9 @@ export interface UnlockReceiptArgs {
     index: bigint | TransactionArgument;
 }
 
-export function unlockReceipt(txb: TransactionBlock, args: UnlockReceiptArgs) {
+export function unlockReceipt(lockedVaultPackage: string, txb: TransactionBlock, args: UnlockReceiptArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::unlock_receipt`,
+        target: `${lockedVaultPackage}::locked_period_vault::unlock_receipt`,
         arguments: [obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`)],
     });
 }
@@ -273,9 +273,9 @@ export interface UpdateCapacityArgs {
     capacity: bigint | TransactionArgument;
 }
 
-export function updateCapacity(txb: TransactionBlock, args: UpdateCapacityArgs) {
+export function updateCapacity(lockedVaultPackage: string, txb: TransactionBlock, args: UpdateCapacityArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::update_capacity`,
+        target: `${lockedVaultPackage}::locked_period_vault::update_capacity`,
         arguments: [obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`), pure(txb, args.capacity, `u64`)],
     });
 }
@@ -286,9 +286,9 @@ export interface UpdateIncentivePpmArgs {
     incentivePpm: bigint | TransactionArgument;
 }
 
-export function updateIncentivePpm(txb: TransactionBlock, args: UpdateIncentivePpmArgs) {
+export function updateIncentivePpm(lockedVaultPackage: string, txb: TransactionBlock, args: UpdateIncentivePpmArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::update_incentive_ppm`,
+        target: `${lockedVaultPackage}::locked_period_vault::update_incentive_ppm`,
         arguments: [obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`), pure(txb, args.incentivePpm, `u64`)],
     });
 }
@@ -299,9 +299,9 @@ export interface UpdateTsMsArgs {
     tsMs: bigint | TransactionArgument;
 }
 
-export function updateTsMs(txb: TransactionBlock, args: UpdateTsMsArgs) {
+export function updateTsMs(lockedVaultPackage: string, txb: TransactionBlock, args: UpdateTsMsArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::update_ts_ms`,
+        target: `${lockedVaultPackage}::locked_period_vault::update_ts_ms`,
         arguments: [obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`), pure(txb, args.tsMs, `u64`)],
     });
 }
@@ -312,9 +312,9 @@ export interface ViewUserArgs {
     user: string | TransactionArgument;
 }
 
-export function viewUser(txb: TransactionBlock, args: ViewUserArgs) {
+export function viewUser(lockedVaultPackage: string, txb: TransactionBlock, args: ViewUserArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::view_user`,
+        target: `${lockedVaultPackage}::locked_period_vault::view_user`,
         arguments: [obj(txb, args.registry), obj(txb, args.lockedVaultRegistry), pure(txb, args.user, `address`)],
     });
 }
@@ -326,9 +326,9 @@ export interface ViewUserReceiptArgs {
     user: string | TransactionArgument;
 }
 
-export function viewUserReceipt(txb: TransactionBlock, args: ViewUserReceiptArgs) {
+export function viewUserReceipt(lockedVaultPackage: string, txb: TransactionBlock, args: ViewUserReceiptArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::view_user_receipt`,
+        target: `${lockedVaultPackage}::locked_period_vault::view_user_receipt`,
         arguments: [
             obj(txb, args.registry),
             obj(txb, args.lockedVaultRegistry),
@@ -343,9 +343,9 @@ export interface WithdrawIncentiveArgs {
     index: bigint | TransactionArgument;
 }
 
-export function withdrawIncentive(txb: TransactionBlock, typeArg: string, args: WithdrawIncentiveArgs) {
+export function withdrawIncentive(lockedVaultPackage: string, txb: TransactionBlock, typeArg: string, args: WithdrawIncentiveArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::withdraw_incentive`,
+        target: `${lockedVaultPackage}::locked_period_vault::withdraw_incentive`,
         typeArguments: [typeArg],
         arguments: [obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`)],
     });
@@ -357,9 +357,9 @@ export interface WithdrawPremiumArgs {
     index: bigint | TransactionArgument;
 }
 
-export function withdrawPremium(txb: TransactionBlock, typeArgs: [string, string], args: WithdrawPremiumArgs) {
+export function withdrawPremium(lockedVaultPackage: string, txb: TransactionBlock, typeArgs: [string, string], args: WithdrawPremiumArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::locked_period_vault::withdraw_premium`,
+        target: `${lockedVaultPackage}::locked_period_vault::withdraw_premium`,
         typeArguments: typeArgs,
         arguments: [obj(txb, args.registry), obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`)],
     });

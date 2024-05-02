@@ -22,8 +22,8 @@ const gasBudget = 100000000;
     let tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
-    removeIncentive(tx, "0x2::sui::SUI", {
-        lockedVaultRegistry: REGISTRY,
+    removeIncentive(config.PACKAGE.LOCKED_VAULT, tx, "0x2::sui::SUI", {
+        lockedVaultRegistry: config.REGISTRY.LOCKED_VAULT,
         index: BigInt(0), // 0 Sui Hourly Call, 9 Sui Hourly Put
     });
 

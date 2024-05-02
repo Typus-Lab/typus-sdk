@@ -25,7 +25,7 @@ const gasBudget = 100000000;
     const D_TOKEN = "0x2::sui::SUI";
     const B_TOKEN = "0x2::sui::SUI";
 
-    crankLeave(tx, [D_TOKEN, B_TOKEN], {
+    crankLeave(config.PACKAGE.LOCKED_VAULT, tx, [D_TOKEN, B_TOKEN], {
         registry: config.REGISTRY.DOV_SINGLE,
         lockedVaultRegistry: config.REGISTRY.LOCKED_VAULT,
         index: BigInt(0), // 0 Sui Hourly Call, 9 Sui Hourly Put

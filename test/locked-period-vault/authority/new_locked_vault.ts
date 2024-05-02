@@ -2,7 +2,6 @@ import configs from "../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { newLockedVault } from "../../../utils/locked-period-vault/locked-period-vault/functions";
-import { REGISTRY } from "../../../utils/locked-period-vault/index";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../../constants";
 
@@ -23,8 +22,8 @@ const gasBudget = 100000000;
     let tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
-    newLockedVault(tx, "0x2::sui::SUI", {
-        lockedVaultRegistry: REGISTRY,
+    newLockedVault(config.PACKAGE.LOCKED_VAULT, tx, "0x2::sui::SUI", {
+        lockedVaultRegistry: config.REGISTRY.LOCKED_VAULT,
         index: BigInt(0), // 0 Sui Hourly Call, 9 Sui Hourly Put
         unlockTsMs: BigInt(1714723200000), // this Friday
         lockPeriodMs: BigInt(1000 * 24 * 3600 * 7), // a week
