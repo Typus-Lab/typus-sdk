@@ -306,6 +306,18 @@ export function updateTsMs(lockedVaultPackage: string, txb: TransactionBlock, ar
     });
 }
 
+export interface UpdateUnlockTsMsArgs {
+    lockedVaultRegistry: ObjectArg;
+    index: bigint | TransactionArgument;
+    unlockTsMs: bigint | TransactionArgument;
+}
+
+export function updateUnlockTsMs(lockedVaultPackage: string, txb: TransactionBlock, args: UpdateUnlockTsMsArgs) {
+    return txb.moveCall({
+        target: `${lockedVaultPackage}::locked_period_vault::update_unlock_ts_ms`,
+        arguments: [obj(txb, args.lockedVaultRegistry), pure(txb, args.index, `u64`), pure(txb, args.unlockTsMs, `u64`)],
+    });
+}
 export interface ViewUserArgs {
     registry: ObjectArg;
     lockedVaultRegistry: ObjectArg;

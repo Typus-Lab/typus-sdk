@@ -1535,7 +1535,7 @@ export class LockedVault implements StructClass {
 
 export function isLockedVaultRegistry(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedVaultRegistry";
+    return type.endsWith("locked_period_vault::LockedVaultRegistry");
 }
 
 export interface LockedVaultRegistryFields {
