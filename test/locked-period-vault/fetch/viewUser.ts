@@ -4,6 +4,7 @@ import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { viewUser } from "../../../utils/locked-period-vault/locked-period-vault/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import "../../load_env";
+import { readVecLockedReceipt } from "../../../utils/locked-period-vault/locked-period-vault/structs";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
@@ -21,7 +22,7 @@ const gasBudget = 100000000;
     let tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
-    viewUser(tx, {
+    viewUser(config.PACKAGE.LOCKED_VAULT, tx, {
         registry: config.REGISTRY.DOV_SINGLE,
         lockedVaultRegistry: config.REGISTRY.LOCKED_VAULT,
         user,
@@ -29,5 +30,9 @@ const gasBudget = 100000000;
 
     let res = await provider.devInspectTransactionBlock({ sender: user, transactionBlock: tx });
 
-    console.log(res.results);
+    // @ts-ignore
+    const returnValues = res.results[0].returnValues[0][0];
+
+    const lockedReceipts = readVecLockedReceipt(Uint8Array.from(returnValues));
+    console.log(lockedReceipts);
 })();

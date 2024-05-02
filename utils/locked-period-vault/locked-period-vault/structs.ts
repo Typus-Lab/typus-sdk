@@ -19,8 +19,9 @@ import {
     ToTypeStr as ToPhantom,
 } from "../../_framework/reified";
 import { FieldsWithTypes, composeSuiType, compressSuiType } from "../../_framework/util";
-import { bcs, fromB64, fromHEX, toHEX } from "@mysten/bcs";
+import { BcsReader, bcs, fromB64, fromHEX, toHEX } from "@mysten/bcs";
 import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
+import { AddressFromBytes } from "../../tools";
 
 /* ============================== AddIncentiveEvent =============================== */
 
@@ -1025,6 +1026,52 @@ export interface LockedReceiptFields {
 }
 
 export type LockedReceiptReified = Reified<LockedReceipt, LockedReceiptFields>;
+
+export function readVecLockedReceipt(bytes: Uint8Array) {
+    let reader = new BcsReader(bytes);
+    return reader.readVec((reader) => {
+        reader.read16();
+        let locked_receipt = {
+            id: AddressFromBytes(reader.readBytes(32)),
+            index: reader.read64(),
+            user: AddressFromBytes(reader.readBytes(32)),
+            receipts: reader.readVec((reader) => {
+                let receipt = {
+                    id: AddressFromBytes(reader.readBytes(32)),
+                    vid: AddressFromBytes(reader.readBytes(32)),
+                    index: reader.read64(),
+                    metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                    u64_padding: reader.readVec((reader) => reader.read64()),
+                };
+                return receipt;
+            }),
+            leave: reader.read8(),
+            unsubscribe: reader.read8(),
+            ts_ms: reader.read64(),
+            incentive_balance: reader.read64(),
+            net_deposit: reader.read64(),
+            total_incentive: reader.read64(),
+            total_premium: reader.read64(),
+            u64_padding: reader.readVec((reader) => reader.read64()),
+            activeSubVaultUserShare: 0,
+            deactivatingSubVaultUserShare: 0,
+            inactiveSubVaultUserShare: 0,
+            warmupSubVaultUserShare: 0,
+            premiumSubVaultUserShare: 0,
+            incentiveShare: 0,
+        };
+
+        // console.log(locked_receipt);
+        locked_receipt.activeSubVaultUserShare = locked_receipt.u64_padding.shift();
+        locked_receipt.deactivatingSubVaultUserShare = locked_receipt.u64_padding.shift();
+        locked_receipt.inactiveSubVaultUserShare = locked_receipt.u64_padding.shift();
+        locked_receipt.warmupSubVaultUserShare = locked_receipt.u64_padding.shift();
+        locked_receipt.premiumSubVaultUserShare = locked_receipt.u64_padding.shift();
+        locked_receipt.incentiveShare = locked_receipt.u64_padding.shift();
+
+        return locked_receipt;
+    });
+}
 
 export class LockedReceipt implements StructClass {
     static readonly $typeName = "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22::locked_period_vault::LockedReceipt";
