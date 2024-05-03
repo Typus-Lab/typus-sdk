@@ -1,9 +1,9 @@
 {
     "MAINNET": {
         "RPC_ENDPOINT": "https://fullnode.mainnet.sui.io:443",
-        "TYPUS_VERSION": "",
-        "TGLD_COIN_METADATA": "",
-        "TGLD_TOKEN_POLICY": "",
+        "TYPUS_VERSION": "0xd2882b992e986250b3304b59530700bc3850939f9a77e9e9dfa9cf1656f84b3d",
+        "TGLD_COIN_METADATA": "0x3a070c729606334a2be7c51ab28da9a1101b0de01452dd62c10cda0f7a5795d2",
+        "TGLD_TOKEN_POLICY": "0xd9461bd329f1df24be9698131b6e2c2b9eaac7c9cf6d76689112f2e57be12009",
         "NFT_TRANSFER_POLICY": "0x55475b9e16d9a0176dcef37f83a1921b15f2cbd2711a5f30b9d952c0c8f5f957",
         "PACKAGE_ORIGIN": {
             "DOV_SINGLE": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
@@ -11,29 +11,29 @@
             "MFUD": "0xd8f04cd2a16c19c17428c3b4c22b01dd06740423b93fb7ee88fbe2676a82849d",
             "NFT": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
             "ORACLE": "0x855eb2d260ee42b898266e6df90bfd3c4ed821ccb253a352c159c223244a4b8a",
-            "TYPUS": ""
+            "TYPUS": "0x4b0f4ee1a40ce37ec81c987cc4e76a665419e74b863319492fc7d26f708b835a"
         },
         "PACKAGE": {
-            "DOV_SINGLE": "0x1ee07392805d5b26a1c248b5739b768d426579ac1f4aeb50152f7ca06d3e2a00",
-            "FRAMEWORK": "0x6e3a0fa749edd4808a9f827f9b49b02b319d221b8391b01a94974e4b09393591",
+            "DOV_SINGLE": "0x0aa360e85a3cf7364c1d823c9a2b978bed9d54369060d31f715e4bd6f834411a",
+            "FRAMEWORK": "0x0580e4c45e06e6a60b0500027a42c7bb7cb87163fdf03a98b0b44b1842c0f3bd",
             "MFUD": "0xd8f04cd2a16c19c17428c3b4c22b01dd06740423b93fb7ee88fbe2676a82849d",
-            "NFT": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+            "NFT": "0xba06aae31d9b7c9f651e783272c7e4f776fb5ae17e89d525b75a17b099f58202",
             "ORACLE": "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd",
-            "TYPUS": ""
+            "TYPUS": "0x4b0f4ee1a40ce37ec81c987cc4e76a665419e74b863319492fc7d26f708b835a"
         },
         "REGISTRY": {
-            "AIRDROP": "",
+            "AIRDROP": "0x4b451f4632bd64af82d5e6fe46e20705c9468bd46d6758a0f7093fde2930d084",
             "DOV_SINGLE": "0x3d70b09359e3ca8301ae0abeda4f2fdf72ce313ba58c919ce568e5f535fd2ea8",
-            "LEADERBOARD": "",
+            "LEADERBOARD": "0xc515a3e7fd12ba902f7f1ebe52c676136e1b34cb614ae9c79a46b257ca7d5534",
             "MFUD": "0xb8d7e7ab783e56700c0212bd9f0938bba9dd3e7241c149e6c52b21334ec45ece",
-            "TGLD": "",
-            "USER": ""
+            "TGLD": "0x8ee1af362fe9e0a29f6bad48d8ff44249ece5aaa77a4302c2ffcc90950e52ed2",
+            "USER": "0xb1b16eb4845b5ee1a29432b1f2bcfe8cbb33c234492baf31a706d82e28e18bce"
         },
         "TOKEN": {
             "FUD": "0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1::fud::FUD",
             "MFUD": "0xd8f04cd2a16c19c17428c3b4c22b01dd06740423b93fb7ee88fbe2676a82849d::mfud::MFUD",
             "SUI": "0x2::sui::SUI",
-            "TGLD": ""
+            "TGLD": "0x4b0f4ee1a40ce37ec81c987cc4e76a665419e74b863319492fc7d26f708b835a::tgld::TGLD"
         },
         "ORACLE": {
             "APT": "0x401ed2a4de92950351c54edaa9a8dce5e38bdb6b06e248935c6f6f7d361a99d6",
@@ -61,7 +61,7 @@
             "NFT": "0x5cfd0819411be98034cba544cbffab192c2c35674a05ff57f4f1c5042875b828",
             "ORACLE": "0x1d17058789bd1e1e79f1a92424519a88146f191f58a06cc4d9ab23d17d46ab73",
             "TYPUS": "0x4213e12a2220f15f1837a76897110d2260786558169bd8d0847f21e9b551f277",
-            "LOCKED_VAULT": "0xc1feadc8cfc768915b9871037d31b5b03f0dceb4418423a128edd12a134b6d22"
+            "LOCKED_VAULT": "0xe79b7ba69b750d30ac7ae171483a4064d0bb34090493fef3c844a11b05818d79"
         },
         "PACKAGE": {
             "DOV_SINGLE": "0xad40e09fd50dc4cc21ca6f37c8f9d4d423ec91e12c80c5181ef69c72f789fe9d",
