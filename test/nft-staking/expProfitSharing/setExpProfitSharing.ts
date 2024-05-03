@@ -6,7 +6,7 @@ import {
     getRemoveProfitSharingTx,
     getAllocateProfitSharingValueTx,
 } from "../../../utils/nft-staking/authorized-entry";
-import { ExpLeaderBoard, getExpLeaderBoard, getExpLeaderBoardWithOwner } from "../../../utils/leader-board";
+import { ExpLeaderBoard, getExpLeaderBoard, getExpLeaderBoardWithOwner } from "../../../utils/api/sentio/leader-board";
 import { getNftTable } from "../../../utils/nft-staking/fetch";
 
 import mnemonic from "../../../mnemonic.json";
