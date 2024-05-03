@@ -2,7 +2,7 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../constants";
 import { KIOSK_TYPE, KioskClient, Network, KioskTransaction } from "@mysten/kiosk";
 import { SuiClient } from "@mysten/sui.js/client";
-import { TailsId } from "../typus-nft/fetch";
+import { TailsId, kioskOwnerCap } from "../typus-nft/fetch";
 
 /**
     entry fun transfer_nft(
@@ -275,9 +275,9 @@ export async function getUnstakeNftTx(
     gasBudget: number,
     nftPackageId: string,
     registry: string,
-    kiosk: string,
-    kiosk_cap: string,
-    typeArguments: string[]
+    typeArguments: string[],
+    kioskOwnerCap: kioskOwnerCap,
+    personalKioskPackageId: string
 ) {
     let tx = new TransactionBlock();
 
@@ -296,11 +296,28 @@ export async function getUnstakeNftTx(
         typeArguments,
         arguments: [tx.object(registry), tx.pure("exp_profit")],
     });
-    tx.moveCall({
-        target: `${nftPackageId}::tails_staking::unstake_nft`,
-        typeArguments: [],
-        arguments: [tx.object(registry), tx.object(kiosk), tx.object(kiosk_cap)],
-    });
+
+    if (kioskOwnerCap.isPersonal) {
+        const [personalKioskCap, borrow] = tx.moveCall({
+            target: `${personalKioskPackageId}::personal_kiosk::borrow_val`,
+            arguments: [tx.object(kioskOwnerCap.objectId)],
+        });
+        tx.moveCall({
+            target: `${nftPackageId}::tails_staking::unstake_nft`,
+            typeArguments: [],
+            arguments: [tx.object(registry), tx.object(kioskOwnerCap.kioskId), tx.object(personalKioskCap)],
+        });
+        tx.moveCall({
+            target: `${personalKioskPackageId}::personal_kiosk::return_val`,
+            arguments: [tx.object(kioskOwnerCap.objectId), personalKioskCap, borrow],
+        });
+    } else {
+        tx.moveCall({
+            target: `${nftPackageId}::tails_staking::unstake_nft`,
+            typeArguments: [],
+            arguments: [tx.object(registry), tx.object(kioskOwnerCap.kioskId), tx.object(kioskOwnerCap.objectId)],
+        });
+    }
     tx.setGasBudget(gasBudget);
 
     return tx;
