@@ -4,12 +4,13 @@ import { AddressFromBytes } from "../../utils/tools";
 import { BcsReader } from "@mysten/bcs";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getVaults } from "../../utils/typus-dov-single-v2/view-function";
+import { getRankings } from "../../utils/leaderboard/view-function";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import * as fs from "fs";
 import configs from "./config.json";
 
-const config = configs.MAINNET;
+const config = configs.TESTNET;
 const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
@@ -293,6 +294,22 @@ async function v() {
     });
 }
 
+async function vi() {
+    console.log(
+        await getRankings({
+            provider,
+            typusPackageId: config.PACKAGE.TYPUS_PACKAGE,
+            typusEcosystemVersion: config.TYPUS_VERSION,
+            typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD_REGISTRY,
+            key: "bidding_leaderboard",
+            id: "0xc94f5b3a1f237925a517e8406080aae523fef744e432bd72cb904f619aced583",
+            ranks: 100,
+            user: "0x692a5563ad3cede2da561f473eb37efdbbb94f8d041dfef7524dda857c609ba3",
+            active: true,
+        })
+    );
+}
+
 (async () => {
-    await v();
+    await vi();
 })();

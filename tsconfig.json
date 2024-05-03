@@ -96,5 +96,5 @@
         "typeRoots": ["node_modules/@types"]
     },
     "include": ["**/*.ts"],
-    "exclude": ["node_modules", "**/__tests__/*", "scripts", "test"]
+    "exclude": ["node_modules", "**/__tests__/*", "scripts", "test", "_deprecated"]
 }
