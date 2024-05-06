@@ -4,7 +4,7 @@
     "description": "typus sdk",
     "version": "1.2.70",
     "dependencies": {
-        "@mysten/bcs": "^0.7.3",
+        "@mysten/bcs": "^0.11.1",
         "@mysten/kiosk": "0.7.12",
         "@mysten/sui.js": "0.48.0",
         "@types/node": "^20.5.7",

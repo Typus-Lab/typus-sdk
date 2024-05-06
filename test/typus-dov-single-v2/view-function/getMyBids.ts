@@ -31,6 +31,6 @@ const provider = new SuiClient({
         .map((obj) => obj.data?.objectId!);
     // console.log(receipts);
 
-    let result = await getMyBids(provider, config.FRAMEWORK_PACKAGE, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE, receipts);
+    let result = await getMyBids(provider, config.PACKAGE.FRAMEWORK, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE, receipts);
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();

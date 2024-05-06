@@ -270,6 +270,7 @@ export async function parseTxHistory(
                     var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
                     var amount = Number(event.parsedJson!.value) / 10 ** assetToDecimal(token)!;
                     // dice_profit, exp_profit
+                    // TODO: filter amount != 0
                     switch (event.parsedJson!.name) {
                         case "dice_profit":
                             Action = "Harvest Dice Profit";
