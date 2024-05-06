@@ -86,6 +86,52 @@ export async function getTotalPremium(): Promise<number> {
     return data.results[0].matrix.samples[0].values[0].value;
 }
 
+export async function getAccumulatedRewardGeneratedUSD(): Promise<number> {
+    const apiUrl = "https://app.sentio.xyz/api/v1/insights/typus/typus_v2/query";
+
+    const requestData = {
+        timeRange: {
+            start: "now",
+            end: "now",
+            step: 3600,
+            timezone: "Asia/Taipei",
+        },
+        limit: 1,
+        queries: [
+            {
+                metricsQuery: {
+                    query: "AccumulatedRewardGeneratedUSD",
+                    alias: "",
+                    id: "a",
+                    labelSelector: {},
+                    aggregate: {
+                        op: "SUM",
+                        grouping: [],
+                    },
+                    functions: [],
+                    disabled: false,
+                },
+                dataSource: "METRICS",
+                sourceName: "",
+            },
+        ],
+        formulas: [],
+    };
+
+    const jsonData = JSON.stringify(requestData);
+
+    let response = await fetch(apiUrl, {
+        method: "POST",
+        headers,
+        body: jsonData,
+    });
+
+    let data = await response.json();
+    // console.log(data);
+
+    return data.results[0].matrix.samples[0].values[0].value;
+}
+
 export async function getTotalProfitSharingClaimed(): Promise<TokenAmount[]> {
     const apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
 
@@ -178,6 +224,8 @@ import { assetToDecimal, typeArgToAsset } from "../../token";
     // console.log(res1);
     // const res2 = await getTotalPremium();
     // console.log(res2);
+    // const res12 = await getAccumulatedRewardGeneratedUSD();
+    // console.log(res12);
     // const res3 = await getTotalProfitSharingClaimed();
     // console.log(res3);
     // const config = configs.MAINNET;
