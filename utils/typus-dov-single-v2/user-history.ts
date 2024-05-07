@@ -548,7 +548,7 @@ function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action:
                 optionType = "Capped Put";
                 break;
             case "6":
-                optionType = "Capped Call";
+                optionType = "Call Selling";
                 break;
             default:
                 optionType = "";
