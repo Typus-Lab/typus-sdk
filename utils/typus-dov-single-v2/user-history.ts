@@ -562,6 +562,7 @@ function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action:
                         optionType = "Capped Call";
                         break;
                 }
+                break;
             default:
                 optionType = "";
                 break;
