@@ -548,8 +548,20 @@ function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action:
                 optionType = "Capped Put";
                 break;
             case "6":
-                optionType = "Call Selling";
-                break;
+                switch (action) {
+                    case "DepositEvent":
+                    case "WithdrawEvent":
+                    case "UnsubscribeEvent":
+                    case "ClaimEvent":
+                    case "CompoundEvent":
+                    case "HarvestEvent":
+                    case "RedeemEvent":
+                        optionType = "Call Selling";
+                        break;
+                    default:
+                        optionType = "Capped Call";
+                        break;
+                }
             default:
                 optionType = "";
                 break;
