@@ -89,7 +89,7 @@ export async function getHistory(provider: SuiClient, dicePackage: string, playg
 
     var history = await parseHistory(result.data, playgrounds);
 
-    while (result.hasNextPage) {
+    while (result.hasNextPage && history.length <= 60) {
         result = await provider.queryEvents({ query: eventFilter, order: "descending", cursor: result.nextCursor });
         const nextPage = await parseHistory(result.data, playgrounds);
         history = history.concat(nextPage);
