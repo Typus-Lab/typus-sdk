@@ -572,7 +572,7 @@ export interface BidVault {
     index: string;
     shareSupply: string;
     metadata: string;
-    u64Padding: string[];
+    u64Padding: string[]; // [SETTLE_PRICE, DELIVERY_PRICE, BID_INCENTIVE_BP, (ROUND)]
     bcsPadding: string[];
 }
 export interface BidShare {
