@@ -216,6 +216,69 @@ interface TokenAmount {
     total_amount: string;
 }
 
+export async function getAccumulatedUser(): Promise<number> {
+    const apiUrls = [
+        "https://app.sentio.xyz/api/v1/insights/typus/typus_v1/query",
+        "https://app.sentio.xyz/api/v1/insights/typus/typus_v2/query",
+    ];
+
+    let sum = 0;
+
+    for (let apiUrl of apiUrls) {
+        const requestData = {
+            timeRange: {
+                start: "now-1h",
+                end: "now",
+                step: 3600,
+                timezone: "Asia/Taipei",
+            },
+            limit: 1,
+            queries: [
+                {
+                    eventsQuery: {
+                        resource: {
+                            name: "",
+                            type: "EVENTS",
+                        },
+                        alias: "",
+                        id: "a",
+                        aggregation: {
+                            countUnique: {
+                                duration: {
+                                    value: 0,
+                                    unit: "day",
+                                },
+                            },
+                        },
+                        groupBy: [],
+                        limit: 1,
+                        functions: [],
+                        disabled: false,
+                    },
+                    dataSource: "EVENTS",
+                    sourceName: "",
+                },
+            ],
+            formulas: [],
+        };
+
+        const jsonData = JSON.stringify(requestData);
+
+        let response = await fetch(apiUrl, {
+            method: "POST",
+            headers,
+            body: jsonData,
+        });
+
+        let data = await response.json();
+        // console.log(data.results[0].matrix.samples[0].values[0].value);
+
+        sum += data.results[0].matrix.samples[0].values[0].value;
+    }
+
+    return sum;
+}
+
 import configs from "../../../config.json";
 import { assetToDecimal, typeArgToAsset } from "../../token";
 
@@ -232,4 +295,6 @@ import { assetToDecimal, typeArgToAsset } from "../../token";
     // const provider = new SuiClient({ url: config.RPC_ENDPOINT });
     // const res4 = await getTotalProfitSharing(provider);
     // console.log(res4);
+    // const res5 = await getAccumulatedUser();
+    // console.log(res5);
 })();
