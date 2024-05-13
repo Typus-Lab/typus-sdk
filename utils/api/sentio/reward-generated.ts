@@ -86,7 +86,72 @@ export async function getTotalPremium(): Promise<number> {
     return data.results[0].matrix.samples[0].values[0].value;
 }
 
-export async function getAccumulatedRewardGeneratedUSD(): Promise<number> {
+/** Returns Accumulated Rewards im USD [v1, v2] */
+export async function getAccumulatedRewardGeneratedUSD(): Promise<[number, number]> {
+    const apiUrlV1 = "https://app.sentio.xyz/api/v1/insights/typus/typus_v1/query";
+
+    const requestDataV1 = {
+        timeRange: {
+            start: "now",
+            end: "now",
+            step: 3600,
+            timezone: "Asia/Taipei",
+        },
+        limit: 1,
+        queries: [
+            {
+                metricsQuery: {
+                    query: "premiumUSD",
+                    alias: "",
+                    id: "a",
+                    labelSelector: {},
+                    aggregate: {
+                        op: "SUM",
+                        grouping: [],
+                    },
+                    functions: [
+                        {
+                            name: "sum_over_time",
+                            arguments: [
+                                {
+                                    durationValue: {
+                                        value: 100,
+                                        unit: "w",
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                    disabled: true,
+                },
+                dataSource: "METRICS",
+                sourceName: "",
+            },
+        ],
+        formulas: [
+            {
+                expression: "a/2",
+                alias: "",
+                id: "A",
+                disabled: false,
+                functions: [],
+            },
+        ],
+    };
+
+    const jsonDataV1 = JSON.stringify(requestDataV1);
+
+    let responseV1 = await fetch(apiUrlV1, {
+        method: "POST",
+        headers,
+        body: jsonDataV1,
+    });
+
+    let dataV1 = await responseV1.json();
+    // console.log(dataV1.results[0].matrix.samples[0].values[0].value);
+
+    // data.results[0].matrix.samples[0].values[0].value;
+
     const apiUrl = "https://app.sentio.xyz/api/v1/insights/typus/typus_v2/query";
 
     const requestData = {
@@ -129,7 +194,7 @@ export async function getAccumulatedRewardGeneratedUSD(): Promise<number> {
     let data = await response.json();
     // console.log(data);
 
-    return data.results[0].matrix.samples[0].values[0].value;
+    return [dataV1.results[0].matrix.samples[0].values[0].value, data.results[0].matrix.samples[0].values[0].value];
 }
 
 export async function getTotalProfitSharingClaimed(): Promise<TokenAmount[]> {
@@ -216,13 +281,14 @@ interface TokenAmount {
     total_amount: string;
 }
 
-export async function getAccumulatedUser(): Promise<number> {
+/** Returns Accumulated Users [v1, v2] */
+export async function getAccumulatedUser(): Promise<number[]> {
     const apiUrls = [
         "https://app.sentio.xyz/api/v1/insights/typus/typus_v1/query",
         "https://app.sentio.xyz/api/v1/insights/typus/typus_v2/query",
     ];
 
-    let sum = 0;
+    const result: number[] = [];
 
     for (let apiUrl of apiUrls) {
         const requestData = {
@@ -273,10 +339,10 @@ export async function getAccumulatedUser(): Promise<number> {
         let data = await response.json();
         // console.log(data.results[0].matrix.samples[0].values[0].value);
 
-        sum += data.results[0].matrix.samples[0].values[0].value;
+        result.push(data.results[0].matrix.samples[0].values[0].value);
     }
 
-    return sum;
+    return result;
 }
 
 import configs from "../../../config.json";
