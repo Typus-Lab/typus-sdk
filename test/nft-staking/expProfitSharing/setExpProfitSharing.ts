@@ -88,7 +88,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
     console.log(`getRemoveProfitSharingTx:`);
     console.log(res);
-    await sleep(1000);
+    await sleep(5000);
 
     // STEP 2: Set
 
@@ -108,7 +108,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
     console.log(`getSetProfitSharingTx:`);
     console.log(res);
-    await sleep(1000);
+    await sleep(5000);
 
     // STEP 3: Allocate
 
@@ -139,6 +139,6 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
         var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
         console.log(`getAllocateProfitSharingValueTx:`);
         console.log(res);
-        await sleep(1000);
+        await sleep(5000);
     }
 })();
