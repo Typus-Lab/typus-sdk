@@ -109,34 +109,14 @@ export async function getAccumulatedRewardGeneratedUSD(): Promise<[number, numbe
                         op: "SUM",
                         grouping: [],
                     },
-                    functions: [
-                        {
-                            name: "sum_over_time",
-                            arguments: [
-                                {
-                                    durationValue: {
-                                        value: 100,
-                                        unit: "w",
-                                    },
-                                },
-                            ],
-                        },
-                    ],
-                    disabled: true,
+                    functions: [],
+                    disabled: false,
                 },
                 dataSource: "METRICS",
                 sourceName: "",
             },
         ],
-        formulas: [
-            {
-                expression: "a/2",
-                alias: "",
-                id: "A",
-                disabled: false,
-                functions: [],
-            },
-        ],
+        formulas: [],
     };
 
     const jsonDataV1 = JSON.stringify(requestDataV1);
