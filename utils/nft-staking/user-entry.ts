@@ -180,11 +180,11 @@ export async function getSwitchNftTx(
     let tx = new TransactionBlock();
 
     let [coin] = tx.splitCoins(tx.gas, [tx.pure(50000000)]);
-    tx.moveCall({
-        target: `${nftPackageId}::tails_staking::snapshot`,
-        typeArguments: [],
-        arguments: [tx.object(registry), tx.object(CLOCK)],
-    });
+    // tx.moveCall({
+    //     target: `${nftPackageId}::tails_staking::snapshot`,
+    //     typeArguments: [],
+    //     arguments: [tx.object(registry), tx.object(CLOCK)],
+    // });
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::claim_profit_sharing`,
         typeArguments,
@@ -281,11 +281,11 @@ export async function getUnstakeNftTx(
 ) {
     let tx = new TransactionBlock();
 
-    tx.moveCall({
-        target: `${nftPackageId}::tails_staking::snapshot`,
-        typeArguments: [],
-        arguments: [tx.object(registry), tx.object(CLOCK)],
-    });
+    // tx.moveCall({
+    //     target: `${nftPackageId}::tails_staking::snapshot`,
+    //     typeArguments: [],
+    //     arguments: [tx.object(registry), tx.object(CLOCK)],
+    // });
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::claim_profit_sharing`,
         typeArguments,
@@ -350,13 +350,20 @@ export async function getDailyAttendTx(gasBudget: number, nftPackageId: string, 
         ctx: &mut TxContext
     )
 */
-export async function getSnapshotTx(gasBudget: number, nftPackageId: string, registry: string) {
+export async function getSnapshotTx(
+    gasBudget: number,
+    typusEcosystemVersion: string,
+    typusUserRegistry: string,
+    nftPackageId: string,
+    registry: string,
+    amount: string
+) {
     let tx = new TransactionBlock();
 
     tx.moveCall({
         target: `${nftPackageId}::tails_staking::snapshot`,
         typeArguments: [],
-        arguments: [tx.object(registry), tx.object(CLOCK)],
+        arguments: [tx.object(typusEcosystemVersion), tx.object(typusUserRegistry), tx.object(registry), tx.pure(amount)],
     });
     tx.setGasBudget(gasBudget);
 
