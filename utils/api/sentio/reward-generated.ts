@@ -101,7 +101,7 @@ export async function getAccumulatedRewardGeneratedUSD(): Promise<[number, numbe
         queries: [
             {
                 metricsQuery: {
-                    query: "premiumUSD",
+                    query: "AccumulatedPremiumUSD",
                     alias: "",
                     id: "a",
                     labelSelector: {},
