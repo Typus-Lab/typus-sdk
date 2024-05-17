@@ -101,7 +101,7 @@ export async function getAccumulatedRewardGeneratedUSD(): Promise<[number, numbe
         queries: [
             {
                 metricsQuery: {
-                    query: "premiumUSD",
+                    query: "AccumulatedPremiumUSD",
                     alias: "",
                     id: "a",
                     labelSelector: {},
@@ -109,34 +109,14 @@ export async function getAccumulatedRewardGeneratedUSD(): Promise<[number, numbe
                         op: "SUM",
                         grouping: [],
                     },
-                    functions: [
-                        {
-                            name: "sum_over_time",
-                            arguments: [
-                                {
-                                    durationValue: {
-                                        value: 100,
-                                        unit: "w",
-                                    },
-                                },
-                            ],
-                        },
-                    ],
-                    disabled: true,
+                    functions: [],
+                    disabled: false,
                 },
                 dataSource: "METRICS",
                 sourceName: "",
             },
         ],
-        formulas: [
-            {
-                expression: "a/2",
-                alias: "",
-                id: "A",
-                disabled: false,
-                functions: [],
-            },
-        ],
+        formulas: [],
     };
 
     const jsonDataV1 = JSON.stringify(requestDataV1);
@@ -345,6 +325,62 @@ export async function getAccumulatedUser(): Promise<number[]> {
     return result;
 }
 
+/** Returns Accumulated Notional Volume in USD [v1, v2] */
+export async function getAccumulatedNotionalVolumeUSD(): Promise<number[]> {
+    const apiUrls = [
+        "https://app.sentio.xyz/api/v1/insights/typus/typus_v1/query",
+        "https://app.sentio.xyz/api/v1/insights/typus/typus_v2/query",
+    ];
+
+    const result: number[] = [];
+
+    for (let apiUrl of apiUrls) {
+        const requestData = {
+            timeRange: {
+                start: "now",
+                end: "now",
+                step: 3600,
+                timezone: "Asia/Taipei",
+            },
+            limit: 1,
+            queries: [
+                {
+                    metricsQuery: {
+                        query: "AccumulatedNotionalVolumeUSD",
+                        alias: "",
+                        id: "a",
+                        labelSelector: {},
+                        aggregate: {
+                            op: "SUM",
+                            grouping: [],
+                        },
+                        functions: [],
+                        disabled: false,
+                    },
+                    dataSource: "METRICS",
+                    sourceName: "",
+                },
+            ],
+            formulas: [],
+        };
+
+        const jsonData = JSON.stringify(requestData);
+
+        let response = await fetch(apiUrl, {
+            method: "POST",
+            headers,
+            body: jsonData,
+        });
+
+        let data = await response.json();
+        console.log(data.results[0]);
+
+        result.push(data.results[0].matrix.samples[0].values[0].value);
+    }
+
+    return result;
+}
+
 import configs from "../../../config.json";
 import { assetToDecimal, typeArgToAsset } from "../../token";
 
@@ -363,4 +399,6 @@ import { assetToDecimal, typeArgToAsset } from "../../token";
     // console.log(res4);
     // const res5 = await getAccumulatedUser();
     // console.log(res5);
+    // const res6 = await getAccumulatedNotionalVolumeUSD();
+    // console.log(res6);
 })();
