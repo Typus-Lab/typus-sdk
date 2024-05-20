@@ -20,7 +20,7 @@ const gasBudget = 100000000;
 
 const typeArgumentsRemove = ["0x2::sui::SUI"];
 const typeArguments = ["0x2::sui::SUI"];
-const totalRewards = 3333_000000000;
+const totalRewards = 2222_000000000;
 
 const NAME = "exp_profit_sharing";
 
