@@ -64,12 +64,12 @@
             "LOCKED_VAULT": "0xe79b7ba69b750d30ac7ae171483a4064d0bb34090493fef3c844a11b05818d79"
         },
         "PACKAGE": {
-            "DOV_SINGLE": "0x31d2949b6dc26a162d0400f24bdff53ed22c0c0d5ffd11dec5e243d0ab31d9df",
+            "DOV_SINGLE": "0xa4fe84c953785d9dcb388a860d30e3a1e46eeb9647f80c40359c192424f19938",
             "FRAMEWORK": "0xa304e225551b619b07c06d8965462b268138b2c5774fd22ad8853ef91fbb9771",
             "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c",
             "NFT": "0x0f5162014f18686640b8d0adefd60c3fe5b377413ec4f1e77001c67d96f8501a",
             "ORACLE": "0x71fbc7acaf513561dabdeb846e7dd5288108e56edb0b6de8d4999c4dfce21f66",
-            "TYPUS": "0xc0d2e234cd1211a0f7b0bac8798d6e8fa8ab5db29d779245c4c4280eb6d16b94"
+            "TYPUS": "0x01840fac0c84618087065346acdbac28bdec4326c416fcd2dc6d2f1b7d86fe62"
         },
         "REGISTRY": {
             "AIRDROP": "0xfb2fbf261f6050d100bcd026ffa0076e088506b1bec26313947239303e2a0224",
