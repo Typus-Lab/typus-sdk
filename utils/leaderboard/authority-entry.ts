@@ -24,7 +24,7 @@ export async function getActivateLeaderboardTx(
     tx.moveCall({
         target: `${packageId}::leaderboard::activate_leaderboard`,
         typeArguments: [],
-        arguments: [tx.object(version), tx.object(typusLeaderboardRegistry), tx.object(key), tx.pure(start_ts_ms), tx.pure(end_ts_ms)],
+        arguments: [tx.object(version), tx.object(typusLeaderboardRegistry), tx.pure(key), tx.pure(start_ts_ms), tx.pure(end_ts_ms)],
     });
 
     tx.setGasBudget(gasBudget);
