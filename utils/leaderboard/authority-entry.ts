@@ -54,7 +54,7 @@ export async function getDeactivateLeaderboardTx(
     tx.moveCall({
         target: `${packageId}::leaderboard::deactivate_leaderboard`,
         typeArguments: [],
-        arguments: [tx.object(version), tx.object(typusLeaderboardRegistry), tx.object(key), tx.pure(id)],
+        arguments: [tx.object(version), tx.object(typusLeaderboardRegistry), tx.pure(key), tx.pure(id)],
     });
 
     tx.setGasBudget(gasBudget);
