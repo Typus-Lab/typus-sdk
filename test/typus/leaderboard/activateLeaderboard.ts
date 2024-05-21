@@ -22,7 +22,7 @@ const start_ts_ms = 1716278400000;
 
     var transactionBlock = await getActivateLeaderboardTx(
         gasBudget,
-        config.PACKAGE.DOV_SINGLE,
+        config.PACKAGE.TYPUS,
         config.TYPUS_VERSION,
         config.REGISTRY.LEADERBOARD,
         KEY,
