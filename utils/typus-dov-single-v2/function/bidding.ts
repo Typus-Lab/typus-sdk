@@ -8,6 +8,7 @@ import { StableCoin, getTokenName } from "./token";
 import { checkNumber, countFloating, insertAt } from "../../tools";
 import config from "../../../config.json";
 import { getUserStrategies } from "../../auto-bid/view-function";
+import { typeArgsToAssets } from "../../token";
 
 const PriceDecimal = BigNumber(10).pow(8);
 
@@ -192,7 +193,7 @@ export const calcEstPnl = (
 ) => {
     let profit = "0";
     let cost = "0";
-    const [dToken, bToken, oToken] = assets;
+    const [dToken, bToken, oToken] = typeArgsToAssets(assets);
     const dTokenWrappedName = getTokenName({ token: dToken, wrapped: true });
     const bTokenWrappedName = getTokenName({ token: bToken, wrapped: true });
     const estPnls: TokenAmount[] = [];
@@ -243,7 +244,7 @@ export const calcEstPnl = (
     if (!live) {
         estPnls.push({
             value: profit,
-            token: dTokenWrappedName,
+            token: assets[1],
         });
         if (dToken !== bToken) {
             estPnls.push({ value: "-" + cost, token: bTokenWrappedName });
@@ -344,7 +345,7 @@ export const parseBid = (
         vaultInfo,
         vaultInfo: {
             info,
-            info: { index, bTokenDecimal, oTokenDecimal, optionType, period },
+            info: { index, bTokenDecimal, oTokenDecimal, optionType, period, depositToken, bidToken, settlementBase },
             config: { bidLotSize: lotSize, bidIncentiveBp, u64Padding },
         },
         receipt,
@@ -400,7 +401,7 @@ export const parseBid = (
         incentiveRate,
         bidSize,
         optionType,
-        [dToken, bToken, oToken],
+        [depositToken, bidToken, settlementBase],
         strikes,
         bidShare,
         deliveryPrice.toString(),
@@ -421,7 +422,7 @@ export const parseBid = (
             value: BigNumber(bidSize)
                 .div(BigNumber(10).pow(oToken === "MFUD" ? 6 : 0))
                 .toString(),
-            token: oToken,
+            token: settlementBase,
         },
         breakEvenPrice: BigNumber(breakEvenPrice)
             .div(BigNumber(10).pow(oToken === "MFUD" ? 6 : 0))
