@@ -266,6 +266,9 @@ export const parseStrikes = (period: string, optionType: string, metadata: strin
             break;
         case "4":
             strikes = [metadata.split("-")[2], metadata.split("-")[3]];
+            if (period == "3") {
+                strikes = [metadata.split("-")[3], metadata.split("-")[4]];
+            }
 
             strikes = strikes.sort((a, b) => Number(a) - Number(b));
 
