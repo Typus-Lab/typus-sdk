@@ -244,10 +244,10 @@ export const calcEstPnl = (
     if (!live) {
         estPnls.push({
             value: profit,
-            token: assets[1],
+            token: assets[0],
         });
         if (dToken !== bToken) {
-            estPnls.push({ value: "-" + cost, token: bTokenWrappedName });
+            estPnls.push({ value: "-" + cost, token: assets[1] });
         }
     }
 
