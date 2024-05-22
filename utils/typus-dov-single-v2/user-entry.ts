@@ -53,19 +53,28 @@ export function getRaiseFundTx(input: {
         ],
     });
     input.tx.transferObjects([input.tx.object(result[0])], input.user);
+
+    return input.tx;
 }
 
 /**
-    public fun withdraw<D_TOKEN, B_TOKEN>(
+    public fun public_reduce_fund<D_TOKEN, B_TOKEN, I_TOKEN>(
+        typus_ecosystem_version: &TypusEcosystemVersion,
+        typus_user_registry: &mut TypusUserRegistry,
+        typus_leaderboard_registry: &mut TypusLeaderboardRegistry,
         registry: &mut Registry,
         index: u64,
         receipts: vector<TypusDepositReceipt>,
-        share: Option<u64>,
+        reduce_from_warmup: u64,
+        reduce_from_active: u64,
+        reduce_from_premium: bool,
+        reduce_from_inactive: bool,
+        reduce_from_incentive: bool,
         clock: &Clock,
         ctx: &mut TxContext,
-    )
-*/
-export function getWithdrawTx(input: {
+    ): (Option<TypusDepositReceipt>, Balance<D_TOKEN>, Balance<B_TOKEN>, Balance<I_TOKEN>, vector<u64>) {
+ */
+export function getReduceFundTx(input: {
     tx: TransactionBlock;
     typusEcosystemVersion: string;
     typusUserRegistry: string;
@@ -77,11 +86,15 @@ export function getWithdrawTx(input: {
     typeArguments: string[];
     index: string;
     receipts: string[] | TransactionObjectArgument[];
+    reduceFromWarmup: string;
+    reduceFromActive: string;
+    reduceFromPremium: boolean;
+    reduceFromInactive: boolean;
+    reduceFromIncentive: boolean;
     user: string;
-    share?: string;
 }) {
     let result = input.tx.moveCall({
-        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_withdraw`,
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_reduce_fund`,
         typeArguments: input.typeArguments,
         arguments: [
             input.tx.object(input.typusEcosystemVersion),
@@ -93,18 +106,32 @@ export function getWithdrawTx(input: {
                 type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                 objects: input.receipts.map((receipt) => input.tx.object(receipt)),
             }),
-            input.tx.pure(input.share ? [input.share] : []),
+            input.tx.pure(input.reduceFromWarmup),
+            input.tx.pure(input.reduceFromActive),
+            input.tx.pure(input.reduceFromPremium),
+            input.tx.pure(input.reduceFromInactive),
+            input.tx.pure(input.reduceFromIncentive),
             input.tx.pure(CLOCK),
         ],
     });
     input.tx.moveCall({
-        target: `${input.typusFrameworkPackageId}::utils::transfer_balance`,
-        typeArguments: [input.typeArguments[0]],
+        target: `${input.typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
         arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
     });
     input.tx.moveCall({
-        target: `${input.typusFrameworkPackageId}::vault::transfer_deposit_receipt`,
+        target: `${input.typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [input.typeArguments[0]],
         arguments: [input.tx.object(result[1]), input.tx.pure(input.user)],
+    });
+    input.tx.moveCall({
+        target: `${input.typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [input.typeArguments[1]],
+        arguments: [input.tx.object(result[2]), input.tx.pure(input.user)],
+    });
+    input.tx.moveCall({
+        target: `${input.typusFrameworkPackageId}::utils::transfer_balance`,
+        typeArguments: [input.typeArguments[2]],
+        arguments: [input.tx.object(result[3]), input.tx.pure(input.user)],
     });
 
     return input.tx;
