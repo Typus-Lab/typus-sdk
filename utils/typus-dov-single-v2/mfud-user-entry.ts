@@ -1,6 +1,69 @@
 import { TransactionBlock, TransactionObjectArgument } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../constants";
 
+export function getRaiseFundTx(input: {
+    tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    typusUserRegistry: string;
+    typusLeaderboardRegistry: string;
+    typusFrameworkOriginPackageId: string;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typusTokenPackageId: string;
+    typusTokenRegistry: string;
+    typusTokenType: string;
+    typusTokenAmount: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    raiseBalance: TransactionObjectArgument;
+    raiseFromPremium: boolean;
+    raiseFromInactive: boolean;
+    user: string;
+}) {
+    let token = input.tx.moveCall({
+        target: `0x2::coin::from_balance`,
+        typeArguments: [input.typusTokenType],
+        arguments: [input.tx.object(input.raiseBalance)],
+    });
+    let typusToken = input.tx.moveCall({
+        target: `${input.typusTokenPackageId}::${input.typusTokenType.split("::")[1]}::mint`,
+        arguments: [
+            input.tx.object(input.typusTokenPackageId),
+            input.tx.makeMoveVec({ objects: [token] }),
+            input.tx.pure(input.typusTokenAmount),
+        ],
+    });
+    let typusTokenBalance = input.tx.moveCall({
+        target: `0x2::coin::into_balance`,
+        typeArguments: [input.typusTokenType],
+        arguments: [input.tx.object(typusToken)],
+    });
+    let result = input.tx.moveCall({
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_raise_fund`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.typusUserRegistry),
+            input.tx.object(input.typusLeaderboardRegistry),
+            input.tx.object(input.typusDovSingleRegistry),
+            input.tx.pure(input.index),
+            input.tx.makeMoveVec({
+                type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                objects: input.receipts.map((receipt) => input.tx.object(receipt)),
+            }),
+            input.tx.object(typusTokenBalance),
+            input.tx.pure(input.raiseFromPremium),
+            input.tx.pure(input.raiseFromInactive),
+            input.tx.pure(CLOCK),
+        ],
+    });
+    input.tx.transferObjects([input.tx.object(result[0])], input.user);
+
+    return input.tx;
+}
+
 export function getReduceFundTx(input: {
     tx: TransactionBlock;
     typusEcosystemVersion: string;
