@@ -28,11 +28,24 @@ export function getRaiseFundTx(input: {
     typeArguments: string[];
     index: string;
     receipts: string[] | TransactionObjectArgument[];
-    raiseBalance: TransactionObjectArgument;
+    raiseCoins: string[];
+    raiseAmount: string;
     raiseFromPremium: boolean;
     raiseFromInactive: boolean;
     user: string;
 }) {
+    let raiseBalance = input.tx.moveCall({
+        target: `${input.typusFrameworkPackageId}::utils::delegate_extract_balance`,
+        typeArguments: [input.typeArguments[0]],
+        arguments: [
+            input.tx.pure(input.user),
+            input.tx.makeMoveVec({
+                type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
+                objects: input.raiseCoins,
+            }),
+            input.tx.pure(input.raiseAmount),
+        ],
+    });
     let result = input.tx.moveCall({
         target: `${input.typusDovSinglePackageId}::tds_user_entry::public_raise_fund`,
         typeArguments: input.typeArguments,
@@ -46,7 +59,7 @@ export function getRaiseFundTx(input: {
                 type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                 objects: input.receipts.map((receipt) => input.tx.object(receipt)),
             }),
-            input.tx.object(input.raiseBalance),
+            input.tx.object(raiseBalance),
             input.tx.pure(input.raiseFromPremium),
             input.tx.pure(input.raiseFromInactive),
             input.tx.pure(CLOCK),

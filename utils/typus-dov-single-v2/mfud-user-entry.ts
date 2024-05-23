@@ -13,26 +13,21 @@ export function getRaiseFundTx(input: {
     typusTokenPackageId: string;
     typusTokenRegistry: string;
     typusTokenType: string;
-    typusTokenAmount: string;
     typeArguments: string[];
     index: string;
     receipts: string[] | TransactionObjectArgument[];
-    raiseBalance: TransactionObjectArgument;
+    raiseCoins: string[];
+    raiseAmount: string;
     raiseFromPremium: boolean;
     raiseFromInactive: boolean;
     user: string;
 }) {
-    let token = input.tx.moveCall({
-        target: `0x2::coin::from_balance`,
-        typeArguments: [input.typusTokenType],
-        arguments: [input.tx.object(input.raiseBalance)],
-    });
     let typusToken = input.tx.moveCall({
         target: `${input.typusTokenPackageId}::${input.typusTokenType.split("::")[1]}::mint`,
         arguments: [
             input.tx.object(input.typusTokenPackageId),
-            input.tx.makeMoveVec({ objects: [token] }),
-            input.tx.pure(input.typusTokenAmount),
+            input.tx.makeMoveVec({ objects: input.raiseCoins }),
+            input.tx.pure(input.raiseAmount),
         ],
     });
     let typusTokenBalance = input.tx.moveCall({
