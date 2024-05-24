@@ -1,4 +1,6 @@
 import BigNumber from "bignumber.js";
+import { Connection, PublicKey } from "@solana/web3.js";
+import { PythHttpClient, getPythClusterApiUrl, getPythProgramKeyForCluster, PythCluster, PriceData } from "@pythnetwork/client";
 import { orderBy } from "lodash";
 import moment from "moment";
 import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
@@ -9,8 +11,62 @@ import { checkNumber, countFloating, insertAt } from "../../tools";
 import config from "../../../config.json";
 import { getUserStrategies } from "../../auto-bid/view-function";
 import { typeArgsToAssets } from "../../token";
+import { WrappedToken } from "./token";
+import { getLatestPrice } from "../../price";
+import { StringFields } from "../../../lib/utils/_dependencies/source/0x1/ascii/structs";
 
 const PriceDecimal = BigNumber(10).pow(8);
+
+export const ASSET_INFO = {
+    BTC: {
+        product: new PublicKey("4aDoSXJ5o3AuvL7QFeR6h44jALQfTmUUCTVGDD6aoJTM"),
+        price: new PublicKey("GVXRSBjFk6e6J3NbVPXohDJetcTjaeeuykUpbQF8UoMU"),
+    },
+    ETH: {
+        product: new PublicKey("EMkxjGC1CQ7JLiutDbfYb7UKb3zm9SJcUmr1YicBsdpZ"),
+        price: new PublicKey("JBu1AL4obBcCMqKBBxhpWCNUt136ijcuMZLFvTP7iWdB"),
+    },
+    SUI: {
+        product: new PublicKey("2F8rfBf4z4SzNpeQstFTpLXTQQ7RNKsLFqPdbpybooCc"),
+        price: new PublicKey("3Qub3HaAJaa2xNY7SUqPKd3vVwTqDfDDkEUMPjXD2c1q"),
+    },
+    CETUS: {
+        product: new PublicKey("JDHPsM1zxsZ6TfDwpCVzo41DAZdRi6ZmhkzWU1iXvSQ"),
+        price: new PublicKey("GTeC2JfBFrHuYkBivDQcNdLY74X5FRDLEJntnxPKRQbY"),
+    },
+    SEI: {
+        product: new PublicKey("24bB1mRGsrrDVawJTCVYXrxbEz6ozztukPUKvcZCDcPz"),
+        price: new PublicKey("6cUuAyAX3eXoiWkjFF77RQBEUF15AAMQ7d1hm4EPd3tv"),
+    },
+    USDC: {
+        product: new PublicKey("8GWTTbNiXdmyZREXbjsZBmCRuzdPrW55dnZGDkTRjWvb"),
+        price: new PublicKey("Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD"),
+    },
+    USDT: {
+        product: new PublicKey("Av6XyAMJnyi68FdsKSPYgzfXGjYrrt6jcAMwtvzLCqaM"),
+        price: new PublicKey("3vxLXJqLqF3JG5TCbYycbKWRBbCJQLxQmBGCkyqEEefL"),
+    },
+    TURBOS: {
+        product: new PublicKey("8DZUgXNQo5Um1pqo4gzv9oWPUZpyKV9nXm51gysZFMef"),
+        price: new PublicKey("HoxttzPFzcPvpZhUY8LCLkFNn9keDnBrctno4wXEhpFk"),
+    },
+    APT: {
+        product: new PublicKey("6bQMDtuAmRgjvymdWk9w4tTc9YyuXcjMxF8MyPHXejsx"),
+        price: new PublicKey("FNNvb1AFDnDVPkocEri8mWbJ1952HQZtFLuwPiUjSJQ"),
+    },
+    SOL: {
+        product: new PublicKey("ALP8SdU9oARYVLgLR7LrqMNCYBnhtnQz1cj6bwgwQmgj"),
+        price: new PublicKey("H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG"),
+    },
+    INJ: {
+        product: new PublicKey("5Q5kyCVzssrGMd2BniSdVeRwjNWrGGrFhMrgGt4zURyA"),
+        price: new PublicKey("9EdtbaivHQYA4Nh3XzGR6DwRaoorqXYnmpfsnFhvwuVj"),
+    },
+    JUP: {
+        product: new PublicKey("AykbyeHZbUbEtEAPVpBLoPAMHBrUrDMtXJkPWZw4TRDX"),
+        price: new PublicKey("g6eRCbboSwK4tSWngn773RCMexr1APQr4uA9bGZBYfo"),
+    },
+};
 
 export const tokenOrder: { [key: string]: number } = {
     // Basically it's a to z but put SUI at first
@@ -88,7 +144,122 @@ export interface OrderBy {
     periodOrder: number;
 }
 
+export interface CoinInfo {
+    price: string;
+    decimal: string;
+    quote: string;
+}
+
 export const IncentiveRateBp = 4;
+
+const DefaultOracleDecimal: { [key: string]: string } = {
+    ETH: "8",
+    SUI: "8",
+    AFSUI: "8",
+    BTC: "8",
+    DOGE: "8",
+    APT: "8",
+    SOL: "8",
+    USDC: "8",
+    USDT: "8",
+    CETUS: "8",
+    TURBOS: "8",
+    NAVX: "8",
+    JUP: "8",
+    BUCK: "8",
+    USDY: "8",
+    SEI: "8",
+    FUD: "8",
+    MFUD: "8",
+    INJ: "8",
+    SCA: "8",
+};
+
+export const parsePythOracleData = (data: PriceData[], decimals: { [key: string]: string }) => {
+    const prices: { [key: string]: CoinInfo } = {};
+    Object.entries(ASSET_INFO).forEach((p) => {
+        const asset = p[0].toUpperCase();
+        const coinData = data.find((s) => {
+            return s.productAccountKey.equals(p[1].product);
+        });
+        const decimal = decimals[asset];
+        if (decimal && coinData) {
+            prices[asset.toLowerCase()] = {
+                price: BigNumber(coinData.price ?? 0)
+                    .multipliedBy(BigNumber(10).pow(decimal))
+                    .toString(),
+                decimal,
+                quote: "usd",
+            };
+            if (WrappedToken[asset]) {
+                prices[WrappedToken[asset].toLowerCase()] = {
+                    price: BigNumber(coinData.price ?? 0)
+                        .multipliedBy(BigNumber(10).pow(decimal))
+                        .toString(),
+                    decimal,
+                    quote: "usd",
+                };
+            }
+        }
+    });
+    return prices;
+};
+
+export const fetchPrices = async (provider: SuiClient, network: string): Promise<{ [key: string]: CoinInfo }> => {
+    const coinObjects = await provider.multiGetObjects({
+        ids: Object.values(config[network.toUpperCase()].ORACLE),
+        options: { showContent: true },
+    });
+
+    const oracleDecimal: { [key: string]: string } = {
+        ...DefaultOracleDecimal,
+    };
+
+    coinObjects.forEach((c) => {
+        // @ts-ignore
+        oracleDecimal[c.data?.content.fields.base_token] =
+            // @ts-ignore
+            c.data?.content.fields.decimal;
+    });
+
+    const PYTHNET_CLUSTER_NAME: PythCluster = "pythnet";
+    const connection = new Connection(getPythClusterApiUrl(PYTHNET_CLUSTER_NAME));
+    const pythPublicKey = getPythProgramKeyForCluster(PYTHNET_CLUSTER_NAME);
+    const pythClient = new PythHttpClient(connection, pythPublicKey);
+    const priceData = await pythClient.getAssetPricesFromAccounts(Object.values(ASSET_INFO).map((a) => a.price));
+    const prices = parsePythOracleData(priceData, oracleDecimal);
+
+    const suiusd = BigNumber(prices["sui"]?.price ?? 0);
+
+    const suifud = await getLatestPrice("SUIFUD");
+    const fudusd = suifud == "0" ? BigNumber(0) : suiusd.div(suifud);
+
+    const suiafsui = await getLatestPrice("SUIAFSUI");
+    const afsuiusd = suiafsui == "0" ? BigNumber(0) : suiusd.div(suiafsui);
+
+    const suinavx = await getLatestPrice("SUINAVX");
+    const navxusd = suiusd.div(suinavx);
+
+    const suibuck = await getLatestPrice("SUIBUCK");
+    const buckusd = BigNumber(suibuck).lte(0) ? "0" : suiusd.div(suibuck);
+
+    const usdyusdc = await getLatestPrice("USDYUSDC");
+    const usdyusdcWithDecimal = BigNumber(usdyusdc).multipliedBy(BigNumber(10).pow(8));
+
+    const scasui = await getLatestPrice("SCASUI");
+    const scausd = suiusd.eq(0) ? BigNumber(0) : BigNumber(scasui).multipliedBy(suiusd);
+
+    return {
+        fud: { price: fudusd.toString(), decimal: "8", quote: "usd" },
+        mfud: { price: fudusd.multipliedBy(1000000).toString(), decimal: "8", quote: "usd" },
+        afsui: { price: afsuiusd.toString(), decimal: "8", quote: "usd" },
+        navx: { price: navxusd.toString(), decimal: "8", quote: "usd" },
+        buck: { price: buckusd.toString(), decimal: "8", quote: "usd" },
+        usdy: { price: usdyusdcWithDecimal.toString(), decimal: "8", quote: "usd" },
+        sca: { price: scausd.toString(), decimal: "8", quote: "usd" },
+        ...prices,
+    };
+};
 
 export const calcIncentiveRate = (incentiveBp) => {
     const incentiveRateBp = BigNumber(incentiveBp).div(BigNumber(10).pow(IncentiveRateBp));
@@ -519,14 +690,16 @@ export const fetchUserBids = async (
     registryAddress: string,
     strategyPoolAddress: string,
     userAddress: string,
-    prices: { [key: string]: string }
+    prices?: { [key: string]: CoinInfo }
 ) => {
-    // Step 1: get user bid receipts, vaults info, user strategies, auction data
+    // Step 1: get user bid receipts, vaults info, user strategies, auction data, prices
     const vaultsInfo = await getVaults(provider, packageAddress, registryAddress, []);
     const userReceipts = await getUserBidReceipts(provider, network, originFramworkAddress, userAddress);
     const userStrategies = await getUserStrategies(provider, packageAddress, registryAddress, strategyPoolAddress, userAddress);
     const auctions = await getAuctions(provider, packageAddress, registryAddress, []);
-
+    if (typeof prices === "undefined") {
+        prices = await fetchPrices(provider, "testnet");
+    }
     // Step 2: sort receipts and flat receipts
     const { sortedBidReceipts, bidVaultsInfo } = parseBidReceipt(Object.values(vaultsInfo), userReceipts);
 
@@ -540,7 +713,10 @@ export const fetchUserBids = async (
         const auction = auctions ? auctions[bidVaultInfo.vaultInfo.info.index] : null;
         const [dToken, bToken, oToken] = parseAssets(bidVaultInfo.vaultInfo.info);
         if (bidShare) {
-            const data = parseBid(bidVaultInfo, bidShare, auction, prices[oToken.toLowerCase()], false);
+            const price = BigNumber(prices[oToken.toLowerCase()].price)
+                .div(BigNumber(10).pow(prices[oToken.toLowerCase()].decimal))
+                .toString();
+            const data = parseBid(bidVaultInfo, bidShare, auction, price, false);
             const checkExistVault = bidsFromBidShares.find(
                 (p) => p.vaultIndex === bidVaultInfo.vaultInfo.info.index && p.receiptsVid.includes(bidVaultInfo.receipt.vid)
             );
@@ -609,7 +785,10 @@ export const fetchUserBids = async (
         const auction = auctions ? auctions[autoBidVaultInfo.vaultInfo.info.index] : null;
         const [dToken, bToken, oToken] = parseAssets(autoBidVaultInfo.vaultInfo.info);
         if (bidShare) {
-            const data = parseBid(autoBidVaultInfo, bidShare, auction, prices[oToken.toLowerCase()], false);
+            const price = BigNumber(prices[oToken.toLowerCase()].price)
+                .div(BigNumber(10).pow(prices[oToken.toLowerCase()].decimal))
+                .toString();
+            const data = parseBid(autoBidVaultInfo, bidShare, auction, price, false);
             const checkExistVault = bidsFromStrategies.find(
                 (p) => p.vaultIndex === autoBidVaultInfo.vaultInfo.info.index && p.receiptsVid.includes(autoBidVaultInfo.receipt.vid)
             );
