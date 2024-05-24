@@ -13,7 +13,6 @@ import { getUserStrategies } from "../../auto-bid/view-function";
 import { typeArgsToAssets } from "../../token";
 import { WrappedToken } from "./token";
 import { getLatestPrice } from "../../price";
-import { StringFields } from "../../../lib/utils/_dependencies/source/0x1/ascii/structs";
 
 const PriceDecimal = BigNumber(10).pow(8);
 
