@@ -49,9 +49,10 @@ export async function getStakeTailsTx(input: {
     kiosk: string;
     kioskCap: string;
     tails: string;
+    fee: string;
     personalKioskPackageId: string | undefined;
 }) {
-    let [coin] = input.tx.splitCoins(input.tx.gas, [input.tx.pure(50000000)]);
+    let [coin] = input.tx.splitCoins(input.tx.gas, [input.tx.pure(input.fee)]);
 
     if (input.personalKioskPackageId) {
         const [personalKioskCap, borrow] = input.tx.moveCall({
@@ -142,6 +143,73 @@ export async function getUnstakeTailsTx(input: {
                 input.tx.object(input.kiosk),
                 input.tx.object(input.kioskCap),
                 input.tx.pure(input.tails),
+            ],
+        });
+    }
+
+    return input.tx;
+}
+
+/**
+    public fun transfer_tails(
+        version: &mut Version,
+        tails_staking_registry: &TailsStakingRegistry,
+        kiosk: &mut Kiosk,
+        kiosk_owner_cap: &KioskOwnerCap,
+        tails: address,
+        coin: Coin<SUI>,
+        recipient: address,
+        ctx: &mut TxContext,
+    ) {
+*/
+export async function getTransferTailsTx(input: {
+    tx: TransactionBlock;
+    typusPackageId: string;
+    typusEcosystemVersion: string;
+    typusTailsStakingRegistry: string;
+    kiosk: string;
+    kioskCap: string;
+    tails: string;
+    recipient: string;
+    fee: string;
+    personalKioskPackageId: string | undefined;
+}) {
+    let [coin] = input.tx.splitCoins(input.tx.gas, [input.tx.pure(input.fee)]);
+
+    if (input.personalKioskPackageId) {
+        const [personalKioskCap, borrow] = input.tx.moveCall({
+            target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
+            arguments: [input.tx.object(input.kioskCap)],
+        });
+        input.tx.moveCall({
+            target: `${input.typusPackageId}::tails_staking::transfer_tails`,
+            typeArguments: [],
+            arguments: [
+                input.tx.object(input.typusEcosystemVersion),
+                input.tx.object(input.typusTailsStakingRegistry),
+                input.tx.object(input.kiosk),
+                personalKioskCap,
+                input.tx.pure(input.tails),
+                coin,
+                input.tx.pure(input.recipient),
+            ],
+        });
+        input.tx.moveCall({
+            target: `${input.personalKioskPackageId}::personal_kiosk::return_val`,
+            arguments: [input.tx.object(input.kioskCap), personalKioskCap, borrow],
+        });
+    } else {
+        input.tx.moveCall({
+            target: `${input.typusPackageId}::tails_staking::transfer_tails`,
+            typeArguments: [],
+            arguments: [
+                input.tx.object(input.typusEcosystemVersion),
+                input.tx.object(input.typusTailsStakingRegistry),
+                input.tx.object(input.kiosk),
+                input.tx.object(input.kioskCap),
+                input.tx.pure(input.tails),
+                coin,
+                input.tx.pure(input.recipient),
             ],
         });
     }
