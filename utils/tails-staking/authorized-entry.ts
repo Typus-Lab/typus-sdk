@@ -171,3 +171,68 @@ export async function getRemoveIpfsUrlsTx(input: {
 
     return input.tx;
 }
+
+/**
+    entry fun upload_webp_bytes(
+        version: &Version,
+        tails_staking_registry: &mut TailsStakingRegistry,
+        number: u64,
+        level: u64,
+        mut bytes: vector<u8>, // reverse when extend
+        ctx: &TxContext,
+    ) {
+*/
+export async function getUploadWebpBytesTx(input: {
+    tx: TransactionBlock;
+    typusPackageId: string;
+    typusEcosystemVersion: string;
+    typusTailsStakingRegistry: string;
+    number: string;
+    level: string;
+    bytes: string[];
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusPackageId}::tails_staking::upload_webp_bytes`,
+        typeArguments: [],
+        arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.typusTailsStakingRegistry),
+            input.tx.pure(input.number),
+            input.tx.pure(input.level),
+            input.tx.pure(input.bytes),
+        ],
+    });
+
+    return input.tx;
+}
+
+/**
+    entry fun remove_webp_bytes(
+        version: &Version,
+        tails_staking_registry: &mut TailsStakingRegistry,
+        number: u64,
+        level: u64,
+        ctx: &TxContext,
+    ) {
+*/
+export async function getRemoveWebpBytesTx(input: {
+    tx: TransactionBlock;
+    typusPackageId: string;
+    typusEcosystemVersion: string;
+    typusTailsStakingRegistry: string;
+    number: string;
+    level: string;
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusPackageId}::tails_staking::remove_webp_bytes`,
+        typeArguments: [],
+        arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.typusTailsStakingRegistry),
+            input.tx.pure(input.number),
+            input.tx.pure(input.level),
+        ],
+    });
+
+    return input.tx;
+}
