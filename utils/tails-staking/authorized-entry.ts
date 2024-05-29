@@ -236,3 +236,34 @@ export async function getRemoveWebpBytesTx(input: {
 
     return input.tx;
 }
+
+/**
+    entry fun update_tails_staking_registry_config(
+        version: &Version,
+        tails_staking_registry: &mut TailsStakingRegistry,
+        index: u64,
+        value: u64,
+        ctx: &TxContext,
+    ) {
+*/
+export async function getUpdateTailsStakingRegistryConfigTx(input: {
+    tx: TransactionBlock;
+    typusPackageId: string;
+    typusEcosystemVersion: string;
+    typusTailsStakingRegistry: string;
+    index: string;
+    value: string;
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusPackageId}::tails_staking::update_tails_staking_registry_config`,
+        typeArguments: [],
+        arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.typusTailsStakingRegistry),
+            input.tx.pure(input.index),
+            input.tx.pure(input.value),
+        ],
+    });
+
+    return input.tx;
+}
