@@ -56,6 +56,7 @@ export async function getRemoveIdsTx(input: {
 
     return input.tx;
 }
+
 /**
     entry fun upload_levels(
         version: &Version,
@@ -106,6 +107,65 @@ export async function getRemoveLevelsTx(input: {
             input.tx.object(input.typusEcosystemVersion),
             input.tx.object(input.typusTailsStakingRegistry),
             input.tx.pure(input.count),
+        ],
+    });
+
+    return input.tx;
+}
+
+/**
+    entry fun upload_ipfs_urls(
+        version: &Version,
+        tails_staking_registry: &mut TailsStakingRegistry,
+        level: u64,
+        mut urls: vector<vector<u8>>, // reverse
+        ctx: &TxContext,
+    ) {
+*/
+export async function getUploadIpfsUrlsTx(input: {
+    tx: TransactionBlock;
+    typusPackageId: string;
+    typusEcosystemVersion: string;
+    typusTailsStakingRegistry: string;
+    level: string;
+    urls: string[][];
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusPackageId}::tails_staking::upload_ipfs_urls`,
+        typeArguments: [],
+        arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.typusTailsStakingRegistry),
+            input.tx.pure(input.level),
+            input.tx.pure(input.urls),
+        ],
+    });
+
+    return input.tx;
+}
+
+/**
+    entry fun remove_ipfs_urls(
+        version: &Version,
+        tails_staking_registry: &mut TailsStakingRegistry,
+        level: u64,
+        ctx: &mut TxContext,
+    ) {
+*/
+export async function getRemoveIpfsUrlsTx(input: {
+    tx: TransactionBlock;
+    typusPackageId: string;
+    typusEcosystemVersion: string;
+    typusTailsStakingRegistry: string;
+    level: string;
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusPackageId}::tails_staking::remove_ipfs_urls`,
+        typeArguments: [],
+        arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.typusTailsStakingRegistry),
+            input.tx.pure(input.level),
         ],
     });
 
