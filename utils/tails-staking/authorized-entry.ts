@@ -267,3 +267,35 @@ export async function getUpdateTailsStakingRegistryConfigTx(input: {
 
     return input.tx;
 }
+
+/**
+    entry fun set_profit_sharing<TOKEN>(
+        version: &Version,
+        tails_staking_registry: &mut TailsStakingRegistry,
+        level_profits: vector<u64>,
+        mut profit: vector<Coin<TOKEN>>,
+        ctx: &TxContext,
+    ) {
+*/
+export async function getSetProfitSharingTx(input: {
+    tx: TransactionBlock;
+    typusPackageId: string;
+    typusEcosystemVersion: string;
+    typusTailsStakingRegistry: string;
+    typeArguments: string[];
+    level_profits: string;
+    coins: string[];
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusPackageId}::tails_staking::set_profit_sharing`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.typusTailsStakingRegistry),
+            input.tx.pure(input.level_profits),
+            input.tx.makeMoveVec({ objects: input.coins.map((coin) => input.tx.object(coin)) }),
+        ],
+    });
+
+    return input.tx;
+}
