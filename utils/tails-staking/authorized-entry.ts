@@ -299,3 +299,32 @@ export async function getSetProfitSharingTx(input: {
 
     return input.tx;
 }
+
+/**
+    entry fun remove_profit_sharing<TOKEN>(
+        version: &Version,
+        tails_staking_registry: &mut TailsStakingRegistry,
+        recipient: address,
+        ctx: &mut TxContext,
+    ) {
+*/
+export async function getRemoveProfitSharingTx(input: {
+    tx: TransactionBlock;
+    typusPackageId: string;
+    typusEcosystemVersion: string;
+    typusTailsStakingRegistry: string;
+    typeArguments: string[];
+    recipient: string;
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusPackageId}::tails_staking::remove_profit_sharing`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.typusTailsStakingRegistry),
+            input.tx.pure(input.recipient),
+        ],
+    });
+
+    return input.tx;
+}
