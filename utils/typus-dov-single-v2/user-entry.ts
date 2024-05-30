@@ -151,6 +151,52 @@ export function getReduceFundTx(input: {
 }
 
 /**
+    public fun public_refresh_deposit_snapshot<D_TOKEN, B_TOKEN>(
+        typus_ecosystem_version: &TypusEcosystemVersion,
+        typus_user_registry: &mut TypusUserRegistry,
+        typus_leaderboard_registry: &mut TypusLeaderboardRegistry,
+        registry: &mut Registry,
+        index: u64,
+        receipts: vector<TypusDepositReceipt>,
+        clock: &Clock,
+        ctx: &mut TxContext,
+    ): (TypusDepositReceipt, vector<u64>) {
+ */
+export function getRefreshDepositSnapshotTx(input: {
+    tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    typusUserRegistry: string;
+    typusLeaderboardRegistry: string;
+    typusFrameworkOriginPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    user: string;
+}) {
+    let result = input.tx.moveCall({
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::public_refresh_deposit_snapshot`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.typusUserRegistry),
+            input.tx.object(input.typusLeaderboardRegistry),
+            input.tx.object(input.typusDovSingleRegistry),
+            input.tx.pure(input.index),
+            input.tx.makeMoveVec({
+                type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
+                objects: input.receipts.map((receipt) => input.tx.object(receipt)),
+            }),
+            input.tx.pure(CLOCK),
+        ],
+    });
+    input.tx.transferObjects([input.tx.object(result[0])], input.user);
+
+    return input.tx;
+}
+
+/**
     public(friend) entry fun new_bid<D_TOKEN, B_TOKEN>(
         registry: &mut Registry,
         index: u64,
