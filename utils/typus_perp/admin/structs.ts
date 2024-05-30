@@ -19,11 +19,331 @@ import { FieldsWithTypes, composeSuiType, compressSuiType } from "../../_framewo
 import { bcs, fromB64, fromHEX, toHEX } from "@mysten/bcs";
 import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
+/* ============================== Version =============================== */
+
+export function isVersion(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::Version";
+}
+
+export interface VersionFields {
+    id: ToField<UID>;
+    value: ToField<"u64">;
+    feePool: ToField<FeePool>;
+    liquidatorFeePool: ToField<FeePool>;
+    authority: ToField<VecSet<"address">>;
+    u64Padding: ToField<Vector<"u64">>;
+}
+
+export type VersionReified = Reified<Version, VersionFields>;
+
+export class Version implements StructClass {
+    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::Version";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = Version.$typeName;
+
+    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::Version";
+
+    readonly $typeArgs: [];
+
+    readonly id: ToField<UID>;
+    readonly value: ToField<"u64">;
+    readonly feePool: ToField<FeePool>;
+    readonly liquidatorFeePool: ToField<FeePool>;
+    readonly authority: ToField<VecSet<"address">>;
+    readonly u64Padding: ToField<Vector<"u64">>;
+
+    private constructor(typeArgs: [], fields: VersionFields) {
+        this.$fullTypeName = composeSuiType(
+            Version.$typeName,
+            ...typeArgs
+        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::Version";
+        this.$typeArgs = typeArgs;
+
+        this.id = fields.id;
+        this.value = fields.value;
+        this.feePool = fields.feePool;
+        this.liquidatorFeePool = fields.liquidatorFeePool;
+        this.authority = fields.authority;
+        this.u64Padding = fields.u64Padding;
+    }
+
+    static reified(): VersionReified {
+        return {
+            typeName: Version.$typeName,
+            fullTypeName: composeSuiType(
+                Version.$typeName,
+                ...[]
+            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::Version",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => Version.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => Version.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => Version.fromBcs(data),
+            bcs: Version.bcs,
+            fromJSONField: (field: any) => Version.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => Version.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => Version.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => Version.fetch(client, id),
+            new: (fields: VersionFields) => {
+                return new Version([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return Version.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<Version>> {
+        return phantom(Version.reified());
+    }
+    static get p() {
+        return Version.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("Version", {
+            id: UID.bcs,
+            value: bcs.u64(),
+            fee_pool: FeePool.bcs,
+            liquidator_fee_pool: FeePool.bcs,
+            authority: VecSet.bcs(
+                bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) })
+            ),
+            u64_padding: bcs.vector(bcs.u64()),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): Version {
+        return Version.reified().new({
+            id: decodeFromFields(UID.reified(), fields.id),
+            value: decodeFromFields("u64", fields.value),
+            feePool: decodeFromFields(FeePool.reified(), fields.fee_pool),
+            liquidatorFeePool: decodeFromFields(FeePool.reified(), fields.liquidator_fee_pool),
+            authority: decodeFromFields(VecSet.reified("address"), fields.authority),
+            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): Version {
+        if (!isVersion(item.type)) {
+            throw new Error("not a Version type");
+        }
+
+        return Version.reified().new({
+            id: decodeFromFieldsWithTypes(UID.reified(), item.fields.id),
+            value: decodeFromFieldsWithTypes("u64", item.fields.value),
+            feePool: decodeFromFieldsWithTypes(FeePool.reified(), item.fields.fee_pool),
+            liquidatorFeePool: decodeFromFieldsWithTypes(FeePool.reified(), item.fields.liquidator_fee_pool),
+            authority: decodeFromFieldsWithTypes(VecSet.reified("address"), item.fields.authority),
+            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): Version {
+        return Version.fromFields(Version.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            id: this.id,
+            value: this.value.toString(),
+            feePool: this.feePool.toJSONField(),
+            liquidatorFeePool: this.liquidatorFeePool.toJSONField(),
+            authority: this.authority.toJSONField(),
+            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): Version {
+        return Version.reified().new({
+            id: decodeFromJSONField(UID.reified(), field.id),
+            value: decodeFromJSONField("u64", field.value),
+            feePool: decodeFromJSONField(FeePool.reified(), field.feePool),
+            liquidatorFeePool: decodeFromJSONField(FeePool.reified(), field.liquidatorFeePool),
+            authority: decodeFromJSONField(VecSet.reified("address"), field.authority),
+            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): Version {
+        if (json.$typeName !== Version.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return Version.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): Version {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isVersion(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a Version object`);
+        }
+        return Version.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<Version> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching Version object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isVersion(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a Version object`);
+        }
+        return Version.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
+/* ============================== ManagerCap =============================== */
+
+export function isManagerCap(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::ManagerCap";
+}
+
+export interface ManagerCapFields {
+    dummyField: ToField<"bool">;
+}
+
+export type ManagerCapReified = Reified<ManagerCap, ManagerCapFields>;
+
+export class ManagerCap implements StructClass {
+    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::ManagerCap";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = ManagerCap.$typeName;
+
+    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::ManagerCap";
+
+    readonly $typeArgs: [];
+
+    readonly dummyField: ToField<"bool">;
+
+    private constructor(typeArgs: [], fields: ManagerCapFields) {
+        this.$fullTypeName = composeSuiType(
+            ManagerCap.$typeName,
+            ...typeArgs
+        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::ManagerCap";
+        this.$typeArgs = typeArgs;
+
+        this.dummyField = fields.dummyField;
+    }
+
+    static reified(): ManagerCapReified {
+        return {
+            typeName: ManagerCap.$typeName,
+            fullTypeName: composeSuiType(
+                ManagerCap.$typeName,
+                ...[]
+            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::ManagerCap",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => ManagerCap.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => ManagerCap.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => ManagerCap.fromBcs(data),
+            bcs: ManagerCap.bcs,
+            fromJSONField: (field: any) => ManagerCap.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => ManagerCap.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => ManagerCap.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => ManagerCap.fetch(client, id),
+            new: (fields: ManagerCapFields) => {
+                return new ManagerCap([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return ManagerCap.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<ManagerCap>> {
+        return phantom(ManagerCap.reified());
+    }
+    static get p() {
+        return ManagerCap.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("ManagerCap", {
+            dummy_field: bcs.bool(),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): ManagerCap {
+        return ManagerCap.reified().new({ dummyField: decodeFromFields("bool", fields.dummy_field) });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): ManagerCap {
+        if (!isManagerCap(item.type)) {
+            throw new Error("not a ManagerCap type");
+        }
+
+        return ManagerCap.reified().new({ dummyField: decodeFromFieldsWithTypes("bool", item.fields.dummy_field) });
+    }
+
+    static fromBcs(data: Uint8Array): ManagerCap {
+        return ManagerCap.fromFields(ManagerCap.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            dummyField: this.dummyField,
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): ManagerCap {
+        return ManagerCap.reified().new({ dummyField: decodeFromJSONField("bool", field.dummyField) });
+    }
+
+    static fromJSON(json: Record<string, any>): ManagerCap {
+        if (json.$typeName !== ManagerCap.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return ManagerCap.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): ManagerCap {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isManagerCap(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a ManagerCap object`);
+        }
+        return ManagerCap.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<ManagerCap> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching ManagerCap object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isManagerCap(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a ManagerCap object`);
+        }
+        return ManagerCap.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
 /* ============================== FeeInfo =============================== */
 
 export function isFeeInfo(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::admin::FeeInfo";
+    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeeInfo";
 }
 
 export interface FeeInfoFields {
@@ -34,12 +354,12 @@ export interface FeeInfoFields {
 export type FeeInfoReified = Reified<FeeInfo, FeeInfoFields>;
 
 export class FeeInfo implements StructClass {
-    static readonly $typeName = "0x0::admin::FeeInfo";
+    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeeInfo";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = FeeInfo.$typeName;
 
-    readonly $fullTypeName: "0x0::admin::FeeInfo";
+    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeeInfo";
 
     readonly $typeArgs: [];
 
@@ -47,7 +367,10 @@ export class FeeInfo implements StructClass {
     readonly value: ToField<"u64">;
 
     private constructor(typeArgs: [], fields: FeeInfoFields) {
-        this.$fullTypeName = composeSuiType(FeeInfo.$typeName, ...typeArgs) as "0x0::admin::FeeInfo";
+        this.$fullTypeName = composeSuiType(
+            FeeInfo.$typeName,
+            ...typeArgs
+        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeeInfo";
         this.$typeArgs = typeArgs;
 
         this.token = fields.token;
@@ -57,7 +380,10 @@ export class FeeInfo implements StructClass {
     static reified(): FeeInfoReified {
         return {
             typeName: FeeInfo.$typeName,
-            fullTypeName: composeSuiType(FeeInfo.$typeName, ...[]) as "0x0::admin::FeeInfo",
+            fullTypeName: composeSuiType(
+                FeeInfo.$typeName,
+                ...[]
+            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeeInfo",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => FeeInfo.fromFields(fields),
@@ -167,7 +493,7 @@ export class FeeInfo implements StructClass {
 
 export function isFeePool(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::admin::FeePool";
+    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeePool";
 }
 
 export interface FeePoolFields {
@@ -178,12 +504,12 @@ export interface FeePoolFields {
 export type FeePoolReified = Reified<FeePool, FeePoolFields>;
 
 export class FeePool implements StructClass {
-    static readonly $typeName = "0x0::admin::FeePool";
+    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeePool";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = FeePool.$typeName;
 
-    readonly $fullTypeName: "0x0::admin::FeePool";
+    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeePool";
 
     readonly $typeArgs: [];
 
@@ -191,7 +517,10 @@ export class FeePool implements StructClass {
     readonly feeInfos: ToField<Vector<FeeInfo>>;
 
     private constructor(typeArgs: [], fields: FeePoolFields) {
-        this.$fullTypeName = composeSuiType(FeePool.$typeName, ...typeArgs) as "0x0::admin::FeePool";
+        this.$fullTypeName = composeSuiType(
+            FeePool.$typeName,
+            ...typeArgs
+        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeePool";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -201,7 +530,10 @@ export class FeePool implements StructClass {
     static reified(): FeePoolReified {
         return {
             typeName: FeePool.$typeName,
-            fullTypeName: composeSuiType(FeePool.$typeName, ...[]) as "0x0::admin::FeePool",
+            fullTypeName: composeSuiType(
+                FeePool.$typeName,
+                ...[]
+            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeePool",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => FeePool.fromFields(fields),
@@ -262,7 +594,10 @@ export class FeePool implements StructClass {
     toJSONField() {
         return {
             id: this.id,
-            feeInfos: fieldToJSON<Vector<FeeInfo>>(`vector<0x0::admin::FeeInfo>`, this.feeInfos),
+            feeInfos: fieldToJSON<Vector<FeeInfo>>(
+                `vector<0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeeInfo>`,
+                this.feeInfos
+            ),
         };
     }
 
@@ -307,141 +642,11 @@ export class FeePool implements StructClass {
     }
 }
 
-/* ============================== ManagerCap =============================== */
-
-export function isManagerCap(type: string): boolean {
-    type = compressSuiType(type);
-    return type === "0x0::admin::ManagerCap";
-}
-
-export interface ManagerCapFields {
-    dummyField: ToField<"bool">;
-}
-
-export type ManagerCapReified = Reified<ManagerCap, ManagerCapFields>;
-
-export class ManagerCap implements StructClass {
-    static readonly $typeName = "0x0::admin::ManagerCap";
-    static readonly $numTypeParams = 0;
-
-    readonly $typeName = ManagerCap.$typeName;
-
-    readonly $fullTypeName: "0x0::admin::ManagerCap";
-
-    readonly $typeArgs: [];
-
-    readonly dummyField: ToField<"bool">;
-
-    private constructor(typeArgs: [], fields: ManagerCapFields) {
-        this.$fullTypeName = composeSuiType(ManagerCap.$typeName, ...typeArgs) as "0x0::admin::ManagerCap";
-        this.$typeArgs = typeArgs;
-
-        this.dummyField = fields.dummyField;
-    }
-
-    static reified(): ManagerCapReified {
-        return {
-            typeName: ManagerCap.$typeName,
-            fullTypeName: composeSuiType(ManagerCap.$typeName, ...[]) as "0x0::admin::ManagerCap",
-            typeArgs: [] as [],
-            reifiedTypeArgs: [],
-            fromFields: (fields: Record<string, any>) => ManagerCap.fromFields(fields),
-            fromFieldsWithTypes: (item: FieldsWithTypes) => ManagerCap.fromFieldsWithTypes(item),
-            fromBcs: (data: Uint8Array) => ManagerCap.fromBcs(data),
-            bcs: ManagerCap.bcs,
-            fromJSONField: (field: any) => ManagerCap.fromJSONField(field),
-            fromJSON: (json: Record<string, any>) => ManagerCap.fromJSON(json),
-            fromSuiParsedData: (content: SuiParsedData) => ManagerCap.fromSuiParsedData(content),
-            fetch: async (client: SuiClient, id: string) => ManagerCap.fetch(client, id),
-            new: (fields: ManagerCapFields) => {
-                return new ManagerCap([], fields);
-            },
-            kind: "StructClassReified",
-        };
-    }
-
-    static get r() {
-        return ManagerCap.reified();
-    }
-
-    static phantom(): PhantomReified<ToTypeStr<ManagerCap>> {
-        return phantom(ManagerCap.reified());
-    }
-    static get p() {
-        return ManagerCap.phantom();
-    }
-
-    static get bcs() {
-        return bcs.struct("ManagerCap", {
-            dummy_field: bcs.bool(),
-        });
-    }
-
-    static fromFields(fields: Record<string, any>): ManagerCap {
-        return ManagerCap.reified().new({ dummyField: decodeFromFields("bool", fields.dummy_field) });
-    }
-
-    static fromFieldsWithTypes(item: FieldsWithTypes): ManagerCap {
-        if (!isManagerCap(item.type)) {
-            throw new Error("not a ManagerCap type");
-        }
-
-        return ManagerCap.reified().new({ dummyField: decodeFromFieldsWithTypes("bool", item.fields.dummy_field) });
-    }
-
-    static fromBcs(data: Uint8Array): ManagerCap {
-        return ManagerCap.fromFields(ManagerCap.bcs.parse(data));
-    }
-
-    toJSONField() {
-        return {
-            dummyField: this.dummyField,
-        };
-    }
-
-    toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
-    }
-
-    static fromJSONField(field: any): ManagerCap {
-        return ManagerCap.reified().new({ dummyField: decodeFromJSONField("bool", field.dummyField) });
-    }
-
-    static fromJSON(json: Record<string, any>): ManagerCap {
-        if (json.$typeName !== ManagerCap.$typeName) {
-            throw new Error("not a WithTwoGenerics json object");
-        }
-
-        return ManagerCap.fromJSONField(json);
-    }
-
-    static fromSuiParsedData(content: SuiParsedData): ManagerCap {
-        if (content.dataType !== "moveObject") {
-            throw new Error("not an object");
-        }
-        if (!isManagerCap(content.type)) {
-            throw new Error(`object at ${(content.fields as any).id} is not a ManagerCap object`);
-        }
-        return ManagerCap.fromFieldsWithTypes(content);
-    }
-
-    static async fetch(client: SuiClient, id: string): Promise<ManagerCap> {
-        const res = await client.getObject({ id, options: { showBcs: true } });
-        if (res.error) {
-            throw new Error(`error fetching ManagerCap object at id ${id}: ${res.error.code}`);
-        }
-        if (res.data?.bcs?.dataType !== "moveObject" || !isManagerCap(res.data.bcs.type)) {
-            throw new Error(`object at id ${id} is not a ManagerCap object`);
-        }
-        return ManagerCap.fromBcs(fromB64(res.data.bcs.bcsBytes));
-    }
-}
-
 /* ============================== SendFeeEvent =============================== */
 
 export function isSendFeeEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::admin::SendFeeEvent";
+    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::SendFeeEvent";
 }
 
 export interface SendFeeEventFields {
@@ -452,12 +657,12 @@ export interface SendFeeEventFields {
 export type SendFeeEventReified = Reified<SendFeeEvent, SendFeeEventFields>;
 
 export class SendFeeEvent implements StructClass {
-    static readonly $typeName = "0x0::admin::SendFeeEvent";
+    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::SendFeeEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = SendFeeEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::admin::SendFeeEvent";
+    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::SendFeeEvent";
 
     readonly $typeArgs: [];
 
@@ -465,7 +670,10 @@ export class SendFeeEvent implements StructClass {
     readonly amount: ToField<"u64">;
 
     private constructor(typeArgs: [], fields: SendFeeEventFields) {
-        this.$fullTypeName = composeSuiType(SendFeeEvent.$typeName, ...typeArgs) as "0x0::admin::SendFeeEvent";
+        this.$fullTypeName = composeSuiType(
+            SendFeeEvent.$typeName,
+            ...typeArgs
+        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::SendFeeEvent";
         this.$typeArgs = typeArgs;
 
         this.token = fields.token;
@@ -475,7 +683,10 @@ export class SendFeeEvent implements StructClass {
     static reified(): SendFeeEventReified {
         return {
             typeName: SendFeeEvent.$typeName,
-            fullTypeName: composeSuiType(SendFeeEvent.$typeName, ...[]) as "0x0::admin::SendFeeEvent",
+            fullTypeName: composeSuiType(
+                SendFeeEvent.$typeName,
+                ...[]
+            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::SendFeeEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => SendFeeEvent.fromFields(fields),
@@ -578,175 +789,5 @@ export class SendFeeEvent implements StructClass {
             throw new Error(`object at id ${id} is not a SendFeeEvent object`);
         }
         return SendFeeEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
-    }
-}
-
-/* ============================== Version =============================== */
-
-export function isVersion(type: string): boolean {
-    type = compressSuiType(type);
-    return type === "0x0::admin::Version";
-}
-
-export interface VersionFields {
-    id: ToField<UID>;
-    value: ToField<"u64">;
-    feePool: ToField<FeePool>;
-    authority: ToField<VecSet<"address">>;
-    u64Padding: ToField<Vector<"u64">>;
-}
-
-export type VersionReified = Reified<Version, VersionFields>;
-
-export class Version implements StructClass {
-    static readonly $typeName = "0x0::admin::Version";
-    static readonly $numTypeParams = 0;
-
-    readonly $typeName = Version.$typeName;
-
-    readonly $fullTypeName: "0x0::admin::Version";
-
-    readonly $typeArgs: [];
-
-    readonly id: ToField<UID>;
-    readonly value: ToField<"u64">;
-    readonly feePool: ToField<FeePool>;
-    readonly authority: ToField<VecSet<"address">>;
-    readonly u64Padding: ToField<Vector<"u64">>;
-
-    private constructor(typeArgs: [], fields: VersionFields) {
-        this.$fullTypeName = composeSuiType(Version.$typeName, ...typeArgs) as "0x0::admin::Version";
-        this.$typeArgs = typeArgs;
-
-        this.id = fields.id;
-        this.value = fields.value;
-        this.feePool = fields.feePool;
-        this.authority = fields.authority;
-        this.u64Padding = fields.u64Padding;
-    }
-
-    static reified(): VersionReified {
-        return {
-            typeName: Version.$typeName,
-            fullTypeName: composeSuiType(Version.$typeName, ...[]) as "0x0::admin::Version",
-            typeArgs: [] as [],
-            reifiedTypeArgs: [],
-            fromFields: (fields: Record<string, any>) => Version.fromFields(fields),
-            fromFieldsWithTypes: (item: FieldsWithTypes) => Version.fromFieldsWithTypes(item),
-            fromBcs: (data: Uint8Array) => Version.fromBcs(data),
-            bcs: Version.bcs,
-            fromJSONField: (field: any) => Version.fromJSONField(field),
-            fromJSON: (json: Record<string, any>) => Version.fromJSON(json),
-            fromSuiParsedData: (content: SuiParsedData) => Version.fromSuiParsedData(content),
-            fetch: async (client: SuiClient, id: string) => Version.fetch(client, id),
-            new: (fields: VersionFields) => {
-                return new Version([], fields);
-            },
-            kind: "StructClassReified",
-        };
-    }
-
-    static get r() {
-        return Version.reified();
-    }
-
-    static phantom(): PhantomReified<ToTypeStr<Version>> {
-        return phantom(Version.reified());
-    }
-    static get p() {
-        return Version.phantom();
-    }
-
-    static get bcs() {
-        return bcs.struct("Version", {
-            id: UID.bcs,
-            value: bcs.u64(),
-            fee_pool: FeePool.bcs,
-            authority: VecSet.bcs(
-                bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) })
-            ),
-            u64_padding: bcs.vector(bcs.u64()),
-        });
-    }
-
-    static fromFields(fields: Record<string, any>): Version {
-        return Version.reified().new({
-            id: decodeFromFields(UID.reified(), fields.id),
-            value: decodeFromFields("u64", fields.value),
-            feePool: decodeFromFields(FeePool.reified(), fields.fee_pool),
-            authority: decodeFromFields(VecSet.reified("address"), fields.authority),
-            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
-        });
-    }
-
-    static fromFieldsWithTypes(item: FieldsWithTypes): Version {
-        if (!isVersion(item.type)) {
-            throw new Error("not a Version type");
-        }
-
-        return Version.reified().new({
-            id: decodeFromFieldsWithTypes(UID.reified(), item.fields.id),
-            value: decodeFromFieldsWithTypes("u64", item.fields.value),
-            feePool: decodeFromFieldsWithTypes(FeePool.reified(), item.fields.fee_pool),
-            authority: decodeFromFieldsWithTypes(VecSet.reified("address"), item.fields.authority),
-            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
-        });
-    }
-
-    static fromBcs(data: Uint8Array): Version {
-        return Version.fromFields(Version.bcs.parse(data));
-    }
-
-    toJSONField() {
-        return {
-            id: this.id,
-            value: this.value.toString(),
-            feePool: this.feePool.toJSONField(),
-            authority: this.authority.toJSONField(),
-            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
-        };
-    }
-
-    toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
-    }
-
-    static fromJSONField(field: any): Version {
-        return Version.reified().new({
-            id: decodeFromJSONField(UID.reified(), field.id),
-            value: decodeFromJSONField("u64", field.value),
-            feePool: decodeFromJSONField(FeePool.reified(), field.feePool),
-            authority: decodeFromJSONField(VecSet.reified("address"), field.authority),
-            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
-        });
-    }
-
-    static fromJSON(json: Record<string, any>): Version {
-        if (json.$typeName !== Version.$typeName) {
-            throw new Error("not a WithTwoGenerics json object");
-        }
-
-        return Version.fromJSONField(json);
-    }
-
-    static fromSuiParsedData(content: SuiParsedData): Version {
-        if (content.dataType !== "moveObject") {
-            throw new Error("not an object");
-        }
-        if (!isVersion(content.type)) {
-            throw new Error(`object at ${(content.fields as any).id} is not a Version object`);
-        }
-        return Version.fromFieldsWithTypes(content);
-    }
-
-    static async fetch(client: SuiClient, id: string): Promise<Version> {
-        const res = await client.getObject({ id, options: { showBcs: true } });
-        if (res.error) {
-            throw new Error(`error fetching Version object at id ${id}: ${res.error.code}`);
-        }
-        if (res.data?.bcs?.dataType !== "moveObject" || !isVersion(res.data.bcs.type)) {
-            throw new Error(`object at id ${id} is not a Version object`);
-        }
-        return Version.fromBcs(fromB64(res.data.bcs.bcsBytes));
     }
 }

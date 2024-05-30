@@ -24,7 +24,7 @@ import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
 export function isOrderFilledEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::position::OrderFilledEvent";
+    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::OrderFilledEvent";
 }
 
 export interface OrderFilledEventFields {
@@ -45,12 +45,12 @@ export interface OrderFilledEventFields {
 export type OrderFilledEventReified = Reified<OrderFilledEvent, OrderFilledEventFields>;
 
 export class OrderFilledEvent implements StructClass {
-    static readonly $typeName = "0x0::position::OrderFilledEvent";
+    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::OrderFilledEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = OrderFilledEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::position::OrderFilledEvent";
+    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::OrderFilledEvent";
 
     readonly $typeArgs: [];
 
@@ -68,7 +68,10 @@ export class OrderFilledEvent implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: OrderFilledEventFields) {
-        this.$fullTypeName = composeSuiType(OrderFilledEvent.$typeName, ...typeArgs) as "0x0::position::OrderFilledEvent";
+        this.$fullTypeName = composeSuiType(
+            OrderFilledEvent.$typeName,
+            ...typeArgs
+        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::OrderFilledEvent";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -88,7 +91,10 @@ export class OrderFilledEvent implements StructClass {
     static reified(): OrderFilledEventReified {
         return {
             typeName: OrderFilledEvent.$typeName,
-            fullTypeName: composeSuiType(OrderFilledEvent.$typeName, ...[]) as "0x0::position::OrderFilledEvent",
+            fullTypeName: composeSuiType(
+                OrderFilledEvent.$typeName,
+                ...[]
+            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::OrderFilledEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => OrderFilledEvent.fromFields(fields),
@@ -248,13 +254,15 @@ export class OrderFilledEvent implements StructClass {
 
 export function isPosition(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::position::Position";
+    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::Position";
 }
 
 export interface PositionFields {
     id: ToField<UID>;
     createTsMs: ToField<"u64">;
     positionId: ToField<"u64">;
+    linkedOrderIds: ToField<Vector<"u64">>;
+    linkedOrderPrices: ToField<Vector<"u64">>;
     user: ToField<"address">;
     isLong: ToField<"bool">;
     size: ToField<"u64">;
@@ -265,9 +273,13 @@ export interface PositionFields {
     collateralAmount: ToField<"u64">;
     reserveAmount: ToField<"u64">;
     averagePrice: ToField<"u64">;
-    entryFundingIndex: ToField<"u64">;
-    realizedHasProfit: ToField<"bool">;
-    unrealizedCost: ToField<"u64">;
+    entryBorrowIndex: ToField<"u64">;
+    entryFundingRateIndexSign: ToField<"bool">;
+    entryFundingRateIndex: ToField<"u64">;
+    unrealizedLoss: ToField<"u64">;
+    unrealizedFundingSign: ToField<"bool">;
+    unrealizedFundingFee: ToField<"u64">;
+    unrealizedBorrowFee: ToField<"u64">;
     unrealizedRebate: ToField<"u64">;
     u64Padding: ToField<Vector<"u64">>;
 }
@@ -275,18 +287,20 @@ export interface PositionFields {
 export type PositionReified = Reified<Position, PositionFields>;
 
 export class Position implements StructClass {
-    static readonly $typeName = "0x0::position::Position";
+    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::Position";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = Position.$typeName;
 
-    readonly $fullTypeName: "0x0::position::Position";
+    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::Position";
 
     readonly $typeArgs: [];
 
     readonly id: ToField<UID>;
     readonly createTsMs: ToField<"u64">;
     readonly positionId: ToField<"u64">;
+    readonly linkedOrderIds: ToField<Vector<"u64">>;
+    readonly linkedOrderPrices: ToField<Vector<"u64">>;
     readonly user: ToField<"address">;
     readonly isLong: ToField<"bool">;
     readonly size: ToField<"u64">;
@@ -297,19 +311,28 @@ export class Position implements StructClass {
     readonly collateralAmount: ToField<"u64">;
     readonly reserveAmount: ToField<"u64">;
     readonly averagePrice: ToField<"u64">;
-    readonly entryFundingIndex: ToField<"u64">;
-    readonly realizedHasProfit: ToField<"bool">;
-    readonly unrealizedCost: ToField<"u64">;
+    readonly entryBorrowIndex: ToField<"u64">;
+    readonly entryFundingRateIndexSign: ToField<"bool">;
+    readonly entryFundingRateIndex: ToField<"u64">;
+    readonly unrealizedLoss: ToField<"u64">;
+    readonly unrealizedFundingSign: ToField<"bool">;
+    readonly unrealizedFundingFee: ToField<"u64">;
+    readonly unrealizedBorrowFee: ToField<"u64">;
     readonly unrealizedRebate: ToField<"u64">;
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: PositionFields) {
-        this.$fullTypeName = composeSuiType(Position.$typeName, ...typeArgs) as "0x0::position::Position";
+        this.$fullTypeName = composeSuiType(
+            Position.$typeName,
+            ...typeArgs
+        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::Position";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
         this.createTsMs = fields.createTsMs;
         this.positionId = fields.positionId;
+        this.linkedOrderIds = fields.linkedOrderIds;
+        this.linkedOrderPrices = fields.linkedOrderPrices;
         this.user = fields.user;
         this.isLong = fields.isLong;
         this.size = fields.size;
@@ -320,9 +343,13 @@ export class Position implements StructClass {
         this.collateralAmount = fields.collateralAmount;
         this.reserveAmount = fields.reserveAmount;
         this.averagePrice = fields.averagePrice;
-        this.entryFundingIndex = fields.entryFundingIndex;
-        this.realizedHasProfit = fields.realizedHasProfit;
-        this.unrealizedCost = fields.unrealizedCost;
+        this.entryBorrowIndex = fields.entryBorrowIndex;
+        this.entryFundingRateIndexSign = fields.entryFundingRateIndexSign;
+        this.entryFundingRateIndex = fields.entryFundingRateIndex;
+        this.unrealizedLoss = fields.unrealizedLoss;
+        this.unrealizedFundingSign = fields.unrealizedFundingSign;
+        this.unrealizedFundingFee = fields.unrealizedFundingFee;
+        this.unrealizedBorrowFee = fields.unrealizedBorrowFee;
         this.unrealizedRebate = fields.unrealizedRebate;
         this.u64Padding = fields.u64Padding;
     }
@@ -330,7 +357,10 @@ export class Position implements StructClass {
     static reified(): PositionReified {
         return {
             typeName: Position.$typeName,
-            fullTypeName: composeSuiType(Position.$typeName, ...[]) as "0x0::position::Position",
+            fullTypeName: composeSuiType(
+                Position.$typeName,
+                ...[]
+            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::Position",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => Position.fromFields(fields),
@@ -364,6 +394,8 @@ export class Position implements StructClass {
             id: UID.bcs,
             create_ts_ms: bcs.u64(),
             position_id: bcs.u64(),
+            linked_order_ids: bcs.vector(bcs.u64()),
+            linked_order_prices: bcs.vector(bcs.u64()),
             user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
             is_long: bcs.bool(),
             size: bcs.u64(),
@@ -374,9 +406,13 @@ export class Position implements StructClass {
             collateral_amount: bcs.u64(),
             reserve_amount: bcs.u64(),
             average_price: bcs.u64(),
-            entry_funding_index: bcs.u64(),
-            realized_has_profit: bcs.bool(),
-            unrealized_cost: bcs.u64(),
+            entry_borrow_index: bcs.u64(),
+            entry_funding_rate_index_sign: bcs.bool(),
+            entry_funding_rate_index: bcs.u64(),
+            unrealized_loss: bcs.u64(),
+            unrealized_funding_sign: bcs.bool(),
+            unrealized_funding_fee: bcs.u64(),
+            unrealized_borrow_fee: bcs.u64(),
             unrealized_rebate: bcs.u64(),
             u64_padding: bcs.vector(bcs.u64()),
         });
@@ -387,6 +423,8 @@ export class Position implements StructClass {
             id: decodeFromFields(UID.reified(), fields.id),
             createTsMs: decodeFromFields("u64", fields.create_ts_ms),
             positionId: decodeFromFields("u64", fields.position_id),
+            linkedOrderIds: decodeFromFields(reified.vector("u64"), fields.linked_order_ids),
+            linkedOrderPrices: decodeFromFields(reified.vector("u64"), fields.linked_order_prices),
             user: decodeFromFields("address", fields.user),
             isLong: decodeFromFields("bool", fields.is_long),
             size: decodeFromFields("u64", fields.size),
@@ -397,9 +435,13 @@ export class Position implements StructClass {
             collateralAmount: decodeFromFields("u64", fields.collateral_amount),
             reserveAmount: decodeFromFields("u64", fields.reserve_amount),
             averagePrice: decodeFromFields("u64", fields.average_price),
-            entryFundingIndex: decodeFromFields("u64", fields.entry_funding_index),
-            realizedHasProfit: decodeFromFields("bool", fields.realized_has_profit),
-            unrealizedCost: decodeFromFields("u64", fields.unrealized_cost),
+            entryBorrowIndex: decodeFromFields("u64", fields.entry_borrow_index),
+            entryFundingRateIndexSign: decodeFromFields("bool", fields.entry_funding_rate_index_sign),
+            entryFundingRateIndex: decodeFromFields("u64", fields.entry_funding_rate_index),
+            unrealizedLoss: decodeFromFields("u64", fields.unrealized_loss),
+            unrealizedFundingSign: decodeFromFields("bool", fields.unrealized_funding_sign),
+            unrealizedFundingFee: decodeFromFields("u64", fields.unrealized_funding_fee),
+            unrealizedBorrowFee: decodeFromFields("u64", fields.unrealized_borrow_fee),
             unrealizedRebate: decodeFromFields("u64", fields.unrealized_rebate),
             u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
         });
@@ -414,6 +456,8 @@ export class Position implements StructClass {
             id: decodeFromFieldsWithTypes(UID.reified(), item.fields.id),
             createTsMs: decodeFromFieldsWithTypes("u64", item.fields.create_ts_ms),
             positionId: decodeFromFieldsWithTypes("u64", item.fields.position_id),
+            linkedOrderIds: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.linked_order_ids),
+            linkedOrderPrices: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.linked_order_prices),
             user: decodeFromFieldsWithTypes("address", item.fields.user),
             isLong: decodeFromFieldsWithTypes("bool", item.fields.is_long),
             size: decodeFromFieldsWithTypes("u64", item.fields.size),
@@ -424,9 +468,13 @@ export class Position implements StructClass {
             collateralAmount: decodeFromFieldsWithTypes("u64", item.fields.collateral_amount),
             reserveAmount: decodeFromFieldsWithTypes("u64", item.fields.reserve_amount),
             averagePrice: decodeFromFieldsWithTypes("u64", item.fields.average_price),
-            entryFundingIndex: decodeFromFieldsWithTypes("u64", item.fields.entry_funding_index),
-            realizedHasProfit: decodeFromFieldsWithTypes("bool", item.fields.realized_has_profit),
-            unrealizedCost: decodeFromFieldsWithTypes("u64", item.fields.unrealized_cost),
+            entryBorrowIndex: decodeFromFieldsWithTypes("u64", item.fields.entry_borrow_index),
+            entryFundingRateIndexSign: decodeFromFieldsWithTypes("bool", item.fields.entry_funding_rate_index_sign),
+            entryFundingRateIndex: decodeFromFieldsWithTypes("u64", item.fields.entry_funding_rate_index),
+            unrealizedLoss: decodeFromFieldsWithTypes("u64", item.fields.unrealized_loss),
+            unrealizedFundingSign: decodeFromFieldsWithTypes("bool", item.fields.unrealized_funding_sign),
+            unrealizedFundingFee: decodeFromFieldsWithTypes("u64", item.fields.unrealized_funding_fee),
+            unrealizedBorrowFee: decodeFromFieldsWithTypes("u64", item.fields.unrealized_borrow_fee),
             unrealizedRebate: decodeFromFieldsWithTypes("u64", item.fields.unrealized_rebate),
             u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
         });
@@ -441,6 +489,8 @@ export class Position implements StructClass {
             id: this.id,
             createTsMs: this.createTsMs.toString(),
             positionId: this.positionId.toString(),
+            linkedOrderIds: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.linkedOrderIds),
+            linkedOrderPrices: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.linkedOrderPrices),
             user: this.user,
             isLong: this.isLong,
             size: this.size.toString(),
@@ -451,9 +501,13 @@ export class Position implements StructClass {
             collateralAmount: this.collateralAmount.toString(),
             reserveAmount: this.reserveAmount.toString(),
             averagePrice: this.averagePrice.toString(),
-            entryFundingIndex: this.entryFundingIndex.toString(),
-            realizedHasProfit: this.realizedHasProfit,
-            unrealizedCost: this.unrealizedCost.toString(),
+            entryBorrowIndex: this.entryBorrowIndex.toString(),
+            entryFundingRateIndexSign: this.entryFundingRateIndexSign,
+            entryFundingRateIndex: this.entryFundingRateIndex.toString(),
+            unrealizedLoss: this.unrealizedLoss.toString(),
+            unrealizedFundingSign: this.unrealizedFundingSign,
+            unrealizedFundingFee: this.unrealizedFundingFee.toString(),
+            unrealizedBorrowFee: this.unrealizedBorrowFee.toString(),
             unrealizedRebate: this.unrealizedRebate.toString(),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
         };
@@ -468,6 +522,8 @@ export class Position implements StructClass {
             id: decodeFromJSONField(UID.reified(), field.id),
             createTsMs: decodeFromJSONField("u64", field.createTsMs),
             positionId: decodeFromJSONField("u64", field.positionId),
+            linkedOrderIds: decodeFromJSONField(reified.vector("u64"), field.linkedOrderIds),
+            linkedOrderPrices: decodeFromJSONField(reified.vector("u64"), field.linkedOrderPrices),
             user: decodeFromJSONField("address", field.user),
             isLong: decodeFromJSONField("bool", field.isLong),
             size: decodeFromJSONField("u64", field.size),
@@ -478,9 +534,13 @@ export class Position implements StructClass {
             collateralAmount: decodeFromJSONField("u64", field.collateralAmount),
             reserveAmount: decodeFromJSONField("u64", field.reserveAmount),
             averagePrice: decodeFromJSONField("u64", field.averagePrice),
-            entryFundingIndex: decodeFromJSONField("u64", field.entryFundingIndex),
-            realizedHasProfit: decodeFromJSONField("bool", field.realizedHasProfit),
-            unrealizedCost: decodeFromJSONField("u64", field.unrealizedCost),
+            entryBorrowIndex: decodeFromJSONField("u64", field.entryBorrowIndex),
+            entryFundingRateIndexSign: decodeFromJSONField("bool", field.entryFundingRateIndexSign),
+            entryFundingRateIndex: decodeFromJSONField("u64", field.entryFundingRateIndex),
+            unrealizedLoss: decodeFromJSONField("u64", field.unrealizedLoss),
+            unrealizedFundingSign: decodeFromJSONField("bool", field.unrealizedFundingSign),
+            unrealizedFundingFee: decodeFromJSONField("u64", field.unrealizedFundingFee),
+            unrealizedBorrowFee: decodeFromJSONField("u64", field.unrealizedBorrowFee),
             unrealizedRebate: decodeFromJSONField("u64", field.unrealizedRebate),
             u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
         });
@@ -520,7 +580,7 @@ export class Position implements StructClass {
 
 export function isTradingOrder(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::position::TradingOrder";
+    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::TradingOrder";
 }
 
 export interface TradingOrderFields {
@@ -546,12 +606,12 @@ export interface TradingOrderFields {
 export type TradingOrderReified = Reified<TradingOrder, TradingOrderFields>;
 
 export class TradingOrder implements StructClass {
-    static readonly $typeName = "0x0::position::TradingOrder";
+    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::TradingOrder";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = TradingOrder.$typeName;
 
-    readonly $fullTypeName: "0x0::position::TradingOrder";
+    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::TradingOrder";
 
     readonly $typeArgs: [];
 
@@ -574,7 +634,10 @@ export class TradingOrder implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: TradingOrderFields) {
-        this.$fullTypeName = composeSuiType(TradingOrder.$typeName, ...typeArgs) as "0x0::position::TradingOrder";
+        this.$fullTypeName = composeSuiType(
+            TradingOrder.$typeName,
+            ...typeArgs
+        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::TradingOrder";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -599,7 +662,10 @@ export class TradingOrder implements StructClass {
     static reified(): TradingOrderReified {
         return {
             typeName: TradingOrder.$typeName,
-            fullTypeName: composeSuiType(TradingOrder.$typeName, ...[]) as "0x0::position::TradingOrder",
+            fullTypeName: composeSuiType(
+                TradingOrder.$typeName,
+                ...[]
+            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::TradingOrder",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => TradingOrder.fromFields(fields),

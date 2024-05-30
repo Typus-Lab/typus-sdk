@@ -1,3 +1,3 @@
-import { StructClassLoader } from "../../../_framework/loader";
+import {StructClassLoader} from "../../../_framework/loader";
 
-export function registerClasses(loader: StructClassLoader) {}
+export function registerClasses(loader: StructClassLoader) { }

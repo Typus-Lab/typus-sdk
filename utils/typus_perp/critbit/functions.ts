@@ -10,12 +10,12 @@ export function isEmpty(txb: TransactionBlock, typeArg: string, tree: ObjectArg)
     return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::is_empty`, typeArguments: [typeArg], arguments: [obj(txb, tree)] });
 }
 
-export function size(txb: TransactionBlock, typeArg: string, tree: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::size`, typeArguments: [typeArg], arguments: [obj(txb, tree)] });
-}
-
 export function new_(txb: TransactionBlock, typeArg: string) {
     return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::new`, typeArguments: [typeArg], arguments: [] });
+}
+
+export function size(txb: TransactionBlock, typeArg: string, tree: ObjectArg) {
+    return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::size`, typeArguments: [typeArg], arguments: [obj(txb, tree)] });
 }
 
 export function drop(txb: TransactionBlock, typeArg: string, tree: ObjectArg) {
