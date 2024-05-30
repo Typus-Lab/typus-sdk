@@ -269,3 +269,101 @@ export async function getLevelUpTx(input: {
 
     return input.tx;
 }
+
+/**
+    entry fun exp_up(
+        version: &Version,
+        tails_staking_registry: &mut TailsStakingRegistry,
+        typus_user_registry: &mut TypusUserRegistry,
+        tails: address,
+        amount: u64,
+        ctx: &TxContext,
+    ) {
+*/
+export async function getExpUpTx(input: {
+    tx: TransactionBlock;
+    typusPackageId: string;
+    typusEcosystemVersion: string;
+    typusTailsStakingRegistry: string;
+    typusUserRegistry: string;
+    tails: string;
+    amount: string;
+}) {
+    input.tx.moveCall({
+        target: `${input.typusPackageId}::tails_staking::exp_up`,
+        typeArguments: [],
+        arguments: [
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.typusTailsStakingRegistry),
+            input.tx.object(input.typusUserRegistry),
+            input.tx.pure(input.tails),
+            input.tx.pure(input.amount),
+        ],
+    });
+
+    return input.tx;
+}
+/**
+    entry fun exp_up_without_staking(
+        version: &Version,
+        tails_staking_registry: &TailsStakingRegistry,
+        typus_user_registry: &mut TypusUserRegistry,
+        kiosk: &mut Kiosk,
+        kiosk_owner_cap: &KioskOwnerCap,
+        tails: address,
+        amount: u64,
+        ctx: &TxContext,
+    ) {
+*/
+export async function getExpUpWithoutStakingTx(input: {
+    tx: TransactionBlock;
+    typusPackageId: string;
+    typusEcosystemVersion: string;
+    typusTailsStakingRegistry: string;
+    typusUserRegistry: string;
+    kiosk: string;
+    kioskCap: string;
+    tails: string;
+    amount: string;
+    personalKioskPackageId: string | undefined;
+}) {
+    if (input.personalKioskPackageId) {
+        const [personalKioskCap, borrow] = input.tx.moveCall({
+            target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
+            arguments: [input.tx.object(input.kioskCap)],
+        });
+        input.tx.moveCall({
+            target: `${input.typusPackageId}::tails_staking::exp_up_without_staking`,
+            typeArguments: [],
+            arguments: [
+                input.tx.object(input.typusEcosystemVersion),
+                input.tx.object(input.typusTailsStakingRegistry),
+                input.tx.object(input.typusUserRegistry),
+                input.tx.object(input.kiosk),
+                personalKioskCap,
+                input.tx.pure(input.tails),
+                input.tx.pure(input.amount),
+            ],
+        });
+        input.tx.moveCall({
+            target: `${input.personalKioskPackageId}::personal_kiosk::return_val`,
+            arguments: [input.tx.object(input.kioskCap), personalKioskCap, borrow],
+        });
+    } else {
+        input.tx.moveCall({
+            target: `${input.typusPackageId}::tails_staking::exp_up_without_staking`,
+            typeArguments: [],
+            arguments: [
+                input.tx.object(input.typusEcosystemVersion),
+                input.tx.object(input.typusTailsStakingRegistry),
+                input.tx.object(input.typusUserRegistry),
+                input.tx.object(input.kiosk),
+                input.tx.object(input.kioskCap),
+                input.tx.pure(input.tails),
+                input.tx.pure(input.amount),
+            ],
+        });
+    }
+
+    return input.tx;
+}
