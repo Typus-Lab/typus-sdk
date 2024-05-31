@@ -3,7 +3,7 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
 
 export const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-export async function getAirdrop(input: {
+export async function getUserMetadata(input: {
     provider: SuiClient;
     typusPackageId: string;
     typusEcosystemVersion: string;
