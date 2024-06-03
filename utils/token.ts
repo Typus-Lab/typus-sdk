@@ -8,6 +8,8 @@ export function typeArgsToAssets(typeArgs: string[]): string[] {
 export function typeArgToAsset(typeArg: string): string {
     let typeArgs = typeArg.split("::");
     switch (normalizeSuiAddress(typeArgs[0])) {
+        case "0x549e8b69270defbfafd4f94e17ec44cdbdd99820b33bda2278dea3b9a32d3f55":
+            return "VSUI";
         case "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881":
             return "WBTC";
         case "0xaf8cd5edc19c4512f4259f0bee101a40d41ebed738ade5874359610ef8eeced5":
