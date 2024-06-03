@@ -21,9 +21,12 @@ export async function getUserMetadata(input: {
         ],
     });
     let results = (await input.provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    // console.log(JSON.stringify(results));
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
+    // console.log(JSON.stringify(bytes));
     let reader = new BcsReader(new Uint8Array(bytes));
+    reader.readULEB();
     return reader.readVec((reader) => {
         return reader.read64();
     });

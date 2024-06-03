@@ -5,6 +5,7 @@ import { BcsReader } from "@mysten/bcs";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getVaults } from "../../utils/typus-dov-single-v2/view-function";
 import { getRankings } from "../../utils/leaderboard/view-function";
+import { getUserMetadata } from "../../utils/user/view-function";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import * as fs from "fs";
@@ -310,6 +311,18 @@ async function vi() {
     );
 }
 
+async function vii() {
+    console.log(
+        await getUserMetadata({
+            provider,
+            typusPackageId: config.PACKAGE.TYPUS_PACKAGE,
+            typusEcosystemVersion: config.TYPUS_VERSION,
+            typusUserRegistry: config.REGISTRY.USER_REGISTRY,
+            user: "0xd69a38a6502329237c7e749540d9a9be7746a6beec02e6b0fcffc7555f3ea479",
+        })
+    );
+}
+
 (async () => {
-    await vi();
+    await vii();
 })();
