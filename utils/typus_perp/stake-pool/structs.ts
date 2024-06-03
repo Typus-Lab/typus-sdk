@@ -24,7 +24,7 @@ import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
 export function isHarvestEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::HarvestEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::HarvestEvent";
 }
 
 export interface HarvestEventFields {
@@ -39,12 +39,12 @@ export interface HarvestEventFields {
 export type HarvestEventReified = Reified<HarvestEvent, HarvestEventFields>;
 
 export class HarvestEvent implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::HarvestEvent";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::HarvestEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = HarvestEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::HarvestEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::HarvestEvent";
 
     readonly $typeArgs: [];
 
@@ -59,7 +59,7 @@ export class HarvestEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             HarvestEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::HarvestEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::HarvestEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -76,7 +76,7 @@ export class HarvestEvent implements StructClass {
             fullTypeName: composeSuiType(
                 HarvestEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::HarvestEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::HarvestEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => HarvestEvent.fromFields(fields),
@@ -206,7 +206,7 @@ export class HarvestEvent implements StructClass {
 
 export function isUnsubscribeEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UnsubscribeEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UnsubscribeEvent";
 }
 
 export interface UnsubscribeEventFields {
@@ -223,12 +223,12 @@ export interface UnsubscribeEventFields {
 export type UnsubscribeEventReified = Reified<UnsubscribeEvent, UnsubscribeEventFields>;
 
 export class UnsubscribeEvent implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UnsubscribeEvent";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UnsubscribeEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UnsubscribeEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UnsubscribeEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UnsubscribeEvent";
 
     readonly $typeArgs: [];
 
@@ -245,7 +245,7 @@ export class UnsubscribeEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             UnsubscribeEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UnsubscribeEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UnsubscribeEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -264,7 +264,7 @@ export class UnsubscribeEvent implements StructClass {
             fullTypeName: composeSuiType(
                 UnsubscribeEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UnsubscribeEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UnsubscribeEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UnsubscribeEvent.fromFields(fields),
@@ -404,7 +404,7 @@ export class UnsubscribeEvent implements StructClass {
 
 export function isActivateIncentiveTokenEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::ActivateIncentiveTokenEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::ActivateIncentiveTokenEvent";
 }
 
 export interface ActivateIncentiveTokenEventFields {
@@ -418,12 +418,12 @@ export type ActivateIncentiveTokenEventReified = Reified<ActivateIncentiveTokenE
 
 export class ActivateIncentiveTokenEvent implements StructClass {
     static readonly $typeName =
-        "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::ActivateIncentiveTokenEvent";
+        "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::ActivateIncentiveTokenEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = ActivateIncentiveTokenEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::ActivateIncentiveTokenEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::ActivateIncentiveTokenEvent";
 
     readonly $typeArgs: [];
 
@@ -436,7 +436,7 @@ export class ActivateIncentiveTokenEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             ActivateIncentiveTokenEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::ActivateIncentiveTokenEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::ActivateIncentiveTokenEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -451,7 +451,7 @@ export class ActivateIncentiveTokenEvent implements StructClass {
             fullTypeName: composeSuiType(
                 ActivateIncentiveTokenEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::ActivateIncentiveTokenEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::ActivateIncentiveTokenEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => ActivateIncentiveTokenEvent.fromFields(fields),
@@ -571,7 +571,7 @@ export class ActivateIncentiveTokenEvent implements StructClass {
 
 export function isAddIncentiveTokenEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::AddIncentiveTokenEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::AddIncentiveTokenEvent";
 }
 
 export interface AddIncentiveTokenEventFields {
@@ -586,12 +586,12 @@ export interface AddIncentiveTokenEventFields {
 export type AddIncentiveTokenEventReified = Reified<AddIncentiveTokenEvent, AddIncentiveTokenEventFields>;
 
 export class AddIncentiveTokenEvent implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::AddIncentiveTokenEvent";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::AddIncentiveTokenEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = AddIncentiveTokenEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::AddIncentiveTokenEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::AddIncentiveTokenEvent";
 
     readonly $typeArgs: [];
 
@@ -606,7 +606,7 @@ export class AddIncentiveTokenEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             AddIncentiveTokenEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::AddIncentiveTokenEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::AddIncentiveTokenEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -623,7 +623,7 @@ export class AddIncentiveTokenEvent implements StructClass {
             fullTypeName: composeSuiType(
                 AddIncentiveTokenEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::AddIncentiveTokenEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::AddIncentiveTokenEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => AddIncentiveTokenEvent.fromFields(fields),
@@ -753,7 +753,7 @@ export class AddIncentiveTokenEvent implements StructClass {
 
 export function isDeactivateIncentiveTokenEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::DeactivateIncentiveTokenEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::DeactivateIncentiveTokenEvent";
 }
 
 export interface DeactivateIncentiveTokenEventFields {
@@ -767,12 +767,12 @@ export type DeactivateIncentiveTokenEventReified = Reified<DeactivateIncentiveTo
 
 export class DeactivateIncentiveTokenEvent implements StructClass {
     static readonly $typeName =
-        "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::DeactivateIncentiveTokenEvent";
+        "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::DeactivateIncentiveTokenEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = DeactivateIncentiveTokenEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::DeactivateIncentiveTokenEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::DeactivateIncentiveTokenEvent";
 
     readonly $typeArgs: [];
 
@@ -785,7 +785,7 @@ export class DeactivateIncentiveTokenEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             DeactivateIncentiveTokenEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::DeactivateIncentiveTokenEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::DeactivateIncentiveTokenEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -800,7 +800,7 @@ export class DeactivateIncentiveTokenEvent implements StructClass {
             fullTypeName: composeSuiType(
                 DeactivateIncentiveTokenEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::DeactivateIncentiveTokenEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::DeactivateIncentiveTokenEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => DeactivateIncentiveTokenEvent.fromFields(fields),
@@ -920,7 +920,7 @@ export class DeactivateIncentiveTokenEvent implements StructClass {
 
 export function isDepositIncentiveEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::DepositIncentiveEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::DepositIncentiveEvent";
 }
 
 export interface DepositIncentiveEventFields {
@@ -934,12 +934,12 @@ export interface DepositIncentiveEventFields {
 export type DepositIncentiveEventReified = Reified<DepositIncentiveEvent, DepositIncentiveEventFields>;
 
 export class DepositIncentiveEvent implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::DepositIncentiveEvent";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::DepositIncentiveEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = DepositIncentiveEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::DepositIncentiveEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::DepositIncentiveEvent";
 
     readonly $typeArgs: [];
 
@@ -953,7 +953,7 @@ export class DepositIncentiveEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             DepositIncentiveEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::DepositIncentiveEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::DepositIncentiveEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -969,7 +969,7 @@ export class DepositIncentiveEvent implements StructClass {
             fullTypeName: composeSuiType(
                 DepositIncentiveEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::DepositIncentiveEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::DepositIncentiveEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => DepositIncentiveEvent.fromFields(fields),
@@ -1094,7 +1094,7 @@ export class DepositIncentiveEvent implements StructClass {
 
 export function isHarvestPerUserShareEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::HarvestPerUserShareEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::HarvestPerUserShareEvent";
 }
 
 export interface HarvestPerUserShareEventFields {
@@ -1109,12 +1109,12 @@ export interface HarvestPerUserShareEventFields {
 export type HarvestPerUserShareEventReified = Reified<HarvestPerUserShareEvent, HarvestPerUserShareEventFields>;
 
 export class HarvestPerUserShareEvent implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::HarvestPerUserShareEvent";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::HarvestPerUserShareEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = HarvestPerUserShareEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::HarvestPerUserShareEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::HarvestPerUserShareEvent";
 
     readonly $typeArgs: [];
 
@@ -1129,7 +1129,7 @@ export class HarvestPerUserShareEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             HarvestPerUserShareEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::HarvestPerUserShareEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::HarvestPerUserShareEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -1146,7 +1146,7 @@ export class HarvestPerUserShareEvent implements StructClass {
             fullTypeName: composeSuiType(
                 HarvestPerUserShareEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::HarvestPerUserShareEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::HarvestPerUserShareEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => HarvestPerUserShareEvent.fromFields(fields),
@@ -1276,7 +1276,7 @@ export class HarvestPerUserShareEvent implements StructClass {
 
 export function isIncentive(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::Incentive";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::Incentive";
 }
 
 export interface IncentiveFields {
@@ -1288,12 +1288,12 @@ export interface IncentiveFields {
 export type IncentiveReified = Reified<Incentive, IncentiveFields>;
 
 export class Incentive implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::Incentive";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::Incentive";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = Incentive.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::Incentive";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::Incentive";
 
     readonly $typeArgs: [];
 
@@ -1305,7 +1305,7 @@ export class Incentive implements StructClass {
         this.$fullTypeName = composeSuiType(
             Incentive.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::Incentive";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::Incentive";
         this.$typeArgs = typeArgs;
 
         this.tokenType = fields.tokenType;
@@ -1319,7 +1319,7 @@ export class Incentive implements StructClass {
             fullTypeName: composeSuiType(
                 Incentive.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::Incentive",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::Incentive",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => Incentive.fromFields(fields),
@@ -1434,7 +1434,7 @@ export class Incentive implements StructClass {
 
 export function isIncentiveConfig(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::IncentiveConfig";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::IncentiveConfig";
 }
 
 export interface IncentiveConfigFields {
@@ -1446,12 +1446,12 @@ export interface IncentiveConfigFields {
 export type IncentiveConfigReified = Reified<IncentiveConfig, IncentiveConfigFields>;
 
 export class IncentiveConfig implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::IncentiveConfig";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::IncentiveConfig";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = IncentiveConfig.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::IncentiveConfig";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::IncentiveConfig";
 
     readonly $typeArgs: [];
 
@@ -1463,7 +1463,7 @@ export class IncentiveConfig implements StructClass {
         this.$fullTypeName = composeSuiType(
             IncentiveConfig.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::IncentiveConfig";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::IncentiveConfig";
         this.$typeArgs = typeArgs;
 
         this.periodIncentiveAmount = fields.periodIncentiveAmount;
@@ -1477,7 +1477,7 @@ export class IncentiveConfig implements StructClass {
             fullTypeName: composeSuiType(
                 IncentiveConfig.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::IncentiveConfig",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::IncentiveConfig",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => IncentiveConfig.fromFields(fields),
@@ -1592,7 +1592,7 @@ export class IncentiveConfig implements StructClass {
 
 export function isIncentiveInfo(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::IncentiveInfo";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::IncentiveInfo";
 }
 
 export interface IncentiveInfoFields {
@@ -1605,12 +1605,12 @@ export interface IncentiveInfoFields {
 export type IncentiveInfoReified = Reified<IncentiveInfo, IncentiveInfoFields>;
 
 export class IncentiveInfo implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::IncentiveInfo";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::IncentiveInfo";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = IncentiveInfo.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::IncentiveInfo";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::IncentiveInfo";
 
     readonly $typeArgs: [];
 
@@ -1623,7 +1623,7 @@ export class IncentiveInfo implements StructClass {
         this.$fullTypeName = composeSuiType(
             IncentiveInfo.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::IncentiveInfo";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::IncentiveInfo";
         this.$typeArgs = typeArgs;
 
         this.active = fields.active;
@@ -1638,7 +1638,7 @@ export class IncentiveInfo implements StructClass {
             fullTypeName: composeSuiType(
                 IncentiveInfo.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::IncentiveInfo",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::IncentiveInfo",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => IncentiveInfo.fromFields(fields),
@@ -1758,7 +1758,7 @@ export class IncentiveInfo implements StructClass {
 
 export function isLpUserShare(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::LpUserShare";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::LpUserShare";
 }
 
 export interface LpUserShareFields {
@@ -1776,12 +1776,12 @@ export interface LpUserShareFields {
 export type LpUserShareReified = Reified<LpUserShare, LpUserShareFields>;
 
 export class LpUserShare implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::LpUserShare";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::LpUserShare";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LpUserShare.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::LpUserShare";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::LpUserShare";
 
     readonly $typeArgs: [];
 
@@ -1799,7 +1799,7 @@ export class LpUserShare implements StructClass {
         this.$fullTypeName = composeSuiType(
             LpUserShare.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::LpUserShare";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::LpUserShare";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -1819,7 +1819,7 @@ export class LpUserShare implements StructClass {
             fullTypeName: composeSuiType(
                 LpUserShare.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::LpUserShare",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::LpUserShare",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LpUserShare.fromFields(fields),
@@ -1970,7 +1970,7 @@ export class LpUserShare implements StructClass {
 
 export function isNewStakePoolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::NewStakePoolEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::NewStakePoolEvent";
 }
 
 export interface NewStakePoolEventFields {
@@ -1983,12 +1983,12 @@ export interface NewStakePoolEventFields {
 export type NewStakePoolEventReified = Reified<NewStakePoolEvent, NewStakePoolEventFields>;
 
 export class NewStakePoolEvent implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::NewStakePoolEvent";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::NewStakePoolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = NewStakePoolEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::NewStakePoolEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::NewStakePoolEvent";
 
     readonly $typeArgs: [];
 
@@ -2001,7 +2001,7 @@ export class NewStakePoolEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             NewStakePoolEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::NewStakePoolEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::NewStakePoolEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -2016,7 +2016,7 @@ export class NewStakePoolEvent implements StructClass {
             fullTypeName: composeSuiType(
                 NewStakePoolEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::NewStakePoolEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::NewStakePoolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => NewStakePoolEvent.fromFields(fields),
@@ -2136,7 +2136,7 @@ export class NewStakePoolEvent implements StructClass {
 
 export function isRemoveIncentiveTokenEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::RemoveIncentiveTokenEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::RemoveIncentiveTokenEvent";
 }
 
 export interface RemoveIncentiveTokenEventFields {
@@ -2150,12 +2150,12 @@ export interface RemoveIncentiveTokenEventFields {
 export type RemoveIncentiveTokenEventReified = Reified<RemoveIncentiveTokenEvent, RemoveIncentiveTokenEventFields>;
 
 export class RemoveIncentiveTokenEvent implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::RemoveIncentiveTokenEvent";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::RemoveIncentiveTokenEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = RemoveIncentiveTokenEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::RemoveIncentiveTokenEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::RemoveIncentiveTokenEvent";
 
     readonly $typeArgs: [];
 
@@ -2169,7 +2169,7 @@ export class RemoveIncentiveTokenEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             RemoveIncentiveTokenEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::RemoveIncentiveTokenEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::RemoveIncentiveTokenEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -2185,7 +2185,7 @@ export class RemoveIncentiveTokenEvent implements StructClass {
             fullTypeName: composeSuiType(
                 RemoveIncentiveTokenEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::RemoveIncentiveTokenEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::RemoveIncentiveTokenEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => RemoveIncentiveTokenEvent.fromFields(fields),
@@ -2310,7 +2310,7 @@ export class RemoveIncentiveTokenEvent implements StructClass {
 
 export function isStakeEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakeEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakeEvent";
 }
 
 export interface StakeEventFields {
@@ -2327,12 +2327,12 @@ export interface StakeEventFields {
 export type StakeEventReified = Reified<StakeEvent, StakeEventFields>;
 
 export class StakeEvent implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakeEvent";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakeEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = StakeEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakeEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakeEvent";
 
     readonly $typeArgs: [];
 
@@ -2349,7 +2349,7 @@ export class StakeEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             StakeEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakeEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakeEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -2368,7 +2368,7 @@ export class StakeEvent implements StructClass {
             fullTypeName: composeSuiType(
                 StakeEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakeEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakeEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => StakeEvent.fromFields(fields),
@@ -2511,7 +2511,7 @@ export class StakeEvent implements StructClass {
 
 export function isStakePool(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePool";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePool";
 }
 
 export interface StakePoolFields {
@@ -2525,12 +2525,12 @@ export interface StakePoolFields {
 export type StakePoolReified = Reified<StakePool, StakePoolFields>;
 
 export class StakePool implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePool";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePool";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = StakePool.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePool";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePool";
 
     readonly $typeArgs: [];
 
@@ -2544,7 +2544,7 @@ export class StakePool implements StructClass {
         this.$fullTypeName = composeSuiType(
             StakePool.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePool";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePool";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -2560,7 +2560,7 @@ export class StakePool implements StructClass {
             fullTypeName: composeSuiType(
                 StakePool.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePool",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePool",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => StakePool.fromFields(fields),
@@ -2633,7 +2633,7 @@ export class StakePool implements StructClass {
             poolInfo: this.poolInfo.toJSONField(),
             config: this.config.toJSONField(),
             incentives: fieldToJSON<Vector<Incentive>>(
-                `vector<0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::Incentive>`,
+                `vector<0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::Incentive>`,
                 this.incentives
             ),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
@@ -2688,7 +2688,7 @@ export class StakePool implements StructClass {
 
 export function isStakePoolConfig(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolConfig";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolConfig";
 }
 
 export interface StakePoolConfigFields {
@@ -2699,12 +2699,12 @@ export interface StakePoolConfigFields {
 export type StakePoolConfigReified = Reified<StakePoolConfig, StakePoolConfigFields>;
 
 export class StakePoolConfig implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolConfig";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolConfig";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = StakePoolConfig.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolConfig";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolConfig";
 
     readonly $typeArgs: [];
 
@@ -2715,7 +2715,7 @@ export class StakePoolConfig implements StructClass {
         this.$fullTypeName = composeSuiType(
             StakePoolConfig.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolConfig";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolConfig";
         this.$typeArgs = typeArgs;
 
         this.unlockCountdownTsMs = fields.unlockCountdownTsMs;
@@ -2728,7 +2728,7 @@ export class StakePoolConfig implements StructClass {
             fullTypeName: composeSuiType(
                 StakePoolConfig.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolConfig",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolConfig",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => StakePoolConfig.fromFields(fields),
@@ -2838,7 +2838,7 @@ export class StakePoolConfig implements StructClass {
 
 export function isStakePoolInfo(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolInfo";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolInfo";
 }
 
 export interface StakePoolInfoFields {
@@ -2853,12 +2853,12 @@ export interface StakePoolInfoFields {
 export type StakePoolInfoReified = Reified<StakePoolInfo, StakePoolInfoFields>;
 
 export class StakePoolInfo implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolInfo";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolInfo";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = StakePoolInfo.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolInfo";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolInfo";
 
     readonly $typeArgs: [];
 
@@ -2873,7 +2873,7 @@ export class StakePoolInfo implements StructClass {
         this.$fullTypeName = composeSuiType(
             StakePoolInfo.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolInfo";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolInfo";
         this.$typeArgs = typeArgs;
 
         this.stakeToken = fields.stakeToken;
@@ -2890,7 +2890,7 @@ export class StakePoolInfo implements StructClass {
             fullTypeName: composeSuiType(
                 StakePoolInfo.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolInfo",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolInfo",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => StakePoolInfo.fromFields(fields),
@@ -3020,7 +3020,7 @@ export class StakePoolInfo implements StructClass {
 
 export function isStakePoolRegistry(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolRegistry";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolRegistry";
 }
 
 export interface StakePoolRegistryFields {
@@ -3031,12 +3031,12 @@ export interface StakePoolRegistryFields {
 export type StakePoolRegistryReified = Reified<StakePoolRegistry, StakePoolRegistryFields>;
 
 export class StakePoolRegistry implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolRegistry";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolRegistry";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = StakePoolRegistry.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolRegistry";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolRegistry";
 
     readonly $typeArgs: [];
 
@@ -3047,7 +3047,7 @@ export class StakePoolRegistry implements StructClass {
         this.$fullTypeName = composeSuiType(
             StakePoolRegistry.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolRegistry";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolRegistry";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -3060,7 +3060,7 @@ export class StakePoolRegistry implements StructClass {
             fullTypeName: composeSuiType(
                 StakePoolRegistry.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::StakePoolRegistry",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::StakePoolRegistry",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => StakePoolRegistry.fromFields(fields),
@@ -3170,7 +3170,7 @@ export class StakePoolRegistry implements StructClass {
 
 export function isUnstakeEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UnstakeEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UnstakeEvent";
 }
 
 export interface UnstakeEventFields {
@@ -3186,12 +3186,12 @@ export interface UnstakeEventFields {
 export type UnstakeEventReified = Reified<UnstakeEvent, UnstakeEventFields>;
 
 export class UnstakeEvent implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UnstakeEvent";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UnstakeEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UnstakeEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UnstakeEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UnstakeEvent";
 
     readonly $typeArgs: [];
 
@@ -3207,7 +3207,7 @@ export class UnstakeEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             UnstakeEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UnstakeEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UnstakeEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -3225,7 +3225,7 @@ export class UnstakeEvent implements StructClass {
             fullTypeName: composeSuiType(
                 UnstakeEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UnstakeEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UnstakeEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UnstakeEvent.fromFields(fields),
@@ -3360,7 +3360,7 @@ export class UnstakeEvent implements StructClass {
 
 export function isUpdateIncentiveConfigEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UpdateIncentiveConfigEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UpdateIncentiveConfigEvent";
 }
 
 export interface UpdateIncentiveConfigEventFields {
@@ -3375,12 +3375,12 @@ export type UpdateIncentiveConfigEventReified = Reified<UpdateIncentiveConfigEve
 
 export class UpdateIncentiveConfigEvent implements StructClass {
     static readonly $typeName =
-        "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UpdateIncentiveConfigEvent";
+        "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UpdateIncentiveConfigEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UpdateIncentiveConfigEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UpdateIncentiveConfigEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UpdateIncentiveConfigEvent";
 
     readonly $typeArgs: [];
 
@@ -3394,7 +3394,7 @@ export class UpdateIncentiveConfigEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             UpdateIncentiveConfigEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UpdateIncentiveConfigEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UpdateIncentiveConfigEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -3410,7 +3410,7 @@ export class UpdateIncentiveConfigEvent implements StructClass {
             fullTypeName: composeSuiType(
                 UpdateIncentiveConfigEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UpdateIncentiveConfigEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UpdateIncentiveConfigEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UpdateIncentiveConfigEvent.fromFields(fields),
@@ -3535,7 +3535,7 @@ export class UpdateIncentiveConfigEvent implements StructClass {
 
 export function isUpdateUnlockCountdownTsMsEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UpdateUnlockCountdownTsMsEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UpdateUnlockCountdownTsMsEvent";
 }
 
 export interface UpdateUnlockCountdownTsMsEventFields {
@@ -3550,12 +3550,12 @@ export type UpdateUnlockCountdownTsMsEventReified = Reified<UpdateUnlockCountdow
 
 export class UpdateUnlockCountdownTsMsEvent implements StructClass {
     static readonly $typeName =
-        "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UpdateUnlockCountdownTsMsEvent";
+        "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UpdateUnlockCountdownTsMsEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UpdateUnlockCountdownTsMsEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UpdateUnlockCountdownTsMsEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UpdateUnlockCountdownTsMsEvent";
 
     readonly $typeArgs: [];
 
@@ -3569,7 +3569,7 @@ export class UpdateUnlockCountdownTsMsEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             UpdateUnlockCountdownTsMsEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UpdateUnlockCountdownTsMsEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UpdateUnlockCountdownTsMsEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -3585,7 +3585,7 @@ export class UpdateUnlockCountdownTsMsEvent implements StructClass {
             fullTypeName: composeSuiType(
                 UpdateUnlockCountdownTsMsEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::UpdateUnlockCountdownTsMsEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::UpdateUnlockCountdownTsMsEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UpdateUnlockCountdownTsMsEvent.fromFields(fields),
@@ -3710,7 +3710,7 @@ export class UpdateUnlockCountdownTsMsEvent implements StructClass {
 
 export function isWithdrawIncentiveEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::WithdrawIncentiveEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::WithdrawIncentiveEvent";
 }
 
 export interface WithdrawIncentiveEventFields {
@@ -3724,12 +3724,12 @@ export interface WithdrawIncentiveEventFields {
 export type WithdrawIncentiveEventReified = Reified<WithdrawIncentiveEvent, WithdrawIncentiveEventFields>;
 
 export class WithdrawIncentiveEvent implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::WithdrawIncentiveEvent";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::WithdrawIncentiveEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = WithdrawIncentiveEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::WithdrawIncentiveEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::WithdrawIncentiveEvent";
 
     readonly $typeArgs: [];
 
@@ -3743,7 +3743,7 @@ export class WithdrawIncentiveEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             WithdrawIncentiveEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::WithdrawIncentiveEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::WithdrawIncentiveEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -3759,7 +3759,7 @@ export class WithdrawIncentiveEvent implements StructClass {
             fullTypeName: composeSuiType(
                 WithdrawIncentiveEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::WithdrawIncentiveEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::WithdrawIncentiveEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => WithdrawIncentiveEvent.fromFields(fields),

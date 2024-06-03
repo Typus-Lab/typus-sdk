@@ -18,7 +18,7 @@ import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
 export function isPythPrice(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::oracle::PythPrice";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::oracle::PythPrice";
 }
 
 export interface PythPriceFields {
@@ -31,12 +31,12 @@ export interface PythPriceFields {
 export type PythPriceReified = Reified<PythPrice, PythPriceFields>;
 
 export class PythPrice implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::oracle::PythPrice";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::oracle::PythPrice";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = PythPrice.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::oracle::PythPrice";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::oracle::PythPrice";
 
     readonly $typeArgs: [];
 
@@ -49,7 +49,7 @@ export class PythPrice implements StructClass {
         this.$fullTypeName = composeSuiType(
             PythPrice.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::oracle::PythPrice";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::oracle::PythPrice";
         this.$typeArgs = typeArgs;
 
         this.price = fields.price;
@@ -64,7 +64,7 @@ export class PythPrice implements StructClass {
             fullTypeName: composeSuiType(
                 PythPrice.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::oracle::PythPrice",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::oracle::PythPrice",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => PythPrice.fromFields(fields),
@@ -184,7 +184,7 @@ export class PythPrice implements StructClass {
 
 export function isPythPriceInfoObject(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::oracle::PythPriceInfoObject";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::oracle::PythPriceInfoObject";
 }
 
 export interface PythPriceInfoObjectFields {
@@ -194,12 +194,12 @@ export interface PythPriceInfoObjectFields {
 export type PythPriceInfoObjectReified = Reified<PythPriceInfoObject, PythPriceInfoObjectFields>;
 
 export class PythPriceInfoObject implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::oracle::PythPriceInfoObject";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::oracle::PythPriceInfoObject";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = PythPriceInfoObject.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::oracle::PythPriceInfoObject";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::oracle::PythPriceInfoObject";
 
     readonly $typeArgs: [];
 
@@ -209,7 +209,7 @@ export class PythPriceInfoObject implements StructClass {
         this.$fullTypeName = composeSuiType(
             PythPriceInfoObject.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::oracle::PythPriceInfoObject";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::oracle::PythPriceInfoObject";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -221,7 +221,7 @@ export class PythPriceInfoObject implements StructClass {
             fullTypeName: composeSuiType(
                 PythPriceInfoObject.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::oracle::PythPriceInfoObject",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::oracle::PythPriceInfoObject",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => PythPriceInfoObject.fromFields(fields),

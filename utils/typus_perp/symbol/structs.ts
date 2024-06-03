@@ -18,7 +18,7 @@ import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
 export function isSymbol(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::symbol::Symbol";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::symbol::Symbol";
 }
 
 export interface SymbolFields {
@@ -29,12 +29,12 @@ export interface SymbolFields {
 export type SymbolReified = Reified<Symbol, SymbolFields>;
 
 export class Symbol implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::symbol::Symbol";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::symbol::Symbol";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = Symbol.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::symbol::Symbol";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::symbol::Symbol";
 
     readonly $typeArgs: [];
 
@@ -45,7 +45,7 @@ export class Symbol implements StructClass {
         this.$fullTypeName = composeSuiType(
             Symbol.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::symbol::Symbol";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::symbol::Symbol";
         this.$typeArgs = typeArgs;
 
         this.baseToken = fields.baseToken;
@@ -58,7 +58,7 @@ export class Symbol implements StructClass {
             fullTypeName: composeSuiType(
                 Symbol.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::symbol::Symbol",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::symbol::Symbol",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => Symbol.fromFields(fields),

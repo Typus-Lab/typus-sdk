@@ -345,7 +345,7 @@ export function storeUserShares(txb: TransactionBlock, args: StoreUserSharesArgs
         arguments: [
             obj(txb, args.id),
             pure(txb, args.user, `address`),
-            vector(txb, `0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::stake_pool::LpUserShare`, args.userShares),
+            vector(txb, `0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::LpUserShare`, args.userShares),
         ],
     });
 }

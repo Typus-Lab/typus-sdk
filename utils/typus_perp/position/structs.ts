@@ -24,7 +24,7 @@ import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
 export function isOrderFilledEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::OrderFilledEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::OrderFilledEvent";
 }
 
 export interface OrderFilledEventFields {
@@ -45,12 +45,12 @@ export interface OrderFilledEventFields {
 export type OrderFilledEventReified = Reified<OrderFilledEvent, OrderFilledEventFields>;
 
 export class OrderFilledEvent implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::OrderFilledEvent";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::OrderFilledEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = OrderFilledEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::OrderFilledEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::OrderFilledEvent";
 
     readonly $typeArgs: [];
 
@@ -71,7 +71,7 @@ export class OrderFilledEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             OrderFilledEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::OrderFilledEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::OrderFilledEvent";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -94,7 +94,7 @@ export class OrderFilledEvent implements StructClass {
             fullTypeName: composeSuiType(
                 OrderFilledEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::OrderFilledEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::OrderFilledEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => OrderFilledEvent.fromFields(fields),
@@ -254,7 +254,7 @@ export class OrderFilledEvent implements StructClass {
 
 export function isPosition(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::Position";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::Position";
 }
 
 export interface PositionFields {
@@ -287,12 +287,12 @@ export interface PositionFields {
 export type PositionReified = Reified<Position, PositionFields>;
 
 export class Position implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::Position";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::Position";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = Position.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::Position";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::Position";
 
     readonly $typeArgs: [];
 
@@ -325,7 +325,7 @@ export class Position implements StructClass {
         this.$fullTypeName = composeSuiType(
             Position.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::Position";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::Position";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -360,7 +360,7 @@ export class Position implements StructClass {
             fullTypeName: composeSuiType(
                 Position.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::Position",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::Position",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => Position.fromFields(fields),
@@ -580,7 +580,7 @@ export class Position implements StructClass {
 
 export function isTradingOrder(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::TradingOrder";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::TradingOrder";
 }
 
 export interface TradingOrderFields {
@@ -606,12 +606,12 @@ export interface TradingOrderFields {
 export type TradingOrderReified = Reified<TradingOrder, TradingOrderFields>;
 
 export class TradingOrder implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::TradingOrder";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::TradingOrder";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = TradingOrder.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::TradingOrder";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::TradingOrder";
 
     readonly $typeArgs: [];
 
@@ -637,7 +637,7 @@ export class TradingOrder implements StructClass {
         this.$fullTypeName = composeSuiType(
             TradingOrder.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::TradingOrder";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::TradingOrder";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -665,7 +665,7 @@ export class TradingOrder implements StructClass {
             fullTypeName: composeSuiType(
                 TradingOrder.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::TradingOrder",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::TradingOrder",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => TradingOrder.fromFields(fields),

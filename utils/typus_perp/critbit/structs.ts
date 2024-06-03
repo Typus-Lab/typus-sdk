@@ -27,7 +27,7 @@ import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
 export function isCritbitTree(type: string): boolean {
     type = compressSuiType(type);
-    return type.startsWith("0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::CritbitTree<");
+    return type.startsWith("0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::CritbitTree<");
 }
 
 export interface CritbitTreeFields<V extends TypeArgument> {
@@ -43,12 +43,12 @@ export interface CritbitTreeFields<V extends TypeArgument> {
 export type CritbitTreeReified<V extends TypeArgument> = Reified<CritbitTree<V>, CritbitTreeFields<V>>;
 
 export class CritbitTree<V extends TypeArgument> implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::CritbitTree";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::CritbitTree";
     static readonly $numTypeParams = 1;
 
     readonly $typeName = CritbitTree.$typeName;
 
-    readonly $fullTypeName: `0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::CritbitTree<${ToTypeStr<V>}>`;
+    readonly $fullTypeName: `0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::CritbitTree<${ToTypeStr<V>}>`;
 
     readonly $typeArgs: [ToTypeStr<V>];
 
@@ -64,7 +64,7 @@ export class CritbitTree<V extends TypeArgument> implements StructClass {
         this.$fullTypeName = composeSuiType(
             CritbitTree.$typeName,
             ...typeArgs
-        ) as `0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::CritbitTree<${ToTypeStr<V>}>`;
+        ) as `0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::CritbitTree<${ToTypeStr<V>}>`;
         this.$typeArgs = typeArgs;
 
         this.root = fields.root;
@@ -82,7 +82,7 @@ export class CritbitTree<V extends TypeArgument> implements StructClass {
             fullTypeName: composeSuiType(
                 CritbitTree.$typeName,
                 ...[extractType(V)]
-            ) as `0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::CritbitTree<${ToTypeStr<ToTypeArgument<V>>}>`,
+            ) as `0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::CritbitTree<${ToTypeStr<ToTypeArgument<V>>}>`,
             typeArgs: [extractType(V)] as [ToTypeStr<ToTypeArgument<V>>],
             reifiedTypeArgs: [V],
             fromFields: (fields: Record<string, any>) => CritbitTree.fromFields(V, fields),
@@ -238,7 +238,7 @@ export class CritbitTree<V extends TypeArgument> implements StructClass {
 
 export function isInternalNode(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::InternalNode";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::InternalNode";
 }
 
 export interface InternalNodeFields {
@@ -251,12 +251,12 @@ export interface InternalNodeFields {
 export type InternalNodeReified = Reified<InternalNode, InternalNodeFields>;
 
 export class InternalNode implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::InternalNode";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::InternalNode";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = InternalNode.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::InternalNode";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::InternalNode";
 
     readonly $typeArgs: [];
 
@@ -269,7 +269,7 @@ export class InternalNode implements StructClass {
         this.$fullTypeName = composeSuiType(
             InternalNode.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::InternalNode";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::InternalNode";
         this.$typeArgs = typeArgs;
 
         this.mask = fields.mask;
@@ -284,7 +284,7 @@ export class InternalNode implements StructClass {
             fullTypeName: composeSuiType(
                 InternalNode.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::InternalNode",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::InternalNode",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => InternalNode.fromFields(fields),
@@ -404,7 +404,7 @@ export class InternalNode implements StructClass {
 
 export function isLeaf(type: string): boolean {
     type = compressSuiType(type);
-    return type.startsWith("0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::Leaf<");
+    return type.startsWith("0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::Leaf<");
 }
 
 export interface LeafFields<V extends TypeArgument> {
@@ -416,12 +416,12 @@ export interface LeafFields<V extends TypeArgument> {
 export type LeafReified<V extends TypeArgument> = Reified<Leaf<V>, LeafFields<V>>;
 
 export class Leaf<V extends TypeArgument> implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::Leaf";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::Leaf";
     static readonly $numTypeParams = 1;
 
     readonly $typeName = Leaf.$typeName;
 
-    readonly $fullTypeName: `0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::Leaf<${ToTypeStr<V>}>`;
+    readonly $fullTypeName: `0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::Leaf<${ToTypeStr<V>}>`;
 
     readonly $typeArgs: [ToTypeStr<V>];
 
@@ -433,7 +433,7 @@ export class Leaf<V extends TypeArgument> implements StructClass {
         this.$fullTypeName = composeSuiType(
             Leaf.$typeName,
             ...typeArgs
-        ) as `0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::Leaf<${ToTypeStr<V>}>`;
+        ) as `0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::Leaf<${ToTypeStr<V>}>`;
         this.$typeArgs = typeArgs;
 
         this.key = fields.key;
@@ -447,7 +447,7 @@ export class Leaf<V extends TypeArgument> implements StructClass {
             fullTypeName: composeSuiType(
                 Leaf.$typeName,
                 ...[extractType(V)]
-            ) as `0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::critbit::Leaf<${ToTypeStr<ToTypeArgument<V>>}>`,
+            ) as `0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::critbit::Leaf<${ToTypeStr<ToTypeArgument<V>>}>`,
             typeArgs: [extractType(V)] as [ToTypeStr<ToTypeArgument<V>>],
             reifiedTypeArgs: [V],
             fromFields: (fields: Record<string, any>) => Leaf.fromFields(V, fields),

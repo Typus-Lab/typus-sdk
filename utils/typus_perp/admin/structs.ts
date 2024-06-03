@@ -23,7 +23,7 @@ import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
 export function isVersion(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::Version";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::Version";
 }
 
 export interface VersionFields {
@@ -38,12 +38,12 @@ export interface VersionFields {
 export type VersionReified = Reified<Version, VersionFields>;
 
 export class Version implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::Version";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::Version";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = Version.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::Version";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::Version";
 
     readonly $typeArgs: [];
 
@@ -58,7 +58,7 @@ export class Version implements StructClass {
         this.$fullTypeName = composeSuiType(
             Version.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::Version";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::Version";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -75,7 +75,7 @@ export class Version implements StructClass {
             fullTypeName: composeSuiType(
                 Version.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::Version",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::Version",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => Version.fromFields(fields),
@@ -207,7 +207,7 @@ export class Version implements StructClass {
 
 export function isManagerCap(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::ManagerCap";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::ManagerCap";
 }
 
 export interface ManagerCapFields {
@@ -217,12 +217,12 @@ export interface ManagerCapFields {
 export type ManagerCapReified = Reified<ManagerCap, ManagerCapFields>;
 
 export class ManagerCap implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::ManagerCap";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::ManagerCap";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = ManagerCap.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::ManagerCap";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::ManagerCap";
 
     readonly $typeArgs: [];
 
@@ -232,7 +232,7 @@ export class ManagerCap implements StructClass {
         this.$fullTypeName = composeSuiType(
             ManagerCap.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::ManagerCap";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::ManagerCap";
         this.$typeArgs = typeArgs;
 
         this.dummyField = fields.dummyField;
@@ -244,7 +244,7 @@ export class ManagerCap implements StructClass {
             fullTypeName: composeSuiType(
                 ManagerCap.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::ManagerCap",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::ManagerCap",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => ManagerCap.fromFields(fields),
@@ -343,7 +343,7 @@ export class ManagerCap implements StructClass {
 
 export function isFeeInfo(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeeInfo";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::FeeInfo";
 }
 
 export interface FeeInfoFields {
@@ -354,12 +354,12 @@ export interface FeeInfoFields {
 export type FeeInfoReified = Reified<FeeInfo, FeeInfoFields>;
 
 export class FeeInfo implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeeInfo";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::FeeInfo";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = FeeInfo.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeeInfo";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::FeeInfo";
 
     readonly $typeArgs: [];
 
@@ -370,7 +370,7 @@ export class FeeInfo implements StructClass {
         this.$fullTypeName = composeSuiType(
             FeeInfo.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeeInfo";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::FeeInfo";
         this.$typeArgs = typeArgs;
 
         this.token = fields.token;
@@ -383,7 +383,7 @@ export class FeeInfo implements StructClass {
             fullTypeName: composeSuiType(
                 FeeInfo.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeeInfo",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::FeeInfo",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => FeeInfo.fromFields(fields),
@@ -493,7 +493,7 @@ export class FeeInfo implements StructClass {
 
 export function isFeePool(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeePool";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::FeePool";
 }
 
 export interface FeePoolFields {
@@ -504,12 +504,12 @@ export interface FeePoolFields {
 export type FeePoolReified = Reified<FeePool, FeePoolFields>;
 
 export class FeePool implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeePool";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::FeePool";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = FeePool.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeePool";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::FeePool";
 
     readonly $typeArgs: [];
 
@@ -520,7 +520,7 @@ export class FeePool implements StructClass {
         this.$fullTypeName = composeSuiType(
             FeePool.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeePool";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::FeePool";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -533,7 +533,7 @@ export class FeePool implements StructClass {
             fullTypeName: composeSuiType(
                 FeePool.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeePool",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::FeePool",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => FeePool.fromFields(fields),
@@ -595,7 +595,7 @@ export class FeePool implements StructClass {
         return {
             id: this.id,
             feeInfos: fieldToJSON<Vector<FeeInfo>>(
-                `vector<0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::FeeInfo>`,
+                `vector<0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::FeeInfo>`,
                 this.feeInfos
             ),
         };
@@ -646,7 +646,7 @@ export class FeePool implements StructClass {
 
 export function isSendFeeEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::SendFeeEvent";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::SendFeeEvent";
 }
 
 export interface SendFeeEventFields {
@@ -657,12 +657,12 @@ export interface SendFeeEventFields {
 export type SendFeeEventReified = Reified<SendFeeEvent, SendFeeEventFields>;
 
 export class SendFeeEvent implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::SendFeeEvent";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::SendFeeEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = SendFeeEvent.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::SendFeeEvent";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::SendFeeEvent";
 
     readonly $typeArgs: [];
 
@@ -673,7 +673,7 @@ export class SendFeeEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             SendFeeEvent.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::SendFeeEvent";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::SendFeeEvent";
         this.$typeArgs = typeArgs;
 
         this.token = fields.token;
@@ -686,7 +686,7 @@ export class SendFeeEvent implements StructClass {
             fullTypeName: composeSuiType(
                 SendFeeEvent.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::admin::SendFeeEvent",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::admin::SendFeeEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => SendFeeEvent.fromFields(fields),

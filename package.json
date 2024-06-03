@@ -6,9 +6,11 @@
     "dependencies": {
         "@mysten/bcs": "^0.11.1",
         "@mysten/kiosk": "0.7.12",
-        "@mysten/sui.js": "0.48.0",
+        "@mysten/sui.js": "0.54.1",
         "@pythnetwork/client": "^2.21.0",
+        "@pythnetwork/pyth-sui-js": "^2.0.0",
         "@solana/web3.js": "^1.91.8",
+        "@typemove/sui": "^1.6.1",
         "@types/node": "^20.5.7",
         "aftermath-ts-sdk": "^1.1.14",
         "bignumber.js": "^9.1.1",

@@ -26,7 +26,7 @@ export function orderFilled(txb: TransactionBlock, typeArg: string, args: OrderF
         arguments: [
             obj(txb, args.version),
             obj(txb, args.order),
-            option(txb, `0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::Position`, args.originalPosition),
+            option(txb, `0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::Position`, args.originalPosition),
             pure(txb, args.nextPositionId, `u64`),
             pure(txb, args.collateralOraclePrice, `u64`),
             pure(txb, args.collateralOraclePriceDecimal, `u64`),
@@ -554,7 +554,7 @@ export function orderFilledWithBidReceiptsCollateral(
             obj(txb, args.dovRegistry),
             obj(txb, args.typusOracle),
             obj(txb, args.order),
-            option(txb, `0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::position::Position`, args.originalPosition),
+            option(txb, `0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::Position`, args.originalPosition),
             pure(txb, args.nextPositionId, `u64`),
             pure(txb, args.collateralOraclePrice, `u64`),
             pure(txb, args.collateralOraclePriceDecimal, `u64`),

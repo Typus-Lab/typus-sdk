@@ -18,7 +18,7 @@ import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
 export function isTreasuryCaps(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::treasury_caps::TreasuryCaps";
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::treasury_caps::TreasuryCaps";
 }
 
 export interface TreasuryCapsFields {
@@ -28,12 +28,12 @@ export interface TreasuryCapsFields {
 export type TreasuryCapsReified = Reified<TreasuryCaps, TreasuryCapsFields>;
 
 export class TreasuryCaps implements StructClass {
-    static readonly $typeName = "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::treasury_caps::TreasuryCaps";
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::treasury_caps::TreasuryCaps";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = TreasuryCaps.$typeName;
 
-    readonly $fullTypeName: "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::treasury_caps::TreasuryCaps";
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::treasury_caps::TreasuryCaps";
 
     readonly $typeArgs: [];
 
@@ -43,7 +43,7 @@ export class TreasuryCaps implements StructClass {
         this.$fullTypeName = composeSuiType(
             TreasuryCaps.$typeName,
             ...typeArgs
-        ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::treasury_caps::TreasuryCaps";
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::treasury_caps::TreasuryCaps";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -55,7 +55,7 @@ export class TreasuryCaps implements StructClass {
             fullTypeName: composeSuiType(
                 TreasuryCaps.$typeName,
                 ...[]
-            ) as "0x4c83d54c5b4fa3096550131d62cc28f01594a88e3a7ed2acb3fda8888ec653df::treasury_caps::TreasuryCaps",
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::treasury_caps::TreasuryCaps",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => TreasuryCaps.fromFields(fields),
