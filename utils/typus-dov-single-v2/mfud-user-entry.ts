@@ -7,7 +7,6 @@ export function getRaiseFundTx(input: {
     typusUserRegistry: string;
     typusLeaderboardRegistry: string;
     typusFrameworkOriginPackageId: string;
-    typusFrameworkPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
     typusTokenPackageId: string;
@@ -25,7 +24,7 @@ export function getRaiseFundTx(input: {
     let typusToken = input.tx.moveCall({
         target: `${input.typusTokenPackageId}::${input.typusTokenType.split("::")[1]}::mint`,
         arguments: [
-            input.tx.object(input.typusTokenPackageId),
+            input.tx.object(input.typusTokenRegistry),
             input.tx.makeMoveVec({ objects: input.raiseCoins }),
             input.tx.pure(input.raiseAmount),
         ],
