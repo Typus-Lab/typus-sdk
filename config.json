@@ -46,7 +46,9 @@
             "SUI": "0xeb6b3e3300ff884604ead6172b0aeadee3854980cab65a7feb57300b04b74cc1",
             "TURBOS": "0x819ff07b5768d7b9b428b69b123140f6a74b04eaa978a4cbab9055025bd1536d",
             "WBTC": "0x61813dc2e46dba41b14507857827f0ed7e99b0be242548828769728b81c8fab5",
-            "WETH": "0x253bbaaa35275240cf6df03258489707ea059762831e4102ebaabafd442bc935"
+            "WETH": "0x253bbaaa35275240cf6df03258489707ea059762831e4102ebaabafd442bc935",
+            "VSUI": "0x454a942594b52fbe08f7bab38c4ee3f677564a23ac1636dc21231f6fb5fc4538",
+            "HASUI": "0xae6f3bb346766afa6165190b78419316947b431d135e152a2f0324932caba33c"
         }
     },
     "TESTNET": {
