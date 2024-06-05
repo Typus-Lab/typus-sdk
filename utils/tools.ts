@@ -1,3 +1,5 @@
+import BigNumber from "bignumber.js";
+
 export function U64FromBytes(x) {
     var u64 = BigInt(0);
     for (var i = 0; i < x.length; i++) {
@@ -14,3 +16,23 @@ export function AddressFromBytes(x) {
     }
     return address;
 }
+
+export const insertAt = (str: string, sub: string, pos: number) => `${str.slice(0, pos)}${sub}${str.slice(pos)}`;
+
+export const checkNumber = (str: any) => {
+    if (typeof str != "string") return false; // we only process strings!
+    return (
+        // @ts-ignore
+        !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+        !isNaN(parseFloat(str))
+    ); // ...and ensure strings of whitespace fail
+};
+
+export const countFloating = (value: number | BigNumber) => {
+    let num = BigNumber(value).toFixed().replace(/,/g, "");
+    if (value instanceof BigNumber) {
+        num = value.toFixed().replace(/,/g, "");
+    }
+    if (!num.includes(".")) return 0;
+    return num.split(".")[1].length;
+};

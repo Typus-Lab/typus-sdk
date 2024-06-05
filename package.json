@@ -2,11 +2,20 @@
     "name": "@typus/typus-sdk",
     "author": "Typus",
     "description": "typus sdk",
+<<<<<<< HEAD
     "version": "1.2.87-tails-exp",
+=======
+    "version": "1.2.86",
+>>>>>>> main
     "dependencies": {
         "@mysten/bcs": "^0.11.1",
         "@mysten/kiosk": "0.8.10",
         "@mysten/sui.js": "0.54.1",
+<<<<<<< HEAD
+=======
+        "@pythnetwork/client": "^2.21.0",
+        "@solana/web3.js": "^1.91.8",
+>>>>>>> main
         "@types/node": "^20.5.7",
         "aftermath-ts-sdk": "^1.1.14",
         "bignumber.js": "^9.1.1",
@@ -33,12 +42,13 @@
         "js-tokens": "^8.0.1",
         "js-yaml": "^4.1.0",
         "json2csv": "^6.0.0-alpha.2",
+        "lodash": "^4.17.21",
         "math-erf": "^1.0.0",
         "minimatch": "^9.0.3",
         "minimist": "^1.2.5",
         "mkdirp": "^3.0.1",
         "mocha": "^10.1.0",
-        "moment": "^2.29.4",
+        "moment": "^2.30.1",
         "node-cron": "^3.0.2",
         "once": "^1.4.0",
         "path-is-absolute": "^2.0.0",
