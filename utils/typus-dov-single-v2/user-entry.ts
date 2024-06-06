@@ -42,7 +42,7 @@ export function getRaiseFundTx(input: {
                   typeArguments: [input.typeArguments[0]],
                   arguments: [
                       input.tx.pure(input.user),
-                      input.tx.makeMoveVec({ objects: [input.tx.gas] }),
+                      input.tx.makeMoveVec({ objects: [input.tx.splitCoins(input.tx.gas, [input.tx.pure(input.raiseAmount)])] }),
                       input.tx.pure(input.raiseAmount),
                   ],
               })
@@ -51,10 +51,7 @@ export function getRaiseFundTx(input: {
                   typeArguments: [input.typeArguments[0]],
                   arguments: [
                       input.tx.pure(input.user),
-                      input.tx.makeMoveVec({
-                          type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          objects: input.raiseCoins,
-                      }),
+                      input.tx.makeMoveVec({ objects: input.raiseCoins.map((coin) => input.tx.object(coin)) }),
                       input.tx.pure(input.raiseAmount),
                   ],
               });
