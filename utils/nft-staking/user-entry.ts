@@ -354,14 +354,14 @@ export async function getSnapshotTx(
     gasBudget: number,
     typusEcosystemVersion: string,
     typusUserRegistry: string,
-    nftPackageId: string,
+    typusDovSinglePackageId: string,
     registry: string,
     amount: string
 ) {
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${nftPackageId}::tails_staking::snapshot`,
+        target: `${typusDovSinglePackageId}::tails_staking::snapshot`,
         typeArguments: [],
         arguments: [tx.object(typusEcosystemVersion), tx.object(typusUserRegistry), tx.object(registry), tx.pure(amount)],
     });
