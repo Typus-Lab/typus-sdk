@@ -88,7 +88,7 @@ const gasBudget = 100000000;
         isLong: true,
         isStopOrder: false,
         size: BigInt(1000000000000),
-        triggerPrice: BigInt(1),
+        triggerPrice: BigInt(200000000),
     });
 
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
