@@ -17,8 +17,10 @@ import {
 } from "../../_framework/reified";
 import { FieldsWithTypes, composeSuiType, compressSuiType } from "../../_framework/util";
 import { Symbol } from "../symbol/structs";
-import { bcs, fromB64, fromHEX, toHEX } from "@mysten/bcs";
+import { BcsReader, bcs, fromB64, fromHEX, toHEX } from "@mysten/bcs";
 import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
+import { AddressFromBytes } from "../../tools";
+import { baseToken, quoteToken } from "../symbol/functions";
 
 /* ============================== OrderFilledEvent =============================== */
 
@@ -292,6 +294,42 @@ export interface PositionFields {
 }
 
 export type PositionReified = Reified<Position, PositionFields>;
+
+export function readVecPosition(bytes: Uint8Array) {
+    let reader = new BcsReader(bytes);
+    return reader.readVec((reader) => {
+        reader.read16();
+        let position = {
+            id: AddressFromBytes(reader.readBytes(32)),
+            create_ts_ms: reader.read64(),
+            position_id: reader.read64(),
+            linked_order_ids: reader.readVec((reader) => reader.read64()),
+            linked_order_prices: reader.readVec((reader) => reader.read64()),
+            user: AddressFromBytes(reader.readBytes(32)),
+            is_long: reader.read8(),
+            size: reader.read64(),
+            size_decimal: reader.read64(),
+            collateral_token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            collateral_token_decimal: reader.read64(),
+            baseToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            quoteToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            collateral_amount: reader.read64(),
+            reserve_amount: reader.read64(),
+            average_price: reader.read64(),
+            entry_borrow_index: reader.read64(),
+            entry_funding_rate_index_sign: reader.read8(),
+            entry_funding_rate_index: reader.read64(),
+            unrealized_loss: reader.read64(),
+            unrealized_funding_sign: reader.read8(),
+            unrealized_funding_fee: reader.read64(),
+            unrealized_borrow_fee: reader.read64(),
+            unrealized_rebate: reader.read64(),
+            u64_padding: reader.readVec((reader) => reader.read64()),
+        };
+
+        return position;
+    });
+}
 
 export class Position implements StructClass {
     static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::Position";
