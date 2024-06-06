@@ -153,7 +153,7 @@ export async function getAuctionMaxSize(
         transactionBlock.pure(additional_config_registry),
         transactionBlock.pure(index),
         transactionBlock.pure(priceOracle),
-        transactionBlock.pure(CLOCK),
+        transactionBlock.object(CLOCK),
     ];
     transactionBlock.moveCall({
         target,
@@ -182,7 +182,7 @@ export async function getMaxLossPerUnit(
         transactionBlock.pure(additional_config_registry),
         transactionBlock.pure(index),
         transactionBlock.pure(priceOracle),
-        transactionBlock.pure(CLOCK),
+        transactionBlock.object(CLOCK),
     ];
     transactionBlock.moveCall({
         target,

@@ -50,7 +50,7 @@ export function getRaiseFundTx(input: {
             input.tx.object(typusTokenBalance),
             input.tx.pure(input.raiseFromPremium),
             input.tx.pure(input.raiseFromInactive),
-            input.tx.pure(CLOCK),
+            input.tx.object(CLOCK),
         ],
     });
     input.tx.transferObjects([input.tx.object(result[0])], input.user);
@@ -98,7 +98,7 @@ export function getReduceFundTx(input: {
             input.tx.pure(input.reduceFromPremium),
             input.tx.pure(input.reduceFromInactive),
             input.tx.pure(input.reduceFromIncentive),
-            input.tx.pure(CLOCK),
+            input.tx.object(CLOCK),
         ],
     });
     input.tx.moveCall({
@@ -203,7 +203,7 @@ export function getDepositTx(input: {
                 type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                 objects: input.receipts.map((id) => input.tx.object(id)),
             }),
-            input.tx.pure(CLOCK),
+            input.tx.object(CLOCK),
         ],
     });
     input.tx.moveCall({
