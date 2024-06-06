@@ -37,6 +37,6 @@ const gasBudget = 100000000;
     const returnValues = res.results[0].returnValues[0][0];
     // console.log(returnValues);
 
-    const positions = readVecOrder(Uint8Array.from(returnValues));
-    console.log(positions);
+    const orders = readVecOrder(Uint8Array.from(returnValues));
+    console.log(orders);
 })();
