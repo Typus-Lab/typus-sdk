@@ -188,7 +188,7 @@ export function getRefreshDepositSnapshotTx(input: {
                 type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                 objects: input.receipts.map((receipt) => input.tx.object(receipt)),
             }),
-            input.tx.pure(CLOCK),
+            input.tx.object(CLOCK),
         ],
     });
     input.tx.transferObjects([input.tx.object(result[0])], input.user);
