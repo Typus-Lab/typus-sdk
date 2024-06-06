@@ -657,6 +657,39 @@ export interface TradingOrderFields {
 
 export type TradingOrderReified = Reified<TradingOrder, TradingOrderFields>;
 
+export function readVecOrder(bytes: Uint8Array) {
+    let reader = new BcsReader(bytes);
+    return reader.readVec((reader) => {
+        reader.read16();
+        let order = {
+            id: AddressFromBytes(reader.readBytes(32)),
+            create_ts_ms: reader.read64(),
+            order_id: reader.read64(),
+            linked_position_id: reader
+                .readVec((reader) => {
+                    return reader.read64();
+                })
+                .at(0),
+            user: AddressFromBytes(reader.readBytes(32)),
+            collateral_token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            collateral_token_decimal: reader.read64(),
+            baseToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            quoteToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            leverage_pct: reader.read64(),
+            reduce_only: reader.read8(),
+            is_long: reader.read8(),
+            is_stop_order: reader.read8(),
+            size: reader.read64(),
+            size_decimal: reader.read64(),
+            trigger_price: reader.read64(),
+            oracle_price_when_placing: reader.read64(),
+            u64_padding: reader.readVec((reader) => reader.read64()),
+        };
+
+        return order;
+    });
+}
+
 export class TradingOrder implements StructClass {
     static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::TradingOrder";
     static readonly $numTypeParams = 0;
