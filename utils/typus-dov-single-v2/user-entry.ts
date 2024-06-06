@@ -34,18 +34,30 @@ export function getRaiseFundTx(input: {
     raiseFromInactive: boolean;
     user: string;
 }) {
-    let raiseBalance = input.tx.moveCall({
-        target: `${input.typusFrameworkPackageId}::utils::delegate_extract_balance`,
-        typeArguments: [input.typeArguments[0]],
-        arguments: [
-            input.tx.pure(input.user),
-            input.tx.makeMoveVec({
-                type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                objects: input.raiseCoins,
-            }),
-            input.tx.pure(input.raiseAmount),
-        ],
-    });
+    let raiseBalance =
+        input.typeArguments[0] == "0x2::sui::SUI" ||
+        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
+            ? input.tx.moveCall({
+                  target: `${input.typusFrameworkPackageId}::utils::delegate_extract_balance`,
+                  typeArguments: [input.typeArguments[0]],
+                  arguments: [
+                      input.tx.pure(input.user),
+                      input.tx.makeMoveVec({ objects: [input.tx.gas] }),
+                      input.tx.pure(input.raiseAmount),
+                  ],
+              })
+            : input.tx.moveCall({
+                  target: `${input.typusFrameworkPackageId}::utils::delegate_extract_balance`,
+                  typeArguments: [input.typeArguments[0]],
+                  arguments: [
+                      input.tx.pure(input.user),
+                      input.tx.makeMoveVec({
+                          type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
+                          objects: input.raiseCoins,
+                      }),
+                      input.tx.pure(input.raiseAmount),
+                  ],
+              });
     let result = input.tx.moveCall({
         target: `${input.typusDovSinglePackageId}::tds_user_entry::public_raise_fund`,
         typeArguments: input.typeArguments,
