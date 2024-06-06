@@ -3,7 +3,10 @@ import { ObjectArg, obj, pure } from "../../_framework/util";
 import { TransactionArgument, TransactionBlock } from "@mysten/sui.js/transactions";
 
 export function init(txb: TransactionBlock) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::trading::init`, arguments: [] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::trading::init`,
+        arguments: [],
+    });
 }
 
 export interface IncreaseCollateralArgs {
@@ -351,8 +354,7 @@ export interface CreateTradingOrderArgs {
     typusUserRegistry: ObjectArg;
     typusLeaderboardRegistry: ObjectArg;
     linkedPositionId: bigint | TransactionArgument | TransactionArgument | null;
-    collateralCoin: ObjectArg;
-    leveragePct: bigint | TransactionArgument;
+    collateral: ObjectArg;
     reduceOnly: boolean | TransactionArgument;
     isLong: boolean | TransactionArgument;
     isStopOrder: boolean | TransactionArgument;
@@ -378,8 +380,7 @@ export function createTradingOrder(txb: TransactionBlock, typeArgs: [string, str
             obj(txb, args.typusUserRegistry),
             obj(txb, args.typusLeaderboardRegistry),
             pure(txb, args.linkedPositionId, `0x1::option::Option<u64>`),
-            obj(txb, args.collateralCoin),
-            pure(txb, args.leveragePct, `u64`),
+            obj(txb, args.collateral),
             pure(txb, args.reduceOnly, `bool`),
             pure(txb, args.isLong, `bool`),
             pure(txb, args.isStopOrder, `bool`),
@@ -580,7 +581,10 @@ export interface GetMarketArgs {
 }
 
 export function getMarket(txb: TransactionBlock, args: GetMarketArgs) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::trading::get_market`, arguments: [obj(txb, args.id), pure(txb, args.index, `u64`)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::trading::get_market`,
+        arguments: [obj(txb, args.id), pure(txb, args.index, `u64`)],
+    });
 }
 
 export interface GetMutMarketArgs {
@@ -738,29 +742,6 @@ export function newMarkets(txb: TransactionBlock, typeArgs: [string, string], ar
         target: `${PUBLISHED_AT}::trading::new_markets`,
         typeArguments: typeArgs,
         arguments: [obj(txb, args.version), obj(txb, args.registry), pure(txb, args.protocolFeeShareBp, `u64`)],
-    });
-}
-
-export interface RemoveLinkedOptionCollateralOrdersArgs {
-    version: ObjectArg;
-    marketIndex: bigint | TransactionArgument;
-    symbolMarket: ObjectArg;
-    linkedOrderIds: Array<bigint | TransactionArgument> | TransactionArgument;
-    linkedOrderPrices: Array<bigint | TransactionArgument> | TransactionArgument;
-    user: string | TransactionArgument;
-}
-
-export function removeLinkedOptionCollateralOrders(txb: TransactionBlock, args: RemoveLinkedOptionCollateralOrdersArgs) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::trading::remove_linked_option_collateral_orders`,
-        arguments: [
-            obj(txb, args.version),
-            pure(txb, args.marketIndex, `u64`),
-            obj(txb, args.symbolMarket),
-            pure(txb, args.linkedOrderIds, `vector<u64>`),
-            pure(txb, args.linkedOrderPrices, `vector<u64>`),
-            pure(txb, args.user, `address`),
-        ],
     });
 }
 

@@ -111,7 +111,10 @@ export class Version implements StructClass {
             fee_pool: FeePool.bcs,
             liquidator_fee_pool: FeePool.bcs,
             authority: VecSet.bcs(
-                bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) })
+                bcs.bytes(32).transform({
+                    input: (val: string) => fromHEX(val),
+                    output: (val: Uint8Array) => toHEX(val),
+                })
             ),
             u64_padding: bcs.vector(bcs.u64()),
         });
@@ -159,7 +162,11 @@ export class Version implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): Version {
@@ -280,7 +287,9 @@ export class ManagerCap implements StructClass {
     }
 
     static fromFields(fields: Record<string, any>): ManagerCap {
-        return ManagerCap.reified().new({ dummyField: decodeFromFields("bool", fields.dummy_field) });
+        return ManagerCap.reified().new({
+            dummyField: decodeFromFields("bool", fields.dummy_field),
+        });
     }
 
     static fromFieldsWithTypes(item: FieldsWithTypes): ManagerCap {
@@ -288,7 +297,9 @@ export class ManagerCap implements StructClass {
             throw new Error("not a ManagerCap type");
         }
 
-        return ManagerCap.reified().new({ dummyField: decodeFromFieldsWithTypes("bool", item.fields.dummy_field) });
+        return ManagerCap.reified().new({
+            dummyField: decodeFromFieldsWithTypes("bool", item.fields.dummy_field),
+        });
     }
 
     static fromBcs(data: Uint8Array): ManagerCap {
@@ -302,11 +313,17 @@ export class ManagerCap implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): ManagerCap {
-        return ManagerCap.reified().new({ dummyField: decodeFromJSONField("bool", field.dummyField) });
+        return ManagerCap.reified().new({
+            dummyField: decodeFromJSONField("bool", field.dummyField),
+        });
     }
 
     static fromJSON(json: Record<string, any>): ManagerCap {
@@ -449,7 +466,11 @@ export class FeeInfo implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): FeeInfo {
@@ -602,7 +623,11 @@ export class FeePool implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): FeePool {
@@ -752,7 +777,11 @@ export class SendFeeEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): SendFeeEvent {

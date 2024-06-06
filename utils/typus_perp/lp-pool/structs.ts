@@ -102,7 +102,10 @@ export class Config implements StructClass {
 
     static get bcs() {
         return bcs.struct("Config", {
-            oracle_id: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            oracle_id: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             liquidity_token_decimal: bcs.u64(),
             spot_config: SpotConfig.bcs,
             margin_config: MarginConfig.bcs,
@@ -149,7 +152,11 @@ export class Config implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): Config {
@@ -344,7 +351,11 @@ export class State implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): State {
@@ -387,6 +398,168 @@ export class State implements StructClass {
             throw new Error(`object at id ${id} is not a State object`);
         }
         return State.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
+/* ============================== Registry =============================== */
+
+export function isRegistry(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry";
+}
+
+export interface RegistryFields {
+    id: ToField<UID>;
+    numPool: ToField<"u64">;
+    liquidityPoolRegistry: ToField<UID>;
+}
+
+export type RegistryReified = Reified<Registry, RegistryFields>;
+
+export class Registry implements StructClass {
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = Registry.$typeName;
+
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry";
+
+    readonly $typeArgs: [];
+
+    readonly id: ToField<UID>;
+    readonly numPool: ToField<"u64">;
+    readonly liquidityPoolRegistry: ToField<UID>;
+
+    private constructor(typeArgs: [], fields: RegistryFields) {
+        this.$fullTypeName = composeSuiType(
+            Registry.$typeName,
+            ...typeArgs
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry";
+        this.$typeArgs = typeArgs;
+
+        this.id = fields.id;
+        this.numPool = fields.numPool;
+        this.liquidityPoolRegistry = fields.liquidityPoolRegistry;
+    }
+
+    static reified(): RegistryReified {
+        return {
+            typeName: Registry.$typeName,
+            fullTypeName: composeSuiType(
+                Registry.$typeName,
+                ...[]
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => Registry.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => Registry.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => Registry.fromBcs(data),
+            bcs: Registry.bcs,
+            fromJSONField: (field: any) => Registry.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => Registry.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => Registry.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => Registry.fetch(client, id),
+            new: (fields: RegistryFields) => {
+                return new Registry([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return Registry.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<Registry>> {
+        return phantom(Registry.reified());
+    }
+    static get p() {
+        return Registry.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("Registry", {
+            id: UID.bcs,
+            num_pool: bcs.u64(),
+            liquidity_pool_registry: UID.bcs,
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): Registry {
+        return Registry.reified().new({
+            id: decodeFromFields(UID.reified(), fields.id),
+            numPool: decodeFromFields("u64", fields.num_pool),
+            liquidityPoolRegistry: decodeFromFields(UID.reified(), fields.liquidity_pool_registry),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): Registry {
+        if (!isRegistry(item.type)) {
+            throw new Error("not a Registry type");
+        }
+
+        return Registry.reified().new({
+            id: decodeFromFieldsWithTypes(UID.reified(), item.fields.id),
+            numPool: decodeFromFieldsWithTypes("u64", item.fields.num_pool),
+            liquidityPoolRegistry: decodeFromFieldsWithTypes(UID.reified(), item.fields.liquidity_pool_registry),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): Registry {
+        return Registry.fromFields(Registry.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            id: this.id,
+            numPool: this.numPool.toString(),
+            liquidityPoolRegistry: this.liquidityPoolRegistry,
+        };
+    }
+
+    toJSON() {
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
+    }
+
+    static fromJSONField(field: any): Registry {
+        return Registry.reified().new({
+            id: decodeFromJSONField(UID.reified(), field.id),
+            numPool: decodeFromJSONField("u64", field.numPool),
+            liquidityPoolRegistry: decodeFromJSONField(UID.reified(), field.liquidityPoolRegistry),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): Registry {
+        if (json.$typeName !== Registry.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return Registry.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): Registry {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isRegistry(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a Registry object`);
+        }
+        return Registry.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<Registry> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching Registry object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isRegistry(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a Registry object`);
+        }
+        return Registry.fromBcs(fromB64(res.data.bcs.bcsBytes));
     }
 }
 
@@ -477,7 +650,10 @@ export class AddLiquidityTokenEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("AddLiquidityTokenEvent", {
-            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            sender: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             index: bcs.u64(),
             token_type: TypeName.bcs,
             config: Config.bcs,
@@ -528,7 +704,11 @@ export class AddLiquidityTokenEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): AddLiquidityTokenEvent {
@@ -668,7 +848,10 @@ export class BurnLpEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("BurnLpEvent", {
-            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            sender: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             index: bcs.u64(),
             lp_token_type: TypeName.bcs,
             burn_lp_amount: bcs.u64(),
@@ -731,7 +914,11 @@ export class BurnLpEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): BurnLpEvent {
@@ -933,7 +1120,11 @@ export class LiquidityPool implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): LiquidityPool {
@@ -1103,7 +1294,11 @@ export class LiquidityPoolInfo implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): LiquidityPoolInfo {
@@ -1290,7 +1485,11 @@ export class MarginConfig implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): MarginConfig {
@@ -1431,7 +1630,10 @@ export class MintLpEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("MintLpEvent", {
-            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            sender: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             index: bcs.u64(),
             liquidity_token_type: TypeName.bcs,
             deposit_amount: bcs.u64(),
@@ -1494,7 +1696,11 @@ export class MintLpEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): MintLpEvent {
@@ -1625,7 +1831,10 @@ export class NewLiquidityPoolEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("NewLiquidityPoolEvent", {
-            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            sender: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             index: bcs.u64(),
             lp_token_type: TypeName.bcs,
             lp_token_decimal: bcs.u64(),
@@ -1672,7 +1881,11 @@ export class NewLiquidityPoolEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): NewLiquidityPoolEvent {
@@ -1712,164 +1925,6 @@ export class NewLiquidityPoolEvent implements StructClass {
             throw new Error(`object at id ${id} is not a NewLiquidityPoolEvent object`);
         }
         return NewLiquidityPoolEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
-    }
-}
-
-/* ============================== Registry =============================== */
-
-export function isRegistry(type: string): boolean {
-    type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry";
-}
-
-export interface RegistryFields {
-    id: ToField<UID>;
-    numPool: ToField<"u64">;
-    liquidityPoolRegistry: ToField<UID>;
-}
-
-export type RegistryReified = Reified<Registry, RegistryFields>;
-
-export class Registry implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry";
-    static readonly $numTypeParams = 0;
-
-    readonly $typeName = Registry.$typeName;
-
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry";
-
-    readonly $typeArgs: [];
-
-    readonly id: ToField<UID>;
-    readonly numPool: ToField<"u64">;
-    readonly liquidityPoolRegistry: ToField<UID>;
-
-    private constructor(typeArgs: [], fields: RegistryFields) {
-        this.$fullTypeName = composeSuiType(
-            Registry.$typeName,
-            ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry";
-        this.$typeArgs = typeArgs;
-
-        this.id = fields.id;
-        this.numPool = fields.numPool;
-        this.liquidityPoolRegistry = fields.liquidityPoolRegistry;
-    }
-
-    static reified(): RegistryReified {
-        return {
-            typeName: Registry.$typeName,
-            fullTypeName: composeSuiType(
-                Registry.$typeName,
-                ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry",
-            typeArgs: [] as [],
-            reifiedTypeArgs: [],
-            fromFields: (fields: Record<string, any>) => Registry.fromFields(fields),
-            fromFieldsWithTypes: (item: FieldsWithTypes) => Registry.fromFieldsWithTypes(item),
-            fromBcs: (data: Uint8Array) => Registry.fromBcs(data),
-            bcs: Registry.bcs,
-            fromJSONField: (field: any) => Registry.fromJSONField(field),
-            fromJSON: (json: Record<string, any>) => Registry.fromJSON(json),
-            fromSuiParsedData: (content: SuiParsedData) => Registry.fromSuiParsedData(content),
-            fetch: async (client: SuiClient, id: string) => Registry.fetch(client, id),
-            new: (fields: RegistryFields) => {
-                return new Registry([], fields);
-            },
-            kind: "StructClassReified",
-        };
-    }
-
-    static get r() {
-        return Registry.reified();
-    }
-
-    static phantom(): PhantomReified<ToTypeStr<Registry>> {
-        return phantom(Registry.reified());
-    }
-    static get p() {
-        return Registry.phantom();
-    }
-
-    static get bcs() {
-        return bcs.struct("Registry", {
-            id: UID.bcs,
-            num_pool: bcs.u64(),
-            liquidity_pool_registry: UID.bcs,
-        });
-    }
-
-    static fromFields(fields: Record<string, any>): Registry {
-        return Registry.reified().new({
-            id: decodeFromFields(UID.reified(), fields.id),
-            numPool: decodeFromFields("u64", fields.num_pool),
-            liquidityPoolRegistry: decodeFromFields(UID.reified(), fields.liquidity_pool_registry),
-        });
-    }
-
-    static fromFieldsWithTypes(item: FieldsWithTypes): Registry {
-        if (!isRegistry(item.type)) {
-            throw new Error("not a Registry type");
-        }
-
-        return Registry.reified().new({
-            id: decodeFromFieldsWithTypes(UID.reified(), item.fields.id),
-            numPool: decodeFromFieldsWithTypes("u64", item.fields.num_pool),
-            liquidityPoolRegistry: decodeFromFieldsWithTypes(UID.reified(), item.fields.liquidity_pool_registry),
-        });
-    }
-
-    static fromBcs(data: Uint8Array): Registry {
-        return Registry.fromFields(Registry.bcs.parse(data));
-    }
-
-    toJSONField() {
-        return {
-            id: this.id,
-            numPool: this.numPool.toString(),
-            liquidityPoolRegistry: this.liquidityPoolRegistry,
-        };
-    }
-
-    toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
-    }
-
-    static fromJSONField(field: any): Registry {
-        return Registry.reified().new({
-            id: decodeFromJSONField(UID.reified(), field.id),
-            numPool: decodeFromJSONField("u64", field.numPool),
-            liquidityPoolRegistry: decodeFromJSONField(UID.reified(), field.liquidityPoolRegistry),
-        });
-    }
-
-    static fromJSON(json: Record<string, any>): Registry {
-        if (json.$typeName !== Registry.$typeName) {
-            throw new Error("not a WithTwoGenerics json object");
-        }
-
-        return Registry.fromJSONField(json);
-    }
-
-    static fromSuiParsedData(content: SuiParsedData): Registry {
-        if (content.dataType !== "moveObject") {
-            throw new Error("not an object");
-        }
-        if (!isRegistry(content.type)) {
-            throw new Error(`object at ${(content.fields as any).id} is not a Registry object`);
-        }
-        return Registry.fromFieldsWithTypes(content);
-    }
-
-    static async fetch(client: SuiClient, id: string): Promise<Registry> {
-        const res = await client.getObject({ id, options: { showBcs: true } });
-        if (res.error) {
-            throw new Error(`error fetching Registry object at id ${id}: ${res.error.code}`);
-        }
-        if (res.data?.bcs?.dataType !== "moveObject" || !isRegistry(res.data.bcs.type)) {
-            throw new Error(`object at id ${id} is not a Registry object`);
-        }
-        return Registry.fromBcs(fromB64(res.data.bcs.bcsBytes));
     }
 }
 
@@ -1951,7 +2006,10 @@ export class ResumePoolEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("ResumePoolEvent", {
-            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            sender: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             index: bcs.u64(),
             u64_padding: bcs.vector(bcs.u64()),
         });
@@ -1990,7 +2048,11 @@ export class ResumePoolEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): ResumePoolEvent {
@@ -2112,7 +2174,10 @@ export class ResumeTokenPoolEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("ResumeTokenPoolEvent", {
-            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            sender: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             index: bcs.u64(),
             liquidity_token: TypeName.bcs,
             u64_padding: bcs.vector(bcs.u64()),
@@ -2155,7 +2220,11 @@ export class ResumeTokenPoolEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): ResumeTokenPoolEvent {
@@ -2363,7 +2432,11 @@ export class SpotConfig implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): SpotConfig {
@@ -2489,7 +2562,10 @@ export class SuspendPoolEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("SuspendPoolEvent", {
-            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            sender: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             index: bcs.u64(),
             u64_padding: bcs.vector(bcs.u64()),
         });
@@ -2528,7 +2604,11 @@ export class SuspendPoolEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): SuspendPoolEvent {
@@ -2650,7 +2730,10 @@ export class SuspendTokenPoolEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("SuspendTokenPoolEvent", {
-            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            sender: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             index: bcs.u64(),
             liquidity_token: TypeName.bcs,
             u64_padding: bcs.vector(bcs.u64()),
@@ -2693,7 +2776,11 @@ export class SuspendTokenPoolEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): SuspendTokenPoolEvent {
@@ -2834,7 +2921,10 @@ export class SwapEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("SwapEvent", {
-            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            sender: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             index: bcs.u64(),
             from_token_type: TypeName.bcs,
             from_amount: bcs.u64(),
@@ -2901,7 +2991,11 @@ export class SwapEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): SwapEvent {
@@ -3066,7 +3160,11 @@ export class TokenPool implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): TokenPool {
@@ -3259,7 +3357,11 @@ export class UpdateFundingInfoEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): UpdateFundingInfoEvent {
@@ -3392,7 +3494,10 @@ export class UpdateMarginConfigEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("UpdateMarginConfigEvent", {
-            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            sender: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             index: bcs.u64(),
             liquidity_token_type: TypeName.bcs,
             previous_margin_config: MarginConfig.bcs,
@@ -3443,7 +3548,11 @@ export class UpdateMarginConfigEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): UpdateMarginConfigEvent {
@@ -3574,7 +3683,10 @@ export class UpdateSpotConfigEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("UpdateSpotConfigEvent", {
-            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            sender: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             index: bcs.u64(),
             liquidity_token_type: TypeName.bcs,
             previous_spot_config: SpotConfig.bcs,
@@ -3625,7 +3737,11 @@ export class UpdateSpotConfigEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): UpdateSpotConfigEvent {

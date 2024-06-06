@@ -3,23 +3,43 @@ import { GenericArg, ObjectArg, generic, obj, pure } from "../../_framework/util
 import { TransactionArgument, TransactionBlock } from "@mysten/sui.js/transactions";
 
 export function destroyEmpty(txb: TransactionBlock, typeArg: string, tree: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::destroy_empty`, typeArguments: [typeArg], arguments: [obj(txb, tree)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::critbit::destroy_empty`,
+        typeArguments: [typeArg],
+        arguments: [obj(txb, tree)],
+    });
 }
 
 export function isEmpty(txb: TransactionBlock, typeArg: string, tree: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::is_empty`, typeArguments: [typeArg], arguments: [obj(txb, tree)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::critbit::is_empty`,
+        typeArguments: [typeArg],
+        arguments: [obj(txb, tree)],
+    });
 }
 
 export function new_(txb: TransactionBlock, typeArg: string) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::new`, typeArguments: [typeArg], arguments: [] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::critbit::new`,
+        typeArguments: [typeArg],
+        arguments: [],
+    });
 }
 
 export function size(txb: TransactionBlock, typeArg: string, tree: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::size`, typeArguments: [typeArg], arguments: [obj(txb, tree)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::critbit::size`,
+        typeArguments: [typeArg],
+        arguments: [obj(txb, tree)],
+    });
 }
 
 export function drop(txb: TransactionBlock, typeArg: string, tree: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::drop`, typeArguments: [typeArg], arguments: [obj(txb, tree)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::critbit::drop`,
+        typeArguments: [typeArg],
+        arguments: [obj(txb, tree)],
+    });
 }
 
 export interface BorrowLeafByIndexArgs {
@@ -75,7 +95,10 @@ export function borrowMutLeafByKey(txb: TransactionBlock, typeArg: string, args:
 }
 
 export function countLeadingZeros(txb: TransactionBlock, x: bigint | TransactionArgument) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::count_leading_zeros`, arguments: [pure(txb, x, `u128`)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::critbit::count_leading_zeros`,
+        arguments: [pure(txb, x, `u128`)],
+    });
 }
 
 export interface FindClosestKeyArgs {
@@ -172,11 +195,19 @@ export function leftMostLeaf(txb: TransactionBlock, typeArg: string, args: LeftM
 }
 
 export function maxLeaf(txb: TransactionBlock, typeArg: string, tree: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::max_leaf`, typeArguments: [typeArg], arguments: [obj(txb, tree)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::critbit::max_leaf`,
+        typeArguments: [typeArg],
+        arguments: [obj(txb, tree)],
+    });
 }
 
 export function minLeaf(txb: TransactionBlock, typeArg: string, tree: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::min_leaf`, typeArguments: [typeArg], arguments: [obj(txb, tree)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::critbit::min_leaf`,
+        typeArguments: [typeArg],
+        arguments: [obj(txb, tree)],
+    });
 }
 
 export interface NextLeafArgs {
@@ -232,11 +263,19 @@ export function removeLeafByKey(txb: TransactionBlock, typeArg: string, args: Re
 }
 
 export function removeMaxLeaf(txb: TransactionBlock, typeArg: string, tree: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::remove_max_leaf`, typeArguments: [typeArg], arguments: [obj(txb, tree)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::critbit::remove_max_leaf`,
+        typeArguments: [typeArg],
+        arguments: [obj(txb, tree)],
+    });
 }
 
 export function removeMinLeaf(txb: TransactionBlock, typeArg: string, tree: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::critbit::remove_min_leaf`, typeArguments: [typeArg], arguments: [obj(txb, tree)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::critbit::remove_min_leaf`,
+        typeArguments: [typeArg],
+        arguments: [obj(txb, tree)],
+    });
 }
 
 export interface RightMostLeafArgs {

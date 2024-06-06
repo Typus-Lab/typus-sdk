@@ -153,7 +153,11 @@ export class AddTradingSymbolEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): AddTradingSymbolEvent {
@@ -289,7 +293,10 @@ export class CancelTradingOrderEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("CancelTradingOrderEvent", {
-            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            user: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             market_index: bcs.u64(),
             order_id: bcs.u64(),
             trigger_price: bcs.u64(),
@@ -348,7 +355,11 @@ export class CancelTradingOrderEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): CancelTradingOrderEvent {
@@ -491,14 +502,20 @@ export class CancelTradingOrderWithBidReceiptEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("CancelTradingOrderWithBidReceiptEvent", {
-            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            user: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             market_index: bcs.u64(),
             order_id: bcs.u64(),
             trigger_price: bcs.u64(),
             collateral_token: TypeName.bcs,
             base_token: TypeName.bcs,
             returned_receipts: bcs.vector(
-                bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) })
+                bcs.bytes(32).transform({
+                    input: (val: string) => fromHEX(val),
+                    output: (val: Uint8Array) => toHEX(val),
+                })
             ),
             u64_padding: bcs.vector(bcs.u64()),
         });
@@ -552,7 +569,11 @@ export class CancelTradingOrderWithBidReceiptEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): CancelTradingOrderWithBidReceiptEvent {
@@ -715,7 +736,10 @@ export class CreateTradingOrderEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("CreateTradingOrderEvent", {
-            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            user: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             market_index: bcs.u64(),
             pool_index: bcs.u64(),
             collateral_token: TypeName.bcs,
@@ -806,7 +830,11 @@ export class CreateTradingOrderEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): CreateTradingOrderEvent {
@@ -975,7 +1003,10 @@ export class CreateTradingOrderWithBidReceiptsEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("CreateTradingOrderWithBidReceiptsEvent", {
-            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            user: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             market_index: bcs.u64(),
             pool_index: bcs.u64(),
             collateral_token: TypeName.bcs,
@@ -1058,7 +1089,11 @@ export class CreateTradingOrderWithBidReceiptsEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): CreateTradingOrderWithBidReceiptsEvent {
@@ -1206,7 +1241,10 @@ export class IncreaseCollateralEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("IncreaseCollateralEvent", {
-            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            user: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             market_index: bcs.u64(),
             pool_index: bcs.u64(),
             position_id: bcs.u64(),
@@ -1269,7 +1307,11 @@ export class IncreaseCollateralEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): IncreaseCollateralEvent {
@@ -1397,7 +1439,12 @@ export class LinkedOrdersInfo implements StructClass {
 
     static get bcs() {
         return bcs.struct("LinkedOrdersInfo", {
-            users: bcs.vector(bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) })),
+            users: bcs.vector(
+                bcs.bytes(32).transform({
+                    input: (val: string) => fromHEX(val),
+                    output: (val: Uint8Array) => toHEX(val),
+                })
+            ),
             ids: bcs.vector(bcs.vector(bcs.u64())),
             prices: bcs.vector(bcs.vector(bcs.u64())),
             u64_padding: bcs.vector(bcs.u64()),
@@ -1440,7 +1487,11 @@ export class LinkedOrdersInfo implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): LinkedOrdersInfo {
@@ -1575,7 +1626,10 @@ export class LiquidateEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("LiquidateEvent", {
-            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            user: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             collateral_token: TypeName.bcs,
             base_token: TypeName.bcs,
             position_id: bcs.u64(),
@@ -1634,7 +1688,11 @@ export class LiquidateEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): LiquidateEvent {
@@ -1776,7 +1834,10 @@ export class MarketConfig implements StructClass {
 
     static get bcs() {
         return bcs.struct("MarketConfig", {
-            oracle_id: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            oracle_id: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             max_leverage_pct: bcs.u64(),
             min_size: bcs.u64(),
             lot_size: bcs.u64(),
@@ -1839,7 +1900,11 @@ export class MarketConfig implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): MarketConfig {
@@ -2066,7 +2131,11 @@ export class MarketInfo implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): MarketInfo {
@@ -2240,7 +2309,11 @@ export class MarketRegistry implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): MarketRegistry {
@@ -2447,7 +2520,11 @@ export class Markets implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): Markets {
@@ -2628,7 +2705,11 @@ export class MatchTradingOrderEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): MatchTradingOrderEvent {
@@ -2802,7 +2883,11 @@ export class NewMarketsEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): NewMarketsEvent {
@@ -2941,7 +3026,10 @@ export class ReleaseCollateralEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("ReleaseCollateralEvent", {
-            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            user: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             market_index: bcs.u64(),
             pool_index: bcs.u64(),
             position_id: bcs.u64(),
@@ -3004,7 +3092,11 @@ export class ReleaseCollateralEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): ReleaseCollateralEvent {
@@ -3161,7 +3253,11 @@ export class ResumeMarketEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): ResumeMarketEvent {
@@ -3318,7 +3414,11 @@ export class ResumeTradingSymbolEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): ResumeTradingSymbolEvent {
@@ -3469,7 +3569,11 @@ export class SuspendMarketEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): SuspendMarketEvent {
@@ -3626,7 +3730,11 @@ export class SuspendTradingSymbolEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): SuspendTradingSymbolEvent {
@@ -3805,7 +3913,11 @@ export class SymbolMarket implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): SymbolMarket {
@@ -3846,6 +3958,152 @@ export class SymbolMarket implements StructClass {
             throw new Error(`object at id ${id} is not a SymbolMarket object`);
         }
         return SymbolMarket.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
+/* ============================== USD =============================== */
+
+export function isUSD(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::trading::USD";
+}
+
+export interface USDFields {
+    dummyField: ToField<"bool">;
+}
+
+export type USDReified = Reified<USD, USDFields>;
+
+export class USD implements StructClass {
+    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::trading::USD";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = USD.$typeName;
+
+    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::trading::USD";
+
+    readonly $typeArgs: [];
+
+    readonly dummyField: ToField<"bool">;
+
+    private constructor(typeArgs: [], fields: USDFields) {
+        this.$fullTypeName = composeSuiType(
+            USD.$typeName,
+            ...typeArgs
+        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::trading::USD";
+        this.$typeArgs = typeArgs;
+
+        this.dummyField = fields.dummyField;
+    }
+
+    static reified(): USDReified {
+        return {
+            typeName: USD.$typeName,
+            fullTypeName: composeSuiType(
+                USD.$typeName,
+                ...[]
+            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::trading::USD",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => USD.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => USD.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => USD.fromBcs(data),
+            bcs: USD.bcs,
+            fromJSONField: (field: any) => USD.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => USD.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => USD.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => USD.fetch(client, id),
+            new: (fields: USDFields) => {
+                return new USD([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return USD.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<USD>> {
+        return phantom(USD.reified());
+    }
+    static get p() {
+        return USD.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("USD", {
+            dummy_field: bcs.bool(),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): USD {
+        return USD.reified().new({
+            dummyField: decodeFromFields("bool", fields.dummy_field),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): USD {
+        if (!isUSD(item.type)) {
+            throw new Error("not a USD type");
+        }
+
+        return USD.reified().new({
+            dummyField: decodeFromFieldsWithTypes("bool", item.fields.dummy_field),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): USD {
+        return USD.fromFields(USD.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            dummyField: this.dummyField,
+        };
+    }
+
+    toJSON() {
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
+    }
+
+    static fromJSONField(field: any): USD {
+        return USD.reified().new({
+            dummyField: decodeFromJSONField("bool", field.dummyField),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): USD {
+        if (json.$typeName !== USD.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return USD.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): USD {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isUSD(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a USD object`);
+        }
+        return USD.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<USD> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching USD object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isUSD(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a USD object`);
+        }
+        return USD.fromBcs(fromB64(res.data.bcs.bcsBytes));
     }
 }
 
@@ -4011,7 +4269,11 @@ export class UpdateFundingRateEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): UpdateFundingRateEvent {
@@ -4189,7 +4451,11 @@ export class UpdateMarketConfigEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): UpdateMarketConfigEvent {
@@ -4357,7 +4623,11 @@ export class UpdateProtocolFeeShareBpEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): UpdateProtocolFeeShareBpEvent {

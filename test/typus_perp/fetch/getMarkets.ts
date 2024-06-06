@@ -33,6 +33,8 @@ const provider = new SuiClient({
 
         for (const field of dynamicFields.data) {
             const symbolMarket = await SymbolMarket.fetch(provider, field.objectId);
+            // @ts-ignore
+            console.log(field.name.value.name);
             console.log(symbolMarket);
         }
     }

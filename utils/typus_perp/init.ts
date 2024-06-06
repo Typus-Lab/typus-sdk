@@ -26,6 +26,7 @@ export function registerClasses(loader: StructClassLoader) {
     loader.register(oracle.PythPriceInfoObject);
     loader.register(lpPool.Config);
     loader.register(lpPool.State);
+    loader.register(lpPool.Registry);
     loader.register(lpPool.AddLiquidityTokenEvent);
     loader.register(lpPool.BurnLpEvent);
     loader.register(lpPool.LiquidityPool);
@@ -33,7 +34,6 @@ export function registerClasses(loader: StructClassLoader) {
     loader.register(lpPool.MarginConfig);
     loader.register(lpPool.MintLpEvent);
     loader.register(lpPool.NewLiquidityPoolEvent);
-    loader.register(lpPool.Registry);
     loader.register(lpPool.ResumePoolEvent);
     loader.register(lpPool.ResumeTokenPoolEvent);
     loader.register(lpPool.SpotConfig);
@@ -90,6 +90,7 @@ export function registerClasses(loader: StructClassLoader) {
     loader.register(trading.SuspendMarketEvent);
     loader.register(trading.SuspendTradingSymbolEvent);
     loader.register(trading.SymbolMarket);
+    loader.register(trading.USD);
     loader.register(trading.UpdateFundingRateEvent);
     loader.register(trading.UpdateMarketConfigEvent);
     loader.register(trading.UpdateProtocolFeeShareBpEvent);

@@ -125,7 +125,10 @@ export class OrderFilledEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("OrderFilledEvent", {
-            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            user: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             collateral_token: TypeName.bcs,
             symbol: Symbol.bcs,
             order_id: bcs.u64(),
@@ -200,7 +203,11 @@ export class OrderFilledEvent implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): OrderFilledEvent {
@@ -396,7 +403,10 @@ export class Position implements StructClass {
             position_id: bcs.u64(),
             linked_order_ids: bcs.vector(bcs.u64()),
             linked_order_prices: bcs.vector(bcs.u64()),
-            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            user: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             is_long: bcs.bool(),
             size: bcs.u64(),
             size_decimal: bcs.u64(),
@@ -514,7 +524,11 @@ export class Position implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): Position {
@@ -700,7 +714,10 @@ export class TradingOrder implements StructClass {
             create_ts_ms: bcs.u64(),
             order_id: bcs.u64(),
             linked_position_id: Option.bcs(bcs.u64()),
-            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            user: bcs.bytes(32).transform({
+                input: (val: string) => fromHEX(val),
+                output: (val: Uint8Array) => toHEX(val),
+            }),
             collateral_token: TypeName.bcs,
             collateral_token_decimal: bcs.u64(),
             symbol: Symbol.bcs,
@@ -791,7 +808,11 @@ export class TradingOrder implements StructClass {
     }
 
     toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+        return {
+            $typeName: this.$typeName,
+            $typeArgs: this.$typeArgs,
+            ...this.toJSONField(),
+        };
     }
 
     static fromJSONField(field: any): TradingOrder {

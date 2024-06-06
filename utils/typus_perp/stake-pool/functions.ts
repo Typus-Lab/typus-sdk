@@ -3,7 +3,10 @@ import { ObjectArg, obj, pure, vector } from "../../_framework/util";
 import { TransactionArgument, TransactionBlock } from "@mysten/sui.js/transactions";
 
 export function init(txb: TransactionBlock) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::stake_pool::init`, arguments: [] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::stake_pool::init`,
+        arguments: [],
+    });
 }
 
 export interface HarvestArgs {
@@ -169,11 +172,17 @@ export function getIncentive(txb: TransactionBlock, args: GetIncentiveArgs) {
 }
 
 export function getIncentiveTokens(txb: TransactionBlock, stakePool: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::stake_pool::get_incentive_tokens`, arguments: [obj(txb, stakePool)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::stake_pool::get_incentive_tokens`,
+        arguments: [obj(txb, stakePool)],
+    });
 }
 
 export function getLastIncentivePriceIndex(txb: TransactionBlock, stakePool: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::stake_pool::get_last_incentive_price_index`, arguments: [obj(txb, stakePool)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::stake_pool::get_last_incentive_price_index`,
+        arguments: [obj(txb, stakePool)],
+    });
 }
 
 export interface GetMutIncentiveArgs {

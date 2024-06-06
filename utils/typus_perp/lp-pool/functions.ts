@@ -9,7 +9,7 @@ export interface SwapArgs {
     pythState: ObjectArg;
     oracleFromToken: ObjectArg;
     oracleToToken: ObjectArg;
-    fromCoin: ObjectArg;
+    fromBalance: ObjectArg;
     minToAmount: bigint | TransactionArgument;
     clock: ObjectArg;
 }
@@ -25,7 +25,7 @@ export function swap(txb: TransactionBlock, typeArgs: [string, string], args: Sw
             obj(txb, args.pythState),
             obj(txb, args.oracleFromToken),
             obj(txb, args.oracleToToken),
-            obj(txb, args.fromCoin),
+            obj(txb, args.fromBalance),
             pure(txb, args.minToAmount, `u64`),
             obj(txb, args.clock),
         ],
@@ -33,7 +33,10 @@ export function swap(txb: TransactionBlock, typeArgs: [string, string], args: Sw
 }
 
 export function init(txb: TransactionBlock) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::lp_pool::init`, arguments: [] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::lp_pool::init`,
+        arguments: [],
+    });
 }
 
 export interface AddLiquidityTokenArgs {
@@ -219,7 +222,10 @@ export function checkTvlUpdated(txb: TransactionBlock, args: CheckTvlUpdatedArgs
 }
 
 export function getBorrowRateDecimal(txb: TransactionBlock) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::lp_pool::get_borrow_rate_decimal`, arguments: [] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::lp_pool::get_borrow_rate_decimal`,
+        arguments: [],
+    });
 }
 
 export interface GetCumulativeBorrowRateArgs {
@@ -321,7 +327,10 @@ export function getTokenPool(txb: TransactionBlock, args: GetTokenPoolArgs) {
 }
 
 export function getTvlUsd(txb: TransactionBlock, liquidityPool: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::lp_pool::get_tvl_usd`, arguments: [obj(txb, liquidityPool)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::lp_pool::get_tvl_usd`,
+        arguments: [obj(txb, liquidityPool)],
+    });
 }
 
 export interface MintLpArgs {
@@ -479,7 +488,10 @@ export function resumeTokenPool(txb: TransactionBlock, typeArg: string, args: Re
 }
 
 export function safetyCheck(txb: TransactionBlock, liquidityPool: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::lp_pool::safety_check`, arguments: [obj(txb, liquidityPool)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::lp_pool::safety_check`,
+        arguments: [obj(txb, liquidityPool)],
+    });
 }
 
 export interface SuspendPoolArgs {

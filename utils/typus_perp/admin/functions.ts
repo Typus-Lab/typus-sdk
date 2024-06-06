@@ -3,15 +3,24 @@ import { ObjectArg, obj, pure } from "../../_framework/util";
 import { TransactionArgument, TransactionBlock } from "@mysten/sui.js/transactions";
 
 export function upgrade(txb: TransactionBlock, version: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::admin::upgrade`, arguments: [obj(txb, version)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::admin::upgrade`,
+        arguments: [obj(txb, version)],
+    });
 }
 
 export function init(txb: TransactionBlock) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::admin::init`, arguments: [] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::admin::init`,
+        arguments: [],
+    });
 }
 
 export function verify(txb: TransactionBlock, version: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::admin::verify`, arguments: [obj(txb, version)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::admin::verify`,
+        arguments: [obj(txb, version)],
+    });
 }
 
 export interface AddAuthorizedUserArgs {
@@ -40,7 +49,10 @@ export function chargeFee(txb: TransactionBlock, typeArg: string, args: ChargeFe
 }
 
 export function issueManagerCap(txb: TransactionBlock, version: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::admin::issue_manager_cap`, arguments: [obj(txb, version)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::admin::issue_manager_cap`,
+        arguments: [obj(txb, version)],
+    });
 }
 
 export interface RemoveAuthorizedUserArgs {
@@ -56,11 +68,18 @@ export function removeAuthorizedUser(txb: TransactionBlock, args: RemoveAuthoriz
 }
 
 export function sendFee(txb: TransactionBlock, typeArg: string, version: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::admin::send_fee`, typeArguments: [typeArg], arguments: [obj(txb, version)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::admin::send_fee`,
+        typeArguments: [typeArg],
+        arguments: [obj(txb, version)],
+    });
 }
 
 export function versionCheck(txb: TransactionBlock, version: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::admin::version_check`, arguments: [obj(txb, version)] });
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::admin::version_check`,
+        arguments: [obj(txb, version)],
+    });
 }
 
 export interface AddTailsExpAmountArgs {
