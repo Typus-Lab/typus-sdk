@@ -118,6 +118,7 @@ export async function newGamePlayGuessTx(
             tx.pure(larger_than_1),
             tx.pure(guess_2),
             tx.pure(larger_than_2),
+            tx.object("0x8"),
         ],
     });
     tx.setGasBudget(gasBudget);

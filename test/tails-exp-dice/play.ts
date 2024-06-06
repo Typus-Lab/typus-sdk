@@ -3,8 +3,8 @@ import config from "../../dice_config.json";
 import { waitHistory, getPlaygrounds, parseHistory } from "../../utils/tails-exp-dice/fetch";
 import { newGamePlayGuessTx } from "../../utils/tails-exp-dice/user-entry";
 import { SuiClient, SuiHTTPTransport, getFullnodeUrl } from "@mysten/sui.js/client";
-import { WebSocket } from "ws";
-import { simulateGame } from "../../utils/tails-exp-dice/view-function";
+// import { WebSocket } from "ws";
+import { simulateGame, DrawResult } from "../../utils/tails-exp-dice/view-function";
 import { getDrawResult } from "../../utils/tails-exp-dice/api";
 
 // const provider = new SuiClient({
@@ -16,14 +16,14 @@ import { getDrawResult } from "../../utils/tails-exp-dice/api";
 //         network in Network && network === Network.MAINNET ? new SentryHttpTransport(networkUrl) : new SuiHTTPTransport({ url: networkUrl }),
 // });
 
-// const provider = new SuiClient({ url: getFullnodeUrl("testnet") });
+const provider = new SuiClient({ url: getFullnodeUrl("testnet") });
 
-const provider = new SuiClient({
-    transport: new SuiHTTPTransport({
-        url: config.RPC_ENDPOINT,
-        WebSocketConstructor: WebSocket as never,
-    }),
-});
+// const provider = new SuiClient({
+//     transport: new SuiHTTPTransport({
+//         url: config.RPC_ENDPOINT,
+//         WebSocketConstructor: WebSocket as never,
+//     }),
+// });
 
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -65,25 +65,7 @@ const larger_than_2 = true;
     // Send Play
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock, options: { showEvents: true } });
     console.log(res);
-    const game_id = res.events![1].parsedJson!["game_id"];
-    console.log("game_id : " + game_id);
-
-    const vrf_input_1 = res.events![1].parsedJson!["vrf_input_1"];
-    const vrf_input_2 = res.events![1].parsedJson!["vrf_input_2"];
-
-    const drawResult = await getDrawResult(
-        "testnet",
-        config.PACKAGE,
-        config.REGISTRY,
-        index.toString(),
-        amount,
-        guess_1,
-        larger_than_1,
-        guess_2,
-        larger_than_2,
-        vrf_input_1,
-        vrf_input_2
-    );
-
+    const result = res.events![2].parsedJson!;
+    const drawResult = result as DrawResult;
     console.log(drawResult);
 })();
