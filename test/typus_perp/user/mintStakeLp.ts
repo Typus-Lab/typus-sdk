@@ -7,8 +7,8 @@ import { CLOCK } from "../../../constants";
 import { LiquidityPool, Registry } from "../../../utils/typus_perp/lp-pool/structs";
 import { SuiPriceServiceConnection, SuiPythClient } from "@pythnetwork/pyth-sui-js";
 
-import mnemonic from "../../../mnemonic.json";
-const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+import { stake } from "../../../utils/typus_perp/stake-pool/functions";
+const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
 const config = configs.TESTNET;
 
@@ -43,6 +43,7 @@ const gasBudget = 100000000;
     const priceIDs = [
         // You can find the IDs of prices at https://pyth.network/developers/price-feed-ids
         "0x50c67b3fd225db8912a424dd4baed60ffdde625ed2feaaf283724f9608fea266", // SUI/USD price ID
+        "0x1fc18861232290221461220bd4e2acd1dcdfbc89c84092c93c18bdc7756c1588", // USDT/USD price ID
     ];
 
     const priceFeedUpdateData = await connection.getPriceFeedsUpdateData(priceIDs);
@@ -51,20 +52,48 @@ const gasBudget = 100000000;
     const priceInfoObjectIds = await client.updatePriceFeeds(tx, priceFeedUpdateData, priceIDs);
     // console.log(priceInfoObjectIds);
 
-    const [coin] = tx.splitCoins(tx.gas, ["1000000000"]);
+    // const [coin] = tx.splitCoins(tx.gas, ["1000000000"]);
 
-    const lpCoin = mintLp(tx, ["0x2::sui::SUI", "0x" + lpPool.lpTokenType.name], {
+    const cToken = "0xa38dad920880f81ea514de6db007d3a84e9116a29c60b3e69bbe418c2d9f553c::usdt::USDT";
+    const oracle = config.PRICE_INFO_OBJECT_USDT;
+
+    const coins = (
+        await provider.getCoins({
+            owner: address,
+            coinType: cToken,
+        })
+    ).data.map((coin) => coin.coinObjectId);
+
+    console.log(coins.length);
+
+    const destination = coins.pop()!;
+
+    if (coins.length > 0) {
+        tx.mergeCoins(destination, coins);
+    }
+
+    const [coin] = tx.splitCoins(destination, ["1000000000"]);
+
+    const lpCoin = mintLp(tx, [cToken, "0x" + lpPool.lpTokenType.name], {
         version: config.TYPUS_PERP_VERSION,
         registry: config.TYPUS_PERP_LP_POOL_REGISTRY,
         treasuryCaps: config.TYPUS_PERP_TREASURY_CAPS,
         index: BigInt(0),
         pythState: config.PYTH_STATE,
-        oracle: config.PRICE_INFO_OBJECT_SUI,
+        oracle,
         coin,
         clock: CLOCK,
     });
 
-    tx.transferObjects([lpCoin], address);
+    stake(tx, "0x" + lpPool.lpTokenType.name, {
+        version: config.TYPUS_PERP_VERSION,
+        registry: config.TYPUS_PERP_STAKE_POOL_REGISTRY,
+        index: BigInt(0),
+        lpToken: lpCoin,
+        clock: CLOCK,
+    });
+
+    // tx.transferObjects([lpCoin], address);
 
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
 
