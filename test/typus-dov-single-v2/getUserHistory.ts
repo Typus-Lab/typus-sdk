@@ -43,7 +43,7 @@ const fileName = "testnetLocalCacheEvents.json";
         }
     } catch {}
 
-    const [datas1, cursor1] = await getUserEvents(provider, sender, undefined);
+    const [datas1, cursor1] = await getUserEvents(provider, sender, cursor);
 
     // save local cache for user
     localCacheEvents = localCacheEvents.concat(datas1);
