@@ -21,19 +21,29 @@ export function getRaiseFundTx(input: {
     raiseFromInactive: boolean;
     user: string;
 }) {
-    let typusToken = input.tx.moveCall({
-        target: `${input.typusTokenPackageId}::${input.typusTokenType.split("::")[1]}::mint`,
-        arguments: [
-            input.tx.object(input.typusTokenRegistry),
-            input.tx.makeMoveVec({ objects: input.raiseCoins }),
-            input.tx.pure(input.raiseAmount),
-        ],
-    });
-    let typusTokenBalance = input.tx.moveCall({
-        target: `0x2::coin::into_balance`,
-        typeArguments: [input.typusTokenType],
-        arguments: [input.tx.object(typusToken)],
-    });
+    let typusTokenBalance =
+        input.raiseCoins.length > 0
+            ? input.tx.moveCall({
+                  target: `0x2::coin::into_balance`,
+                  typeArguments: [input.typusTokenType],
+                  arguments: [
+                      input.tx.object(
+                          input.tx.moveCall({
+                              target: `${input.typusTokenPackageId}::${input.typusTokenType.split("::")[1]}::mint`,
+                              arguments: [
+                                  input.tx.object(input.typusTokenRegistry),
+                                  input.tx.makeMoveVec({ objects: input.raiseCoins }),
+                                  input.tx.pure(input.raiseAmount),
+                              ],
+                          })
+                      ),
+                  ],
+              })
+            : input.tx.moveCall({
+                  target: `0x2::balance::zero`,
+                  typeArguments: [input.typusTokenType],
+                  arguments: [],
+              });
     let result = input.tx.moveCall({
         target: `${input.typusDovSinglePackageId}::tds_user_entry::public_raise_fund`,
         typeArguments: input.typeArguments,
