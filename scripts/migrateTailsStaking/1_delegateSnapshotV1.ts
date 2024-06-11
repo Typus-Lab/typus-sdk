@@ -7,7 +7,8 @@ import { CLOCK } from "../../constants";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const config = configs.TESTNET;
-const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+import mnemonic from "../../mnemonic.json";
+const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 const nftTable = "0xf011b3ebf0c073f14e39405248e2042b4528529529265dc8aad4e063f9203f87";
 
@@ -35,10 +36,16 @@ const nftTable = "0xf011b3ebf0c073f14e39405248e2042b4528529529265dc8aad4e063f920
         transactionBlock.moveCall({
             target: `${config.PACKAGE.DOV_SINGLE}::tails_staking::delegate_snapshot_v1`,
             typeArguments: [],
-            arguments: [transactionBlock.object(config.REGISTRY.DOV_SINGLE), transactionBlock.object(CLOCK), transactionBlock.pure(chunk)],
+            arguments: [
+                transactionBlock.object(config.REGISTRY.DOV_SINGLE),
+                transactionBlock.object(config.TYPUS_VERSION),
+                transactionBlock.object(config.REGISTRY.USER),
+                transactionBlock.object(CLOCK),
+                transactionBlock.pure(chunk),
+            ],
         });
         transactionBlock.setGasBudget(100000000);
-        let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+        let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
         console.log(res);
         await sleep(1000);
     }
