@@ -1,4 +1,4 @@
-import config from "../../mainnet.json";
+import configs from "../../config.json";
 import {
     getUserEvents,
     getAutoBidEvents,
@@ -10,15 +10,17 @@ import { getVaults } from "../../utils/typus-dov-single-v2/view-function";
 import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
 import * as fs from "fs";
 
+const config = configs.TESTNET;
+
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });
 
-const sender = "0xd15f079d5f60b8fdfdcf3ca66c0d3473790c758b04b6418929d5d2991c5443ee";
-const fileName = "mainnetLocalCacheEvents.json";
+const sender = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9";
+const fileName = "testnetLocalCacheEvents.json";
 
 (async () => {
-    const vaults = await getVaults(provider, config.SINGLE_COLLATERAL_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY, []);
+    const vaults = await getVaults(provider, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE, []);
 
     // 1. Get User Events
     var localCacheEvents: SuiEvent[] = [];
@@ -41,7 +43,7 @@ const fileName = "mainnetLocalCacheEvents.json";
         }
     } catch {}
 
-    const [datas1, cursor1] = await getUserEvents(provider, sender, cursor);
+    const [datas1, cursor1] = await getUserEvents(provider, sender, undefined);
 
     // save local cache for user
     localCacheEvents = localCacheEvents.concat(datas1);
@@ -87,7 +89,7 @@ const fileName = "mainnetLocalCacheEvents.json";
 
     const datas = localCacheEvents;
 
-    const txHistory = await parseTxHistory(datas, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, vaults);
+    const txHistory = await parseTxHistory(datas, config.PACKAGE_ORIGIN.DOV_SINGLE, vaults);
     // console.log(txHistory.reverse());
 
     const newBidHistory = await getNewBidFromSentio(vaults, sender, 0);
@@ -102,5 +104,5 @@ const fileName = "mainnetLocalCacheEvents.json";
         .sort((a, b) => Number(b.Date) - Number(a.Date));
 
     // console.log(concatHistory.filter((h) => h.Action?.includes("Exercise")));
-    // console.log(concatHistory.filter((h) => Math.round(h.Date?.getTime() / 24 / 3600000) == Math.round(Date.now() / 24 / 3600000)));
+    console.log(concatHistory.filter((h) => Math.round(h.Date?.getTime() / 24 / 3600000) == Math.round(Date.now() / 24 / 3600000)));
 })();

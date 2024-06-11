@@ -200,6 +200,121 @@ export async function parseTxHistory(
                         return txHistory;
                     }
                     break;
+                case "RaiseFundEvent":
+                    Index = event.parsedJson!.log[0];
+                    [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, Index!, action);
+                    var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
+                    if (event.parsedJson!.log[4] > 0) {
+                        // deposit
+                        Action = "Deposit";
+                        var amount = Number(event.parsedJson!.log[4]) / 10 ** assetToDecimal(token)!;
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                    } else if (event.parsedJson!.log[5] > 0) {
+                        // compound
+                        Action = "Compound";
+                        var amount = Number(event.parsedJson!.log[5]) / 10 ** assetToDecimal(token)!;
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                    }
+                    break;
+                case "ReduceFundEvent":
+                    Index = event.parsedJson!.log[0];
+                    [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, Index!, action);
+                    if (event.parsedJson!.log[4] > 0) {
+                        // withdraw
+                        Action = "Withdraw";
+                        var token = typeArgToAsset("0x" + event.parsedJson!.d_token.name);
+                        var amount = Number(event.parsedJson!.log[4]) / 10 ** assetToDecimal(token)!;
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                        txHistory.push({
+                            Index,
+                            Period,
+                            Action,
+                            Amount,
+                            Vault,
+                            RiskLevel,
+                            Tails,
+                            Exp,
+                            Date: new Date(Number(event.timestampMs)),
+                            txDigest: event.id.txDigest,
+                        });
+                    }
+                    if (event.parsedJson!.log[5] > 0) {
+                        // unsubscribe
+                        Action = "Unsubscribe";
+                        var token = typeArgToAsset("0x" + event.parsedJson!.d_token.name);
+                        var amount = Number(event.parsedJson!.log[5]) / 10 ** assetToDecimal(token)!;
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                        txHistory.push({
+                            Index,
+                            Period,
+                            Action,
+                            Amount,
+                            Vault,
+                            RiskLevel,
+                            Tails,
+                            Exp,
+                            Date: new Date(Number(event.timestampMs)),
+                            txDigest: event.id.txDigest,
+                        });
+                    }
+                    if (event.parsedJson!.log[6] > 0) {
+                        // harvest
+                        Action = "Harvest";
+                        var token = typeArgToAsset("0x" + event.parsedJson!.b_token.name);
+                        var amount = Number(event.parsedJson!.log[6]) / 10 ** assetToDecimal(token)!;
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                        txHistory.push({
+                            Index,
+                            Period,
+                            Action,
+                            Amount,
+                            Vault,
+                            RiskLevel,
+                            Tails,
+                            Exp,
+                            Date: new Date(Number(event.timestampMs)),
+                            txDigest: event.id.txDigest,
+                        });
+                    }
+                    if (event.parsedJson!.log[9] > 0) {
+                        // claim
+                        Action = "Claim";
+                        var token = typeArgToAsset("0x" + event.parsedJson!.d_token.name);
+                        var amount = Number(event.parsedJson!.log[9]) / 10 ** assetToDecimal(token)!;
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                        txHistory.push({
+                            Index,
+                            Period,
+                            Action,
+                            Amount,
+                            Vault,
+                            RiskLevel,
+                            Tails,
+                            Exp,
+                            Date: new Date(Number(event.timestampMs)),
+                            txDigest: event.id.txDigest,
+                        });
+                    }
+                    if (event.parsedJson!.log[10] > 0) {
+                        // redeem
+                        Action = "Redeem";
+                        var token = typeArgToAsset("0x" + event.parsedJson!.i_token.name);
+                        var amount = Number(event.parsedJson!.log[10]) / 10 ** assetToDecimal(token)!;
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                        txHistory.push({
+                            Index,
+                            Period,
+                            Action,
+                            Amount,
+                            Vault,
+                            RiskLevel,
+                            Tails,
+                            Exp,
+                            Date: new Date(Number(event.timestampMs)),
+                            txDigest: event.id.txDigest,
+                        });
+                    }
+                    return txHistory;
                 case "NewStrategyEventV2":
                     Action = "Create Strategy";
                     var deposit_amount = Number(event.parsedJson!.deposit_amount) / 10 ** assetToDecimal(b_token!)!;
