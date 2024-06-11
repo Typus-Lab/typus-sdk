@@ -501,6 +501,11 @@ export async function getAuctionBids(
     return result;
 }
 
+export interface DepositSnapshot {
+    snapshots: string[];
+    totalDeposit: string;
+    snapshotTsMs: string;
+}
 export interface DepositShare {
     index: string;
     activeSubVaultUserShare: string;
@@ -510,14 +515,19 @@ export interface DepositShare {
     premiumSubVaultUserShare: string;
     incentiveShare: string;
 }
+export interface RRR {
+    a: { [key: string]: DepositShare };
+    b: DepositSnapshot;
+}
 export async function getDepositShares(
     provider: SuiClient,
     typusFrameworkPackageId: string,
     packageId: string,
     registry: string,
     receipts: string[],
+    user: string,
     sender = SENDER
-): Promise<{ [key: string]: DepositShare }> {
+): Promise<{ depositShare: { [key: string]: DepositShare }; depositSnapshot: DepositSnapshot }> {
     let transactionBlock = new TransactionBlock();
     let target = `${packageId}::tds_view_function::get_deposit_shares_bcs` as any;
     let transactionBlockArguments = [
@@ -526,6 +536,7 @@ export async function getDepositShares(
             type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
             objects: receipts.map((id) => transactionBlock.object(id)),
         }),
+        transactionBlock.pure(user),
     ];
     transactionBlock.moveCall({
         target,
@@ -536,32 +547,45 @@ export async function getDepositShares(
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
-    let result = Array.from(new Map()).reduce((map, [key, value]) => {
+    let depositShare = Array.from(new Map()).reduce((map, [key, value]) => {
         map[key] = value;
         return map;
     }, {});
+    let depositSnapshot = {};
+    // console.log(bytes);
     reader.readVec((reader, i) => {
-        reader.read8();
-        let index = reader.read64();
-        let activeSubVaultUserShare = reader.read64();
-        let deactivatingSubVaultUserShare = reader.read64();
-        let inactiveSubVaultUserShare = reader.read64();
-        let warmupSubVaultUserShare = reader.read64();
-        let premiumSubVaultUserShare = reader.read64();
-        let incentiveShare = reader.read64();
-        result[index] = {
-            index,
-            activeSubVaultUserShare,
-            deactivatingSubVaultUserShare,
-            inactiveSubVaultUserShare,
-            warmupSubVaultUserShare,
-            premiumSubVaultUserShare,
-            incentiveShare,
-        } as DepositShare;
+        if (i == 0) {
+            reader.readULEB();
+            depositSnapshot = {
+                snapshots: reader.readVec((reader) => {
+                    return reader.read64();
+                }),
+                totalDeposit: reader.read64(),
+                snapshotTsMs: reader.read64(),
+            } as DepositSnapshot;
+        } else {
+            reader.readULEB();
+            let index = reader.read64();
+            let activeSubVaultUserShare = reader.read64();
+            let deactivatingSubVaultUserShare = reader.read64();
+            let inactiveSubVaultUserShare = reader.read64();
+            let warmupSubVaultUserShare = reader.read64();
+            let premiumSubVaultUserShare = reader.read64();
+            let incentiveShare = reader.read64();
+            depositShare[index] = {
+                index,
+                activeSubVaultUserShare,
+                deactivatingSubVaultUserShare,
+                inactiveSubVaultUserShare,
+                warmupSubVaultUserShare,
+                premiumSubVaultUserShare,
+                incentiveShare,
+            } as DepositShare;
+        }
     });
 
     // @ts-ignore
-    return result;
+    return { depositShare, depositSnapshot };
 }
 
 export interface BidVault {

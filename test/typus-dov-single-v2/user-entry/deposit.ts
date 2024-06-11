@@ -22,7 +22,7 @@ const provider = new SuiClient({ url: config.RPC_ENDPOINT });
         typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
         typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
         typeArguments: [config.TOKEN.SUI, config.TOKEN.SUI],
-        index: "1",
+        index: "0",
         raiseCoins: (await provider.getCoins({ owner: user, coinType: config.TOKEN.SUI })).data.map((coin) => coin.coinObjectId),
         raiseAmount: "10000000000",
         receipts: [],
