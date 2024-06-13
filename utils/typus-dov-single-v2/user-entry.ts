@@ -491,7 +491,7 @@ export function getCompoundWithRedeemTx(input: {
     });
     let result = input.tx.moveCall({
         target: `${input.typusDovSinglePackageId}::tds_user_entry::public_raise_fund`,
-        typeArguments: input.typeArguments,
+        typeArguments: [input.typeArguments[0], input.typeArguments[1]],
         arguments: [
             input.tx.object(input.typusEcosystemVersion),
             input.tx.object(input.typusUserRegistry),
