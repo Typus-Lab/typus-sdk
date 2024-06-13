@@ -42,8 +42,8 @@ const gasBudget = 100000000;
 
     const priceIDs = [
         // You can find the IDs of prices at https://pyth.network/developers/price-feed-ids
-        "0x50c67b3fd225db8912a424dd4baed60ffdde625ed2feaaf283724f9608fea266", // SUI/USD price ID
         "0x1fc18861232290221461220bd4e2acd1dcdfbc89c84092c93c18bdc7756c1588", // USDT/USD price ID
+        "0x50c67b3fd225db8912a424dd4baed60ffdde625ed2feaaf283724f9608fea266", // SUI/USD price ID
     ];
 
     const priceFeedUpdateData = await connection.getPriceFeedsUpdateData(priceIDs);
@@ -65,20 +65,22 @@ const gasBudget = 100000000;
     const balance = tx.moveCall({
         target: `${config.FRAMEWORK}::utils::extract_balance`,
         typeArguments: [fromToken],
-        arguments: [tx.makeMoveVec({ objects: coins.map((coin) => tx.object(coin)) }), tx.pure("1000000000")],
+        arguments: [tx.makeMoveVec({ objects: coins.map((coin) => tx.object(coin)) }), tx.pure("1000000")],
     });
 
-    swap(tx, [fromToken, toToken], {
+    const token = swap(tx, [fromToken, toToken], {
         version: config.TYPUS_PERP_VERSION,
         registry: config.TYPUS_PERP_LP_POOL_REGISTRY,
         pythState: config.PYTH_STATE,
         clock: CLOCK,
         index: BigInt(0),
-        oracleFromToken: "",
-        oracleToToken: "",
+        oracleFromToken: priceInfoObjectIds[0],
+        oracleToToken: priceInfoObjectIds[1],
         fromBalance: balance,
         minToAmount: BigInt(0),
     });
+
+    tx.transferObjects([token], address);
 
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
 
