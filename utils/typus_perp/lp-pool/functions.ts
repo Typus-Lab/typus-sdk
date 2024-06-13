@@ -33,10 +33,7 @@ export function swap(txb: TransactionBlock, typeArgs: [string, string], args: Sw
 }
 
 export function init(txb: TransactionBlock) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::lp_pool::init`,
-        arguments: [],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::lp_pool::init`, arguments: [] });
 }
 
 export interface AddLiquidityTokenArgs {
@@ -222,10 +219,7 @@ export function checkTvlUpdated(txb: TransactionBlock, args: CheckTvlUpdatedArgs
 }
 
 export function getBorrowRateDecimal(txb: TransactionBlock) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::lp_pool::get_borrow_rate_decimal`,
-        arguments: [],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::lp_pool::get_borrow_rate_decimal`, arguments: [] });
 }
 
 export interface GetCumulativeBorrowRateArgs {
@@ -326,11 +320,20 @@ export function getTokenPool(txb: TransactionBlock, args: GetTokenPoolArgs) {
     });
 }
 
-export function getTvlUsd(txb: TransactionBlock, liquidityPool: ObjectArg) {
+export interface GetTokenPoolStateArgs {
+    liquidityPool: ObjectArg;
+    liquidityToken: ObjectArg;
+}
+
+export function getTokenPoolState(txb: TransactionBlock, args: GetTokenPoolStateArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::lp_pool::get_tvl_usd`,
-        arguments: [obj(txb, liquidityPool)],
+        target: `${PUBLISHED_AT}::lp_pool::get_token_pool_state`,
+        arguments: [obj(txb, args.liquidityPool), obj(txb, args.liquidityToken)],
     });
+}
+
+export function getTvlUsd(txb: TransactionBlock, liquidityPool: ObjectArg) {
+    return txb.moveCall({ target: `${PUBLISHED_AT}::lp_pool::get_tvl_usd`, arguments: [obj(txb, liquidityPool)] });
 }
 
 export interface MintLpArgs {
@@ -488,10 +491,7 @@ export function resumeTokenPool(txb: TransactionBlock, typeArg: string, args: Re
 }
 
 export function safetyCheck(txb: TransactionBlock, liquidityPool: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::lp_pool::safety_check`,
-        arguments: [obj(txb, liquidityPool)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::lp_pool::safety_check`, arguments: [obj(txb, liquidityPool)] });
 }
 
 export interface SuspendPoolArgs {
@@ -521,7 +521,45 @@ export function suspendTokenPool(txb: TransactionBlock, typeArg: string, args: S
     });
 }
 
-export interface UdpateMarginConfigArgs {
+export interface UpdateBorrowInfoArgs {
+    version: ObjectArg;
+    registry: ObjectArg;
+    index: bigint | TransactionArgument;
+    clock: ObjectArg;
+}
+
+export function updateBorrowInfo(txb: TransactionBlock, args: UpdateBorrowInfoArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::lp_pool::update_borrow_info`,
+        arguments: [obj(txb, args.version), obj(txb, args.registry), pure(txb, args.index, `u64`), obj(txb, args.clock)],
+    });
+}
+
+export interface UpdateLiquidityValueArgs {
+    version: ObjectArg;
+    registry: ObjectArg;
+    index: bigint | TransactionArgument;
+    pythState: ObjectArg;
+    oracle: ObjectArg;
+    clock: ObjectArg;
+}
+
+export function updateLiquidityValue(txb: TransactionBlock, typeArg: string, args: UpdateLiquidityValueArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::lp_pool::update_liquidity_value`,
+        typeArguments: [typeArg],
+        arguments: [
+            obj(txb, args.version),
+            obj(txb, args.registry),
+            pure(txb, args.index, `u64`),
+            obj(txb, args.pythState),
+            obj(txb, args.oracle),
+            obj(txb, args.clock),
+        ],
+    });
+}
+
+export interface UpdateMarginConfigArgs {
     version: ObjectArg;
     registry: ObjectArg;
     index: bigint | TransactionArgument;
@@ -533,9 +571,9 @@ export interface UdpateMarginConfigArgs {
     borrowIntervalTsMs: bigint | TransactionArgument | TransactionArgument | null;
 }
 
-export function udpateMarginConfig(txb: TransactionBlock, typeArg: string, args: UdpateMarginConfigArgs) {
+export function updateMarginConfig(txb: TransactionBlock, typeArg: string, args: UpdateMarginConfigArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::lp_pool::udpate_margin_config`,
+        target: `${PUBLISHED_AT}::lp_pool::update_margin_config`,
         typeArguments: [typeArg],
         arguments: [
             obj(txb, args.version),
@@ -551,7 +589,7 @@ export function udpateMarginConfig(txb: TransactionBlock, typeArg: string, args:
     });
 }
 
-export interface UdpateSpotConfigArgs {
+export interface UpdateSpotConfigArgs {
     version: ObjectArg;
     registry: ObjectArg;
     index: bigint | TransactionArgument;
@@ -566,9 +604,9 @@ export interface UdpateSpotConfigArgs {
     swapFeeProtocolShareBp: bigint | TransactionArgument | TransactionArgument | null;
 }
 
-export function udpateSpotConfig(txb: TransactionBlock, typeArg: string, args: UdpateSpotConfigArgs) {
+export function updateSpotConfig(txb: TransactionBlock, typeArg: string, args: UpdateSpotConfigArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::lp_pool::udpate_spot_config`,
+        target: `${PUBLISHED_AT}::lp_pool::update_spot_config`,
         typeArguments: [typeArg],
         arguments: [
             obj(txb, args.version),
@@ -584,20 +622,6 @@ export function udpateSpotConfig(txb: TransactionBlock, typeArg: string, args: U
             pure(txb, args.swapFeeBp, `0x1::option::Option<u64>`),
             pure(txb, args.swapFeeProtocolShareBp, `0x1::option::Option<u64>`),
         ],
-    });
-}
-
-export interface UpdateBorrowInfoArgs {
-    version: ObjectArg;
-    registry: ObjectArg;
-    index: bigint | TransactionArgument;
-    clock: ObjectArg;
-}
-
-export function updateBorrowInfo(txb: TransactionBlock, args: UpdateBorrowInfoArgs) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::lp_pool::update_borrow_info`,
-        arguments: [obj(txb, args.version), obj(txb, args.registry), pure(txb, args.index, `u64`), obj(txb, args.clock)],
     });
 }
 

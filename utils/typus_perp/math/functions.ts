@@ -3,10 +3,7 @@ import { pure } from "../../_framework/util";
 import { TransactionArgument, TransactionBlock } from "@mysten/sui.js/transactions";
 
 export function multiplier(txb: TransactionBlock, decimal: bigint | TransactionArgument) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::math::multiplier`,
-        arguments: [pure(txb, decimal, `u64`)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::math::multiplier`, arguments: [pure(txb, decimal, `u64`)] });
 }
 
 export interface AmountToUsdArgs {
@@ -29,17 +26,11 @@ export function amountToUsd(txb: TransactionBlock, args: AmountToUsdArgs) {
 }
 
 export function getFundingRateDecimal(txb: TransactionBlock) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::math::get_funding_rate_decimal`,
-        arguments: [],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::math::get_funding_rate_decimal`, arguments: [] });
 }
 
 export function getUsdDecimal(txb: TransactionBlock) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::math::get_usd_decimal`,
-        arguments: [],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::math::get_usd_decimal`, arguments: [] });
 }
 
 export interface UsdToAmountArgs {

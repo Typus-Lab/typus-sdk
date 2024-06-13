@@ -3,10 +3,7 @@ import { ObjectArg, obj, pure, vector } from "../../_framework/util";
 import { TransactionArgument, TransactionBlock } from "@mysten/sui.js/transactions";
 
 export function init(txb: TransactionBlock) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::init`,
-        arguments: [],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::stake_pool::init`, arguments: [] });
 }
 
 export interface HarvestArgs {
@@ -172,17 +169,11 @@ export function getIncentive(txb: TransactionBlock, args: GetIncentiveArgs) {
 }
 
 export function getIncentiveTokens(txb: TransactionBlock, stakePool: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::get_incentive_tokens`,
-        arguments: [obj(txb, stakePool)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::stake_pool::get_incentive_tokens`, arguments: [obj(txb, stakePool)] });
 }
 
 export function getLastIncentivePriceIndex(txb: TransactionBlock, stakePool: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::get_last_incentive_price_index`,
-        arguments: [obj(txb, stakePool)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::stake_pool::get_last_incentive_price_index`, arguments: [obj(txb, stakePool)] });
 }
 
 export interface GetMutIncentiveArgs {
@@ -230,6 +221,19 @@ export function getUserShareIds(txb: TransactionBlock, args: GetUserShareIdsArgs
     return txb.moveCall({
         target: `${PUBLISHED_AT}::stake_pool::get_user_share_ids`,
         arguments: [obj(txb, args.stakePool), pure(txb, args.user, `address`)],
+    });
+}
+
+export interface GetUserSharesArgs {
+    registry: ObjectArg;
+    index: bigint | TransactionArgument;
+    user: string | TransactionArgument;
+}
+
+export function getUserShares(txb: TransactionBlock, args: GetUserSharesArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::stake_pool::get_user_shares`,
+        arguments: [obj(txb, args.registry), pure(txb, args.index, `u64`), pure(txb, args.user, `address`)],
     });
 }
 
@@ -385,20 +389,19 @@ export interface UpdateIncentiveConfigArgs {
     version: ObjectArg;
     registry: ObjectArg;
     index: bigint | TransactionArgument;
-    incentiveToken: ObjectArg;
     periodIncentiveAmount: bigint | TransactionArgument | TransactionArgument | null;
     incentiveIntervalTsMs: bigint | TransactionArgument | TransactionArgument | null;
     u64Padding: Array<bigint | TransactionArgument> | TransactionArgument | TransactionArgument | null;
 }
 
-export function updateIncentiveConfig(txb: TransactionBlock, args: UpdateIncentiveConfigArgs) {
+export function updateIncentiveConfig(txb: TransactionBlock, typeArg: string, args: UpdateIncentiveConfigArgs) {
     return txb.moveCall({
         target: `${PUBLISHED_AT}::stake_pool::update_incentive_config`,
+        typeArguments: [typeArg],
         arguments: [
             obj(txb, args.version),
             obj(txb, args.registry),
             pure(txb, args.index, `u64`),
-            obj(txb, args.incentiveToken),
             pure(txb, args.periodIncentiveAmount, `0x1::option::Option<u64>`),
             pure(txb, args.incentiveIntervalTsMs, `0x1::option::Option<u64>`),
             pure(txb, args.u64Padding, `0x1::option::Option<vector<u64>>`),

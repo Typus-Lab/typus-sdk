@@ -17,10 +17,8 @@ import {
 } from "../../_framework/reified";
 import { FieldsWithTypes, composeSuiType, compressSuiType } from "../../_framework/util";
 import { Symbol } from "../symbol/structs";
-import { BcsReader, bcs, fromB64, fromHEX, toHEX } from "@mysten/bcs";
+import { bcs, fromB64, fromHEX, toHEX } from "@mysten/bcs";
 import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
-import { AddressFromBytes } from "../../tools";
-import { baseToken, quoteToken } from "../symbol/functions";
 
 /* ============================== OrderFilledEvent =============================== */
 
@@ -127,10 +125,7 @@ export class OrderFilledEvent implements StructClass {
 
     static get bcs() {
         return bcs.struct("OrderFilledEvent", {
-            user: bcs.bytes(32).transform({
-                input: (val: string) => fromHEX(val),
-                output: (val: Uint8Array) => toHEX(val),
-            }),
+            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
             collateral_token: TypeName.bcs,
             symbol: Symbol.bcs,
             order_id: bcs.u64(),
@@ -205,11 +200,7 @@ export class OrderFilledEvent implements StructClass {
     }
 
     toJSON() {
-        return {
-            $typeName: this.$typeName,
-            $typeArgs: this.$typeArgs,
-            ...this.toJSONField(),
-        };
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
     }
 
     static fromJSONField(field: any): OrderFilledEvent {
@@ -294,42 +285,6 @@ export interface PositionFields {
 }
 
 export type PositionReified = Reified<Position, PositionFields>;
-
-export function readVecPosition(bytes: Uint8Array) {
-    let reader = new BcsReader(bytes);
-    return reader.readVec((reader) => {
-        reader.read16();
-        let position = {
-            id: AddressFromBytes(reader.readBytes(32)),
-            create_ts_ms: reader.read64(),
-            position_id: reader.read64(),
-            linked_order_ids: reader.readVec((reader) => reader.read64()),
-            linked_order_prices: reader.readVec((reader) => reader.read64()),
-            user: AddressFromBytes(reader.readBytes(32)),
-            is_long: reader.read8(),
-            size: reader.read64(),
-            size_decimal: reader.read64(),
-            collateral_token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            collateral_token_decimal: reader.read64(),
-            baseToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            quoteToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            collateral_amount: reader.read64(),
-            reserve_amount: reader.read64(),
-            average_price: reader.read64(),
-            entry_borrow_index: reader.read64(),
-            entry_funding_rate_index_sign: reader.read8(),
-            entry_funding_rate_index: reader.read64(),
-            unrealized_loss: reader.read64(),
-            unrealized_funding_sign: reader.read8(),
-            unrealized_funding_fee: reader.read64(),
-            unrealized_borrow_fee: reader.read64(),
-            unrealized_rebate: reader.read64(),
-            u64_padding: reader.readVec((reader) => reader.read64()),
-        };
-
-        return position;
-    });
-}
 
 export class Position implements StructClass {
     static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::Position";
@@ -441,10 +396,7 @@ export class Position implements StructClass {
             position_id: bcs.u64(),
             linked_order_ids: bcs.vector(bcs.u64()),
             linked_order_prices: bcs.vector(bcs.u64()),
-            user: bcs.bytes(32).transform({
-                input: (val: string) => fromHEX(val),
-                output: (val: Uint8Array) => toHEX(val),
-            }),
+            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
             is_long: bcs.bool(),
             size: bcs.u64(),
             size_decimal: bcs.u64(),
@@ -562,11 +514,7 @@ export class Position implements StructClass {
     }
 
     toJSON() {
-        return {
-            $typeName: this.$typeName,
-            $typeArgs: this.$typeArgs,
-            ...this.toJSONField(),
-        };
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
     }
 
     static fromJSONField(field: any): Position {
@@ -656,39 +604,6 @@ export interface TradingOrderFields {
 }
 
 export type TradingOrderReified = Reified<TradingOrder, TradingOrderFields>;
-
-export function readVecOrder(bytes: Uint8Array) {
-    let reader = new BcsReader(bytes);
-    return reader.readVec((reader) => {
-        reader.read16();
-        let order = {
-            id: AddressFromBytes(reader.readBytes(32)),
-            create_ts_ms: reader.read64(),
-            order_id: reader.read64(),
-            linked_position_id: reader
-                .readVec((reader) => {
-                    return reader.read64();
-                })
-                .at(0),
-            user: AddressFromBytes(reader.readBytes(32)),
-            collateral_token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            collateral_token_decimal: reader.read64(),
-            baseToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            quoteToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            leverage_pct: reader.read64(),
-            reduce_only: reader.read8(),
-            is_long: reader.read8(),
-            is_stop_order: reader.read8(),
-            size: reader.read64(),
-            size_decimal: reader.read64(),
-            trigger_price: reader.read64(),
-            oracle_price_when_placing: reader.read64(),
-            u64_padding: reader.readVec((reader) => reader.read64()),
-        };
-
-        return order;
-    });
-}
 
 export class TradingOrder implements StructClass {
     static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::position::TradingOrder";
@@ -785,10 +700,7 @@ export class TradingOrder implements StructClass {
             create_ts_ms: bcs.u64(),
             order_id: bcs.u64(),
             linked_position_id: Option.bcs(bcs.u64()),
-            user: bcs.bytes(32).transform({
-                input: (val: string) => fromHEX(val),
-                output: (val: Uint8Array) => toHEX(val),
-            }),
+            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
             collateral_token: TypeName.bcs,
             collateral_token_decimal: bcs.u64(),
             symbol: Symbol.bcs,
@@ -879,11 +791,7 @@ export class TradingOrder implements StructClass {
     }
 
     toJSON() {
-        return {
-            $typeName: this.$typeName,
-            $typeArgs: this.$typeArgs,
-            ...this.toJSONField(),
-        };
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
     }
 
     static fromJSONField(field: any): TradingOrder {

@@ -91,9 +91,7 @@ export class LpRegistry implements StructClass {
     }
 
     static fromFields(fields: Record<string, any>): LpRegistry {
-        return LpRegistry.reified().new({
-            id: decodeFromFields(UID.reified(), fields.id),
-        });
+        return LpRegistry.reified().new({ id: decodeFromFields(UID.reified(), fields.id) });
     }
 
     static fromFieldsWithTypes(item: FieldsWithTypes): LpRegistry {
@@ -101,9 +99,7 @@ export class LpRegistry implements StructClass {
             throw new Error("not a LpRegistry type");
         }
 
-        return LpRegistry.reified().new({
-            id: decodeFromFieldsWithTypes(UID.reified(), item.fields.id),
-        });
+        return LpRegistry.reified().new({ id: decodeFromFieldsWithTypes(UID.reified(), item.fields.id) });
     }
 
     static fromBcs(data: Uint8Array): LpRegistry {
@@ -117,17 +113,11 @@ export class LpRegistry implements StructClass {
     }
 
     toJSON() {
-        return {
-            $typeName: this.$typeName,
-            $typeArgs: this.$typeArgs,
-            ...this.toJSONField(),
-        };
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
     }
 
     static fromJSONField(field: any): LpRegistry {
-        return LpRegistry.reified().new({
-            id: decodeFromJSONField(UID.reified(), field.id),
-        });
+        return LpRegistry.reified().new({ id: decodeFromJSONField(UID.reified(), field.id) });
     }
 
     static fromJSON(json: Record<string, any>): LpRegistry {
@@ -237,9 +227,7 @@ export class TLP implements StructClass {
     }
 
     static fromFields(fields: Record<string, any>): TLP {
-        return TLP.reified().new({
-            dummyField: decodeFromFields("bool", fields.dummy_field),
-        });
+        return TLP.reified().new({ dummyField: decodeFromFields("bool", fields.dummy_field) });
     }
 
     static fromFieldsWithTypes(item: FieldsWithTypes): TLP {
@@ -247,9 +235,7 @@ export class TLP implements StructClass {
             throw new Error("not a TLP type");
         }
 
-        return TLP.reified().new({
-            dummyField: decodeFromFieldsWithTypes("bool", item.fields.dummy_field),
-        });
+        return TLP.reified().new({ dummyField: decodeFromFieldsWithTypes("bool", item.fields.dummy_field) });
     }
 
     static fromBcs(data: Uint8Array): TLP {
@@ -263,17 +249,11 @@ export class TLP implements StructClass {
     }
 
     toJSON() {
-        return {
-            $typeName: this.$typeName,
-            $typeArgs: this.$typeArgs,
-            ...this.toJSONField(),
-        };
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
     }
 
     static fromJSONField(field: any): TLP {
-        return TLP.reified().new({
-            dummyField: decodeFromJSONField("bool", field.dummyField),
-        });
+        return TLP.reified().new({ dummyField: decodeFromJSONField("bool", field.dummyField) });
     }
 
     static fromJSON(json: Record<string, any>): TLP {

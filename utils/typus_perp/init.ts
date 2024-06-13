@@ -42,6 +42,7 @@ export function registerClasses(loader: StructClassLoader) {
     loader.register(lpPool.SwapEvent);
     loader.register(lpPool.TokenPool);
     loader.register(lpPool.UpdateFundingInfoEvent);
+    loader.register(lpPool.UpdateLiquidityValueEvent);
     loader.register(lpPool.UpdateMarginConfigEvent);
     loader.register(lpPool.UpdateSpotConfigEvent);
     loader.register(symbol.Symbol);
@@ -78,6 +79,7 @@ export function registerClasses(loader: StructClassLoader) {
     loader.register(trading.IncreaseCollateralEvent);
     loader.register(trading.LinkedOrdersInfo);
     loader.register(trading.LiquidateEvent);
+    loader.register(trading.ManagerReducePosition);
     loader.register(trading.MarketConfig);
     loader.register(trading.MarketInfo);
     loader.register(trading.MarketRegistry);

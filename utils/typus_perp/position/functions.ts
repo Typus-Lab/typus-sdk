@@ -344,10 +344,7 @@ export function createOrderWithBidReceipts(txb: TransactionBlock, args: CreateOr
 }
 
 export function getMaxOrderTypeTag(txb: TransactionBlock) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_max_order_type_tag`,
-        arguments: [],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_max_order_type_tag`, arguments: [] });
 }
 
 export interface GetOptionCollateralOrderCollateralAmountArgs {
@@ -393,10 +390,11 @@ export function getOrderCollateralAmount(txb: TransactionBlock, typeArg: string,
 }
 
 export function getOrderCollateralToken(txb: TransactionBlock, order: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_order_collateral_token`,
-        arguments: [obj(txb, order)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_order_collateral_token`, arguments: [obj(txb, order)] });
+}
+
+export function getOrderCollateralTokenDecimal(txb: TransactionBlock, order: ObjectArg) {
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_order_collateral_token_decimal`, arguments: [obj(txb, order)] });
 }
 
 export interface GetOrderFilledFeeArgs {
@@ -425,66 +423,43 @@ export function getOrderFilledFee(txb: TransactionBlock, args: GetOrderFilledFee
 }
 
 export function getOrderId(txb: TransactionBlock, order: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_order_id`,
-        arguments: [obj(txb, order)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_order_id`, arguments: [obj(txb, order)] });
 }
 
 export function getOrderLinkedPositionId(txb: TransactionBlock, order: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_order_linked_position_id`,
-        arguments: [obj(txb, order)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_order_linked_position_id`, arguments: [obj(txb, order)] });
 }
 
 export function getOrderPortfolioIndex(txb: TransactionBlock, order: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_order_portfolio_index`,
-        arguments: [obj(txb, order)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_order_portfolio_index`, arguments: [obj(txb, order)] });
 }
 
 export function getOrderPrice(txb: TransactionBlock, order: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_order_price`,
-        arguments: [obj(txb, order)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_order_price`, arguments: [obj(txb, order)] });
+}
+
+export function getOrderReduceOnly(txb: TransactionBlock, order: ObjectArg) {
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_order_reduce_only`, arguments: [obj(txb, order)] });
 }
 
 export function getOrderSide(txb: TransactionBlock, order: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_order_side`,
-        arguments: [obj(txb, order)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_order_side`, arguments: [obj(txb, order)] });
 }
 
 export function getOrderSize(txb: TransactionBlock, order: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_order_size`,
-        arguments: [obj(txb, order)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_order_size`, arguments: [obj(txb, order)] });
 }
 
 export function getOrderTradingSymbol(txb: TransactionBlock, order: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_order_trading_symbol`,
-        arguments: [obj(txb, order)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_order_trading_symbol`, arguments: [obj(txb, order)] });
 }
 
 export function getOrderTypeTag(txb: TransactionBlock, order: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_order_type_tag`,
-        arguments: [obj(txb, order)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_order_type_tag`, arguments: [obj(txb, order)] });
 }
 
 export function getOrderUser(txb: TransactionBlock, order: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_order_user`,
-        arguments: [obj(txb, order)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_order_user`, arguments: [obj(txb, order)] });
 }
 
 export function getPositionCollateralAmount(txb: TransactionBlock, typeArg: string, position: ObjectArg) {
@@ -496,66 +471,39 @@ export function getPositionCollateralAmount(txb: TransactionBlock, typeArg: stri
 }
 
 export function getPositionCollateralTokenDecimal(txb: TransactionBlock, position: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_position_collateral_token_decimal`,
-        arguments: [obj(txb, position)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_position_collateral_token_decimal`, arguments: [obj(txb, position)] });
 }
 
 export function getPositionCollateralTokenType(txb: TransactionBlock, position: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_position_collateral_token_type`,
-        arguments: [obj(txb, position)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_position_collateral_token_type`, arguments: [obj(txb, position)] });
 }
 
 export function getPositionId(txb: TransactionBlock, position: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_position_id`,
-        arguments: [obj(txb, position)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_position_id`, arguments: [obj(txb, position)] });
 }
 
 export function getPositionSide(txb: TransactionBlock, position: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_position_side`,
-        arguments: [obj(txb, position)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_position_side`, arguments: [obj(txb, position)] });
 }
 
 export function getPositionSize(txb: TransactionBlock, position: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_position_size`,
-        arguments: [obj(txb, position)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_position_size`, arguments: [obj(txb, position)] });
 }
 
 export function getPositionSizeDecimal(txb: TransactionBlock, position: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_position_size_decimal`,
-        arguments: [obj(txb, position)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_position_size_decimal`, arguments: [obj(txb, position)] });
 }
 
 export function getPositionUnrealizedFundingSign(txb: TransactionBlock, position: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_position_unrealized_funding_sign`,
-        arguments: [obj(txb, position)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_position_unrealized_funding_sign`, arguments: [obj(txb, position)] });
 }
 
 export function getPositionUser(txb: TransactionBlock, position: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_position_user`,
-        arguments: [obj(txb, position)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_position_user`, arguments: [obj(txb, position)] });
 }
 
 export function getReserveAmount(txb: TransactionBlock, position: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::get_reserve_amount`,
-        arguments: [obj(txb, position)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::get_reserve_amount`, arguments: [obj(txb, position)] });
 }
 
 export interface IncreaseCollateralArgs {
@@ -572,16 +520,48 @@ export function increaseCollateral(txb: TransactionBlock, typeArg: string, args:
 }
 
 export function isOptionCollateralOrder(txb: TransactionBlock, order: ObjectArg) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::is_option_collateral_order`,
-        arguments: [obj(txb, order)],
-    });
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::is_option_collateral_order`, arguments: [obj(txb, order)] });
 }
 
 export function isOptionCollateralPosition(txb: TransactionBlock, position: ObjectArg) {
+    return txb.moveCall({ target: `${PUBLISHED_AT}::position::is_option_collateral_position`, arguments: [obj(txb, position)] });
+}
+
+export interface ManagerCreateReduceOnlyOrderArgs {
+    version: ObjectArg;
+    symbol: ObjectArg;
+    isLong: boolean | TransactionArgument;
+    size: bigint | TransactionArgument;
+    sizeDecimal: bigint | TransactionArgument;
+    triggerPrice: bigint | TransactionArgument;
+    collateral: ObjectArg;
+    collateralTokenDecimal: bigint | TransactionArgument;
+    linkedPositionId: bigint | TransactionArgument;
+    user: string | TransactionArgument;
+    orderId: bigint | TransactionArgument;
+    oraclePrice: bigint | TransactionArgument;
+    clock: ObjectArg;
+}
+
+export function managerCreateReduceOnlyOrder(txb: TransactionBlock, typeArg: string, args: ManagerCreateReduceOnlyOrderArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::position::is_option_collateral_position`,
-        arguments: [obj(txb, position)],
+        target: `${PUBLISHED_AT}::position::manager_create_reduce_only_order`,
+        typeArguments: [typeArg],
+        arguments: [
+            obj(txb, args.version),
+            obj(txb, args.symbol),
+            pure(txb, args.isLong, `bool`),
+            pure(txb, args.size, `u64`),
+            pure(txb, args.sizeDecimal, `u64`),
+            pure(txb, args.triggerPrice, `u64`),
+            obj(txb, args.collateral),
+            pure(txb, args.collateralTokenDecimal, `u64`),
+            pure(txb, args.linkedPositionId, `u64`),
+            pure(txb, args.user, `address`),
+            pure(txb, args.orderId, `u64`),
+            pure(txb, args.oraclePrice, `u64`),
+            obj(txb, args.clock),
+        ],
     });
 }
 

@@ -4,7 +4,8 @@ import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getUserPositions } from "../../../utils/typus_perp/trading/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import "../../load_env";
-import { Position, readVecPosition } from "../../../utils/typus_perp/position/structs";
+import { readVecPosition } from "../../../utils/typus_perp/readVec";
+
 import { bcs } from "@mysten/bcs";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
