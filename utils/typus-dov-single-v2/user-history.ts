@@ -297,7 +297,7 @@ export async function parseTxHistory(
                     }
                     if (event.parsedJson!.log[10] > 0) {
                         // redeem
-                        Action = "Redeem";
+                        Action = "Harvest Reward";
                         var token = typeArgToAsset("0x" + event.parsedJson!.i_token.name);
                         var amount = Number(event.parsedJson!.log[10]) / 10 ** assetToDecimal(token)!;
                         Amount = `${BigNumber(amount).toFixed()} ${token}`;
