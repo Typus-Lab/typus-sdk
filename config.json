@@ -15,8 +15,8 @@
             "TYPUS": "0x4b0f4ee1a40ce37ec81c987cc4e76a665419e74b863319492fc7d26f708b835a"
         },
         "PACKAGE": {
-            "DOV_SINGLE": "0x8b65b817e7d819ab810bf50eaaa521ceea39d85cd46ab58180cfe287ce6f8ef0",
-            "FRAMEWORK": "0x946d188d91cabd4fe15ef763e463a6738db1965814d3fd790085b4720cf90e28",
+            "DOV_SINGLE": "0x011840332be097b422abb8336970b0be1d7333df22134cd5c3be9d9a1cb956d0",
+            "FRAMEWORK": "0x8638b586ad122d2887d0685d1996a88adc1b7a8a81906fc7f68b25dcbac25cb5",
             "MFUD": "0xd8f04cd2a16c19c17428c3b4c22b01dd06740423b93fb7ee88fbe2676a82849d",
             "NFT": "0xba06aae31d9b7c9f651e783272c7e4f776fb5ae17e89d525b75a17b099f58202",
             "ORACLE": "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd",
@@ -51,7 +51,7 @@
         }
     },
     "TESTNET": {
-        "RPC_ENDPOINT": "https://fullnode.testnet.sui.io:443",
+        "RPC_ENDPOINT": "https://sui-testnet.blastapi.io:443/7f446a12-c4ab-4e3c-b2d8-ebb0fcbe5cdd",
         "TYPUS_VERSION": "0x2edc980f55e31ba3c660f4e2650e915fd47fb33b524b01a52a116719adac8be7",
         "TGLD_COIN_METADATA": "0xf77f8aabe64dccef0e568f2ef58a6ca74bdfb31786507cc35b7626a4df0d0ebc",
         "TGLD_TOKEN_POLICY": "0x17875c2f772053cd148bd2b8b8a40160db3f841825d8963192f8394d5c18974c",
