@@ -508,7 +508,6 @@ export function getCompoundWithRedeemTx(input: {
             input.tx.object(CLOCK),
         ],
     });
-    input.tx.transferObjects([input.tx.object(result[0])], input.user);
 
     return getReduceFundTx({
         tx: input.tx,
