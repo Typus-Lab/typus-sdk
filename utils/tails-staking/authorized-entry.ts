@@ -285,6 +285,8 @@ export async function getSetProfitSharingTx(input: {
     typeArguments: string[];
     level_profits: string;
     coins: string[];
+    amount: string;
+    tsMs: string;
 }) {
     let result = input.tx.moveCall({
         target: `${input.typusPackageId}::tails_staking::set_profit_sharing`,
@@ -294,6 +296,8 @@ export async function getSetProfitSharingTx(input: {
             input.tx.object(input.typusTailsStakingRegistry),
             input.tx.pure(input.level_profits),
             input.tx.makeMoveVec({ objects: input.coins.map((coin) => input.tx.object(coin)) }),
+            input.tx.pure(input.amount),
+            input.tx.pure(input.tsMs),
         ],
     });
 
