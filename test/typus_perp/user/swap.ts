@@ -5,8 +5,10 @@ import { swap } from "../../../utils/typus_perp/lp-pool/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../../constants";
 import { LiquidityPool, Registry } from "../../../utils/typus_perp/lp-pool/structs";
-import { SuiPriceServiceConnection, SuiPythClient } from "@pythnetwork/pyth-sui-js";
 import "../../load_env";
+import { createPythClient, updatePyth } from "../../../utils/pyth/pythClient";
+import { tokenType } from "../../../utils/token";
+import { priceInfoObjectIds } from "../../../utils/pyth/constant";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
@@ -35,25 +37,15 @@ const gasBudget = 100000000;
     let tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
-    // @ts-ignore
-    const client = new SuiPythClient(provider, config.PYTH_STATE, config.WORMHOLE_STATE);
+    // INPUTS
+    const FROM_TOKEN = "USDT";
+    const TO_TOKEN = "SUI";
+    const NETWORK = "TESTNET";
 
-    const connection = new SuiPriceServiceConnection("https://hermes-beta.pyth.network");
-
-    const priceIDs = [
-        // You can find the IDs of prices at https://pyth.network/developers/price-feed-ids
-        "0x1fc18861232290221461220bd4e2acd1dcdfbc89c84092c93c18bdc7756c1588", // USDT/USD price ID
-        "0x50c67b3fd225db8912a424dd4baed60ffdde625ed2feaaf283724f9608fea266", // SUI/USD price ID
-    ];
-
-    const priceFeedUpdateData = await connection.getPriceFeedsUpdateData(priceIDs);
-
-    // @ts-ignore
-    const priceInfoObjectIds = await client.updatePriceFeeds(tx, priceFeedUpdateData, priceIDs);
-    // console.log(priceInfoObjectIds);
-
-    const fromToken = "0xa38dad920880f81ea514de6db007d3a84e9116a29c60b3e69bbe418c2d9f553c::usdt::USDT";
-    const toToken = "0x2::sui::SUI";
+    const pythClient = createPythClient(provider, NETWORK);
+    await updatePyth(pythClient, tx, [FROM_TOKEN, TO_TOKEN]);
+    const fromToken = tokenType[NETWORK][FROM_TOKEN];
+    const toToken = tokenType[NETWORK][TO_TOKEN];
 
     const coins = (
         await provider.getCoins({
@@ -74,8 +66,8 @@ const gasBudget = 100000000;
         pythState: config.PYTH_STATE,
         clock: CLOCK,
         index: BigInt(0),
-        oracleFromToken: priceInfoObjectIds[0],
-        oracleToToken: priceInfoObjectIds[1],
+        oracleFromToken: priceInfoObjectIds[NETWORK][FROM_TOKEN],
+        oracleToToken: priceInfoObjectIds[NETWORK][TO_TOKEN],
         fromBalance: balance,
         minToAmount: BigInt(0),
     });
@@ -85,4 +77,5 @@ const gasBudget = 100000000;
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
 
     console.log(res);
+    // https://testnet.suivision.xyz/txblock/8TDGppninwYxBqpNtao3mMa936nemU3rdMqA8xesJREA
 })();
