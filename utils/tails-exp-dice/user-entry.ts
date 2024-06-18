@@ -124,3 +124,117 @@ export async function newGamePlayGuessTx(
 
     return tx;
 }
+
+/**
+    public fun consume_exp_coin_staked(
+        registry: &mut Registry,
+        version: &Version,
+        tails_staking_registry: &mut TailsStakingRegistry,
+        tails: address,
+        coin: Coin<TAILS_EXP>,
+    ) {
+ */
+export function getConsumeExpCoinStakedTx(input: {
+    tx: TransactionBlock;
+    packageId: string;
+    tailsExpRegistry: string;
+    typusEcosystemVersion: string;
+    tailsStakingRegistry: string;
+    tails: string;
+    coins: string[];
+    amount: string;
+}) {
+    let coin = input.coins.pop()!;
+    if (input.coins.length > 0) {
+        input.tx.mergeCoins(
+            input.tx.object(coin),
+            input.coins.map((id) => input.tx.object(id))
+        );
+    }
+    let [input_coin] = input.tx.splitCoins(input.tx.object(coin), [input.tx.pure(input.amount)]);
+    input.tx.moveCall({
+        target: `${input.packageId}::tails_exp::consume_exp_coin_staked`,
+        typeArguments: [],
+        arguments: [
+            input.tx.object(input.tailsExpRegistry),
+            input.tx.object(input.typusEcosystemVersion),
+            input.tx.object(input.tailsStakingRegistry),
+            input.tx.pure(input.tails),
+            input.tx.object(input_coin),
+        ],
+    });
+
+    return input.tx;
+}
+/**
+    public fun consume_exp_coin_unstaked(
+        registry: &mut Registry,
+        version: &Version,
+        tails_staking_registry: &TailsStakingRegistry,
+        kiosk: &mut Kiosk,
+        kiosk_owner_cap: &KioskOwnerCap,
+        tails: address,
+        coin: Coin<TAILS_EXP>,
+    ) {
+ */
+export function getConsumeExpCoinUnstakedTx(input: {
+    tx: TransactionBlock;
+    packageId: string;
+    tailsExpRegistry: string;
+    typusEcosystemVersion: string;
+    tailsStakingRegistry: string;
+    kiosk: string;
+    kioskCap: string;
+    tails: string;
+    coins: string[];
+    amount: string;
+    personalKioskPackageId: string | undefined;
+}) {
+    let coin = input.coins.pop()!;
+    if (input.coins.length > 0) {
+        input.tx.mergeCoins(
+            input.tx.object(coin),
+            input.coins.map((id) => input.tx.object(id))
+        );
+    }
+    let [input_coin] = input.tx.splitCoins(input.tx.object(coin), [input.tx.pure(input.amount)]);
+    if (input.personalKioskPackageId) {
+        const [personalKioskCap, borrow] = input.tx.moveCall({
+            target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
+            arguments: [input.tx.object(input.kioskCap)],
+        });
+        input.tx.moveCall({
+            target: `${input.packageId}::tails_exp::consume_exp_coin_unstaked`,
+            typeArguments: [],
+            arguments: [
+                input.tx.object(input.tailsExpRegistry),
+                input.tx.object(input.typusEcosystemVersion),
+                input.tx.object(input.tailsStakingRegistry),
+                input.tx.object(input.kiosk),
+                personalKioskCap,
+                input.tx.pure(input.tails),
+                input.tx.object(input_coin),
+            ],
+        });
+        input.tx.moveCall({
+            target: `${input.personalKioskPackageId}::personal_kiosk::return_val`,
+            arguments: [input.tx.object(input.kioskCap), personalKioskCap, borrow],
+        });
+    } else {
+        input.tx.moveCall({
+            target: `${input.packageId}::tails_exp::consume_exp_coin_unstaked`,
+            typeArguments: [],
+            arguments: [
+                input.tx.object(input.tailsExpRegistry),
+                input.tx.object(input.typusEcosystemVersion),
+                input.tx.object(input.tailsStakingRegistry),
+                input.tx.object(input.kiosk),
+                input.tx.object(input.kioskCap),
+                input.tx.pure(input.tails),
+                input.tx.object(input_coin),
+            ],
+        });
+    }
+
+    return input.tx;
+}
