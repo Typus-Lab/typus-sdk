@@ -278,7 +278,7 @@ export async function parseTxHistory(
                     }
                     if (event.parsedJson!.log[6] > 0 && event.parsedJson!.log[10] > 0) {
                         // Harvest d token and i token
-                        Action = "Harvest";
+                        Action = "Harvest Reward";
                         var b_token_name = typeArgToAsset("0x" + event.parsedJson!.b_token.name);
                         var b_token_amount = Number(event.parsedJson!.log[6]) / 10 ** assetToDecimal(b_token_name)!;
 
