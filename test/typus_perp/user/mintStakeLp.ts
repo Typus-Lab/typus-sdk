@@ -6,7 +6,7 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../../constants";
 import { LiquidityPool, Registry } from "../../../utils/typus_perp/lp-pool/structs";
 import { createPythClient, updatePyth } from "../../../utils/pyth/pythClient";
-import { tokenType } from "../../../utils/token";
+import { tokenType, typeArgToAsset } from "../../../utils/token";
 import { stake } from "../../../utils/typus_perp/stake-pool/functions";
 import { priceIDs, priceInfoObjectIds } from "../../../utils/pyth/constant";
 
@@ -42,8 +42,10 @@ const gasBudget = 100000000;
 
     // INPUT
     const NETWORK = "TESTNET";
+    // INPUT
     const TOKEN = "USDC";
-    const tokens = ["SUI", "USDC", "USDT"];
+
+    const tokens = lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
 
     const pythClient = createPythClient(provider, NETWORK);
     await updatePyth(pythClient, tx, tokens);
