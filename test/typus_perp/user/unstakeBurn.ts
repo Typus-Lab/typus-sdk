@@ -90,8 +90,13 @@ const gasBudget = 100000000;
 
     tx.transferObjects([coin], address);
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
+    let dryrunRes = await provider.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: address,
+    });
+    console.log(dryrunRes.events.filter((e) => e.type.endsWith("BurnLpEvent")));
 
-    console.log(res);
+    // let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
+    // console.log(res);
     // https://testnet.suivision.xyz/txblock/4sSFtXE15BUQqz6k3z4xrQwFUa4wRev1TaX3L5DUL9jh
 })();
