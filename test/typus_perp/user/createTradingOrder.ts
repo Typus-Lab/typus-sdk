@@ -5,8 +5,10 @@ import { createTradingOrder } from "../../../utils/typus_perp/trading/functions"
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../../constants";
 import { LiquidityPool, Registry } from "../../../utils/typus_perp/lp-pool/structs";
-import { SuiPriceServiceConnection, SuiPythClient } from "@pythnetwork/pyth-sui-js";
 import "../../load_env";
+import { createPythClient, updatePyth } from "../../../utils/pyth/pythClient";
+import { tokenType } from "../../../utils/token";
+import { priceInfoObjectIds } from "../../../utils/pyth/constant";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
@@ -35,26 +37,15 @@ const gasBudget = 100000000;
     let tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
-    // @ts-ignore
-    const client = new SuiPythClient(provider, config.PYTH_STATE, config.WORMHOLE_STATE);
+    // INPUTS
+    const TOKEN = "USDT";
+    const BASE_TOKEN = "SUI";
+    const NETWORK = "TESTNET";
 
-    const connection = new SuiPriceServiceConnection("https://hermes-beta.pyth.network");
-
-    const priceIDs = [
-        // You can find the IDs of prices at https://pyth.network/developers/price-feed-ids
-        "0x50c67b3fd225db8912a424dd4baed60ffdde625ed2feaaf283724f9608fea266", // SUI/USD price ID
-        "0x1fc18861232290221461220bd4e2acd1dcdfbc89c84092c93c18bdc7756c1588", // USDT/USD price ID
-    ];
-
-    const priceFeedUpdateData = await connection.getPriceFeedsUpdateData(priceIDs);
-
-    // @ts-ignore
-    const priceInfoObjectIds = await client.updatePriceFeeds(tx, priceFeedUpdateData, priceIDs);
-    // console.log(priceInfoObjectIds);
-
-    const cToken = "0xa38dad920880f81ea514de6db007d3a84e9116a29c60b3e69bbe418c2d9f553c::usdt::USDT";
-
-    const BASE_TOKEN = "0x2::sui::SUI";
+    const pythClient = createPythClient(provider, NETWORK);
+    await updatePyth(pythClient, tx, [TOKEN, BASE_TOKEN]);
+    const cToken = tokenType[NETWORK][TOKEN];
+    const baseToken = tokenType[NETWORK][BASE_TOKEN];
 
     const coins = (
         await provider.getCoins({
@@ -69,15 +60,15 @@ const gasBudget = 100000000;
         arguments: [tx.makeMoveVec({ objects: coins.map((coin) => tx.object(coin)) }), tx.pure("1000000000")],
     });
 
-    createTradingOrder(tx, [cToken, BASE_TOKEN], {
+    createTradingOrder(tx, [cToken, baseToken], {
         version: config.TYPUS_PERP_VERSION,
         registry: config.TYPUS_PERP_MARKET_REGISTRY,
         poolRegistry: config.TYPUS_PERP_LP_POOL_REGISTRY,
         marketIndex: BigInt(0),
         poolIndex: BigInt(0),
         pythState: config.PYTH_STATE,
-        oracleCToken: config.PRICE_INFO_OBJECT_USDT,
-        oracleTradingSymbol: config.PRICE_INFO_OBJECT_SUI,
+        oracleCToken: priceInfoObjectIds[NETWORK][TOKEN],
+        oracleTradingSymbol: priceInfoObjectIds[NETWORK][BASE_TOKEN],
         clock: CLOCK,
         typusEcosystemVersion: config.TYPUS_VERSION,
         typusUserRegistry: config.USER_REGISTRY,
