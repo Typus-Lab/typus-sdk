@@ -45,6 +45,7 @@ const gasBudget = 100000000;
     // INPUT
     const TOKEN = "USDC";
 
+    // update pyth oracle
     const tokens = lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
 
     const pythClient = createPythClient(provider, NETWORK);
