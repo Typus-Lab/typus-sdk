@@ -276,13 +276,21 @@ export async function parseTxHistory(
                             txDigest: event.id.txDigest,
                         });
                     }
+                    if (event.parsedJson!.log[6] > 0 && event.parsedJson!.log[10] > 0) {
+                        // Harvest d token and i token
+                        Action = "Harvest Reward";
+                        var b_token_name = typeArgToAsset("0x" + event.parsedJson!.b_token.name);
+                        var b_token_amount = Number(event.parsedJson!.log[6]) / 10 ** assetToDecimal(b_token_name)!;
 
-                    if (event.parsedJson!.log[6] > 0) {
-                        // harvest
-                        Action = "Harvest Reward";
-                        var token = typeArgToAsset("0x" + event.parsedJson!.b_token.name);
-                        var amount = Number(event.parsedJson!.log[6]) / 10 ** assetToDecimal(token)!;
-                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                        var i_token_name = typeArgToAsset("0x" + event.parsedJson!.i_token.name);
+                        var i_token_amount = Number(event.parsedJson!.log[10]) / 10 ** assetToDecimal(i_token_name)!;
+
+                        Amount = `${BigNumber(b_token_amount).toFixed()} ${b_token_name!}\n${BigNumber(i_token_amount).toFixed()} ${i_token_name!}`;
+
+                        // var amount =
+                        //     Number(event.parsedJson!.log[6]) / 10 ** assetToDecimal(token)!
+                        //     Number(event.parsedJson!.log[10]) / 10 ** assetToDecimal(token)!;
+                        // Amount = `${BigNumber(amount).toFixed()} ${token}`;
                         txHistory.push({
                             Index,
                             Period,
@@ -295,25 +303,45 @@ export async function parseTxHistory(
                             Date: new Date(Number(event.timestampMs)),
                             txDigest: event.id.txDigest,
                         });
-                    }
-                    if (event.parsedJson!.log[10] > 0) {
-                        // redeem
-                        Action = "Harvest Reward";
-                        var token = typeArgToAsset("0x" + event.parsedJson!.i_token.name);
-                        var amount = Number(event.parsedJson!.log[10]) / 10 ** assetToDecimal(token)!;
-                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
-                        txHistory.push({
-                            Index,
-                            Period,
-                            Action,
-                            Amount,
-                            Vault,
-                            RiskLevel,
-                            Tails,
-                            Exp,
-                            Date: new Date(Number(event.timestampMs)),
-                            txDigest: event.id.txDigest,
-                        });
+                    } else {
+                        if (event.parsedJson!.log[6] > 0) {
+                            // harvest
+                            Action = "Harvest Reward";
+                            var token = typeArgToAsset("0x" + event.parsedJson!.b_token.name);
+                            var amount = Number(event.parsedJson!.log[6]) / 10 ** assetToDecimal(token)!;
+                            Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                            txHistory.push({
+                                Index,
+                                Period,
+                                Action,
+                                Amount,
+                                Vault,
+                                RiskLevel,
+                                Tails,
+                                Exp,
+                                Date: new Date(Number(event.timestampMs)),
+                                txDigest: event.id.txDigest,
+                            });
+                        }
+                        if (event.parsedJson!.log[10] > 0) {
+                            // redeem
+                            Action = "Harvest Reward";
+                            var token = typeArgToAsset("0x" + event.parsedJson!.i_token.name);
+                            var amount = Number(event.parsedJson!.log[10]) / 10 ** assetToDecimal(token)!;
+                            Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                            txHistory.push({
+                                Index,
+                                Period,
+                                Action,
+                                Amount,
+                                Vault,
+                                RiskLevel,
+                                Tails,
+                                Exp,
+                                Date: new Date(Number(event.timestampMs)),
+                                txDigest: event.id.txDigest,
+                            });
+                        }
                     }
 
                     return txHistory;
