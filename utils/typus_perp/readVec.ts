@@ -69,3 +69,36 @@ export function readVecOrder(bytes: Uint8Array) {
         return order;
     });
 }
+
+export function readVecShares(bytes: Uint8Array) {
+    let reader = new BcsReader(bytes);
+    return reader.readVec((reader) => {
+        reader.read16();
+        let share = {
+            user: AddressFromBytes(reader.readBytes(32)),
+            user_share_id: reader.read64(),
+            share: reader.read64(),
+            stake_ts_ms: reader.read64(),
+            unlock_ts_ms: reader
+                .readVec((reader) => {
+                    return reader.read64();
+                })
+                .at(0),
+            last_incentive_price_index: reader.readVec((reader) => [
+                String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                reader.read64(),
+            ]),
+            last_harvest_ts_ms: reader.readVec((reader) => [
+                String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                reader.read64(),
+            ]),
+            unlock_incentive_price_index: reader.readVec((reader) => [
+                String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                reader.read64(),
+            ]),
+            u64_padding: reader.readVec((reader) => reader.read64()),
+        };
+
+        return share;
+    });
+}
