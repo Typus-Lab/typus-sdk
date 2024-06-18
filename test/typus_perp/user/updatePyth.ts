@@ -18,7 +18,8 @@ const provider = new SuiClient({
     const tx = new TransactionBlock();
 
     const pythClient = await createPythClient(provider, "TESTNET");
-    await updatePyth(pythClient, tx, ["SUI", "USDC", "USDT", "BTC", "ETH", "SOL", "CETUS", "NAVX", "SCA"]);
+    const priceInfoObjectIds = await updatePyth(pythClient, tx, ["SUI", "USDC", "USDT", "BTC", "ETH", "SOL", "CETUS", "NAVX", "SCA"]);
+    console.log(priceInfoObjectIds);
 
     const res = await provider.signAndExecuteTransactionBlock({
         signer: keypair,

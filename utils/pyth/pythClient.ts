@@ -17,10 +17,9 @@ export function createPythClient(provider: any, network: "MAINNET" | "TESTNET"):
     return pythClient;
 }
 
-export async function updatePyth(pythClient: PythClient, tx: TransactionBlock, assets: string[]): Promise<ObjectId[]> {
-    const _priceIDs = assets.map((asset) => priceIDs[pythClient.network][asset]);
-
-    console.log(_priceIDs);
+export async function updatePyth(pythClient: PythClient, tx: TransactionBlock, tokens: string[]): Promise<ObjectId[]> {
+    const _priceIDs = tokens.map((token) => priceIDs[pythClient.network][token]);
+    // console.log(_priceIDs);
 
     const priceFeedUpdateData = await pythClient.connection.getPriceFeedsUpdateData(_priceIDs);
 
