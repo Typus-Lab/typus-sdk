@@ -20,13 +20,14 @@
             "MFUD": "0xd8f04cd2a16c19c17428c3b4c22b01dd06740423b93fb7ee88fbe2676a82849d",
             "NFT": "0xba06aae31d9b7c9f651e783272c7e4f776fb5ae17e89d525b75a17b099f58202",
             "ORACLE": "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd",
-            "TYPUS": "0x019fe3a0a4a831515a6801c51fdf0800e2428777b4e29cbc8355b7939a009893"
+            "TYPUS": "0x4b0f4ee1a40ce37ec81c987cc4e76a665419e74b863319492fc7d26f708b835a"
         },
         "REGISTRY": {
             "AIRDROP": "0x4b451f4632bd64af82d5e6fe46e20705c9468bd46d6758a0f7093fde2930d084",
             "DOV_SINGLE": "0x3d70b09359e3ca8301ae0abeda4f2fdf72ce313ba58c919ce568e5f535fd2ea8",
             "LEADERBOARD": "0xc515a3e7fd12ba902f7f1ebe52c676136e1b34cb614ae9c79a46b257ca7d5534",
             "MFUD": "0xb8d7e7ab783e56700c0212bd9f0938bba9dd3e7241c149e6c52b21334ec45ece",
+            "TAILS_STAKING": "",
             "TGLD": "0x8ee1af362fe9e0a29f6bad48d8ff44249ece5aaa77a4302c2ffcc90950e52ed2",
             "USER": "0xb1b16eb4845b5ee1a29432b1f2bcfe8cbb33c234492baf31a706d82e28e18bce"
         },
@@ -46,9 +47,7 @@
             "SUI": "0xeb6b3e3300ff884604ead6172b0aeadee3854980cab65a7feb57300b04b74cc1",
             "TURBOS": "0x819ff07b5768d7b9b428b69b123140f6a74b04eaa978a4cbab9055025bd1536d",
             "WBTC": "0x61813dc2e46dba41b14507857827f0ed7e99b0be242548828769728b81c8fab5",
-            "WETH": "0x253bbaaa35275240cf6df03258489707ea059762831e4102ebaabafd442bc935",
-            "VSUI": "0x454a942594b52fbe08f7bab38c4ee3f677564a23ac1636dc21231f6fb5fc4538",
-            "HASUI": "0xae6f3bb346766afa6165190b78419316947b431d135e152a2f0324932caba33c"
+            "WETH": "0x253bbaaa35275240cf6df03258489707ea059762831e4102ebaabafd442bc935"
         }
     },
     "TESTNET": {
@@ -60,6 +59,7 @@
         "STRATEGY_POOL": "0x50b01081469d032e04bfcbd057614b1359376920f55c7bebd076e0e2af07a57f",
         "PACKAGE_ORIGIN": {
             "DOV_SINGLE": "0x6c9a394a43844fc09d9617bc8a8e775a4521f0e28e83de1da780d043a498671f",
+            "EXP_GUESS": "0x9b43ee208a3b235810c145bca1161d1a71d08bfe76b1e55bb3db319ea95d0149",
             "FRAMEWORK": "0x908a10789a1a6953e0b73a997c10e3552f7ce4e2907afd00a334ed74bd973ded",
             "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c",
             "NFT": "0x5cfd0819411be98034cba544cbffab192c2c35674a05ff57f4f1c5042875b828",
@@ -68,18 +68,20 @@
             "LOCKED_VAULT": "0xe79b7ba69b750d30ac7ae171483a4064d0bb34090493fef3c844a11b05818d79"
         },
         "PACKAGE": {
-            "DOV_SINGLE": "0x974da22ade734483d86d4635e3ff39116b6ea4d04c45bb9cd8d30b55f5174986",
-            "FRAMEWORK": "0xa304e225551b619b07c06d8965462b268138b2c5774fd22ad8853ef91fbb9771",
+            "DOV_SINGLE": "0x2e462aa0224bec76acaea81c51ca5b9ae4b27ec50281a764797c84148c8a463f",
+            "EXP_GUESS": "0x4aab9bfc3efe279981d73eca80129356238508d3f2ffdda38a4832faf94e0b9a",
+            "FRAMEWORK": "0x90ca6e2393e3adc91b4e9b70ab16c017e5f70f7094b6f09b913fef2833a656e9",
             "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c",
             "NFT": "0x0f5162014f18686640b8d0adefd60c3fe5b377413ec4f1e77001c67d96f8501a",
             "ORACLE": "0x71fbc7acaf513561dabdeb846e7dd5288108e56edb0b6de8d4999c4dfce21f66",
-            "TYPUS": "0x01840fac0c84618087065346acdbac28bdec4326c416fcd2dc6d2f1b7d86fe62"
+            "TYPUS": "0xd017b56fbdc5cab91c8d24ff16de26130628cad2394e46bcbbf83e9a6263ce5f"
         },
         "REGISTRY": {
             "AIRDROP": "0xfb2fbf261f6050d100bcd026ffa0076e088506b1bec26313947239303e2a0224",
             "DOV_SINGLE": "0x0285cbf4aa8585be6c978235d11d06fa35773266ede040d38d34e1d79b049460",
             "LEADERBOARD": "0x4faabe5a4a509a145fc9bae95761d34c11571da4cb25d681f06ffcbadbc355e7",
             "MFUD": "0x7ad87901531693f1baa541712947860dcc543617e11b14993ad70d20daf159c6",
+            "TAILS_STAKING": "",
             "TGLD": "0x2118b4056c89d90a6dc40d198fbe239cb8e83f7ea20daaf4ea53341c7fdb043c",
             "USER": "0x5f1894a3680949111a7530d63ceda6857d31521ab2de625e9f826cae17c9a7f3",
             "LOCKED_VAULT": "0x50f1fc44c907f8738b098abf2b594e523739df7d40df8164154cfe6f60513302"
