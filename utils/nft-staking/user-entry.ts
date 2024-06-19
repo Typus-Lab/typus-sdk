@@ -1,6 +1,6 @@
-// import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
 // import { CLOCK } from "../../constants";
-// import { KIOSK_TYPE, KioskClient, Network, KioskTransaction } from "@mysten/kiosk";
+import { KIOSK_TYPE, KioskClient, Network, KioskTransaction } from "@mysten/kiosk";
 // import { SuiClient } from "@mysten/sui.js/client";
 // import { TailsId, kioskOwnerCap } from "../typus-nft/fetch";
 
@@ -230,37 +230,37 @@
 // //     return tx;
 // // }
 
-// // export async function getCreateKioskAndLockNftTx(
-// //     kioskClient: KioskClient,
-// //     gasBudget: number,
-// //     nftPackageId: string,
-// //     policy: string,
-// //     nft_id: string,
-// //     singer: string
-// // ) {
-// //     let tx = new TransactionBlock();
+export async function getCreateKioskAndLockNftTx(
+    kioskClient: KioskClient,
+    gasBudget: number,
+    nftPackageId: string,
+    policy: string,
+    nft_id: string,
+    singer: string
+) {
+    let tx = new TransactionBlock();
 
-// //     const kioskTx = new KioskTransaction({ transactionBlock: tx, kioskClient });
-// //     kioskTx.create();
-// //     // @ts-ignore
-// //     kioskTx.lock({ itemType: `${nftPackageId}::typus_nft::Tails`, itemId: nft_id, policy, item: nft_id });
+    const kioskTx = new KioskTransaction({ transactionBlock: tx, kioskClient });
+    kioskTx.create();
+    // @ts-ignore
+    kioskTx.lock({ itemType: `${nftPackageId}::typus_nft::Tails`, itemId: nft_id, policy, item: nft_id });
 
-// //     const { kiosk, kioskCap } = kioskTx;
+    const { kiosk, kioskCap } = kioskTx;
 
-// //     if (kiosk && kioskCap) {
-// //         tx.moveCall({
-// //             target: `0x2::transfer::public_share_object`,
-// //             typeArguments: [KIOSK_TYPE],
-// //             arguments: [kiosk],
-// //         });
-// //         tx.transferObjects([kioskCap], tx.pure(singer));
-// //         tx.setGasBudget(gasBudget);
-// //     } else {
-// //         console.error("Fail to Create Kiosk Tx!!");
-// //     }
+    if (kiosk && kioskCap) {
+        tx.moveCall({
+            target: `0x2::transfer::public_share_object`,
+            typeArguments: [KIOSK_TYPE],
+            arguments: [kiosk],
+        });
+        tx.transferObjects([kioskCap], tx.pure(singer));
+        tx.setGasBudget(gasBudget);
+    } else {
+        console.error("Fail to Create Kiosk Tx!!");
+    }
 
-// //     return tx;
-// // }
+    return tx;
+}
 
 // /**
 //     public fun unstake_nft(
