@@ -98,7 +98,6 @@ export const tokenOrder: { [key: string]: number } = {
     USDC: 16,
     USDT: 17,
     USDY: 18,
-    USDY: 19,
     VSUI: 20,
 };
 
