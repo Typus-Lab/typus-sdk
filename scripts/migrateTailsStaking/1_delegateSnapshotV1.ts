@@ -6,11 +6,11 @@ import configs from "../../config.json";
 import { CLOCK } from "../../constants";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-const config = configs.TESTNET;
+const config = configs.MAINNET;
 import mnemonic from "../../mnemonic.json";
 const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });
-const nftTable = "0xf011b3ebf0c073f14e39405248e2042b4528529529265dc8aad4e063f9203f87";
+const nftTable = "0xa537a287cf99264b905cb0a5400df6ed2612ba82db6c536548ad9f3fd9843c1f";
 
 (async () => {
     let result = await provider.getDynamicFields({
@@ -28,8 +28,8 @@ const nftTable = "0xf011b3ebf0c073f14e39405248e2042b4528529529265dc8aad4e063f920
         return stakedTails.name.value;
     });
     // console.log(stakedUsers);
-    const chunkSize = 300;
-    for (let i = 0; i < stakedUsers.length; i += chunkSize) {
+    const chunkSize = 100;
+    for (let i = 300; i < stakedUsers.length; i += chunkSize) {
         const chunk = stakedUsers.slice(i, i + chunkSize);
         // console.log(chunk);
         let transactionBlock = new TransactionBlock();
@@ -44,9 +44,9 @@ const nftTable = "0xf011b3ebf0c073f14e39405248e2042b4528529529265dc8aad4e063f920
                 transactionBlock.pure(chunk),
             ],
         });
-        transactionBlock.setGasBudget(100000000);
+        transactionBlock.setGasBudget(1000000000);
         let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
         console.log(res);
-        await sleep(1000);
+        await sleep(5000);
     }
 })();
