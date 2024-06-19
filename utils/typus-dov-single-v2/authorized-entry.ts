@@ -55,7 +55,7 @@ export async function getOtcTx(
                 tx.pure(incentiveBidValue),
                 tx.pure(incentiveFeeBalanceValue),
                 tx.pure(depositorIncentiveValue),
-                tx.pure(CLOCK),
+                tx.object(CLOCK),
             ],
         });
     } else {
@@ -73,7 +73,7 @@ export async function getOtcTx(
                 tx.pure(incentiveBidValue),
                 tx.pure(incentiveFeeBalanceValue),
                 tx.pure(depositorIncentiveValue),
-                tx.pure(CLOCK),
+                tx.object(CLOCK),
             ],
         });
     }

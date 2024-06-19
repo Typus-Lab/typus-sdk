@@ -7,31 +7,34 @@ export function getDepositorCashFlows(userHistory: TxHistory[]) {
         const index = history.Index!;
 
         if (history.Action!.startsWith("Harvest Reward")) {
-            const [amount, token] = history.Amount?.split(" ")!;
-            if (depositorCashFlows.has(index)) {
-                let depositorCashFlow = depositorCashFlows.get(index)!;
-                let totalHarvest = depositorCashFlow.totalHarvest;
-                if (totalHarvest.has(token)) {
-                    let sum = totalHarvest.get(token)!;
-                    totalHarvest.set(token, sum + Number(amount));
+            let historyAmounts = history.Amount?.split("\n")!;
+            for (let historyAmount of historyAmounts) {
+                const [amount, token] = historyAmount.split(" ")!;
+                if (depositorCashFlows.has(index)) {
+                    let depositorCashFlow = depositorCashFlows.get(index)!;
+                    let totalHarvest = depositorCashFlow.totalHarvest;
+                    if (totalHarvest.has(token)) {
+                        let sum = totalHarvest.get(token)!;
+                        totalHarvest.set(token, sum + Number(amount));
+                    } else {
+                        totalHarvest.set(token, Number(amount));
+                    }
+                    depositorCashFlow.totalHarvest = totalHarvest;
+                    depositorCashFlows.set(index, depositorCashFlow);
                 } else {
+                    let totalHarvest = new Map();
                     totalHarvest.set(token, Number(amount));
+                    let depositorCashFlow: DepositorCashFlow = {
+                        D_TOKEN: undefined,
+                        totalDeposit: 0,
+                        totalWithdraw: 0,
+                        totalClaim: 0,
+                        totalCompound: 0,
+                        netDeposit: undefined,
+                        totalHarvest,
+                    };
+                    depositorCashFlows.set(index, depositorCashFlow);
                 }
-                depositorCashFlow.totalHarvest = totalHarvest;
-                depositorCashFlows.set(index, depositorCashFlow);
-            } else {
-                let totalHarvest = new Map();
-                totalHarvest.set(token, Number(amount));
-                let depositorCashFlow: DepositorCashFlow = {
-                    D_TOKEN: undefined,
-                    totalDeposit: 0,
-                    totalWithdraw: 0,
-                    totalClaim: 0,
-                    totalCompound: 0,
-                    netDeposit: undefined,
-                    totalHarvest,
-                };
-                depositorCashFlows.set(index, depositorCashFlow);
             }
         } else if (history.Action!.startsWith("Deposit")) {
             const [amount, token] = history.Amount?.split(" ")!;

@@ -3,13 +3,13 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { getDepositShares, getVaults } from "../../../utils/typus-dov-single-v2/view-function";
 import { typeArgToAsset, assetToDecimal } from "../../../utils/token";
 
-const config = configs.MAINNET;
+const config = configs.TESTNET;
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });
 
 (async () => {
-    const user = "0xcb526af5681c32673b5b415b8cdd959b6926d5495b80d6b27d447f10d8bab2e8";
+    const user = "0xb6b29d18c728503fb59cc59ecbe52611d26b2746b2cedc8d38cabf81428cae6c";
 
     var temp = await provider.getOwnedObjects({
         owner: user,
@@ -30,14 +30,15 @@ const provider = new SuiClient({
     const receipts = datas
         .filter((obj) => obj.data?.type! == `${config.PACKAGE_ORIGIN.FRAMEWORK}::vault::TypusDepositReceipt`)
         .map((obj) => obj.data?.objectId!);
-    // console.log(receipts);
+    console.log(receipts);
 
     const depositShares = await getDepositShares(
         provider,
         config.PACKAGE_ORIGIN.FRAMEWORK,
         config.PACKAGE.DOV_SINGLE,
         config.REGISTRY.DOV_SINGLE,
-        receipts
+        receipts,
+        user
     );
     console.log(JSON.stringify(depositShares, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 

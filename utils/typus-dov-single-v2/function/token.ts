@@ -20,6 +20,8 @@ export const RemoveMillionToken: { [key: string]: string } = {
 
 export const LST: { [key: string]: string } = {
     AFSUI: "SUI",
+    HASUI: "SUI",
+    VSUI: "SUI",
 };
 
 export const StableCoin = ["USDC", "USDT", "BUCK", "USDY"];

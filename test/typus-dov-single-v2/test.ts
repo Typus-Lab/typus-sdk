@@ -5,6 +5,7 @@ import { BcsReader } from "@mysten/bcs";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getVaults } from "../../utils/typus-dov-single-v2/view-function";
 import { getRankings } from "../../utils/leaderboard/view-function";
+import { getUserMetadata } from "../../utils/user/view-function";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import * as fs from "fs";
@@ -296,16 +297,32 @@ async function v() {
 
 async function vi() {
     console.log(
-        await getRankings({
+        JSON.stringify(
+            await getRankings({
+                provider,
+                typusPackageId: config.PACKAGE.TYPUS_PACKAGE,
+                typusEcosystemVersion: config.TYPUS_VERSION,
+                typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD_REGISTRY,
+                key: "depositor_program",
+                id: "0x03346fdcc3091c814308bc78f090d06f96accf767ea5b5e54b9f16ab55c2a3b2",
+                ranks: 100,
+                user: "0x754214ab9eadf12bc1518aa37e2fbc9501198319699a60cae2b3094cc6576189",
+                active: true,
+            }),
+            null,
+            2
+        )
+    );
+}
+
+async function vii() {
+    console.log(
+        await getUserMetadata({
             provider,
             typusPackageId: config.PACKAGE.TYPUS_PACKAGE,
             typusEcosystemVersion: config.TYPUS_VERSION,
-            typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD_REGISTRY,
-            key: "bidding_leaderboard",
-            id: "0xc94f5b3a1f237925a517e8406080aae523fef744e432bd72cb904f619aced583",
-            ranks: 100,
-            user: "0x692a5563ad3cede2da561f473eb37efdbbb94f8d041dfef7524dda857c609ba3",
-            active: true,
+            typusUserRegistry: config.REGISTRY.USER_REGISTRY,
+            user: "0x754214ab9eadf12bc1518aa37e2fbc9501198319699a60cae2b3094cc6576189",
         })
     );
 }
