@@ -30,7 +30,7 @@ const nftTable = "0xf011b3ebf0c073f14e39405248e2042b4528529529265dc8aad4e063f920
     const chunkSize = 300;
     for (let i = 0; i < stakedUsers.length; i += chunkSize) {
         const chunk = stakedUsers.slice(i, i + chunkSize);
-        // console.log(chunk);
+        const chunkReversed = stakedUsers.slice(i, i + chunkSize).reverse();
         let transactionBlock = new TransactionBlock();
         let result = transactionBlock.moveCall({
             target: `${config.PACKAGE.DOV_SINGLE}::tails_staking::remove_nft_table_tails`,
@@ -45,15 +45,15 @@ const nftTable = "0xf011b3ebf0c073f14e39405248e2042b4528529529265dc8aad4e063f920
             target: `${config.PACKAGE.TYPUS}::tails_staking::import_tails`,
             typeArguments: [],
             arguments: [
-                transactionBlock.object(config.TYPUS_VERSION),
+                transactionBlock.object(config.OBJECT.TYPUS_VERSION),
                 transactionBlock.object(config.REGISTRY.TAILS_STAKING),
-                transactionBlock.makeMoveVec({ objects: [transactionBlock.object(result[0])] }),
-                transactionBlock.pure(chunk.reverse()),
+                transactionBlock.object(result[0]),
+                transactionBlock.pure(chunkReversed),
             ],
         });
         transactionBlock.setGasBudget(100000000);
         let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
         console.log(res);
-        await sleep(1000);
+        await sleep(5000);
     }
 })();
