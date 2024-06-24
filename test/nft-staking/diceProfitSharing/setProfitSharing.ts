@@ -28,10 +28,6 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     const address = keypair.toSuiAddress();
     console.log(address);
 
-    let lastRound = await getProfitSharing(provider, config.diceProfitSharing);
-    // console.log(lastRound.tokenType);
-    const typeArgumentsRemove = [lastRound.tokenType];
-
     const datas = await getNftTable(provider, config.NFT_TABLE);
     // console.log(datas);
 
@@ -59,18 +55,26 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     // STEP 1: Remove
 
-    var transactionBlock = await getRemoveProfitSharingTx(
-        gasBudget,
-        config.SINGLE_COLLATERAL_PACKAGE,
-        config.SINGLE_COLLATERAL_REGISTRY,
-        NAME,
-        typeArgumentsRemove
-    );
+    try {
+        let lastRound = await getProfitSharing(provider, config.diceProfitSharing);
+        // console.log(lastRound.tokenType);
+        const typeArgumentsRemove = [lastRound.tokenType];
 
-    var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
-    console.log(`getRemoveProfitSharingTx:`);
-    console.log(res);
-    await sleep(5000);
+        var transactionBlock = await getRemoveProfitSharingTx(
+            gasBudget,
+            config.SINGLE_COLLATERAL_PACKAGE,
+            config.SINGLE_COLLATERAL_REGISTRY,
+            NAME,
+            typeArgumentsRemove
+        );
+
+        var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
+        console.log(`getRemoveProfitSharingTx:`);
+        console.log(res);
+        await sleep(5000);
+    } catch {
+        console.log("Skip remove last round.");
+    }
 
     // STEP 2: Set
 
