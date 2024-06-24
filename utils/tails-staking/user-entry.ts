@@ -256,8 +256,8 @@ export async function getLevelUpTx(input: {
     tails: string;
     raw: boolean;
 }) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::daily_sign_up`,
+    input.tx.moveCall({
+        target: `${input.typusPackageId}::tails_staking::level_up`,
         typeArguments: [],
         arguments: [
             input.tx.object(input.typusEcosystemVersion),
