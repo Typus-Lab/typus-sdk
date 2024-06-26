@@ -9,7 +9,7 @@ export interface SwapArgs {
     pythState: ObjectArg;
     oracleFromToken: ObjectArg;
     oracleToToken: ObjectArg;
-    fromBalance: ObjectArg;
+    fromCoin: ObjectArg;
     minToAmount: bigint | TransactionArgument;
     clock: ObjectArg;
 }
@@ -25,7 +25,7 @@ export function swap(txb: TransactionBlock, typeArgs: [string, string], args: Sw
             obj(txb, args.pythState),
             obj(txb, args.oracleFromToken),
             obj(txb, args.oracleToToken),
-            obj(txb, args.fromBalance),
+            obj(txb, args.fromCoin),
             pure(txb, args.minToAmount, `u64`),
             obj(txb, args.clock),
         ],
@@ -57,6 +57,7 @@ export interface AddLiquidityTokenArgs {
     utilizationThresholdBp0: bigint | TransactionArgument;
     utilizationThresholdBp1: bigint | TransactionArgument;
     borrowIntervalTsMs: bigint | TransactionArgument;
+    maxOrderReserveRatioBp: bigint | TransactionArgument;
     clock: ObjectArg;
 }
 
@@ -85,6 +86,7 @@ export function addLiquidityToken(txb: TransactionBlock, typeArg: string, args: 
             pure(txb, args.utilizationThresholdBp0, `u64`),
             pure(txb, args.utilizationThresholdBp1, `u64`),
             pure(txb, args.borrowIntervalTsMs, `u64`),
+            pure(txb, args.maxOrderReserveRatioBp, `u64`),
             obj(txb, args.clock),
         ],
     });
@@ -203,6 +205,19 @@ export function calculateSwapFee(txb: TransactionBlock, args: CalculateSwapFeeAr
             pure(txb, args.amountUsd, `u64`),
             pure(txb, args.swapIn, `bool`),
         ],
+    });
+}
+
+export interface CheckTradingOrderSizeValidArgs {
+    liquidityPool: ObjectArg;
+    liquidityToken: ObjectArg;
+    reserveAmount: bigint | TransactionArgument;
+}
+
+export function checkTradingOrderSizeValid(txb: TransactionBlock, args: CheckTradingOrderSizeValidArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::lp_pool::check_trading_order_size_valid`,
+        arguments: [obj(txb, args.liquidityPool), obj(txb, args.liquidityToken), pure(txb, args.reserveAmount, `u64`)],
     });
 }
 
@@ -569,6 +584,7 @@ export interface UpdateMarginConfigArgs {
     utilizationThresholdBp0: bigint | TransactionArgument | TransactionArgument | null;
     utilizationThresholdBp1: bigint | TransactionArgument | TransactionArgument | null;
     borrowIntervalTsMs: bigint | TransactionArgument | TransactionArgument | null;
+    maxOrderReserveRatioBp: bigint | TransactionArgument | TransactionArgument | null;
 }
 
 export function updateMarginConfig(txb: TransactionBlock, typeArg: string, args: UpdateMarginConfigArgs) {
@@ -585,6 +601,7 @@ export function updateMarginConfig(txb: TransactionBlock, typeArg: string, args:
             pure(txb, args.utilizationThresholdBp0, `0x1::option::Option<u64>`),
             pure(txb, args.utilizationThresholdBp1, `0x1::option::Option<u64>`),
             pure(txb, args.borrowIntervalTsMs, `0x1::option::Option<u64>`),
+            pure(txb, args.maxOrderReserveRatioBp, `0x1::option::Option<u64>`),
         ],
     });
 }
@@ -643,6 +660,34 @@ export function updateTvl(txb: TransactionBlock, args: UpdateTvlArgs) {
             obj(txb, args.tokenType),
             obj(txb, args.pythState),
             obj(txb, args.oracle),
+            obj(txb, args.clock),
+        ],
+    });
+}
+
+export interface ViewSwapResultArgs {
+    version: ObjectArg;
+    registry: ObjectArg;
+    index: bigint | TransactionArgument;
+    pythState: ObjectArg;
+    oracleFromToken: ObjectArg;
+    oracleToToken: ObjectArg;
+    fromAmount: bigint | TransactionArgument;
+    clock: ObjectArg;
+}
+
+export function viewSwapResult(txb: TransactionBlock, typeArgs: [string, string], args: ViewSwapResultArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::lp_pool::view_swap_result`,
+        typeArguments: typeArgs,
+        arguments: [
+            obj(txb, args.version),
+            obj(txb, args.registry),
+            pure(txb, args.index, `u64`),
+            obj(txb, args.pythState),
+            obj(txb, args.oracleFromToken),
+            obj(txb, args.oracleToToken),
+            pure(txb, args.fromAmount, `u64`),
             obj(txb, args.clock),
         ],
     });

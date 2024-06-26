@@ -18,7 +18,7 @@ import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
 export function isLpRegistry(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::tlp::LpRegistry";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::tlp::LpRegistry";
 }
 
 export interface LpRegistryFields {
@@ -28,12 +28,12 @@ export interface LpRegistryFields {
 export type LpRegistryReified = Reified<LpRegistry, LpRegistryFields>;
 
 export class LpRegistry implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::tlp::LpRegistry";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::tlp::LpRegistry";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LpRegistry.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::tlp::LpRegistry";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::tlp::LpRegistry";
 
     readonly $typeArgs: [];
 
@@ -43,7 +43,7 @@ export class LpRegistry implements StructClass {
         this.$fullTypeName = composeSuiType(
             LpRegistry.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::tlp::LpRegistry";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::tlp::LpRegistry";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -55,7 +55,7 @@ export class LpRegistry implements StructClass {
             fullTypeName: composeSuiType(
                 LpRegistry.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::tlp::LpRegistry",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::tlp::LpRegistry",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LpRegistry.fromFields(fields),
@@ -154,7 +154,7 @@ export class LpRegistry implements StructClass {
 
 export function isTLP(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::tlp::TLP";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::tlp::TLP";
 }
 
 export interface TLPFields {
@@ -164,12 +164,12 @@ export interface TLPFields {
 export type TLPReified = Reified<TLP, TLPFields>;
 
 export class TLP implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::tlp::TLP";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::tlp::TLP";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = TLP.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::tlp::TLP";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::tlp::TLP";
 
     readonly $typeArgs: [];
 
@@ -179,7 +179,7 @@ export class TLP implements StructClass {
         this.$fullTypeName = composeSuiType(
             TLP.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::tlp::TLP";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::tlp::TLP";
         this.$typeArgs = typeArgs;
 
         this.dummyField = fields.dummyField;
@@ -191,7 +191,7 @@ export class TLP implements StructClass {
             fullTypeName: composeSuiType(
                 TLP.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::tlp::TLP",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::tlp::TLP",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => TLP.fromFields(fields),

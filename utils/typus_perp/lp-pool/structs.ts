@@ -22,7 +22,7 @@ import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
 export function isConfig(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Config";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::Config";
 }
 
 export interface ConfigFields {
@@ -36,12 +36,12 @@ export interface ConfigFields {
 export type ConfigReified = Reified<Config, ConfigFields>;
 
 export class Config implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Config";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::Config";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = Config.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Config";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::Config";
 
     readonly $typeArgs: [];
 
@@ -55,7 +55,7 @@ export class Config implements StructClass {
         this.$fullTypeName = composeSuiType(
             Config.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Config";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::Config";
         this.$typeArgs = typeArgs;
 
         this.oracleId = fields.oracleId;
@@ -71,7 +71,7 @@ export class Config implements StructClass {
             fullTypeName: composeSuiType(
                 Config.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Config",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::Config",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => Config.fromFields(fields),
@@ -196,7 +196,7 @@ export class Config implements StructClass {
 
 export function isState(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::State";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::State";
 }
 
 export interface StateFields {
@@ -204,21 +204,23 @@ export interface StateFields {
     valueInUsd: ToField<"u64">;
     reservedAmount: ToField<"u64">;
     updateTsMs: ToField<"u64">;
+    isActive: ToField<"bool">;
     lastBorrowRateTsMs: ToField<"u64">;
     cumulativeBorrowRate: ToField<"u64">;
-    isActive: ToField<"bool">;
+    previousLastBorrowRateTsMs: ToField<"u64">;
+    previousCumulativeBorrowRate: ToField<"u64">;
     u64Padding: ToField<Vector<"u64">>;
 }
 
 export type StateReified = Reified<State, StateFields>;
 
 export class State implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::State";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::State";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = State.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::State";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::State";
 
     readonly $typeArgs: [];
 
@@ -226,25 +228,29 @@ export class State implements StructClass {
     readonly valueInUsd: ToField<"u64">;
     readonly reservedAmount: ToField<"u64">;
     readonly updateTsMs: ToField<"u64">;
+    readonly isActive: ToField<"bool">;
     readonly lastBorrowRateTsMs: ToField<"u64">;
     readonly cumulativeBorrowRate: ToField<"u64">;
-    readonly isActive: ToField<"bool">;
+    readonly previousLastBorrowRateTsMs: ToField<"u64">;
+    readonly previousCumulativeBorrowRate: ToField<"u64">;
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: StateFields) {
         this.$fullTypeName = composeSuiType(
             State.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::State";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::State";
         this.$typeArgs = typeArgs;
 
         this.liquidityAmount = fields.liquidityAmount;
         this.valueInUsd = fields.valueInUsd;
         this.reservedAmount = fields.reservedAmount;
         this.updateTsMs = fields.updateTsMs;
+        this.isActive = fields.isActive;
         this.lastBorrowRateTsMs = fields.lastBorrowRateTsMs;
         this.cumulativeBorrowRate = fields.cumulativeBorrowRate;
-        this.isActive = fields.isActive;
+        this.previousLastBorrowRateTsMs = fields.previousLastBorrowRateTsMs;
+        this.previousCumulativeBorrowRate = fields.previousCumulativeBorrowRate;
         this.u64Padding = fields.u64Padding;
     }
 
@@ -254,7 +260,7 @@ export class State implements StructClass {
             fullTypeName: composeSuiType(
                 State.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::State",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::State",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => State.fromFields(fields),
@@ -289,9 +295,11 @@ export class State implements StructClass {
             value_in_usd: bcs.u64(),
             reserved_amount: bcs.u64(),
             update_ts_ms: bcs.u64(),
+            is_active: bcs.bool(),
             last_borrow_rate_ts_ms: bcs.u64(),
             cumulative_borrow_rate: bcs.u64(),
-            is_active: bcs.bool(),
+            previous_last_borrow_rate_ts_ms: bcs.u64(),
+            previous_cumulative_borrow_rate: bcs.u64(),
             u64_padding: bcs.vector(bcs.u64()),
         });
     }
@@ -302,9 +310,11 @@ export class State implements StructClass {
             valueInUsd: decodeFromFields("u64", fields.value_in_usd),
             reservedAmount: decodeFromFields("u64", fields.reserved_amount),
             updateTsMs: decodeFromFields("u64", fields.update_ts_ms),
+            isActive: decodeFromFields("bool", fields.is_active),
             lastBorrowRateTsMs: decodeFromFields("u64", fields.last_borrow_rate_ts_ms),
             cumulativeBorrowRate: decodeFromFields("u64", fields.cumulative_borrow_rate),
-            isActive: decodeFromFields("bool", fields.is_active),
+            previousLastBorrowRateTsMs: decodeFromFields("u64", fields.previous_last_borrow_rate_ts_ms),
+            previousCumulativeBorrowRate: decodeFromFields("u64", fields.previous_cumulative_borrow_rate),
             u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
         });
     }
@@ -319,9 +329,11 @@ export class State implements StructClass {
             valueInUsd: decodeFromFieldsWithTypes("u64", item.fields.value_in_usd),
             reservedAmount: decodeFromFieldsWithTypes("u64", item.fields.reserved_amount),
             updateTsMs: decodeFromFieldsWithTypes("u64", item.fields.update_ts_ms),
+            isActive: decodeFromFieldsWithTypes("bool", item.fields.is_active),
             lastBorrowRateTsMs: decodeFromFieldsWithTypes("u64", item.fields.last_borrow_rate_ts_ms),
             cumulativeBorrowRate: decodeFromFieldsWithTypes("u64", item.fields.cumulative_borrow_rate),
-            isActive: decodeFromFieldsWithTypes("bool", item.fields.is_active),
+            previousLastBorrowRateTsMs: decodeFromFieldsWithTypes("u64", item.fields.previous_last_borrow_rate_ts_ms),
+            previousCumulativeBorrowRate: decodeFromFieldsWithTypes("u64", item.fields.previous_cumulative_borrow_rate),
             u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
         });
     }
@@ -336,9 +348,11 @@ export class State implements StructClass {
             valueInUsd: this.valueInUsd.toString(),
             reservedAmount: this.reservedAmount.toString(),
             updateTsMs: this.updateTsMs.toString(),
+            isActive: this.isActive,
             lastBorrowRateTsMs: this.lastBorrowRateTsMs.toString(),
             cumulativeBorrowRate: this.cumulativeBorrowRate.toString(),
-            isActive: this.isActive,
+            previousLastBorrowRateTsMs: this.previousLastBorrowRateTsMs.toString(),
+            previousCumulativeBorrowRate: this.previousCumulativeBorrowRate.toString(),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
         };
     }
@@ -353,9 +367,11 @@ export class State implements StructClass {
             valueInUsd: decodeFromJSONField("u64", field.valueInUsd),
             reservedAmount: decodeFromJSONField("u64", field.reservedAmount),
             updateTsMs: decodeFromJSONField("u64", field.updateTsMs),
+            isActive: decodeFromJSONField("bool", field.isActive),
             lastBorrowRateTsMs: decodeFromJSONField("u64", field.lastBorrowRateTsMs),
             cumulativeBorrowRate: decodeFromJSONField("u64", field.cumulativeBorrowRate),
-            isActive: decodeFromJSONField("bool", field.isActive),
+            previousLastBorrowRateTsMs: decodeFromJSONField("u64", field.previousLastBorrowRateTsMs),
+            previousCumulativeBorrowRate: decodeFromJSONField("u64", field.previousCumulativeBorrowRate),
             u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
         });
     }
@@ -390,169 +406,11 @@ export class State implements StructClass {
     }
 }
 
-/* ============================== Registry =============================== */
-
-export function isRegistry(type: string): boolean {
-    type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry";
-}
-
-export interface RegistryFields {
-    id: ToField<UID>;
-    numPool: ToField<"u64">;
-    liquidityPoolRegistry: ToField<UID>;
-}
-
-export type RegistryReified = Reified<Registry, RegistryFields>;
-
-export class Registry implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry";
-    static readonly $numTypeParams = 0;
-
-    readonly $typeName = Registry.$typeName;
-
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry";
-
-    readonly $typeArgs: [];
-
-    readonly id: ToField<UID>;
-    readonly numPool: ToField<"u64">;
-    readonly liquidityPoolRegistry: ToField<UID>;
-
-    private constructor(typeArgs: [], fields: RegistryFields) {
-        this.$fullTypeName = composeSuiType(
-            Registry.$typeName,
-            ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry";
-        this.$typeArgs = typeArgs;
-
-        this.id = fields.id;
-        this.numPool = fields.numPool;
-        this.liquidityPoolRegistry = fields.liquidityPoolRegistry;
-    }
-
-    static reified(): RegistryReified {
-        return {
-            typeName: Registry.$typeName,
-            fullTypeName: composeSuiType(
-                Registry.$typeName,
-                ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::Registry",
-            typeArgs: [] as [],
-            reifiedTypeArgs: [],
-            fromFields: (fields: Record<string, any>) => Registry.fromFields(fields),
-            fromFieldsWithTypes: (item: FieldsWithTypes) => Registry.fromFieldsWithTypes(item),
-            fromBcs: (data: Uint8Array) => Registry.fromBcs(data),
-            bcs: Registry.bcs,
-            fromJSONField: (field: any) => Registry.fromJSONField(field),
-            fromJSON: (json: Record<string, any>) => Registry.fromJSON(json),
-            fromSuiParsedData: (content: SuiParsedData) => Registry.fromSuiParsedData(content),
-            fetch: async (client: SuiClient, id: string) => Registry.fetch(client, id),
-            new: (fields: RegistryFields) => {
-                return new Registry([], fields);
-            },
-            kind: "StructClassReified",
-        };
-    }
-
-    static get r() {
-        return Registry.reified();
-    }
-
-    static phantom(): PhantomReified<ToTypeStr<Registry>> {
-        return phantom(Registry.reified());
-    }
-    static get p() {
-        return Registry.phantom();
-    }
-
-    static get bcs() {
-        return bcs.struct("Registry", {
-            id: UID.bcs,
-            num_pool: bcs.u64(),
-            liquidity_pool_registry: UID.bcs,
-        });
-    }
-
-    static fromFields(fields: Record<string, any>): Registry {
-        return Registry.reified().new({
-            id: decodeFromFields(UID.reified(), fields.id),
-            numPool: decodeFromFields("u64", fields.num_pool),
-            liquidityPoolRegistry: decodeFromFields(UID.reified(), fields.liquidity_pool_registry),
-        });
-    }
-
-    static fromFieldsWithTypes(item: FieldsWithTypes): Registry {
-        if (!isRegistry(item.type)) {
-            throw new Error("not a Registry type");
-        }
-
-        return Registry.reified().new({
-            id: decodeFromFieldsWithTypes(UID.reified(), item.fields.id),
-            numPool: decodeFromFieldsWithTypes("u64", item.fields.num_pool),
-            liquidityPoolRegistry: decodeFromFieldsWithTypes(UID.reified(), item.fields.liquidity_pool_registry),
-        });
-    }
-
-    static fromBcs(data: Uint8Array): Registry {
-        return Registry.fromFields(Registry.bcs.parse(data));
-    }
-
-    toJSONField() {
-        return {
-            id: this.id,
-            numPool: this.numPool.toString(),
-            liquidityPoolRegistry: this.liquidityPoolRegistry,
-        };
-    }
-
-    toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
-    }
-
-    static fromJSONField(field: any): Registry {
-        return Registry.reified().new({
-            id: decodeFromJSONField(UID.reified(), field.id),
-            numPool: decodeFromJSONField("u64", field.numPool),
-            liquidityPoolRegistry: decodeFromJSONField(UID.reified(), field.liquidityPoolRegistry),
-        });
-    }
-
-    static fromJSON(json: Record<string, any>): Registry {
-        if (json.$typeName !== Registry.$typeName) {
-            throw new Error("not a WithTwoGenerics json object");
-        }
-
-        return Registry.fromJSONField(json);
-    }
-
-    static fromSuiParsedData(content: SuiParsedData): Registry {
-        if (content.dataType !== "moveObject") {
-            throw new Error("not an object");
-        }
-        if (!isRegistry(content.type)) {
-            throw new Error(`object at ${(content.fields as any).id} is not a Registry object`);
-        }
-        return Registry.fromFieldsWithTypes(content);
-    }
-
-    static async fetch(client: SuiClient, id: string): Promise<Registry> {
-        const res = await client.getObject({ id, options: { showBcs: true } });
-        if (res.error) {
-            throw new Error(`error fetching Registry object at id ${id}: ${res.error.code}`);
-        }
-        if (res.data?.bcs?.dataType !== "moveObject" || !isRegistry(res.data.bcs.type)) {
-            throw new Error(`object at id ${id} is not a Registry object`);
-        }
-        return Registry.fromBcs(fromB64(res.data.bcs.bcsBytes));
-    }
-}
-
 /* ============================== AddLiquidityTokenEvent =============================== */
 
 export function isAddLiquidityTokenEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::AddLiquidityTokenEvent";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::AddLiquidityTokenEvent";
 }
 
 export interface AddLiquidityTokenEventFields {
@@ -567,12 +425,12 @@ export interface AddLiquidityTokenEventFields {
 export type AddLiquidityTokenEventReified = Reified<AddLiquidityTokenEvent, AddLiquidityTokenEventFields>;
 
 export class AddLiquidityTokenEvent implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::AddLiquidityTokenEvent";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::AddLiquidityTokenEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = AddLiquidityTokenEvent.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::AddLiquidityTokenEvent";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::AddLiquidityTokenEvent";
 
     readonly $typeArgs: [];
 
@@ -587,7 +445,7 @@ export class AddLiquidityTokenEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             AddLiquidityTokenEvent.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::AddLiquidityTokenEvent";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::AddLiquidityTokenEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -604,7 +462,7 @@ export class AddLiquidityTokenEvent implements StructClass {
             fullTypeName: composeSuiType(
                 AddLiquidityTokenEvent.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::AddLiquidityTokenEvent",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::AddLiquidityTokenEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => AddLiquidityTokenEvent.fromFields(fields),
@@ -734,7 +592,7 @@ export class AddLiquidityTokenEvent implements StructClass {
 
 export function isBurnLpEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::BurnLpEvent";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::BurnLpEvent";
 }
 
 export interface BurnLpEventFields {
@@ -752,12 +610,12 @@ export interface BurnLpEventFields {
 export type BurnLpEventReified = Reified<BurnLpEvent, BurnLpEventFields>;
 
 export class BurnLpEvent implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::BurnLpEvent";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::BurnLpEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = BurnLpEvent.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::BurnLpEvent";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::BurnLpEvent";
 
     readonly $typeArgs: [];
 
@@ -775,7 +633,7 @@ export class BurnLpEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             BurnLpEvent.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::BurnLpEvent";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::BurnLpEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -795,7 +653,7 @@ export class BurnLpEvent implements StructClass {
             fullTypeName: composeSuiType(
                 BurnLpEvent.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::BurnLpEvent",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::BurnLpEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => BurnLpEvent.fromFields(fields),
@@ -940,7 +798,7 @@ export class BurnLpEvent implements StructClass {
 
 export function isLiquidityPool(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::LiquidityPool";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::LiquidityPool";
 }
 
 export interface LiquidityPoolFields {
@@ -957,12 +815,12 @@ export interface LiquidityPoolFields {
 export type LiquidityPoolReified = Reified<LiquidityPool, LiquidityPoolFields>;
 
 export class LiquidityPool implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::LiquidityPool";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::LiquidityPool";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LiquidityPool.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::LiquidityPool";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::LiquidityPool";
 
     readonly $typeArgs: [];
 
@@ -979,7 +837,7 @@ export class LiquidityPool implements StructClass {
         this.$fullTypeName = composeSuiType(
             LiquidityPool.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::LiquidityPool";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::LiquidityPool";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -998,7 +856,7 @@ export class LiquidityPool implements StructClass {
             fullTypeName: composeSuiType(
                 LiquidityPool.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::LiquidityPool",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::LiquidityPool",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LiquidityPool.fromFields(fields),
@@ -1081,7 +939,7 @@ export class LiquidityPool implements StructClass {
             lpTokenType: this.lpTokenType.toJSONField(),
             liquidityTokens: fieldToJSON<Vector<TypeName>>(`vector<0x1::type_name::TypeName>`, this.liquidityTokens),
             tokenPools: fieldToJSON<Vector<TokenPool>>(
-                `vector<0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::TokenPool>`,
+                `vector<0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::TokenPool>`,
                 this.tokenPools
             ),
             poolInfo: this.poolInfo.toJSONField(),
@@ -1141,7 +999,7 @@ export class LiquidityPool implements StructClass {
 
 export function isLiquidityPoolInfo(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::LiquidityPoolInfo";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::LiquidityPoolInfo";
 }
 
 export interface LiquidityPoolInfoFields {
@@ -1154,12 +1012,12 @@ export interface LiquidityPoolInfoFields {
 export type LiquidityPoolInfoReified = Reified<LiquidityPoolInfo, LiquidityPoolInfoFields>;
 
 export class LiquidityPoolInfo implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::LiquidityPoolInfo";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::LiquidityPoolInfo";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LiquidityPoolInfo.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::LiquidityPoolInfo";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::LiquidityPoolInfo";
 
     readonly $typeArgs: [];
 
@@ -1172,7 +1030,7 @@ export class LiquidityPoolInfo implements StructClass {
         this.$fullTypeName = composeSuiType(
             LiquidityPoolInfo.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::LiquidityPoolInfo";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::LiquidityPoolInfo";
         this.$typeArgs = typeArgs;
 
         this.lpTokenDecimal = fields.lpTokenDecimal;
@@ -1187,7 +1045,7 @@ export class LiquidityPoolInfo implements StructClass {
             fullTypeName: composeSuiType(
                 LiquidityPoolInfo.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::LiquidityPoolInfo",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::LiquidityPoolInfo",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LiquidityPoolInfo.fromFields(fields),
@@ -1307,7 +1165,7 @@ export class LiquidityPoolInfo implements StructClass {
 
 export function isMarginConfig(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::MarginConfig";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::MarginConfig";
 }
 
 export interface MarginConfigFields {
@@ -1317,18 +1175,19 @@ export interface MarginConfigFields {
     utilizationThresholdBp0: ToField<"u64">;
     utilizationThresholdBp1: ToField<"u64">;
     borrowIntervalTsMs: ToField<"u64">;
+    maxOrderReserveRatioBp: ToField<"u64">;
     u64Padding: ToField<Vector<"u64">>;
 }
 
 export type MarginConfigReified = Reified<MarginConfig, MarginConfigFields>;
 
 export class MarginConfig implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::MarginConfig";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::MarginConfig";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = MarginConfig.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::MarginConfig";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::MarginConfig";
 
     readonly $typeArgs: [];
 
@@ -1338,13 +1197,14 @@ export class MarginConfig implements StructClass {
     readonly utilizationThresholdBp0: ToField<"u64">;
     readonly utilizationThresholdBp1: ToField<"u64">;
     readonly borrowIntervalTsMs: ToField<"u64">;
+    readonly maxOrderReserveRatioBp: ToField<"u64">;
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: MarginConfigFields) {
         this.$fullTypeName = composeSuiType(
             MarginConfig.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::MarginConfig";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::MarginConfig";
         this.$typeArgs = typeArgs;
 
         this.basicBorrowRate0 = fields.basicBorrowRate0;
@@ -1353,6 +1213,7 @@ export class MarginConfig implements StructClass {
         this.utilizationThresholdBp0 = fields.utilizationThresholdBp0;
         this.utilizationThresholdBp1 = fields.utilizationThresholdBp1;
         this.borrowIntervalTsMs = fields.borrowIntervalTsMs;
+        this.maxOrderReserveRatioBp = fields.maxOrderReserveRatioBp;
         this.u64Padding = fields.u64Padding;
     }
 
@@ -1362,7 +1223,7 @@ export class MarginConfig implements StructClass {
             fullTypeName: composeSuiType(
                 MarginConfig.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::MarginConfig",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::MarginConfig",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => MarginConfig.fromFields(fields),
@@ -1399,6 +1260,7 @@ export class MarginConfig implements StructClass {
             utilization_threshold_bp_0: bcs.u64(),
             utilization_threshold_bp_1: bcs.u64(),
             borrow_interval_ts_ms: bcs.u64(),
+            max_order_reserve_ratio_bp: bcs.u64(),
             u64_padding: bcs.vector(bcs.u64()),
         });
     }
@@ -1411,6 +1273,7 @@ export class MarginConfig implements StructClass {
             utilizationThresholdBp0: decodeFromFields("u64", fields.utilization_threshold_bp_0),
             utilizationThresholdBp1: decodeFromFields("u64", fields.utilization_threshold_bp_1),
             borrowIntervalTsMs: decodeFromFields("u64", fields.borrow_interval_ts_ms),
+            maxOrderReserveRatioBp: decodeFromFields("u64", fields.max_order_reserve_ratio_bp),
             u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
         });
     }
@@ -1427,6 +1290,7 @@ export class MarginConfig implements StructClass {
             utilizationThresholdBp0: decodeFromFieldsWithTypes("u64", item.fields.utilization_threshold_bp_0),
             utilizationThresholdBp1: decodeFromFieldsWithTypes("u64", item.fields.utilization_threshold_bp_1),
             borrowIntervalTsMs: decodeFromFieldsWithTypes("u64", item.fields.borrow_interval_ts_ms),
+            maxOrderReserveRatioBp: decodeFromFieldsWithTypes("u64", item.fields.max_order_reserve_ratio_bp),
             u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
         });
     }
@@ -1443,6 +1307,7 @@ export class MarginConfig implements StructClass {
             utilizationThresholdBp0: this.utilizationThresholdBp0.toString(),
             utilizationThresholdBp1: this.utilizationThresholdBp1.toString(),
             borrowIntervalTsMs: this.borrowIntervalTsMs.toString(),
+            maxOrderReserveRatioBp: this.maxOrderReserveRatioBp.toString(),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
         };
     }
@@ -1459,6 +1324,7 @@ export class MarginConfig implements StructClass {
             utilizationThresholdBp0: decodeFromJSONField("u64", field.utilizationThresholdBp0),
             utilizationThresholdBp1: decodeFromJSONField("u64", field.utilizationThresholdBp1),
             borrowIntervalTsMs: decodeFromJSONField("u64", field.borrowIntervalTsMs),
+            maxOrderReserveRatioBp: decodeFromJSONField("u64", field.maxOrderReserveRatioBp),
             u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
         });
     }
@@ -1497,7 +1363,7 @@ export class MarginConfig implements StructClass {
 
 export function isMintLpEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::MintLpEvent";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::MintLpEvent";
 }
 
 export interface MintLpEventFields {
@@ -1515,12 +1381,12 @@ export interface MintLpEventFields {
 export type MintLpEventReified = Reified<MintLpEvent, MintLpEventFields>;
 
 export class MintLpEvent implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::MintLpEvent";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::MintLpEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = MintLpEvent.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::MintLpEvent";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::MintLpEvent";
 
     readonly $typeArgs: [];
 
@@ -1538,7 +1404,7 @@ export class MintLpEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             MintLpEvent.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::MintLpEvent";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::MintLpEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -1558,7 +1424,7 @@ export class MintLpEvent implements StructClass {
             fullTypeName: composeSuiType(
                 MintLpEvent.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::MintLpEvent",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::MintLpEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => MintLpEvent.fromFields(fields),
@@ -1703,7 +1569,7 @@ export class MintLpEvent implements StructClass {
 
 export function isNewLiquidityPoolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::NewLiquidityPoolEvent";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::NewLiquidityPoolEvent";
 }
 
 export interface NewLiquidityPoolEventFields {
@@ -1717,12 +1583,12 @@ export interface NewLiquidityPoolEventFields {
 export type NewLiquidityPoolEventReified = Reified<NewLiquidityPoolEvent, NewLiquidityPoolEventFields>;
 
 export class NewLiquidityPoolEvent implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::NewLiquidityPoolEvent";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::NewLiquidityPoolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = NewLiquidityPoolEvent.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::NewLiquidityPoolEvent";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::NewLiquidityPoolEvent";
 
     readonly $typeArgs: [];
 
@@ -1736,7 +1602,7 @@ export class NewLiquidityPoolEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             NewLiquidityPoolEvent.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::NewLiquidityPoolEvent";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::NewLiquidityPoolEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -1752,7 +1618,7 @@ export class NewLiquidityPoolEvent implements StructClass {
             fullTypeName: composeSuiType(
                 NewLiquidityPoolEvent.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::NewLiquidityPoolEvent",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::NewLiquidityPoolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => NewLiquidityPoolEvent.fromFields(fields),
@@ -1873,11 +1739,169 @@ export class NewLiquidityPoolEvent implements StructClass {
     }
 }
 
+/* ============================== Registry =============================== */
+
+export function isRegistry(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::Registry";
+}
+
+export interface RegistryFields {
+    id: ToField<UID>;
+    numPool: ToField<"u64">;
+    liquidityPoolRegistry: ToField<UID>;
+}
+
+export type RegistryReified = Reified<Registry, RegistryFields>;
+
+export class Registry implements StructClass {
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::Registry";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = Registry.$typeName;
+
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::Registry";
+
+    readonly $typeArgs: [];
+
+    readonly id: ToField<UID>;
+    readonly numPool: ToField<"u64">;
+    readonly liquidityPoolRegistry: ToField<UID>;
+
+    private constructor(typeArgs: [], fields: RegistryFields) {
+        this.$fullTypeName = composeSuiType(
+            Registry.$typeName,
+            ...typeArgs
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::Registry";
+        this.$typeArgs = typeArgs;
+
+        this.id = fields.id;
+        this.numPool = fields.numPool;
+        this.liquidityPoolRegistry = fields.liquidityPoolRegistry;
+    }
+
+    static reified(): RegistryReified {
+        return {
+            typeName: Registry.$typeName,
+            fullTypeName: composeSuiType(
+                Registry.$typeName,
+                ...[]
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::Registry",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => Registry.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => Registry.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => Registry.fromBcs(data),
+            bcs: Registry.bcs,
+            fromJSONField: (field: any) => Registry.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => Registry.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => Registry.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => Registry.fetch(client, id),
+            new: (fields: RegistryFields) => {
+                return new Registry([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return Registry.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<Registry>> {
+        return phantom(Registry.reified());
+    }
+    static get p() {
+        return Registry.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("Registry", {
+            id: UID.bcs,
+            num_pool: bcs.u64(),
+            liquidity_pool_registry: UID.bcs,
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): Registry {
+        return Registry.reified().new({
+            id: decodeFromFields(UID.reified(), fields.id),
+            numPool: decodeFromFields("u64", fields.num_pool),
+            liquidityPoolRegistry: decodeFromFields(UID.reified(), fields.liquidity_pool_registry),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): Registry {
+        if (!isRegistry(item.type)) {
+            throw new Error("not a Registry type");
+        }
+
+        return Registry.reified().new({
+            id: decodeFromFieldsWithTypes(UID.reified(), item.fields.id),
+            numPool: decodeFromFieldsWithTypes("u64", item.fields.num_pool),
+            liquidityPoolRegistry: decodeFromFieldsWithTypes(UID.reified(), item.fields.liquidity_pool_registry),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): Registry {
+        return Registry.fromFields(Registry.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            id: this.id,
+            numPool: this.numPool.toString(),
+            liquidityPoolRegistry: this.liquidityPoolRegistry,
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): Registry {
+        return Registry.reified().new({
+            id: decodeFromJSONField(UID.reified(), field.id),
+            numPool: decodeFromJSONField("u64", field.numPool),
+            liquidityPoolRegistry: decodeFromJSONField(UID.reified(), field.liquidityPoolRegistry),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): Registry {
+        if (json.$typeName !== Registry.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return Registry.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): Registry {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isRegistry(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a Registry object`);
+        }
+        return Registry.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<Registry> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching Registry object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isRegistry(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a Registry object`);
+        }
+        return Registry.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
 /* ============================== ResumePoolEvent =============================== */
 
 export function isResumePoolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::ResumePoolEvent";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::ResumePoolEvent";
 }
 
 export interface ResumePoolEventFields {
@@ -1889,12 +1913,12 @@ export interface ResumePoolEventFields {
 export type ResumePoolEventReified = Reified<ResumePoolEvent, ResumePoolEventFields>;
 
 export class ResumePoolEvent implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::ResumePoolEvent";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::ResumePoolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = ResumePoolEvent.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::ResumePoolEvent";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::ResumePoolEvent";
 
     readonly $typeArgs: [];
 
@@ -1906,7 +1930,7 @@ export class ResumePoolEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             ResumePoolEvent.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::ResumePoolEvent";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::ResumePoolEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -1920,7 +1944,7 @@ export class ResumePoolEvent implements StructClass {
             fullTypeName: composeSuiType(
                 ResumePoolEvent.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::ResumePoolEvent",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::ResumePoolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => ResumePoolEvent.fromFields(fields),
@@ -2035,7 +2059,7 @@ export class ResumePoolEvent implements StructClass {
 
 export function isResumeTokenPoolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::ResumeTokenPoolEvent";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::ResumeTokenPoolEvent";
 }
 
 export interface ResumeTokenPoolEventFields {
@@ -2048,12 +2072,12 @@ export interface ResumeTokenPoolEventFields {
 export type ResumeTokenPoolEventReified = Reified<ResumeTokenPoolEvent, ResumeTokenPoolEventFields>;
 
 export class ResumeTokenPoolEvent implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::ResumeTokenPoolEvent";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::ResumeTokenPoolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = ResumeTokenPoolEvent.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::ResumeTokenPoolEvent";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::ResumeTokenPoolEvent";
 
     readonly $typeArgs: [];
 
@@ -2066,7 +2090,7 @@ export class ResumeTokenPoolEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             ResumeTokenPoolEvent.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::ResumeTokenPoolEvent";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::ResumeTokenPoolEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -2081,7 +2105,7 @@ export class ResumeTokenPoolEvent implements StructClass {
             fullTypeName: composeSuiType(
                 ResumeTokenPoolEvent.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::ResumeTokenPoolEvent",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::ResumeTokenPoolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => ResumeTokenPoolEvent.fromFields(fields),
@@ -2201,7 +2225,7 @@ export class ResumeTokenPoolEvent implements StructClass {
 
 export function isSpotConfig(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SpotConfig";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SpotConfig";
 }
 
 export interface SpotConfigFields {
@@ -2220,12 +2244,12 @@ export interface SpotConfigFields {
 export type SpotConfigReified = Reified<SpotConfig, SpotConfigFields>;
 
 export class SpotConfig implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SpotConfig";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SpotConfig";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = SpotConfig.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SpotConfig";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SpotConfig";
 
     readonly $typeArgs: [];
 
@@ -2244,7 +2268,7 @@ export class SpotConfig implements StructClass {
         this.$fullTypeName = composeSuiType(
             SpotConfig.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SpotConfig";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SpotConfig";
         this.$typeArgs = typeArgs;
 
         this.minDeposit = fields.minDeposit;
@@ -2265,7 +2289,7 @@ export class SpotConfig implements StructClass {
             fullTypeName: composeSuiType(
                 SpotConfig.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SpotConfig",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SpotConfig",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => SpotConfig.fromFields(fields),
@@ -2415,7 +2439,7 @@ export class SpotConfig implements StructClass {
 
 export function isSuspendPoolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SuspendPoolEvent";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SuspendPoolEvent";
 }
 
 export interface SuspendPoolEventFields {
@@ -2427,12 +2451,12 @@ export interface SuspendPoolEventFields {
 export type SuspendPoolEventReified = Reified<SuspendPoolEvent, SuspendPoolEventFields>;
 
 export class SuspendPoolEvent implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SuspendPoolEvent";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SuspendPoolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = SuspendPoolEvent.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SuspendPoolEvent";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SuspendPoolEvent";
 
     readonly $typeArgs: [];
 
@@ -2444,7 +2468,7 @@ export class SuspendPoolEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             SuspendPoolEvent.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SuspendPoolEvent";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SuspendPoolEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -2458,7 +2482,7 @@ export class SuspendPoolEvent implements StructClass {
             fullTypeName: composeSuiType(
                 SuspendPoolEvent.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SuspendPoolEvent",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SuspendPoolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => SuspendPoolEvent.fromFields(fields),
@@ -2573,7 +2597,7 @@ export class SuspendPoolEvent implements StructClass {
 
 export function isSuspendTokenPoolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SuspendTokenPoolEvent";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SuspendTokenPoolEvent";
 }
 
 export interface SuspendTokenPoolEventFields {
@@ -2586,12 +2610,12 @@ export interface SuspendTokenPoolEventFields {
 export type SuspendTokenPoolEventReified = Reified<SuspendTokenPoolEvent, SuspendTokenPoolEventFields>;
 
 export class SuspendTokenPoolEvent implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SuspendTokenPoolEvent";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SuspendTokenPoolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = SuspendTokenPoolEvent.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SuspendTokenPoolEvent";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SuspendTokenPoolEvent";
 
     readonly $typeArgs: [];
 
@@ -2604,7 +2628,7 @@ export class SuspendTokenPoolEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             SuspendTokenPoolEvent.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SuspendTokenPoolEvent";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SuspendTokenPoolEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -2619,7 +2643,7 @@ export class SuspendTokenPoolEvent implements StructClass {
             fullTypeName: composeSuiType(
                 SuspendTokenPoolEvent.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SuspendTokenPoolEvent",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SuspendTokenPoolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => SuspendTokenPoolEvent.fromFields(fields),
@@ -2739,7 +2763,7 @@ export class SuspendTokenPoolEvent implements StructClass {
 
 export function isSwapEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SwapEvent";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SwapEvent";
 }
 
 export interface SwapEventFields {
@@ -2758,12 +2782,12 @@ export interface SwapEventFields {
 export type SwapEventReified = Reified<SwapEvent, SwapEventFields>;
 
 export class SwapEvent implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SwapEvent";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SwapEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = SwapEvent.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SwapEvent";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SwapEvent";
 
     readonly $typeArgs: [];
 
@@ -2782,7 +2806,7 @@ export class SwapEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             SwapEvent.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SwapEvent";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SwapEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -2803,7 +2827,7 @@ export class SwapEvent implements StructClass {
             fullTypeName: composeSuiType(
                 SwapEvent.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::SwapEvent",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::SwapEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => SwapEvent.fromFields(fields),
@@ -2953,7 +2977,7 @@ export class SwapEvent implements StructClass {
 
 export function isTokenPool(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::TokenPool";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::TokenPool";
 }
 
 export interface TokenPoolFields {
@@ -2965,12 +2989,12 @@ export interface TokenPoolFields {
 export type TokenPoolReified = Reified<TokenPool, TokenPoolFields>;
 
 export class TokenPool implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::TokenPool";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::TokenPool";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = TokenPool.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::TokenPool";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::TokenPool";
 
     readonly $typeArgs: [];
 
@@ -2982,7 +3006,7 @@ export class TokenPool implements StructClass {
         this.$fullTypeName = composeSuiType(
             TokenPool.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::TokenPool";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::TokenPool";
         this.$typeArgs = typeArgs;
 
         this.tokenType = fields.tokenType;
@@ -2996,7 +3020,7 @@ export class TokenPool implements StructClass {
             fullTypeName: composeSuiType(
                 TokenPool.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::TokenPool",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::TokenPool",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => TokenPool.fromFields(fields),
@@ -3111,7 +3135,7 @@ export class TokenPool implements StructClass {
 
 export function isUpdateFundingInfoEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateFundingInfoEvent";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateFundingInfoEvent";
 }
 
 export interface UpdateFundingInfoEventFields {
@@ -3128,12 +3152,12 @@ export interface UpdateFundingInfoEventFields {
 export type UpdateFundingInfoEventReified = Reified<UpdateFundingInfoEvent, UpdateFundingInfoEventFields>;
 
 export class UpdateFundingInfoEvent implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateFundingInfoEvent";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateFundingInfoEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UpdateFundingInfoEvent.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateFundingInfoEvent";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateFundingInfoEvent";
 
     readonly $typeArgs: [];
 
@@ -3150,7 +3174,7 @@ export class UpdateFundingInfoEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             UpdateFundingInfoEvent.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateFundingInfoEvent";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateFundingInfoEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -3169,7 +3193,7 @@ export class UpdateFundingInfoEvent implements StructClass {
             fullTypeName: composeSuiType(
                 UpdateFundingInfoEvent.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateFundingInfoEvent",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateFundingInfoEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UpdateFundingInfoEvent.fromFields(fields),
@@ -3309,7 +3333,7 @@ export class UpdateFundingInfoEvent implements StructClass {
 
 export function isUpdateLiquidityValueEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6319da0f00c8e28fad6723c7627ee61bc53e91bb624a0bc3740e438032bbc566::lp_pool::UpdateLiquidityValueEvent";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateLiquidityValueEvent";
 }
 
 export interface UpdateLiquidityValueEventFields {
@@ -3325,12 +3349,12 @@ export interface UpdateLiquidityValueEventFields {
 export type UpdateLiquidityValueEventReified = Reified<UpdateLiquidityValueEvent, UpdateLiquidityValueEventFields>;
 
 export class UpdateLiquidityValueEvent implements StructClass {
-    static readonly $typeName = "0x6319da0f00c8e28fad6723c7627ee61bc53e91bb624a0bc3740e438032bbc566::lp_pool::UpdateLiquidityValueEvent";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateLiquidityValueEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UpdateLiquidityValueEvent.$typeName;
 
-    readonly $fullTypeName: "0x6319da0f00c8e28fad6723c7627ee61bc53e91bb624a0bc3740e438032bbc566::lp_pool::UpdateLiquidityValueEvent";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateLiquidityValueEvent";
 
     readonly $typeArgs: [];
 
@@ -3346,7 +3370,7 @@ export class UpdateLiquidityValueEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             UpdateLiquidityValueEvent.$typeName,
             ...typeArgs
-        ) as "0x6319da0f00c8e28fad6723c7627ee61bc53e91bb624a0bc3740e438032bbc566::lp_pool::UpdateLiquidityValueEvent";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateLiquidityValueEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -3364,7 +3388,7 @@ export class UpdateLiquidityValueEvent implements StructClass {
             fullTypeName: composeSuiType(
                 UpdateLiquidityValueEvent.$typeName,
                 ...[]
-            ) as "0x6319da0f00c8e28fad6723c7627ee61bc53e91bb624a0bc3740e438032bbc566::lp_pool::UpdateLiquidityValueEvent",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateLiquidityValueEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UpdateLiquidityValueEvent.fromFields(fields),
@@ -3499,7 +3523,7 @@ export class UpdateLiquidityValueEvent implements StructClass {
 
 export function isUpdateMarginConfigEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateMarginConfigEvent";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateMarginConfigEvent";
 }
 
 export interface UpdateMarginConfigEventFields {
@@ -3514,12 +3538,12 @@ export interface UpdateMarginConfigEventFields {
 export type UpdateMarginConfigEventReified = Reified<UpdateMarginConfigEvent, UpdateMarginConfigEventFields>;
 
 export class UpdateMarginConfigEvent implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateMarginConfigEvent";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateMarginConfigEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UpdateMarginConfigEvent.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateMarginConfigEvent";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateMarginConfigEvent";
 
     readonly $typeArgs: [];
 
@@ -3534,7 +3558,7 @@ export class UpdateMarginConfigEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             UpdateMarginConfigEvent.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateMarginConfigEvent";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateMarginConfigEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -3551,7 +3575,7 @@ export class UpdateMarginConfigEvent implements StructClass {
             fullTypeName: composeSuiType(
                 UpdateMarginConfigEvent.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateMarginConfigEvent",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateMarginConfigEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UpdateMarginConfigEvent.fromFields(fields),
@@ -3681,7 +3705,7 @@ export class UpdateMarginConfigEvent implements StructClass {
 
 export function isUpdateSpotConfigEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateSpotConfigEvent";
+    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateSpotConfigEvent";
 }
 
 export interface UpdateSpotConfigEventFields {
@@ -3696,12 +3720,12 @@ export interface UpdateSpotConfigEventFields {
 export type UpdateSpotConfigEventReified = Reified<UpdateSpotConfigEvent, UpdateSpotConfigEventFields>;
 
 export class UpdateSpotConfigEvent implements StructClass {
-    static readonly $typeName = "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateSpotConfigEvent";
+    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateSpotConfigEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UpdateSpotConfigEvent.$typeName;
 
-    readonly $fullTypeName: "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateSpotConfigEvent";
+    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateSpotConfigEvent";
 
     readonly $typeArgs: [];
 
@@ -3716,7 +3740,7 @@ export class UpdateSpotConfigEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             UpdateSpotConfigEvent.$typeName,
             ...typeArgs
-        ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateSpotConfigEvent";
+        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateSpotConfigEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -3733,7 +3757,7 @@ export class UpdateSpotConfigEvent implements StructClass {
             fullTypeName: composeSuiType(
                 UpdateSpotConfigEvent.$typeName,
                 ...[]
-            ) as "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::lp_pool::UpdateSpotConfigEvent",
+            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::lp_pool::UpdateSpotConfigEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UpdateSpotConfigEvent.fromFields(fields),

@@ -6,26 +6,12 @@ export function init(txb: TransactionBlock) {
     return txb.moveCall({ target: `${PUBLISHED_AT}::stake_pool::init`, arguments: [] });
 }
 
-export interface HarvestArgs {
-    version: ObjectArg;
-    registry: ObjectArg;
-    index: bigint | TransactionArgument;
-    clock: ObjectArg;
-}
-
-export function harvest(txb: TransactionBlock, typeArg: string, args: HarvestArgs) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::harvest`,
-        typeArguments: [typeArg],
-        arguments: [obj(txb, args.version), obj(txb, args.registry), pure(txb, args.index, `u64`), obj(txb, args.clock)],
-    });
-}
-
 export interface UnsubscribeArgs {
     version: ObjectArg;
     registry: ObjectArg;
     index: bigint | TransactionArgument;
     userShareId: bigint | TransactionArgument;
+    unsubscribedShares: bigint | TransactionArgument | TransactionArgument | null;
     clock: ObjectArg;
 }
 
@@ -38,6 +24,7 @@ export function unsubscribe(txb: TransactionBlock, typeArg: string, args: Unsubs
             obj(txb, args.registry),
             pure(txb, args.index, `u64`),
             pure(txb, args.userShareId, `u64`),
+            pure(txb, args.unsubscribedShares, `0x1::option::Option<u64>`),
             obj(txb, args.clock),
         ],
     });
@@ -139,20 +126,13 @@ export interface DepositIncentiveArgs {
     registry: ObjectArg;
     index: bigint | TransactionArgument;
     coin: ObjectArg;
-    incentiveAmount: bigint | TransactionArgument;
 }
 
 export function depositIncentive(txb: TransactionBlock, typeArg: string, args: DepositIncentiveArgs) {
     return txb.moveCall({
         target: `${PUBLISHED_AT}::stake_pool::deposit_incentive`,
         typeArguments: [typeArg],
-        arguments: [
-            obj(txb, args.version),
-            obj(txb, args.registry),
-            pure(txb, args.index, `u64`),
-            obj(txb, args.coin),
-            pure(txb, args.incentiveAmount, `u64`),
-        ],
+        arguments: [obj(txb, args.version), obj(txb, args.registry), pure(txb, args.index, `u64`), obj(txb, args.coin)],
     });
 }
 
@@ -312,23 +292,12 @@ export function removeUserShareById(txb: TransactionBlock, args: RemoveUserShare
     });
 }
 
-export interface RemoveUserShareByUserArgs {
-    id: ObjectArg;
-    user: string | TransactionArgument;
-}
-
-export function removeUserShareByUser(txb: TransactionBlock, args: RemoveUserShareByUserArgs) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::remove_user_share_by_user`,
-        arguments: [obj(txb, args.id), pure(txb, args.user, `address`)],
-    });
-}
-
 export interface StakeArgs {
     version: ObjectArg;
     registry: ObjectArg;
     index: bigint | TransactionArgument;
     lpToken: ObjectArg;
+    userShareId: bigint | TransactionArgument | TransactionArgument | null;
     clock: ObjectArg;
 }
 
@@ -341,6 +310,7 @@ export function stake(txb: TransactionBlock, typeArg: string, args: StakeArgs) {
             obj(txb, args.registry),
             pure(txb, args.index, `u64`),
             obj(txb, args.lpToken),
+            pure(txb, args.userShareId, `0x1::option::Option<u64>`),
             obj(txb, args.clock),
         ],
     });
@@ -358,7 +328,7 @@ export function storeUserShares(txb: TransactionBlock, args: StoreUserSharesArgs
         arguments: [
             obj(txb, args.id),
             pure(txb, args.user, `address`),
-            vector(txb, `0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::stake_pool::LpUserShare`, args.userShares),
+            vector(txb, `0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::stake_pool::LpUserShare`, args.userShares),
         ],
     });
 }
@@ -368,6 +338,7 @@ export interface UnstakeArgs {
     registry: ObjectArg;
     index: bigint | TransactionArgument;
     userShareId: bigint | TransactionArgument;
+    unstakedShares: bigint | TransactionArgument | TransactionArgument | null;
     clock: ObjectArg;
 }
 
@@ -380,6 +351,7 @@ export function unstake(txb: TransactionBlock, typeArg: string, args: UnstakeArg
             obj(txb, args.registry),
             pure(txb, args.index, `u64`),
             pure(txb, args.userShareId, `u64`),
+            pure(txb, args.unstakedShares, `0x1::option::Option<u64>`),
             obj(txb, args.clock),
         ],
     });

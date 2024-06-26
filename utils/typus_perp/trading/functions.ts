@@ -40,54 +40,6 @@ export function increaseCollateral(txb: TransactionBlock, typeArgs: [string, str
     });
 }
 
-export interface ReduceOptionCollateralPositionSizeArgs {
-    version: ObjectArg;
-    registry: ObjectArg;
-    poolRegistry: ObjectArg;
-    dovRegistry: ObjectArg;
-    typusOracle: ObjectArg;
-    marketIndex: bigint | TransactionArgument;
-    poolIndex: bigint | TransactionArgument;
-    typusEcosystemVersion: ObjectArg;
-    typusUserRegistry: ObjectArg;
-    typusLeaderboardRegistry: ObjectArg;
-    pythState: ObjectArg;
-    oracleCToken: ObjectArg;
-    oracleTradingSymbol: ObjectArg;
-    clock: ObjectArg;
-    positionId: bigint | TransactionArgument;
-    orderSize: bigint | TransactionArgument | TransactionArgument | null;
-}
-
-export function reduceOptionCollateralPositionSize(
-    txb: TransactionBlock,
-    typeArgs: [string, string, string],
-    args: ReduceOptionCollateralPositionSizeArgs
-) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::trading::reduce_option_collateral_position_size`,
-        typeArguments: typeArgs,
-        arguments: [
-            obj(txb, args.version),
-            obj(txb, args.registry),
-            obj(txb, args.poolRegistry),
-            obj(txb, args.dovRegistry),
-            obj(txb, args.typusOracle),
-            pure(txb, args.marketIndex, `u64`),
-            pure(txb, args.poolIndex, `u64`),
-            obj(txb, args.typusEcosystemVersion),
-            obj(txb, args.typusUserRegistry),
-            obj(txb, args.typusLeaderboardRegistry),
-            obj(txb, args.pythState),
-            obj(txb, args.oracleCToken),
-            obj(txb, args.oracleTradingSymbol),
-            obj(txb, args.clock),
-            pure(txb, args.positionId, `u64`),
-            pure(txb, args.orderSize, `0x1::option::Option<u64>`),
-        ],
-    });
-}
-
 export interface ReleaseCollateralArgs {
     version: ObjectArg;
     registry: ObjectArg;
@@ -238,32 +190,6 @@ export interface CancelTradingOrderArgs {
 export function cancelTradingOrder(txb: TransactionBlock, typeArgs: [string, string], args: CancelTradingOrderArgs) {
     return txb.moveCall({
         target: `${PUBLISHED_AT}::trading::cancel_trading_order`,
-        typeArguments: typeArgs,
-        arguments: [
-            obj(txb, args.version),
-            obj(txb, args.registry),
-            pure(txb, args.marketIndex, `u64`),
-            pure(txb, args.orderId, `u64`),
-            pure(txb, args.triggerPrice, `u64`),
-        ],
-    });
-}
-
-export interface CancelTradingOrderWithBidReceiptArgs {
-    version: ObjectArg;
-    registry: ObjectArg;
-    marketIndex: bigint | TransactionArgument;
-    orderId: bigint | TransactionArgument;
-    triggerPrice: bigint | TransactionArgument;
-}
-
-export function cancelTradingOrderWithBidReceipt(
-    txb: TransactionBlock,
-    typeArgs: [string, string],
-    args: CancelTradingOrderWithBidReceiptArgs
-) {
-    return txb.moveCall({
-        target: `${PUBLISHED_AT}::trading::cancel_trading_order_with_bid_receipt`,
         typeArguments: typeArgs,
         arguments: [
             obj(txb, args.version),
@@ -430,13 +356,12 @@ export interface CreateTradingOrderWithBidReceiptArgs {
     typusLeaderboardRegistry: ObjectArg;
     collateralBidReceipt: ObjectArg;
     isLong: boolean | TransactionArgument;
-    isStopOrder: boolean | TransactionArgument;
-    triggerPrice: bigint | TransactionArgument;
+    user: string | TransactionArgument;
 }
 
 export function createTradingOrderWithBidReceipt(
     txb: TransactionBlock,
-    typeArgs: [string, string],
+    typeArgs: [string, string, string],
     args: CreateTradingOrderWithBidReceiptArgs
 ) {
     return txb.moveCall({
@@ -459,8 +384,7 @@ export function createTradingOrderWithBidReceipt(
             obj(txb, args.typusLeaderboardRegistry),
             obj(txb, args.collateralBidReceipt),
             pure(txb, args.isLong, `bool`),
-            pure(txb, args.isStopOrder, `bool`),
-            pure(txb, args.triggerPrice, `u64`),
+            pure(txb, args.user, `address`),
         ],
     });
 }
@@ -483,10 +407,10 @@ export interface ExecuteOptionCollateralOrder_Args {
     clock: ObjectArg;
 }
 
-export function executeOptionCollateralOrder_(txb: TransactionBlock, typeArg: string, args: ExecuteOptionCollateralOrder_Args) {
+export function executeOptionCollateralOrder_(txb: TransactionBlock, typeArgs: [string, string], args: ExecuteOptionCollateralOrder_Args) {
     return txb.moveCall({
         target: `${PUBLISHED_AT}::trading::execute_option_collateral_order_`,
-        typeArguments: [typeArg],
+        typeArguments: typeArgs,
         arguments: [
             obj(txb, args.version),
             obj(txb, args.dovRegistry),
@@ -822,6 +746,54 @@ export function newMarkets(txb: TransactionBlock, typeArgs: [string, string], ar
         target: `${PUBLISHED_AT}::trading::new_markets`,
         typeArguments: typeArgs,
         arguments: [obj(txb, args.version), obj(txb, args.registry), pure(txb, args.protocolFeeShareBp, `u64`)],
+    });
+}
+
+export interface ReduceOptionCollateralPositionSizeArgs {
+    version: ObjectArg;
+    registry: ObjectArg;
+    poolRegistry: ObjectArg;
+    dovRegistry: ObjectArg;
+    typusOracle: ObjectArg;
+    marketIndex: bigint | TransactionArgument;
+    poolIndex: bigint | TransactionArgument;
+    typusEcosystemVersion: ObjectArg;
+    typusUserRegistry: ObjectArg;
+    typusLeaderboardRegistry: ObjectArg;
+    pythState: ObjectArg;
+    oracleCToken: ObjectArg;
+    oracleTradingSymbol: ObjectArg;
+    clock: ObjectArg;
+    positionId: bigint | TransactionArgument;
+    orderSize: bigint | TransactionArgument | TransactionArgument | null;
+}
+
+export function reduceOptionCollateralPositionSize(
+    txb: TransactionBlock,
+    typeArgs: [string, string, string],
+    args: ReduceOptionCollateralPositionSizeArgs
+) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::trading::reduce_option_collateral_position_size`,
+        typeArguments: typeArgs,
+        arguments: [
+            obj(txb, args.version),
+            obj(txb, args.registry),
+            obj(txb, args.poolRegistry),
+            obj(txb, args.dovRegistry),
+            obj(txb, args.typusOracle),
+            pure(txb, args.marketIndex, `u64`),
+            pure(txb, args.poolIndex, `u64`),
+            obj(txb, args.typusEcosystemVersion),
+            obj(txb, args.typusUserRegistry),
+            obj(txb, args.typusLeaderboardRegistry),
+            obj(txb, args.pythState),
+            obj(txb, args.oracleCToken),
+            obj(txb, args.oracleTradingSymbol),
+            obj(txb, args.clock),
+            pure(txb, args.positionId, `u64`),
+            pure(txb, args.orderSize, `0x1::option::Option<u64>`),
+        ],
     });
 }
 

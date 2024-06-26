@@ -1,5 +1,4 @@
 import * as admin from "./admin/structs";
-import * as critbit from "./critbit/structs";
 import * as lpPool from "./lp-pool/structs";
 import * as oracle from "./oracle/structs";
 import * as position from "./position/structs";
@@ -11,14 +10,11 @@ import * as treasuryCaps from "./treasury-caps/structs";
 import { StructClassLoader } from "../_framework/loader";
 
 export function registerClasses(loader: StructClassLoader) {
-    loader.register(admin.Version);
-    loader.register(admin.ManagerCap);
     loader.register(admin.FeeInfo);
     loader.register(admin.FeePool);
+    loader.register(admin.ManagerCap);
     loader.register(admin.SendFeeEvent);
-    loader.register(critbit.CritbitTree);
-    loader.register(critbit.InternalNode);
-    loader.register(critbit.Leaf);
+    loader.register(admin.Version);
     loader.register(treasuryCaps.TreasuryCaps);
     loader.register(tlp.LpRegistry);
     loader.register(tlp.TLP);
@@ -26,7 +22,6 @@ export function registerClasses(loader: StructClassLoader) {
     loader.register(oracle.PythPriceInfoObject);
     loader.register(lpPool.Config);
     loader.register(lpPool.State);
-    loader.register(lpPool.Registry);
     loader.register(lpPool.AddLiquidityTokenEvent);
     loader.register(lpPool.BurnLpEvent);
     loader.register(lpPool.LiquidityPool);
@@ -34,6 +29,7 @@ export function registerClasses(loader: StructClassLoader) {
     loader.register(lpPool.MarginConfig);
     loader.register(lpPool.MintLpEvent);
     loader.register(lpPool.NewLiquidityPoolEvent);
+    loader.register(lpPool.Registry);
     loader.register(lpPool.ResumePoolEvent);
     loader.register(lpPool.ResumeTokenPoolEvent);
     loader.register(lpPool.SpotConfig);
@@ -48,12 +44,15 @@ export function registerClasses(loader: StructClassLoader) {
     loader.register(symbol.Symbol);
     loader.register(position.OrderFilledEvent);
     loader.register(position.Position);
+    loader.register(position.RealizeFundingEvent);
+    loader.register(position.RealizedPnlEvent);
+    loader.register(position.RemovePositionEvent);
     loader.register(position.TradingOrder);
-    loader.register(stakePool.HarvestEvent);
     loader.register(stakePool.UnsubscribeEvent);
     loader.register(stakePool.ActivateIncentiveTokenEvent);
     loader.register(stakePool.AddIncentiveTokenEvent);
     loader.register(stakePool.DeactivateIncentiveTokenEvent);
+    loader.register(stakePool.DeactivatingShares);
     loader.register(stakePool.DepositIncentiveEvent);
     loader.register(stakePool.HarvestPerUserShareEvent);
     loader.register(stakePool.Incentive);
@@ -73,7 +72,6 @@ export function registerClasses(loader: StructClassLoader) {
     loader.register(stakePool.WithdrawIncentiveEvent);
     loader.register(trading.AddTradingSymbolEvent);
     loader.register(trading.CancelTradingOrderEvent);
-    loader.register(trading.CancelTradingOrderWithBidReceiptEvent);
     loader.register(trading.CreateTradingOrderEvent);
     loader.register(trading.CreateTradingOrderWithBidReceiptsEvent);
     loader.register(trading.IncreaseCollateralEvent);
