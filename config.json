@@ -106,7 +106,8 @@
             "USDY": "0x604408004efddc03323cd6f6a72b98695dbdced57a630ca2622e6b96fc94a3f6",
             "WBTC": "0xaa72a2b370cf45a7b1363a2b9e3f0c57c05863375b984e2ca0928973574404f2",
             "WETH": "0x0ac9f9275eb0ac33b7f59741b1df67a6783af2db6d2a4e5aba8ce350d5b6b260"
-        }
+        },
+        "PYTH": {}
     },
     "MOVEMENT": {
         "RPC_ENDPOINT": "https://sui.devnet.m2.movementlabs.xyz:443",
