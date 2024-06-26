@@ -57,8 +57,8 @@ const gasBudget = 100000000;
         oracleCToken: priceInfoObjectIds[NETWORK][TOKEN],
         oracleTradingSymbol: priceInfoObjectIds[NETWORK][BASE_TOKEN],
         clock: CLOCK,
-        positionId: BigInt(4),
-        releaseAmount: BigInt(899591197 - 817607418),
+        positionId: BigInt(0),
+        releaseAmount: BigInt(99576926),
     });
 
     tx.transferObjects([coin], address);

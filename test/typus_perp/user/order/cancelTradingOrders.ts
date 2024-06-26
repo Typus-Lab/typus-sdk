@@ -1,11 +1,9 @@
 import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { cancelTradingOrder } from "../../../../utils/typus_perp/trading/functions";
+import { cancelTradingOrder, getUserOrders } from "../../../../utils/typus_perp/trading/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../../../constants";
-import { LiquidityPool, Registry } from "../../../../utils/typus_perp/lp-pool/structs";
-import { SuiPriceServiceConnection, SuiPythClient } from "@pythnetwork/pyth-sui-js";
+import { readVecOrder } from "../../../../utils/typus_perp/readVec";
 import "../../../load_env";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -21,26 +19,50 @@ const gasBudget = 100000000;
     const address = keypair.toSuiAddress();
     console.log(address);
 
-    let tx = new TransactionBlock();
-    tx.setGasBudget(gasBudget);
+    const tx1 = new TransactionBlock();
+    tx1.setGasBudget(gasBudget);
 
-    const cToken = "0xa38dad920880f81ea514de6db007d3a84e9116a29c60b3e69bbe418c2d9f553c::usdt::USDT";
-    const BASE_TOKEN = "0x2::sui::SUI";
-
-    const token = cancelTradingOrder(tx, [cToken, BASE_TOKEN], {
+    getUserOrders(tx1, {
         version: config.OBJECT.TYPUS_PERP_VERSION,
         registry: config.REGISTRY.MARKET_REGISTRY,
         marketIndex: BigInt(0),
-        orderId: BigInt(1),
-        triggerPrice: BigInt(2),
+        user: address,
     });
 
-    tx.moveCall({
-        target: `${config.PACKAGE.FRAMEWORK}::utils::transfer_balance`,
-        typeArguments: [cToken],
-        arguments: [token, tx.pure(address)],
+    const res1 = await provider.devInspectTransactionBlock({ sender: address, transactionBlock: tx1 });
+    // console.log(res1);
+
+    // @ts-ignore
+    const returnValues = res1.results[0].returnValues[0][0];
+    // console.log(returnValues);
+
+    const orders = readVecOrder(Uint8Array.from(returnValues));
+    console.log(orders);
+
+    // Cancel the first order
+    let order = orders[0];
+    const tx = new TransactionBlock();
+    tx.setGasBudget(gasBudget);
+
+    const cToken = order.collateral_token;
+    const BASE_TOKEN = order.baseToken;
+
+    const coin = cancelTradingOrder(tx, [cToken, BASE_TOKEN], {
+        version: config.OBJECT.TYPUS_PERP_VERSION,
+        registry: config.REGISTRY.MARKET_REGISTRY,
+        marketIndex: BigInt(0),
+        orderId: order.order_id,
+        triggerPrice: order.trigger_price,
     });
 
-    const res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
-    console.log(res);
+    tx.transferObjects([coin], address);
+
+    let dryrunRes = await provider.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: address,
+    });
+    console.log(dryrunRes.events.filter((e) => e.type.endsWith("CancelTradingOrderEvent"))[0].parsedJson);
+
+    const res2 = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
+    console.log(res2);
 })();

@@ -54,11 +54,13 @@ const gasBudget = 100000000;
         })
     ).data.map((coin) => coin.coinObjectId);
 
-    const balance = tx.moveCall({
-        target: `${config.PACKAGE.FRAMEWORK}::utils::extract_balance`,
-        typeArguments: [cToken],
-        arguments: [tx.makeMoveVec({ objects: coins.map((coin) => tx.object(coin)) }), tx.pure("1000000000")],
-    });
+    const destination = coins.pop()!;
+
+    if (coins.length > 0) {
+        tx.mergeCoins(destination, coins);
+    }
+
+    const [coin] = tx.splitCoins(destination, ["100000000"]);
 
     createTradingOrder(tx, [cToken, baseToken], {
         version: config.OBJECT.TYPUS_PERP_VERSION,
@@ -74,15 +76,22 @@ const gasBudget = 100000000;
         typusUserRegistry: config.REGISTRY.USER,
         typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD,
         linkedPositionId: null,
-        collateral: balance,
+        collateral: coin,
         reduceOnly: false,
         isLong: true,
         isStopOrder: false,
         size: BigInt(1000000000000),
-        triggerPrice: BigInt(200000000),
+        triggerPrice: BigInt(100000000),
     });
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
+    let dryrunRes = await provider.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: address,
+    });
+    console.log(dryrunRes.events.filter((e) => e.type.endsWith("CreateTradingOrderEvent"))[0].parsedJson);
+    console.log(dryrunRes.events.filter((e) => e.type.endsWith("RealizeFundingEvent"))); // if the order is not filled, there will be no RealizeFundingEvent
+    console.log(dryrunRes.events.filter((e) => e.type.endsWith("OrderFilledEvent"))); // if the order is not filled, there will be no OrderFilledEvent
 
+    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
     console.log(res);
 })();

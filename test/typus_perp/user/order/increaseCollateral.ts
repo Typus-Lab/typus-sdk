@@ -74,7 +74,7 @@ const gasBudget = 100000000;
         oracleCToken: priceInfoObjectIds[NETWORK][TOKEN],
         oracleTradingSymbol: priceInfoObjectIds[NETWORK][BASE_TOKEN],
         clock: CLOCK,
-        positionId: BigInt(4),
+        positionId: BigInt(0),
         collateral: coin,
     });
 
