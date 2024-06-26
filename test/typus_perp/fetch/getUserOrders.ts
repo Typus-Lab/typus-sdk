@@ -1,4 +1,4 @@
-import configs from "../../../perp.json";
+import configs from "../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getUserOrders } from "../../../utils/typus_perp/trading/functions";
@@ -23,8 +23,8 @@ const gasBudget = 100000000;
     tx.setGasBudget(gasBudget);
 
     getUserOrders(tx, {
-        version: config.TYPUS_PERP_VERSION,
-        registry: config.TYPUS_PERP_MARKET_REGISTRY,
+        version: config.OBJECT.TYPUS_PERP_VERSION,
+        registry: config.REGISTRY.MARKET_REGISTRY,
         marketIndex: BigInt(0),
         user,
     });

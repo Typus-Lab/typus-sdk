@@ -77,22 +77,23 @@ export function readVecShares(bytes: Uint8Array) {
         let share = {
             user: AddressFromBytes(reader.readBytes(32)),
             user_share_id: reader.read64(),
-            share: reader.read64(),
             stake_ts_ms: reader.read64(),
-            unlock_ts_ms: reader
-                .readVec((reader) => {
-                    return reader.read64();
-                })
-                .at(0),
+            total_shares: reader.read64(),
+            active_shares: reader.read64(),
+            deactivating_shares: reader.readVec((reader) => {
+                let DeactivatingShares = {
+                    shares: reader.read64(),
+                    unsubscribed_ts_ms: reader.read64(),
+                    unlocked_ts_ms: reader.read64(),
+                    unsubscribed_incentive_price_index: reader.readVec((reader) => [
+                        String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                        reader.read64(),
+                    ]),
+                    u64_padding: reader.readVec((reader) => reader.read64()),
+                };
+                return DeactivatingShares;
+            }),
             last_incentive_price_index: reader.readVec((reader) => [
-                String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-                reader.read64(),
-            ]),
-            last_harvest_ts_ms: reader.readVec((reader) => [
-                String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-                reader.read64(),
-            ]),
-            unlock_incentive_price_index: reader.readVec((reader) => [
                 String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
                 reader.read64(),
             ]),

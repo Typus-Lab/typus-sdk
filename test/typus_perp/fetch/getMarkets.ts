@@ -1,4 +1,4 @@
-import configs from "../../../perp.json";
+import configs from "../../../config.json";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { MarketRegistry, Markets, SymbolMarket } from "../../../utils/typus_perp/trading/structs";
@@ -16,11 +16,11 @@ const provider = new SuiClient({
     const address = keypair.toSuiAddress();
     console.log(address);
 
-    const marketRegistry = await MarketRegistry.fetch(provider, config.TYPUS_PERP_MARKET_REGISTRY);
+    const marketRegistry = await MarketRegistry.fetch(provider, config.REGISTRY.MARKET_REGISTRY);
     console.log(marketRegistry);
 
     const dynamicFields = await provider.getDynamicFields({
-        parentId: config.TYPUS_PERP_MARKET_REGISTRY,
+        parentId: config.REGISTRY.MARKET_REGISTRY,
     });
 
     for (const field of dynamicFields.data) {

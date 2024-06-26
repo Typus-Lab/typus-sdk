@@ -60,7 +60,8 @@
             "NFT": "0x5cfd0819411be98034cba544cbffab192c2c35674a05ff57f4f1c5042875b828",
             "ORACLE": "0x1d17058789bd1e1e79f1a92424519a88146f191f58a06cc4d9ab23d17d46ab73",
             "TYPUS": "0x4213e12a2220f15f1837a76897110d2260786558169bd8d0847f21e9b551f277",
-            "LOCKED_VAULT": "0xe79b7ba69b750d30ac7ae171483a4064d0bb34090493fef3c844a11b05818d79"
+            "LOCKED_VAULT": "0xe79b7ba69b750d30ac7ae171483a4064d0bb34090493fef3c844a11b05818d79",
+            "PERP": "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d"
         },
         "PACKAGE": {
             "DOV_SINGLE": "0x2e462aa0224bec76acaea81c51ca5b9ae4b27ec50281a764797c84148c8a463f",
@@ -69,7 +70,8 @@
             "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c",
             "NFT": "0x0f5162014f18686640b8d0adefd60c3fe5b377413ec4f1e77001c67d96f8501a",
             "ORACLE": "0x71fbc7acaf513561dabdeb846e7dd5288108e56edb0b6de8d4999c4dfce21f66",
-            "TYPUS": "0x459289f0c0ab93157fa49b42d7f61ac816dcca4879d6cedb832d4eea86926945"
+            "TYPUS": "0x459289f0c0ab93157fa49b42d7f61ac816dcca4879d6cedb832d4eea86926945",
+            "PERP": "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d"
         },
         "REGISTRY": {
             "AIRDROP": "0xfb2fbf261f6050d100bcd026ffa0076e088506b1bec26313947239303e2a0224",
@@ -80,14 +82,21 @@
             "TAILS_STAKING": "0x989bd585b580dfc22d9d7656a5807b2f6c8fe36260a2003ef697adc8a38d21af",
             "TGLD": "0x2118b4056c89d90a6dc40d198fbe239cb8e83f7ea20daaf4ea53341c7fdb043c",
             "USER": "0x5f1894a3680949111a7530d63ceda6857d31521ab2de625e9f826cae17c9a7f3",
-            "LOCKED_VAULT": "0x50f1fc44c907f8738b098abf2b594e523739df7d40df8164154cfe6f60513302"
+            "LOCKED_VAULT": "0x50f1fc44c907f8738b098abf2b594e523739df7d40df8164154cfe6f60513302",
+            "STAKE_POOL_REGISTRY": "0x6dc4b86e5a8cabcaab46aa507a4201ca5abbe6e2610429e83c91a837da532247",
+            "LP_POOL_REGISTRY": "0x30e3e2d7080f584efdedefa1c03ca06591d86bada5e1d3e98bbd48a434046f10",
+            "MARKET_REGISTRY": "0x6e11e468b50b1665b930020ea8223bdcc7c86024f85d51021a06dd4ee0e27905",
+            "TLP_REGISTRY": "0xb04440ea6b2c54b8b1d8865f23f9faea4e5b5199cd0536f5783c97813d1bb37b",
+            "TREASURY_CAPS": "0xbbfca01ebd9c3bf637256cdeb6d5bd65ca453a627f65ead304211ea041edd2d4"
         },
         "TOKEN": {
             "FUD": "0x461efa7ee5aa1b27e44450d79e2104e7fc0991461e9eb1c2a3fc1f44cd554856::fud::FUD",
             "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c::mfud::MFUD",
             "SUI": "0x2::sui::SUI",
             "TGLD": "0x4213e12a2220f15f1837a76897110d2260786558169bd8d0847f21e9b551f277::tgld::TGLD",
-            "USDT": "0xa38dad920880f81ea514de6db007d3a84e9116a29c60b3e69bbe418c2d9f553c::usdt::USDT"
+            "USDT": "0xa38dad920880f81ea514de6db007d3a84e9116a29c60b3e69bbe418c2d9f553c::usdt::USDT",
+            "TLP": "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::tlp::TLP",
+            "USD": "0x01a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::USD"
         },
         "ORACLE": {
             "AFSUI": "0xacd75f051b8be445226f92d873fbf9bbc26fe25cec5708b1aeec44286dbbef5b",
@@ -112,7 +121,8 @@
             "TGLD_TOKEN_POLICY": "0x17875c2f772053cd148bd2b8b8a40160db3f841825d8963192f8394d5c18974c",
             "NFT_TRANSFER_POLICY": "0x1c62271ecc443c3d92a8fe8f5662e877856d26b971d967f66937a65f55160831",
             "STRATEGY_POOL": "0x50b01081469d032e04bfcbd057614b1359376920f55c7bebd076e0e2af07a57f",
-            "TAILS_IDS": "0xf4ea1c4432823ebde3b0c1f0705a45b08571b48237db879502b8ba336ea5b916"
+            "TAILS_IDS": "0xf4ea1c4432823ebde3b0c1f0705a45b08571b48237db879502b8ba336ea5b916",
+            "TYPUS_PERP_VERSION": "0xdeb074909c1c18439f39c44c0ae4b16f62da7b9d5b9f22258512f0e0f97636fe"
         }
     },
     "MOVEMENT": {

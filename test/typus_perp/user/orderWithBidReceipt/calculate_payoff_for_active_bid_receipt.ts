@@ -1,14 +1,14 @@
 // calculate_payoff_for_active_bid_receipt;
 
-import configs from "../../../perp.json";
+import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { createTradingOrderWithBidReceipt } from "../../../utils/typus_perp/trading/functions";
+import { createTradingOrderWithBidReceipt } from "../../../../utils/typus_perp/trading/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../../constants";
-import { LiquidityPool, Registry } from "../../../utils/typus_perp/lp-pool/structs";
+import { CLOCK } from "../../../../constants";
+import { LiquidityPool, Registry } from "../../../../utils/typus_perp/lp-pool/structs";
 import { SuiPriceServiceConnection, SuiPythClient } from "@pythnetwork/pyth-sui-js";
-import "../../load_env";
+import "../../../load_env";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 

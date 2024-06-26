@@ -1,4 +1,4 @@
-import configs from "../../../perp.json";
+import configs from "../../../config.json";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { LiquidityPool, Registry } from "../../../utils/typus_perp/lp-pool/structs";
@@ -16,7 +16,7 @@ const provider = new SuiClient({
     const address = keypair.toSuiAddress();
     console.log(address);
 
-    const lpPoolRegistry = await Registry.fetch(provider, config.TYPUS_PERP_LP_POOL_REGISTRY);
+    const lpPoolRegistry = await Registry.fetch(provider, config.REGISTRY.LP_POOL_REGISTRY);
     console.log(lpPoolRegistry);
 
     const dynamicFields = await provider.getDynamicFields({

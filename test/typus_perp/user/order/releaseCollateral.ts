@@ -1,14 +1,14 @@
-import configs from "../../../perp.json";
+import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { increaseCollateral } from "../../../utils/typus_perp/trading/functions";
+import { releaseCollateral } from "../../../../utils/typus_perp/trading/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../../constants";
-import { LiquidityPool, Registry } from "../../../utils/typus_perp/lp-pool/structs";
-import "../../load_env";
-import { createPythClient, updatePyth } from "../../../utils/pyth/pythClient";
-import { tokenType } from "../../../utils/token";
-import { priceInfoObjectIds } from "../../../utils/pyth/constant";
+import { CLOCK } from "../../../../constants";
+import { LiquidityPool, Registry } from "../../../../utils/typus_perp/lp-pool/structs";
+import "../../../load_env";
+import { createPythClient, updatePyth } from "../../../../utils/pyth/pythClient";
+import { tokenType } from "../../../../utils/token";
+import { priceInfoObjectIds, pythStateId } from "../../../../utils/pyth/constant";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
@@ -23,7 +23,7 @@ const gasBudget = 100000000;
     const address = keypair.toSuiAddress();
     console.log(address);
 
-    const lpPoolRegistry = await Registry.fetch(provider, config.TYPUS_PERP_LP_POOL_REGISTRY);
+    const lpPoolRegistry = await Registry.fetch(provider, config.REGISTRY.LP_POOL_REGISTRY);
     console.log(lpPoolRegistry);
 
     const dynamicFields = await provider.getDynamicFields({
@@ -47,36 +47,21 @@ const gasBudget = 100000000;
     const cToken = tokenType[NETWORK][TOKEN];
     const baseToken = tokenType[NETWORK][BASE_TOKEN];
 
-    const coins = (
-        await provider.getCoins({
-            owner: address,
-            coinType: cToken,
-        })
-    ).data.map((coin) => coin.coinObjectId);
-
-    console.log(coins.length);
-
-    const destination = coins.pop()!;
-
-    if (coins.length > 0) {
-        tx.mergeCoins(destination, coins);
-    }
-
-    const [coin] = tx.splitCoins(destination, ["100000000"]);
-
-    increaseCollateral(tx, [cToken, baseToken], {
-        version: config.TYPUS_PERP_VERSION,
-        registry: config.TYPUS_PERP_MARKET_REGISTRY,
-        poolRegistry: config.TYPUS_PERP_LP_POOL_REGISTRY,
+    const coin = releaseCollateral(tx, [cToken, baseToken], {
+        version: config.OBJECT.TYPUS_PERP_VERSION,
+        registry: config.REGISTRY.MARKET_REGISTRY,
+        poolRegistry: config.REGISTRY.LP_POOL_REGISTRY,
         marketIndex: BigInt(0),
         poolIndex: BigInt(0),
-        pythState: config.PYTH_STATE,
+        pythState: pythStateId[NETWORK],
         oracleCToken: priceInfoObjectIds[NETWORK][TOKEN],
         oracleTradingSymbol: priceInfoObjectIds[NETWORK][BASE_TOKEN],
         clock: CLOCK,
         positionId: BigInt(4),
-        collateral: coin,
+        releaseAmount: BigInt(899591197 - 817607418),
     });
+
+    tx.transferObjects([coin], address);
 
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
 

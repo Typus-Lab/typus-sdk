@@ -1,14 +1,14 @@
-import configs from "../../../perp.json";
+import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { swap } from "../../../utils/typus_perp/lp-pool/functions";
+import { swap } from "../../../../utils/typus_perp/lp-pool/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../../constants";
-import { LiquidityPool, Registry } from "../../../utils/typus_perp/lp-pool/structs";
-import "../../load_env";
-import { createPythClient, updatePyth } from "../../../utils/pyth/pythClient";
-import { tokenType } from "../../../utils/token";
-import { priceInfoObjectIds } from "../../../utils/pyth/constant";
+import { CLOCK } from "../../../../constants";
+import { LiquidityPool, Registry } from "../../../../utils/typus_perp/lp-pool/structs";
+import "../../../load_env";
+import { createPythClient, updatePyth } from "../../../../utils/pyth/pythClient";
+import { tokenType } from "../../../../utils/token";
+import { priceInfoObjectIds, pythStateId } from "../../../../utils/pyth/constant";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
@@ -23,7 +23,7 @@ const gasBudget = 100000000;
     const address = keypair.toSuiAddress();
     console.log(address);
 
-    const lpPoolRegistry = await Registry.fetch(provider, config.TYPUS_PERP_LP_POOL_REGISTRY);
+    const lpPoolRegistry = await Registry.fetch(provider, config.REGISTRY.LP_POOL_REGISTRY);
     console.log(lpPoolRegistry);
 
     const dynamicFields = await provider.getDynamicFields({
@@ -39,7 +39,7 @@ const gasBudget = 100000000;
 
     // INPUTS
     const FROM_TOKEN = "USDT";
-    const TO_TOKEN = "SUI";
+    const TO_TOKEN = "USDC";
     const NETWORK = "TESTNET";
 
     const pythClient = createPythClient(provider, NETWORK);
@@ -54,21 +54,23 @@ const gasBudget = 100000000;
         })
     ).data.map((coin) => coin.coinObjectId);
 
-    const balance = tx.moveCall({
-        target: `${config.FRAMEWORK}::utils::extract_balance`,
-        typeArguments: [fromToken],
-        arguments: [tx.makeMoveVec({ objects: coins.map((coin) => tx.object(coin)) }), tx.pure("1000000")],
-    });
+    const destination = coins.pop()!;
+
+    if (coins.length > 0) {
+        tx.mergeCoins(destination, coins);
+    }
+
+    const [coin] = tx.splitCoins(destination, ["100000000"]);
 
     const token = swap(tx, [fromToken, toToken], {
-        version: config.TYPUS_PERP_VERSION,
-        registry: config.TYPUS_PERP_LP_POOL_REGISTRY,
-        pythState: config.PYTH_STATE,
+        version: config.OBJECT.TYPUS_PERP_VERSION,
+        registry: config.REGISTRY.LP_POOL_REGISTRY,
+        pythState: pythStateId[NETWORK],
         clock: CLOCK,
         index: BigInt(0),
         oracleFromToken: priceInfoObjectIds[NETWORK][FROM_TOKEN],
         oracleToToken: priceInfoObjectIds[NETWORK][TO_TOKEN],
-        fromBalance: balance,
+        fromCoin: coin,
         minToAmount: BigInt(0),
     });
 
@@ -78,7 +80,7 @@ const gasBudget = 100000000;
         transactionBlock: tx,
         sender: address,
     });
-    console.log(dryrunRes.events.filter((e) => e.type.endsWith("SwapEvent")));
+    console.log(dryrunRes.events.filter((e) => e.type.endsWith("SwapEvent"))[0].parsedJson);
 
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
     console.log(res);

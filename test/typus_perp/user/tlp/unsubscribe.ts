@@ -1,9 +1,9 @@
-import configs from "../../../perp.json";
+import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../../constants";
-import { unsubscribe } from "../../../utils/typus_perp/stake-pool/functions";
+import { CLOCK } from "../../../../constants";
+import { unsubscribe } from "../../../../utils/typus_perp/stake-pool/functions";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const config = configs.TESTNET;
@@ -19,12 +19,13 @@ const gasBudget = 100000000;
     const tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
-    unsubscribe(tx, "0x6340d69ce680b0b740d20d7ab866678c0a331ad29795bafa138a5f4055dcc25c::tlp::TLP", {
-        version: config.TYPUS_PERP_VERSION,
-        registry: config.TYPUS_PERP_STAKE_POOL_REGISTRY,
+    unsubscribe(tx, config.TOKEN.TLP, {
+        version: config.OBJECT.TYPUS_PERP_VERSION,
+        registry: config.REGISTRY.STAKE_POOL_REGISTRY,
         index: BigInt(0),
         userShareId: BigInt(0),
         clock: CLOCK,
+        unsubscribedShares: BigInt(987450000000),
     });
 
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });

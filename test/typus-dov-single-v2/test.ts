@@ -299,7 +299,7 @@ async function vi() {
         await getRankings({
             provider,
             typusPackageId: config.PACKAGE.TYPUS_PACKAGE,
-            typusEcosystemVersion: config.TYPUS_VERSION,
+            typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
             typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD_REGISTRY,
             key: "bidding_leaderboard",
             id: "0xc94f5b3a1f237925a517e8406080aae523fef744e432bd72cb904f619aced583",

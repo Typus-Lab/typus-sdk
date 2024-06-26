@@ -1,14 +1,14 @@
-import configs from "../../../perp.json";
+import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { createTradingOrder } from "../../../utils/typus_perp/trading/functions";
+import { createTradingOrder } from "../../../../utils/typus_perp/trading/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../../constants";
-import { LiquidityPool, Registry } from "../../../utils/typus_perp/lp-pool/structs";
-import "../../load_env";
-import { createPythClient, updatePyth } from "../../../utils/pyth/pythClient";
-import { tokenType } from "../../../utils/token";
-import { priceInfoObjectIds } from "../../../utils/pyth/constant";
+import { CLOCK } from "../../../../constants";
+import { LiquidityPool, Registry } from "../../../../utils/typus_perp/lp-pool/structs";
+import "../../../load_env";
+import { createPythClient, updatePyth } from "../../../../utils/pyth/pythClient";
+import { tokenType } from "../../../../utils/token";
+import { priceInfoObjectIds, pythStateId } from "../../../../utils/pyth/constant";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
@@ -23,7 +23,7 @@ const gasBudget = 100000000;
     const address = keypair.toSuiAddress();
     console.log(address);
 
-    const lpPoolRegistry = await Registry.fetch(provider, config.TYPUS_PERP_LP_POOL_REGISTRY);
+    const lpPoolRegistry = await Registry.fetch(provider, config.REGISTRY.LP_POOL_REGISTRY);
     console.log(lpPoolRegistry);
 
     const dynamicFields = await provider.getDynamicFields({
@@ -55,24 +55,24 @@ const gasBudget = 100000000;
     ).data.map((coin) => coin.coinObjectId);
 
     const balance = tx.moveCall({
-        target: `${config.FRAMEWORK}::utils::extract_balance`,
+        target: `${config.PACKAGE.FRAMEWORK}::utils::extract_balance`,
         typeArguments: [cToken],
         arguments: [tx.makeMoveVec({ objects: coins.map((coin) => tx.object(coin)) }), tx.pure("1000000000")],
     });
 
     createTradingOrder(tx, [cToken, baseToken], {
-        version: config.TYPUS_PERP_VERSION,
-        registry: config.TYPUS_PERP_MARKET_REGISTRY,
-        poolRegistry: config.TYPUS_PERP_LP_POOL_REGISTRY,
+        version: config.OBJECT.TYPUS_PERP_VERSION,
+        registry: config.REGISTRY.MARKET_REGISTRY,
+        poolRegistry: config.REGISTRY.LP_POOL_REGISTRY,
         marketIndex: BigInt(0),
         poolIndex: BigInt(0),
-        pythState: config.PYTH_STATE,
+        pythState: pythStateId[NETWORK],
         oracleCToken: priceInfoObjectIds[NETWORK][TOKEN],
         oracleTradingSymbol: priceInfoObjectIds[NETWORK][BASE_TOKEN],
         clock: CLOCK,
-        typusEcosystemVersion: config.TYPUS_VERSION,
-        typusUserRegistry: config.USER_REGISTRY,
-        typusLeaderboardRegistry: config.LEADERBOARD_REGISTRY,
+        typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
+        typusUserRegistry: config.REGISTRY.USER,
+        typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD,
         linkedPositionId: null,
         collateral: balance,
         reduceOnly: false,

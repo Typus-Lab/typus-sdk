@@ -1,14 +1,14 @@
-import configs from "../../../perp.json";
+import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { mintLp, updateLiquidityValue } from "../../../utils/typus_perp/lp-pool/functions";
+import { mintLp, updateLiquidityValue } from "../../../../utils/typus_perp/lp-pool/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../../constants";
-import { LiquidityPool, Registry } from "../../../utils/typus_perp/lp-pool/structs";
-import { createPythClient, updatePyth } from "../../../utils/pyth/pythClient";
-import { tokenType, typeArgToAsset } from "../../../utils/token";
-import { stake } from "../../../utils/typus_perp/stake-pool/functions";
-import { priceIDs, priceInfoObjectIds } from "../../../utils/pyth/constant";
+import { CLOCK } from "../../../../constants";
+import { LiquidityPool, Registry } from "../../../../utils/typus_perp/lp-pool/structs";
+import { createPythClient, updatePyth } from "../../../../utils/pyth/pythClient";
+import { tokenType, typeArgToAsset } from "../../../../utils/token";
+import { stake } from "../../../../utils/typus_perp/stake-pool/functions";
+import { priceIDs, priceInfoObjectIds, pythStateId } from "../../../../utils/pyth/constant";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
@@ -23,7 +23,7 @@ const gasBudget = 100000000;
     const address = keypair.toSuiAddress();
     console.log(address);
 
-    const lpPoolRegistry = await Registry.fetch(provider, config.TYPUS_PERP_LP_POOL_REGISTRY);
+    const lpPoolRegistry = await Registry.fetch(provider, config.REGISTRY.LP_POOL_REGISTRY);
     console.log(lpPoolRegistry);
 
     const dynamicFields = await provider.getDynamicFields({
@@ -43,7 +43,7 @@ const gasBudget = 100000000;
     // INPUT
     const NETWORK = "TESTNET";
     // INPUT
-    const TOKEN = "USDC";
+    const TOKEN = "USDT";
 
     // update pyth oracle
     const tokens = lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
@@ -54,10 +54,10 @@ const gasBudget = 100000000;
 
     for (let token of tokens) {
         updateLiquidityValue(tx, tokenType[NETWORK][token], {
-            version: config.TYPUS_PERP_VERSION,
-            registry: config.TYPUS_PERP_LP_POOL_REGISTRY,
+            version: config.OBJECT.TYPUS_PERP_VERSION,
+            registry: config.REGISTRY.LP_POOL_REGISTRY,
             index: BigInt(0),
-            pythState: config.PYTH_STATE,
+            pythState: pythStateId[NETWORK],
             oracle: priceInfoObjectIds[NETWORK][token],
             clock: CLOCK,
         });
@@ -81,23 +81,24 @@ const gasBudget = 100000000;
 
     const [coin] = tx.splitCoins(destination, ["100000000000"]);
 
-    const lpCoin = mintLp(tx, [cToken, "0x" + lpPool.lpTokenType.name], {
-        version: config.TYPUS_PERP_VERSION,
-        registry: config.TYPUS_PERP_LP_POOL_REGISTRY,
-        treasuryCaps: config.TYPUS_PERP_TREASURY_CAPS,
+    const lpCoin = mintLp(tx, [cToken, config.TOKEN.TLP], {
+        version: config.OBJECT.TYPUS_PERP_VERSION,
+        registry: config.REGISTRY.LP_POOL_REGISTRY,
+        treasuryCaps: config.REGISTRY.TREASURY_CAPS,
         index: BigInt(0),
-        pythState: config.PYTH_STATE,
+        pythState: pythStateId[NETWORK],
         oracle: priceInfoObjectIds[NETWORK][TOKEN],
         coin,
         clock: CLOCK,
     });
 
-    stake(tx, "0x" + lpPool.lpTokenType.name, {
-        version: config.TYPUS_PERP_VERSION,
-        registry: config.TYPUS_PERP_STAKE_POOL_REGISTRY,
+    stake(tx, config.TOKEN.TLP, {
+        version: config.OBJECT.TYPUS_PERP_VERSION,
+        registry: config.REGISTRY.STAKE_POOL_REGISTRY,
         index: BigInt(0),
         lpToken: lpCoin,
         clock: CLOCK,
+        userShareId: null,
     });
 
     // tx.transferObjects([lpCoin], address);
