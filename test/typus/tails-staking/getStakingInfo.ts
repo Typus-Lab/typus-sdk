@@ -13,7 +13,7 @@ const provider = new SuiClient({
         typusPackageId: config.PACKAGE.TYPUS,
         typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
         typusTailsStakingRegistry: config.REGISTRY.TAILS_STAKING,
-        user: "0x7f13e7548f1d0a911e2bdc4892b0b3258fa3fa60ac512f17b828e4d012459d20",
+        user: "0xb6b29d18c728503fb59cc59ecbe52611d26b2746b2cedc8d38cabf81428cae6c",
     });
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();

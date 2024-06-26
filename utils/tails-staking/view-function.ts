@@ -32,17 +32,26 @@ export async function getStakingInfo(input: {
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
-    reader.readULEB();
-    return {
-        user: AddressFromBytes(reader.readBytes(32)),
-        tails: reader.readVec((reader) => {
-            return reader.read64();
-        }),
-        profits: reader.readVec((reader) => {
-            return reader.read64();
-        }),
-        u64Padding: reader.readVec((reader) => {
-            return reader.read64();
-        }),
-    } as StakingInfo;
+    let length = reader.readULEB();
+    if (length > 0) {
+        return {
+            user: AddressFromBytes(reader.readBytes(32)),
+            tails: reader.readVec((reader) => {
+                return reader.read64();
+            }),
+            profits: reader.readVec((reader) => {
+                return reader.read64();
+            }),
+            u64Padding: reader.readVec((reader) => {
+                return reader.read64();
+            }),
+        } as StakingInfo;
+    } else {
+        return {
+            user: input.user,
+            tails: [],
+            profits: [],
+            u64Padding: ["0"],
+        } as StakingInfo;
+    }
 }
