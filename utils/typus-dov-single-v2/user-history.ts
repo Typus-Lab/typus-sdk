@@ -126,11 +126,39 @@ export async function parseTxHistory(
             }
 
             switch (action) {
+                // new version events
                 case "StakeTailsEvent":
                     Action = "Stake";
                     Amount = "0.05 SUI";
                     Tails = `#${event.parsedJson!.log[0]}`;
                     break;
+                case "UnstakeTailsEvent":
+                    Action = "Unstake";
+                    Tails = `#${event.parsedJson!.log[0]}`;
+                    break;
+                case "DailySignUpEvent":
+                    Action = "Check In";
+                    Tails = `${event.parsedJson!.tails}`;
+                    break;
+                case "TransferTailsEvent":
+                    Action = "Transfer";
+                    Amount = "0.01 SUI";
+                    Tails = `#${event.parsedJson!.log[0]}`;
+                    break;
+                case "ExpUpEvent":
+                    if (event.parsedJson!.log) {
+                        Action = "Train Tail";
+                        Tails = `#${event.parsedJson!.log[0]}`;
+                        Exp = event.parsedJson!.log[1];
+                        break;
+                    }
+                case "LevelUpEvent":
+                    if (event.parsedJson!.log) {
+                        Action = `Level Up to Level ${event.parsedJson!.log[1]}`;
+                        Tails = `#${event.parsedJson!.log[0]}`;
+                        break;
+                    }
+                // old version events
                 case "StakeNftEvent":
                     Action = "Stake";
                     Amount = "0.05 SUI";
@@ -179,18 +207,12 @@ export async function parseTxHistory(
                     Exp = event.parsedJson!.exp_earn;
                     break;
                 case "LevelUpEvent":
-                    if (event.parsedJson!.level) {
-                        Action = `Level Up to Level ${event.parsedJson!.level}`;
-                        if (event.parsedJson!.number) {
-                            Tails = `#${event.parsedJson!.number}`;
-                            break;
-                        } else {
-                            return txHistory;
-                        }
-                    } else {
-                        Action = `Level Up to Level ${event.parsedJson!.log[1]}`;
-                        Tails = `#${event.parsedJson!.log[0]}`;
+                    Action = `Level Up to Level ${event.parsedJson!.level}`;
+                    if (event.parsedJson!.number) {
+                        Tails = `#${event.parsedJson!.number}`;
                         break;
+                    } else {
+                        return txHistory;
                     }
                 case "DepositEvent":
                 case "WithdrawEvent":
