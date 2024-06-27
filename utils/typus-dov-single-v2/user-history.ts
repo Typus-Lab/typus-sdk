@@ -87,7 +87,12 @@ export async function parseTxHistory(
     const results = await datas
         .filter((event) => {
             const type: string = event.type;
-            return event.packageId == originPackage || type.includes("typus_nft::First") || type.includes("typus_nft::ExpUpEvent");
+            return (
+                event.packageId == originPackage ||
+                type.includes("typus_nft::First") ||
+                type.includes("typus_nft::ExpUpEvent") ||
+                type.includes("tails_staking")
+            );
         })
         .sort((a, b) => {
             // From Old to New!
@@ -121,6 +126,11 @@ export async function parseTxHistory(
             }
 
             switch (action) {
+                case "StakeTailsEvent":
+                    Action = "Stake";
+                    Amount = "0.05 SUI";
+                    Tails = `#${event.parsedJson!.log[0]}`;
+                    break;
                 case "StakeNftEvent":
                     Action = "Stake";
                     Amount = "0.05 SUI";
@@ -169,12 +179,18 @@ export async function parseTxHistory(
                     Exp = event.parsedJson!.exp_earn;
                     break;
                 case "LevelUpEvent":
-                    Action = `Level Up to Level ${event.parsedJson!.level}`;
-                    if (event.parsedJson!.number) {
-                        Tails = `#${event.parsedJson!.number}`;
-                        break;
+                    if (event.parsedJson!.level) {
+                        Action = `Level Up to Level ${event.parsedJson!.level}`;
+                        if (event.parsedJson!.number) {
+                            Tails = `#${event.parsedJson!.number}`;
+                            break;
+                        } else {
+                            return txHistory;
+                        }
                     } else {
-                        return txHistory;
+                        Action = `Level Up to Level ${event.parsedJson!.log[1]}`;
+                        Tails = `#${event.parsedJson!.log[0]}`;
+                        break;
                     }
                 case "DepositEvent":
                 case "WithdrawEvent":
