@@ -22,7 +22,7 @@ const ID = "0x3017fc6d743f73ada74c3754de40aa5b399840cb09ca276cb87916660d2c2bdc";
     var transactionBlock = await getDeactivateLeaderboardTx(
         gasBudget,
         config.PACKAGE.TYPUS,
-        config.TYPUS_VERSION,
+        config.OBJECT.TYPUS_VERSION,
         config.REGISTRY.LEADERBOARD,
         KEY,
         ID

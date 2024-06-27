@@ -14,7 +14,7 @@ const provider = new SuiClient({ url: config.RPC_ENDPOINT });
     let transactionBlock = new TransactionBlock();
     transactionBlock = getRaiseFundTx({
         tx: transactionBlock,
-        typusEcosystemVersion: config.TYPUS_VERSION,
+        typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
         typusUserRegistry: config.REGISTRY.USER,
         typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD,
         typusFrameworkOriginPackageId: config.PACKAGE_ORIGIN.FRAMEWORK,

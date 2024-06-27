@@ -20,11 +20,11 @@ const gasBudget = 100000000;
 
     const amount = "10000";
 
-    console.log(config.TYPUS_VERSION, config.REGISTRY.USER, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE);
+    console.log(config.OBJECT.TYPUS_VERSION, config.REGISTRY.USER, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE);
 
     let transactionBlock = await getSnapshotTx(
         gasBudget,
-        config.TYPUS_VERSION,
+        config.OBJECT.TYPUS_VERSION,
         config.REGISTRY.USER,
         config.PACKAGE.DOV_SINGLE,
         config.REGISTRY.DOV_SINGLE,

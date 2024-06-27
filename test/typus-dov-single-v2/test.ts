@@ -301,7 +301,7 @@ async function vi() {
             await getRankings({
                 provider,
                 typusPackageId: config.PACKAGE.TYPUS_PACKAGE,
-                typusEcosystemVersion: config.TYPUS_VERSION,
+                typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
                 typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD_REGISTRY,
                 key: "depositor_program",
                 id: "0x03346fdcc3091c814308bc78f090d06f96accf767ea5b5e54b9f16ab55c2a3b2",
@@ -320,7 +320,7 @@ async function vii() {
         await getUserMetadata({
             provider,
             typusPackageId: config.PACKAGE.TYPUS_PACKAGE,
-            typusEcosystemVersion: config.TYPUS_VERSION,
+            typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
             typusUserRegistry: config.REGISTRY.USER_REGISTRY,
             user: "0x754214ab9eadf12bc1518aa37e2fbc9501198319699a60cae2b3094cc6576189",
         })
