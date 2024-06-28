@@ -87,7 +87,12 @@ export async function parseTxHistory(
     const results = await datas
         .filter((event) => {
             const type: string = event.type;
-            return event.packageId == originPackage || type.includes("typus_nft::First") || type.includes("typus_nft::ExpUpEvent");
+            return (
+                event.packageId == originPackage ||
+                type.includes("typus_nft::First") ||
+                type.includes("typus_nft::ExpUpEvent") ||
+                type.includes("tails_staking")
+            );
         })
         .sort((a, b) => {
             // From Old to New!
@@ -121,6 +126,39 @@ export async function parseTxHistory(
             }
 
             switch (action) {
+                // new version events
+                case "StakeTailsEvent":
+                    Action = "Stake";
+                    Amount = "0.05 SUI";
+                    Tails = `#${event.parsedJson!.log[0]}`;
+                    break;
+                case "UnstakeTailsEvent":
+                    Action = "Unstake";
+                    Tails = `#${event.parsedJson!.log[0]}`;
+                    break;
+                case "DailySignUpEvent":
+                    Action = "Check In";
+                    Tails = `${event.parsedJson!.tails}`;
+                    break;
+                case "TransferTailsEvent":
+                    Action = "Transfer";
+                    Amount = "0.01 SUI";
+                    Tails = `#${event.parsedJson!.log[0]}`;
+                    break;
+                case "ExpUpEvent":
+                    if (event.parsedJson!.log) {
+                        Action = "Train Tail";
+                        Tails = `#${event.parsedJson!.log[0]}`;
+                        Exp = event.parsedJson!.log[1];
+                        break;
+                    }
+                case "LevelUpEvent":
+                    if (event.parsedJson!.log) {
+                        Action = `Level Up to Level ${event.parsedJson!.log[1]}`;
+                        Tails = `#${event.parsedJson!.log[0]}`;
+                        break;
+                    }
+                // old version events
                 case "StakeNftEvent":
                     Action = "Stake";
                     Amount = "0.05 SUI";
