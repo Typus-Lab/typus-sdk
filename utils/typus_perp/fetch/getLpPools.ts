@@ -1,5 +1,5 @@
 import { SuiClient } from "@mysten/sui.js/client";
-import { LiquidityPool, Registry } from "../../../utils/typus_perp/lp-pool/structs";
+import { LiquidityPool, Registry } from "../lp-pool/structs";
 
 export async function getLpPools(provider: SuiClient, config: { REGISTRY: { LP_POOL_REGISTRY: string } }): Promise<LiquidityPool[]> {
     const lpPoolRegistry = await Registry.fetch(provider, config.REGISTRY.LP_POOL_REGISTRY);

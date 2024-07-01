@@ -1,5 +1,5 @@
 import { SuiClient } from "@mysten/sui.js/client";
-import { MarketRegistry, Markets, SymbolMarket } from "../../../utils/typus_perp/trading/structs";
+import { MarketRegistry, Markets, SymbolMarket } from "../trading/structs";
 
 export async function getMarkets(provider: SuiClient, config: { REGISTRY: { MARKET_REGISTRY: string } }): Promise<Markets[]> {
     // const marketRegistry = await MarketRegistry.fetch(provider, config.REGISTRY.MARKET_REGISTRY);
