@@ -138,7 +138,8 @@ export async function parseTxHistory(
                     break;
                 case "DailySignUpEvent":
                     Action = "Check In";
-                    Tails = `${event.parsedJson!.tails}`;
+                    Tails = event.parsedJson!.tails.map((num) => `#${num}`).join(" ");
+                    Exp = event.parsedJson!.log[0];
                     break;
                 case "TransferTailsEvent":
                     Action = "Transfer";
@@ -150,14 +151,14 @@ export async function parseTxHistory(
                         Action = "Train Tail";
                         Tails = `#${event.parsedJson!.log[0]}`;
                         Exp = event.parsedJson!.log[1];
-                        break;
                     }
+                    break;
                 case "LevelUpEvent":
                     if (event.parsedJson!.log) {
                         Action = `Level Up to Level ${event.parsedJson!.log[1]}`;
                         Tails = `#${event.parsedJson!.log[0]}`;
-                        break;
                     }
+                    break;
                 // old version events
                 case "StakeNftEvent":
                     Action = "Stake";
