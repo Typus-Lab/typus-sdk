@@ -151,6 +151,9 @@ export async function parseTxHistory(
                         Action = "Train Tail";
                         Tails = `#${event.parsedJson!.log[0]}`;
                         Exp = event.parsedJson!.log[1];
+                        if (Number(Exp) == 0) {
+                            return txHistory;
+                        }
                     }
                     break;
                 case "LevelUpEvent":
