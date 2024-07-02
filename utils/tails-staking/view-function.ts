@@ -55,3 +55,24 @@ export async function getStakingInfo(input: {
         } as StakingInfo;
     }
 }
+
+export async function getLevelCounts(input: {
+    provider: SuiClient;
+    typusPackageId: string;
+    typusEcosystemVersion: string;
+    typusTailsStakingRegistry: string;
+}): Promise<number[]> {
+    let transactionBlock = new TransactionBlock();
+    transactionBlock.moveCall({
+        target: `${input.typusPackageId}::tails_staking::get_level_counts`,
+        typeArguments: [],
+        arguments: [transactionBlock.pure(input.typusEcosystemVersion), transactionBlock.pure(input.typusTailsStakingRegistry)],
+    });
+    let results = (await input.provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    // @ts-ignore
+    let bytes = results[results.length - 1].returnValues[0][0];
+    let reader = new BcsReader(new Uint8Array(bytes));
+    return reader.readVec((reader) => {
+        return Number.parseInt(reader.read64());
+    });
+}

@@ -1,5 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../constants";
+import { TransactionBlock, TransactionObjectInput } from "@mysten/sui.js/transactions";
 
 /**
     entry fun upload_ids(
@@ -9,7 +8,7 @@ import { CLOCK } from "../../constants";
         ctx: &TxContext,
     ) {
 */
-export async function getUploadIdsTx(input: {
+export function getUploadIdsTx(input: {
     tx: TransactionBlock;
     typusPackageId: string;
     typusEcosystemVersion: string;
@@ -37,7 +36,7 @@ export async function getUploadIdsTx(input: {
         ctx: &TxContext,
     ) {
 */
-export async function getRemoveIdsTx(input: {
+export function getRemoveIdsTx(input: {
     tx: TransactionBlock;
     typusPackageId: string;
     typusEcosystemVersion: string;
@@ -65,7 +64,7 @@ export async function getRemoveIdsTx(input: {
         ctx: &TxContext,
     ) {
 */
-export async function getUploadLevelsTx(input: {
+export function getUploadLevelsTx(input: {
     tx: TransactionBlock;
     typusPackageId: string;
     typusEcosystemVersion: string;
@@ -93,7 +92,7 @@ export async function getUploadLevelsTx(input: {
         ctx: &TxContext,
     ) {
 */
-export async function getRemoveLevelsTx(input: {
+export function getRemoveLevelsTx(input: {
     tx: TransactionBlock;
     typusPackageId: string;
     typusEcosystemVersion: string;
@@ -122,7 +121,7 @@ export async function getRemoveLevelsTx(input: {
         ctx: &TxContext,
     ) {
 */
-export async function getUploadIpfsUrlsTx(input: {
+export function getUploadIpfsUrlsTx(input: {
     tx: TransactionBlock;
     typusPackageId: string;
     typusEcosystemVersion: string;
@@ -152,7 +151,7 @@ export async function getUploadIpfsUrlsTx(input: {
         ctx: &mut TxContext,
     ) {
 */
-export async function getRemoveIpfsUrlsTx(input: {
+export function getRemoveIpfsUrlsTx(input: {
     tx: TransactionBlock;
     typusPackageId: string;
     typusEcosystemVersion: string;
@@ -182,7 +181,7 @@ export async function getRemoveIpfsUrlsTx(input: {
         ctx: &TxContext,
     ) {
 */
-export async function getUploadWebpBytesTx(input: {
+export function getUploadWebpBytesTx(input: {
     tx: TransactionBlock;
     typusPackageId: string;
     typusEcosystemVersion: string;
@@ -215,7 +214,7 @@ export async function getUploadWebpBytesTx(input: {
         ctx: &TxContext,
     ) {
 */
-export async function getRemoveWebpBytesTx(input: {
+export function getRemoveWebpBytesTx(input: {
     tx: TransactionBlock;
     typusPackageId: string;
     typusEcosystemVersion: string;
@@ -246,7 +245,7 @@ export async function getRemoveWebpBytesTx(input: {
         ctx: &TxContext,
     ) {
 */
-export async function getUpdateTailsStakingRegistryConfigTx(input: {
+export function getUpdateTailsStakingRegistryConfigTx(input: {
     tx: TransactionBlock;
     typusPackageId: string;
     typusEcosystemVersion: string;
@@ -277,14 +276,14 @@ export async function getUpdateTailsStakingRegistryConfigTx(input: {
         ctx: &TxContext,
     ) {
 */
-export async function getSetProfitSharingTx(input: {
+export function getSetProfitSharingTx(input: {
     tx: TransactionBlock;
     typusPackageId: string;
     typusEcosystemVersion: string;
     typusTailsStakingRegistry: string;
     typeArguments: string[];
-    level_profits: string;
-    coins: string[];
+    levelProfits: string[];
+    coin: TransactionObjectInput;
     amount: string;
     tsMs: string;
 }) {
@@ -294,8 +293,8 @@ export async function getSetProfitSharingTx(input: {
         arguments: [
             input.tx.object(input.typusEcosystemVersion),
             input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.pure(input.level_profits),
-            input.tx.makeMoveVec({ objects: input.coins.map((coin) => input.tx.object(coin)) }),
+            input.tx.pure(input.levelProfits),
+            input.tx.object(input.coin),
             input.tx.pure(input.amount),
             input.tx.pure(input.tsMs),
         ],
@@ -312,7 +311,7 @@ export async function getSetProfitSharingTx(input: {
         ctx: &mut TxContext,
     ) {
 */
-export async function getRemoveProfitSharingTx(input: {
+export function getRemoveProfitSharingTx(input: {
     tx: TransactionBlock;
     typusPackageId: string;
     typusEcosystemVersion: string;

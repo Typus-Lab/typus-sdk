@@ -15,6 +15,7 @@ const transferPolicy = "0x6a41a805050984afb72b3bee40420670289ac00f08fa23878c0062
 const tailsStakingRegistry = config.REGISTRY.TAILS_STAKING;
 
 (async () => {
+    // remove_profit_sharing
     // await step1();
     // await step2();
     // await step3();
