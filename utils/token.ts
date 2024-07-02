@@ -135,3 +135,54 @@ export const tokenType = {
         USDC: "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC",
     },
 };
+
+export type TOKEN =
+    | "SUI"
+    | "CETUS"
+    | "BUCK"
+    | "SOL"
+    | "TURBOS"
+    | "APT"
+    | "FUD"
+    | "MFUD"
+    | "USDT"
+    | "AFSUI"
+    | "INJ"
+    | "SEI"
+    | "USDY"
+    | "TEXP"
+    | "SCA"
+    | "BTC"
+    | "ETH"
+    | "USDC";
+
+export function typeArgToToken(typeArg: string): string {
+    // console.log(typeArg);
+    let typeArgs = typeArg.split("::");
+    switch (normalizeSuiAddress(typeArgs[0])) {
+        case "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881":
+            return "BTC";
+        case "0xaf8cd5edc19c4512f4259f0bee101a40d41ebed738ade5874359610ef8eeced5":
+            return "ETH";
+        case "0xb7844e289a8410e50fb3ca48d69eb9cf29e27d223ef90353fe1bd8e27ff8f3f8":
+            return "SOL";
+        case "0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf":
+            return "USDC";
+        case "0xc060006111016b8a020ad5b33834984a437aaa7d3c74c18e09a95d48aceab08c":
+            return "USDT";
+        case "0x5d1f47ea69bb0de31c313d7acf89b890dbb8991ea8e03c6c355171f84bb1ba4a":
+            return "TURBOS";
+        case "0x3a5143bb1196e3bcdfab6203d1683ae29edd26294fc8bfeafe4aaa9d2704df37":
+            return "APT";
+        case "0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1":
+            return "FUD";
+        case "0xf325ce1300e8dac124071d3152c5c5ee6174914f8bc2161e88329cf579246efc":
+            return "AFSUI";
+        case "0x7016aae72cfc67f2fadf55769c0a7dd54291a583b63051a5ed71081cce836ac6":
+            return "SCA";
+        case "0x960b531667636f39e85867775f52f6b1f220a058c4de786905bdf761e06a56bb":
+            return "USDY";
+        default:
+            return typeArgs[2];
+    }
+}

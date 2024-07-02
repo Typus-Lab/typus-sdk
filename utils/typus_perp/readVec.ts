@@ -16,10 +16,12 @@ export function readVecPosition(bytes: Uint8Array) {
             isLong: reader.read8(),
             size: reader.read64(),
             sizeDecimal: reader.read64(),
-            collateralToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            collateralToken: { name: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))) },
             collateralTokenDecimal: reader.read64(),
-            baseToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            quoteToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            symbol: {
+                baseToken: { name: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))) },
+                quoteToken: { name: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))) },
+            },
             collateralAmount: reader.read64(),
             reserveAmount: reader.read64(),
             averagePrice: reader.read64(),
@@ -52,10 +54,12 @@ export function readVecOrder(bytes: Uint8Array) {
                 })
                 .at(0),
             user: AddressFromBytes(reader.readBytes(32)),
-            collateralToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            collateralToken: { name: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))) },
             collateralTokenDecimal: reader.read64(),
-            baseToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            quoteToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            symbol: {
+                baseToken: { name: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))) },
+                quoteToken: { name: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))) },
+            },
             leveragePct: reader.read64(),
             reduceOnly: reader.read8(),
             isLong: reader.read8(),
@@ -87,7 +91,7 @@ export function readVecShares(bytes: Uint8Array) {
                     unsubscribedTsMs: reader.read64(),
                     unlockedTsMs: reader.read64(),
                     unsubscribedIncentivePriceIndex: reader.readVec((reader) => [
-                        String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                        { name: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))) },
                         reader.read64(),
                     ]),
                     u64Padding: reader.readVec((reader) => reader.read64()),
@@ -95,7 +99,7 @@ export function readVecShares(bytes: Uint8Array) {
                 return deactivatingShares;
             }),
             lastIncentivePriceIndex: reader.readVec((reader) => [
-                String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                { name: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))) },
                 reader.read64(),
             ]),
             u64Padding: reader.readVec((reader) => reader.read64()),
