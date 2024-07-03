@@ -1,9 +1,8 @@
-import { SuiClient } from "@mysten/sui.js/client";
 import { burnLp, mintLp, updateLiquidityValue } from "../lp-pool/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../../constants";
 import { LiquidityPool } from "../lp-pool/structs";
-import { createPythClient, updatePyth } from "../../pyth/pythClient";
+import { PythClient, createPythClient, updatePyth } from "../../pyth/pythClient";
 import { tokenType, typeArgToAsset, TOKEN } from "../../token";
 import { stake, unstake } from "../stake-pool/functions";
 import { swap as _swap } from "../lp-pool/functions";
@@ -12,13 +11,13 @@ import { priceInfoObjectIds, pythStateId } from "../../pyth/constant";
 import { NETWORK } from "..";
 
 export async function mintStakeLp(
-    provider: SuiClient,
     config: {
         REGISTRY: { LP_POOL_REGISTRY: string; TREASURY_CAPS: string; STAKE_POOL_REGISTRY: string };
         OBJECT: { TYPUS_PERP_VERSION: string };
         TOKEN: { TLP: string };
     },
     input: {
+        pythClient: PythClient;
         tx: TransactionBlock;
         lpPool: LiquidityPool;
         coins: string[];
@@ -30,8 +29,7 @@ export async function mintStakeLp(
     // update pyth oracle
     const tokens = input.lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
 
-    const pythClient = createPythClient(provider, NETWORK);
-    await updatePyth(pythClient, input.tx, tokens);
+    await updatePyth(input.pythClient, input.tx, tokens);
     const cToken = tokenType[NETWORK][input.cTOKEN];
 
     for (let token of tokens) {
@@ -83,13 +81,13 @@ export async function mintStakeLp(
 }
 
 export async function unstakeBurn(
-    provider: SuiClient,
     config: {
         REGISTRY: { LP_POOL_REGISTRY: string; TREASURY_CAPS: string; STAKE_POOL_REGISTRY: string };
         OBJECT: { TYPUS_PERP_VERSION: string };
         TOKEN: { TLP: string };
     },
     input: {
+        pythClient: PythClient;
         tx: TransactionBlock;
         lpPool: LiquidityPool;
         cTOKEN: TOKEN;
@@ -101,8 +99,7 @@ export async function unstakeBurn(
     // update pyth oracle
     const tokens = input.lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
 
-    const pythClient = createPythClient(provider, NETWORK);
-    await updatePyth(pythClient, input.tx, tokens);
+    await updatePyth(input.pythClient, input.tx, tokens);
     const cToken = tokenType[NETWORK][input.cTOKEN];
     const oracle = priceInfoObjectIds[NETWORK][input.cTOKEN];
 
@@ -143,13 +140,13 @@ export async function unstakeBurn(
 }
 
 export async function swap(
-    provider: SuiClient,
     config: {
         REGISTRY: { LP_POOL_REGISTRY: string; TREASURY_CAPS: string; STAKE_POOL_REGISTRY: string };
         OBJECT: { TYPUS_PERP_VERSION: string };
         TOKEN: { TLP: string };
     },
     input: {
+        pythClient: PythClient;
         tx: TransactionBlock;
         coins: string[];
         FROM_TOKEN: TOKEN;
@@ -158,8 +155,7 @@ export async function swap(
         user: string;
     }
 ): Promise<TransactionBlock> {
-    const pythClient = createPythClient(provider, NETWORK);
-    await updatePyth(pythClient, input.tx, [input.FROM_TOKEN, input.TO_TOKEN]);
+    await updatePyth(input.pythClient, input.tx, [input.FROM_TOKEN, input.TO_TOKEN]);
     const fromToken = tokenType[NETWORK][input.FROM_TOKEN];
     const toToken = tokenType[NETWORK][input.TO_TOKEN];
 
@@ -195,7 +191,6 @@ export async function swap(
 }
 
 export async function unsubscribe(
-    provider: SuiClient,
     config: {
         REGISTRY: { LP_POOL_REGISTRY: string; TREASURY_CAPS: string; STAKE_POOL_REGISTRY: string };
         OBJECT: { TYPUS_PERP_VERSION: string };

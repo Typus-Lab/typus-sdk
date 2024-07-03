@@ -1,14 +1,10 @@
 import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { mintLp, updateLiquidityValue } from "../../../../utils/typus_perp/lp-pool/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../../../constants";
 import { LiquidityPool, Registry } from "../../../../utils/typus_perp/lp-pool/structs";
-import { createPythClient, updatePyth } from "../../../../utils/pyth/pythClient";
-import { tokenType, typeArgToAsset } from "../../../../utils/token";
-import { stake } from "../../../../utils/typus_perp/stake-pool/functions";
-import { priceIDs, priceInfoObjectIds, pythStateId } from "../../../../utils/pyth/constant";
+import { createPythClient } from "../../../../utils/pyth/pythClient";
+import { tokenType } from "../../../../utils/token";
 import { mintStakeLp } from "../../../../utils/typus_perp/user/tlp";
 import { NETWORK } from "../../../../utils/typus_perp";
 
@@ -36,6 +32,8 @@ const gasBudget = 100000000;
     const lpPool = await LiquidityPool.fetch(provider, field.objectId);
     // console.log(lpPool);
 
+    const pythClient = createPythClient(provider, NETWORK);
+
     // INPUT
     const cTOKEN = "USDT";
     const cToken = tokenType[NETWORK][cTOKEN];
@@ -52,7 +50,8 @@ const gasBudget = 100000000;
     let tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
-    tx = await mintStakeLp(provider, config, {
+    tx = await mintStakeLp(config, {
+        pythClient,
         tx: new TransactionBlock(),
         lpPool,
         coins,
@@ -66,7 +65,9 @@ const gasBudget = 100000000;
         sender: address,
     });
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("MintLpEvent")));
+    console.log(dryrunRes.events.filter((e) => e.type.endsWith("StakeEvent")));
 
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
     console.log(res);
+    // https://testnet.suivision.xyz/txblock/GRjmdrHtcqzAP4a8i6nTef88zDpPZ2ouLSVX4DTj8JnC
 })();

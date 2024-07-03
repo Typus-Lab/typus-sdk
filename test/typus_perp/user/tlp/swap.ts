@@ -1,14 +1,12 @@
 import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { swap } from "../../../../utils/typus_perp/lp-pool/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../../../constants";
 import { LiquidityPool, Registry } from "../../../../utils/typus_perp/lp-pool/structs";
-import "../../../load_env";
-import { createPythClient, updatePyth } from "../../../../utils/pyth/pythClient";
+import { createPythClient } from "../../../../utils/pyth/pythClient";
 import { tokenType } from "../../../../utils/token";
-import { priceInfoObjectIds, pythStateId } from "../../../../utils/pyth/constant";
+import { swap } from "../../../../utils/typus_perp/user/tlp";
+import { NETWORK } from "../../../../utils/typus_perp";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
@@ -20,11 +18,11 @@ const provider = new SuiClient({
 const gasBudget = 100000000;
 
 (async () => {
-    const address = keypair.toSuiAddress();
-    console.log(address);
+    const user = keypair.toSuiAddress();
+    console.log(user);
 
     const lpPoolRegistry = await Registry.fetch(provider, config.REGISTRY.LP_POOL_REGISTRY);
-    console.log(lpPoolRegistry);
+    // console.log(lpPoolRegistry);
 
     const dynamicFields = await provider.getDynamicFields({
         parentId: lpPoolRegistry.liquidityPoolRegistry,
@@ -32,53 +30,39 @@ const gasBudget = 100000000;
 
     const field = dynamicFields.data[0];
     const lpPool = await LiquidityPool.fetch(provider, field.objectId);
-    console.log(lpPool);
+    // console.log(lpPool);
+
+    const pythClient = createPythClient(provider, NETWORK);
+
+    // INPUT
+    const FROM_TOKEN = "USDT";
+    const TO_TOKEN = "USDC";
+
+    // coins
+    const coins = (
+        await provider.getCoins({
+            owner: user,
+            coinType: tokenType[NETWORK][FROM_TOKEN],
+        })
+    ).data.map((coin) => coin.coinObjectId);
+    console.log(coins.length);
 
     let tx = new TransactionBlock();
     tx.setGasBudget(gasBudget);
 
-    // INPUTS
-    const FROM_TOKEN = "USDT";
-    const TO_TOKEN = "USDC";
-    const NETWORK = "TESTNET";
-
-    const pythClient = createPythClient(provider, NETWORK);
-    await updatePyth(pythClient, tx, [FROM_TOKEN, TO_TOKEN]);
-    const fromToken = tokenType[NETWORK][FROM_TOKEN];
-    const toToken = tokenType[NETWORK][TO_TOKEN];
-
-    const coins = (
-        await provider.getCoins({
-            owner: address,
-            coinType: fromToken,
-        })
-    ).data.map((coin) => coin.coinObjectId);
-
-    const destination = coins.pop()!;
-
-    if (coins.length > 0) {
-        tx.mergeCoins(destination, coins);
-    }
-
-    const [coin] = tx.splitCoins(destination, ["100000000"]);
-
-    const token = swap(tx, [fromToken, toToken], {
-        version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.LP_POOL_REGISTRY,
-        pythState: pythStateId[NETWORK],
-        clock: CLOCK,
-        index: BigInt(0),
-        oracleFromToken: priceInfoObjectIds[NETWORK][FROM_TOKEN],
-        oracleToToken: priceInfoObjectIds[NETWORK][TO_TOKEN],
-        fromCoin: coin,
-        minToAmount: BigInt(0),
+    tx = await swap(config, {
+        pythClient,
+        tx,
+        coins,
+        amount: "1000000",
+        FROM_TOKEN,
+        TO_TOKEN,
+        user,
     });
-
-    tx.transferObjects([token], address);
 
     let dryrunRes = await provider.devInspectTransactionBlock({
         transactionBlock: tx,
-        sender: address,
+        sender: user,
     });
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("SwapEvent"))[0].parsedJson);
 
