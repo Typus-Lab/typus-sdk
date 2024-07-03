@@ -162,6 +162,15 @@ export async function parseTxHistory(
                         Tails = `#${event.parsedJson!.log[0]}`;
                     }
                     break;
+                case "ClaimProfitSharingEvent":
+                    if (event.parsedJson!.profit_asset) {
+                        var token = typeArgToAsset("0x" + event.parsedJson!.profit_asset.name);
+                        var amount = Number(event.parsedJson!.log[0]) / 10 ** assetToDecimal(token)!;
+                        Action = "Harvest Dice Profit";
+                        Tails = event.parsedJson!.tails.map((num) => `#${num}`).join(" ");
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                    }
+                    break;
                 // old version events
                 case "StakeNftEvent":
                     Action = "Stake";
