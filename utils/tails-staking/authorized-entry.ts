@@ -253,7 +253,7 @@ export function getUpdateTailsStakingRegistryConfigTx(input: {
     index: string;
     value: string;
 }) {
-    let result = input.tx.moveCall({
+    input.tx.moveCall({
         target: `${input.typusPackageId}::tails_staking::update_tails_staking_registry_config`,
         typeArguments: [],
         arguments: [
