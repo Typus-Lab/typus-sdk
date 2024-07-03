@@ -1,16 +1,12 @@
 import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { reduceOptionCollateralPositionSize } from "../../../../utils/typus_perp/trading/functions";
+import { getUserPositions } from "../../../../utils/typus_perp/fetch";
+import { reduceOptionCollateralPositionSize } from "../../../../utils/typus_perp/user/orderWithBidReceipt";
+import { createPythClient } from "../../../../utils/pyth/pythClient";
+import { NETWORK } from "../../../../utils/typus_perp";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../../../constants";
-import { LiquidityPool, Registry } from "../../../../utils/typus_perp/lp-pool/structs";
-import { updateWithPyth } from "../../../../utils/oracle/updateWithPyth";
 import "../../../load_env";
-import { createPythClient, updatePyth } from "../../../../utils/pyth/pythClient";
-import { priceInfoObjectIds } from "../../../../utils/pyth/constant";
-import { tokenType } from "../../../../utils/token";
-import { getSplitBidReceiptTx } from "../../../../utils/typus-dov-single-v2/user-entry";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
@@ -19,66 +15,29 @@ const config = configs.TESTNET;
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });
-const gasBudget = 100000000;
 
 (async () => {
-    const address = keypair.toSuiAddress();
-    console.log(address);
+    const user = keypair.toSuiAddress();
+    console.log(user);
 
-    const lpPoolRegistry = await Registry.fetch(provider, config.REGISTRY.LP_POOL_REGISTRY);
-    console.log(lpPoolRegistry);
+    const positions = await getUserPositions(provider, config, user);
+    // console.log(positions);
 
-    const dynamicFields = await provider.getDynamicFields({
-        parentId: lpPoolRegistry.liquidityPoolRegistry,
-    });
-
-    const field = dynamicFields.data[0];
-    const lpPool = await LiquidityPool.fetch(provider, field.objectId);
-    console.log(lpPool);
-
-    let tx = new TransactionBlock();
-    tx.setGasBudget(gasBudget);
-
-    // INPUTS
-    const TOKEN = "USDC";
-    const BASE_TOKEN = "SOL";
-    const QUOTE_TOKEN = "USDC";
-    const NETWORK = "TESTNET";
+    const bidReceiptPositions = positions.filter((p) => p.collateralToken.name.endsWith("TypusBidReceipt"));
+    const bidReceiptPosition = bidReceiptPositions[0];
+    console.log(bidReceiptPosition);
 
     const pythClient = createPythClient(provider, NETWORK);
-    await updatePyth(pythClient, tx, [TOKEN, BASE_TOKEN]);
-    const cToken = tokenType[NETWORK][TOKEN];
-    const bToken = tokenType[NETWORK][TOKEN];
-    const baseToken = tokenType[NETWORK][BASE_TOKEN];
 
-    updateWithPyth(
-        config.ORACLE,
+    var tx = new TransactionBlock();
+    tx.setGasBudget(100000000);
+
+    const size: string | null = "1000000000";
+
+    reduceOptionCollateralPositionSize(config, {
+        pythClient,
         tx,
-        "0x0edabd97c679967e00d508c766fb4be0195890f96343bd3a58e10fa5e8063c96",
-        pythStateId[NETWORK],
-        priceInfoObjectIds[NETWORK][BASE_TOKEN],
-        priceInfoObjectIds[NETWORK][QUOTE_TOKEN]
-    );
-
-    reduceOptionCollateralPositionSize(tx, [cToken, bToken, baseToken], {
-        version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.MARKET_REGISTRY,
-        poolRegistry: config.REGISTRY.LP_POOL_REGISTRY,
-        marketIndex: BigInt(0),
-        poolIndex: BigInt(0),
-        pythState: pythStateId[NETWORK],
-        oracleCToken: priceInfoObjectIds[NETWORK][TOKEN],
-        oracleTradingSymbol: priceInfoObjectIds[NETWORK][BASE_TOKEN],
-        clock: CLOCK,
-        typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
-        typusUserRegistry: config.REGISTRY.USER,
-        typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD,
-        dovRegistry: config.DOV_REGISTRY,
-        typusOracle: "0x0edabd97c679967e00d508c766fb4be0195890f96343bd3a58e10fa5e8063c96",
-        positionId: BigInt(1),
-        orderSize: null,
+        position: bidReceiptPosition,
+        size,
     });
-
-    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
-    console.log(res);
 })();
