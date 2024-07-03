@@ -688,7 +688,6 @@ export function getSplitBidReceiptTx(input: {
     typusFrameworkOriginPackageId: string;
     typusDovSinglePackageId: string;
     typusDovSingleRegistry: string;
-    typeArguments: string[];
     index: string;
     receipts: string[];
     share: string;
@@ -696,7 +695,7 @@ export function getSplitBidReceiptTx(input: {
 }) {
     const result = input.tx.moveCall({
         target: `${input.typusDovSinglePackageId}::tds_user_entry::simple_split_bid_receipt`,
-        typeArguments: input.typeArguments,
+        typeArguments: [],
         arguments: [
             input.tx.object(input.typusDovSingleRegistry),
             input.tx.pure(input.index),
@@ -705,7 +704,6 @@ export function getSplitBidReceiptTx(input: {
                 objects: input.receipts.map((receipt) => input.tx.object(receipt)),
             }),
             input.tx.pure([input.share]),
-            input.tx.pure(input.recipient),
         ],
     });
 
@@ -715,17 +713,15 @@ export function getSplitBidReceiptTx(input: {
         arguments: [input.tx.object(result[0])],
     });
 
-    const splitReceipt = { objects: [unwrap0] };
-
     const unwrap1 = input.tx.moveCall({
         target: `0x1::option::destroy_some`,
         typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusBidReceipt`],
         arguments: [input.tx.object(result[1])],
     });
 
-    const remainReceipt = { objects: [unwrap1] };
+    input.tx.transferObjects([unwrap1], input.recipient);
 
-    return [splitReceipt, remainReceipt, input.tx];
+    return unwrap0;
 }
 
 export function getMultiTransferBidReceiptTx(input: {
