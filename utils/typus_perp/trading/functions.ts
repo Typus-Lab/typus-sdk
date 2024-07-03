@@ -6,6 +6,38 @@ export function init(txb: TransactionBlock) {
     return txb.moveCall({ target: `${PUBLISHED_AT}::trading::init`, arguments: [] });
 }
 
+export interface GetEstimatedLiquidationPriceArgs {
+    version: ObjectArg;
+    registry: ObjectArg;
+    poolRegistry: ObjectArg;
+    marketIndex: bigint | TransactionArgument;
+    poolIndex: bigint | TransactionArgument;
+    pythState: ObjectArg;
+    oracleCToken: ObjectArg;
+    oracleTradingSymbol: ObjectArg;
+    clock: ObjectArg;
+    positionId: bigint | TransactionArgument;
+}
+
+export function getEstimatedLiquidationPrice(txb: TransactionBlock, typeArgs: [string, string], args: GetEstimatedLiquidationPriceArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::trading::get_estimated_liquidation_price`,
+        typeArguments: typeArgs,
+        arguments: [
+            obj(txb, args.version),
+            obj(txb, args.registry),
+            obj(txb, args.poolRegistry),
+            pure(txb, args.marketIndex, `u64`),
+            pure(txb, args.poolIndex, `u64`),
+            obj(txb, args.pythState),
+            obj(txb, args.oracleCToken),
+            obj(txb, args.oracleTradingSymbol),
+            obj(txb, args.clock),
+            pure(txb, args.positionId, `u64`),
+        ],
+    });
+}
+
 export interface IncreaseCollateralArgs {
     version: ObjectArg;
     registry: ObjectArg;
@@ -549,6 +581,42 @@ export interface GetMarketArgs {
 
 export function getMarket(txb: TransactionBlock, args: GetMarketArgs) {
     return txb.moveCall({ target: `${PUBLISHED_AT}::trading::get_market`, arguments: [obj(txb, args.id), pure(txb, args.index, `u64`)] });
+}
+
+export interface GetMaxReleasingCollateralAmountArgs {
+    version: ObjectArg;
+    registry: ObjectArg;
+    poolRegistry: ObjectArg;
+    marketIndex: bigint | TransactionArgument;
+    poolIndex: bigint | TransactionArgument;
+    pythState: ObjectArg;
+    oracleCToken: ObjectArg;
+    oracleTradingSymbol: ObjectArg;
+    clock: ObjectArg;
+    positionId: bigint | TransactionArgument;
+}
+
+export function getMaxReleasingCollateralAmount(
+    txb: TransactionBlock,
+    typeArgs: [string, string],
+    args: GetMaxReleasingCollateralAmountArgs
+) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::trading::get_max_releasing_collateral_amount`,
+        typeArguments: typeArgs,
+        arguments: [
+            obj(txb, args.version),
+            obj(txb, args.registry),
+            obj(txb, args.poolRegistry),
+            pure(txb, args.marketIndex, `u64`),
+            pure(txb, args.poolIndex, `u64`),
+            obj(txb, args.pythState),
+            obj(txb, args.oracleCToken),
+            obj(txb, args.oracleTradingSymbol),
+            obj(txb, args.clock),
+            pure(txb, args.positionId, `u64`),
+        ],
+    });
 }
 
 export interface GetMutMarketArgs {

@@ -265,6 +265,31 @@ export function checkPositionLiquidated(txb: TransactionBlock, args: CheckPositi
     });
 }
 
+export interface CollateralWithPnlArgs {
+    position: ObjectArg;
+    collateralOraclePrice: bigint | TransactionArgument;
+    collateralOraclePriceDecimal: bigint | TransactionArgument;
+    tradingPairOraclePrice: bigint | TransactionArgument;
+    tradingPairOraclePriceDecimal: bigint | TransactionArgument;
+    tradingFeeRate: bigint | TransactionArgument;
+    tradingFeeDecimal: bigint | TransactionArgument;
+}
+
+export function collateralWithPnl(txb: TransactionBlock, args: CollateralWithPnlArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::position::collateral_with_pnl`,
+        arguments: [
+            obj(txb, args.position),
+            pure(txb, args.collateralOraclePrice, `u64`),
+            pure(txb, args.collateralOraclePriceDecimal, `u64`),
+            pure(txb, args.tradingPairOraclePrice, `u64`),
+            pure(txb, args.tradingPairOraclePriceDecimal, `u64`),
+            pure(txb, args.tradingFeeRate, `u64`),
+            pure(txb, args.tradingFeeDecimal, `u64`),
+        ],
+    });
+}
+
 export interface CreateOrderArgs {
     version: ObjectArg;
     symbol: ObjectArg;
@@ -379,6 +404,33 @@ export function emitRealizedFundingEvent(txb: TransactionBlock, args: EmitRealiz
             pure(txb, args.realizedFundingSign, `bool`),
             pure(txb, args.realizedFundingFee, `u64`),
             pure(txb, args.u64Padding, `vector<u64>`),
+        ],
+    });
+}
+
+export interface GetEstimatedLiquidationPriceArgs {
+    position: ObjectArg;
+    collateralOraclePrice: bigint | TransactionArgument;
+    collateralOraclePriceDecimal: bigint | TransactionArgument;
+    tradingPairOraclePrice: bigint | TransactionArgument;
+    tradingPairOraclePriceDecimal: bigint | TransactionArgument;
+    tradingFeeRate: bigint | TransactionArgument;
+    tradingFeeDecimal: bigint | TransactionArgument;
+    cumulativeBorrowRate: bigint | TransactionArgument;
+}
+
+export function getEstimatedLiquidationPrice(txb: TransactionBlock, args: GetEstimatedLiquidationPriceArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::position::get_estimated_liquidation_price`,
+        arguments: [
+            obj(txb, args.position),
+            pure(txb, args.collateralOraclePrice, `u64`),
+            pure(txb, args.collateralOraclePriceDecimal, `u64`),
+            pure(txb, args.tradingPairOraclePrice, `u64`),
+            pure(txb, args.tradingPairOraclePriceDecimal, `u64`),
+            pure(txb, args.tradingFeeRate, `u64`),
+            pure(txb, args.tradingFeeDecimal, `u64`),
+            pure(txb, args.cumulativeBorrowRate, `u64`),
         ],
     });
 }
@@ -613,6 +665,35 @@ export function managerCreateReduceOnlyOrder(txb: TransactionBlock, typeArg: str
             pure(txb, args.orderId, `u64`),
             pure(txb, args.oraclePrice, `u64`),
             obj(txb, args.clock),
+        ],
+    });
+}
+
+export interface MaxReleasingCollateralAmountArgs {
+    position: ObjectArg;
+    collateralOraclePrice: bigint | TransactionArgument;
+    collateralOraclePriceDecimal: bigint | TransactionArgument;
+    tradingPairOraclePrice: bigint | TransactionArgument;
+    tradingPairOraclePriceDecimal: bigint | TransactionArgument;
+    tradingFeeRate: bigint | TransactionArgument;
+    tradingFeeDecimal: bigint | TransactionArgument;
+    cumulativeBorrowRate: bigint | TransactionArgument;
+    maxEntryLeveragePct: bigint | TransactionArgument;
+}
+
+export function maxReleasingCollateralAmount(txb: TransactionBlock, args: MaxReleasingCollateralAmountArgs) {
+    return txb.moveCall({
+        target: `${PUBLISHED_AT}::position::max_releasing_collateral_amount`,
+        arguments: [
+            obj(txb, args.position),
+            pure(txb, args.collateralOraclePrice, `u64`),
+            pure(txb, args.collateralOraclePriceDecimal, `u64`),
+            pure(txb, args.tradingPairOraclePrice, `u64`),
+            pure(txb, args.tradingPairOraclePriceDecimal, `u64`),
+            pure(txb, args.tradingFeeRate, `u64`),
+            pure(txb, args.tradingFeeDecimal, `u64`),
+            pure(txb, args.cumulativeBorrowRate, `u64`),
+            pure(txb, args.maxEntryLeveragePct, `u64`),
         ],
     });
 }
