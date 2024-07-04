@@ -39,7 +39,7 @@ export function orderFilled(txb: TransactionBlock, typeArg: string, args: OrderF
         arguments: [
             obj(txb, args.version),
             obj(txb, args.order),
-            option(txb, `0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::Position`, args.originalPosition),
+            option(txb, `0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::Position`, args.originalPosition),
             pure(txb, args.nextPositionId, `u64`),
             pure(txb, args.collateralOraclePrice, `u64`),
             pure(txb, args.collateralOraclePriceDecimal, `u64`),
@@ -721,19 +721,19 @@ export interface OrderFilledWithBidReceiptsCollateralArgs {
 
 export function orderFilledWithBidReceiptsCollateral(
     txb: TransactionBlock,
-    typeArg: string,
+    typeArgs: [string, string],
     args: OrderFilledWithBidReceiptsCollateralArgs
 ) {
     return txb.moveCall({
         target: `${PUBLISHED_AT}::position::order_filled_with_bid_receipts_collateral`,
-        typeArguments: [typeArg],
+        typeArguments: typeArgs,
         arguments: [
             obj(txb, args.version),
             obj(txb, args.liquidityPool),
             obj(txb, args.dovRegistry),
             obj(txb, args.typusOracle),
             obj(txb, args.order),
-            option(txb, `0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::Position`, args.originalPosition),
+            option(txb, `0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::Position`, args.originalPosition),
             pure(txb, args.nextPositionId, `u64`),
             pure(txb, args.collateralOraclePrice, `u64`),
             pure(txb, args.collateralOraclePriceDecimal, `u64`),

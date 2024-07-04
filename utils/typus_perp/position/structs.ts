@@ -20,11 +20,161 @@ import { Symbol } from "../symbol/structs";
 import { bcs, fromB64, fromHEX, toHEX } from "@mysten/bcs";
 import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
+/* ============================== OptionCollateralInfo =============================== */
+
+export function isOptionCollateralInfo(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OptionCollateralInfo";
+}
+
+export interface OptionCollateralInfoFields {
+    index: ToField<"u64">;
+    bidToken: ToField<TypeName>;
+}
+
+export type OptionCollateralInfoReified = Reified<OptionCollateralInfo, OptionCollateralInfoFields>;
+
+export class OptionCollateralInfo implements StructClass {
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OptionCollateralInfo";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = OptionCollateralInfo.$typeName;
+
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OptionCollateralInfo";
+
+    readonly $typeArgs: [];
+
+    readonly index: ToField<"u64">;
+    readonly bidToken: ToField<TypeName>;
+
+    private constructor(typeArgs: [], fields: OptionCollateralInfoFields) {
+        this.$fullTypeName = composeSuiType(
+            OptionCollateralInfo.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OptionCollateralInfo";
+        this.$typeArgs = typeArgs;
+
+        this.index = fields.index;
+        this.bidToken = fields.bidToken;
+    }
+
+    static reified(): OptionCollateralInfoReified {
+        return {
+            typeName: OptionCollateralInfo.$typeName,
+            fullTypeName: composeSuiType(
+                OptionCollateralInfo.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OptionCollateralInfo",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => OptionCollateralInfo.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => OptionCollateralInfo.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => OptionCollateralInfo.fromBcs(data),
+            bcs: OptionCollateralInfo.bcs,
+            fromJSONField: (field: any) => OptionCollateralInfo.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => OptionCollateralInfo.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => OptionCollateralInfo.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => OptionCollateralInfo.fetch(client, id),
+            new: (fields: OptionCollateralInfoFields) => {
+                return new OptionCollateralInfo([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return OptionCollateralInfo.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<OptionCollateralInfo>> {
+        return phantom(OptionCollateralInfo.reified());
+    }
+    static get p() {
+        return OptionCollateralInfo.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("OptionCollateralInfo", {
+            index: bcs.u64(),
+            bid_token: TypeName.bcs,
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): OptionCollateralInfo {
+        return OptionCollateralInfo.reified().new({
+            index: decodeFromFields("u64", fields.index),
+            bidToken: decodeFromFields(TypeName.reified(), fields.bid_token),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): OptionCollateralInfo {
+        if (!isOptionCollateralInfo(item.type)) {
+            throw new Error("not a OptionCollateralInfo type");
+        }
+
+        return OptionCollateralInfo.reified().new({
+            index: decodeFromFieldsWithTypes("u64", item.fields.index),
+            bidToken: decodeFromFieldsWithTypes(TypeName.reified(), item.fields.bid_token),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): OptionCollateralInfo {
+        return OptionCollateralInfo.fromFields(OptionCollateralInfo.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            index: this.index.toString(),
+            bidToken: this.bidToken.toJSONField(),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): OptionCollateralInfo {
+        return OptionCollateralInfo.reified().new({
+            index: decodeFromJSONField("u64", field.index),
+            bidToken: decodeFromJSONField(TypeName.reified(), field.bidToken),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): OptionCollateralInfo {
+        if (json.$typeName !== OptionCollateralInfo.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return OptionCollateralInfo.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): OptionCollateralInfo {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isOptionCollateralInfo(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a OptionCollateralInfo object`);
+        }
+        return OptionCollateralInfo.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<OptionCollateralInfo> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching OptionCollateralInfo object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isOptionCollateralInfo(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a OptionCollateralInfo object`);
+        }
+        return OptionCollateralInfo.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
 /* ============================== OrderFilledEvent =============================== */
 
 export function isOrderFilledEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::OrderFilledEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OrderFilledEvent";
 }
 
 export interface OrderFilledEventFields {
@@ -47,12 +197,12 @@ export interface OrderFilledEventFields {
 export type OrderFilledEventReified = Reified<OrderFilledEvent, OrderFilledEventFields>;
 
 export class OrderFilledEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::OrderFilledEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OrderFilledEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = OrderFilledEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::OrderFilledEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OrderFilledEvent";
 
     readonly $typeArgs: [];
 
@@ -75,7 +225,7 @@ export class OrderFilledEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             OrderFilledEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::OrderFilledEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OrderFilledEvent";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -100,7 +250,7 @@ export class OrderFilledEvent implements StructClass {
             fullTypeName: composeSuiType(
                 OrderFilledEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::OrderFilledEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OrderFilledEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => OrderFilledEvent.fromFields(fields),
@@ -270,7 +420,7 @@ export class OrderFilledEvent implements StructClass {
 
 export function isPosition(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::Position";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::Position";
 }
 
 export interface PositionFields {
@@ -297,18 +447,19 @@ export interface PositionFields {
     unrealizedFundingFee: ToField<"u64">;
     unrealizedBorrowFee: ToField<"u64">;
     unrealizedRebate: ToField<"u64">;
+    optionCollateralInfo: ToField<Option<OptionCollateralInfo>>;
     u64Padding: ToField<Vector<"u64">>;
 }
 
 export type PositionReified = Reified<Position, PositionFields>;
 
 export class Position implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::Position";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::Position";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = Position.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::Position";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::Position";
 
     readonly $typeArgs: [];
 
@@ -335,13 +486,14 @@ export class Position implements StructClass {
     readonly unrealizedFundingFee: ToField<"u64">;
     readonly unrealizedBorrowFee: ToField<"u64">;
     readonly unrealizedRebate: ToField<"u64">;
+    readonly optionCollateralInfo: ToField<Option<OptionCollateralInfo>>;
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: PositionFields) {
         this.$fullTypeName = composeSuiType(
             Position.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::Position";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::Position";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -367,6 +519,7 @@ export class Position implements StructClass {
         this.unrealizedFundingFee = fields.unrealizedFundingFee;
         this.unrealizedBorrowFee = fields.unrealizedBorrowFee;
         this.unrealizedRebate = fields.unrealizedRebate;
+        this.optionCollateralInfo = fields.optionCollateralInfo;
         this.u64Padding = fields.u64Padding;
     }
 
@@ -376,7 +529,7 @@ export class Position implements StructClass {
             fullTypeName: composeSuiType(
                 Position.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::Position",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::Position",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => Position.fromFields(fields),
@@ -430,6 +583,7 @@ export class Position implements StructClass {
             unrealized_funding_fee: bcs.u64(),
             unrealized_borrow_fee: bcs.u64(),
             unrealized_rebate: bcs.u64(),
+            option_collateral_info: Option.bcs(OptionCollateralInfo.bcs),
             u64_padding: bcs.vector(bcs.u64()),
         });
     }
@@ -459,6 +613,7 @@ export class Position implements StructClass {
             unrealizedFundingFee: decodeFromFields("u64", fields.unrealized_funding_fee),
             unrealizedBorrowFee: decodeFromFields("u64", fields.unrealized_borrow_fee),
             unrealizedRebate: decodeFromFields("u64", fields.unrealized_rebate),
+            optionCollateralInfo: decodeFromFields(Option.reified(OptionCollateralInfo.reified()), fields.option_collateral_info),
             u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
         });
     }
@@ -492,6 +647,10 @@ export class Position implements StructClass {
             unrealizedFundingFee: decodeFromFieldsWithTypes("u64", item.fields.unrealized_funding_fee),
             unrealizedBorrowFee: decodeFromFieldsWithTypes("u64", item.fields.unrealized_borrow_fee),
             unrealizedRebate: decodeFromFieldsWithTypes("u64", item.fields.unrealized_rebate),
+            optionCollateralInfo: decodeFromFieldsWithTypes(
+                Option.reified(OptionCollateralInfo.reified()),
+                item.fields.option_collateral_info
+            ),
             u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
         });
     }
@@ -525,6 +684,10 @@ export class Position implements StructClass {
             unrealizedFundingFee: this.unrealizedFundingFee.toString(),
             unrealizedBorrowFee: this.unrealizedBorrowFee.toString(),
             unrealizedRebate: this.unrealizedRebate.toString(),
+            optionCollateralInfo: fieldToJSON<Option<OptionCollateralInfo>>(
+                `0x1::option::Option<0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OptionCollateralInfo>`,
+                this.optionCollateralInfo
+            ),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
         };
     }
@@ -558,6 +721,7 @@ export class Position implements StructClass {
             unrealizedFundingFee: decodeFromJSONField("u64", field.unrealizedFundingFee),
             unrealizedBorrowFee: decodeFromJSONField("u64", field.unrealizedBorrowFee),
             unrealizedRebate: decodeFromJSONField("u64", field.unrealizedRebate),
+            optionCollateralInfo: decodeFromJSONField(Option.reified(OptionCollateralInfo.reified()), field.optionCollateralInfo),
             u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
         });
     }
@@ -596,7 +760,7 @@ export class Position implements StructClass {
 
 export function isRealizeFundingEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RealizeFundingEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizeFundingEvent";
 }
 
 export interface RealizeFundingEventFields {
@@ -612,12 +776,12 @@ export interface RealizeFundingEventFields {
 export type RealizeFundingEventReified = Reified<RealizeFundingEvent, RealizeFundingEventFields>;
 
 export class RealizeFundingEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RealizeFundingEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizeFundingEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = RealizeFundingEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RealizeFundingEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizeFundingEvent";
 
     readonly $typeArgs: [];
 
@@ -633,7 +797,7 @@ export class RealizeFundingEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             RealizeFundingEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RealizeFundingEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizeFundingEvent";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -651,7 +815,7 @@ export class RealizeFundingEvent implements StructClass {
             fullTypeName: composeSuiType(
                 RealizeFundingEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RealizeFundingEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizeFundingEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => RealizeFundingEvent.fromFields(fields),
@@ -786,7 +950,7 @@ export class RealizeFundingEvent implements StructClass {
 
 export function isRealizedPnlEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RealizedPnlEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizedPnlEvent";
 }
 
 export interface RealizedPnlEventFields {
@@ -806,12 +970,12 @@ export interface RealizedPnlEventFields {
 export type RealizedPnlEventReified = Reified<RealizedPnlEvent, RealizedPnlEventFields>;
 
 export class RealizedPnlEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RealizedPnlEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizedPnlEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = RealizedPnlEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RealizedPnlEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizedPnlEvent";
 
     readonly $typeArgs: [];
 
@@ -831,7 +995,7 @@ export class RealizedPnlEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             RealizedPnlEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RealizedPnlEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizedPnlEvent";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -853,7 +1017,7 @@ export class RealizedPnlEvent implements StructClass {
             fullTypeName: composeSuiType(
                 RealizedPnlEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RealizedPnlEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizedPnlEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => RealizedPnlEvent.fromFields(fields),
@@ -1008,7 +1172,7 @@ export class RealizedPnlEvent implements StructClass {
 
 export function isRemovePositionEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RemovePositionEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RemovePositionEvent";
 }
 
 export interface RemovePositionEventFields {
@@ -1025,12 +1189,12 @@ export interface RemovePositionEventFields {
 export type RemovePositionEventReified = Reified<RemovePositionEvent, RemovePositionEventFields>;
 
 export class RemovePositionEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RemovePositionEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RemovePositionEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = RemovePositionEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RemovePositionEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RemovePositionEvent";
 
     readonly $typeArgs: [];
 
@@ -1047,7 +1211,7 @@ export class RemovePositionEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             RemovePositionEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RemovePositionEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RemovePositionEvent";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -1066,7 +1230,7 @@ export class RemovePositionEvent implements StructClass {
             fullTypeName: composeSuiType(
                 RemovePositionEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::RemovePositionEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RemovePositionEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => RemovePositionEvent.fromFields(fields),
@@ -1206,7 +1370,7 @@ export class RemovePositionEvent implements StructClass {
 
 export function isTradingOrder(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::TradingOrder";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::TradingOrder";
 }
 
 export interface TradingOrderFields {
@@ -1232,12 +1396,12 @@ export interface TradingOrderFields {
 export type TradingOrderReified = Reified<TradingOrder, TradingOrderFields>;
 
 export class TradingOrder implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::TradingOrder";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::TradingOrder";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = TradingOrder.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::TradingOrder";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::TradingOrder";
 
     readonly $typeArgs: [];
 
@@ -1263,7 +1427,7 @@ export class TradingOrder implements StructClass {
         this.$fullTypeName = composeSuiType(
             TradingOrder.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::TradingOrder";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::TradingOrder";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -1291,7 +1455,7 @@ export class TradingOrder implements StructClass {
             fullTypeName: composeSuiType(
                 TradingOrder.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::position::TradingOrder",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::TradingOrder",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => TradingOrder.fromFields(fields),

@@ -26,7 +26,7 @@ import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
 export function isAddTradingSymbolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::AddTradingSymbolEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::AddTradingSymbolEvent";
 }
 
 export interface AddTradingSymbolEventFields {
@@ -40,12 +40,12 @@ export interface AddTradingSymbolEventFields {
 export type AddTradingSymbolEventReified = Reified<AddTradingSymbolEvent, AddTradingSymbolEventFields>;
 
 export class AddTradingSymbolEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::AddTradingSymbolEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::AddTradingSymbolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = AddTradingSymbolEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::AddTradingSymbolEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::AddTradingSymbolEvent";
 
     readonly $typeArgs: [];
 
@@ -59,7 +59,7 @@ export class AddTradingSymbolEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             AddTradingSymbolEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::AddTradingSymbolEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::AddTradingSymbolEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -75,7 +75,7 @@ export class AddTradingSymbolEvent implements StructClass {
             fullTypeName: composeSuiType(
                 AddTradingSymbolEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::AddTradingSymbolEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::AddTradingSymbolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => AddTradingSymbolEvent.fromFields(fields),
@@ -200,7 +200,7 @@ export class AddTradingSymbolEvent implements StructClass {
 
 export function isCancelTradingOrderEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CancelTradingOrderEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CancelTradingOrderEvent";
 }
 
 export interface CancelTradingOrderEventFields {
@@ -217,12 +217,12 @@ export interface CancelTradingOrderEventFields {
 export type CancelTradingOrderEventReified = Reified<CancelTradingOrderEvent, CancelTradingOrderEventFields>;
 
 export class CancelTradingOrderEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CancelTradingOrderEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CancelTradingOrderEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = CancelTradingOrderEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CancelTradingOrderEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CancelTradingOrderEvent";
 
     readonly $typeArgs: [];
 
@@ -239,7 +239,7 @@ export class CancelTradingOrderEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             CancelTradingOrderEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CancelTradingOrderEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CancelTradingOrderEvent";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -258,7 +258,7 @@ export class CancelTradingOrderEvent implements StructClass {
             fullTypeName: composeSuiType(
                 CancelTradingOrderEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CancelTradingOrderEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CancelTradingOrderEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => CancelTradingOrderEvent.fromFields(fields),
@@ -398,7 +398,7 @@ export class CancelTradingOrderEvent implements StructClass {
 
 export function isCreateTradingOrderEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CreateTradingOrderEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CreateTradingOrderEvent";
 }
 
 export interface CreateTradingOrderEventFields {
@@ -423,12 +423,12 @@ export interface CreateTradingOrderEventFields {
 export type CreateTradingOrderEventReified = Reified<CreateTradingOrderEvent, CreateTradingOrderEventFields>;
 
 export class CreateTradingOrderEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CreateTradingOrderEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CreateTradingOrderEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = CreateTradingOrderEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CreateTradingOrderEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CreateTradingOrderEvent";
 
     readonly $typeArgs: [];
 
@@ -453,7 +453,7 @@ export class CreateTradingOrderEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             CreateTradingOrderEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CreateTradingOrderEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CreateTradingOrderEvent";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -480,7 +480,7 @@ export class CreateTradingOrderEvent implements StructClass {
             fullTypeName: composeSuiType(
                 CreateTradingOrderEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CreateTradingOrderEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CreateTradingOrderEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => CreateTradingOrderEvent.fromFields(fields),
@@ -660,7 +660,7 @@ export class CreateTradingOrderEvent implements StructClass {
 
 export function isCreateTradingOrderWithBidReceiptsEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CreateTradingOrderWithBidReceiptsEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CreateTradingOrderWithBidReceiptsEvent";
 }
 
 export interface CreateTradingOrderWithBidReceiptsEventFields {
@@ -685,12 +685,12 @@ export type CreateTradingOrderWithBidReceiptsEventReified = Reified<
 
 export class CreateTradingOrderWithBidReceiptsEvent implements StructClass {
     static readonly $typeName =
-        "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CreateTradingOrderWithBidReceiptsEvent";
+        "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CreateTradingOrderWithBidReceiptsEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = CreateTradingOrderWithBidReceiptsEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CreateTradingOrderWithBidReceiptsEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CreateTradingOrderWithBidReceiptsEvent";
 
     readonly $typeArgs: [];
 
@@ -711,7 +711,7 @@ export class CreateTradingOrderWithBidReceiptsEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             CreateTradingOrderWithBidReceiptsEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CreateTradingOrderWithBidReceiptsEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CreateTradingOrderWithBidReceiptsEvent";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -734,7 +734,7 @@ export class CreateTradingOrderWithBidReceiptsEvent implements StructClass {
             fullTypeName: composeSuiType(
                 CreateTradingOrderWithBidReceiptsEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::CreateTradingOrderWithBidReceiptsEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::CreateTradingOrderWithBidReceiptsEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => CreateTradingOrderWithBidReceiptsEvent.fromFields(fields),
@@ -894,7 +894,7 @@ export class CreateTradingOrderWithBidReceiptsEvent implements StructClass {
 
 export function isIncreaseCollateralEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::IncreaseCollateralEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::IncreaseCollateralEvent";
 }
 
 export interface IncreaseCollateralEventFields {
@@ -912,12 +912,12 @@ export interface IncreaseCollateralEventFields {
 export type IncreaseCollateralEventReified = Reified<IncreaseCollateralEvent, IncreaseCollateralEventFields>;
 
 export class IncreaseCollateralEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::IncreaseCollateralEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::IncreaseCollateralEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = IncreaseCollateralEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::IncreaseCollateralEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::IncreaseCollateralEvent";
 
     readonly $typeArgs: [];
 
@@ -935,7 +935,7 @@ export class IncreaseCollateralEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             IncreaseCollateralEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::IncreaseCollateralEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::IncreaseCollateralEvent";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -955,7 +955,7 @@ export class IncreaseCollateralEvent implements StructClass {
             fullTypeName: composeSuiType(
                 IncreaseCollateralEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::IncreaseCollateralEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::IncreaseCollateralEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => IncreaseCollateralEvent.fromFields(fields),
@@ -1100,7 +1100,7 @@ export class IncreaseCollateralEvent implements StructClass {
 
 export function isLinkedOrdersInfo(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::LinkedOrdersInfo";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::LinkedOrdersInfo";
 }
 
 export interface LinkedOrdersInfoFields {
@@ -1113,12 +1113,12 @@ export interface LinkedOrdersInfoFields {
 export type LinkedOrdersInfoReified = Reified<LinkedOrdersInfo, LinkedOrdersInfoFields>;
 
 export class LinkedOrdersInfo implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::LinkedOrdersInfo";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::LinkedOrdersInfo";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LinkedOrdersInfo.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::LinkedOrdersInfo";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::LinkedOrdersInfo";
 
     readonly $typeArgs: [];
 
@@ -1131,7 +1131,7 @@ export class LinkedOrdersInfo implements StructClass {
         this.$fullTypeName = composeSuiType(
             LinkedOrdersInfo.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::LinkedOrdersInfo";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::LinkedOrdersInfo";
         this.$typeArgs = typeArgs;
 
         this.users = fields.users;
@@ -1146,7 +1146,7 @@ export class LinkedOrdersInfo implements StructClass {
             fullTypeName: composeSuiType(
                 LinkedOrdersInfo.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::LinkedOrdersInfo",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::LinkedOrdersInfo",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LinkedOrdersInfo.fromFields(fields),
@@ -1266,7 +1266,7 @@ export class LinkedOrdersInfo implements StructClass {
 
 export function isLiquidateEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::LiquidateEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::LiquidateEvent";
 }
 
 export interface LiquidateEventFields {
@@ -1283,12 +1283,12 @@ export interface LiquidateEventFields {
 export type LiquidateEventReified = Reified<LiquidateEvent, LiquidateEventFields>;
 
 export class LiquidateEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::LiquidateEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::LiquidateEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LiquidateEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::LiquidateEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::LiquidateEvent";
 
     readonly $typeArgs: [];
 
@@ -1305,7 +1305,7 @@ export class LiquidateEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             LiquidateEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::LiquidateEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::LiquidateEvent";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -1324,7 +1324,7 @@ export class LiquidateEvent implements StructClass {
             fullTypeName: composeSuiType(
                 LiquidateEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::LiquidateEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::LiquidateEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LiquidateEvent.fromFields(fields),
@@ -1464,7 +1464,7 @@ export class LiquidateEvent implements StructClass {
 
 export function isManagerReducePosition(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ManagerReducePosition";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ManagerReducePosition";
 }
 
 export interface ManagerReducePositionFields {
@@ -1482,12 +1482,12 @@ export interface ManagerReducePositionFields {
 export type ManagerReducePositionReified = Reified<ManagerReducePosition, ManagerReducePositionFields>;
 
 export class ManagerReducePosition implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ManagerReducePosition";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ManagerReducePosition";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = ManagerReducePosition.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ManagerReducePosition";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ManagerReducePosition";
 
     readonly $typeArgs: [];
 
@@ -1505,7 +1505,7 @@ export class ManagerReducePosition implements StructClass {
         this.$fullTypeName = composeSuiType(
             ManagerReducePosition.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ManagerReducePosition";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ManagerReducePosition";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -1525,7 +1525,7 @@ export class ManagerReducePosition implements StructClass {
             fullTypeName: composeSuiType(
                 ManagerReducePosition.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ManagerReducePosition",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ManagerReducePosition",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => ManagerReducePosition.fromFields(fields),
@@ -1670,7 +1670,7 @@ export class ManagerReducePosition implements StructClass {
 
 export function isMarketConfig(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketConfig";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketConfig";
 }
 
 export interface MarketConfigFields {
@@ -1688,12 +1688,12 @@ export interface MarketConfigFields {
 export type MarketConfigReified = Reified<MarketConfig, MarketConfigFields>;
 
 export class MarketConfig implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketConfig";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketConfig";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = MarketConfig.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketConfig";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketConfig";
 
     readonly $typeArgs: [];
 
@@ -1711,7 +1711,7 @@ export class MarketConfig implements StructClass {
         this.$fullTypeName = composeSuiType(
             MarketConfig.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketConfig";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketConfig";
         this.$typeArgs = typeArgs;
 
         this.oracleId = fields.oracleId;
@@ -1731,7 +1731,7 @@ export class MarketConfig implements StructClass {
             fullTypeName: composeSuiType(
                 MarketConfig.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketConfig",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketConfig",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => MarketConfig.fromFields(fields),
@@ -1876,7 +1876,7 @@ export class MarketConfig implements StructClass {
 
 export function isMarketInfo(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketInfo";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketInfo";
 }
 
 export interface MarketInfoFields {
@@ -1900,12 +1900,12 @@ export interface MarketInfoFields {
 export type MarketInfoReified = Reified<MarketInfo, MarketInfoFields>;
 
 export class MarketInfo implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketInfo";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketInfo";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = MarketInfo.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketInfo";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketInfo";
 
     readonly $typeArgs: [];
 
@@ -1929,7 +1929,7 @@ export class MarketInfo implements StructClass {
         this.$fullTypeName = composeSuiType(
             MarketInfo.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketInfo";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketInfo";
         this.$typeArgs = typeArgs;
 
         this.isActive = fields.isActive;
@@ -1955,7 +1955,7 @@ export class MarketInfo implements StructClass {
             fullTypeName: composeSuiType(
                 MarketInfo.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketInfo",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketInfo",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => MarketInfo.fromFields(fields),
@@ -2133,7 +2133,7 @@ export class MarketInfo implements StructClass {
 
 export function isMarketRegistry(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketRegistry";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketRegistry";
 }
 
 export interface MarketRegistryFields {
@@ -2146,12 +2146,12 @@ export interface MarketRegistryFields {
 export type MarketRegistryReified = Reified<MarketRegistry, MarketRegistryFields>;
 
 export class MarketRegistry implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketRegistry";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketRegistry";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = MarketRegistry.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketRegistry";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketRegistry";
 
     readonly $typeArgs: [];
 
@@ -2164,7 +2164,7 @@ export class MarketRegistry implements StructClass {
         this.$fullTypeName = composeSuiType(
             MarketRegistry.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketRegistry";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketRegistry";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -2179,7 +2179,7 @@ export class MarketRegistry implements StructClass {
             fullTypeName: composeSuiType(
                 MarketRegistry.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketRegistry",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MarketRegistry",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => MarketRegistry.fromFields(fields),
@@ -2299,7 +2299,7 @@ export class MarketRegistry implements StructClass {
 
 export function isMarkets(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::Markets";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::Markets";
 }
 
 export interface MarketsFields {
@@ -2317,12 +2317,12 @@ export interface MarketsFields {
 export type MarketsReified = Reified<Markets, MarketsFields>;
 
 export class Markets implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::Markets";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::Markets";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = Markets.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::Markets";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::Markets";
 
     readonly $typeArgs: [];
 
@@ -2340,7 +2340,7 @@ export class Markets implements StructClass {
         this.$fullTypeName = composeSuiType(
             Markets.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::Markets";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::Markets";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -2360,7 +2360,7 @@ export class Markets implements StructClass {
             fullTypeName: composeSuiType(
                 Markets.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::Markets",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::Markets",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => Markets.fromFields(fields),
@@ -2514,7 +2514,7 @@ export class Markets implements StructClass {
 
 export function isMatchTradingOrderEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MatchTradingOrderEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MatchTradingOrderEvent";
 }
 
 export interface MatchTradingOrderEventFields {
@@ -2528,12 +2528,12 @@ export interface MatchTradingOrderEventFields {
 export type MatchTradingOrderEventReified = Reified<MatchTradingOrderEvent, MatchTradingOrderEventFields>;
 
 export class MatchTradingOrderEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MatchTradingOrderEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MatchTradingOrderEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = MatchTradingOrderEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MatchTradingOrderEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MatchTradingOrderEvent";
 
     readonly $typeArgs: [];
 
@@ -2547,7 +2547,7 @@ export class MatchTradingOrderEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             MatchTradingOrderEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MatchTradingOrderEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MatchTradingOrderEvent";
         this.$typeArgs = typeArgs;
 
         this.collateralToken = fields.collateralToken;
@@ -2563,7 +2563,7 @@ export class MatchTradingOrderEvent implements StructClass {
             fullTypeName: composeSuiType(
                 MatchTradingOrderEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MatchTradingOrderEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::MatchTradingOrderEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => MatchTradingOrderEvent.fromFields(fields),
@@ -2688,7 +2688,7 @@ export class MatchTradingOrderEvent implements StructClass {
 
 export function isNewMarketsEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::NewMarketsEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::NewMarketsEvent";
 }
 
 export interface NewMarketsEventFields {
@@ -2702,12 +2702,12 @@ export interface NewMarketsEventFields {
 export type NewMarketsEventReified = Reified<NewMarketsEvent, NewMarketsEventFields>;
 
 export class NewMarketsEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::NewMarketsEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::NewMarketsEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = NewMarketsEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::NewMarketsEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::NewMarketsEvent";
 
     readonly $typeArgs: [];
 
@@ -2721,7 +2721,7 @@ export class NewMarketsEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             NewMarketsEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::NewMarketsEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::NewMarketsEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -2737,7 +2737,7 @@ export class NewMarketsEvent implements StructClass {
             fullTypeName: composeSuiType(
                 NewMarketsEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::NewMarketsEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::NewMarketsEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => NewMarketsEvent.fromFields(fields),
@@ -2862,7 +2862,7 @@ export class NewMarketsEvent implements StructClass {
 
 export function isReleaseCollateralEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ReleaseCollateralEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ReleaseCollateralEvent";
 }
 
 export interface ReleaseCollateralEventFields {
@@ -2880,12 +2880,12 @@ export interface ReleaseCollateralEventFields {
 export type ReleaseCollateralEventReified = Reified<ReleaseCollateralEvent, ReleaseCollateralEventFields>;
 
 export class ReleaseCollateralEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ReleaseCollateralEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ReleaseCollateralEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = ReleaseCollateralEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ReleaseCollateralEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ReleaseCollateralEvent";
 
     readonly $typeArgs: [];
 
@@ -2903,7 +2903,7 @@ export class ReleaseCollateralEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             ReleaseCollateralEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ReleaseCollateralEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ReleaseCollateralEvent";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -2923,7 +2923,7 @@ export class ReleaseCollateralEvent implements StructClass {
             fullTypeName: composeSuiType(
                 ReleaseCollateralEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ReleaseCollateralEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ReleaseCollateralEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => ReleaseCollateralEvent.fromFields(fields),
@@ -3068,7 +3068,7 @@ export class ReleaseCollateralEvent implements StructClass {
 
 export function isResumeMarketEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ResumeMarketEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ResumeMarketEvent";
 }
 
 export interface ResumeMarketEventFields {
@@ -3079,12 +3079,12 @@ export interface ResumeMarketEventFields {
 export type ResumeMarketEventReified = Reified<ResumeMarketEvent, ResumeMarketEventFields>;
 
 export class ResumeMarketEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ResumeMarketEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ResumeMarketEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = ResumeMarketEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ResumeMarketEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ResumeMarketEvent";
 
     readonly $typeArgs: [];
 
@@ -3095,7 +3095,7 @@ export class ResumeMarketEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             ResumeMarketEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ResumeMarketEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ResumeMarketEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -3108,7 +3108,7 @@ export class ResumeMarketEvent implements StructClass {
             fullTypeName: composeSuiType(
                 ResumeMarketEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ResumeMarketEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ResumeMarketEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => ResumeMarketEvent.fromFields(fields),
@@ -3218,7 +3218,7 @@ export class ResumeMarketEvent implements StructClass {
 
 export function isResumeTradingSymbolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ResumeTradingSymbolEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ResumeTradingSymbolEvent";
 }
 
 export interface ResumeTradingSymbolEventFields {
@@ -3230,12 +3230,12 @@ export interface ResumeTradingSymbolEventFields {
 export type ResumeTradingSymbolEventReified = Reified<ResumeTradingSymbolEvent, ResumeTradingSymbolEventFields>;
 
 export class ResumeTradingSymbolEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ResumeTradingSymbolEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ResumeTradingSymbolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = ResumeTradingSymbolEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ResumeTradingSymbolEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ResumeTradingSymbolEvent";
 
     readonly $typeArgs: [];
 
@@ -3247,7 +3247,7 @@ export class ResumeTradingSymbolEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             ResumeTradingSymbolEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ResumeTradingSymbolEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ResumeTradingSymbolEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -3261,7 +3261,7 @@ export class ResumeTradingSymbolEvent implements StructClass {
             fullTypeName: composeSuiType(
                 ResumeTradingSymbolEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::ResumeTradingSymbolEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::ResumeTradingSymbolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => ResumeTradingSymbolEvent.fromFields(fields),
@@ -3376,7 +3376,7 @@ export class ResumeTradingSymbolEvent implements StructClass {
 
 export function isSuspendMarketEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SuspendMarketEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SuspendMarketEvent";
 }
 
 export interface SuspendMarketEventFields {
@@ -3387,12 +3387,12 @@ export interface SuspendMarketEventFields {
 export type SuspendMarketEventReified = Reified<SuspendMarketEvent, SuspendMarketEventFields>;
 
 export class SuspendMarketEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SuspendMarketEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SuspendMarketEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = SuspendMarketEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SuspendMarketEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SuspendMarketEvent";
 
     readonly $typeArgs: [];
 
@@ -3403,7 +3403,7 @@ export class SuspendMarketEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             SuspendMarketEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SuspendMarketEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SuspendMarketEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -3416,7 +3416,7 @@ export class SuspendMarketEvent implements StructClass {
             fullTypeName: composeSuiType(
                 SuspendMarketEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SuspendMarketEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SuspendMarketEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => SuspendMarketEvent.fromFields(fields),
@@ -3526,7 +3526,7 @@ export class SuspendMarketEvent implements StructClass {
 
 export function isSuspendTradingSymbolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SuspendTradingSymbolEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SuspendTradingSymbolEvent";
 }
 
 export interface SuspendTradingSymbolEventFields {
@@ -3538,12 +3538,12 @@ export interface SuspendTradingSymbolEventFields {
 export type SuspendTradingSymbolEventReified = Reified<SuspendTradingSymbolEvent, SuspendTradingSymbolEventFields>;
 
 export class SuspendTradingSymbolEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SuspendTradingSymbolEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SuspendTradingSymbolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = SuspendTradingSymbolEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SuspendTradingSymbolEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SuspendTradingSymbolEvent";
 
     readonly $typeArgs: [];
 
@@ -3555,7 +3555,7 @@ export class SuspendTradingSymbolEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             SuspendTradingSymbolEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SuspendTradingSymbolEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SuspendTradingSymbolEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -3569,7 +3569,7 @@ export class SuspendTradingSymbolEvent implements StructClass {
             fullTypeName: composeSuiType(
                 SuspendTradingSymbolEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SuspendTradingSymbolEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SuspendTradingSymbolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => SuspendTradingSymbolEvent.fromFields(fields),
@@ -3684,7 +3684,7 @@ export class SuspendTradingSymbolEvent implements StructClass {
 
 export function isSymbolMarket(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SymbolMarket";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SymbolMarket";
 }
 
 export interface SymbolMarketFields {
@@ -3699,12 +3699,12 @@ export interface SymbolMarketFields {
 export type SymbolMarketReified = Reified<SymbolMarket, SymbolMarketFields>;
 
 export class SymbolMarket implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SymbolMarket";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SymbolMarket";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = SymbolMarket.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SymbolMarket";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SymbolMarket";
 
     readonly $typeArgs: [];
 
@@ -3719,7 +3719,7 @@ export class SymbolMarket implements StructClass {
         this.$fullTypeName = composeSuiType(
             SymbolMarket.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SymbolMarket";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SymbolMarket";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -3736,7 +3736,7 @@ export class SymbolMarket implements StructClass {
             fullTypeName: composeSuiType(
                 SymbolMarket.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::SymbolMarket",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::SymbolMarket",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => SymbolMarket.fromFields(fields),
@@ -3866,7 +3866,7 @@ export class SymbolMarket implements StructClass {
 
 export function isUSD(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::USD";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::USD";
 }
 
 export interface USDFields {
@@ -3876,12 +3876,12 @@ export interface USDFields {
 export type USDReified = Reified<USD, USDFields>;
 
 export class USD implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::USD";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::USD";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = USD.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::USD";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::USD";
 
     readonly $typeArgs: [];
 
@@ -3891,7 +3891,7 @@ export class USD implements StructClass {
         this.$fullTypeName = composeSuiType(
             USD.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::USD";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::USD";
         this.$typeArgs = typeArgs;
 
         this.dummyField = fields.dummyField;
@@ -3903,7 +3903,7 @@ export class USD implements StructClass {
             fullTypeName: composeSuiType(
                 USD.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::USD",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::USD",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => USD.fromFields(fields),
@@ -4002,7 +4002,7 @@ export class USD implements StructClass {
 
 export function isUpdateFundingRateEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateFundingRateEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateFundingRateEvent";
 }
 
 export interface UpdateFundingRateEventFields {
@@ -4019,12 +4019,12 @@ export interface UpdateFundingRateEventFields {
 export type UpdateFundingRateEventReified = Reified<UpdateFundingRateEvent, UpdateFundingRateEventFields>;
 
 export class UpdateFundingRateEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateFundingRateEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateFundingRateEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UpdateFundingRateEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateFundingRateEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateFundingRateEvent";
 
     readonly $typeArgs: [];
 
@@ -4041,7 +4041,7 @@ export class UpdateFundingRateEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             UpdateFundingRateEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateFundingRateEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateFundingRateEvent";
         this.$typeArgs = typeArgs;
 
         this.baseToken = fields.baseToken;
@@ -4060,7 +4060,7 @@ export class UpdateFundingRateEvent implements StructClass {
             fullTypeName: composeSuiType(
                 UpdateFundingRateEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateFundingRateEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateFundingRateEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UpdateFundingRateEvent.fromFields(fields),
@@ -4203,7 +4203,7 @@ export class UpdateFundingRateEvent implements StructClass {
 
 export function isUpdateMarketConfigEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateMarketConfigEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateMarketConfigEvent";
 }
 
 export interface UpdateMarketConfigEventFields {
@@ -4217,12 +4217,12 @@ export interface UpdateMarketConfigEventFields {
 export type UpdateMarketConfigEventReified = Reified<UpdateMarketConfigEvent, UpdateMarketConfigEventFields>;
 
 export class UpdateMarketConfigEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateMarketConfigEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateMarketConfigEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UpdateMarketConfigEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateMarketConfigEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateMarketConfigEvent";
 
     readonly $typeArgs: [];
 
@@ -4236,7 +4236,7 @@ export class UpdateMarketConfigEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             UpdateMarketConfigEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateMarketConfigEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateMarketConfigEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -4252,7 +4252,7 @@ export class UpdateMarketConfigEvent implements StructClass {
             fullTypeName: composeSuiType(
                 UpdateMarketConfigEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateMarketConfigEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateMarketConfigEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UpdateMarketConfigEvent.fromFields(fields),
@@ -4377,7 +4377,7 @@ export class UpdateMarketConfigEvent implements StructClass {
 
 export function isUpdateProtocolFeeShareBpEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateProtocolFeeShareBpEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateProtocolFeeShareBpEvent";
 }
 
 export interface UpdateProtocolFeeShareBpEventFields {
@@ -4390,12 +4390,13 @@ export interface UpdateProtocolFeeShareBpEventFields {
 export type UpdateProtocolFeeShareBpEventReified = Reified<UpdateProtocolFeeShareBpEvent, UpdateProtocolFeeShareBpEventFields>;
 
 export class UpdateProtocolFeeShareBpEvent implements StructClass {
-    static readonly $typeName = "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateProtocolFeeShareBpEvent";
+    static readonly $typeName =
+        "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateProtocolFeeShareBpEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UpdateProtocolFeeShareBpEvent.$typeName;
 
-    readonly $fullTypeName: "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateProtocolFeeShareBpEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateProtocolFeeShareBpEvent";
 
     readonly $typeArgs: [];
 
@@ -4408,7 +4409,7 @@ export class UpdateProtocolFeeShareBpEvent implements StructClass {
         this.$fullTypeName = composeSuiType(
             UpdateProtocolFeeShareBpEvent.$typeName,
             ...typeArgs
-        ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateProtocolFeeShareBpEvent";
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateProtocolFeeShareBpEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
@@ -4423,7 +4424,7 @@ export class UpdateProtocolFeeShareBpEvent implements StructClass {
             fullTypeName: composeSuiType(
                 UpdateProtocolFeeShareBpEvent.$typeName,
                 ...[]
-            ) as "0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::UpdateProtocolFeeShareBpEvent",
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::trading::UpdateProtocolFeeShareBpEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UpdateProtocolFeeShareBpEvent.fromFields(fields),
