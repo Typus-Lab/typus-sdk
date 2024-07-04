@@ -13,12 +13,14 @@ const provider = new SuiClient({
 });
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
-const totalRewards = 1888_000000000;
-const token = "0xd31923b6821fb7ba32d23e514b43d307da6ef991f9ef1af2cc4e26a0992ac87a::afsui::AFSUI";
-const tsMs = "1719964800000";
+const rewards = 1888_000000000;
+const token = config.TOKEN.AFSUI;
+const nextWeekRewards = 3333_000000000;
+const nextWeekToken = config.TOKEN.SUI;
+const nextWeekTsMs = 1720422000000;
 
 (async () => {
-    console.log("totalRewards: " + totalRewards);
+    console.log("rewards: " + rewards);
     let levelCounts = await getLevelCounts({
         provider,
         typusPackageId: config.PACKAGE.TYPUS,
@@ -26,7 +28,7 @@ const tsMs = "1719964800000";
         typusTailsStakingRegistry: config.REGISTRY.TAILS_STAKING,
     });
     console.log("levelCounts: " + levelCounts);
-    let levelProfits = calculateLevelReward(totalRewards, levelShares, levelCounts);
+    let levelProfits = calculateLevelReward(rewards, levelShares, levelCounts);
     console.log("levelProfits: " + levelProfits);
     let profitAsset = (await provider.getDynamicFields({ parentId: config.REGISTRY.TAILS_STAKING })).data
         .filter((x) => x.objectType.includes(token))
@@ -80,11 +82,11 @@ const tsMs = "1719964800000";
         typusPackageId: config.PACKAGE.TYPUS,
         typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
         typusTailsStakingRegistry: config.REGISTRY.TAILS_STAKING,
-        typeArguments: [token],
+        typeArguments: [token, nextWeekToken],
         levelProfits: levelProfits.map((x) => x.toString()),
         coin: inputCoin,
-        amount: totalRewards.toString(),
-        tsMs: tsMs,
+        amount: nextWeekRewards.toString(),
+        tsMs: nextWeekTsMs.toString(),
     });
     tx.setGasBudget(100000000);
     let result = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
