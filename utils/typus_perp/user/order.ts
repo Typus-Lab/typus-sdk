@@ -103,8 +103,8 @@ export async function cancelTradingOrder(
         user: string;
     }
 ): Promise<TransactionBlock> {
-    const cToken = "0x" + input.order.collateralToken;
-    const BASE_TOKEN = "0x" + input.order.symbol.baseToken;
+    const cToken = "0x" + input.order.collateralToken.name;
+    const BASE_TOKEN = "0x" + input.order.symbol.baseToken.name;
 
     const coin = _cancelTradingOrder(input.tx, [cToken, BASE_TOKEN], {
         version: config.OBJECT.TYPUS_PERP_VERSION,
