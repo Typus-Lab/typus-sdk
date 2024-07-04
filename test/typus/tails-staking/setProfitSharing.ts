@@ -20,6 +20,7 @@ const nextWeekToken = config.TOKEN.SUI;
 const nextWeekTsMs = 1720422000000;
 
 (async () => {
+    console.log("token: " + token);
     console.log("rewards: " + rewards);
     let levelCounts = await getLevelCounts({
         provider,
@@ -44,13 +45,16 @@ const nextWeekTsMs = 1720422000000;
     }
     spendingProfit -= remainingProfit;
     console.log("spendingProfit: " + spendingProfit);
+    console.log("nextWeekRewards: " + nextWeekRewards);
+    console.log("nextWeekToken: " + nextWeekToken);
+    console.log(`nextWeekTsMs: ${nextWeekTsMs} (${new Date(nextWeekTsMs)})`);
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
     });
     try {
         const answer = await rl.question("ARE YOU SURE TO PROCEED? [y/N] ", {
-            signal: AbortSignal.timeout(10_000), // 10s timeout
+            signal: AbortSignal.timeout(30_000), // 10s timeout
         });
         switch (answer.toLowerCase()) {
             case "y":
