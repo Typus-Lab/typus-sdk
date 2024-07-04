@@ -26,15 +26,15 @@ const gasBudget = 100000000;
     tx.setGasBudget(gasBudget);
 
     // 1. Get user's bid receipt
-    const bidReceipt = "0xacad42b6e075d22618f9eaca08d33bf69c552c15c1ad6395d478c4b2ddb7398b";
+    const bidReceipt = "0xb1b3e07b526a05b705dde1aadf76a9af8906a3e1479ea0d4a9eb33fafeba777c";
 
     // 2. Get receipt detail, vault_index, dToken, bToken, oToken
-    const index = "8";
+    const index = "5";
     const cToken = "USDC"; // dToken
     const bToken = "USDC";
     const tradingToken = "SOL"; // oToken
-    const isLong = true; // call => short, put => long
-    const share: string | null = "1000000000";
+    const isLong = false; // call => short, put => long
+    const share: string | null = "100000000";
 
     tx = await createTradingOrderWithBidReceipt(config, {
         pythClient,
@@ -53,8 +53,7 @@ const gasBudget = 100000000;
         transactionBlock: tx,
         sender: user,
     });
-    console.log(dryrunRes.events.filter((e) => e.type.endsWith("CreateTradingOrderEvent")));
-    console.log(dryrunRes.events.filter((e) => e.type.endsWith("RealizeFundingEvent"))); // if the order is not filled, there will be no RealizeFundingEvent
+    console.log(dryrunRes.events.filter((e) => e.type.endsWith("CreateTradingOrderWithBidReceiptsEvent")));
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("OrderFilledEvent"))); // if the order is not filled, there will be no OrderFilledEvent
 
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });

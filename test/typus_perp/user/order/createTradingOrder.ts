@@ -55,7 +55,7 @@ const provider = new SuiClient({
         sender: address,
     });
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("CreateTradingOrderEvent"))[0].parsedJson);
-    console.log(dryrunRes.events.filter((e) => e.type.endsWith("RealizeFundingEvent"))); // if the order is not filled, there will be no RealizeFundingEvent
+    console.log(dryrunRes.events.filter((e) => e.type.endsWith("RealizeFundingEvent"))); // only exists if the order is reduced only
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("OrderFilledEvent"))); // if the order is not filled, there will be no OrderFilledEvent
 
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
