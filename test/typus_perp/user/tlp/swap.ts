@@ -21,17 +21,6 @@ const gasBudget = 100000000;
     const user = keypair.toSuiAddress();
     console.log(user);
 
-    const lpPoolRegistry = await Registry.fetch(provider, config.REGISTRY.LP_POOL_REGISTRY);
-    // console.log(lpPoolRegistry);
-
-    const dynamicFields = await provider.getDynamicFields({
-        parentId: lpPoolRegistry.liquidityPoolRegistry,
-    });
-
-    const field = dynamicFields.data[0];
-    const lpPool = await LiquidityPool.fetch(provider, field.objectId);
-    // console.log(lpPool);
-
     const pythClient = createPythClient(provider, NETWORK);
 
     // INPUT

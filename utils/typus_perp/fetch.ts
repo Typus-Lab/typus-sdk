@@ -8,12 +8,20 @@ import { TradingOrder, Position } from "./position/structs";
 import { getUserShares } from "./stake-pool/functions";
 import { LpUserShare } from "./stake-pool/structs";
 
-export async function getLpPools(provider: SuiClient, config: { REGISTRY: { LP_POOL_REGISTRY: string } }): Promise<LiquidityPool[]> {
-    const lpPoolRegistry = await Registry.fetch(provider, config.REGISTRY.LP_POOL_REGISTRY);
+export async function getLpPools(
+    provider: SuiClient,
+    config: {
+        REGISTRY: {
+            LP_POOL_REGISTRY: string;
+            LIQUIDITY_POOL_REGISTRY: string;
+        };
+    }
+): Promise<LiquidityPool[]> {
+    // const lpPoolRegistry = await Registry.fetch(provider, config.REGISTRY.LP_POOL_REGISTRY);
     // console.log(lpPoolRegistry);
 
     const dynamicFields = await provider.getDynamicFields({
-        parentId: lpPoolRegistry.liquidityPoolRegistry,
+        parentId: config.REGISTRY.LIQUIDITY_POOL_REGISTRY,
     });
 
     const lpPools: LiquidityPool[] = [];

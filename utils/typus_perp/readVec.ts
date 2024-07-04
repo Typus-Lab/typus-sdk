@@ -33,6 +33,14 @@ export function readVecPosition(bytes: Uint8Array) {
             unrealizedFundingFee: reader.read64(),
             unrealizedBorrowFee: reader.read64(),
             unrealizedRebate: reader.read64(),
+            optionCollateralInfo: reader
+                .readVec((reader) => {
+                    return {
+                        index: reader.read64(),
+                        bid_token: { name: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))) },
+                    };
+                })
+                .at(0),
             u64Padding: reader.readVec((reader) => reader.read64()),
         };
 
