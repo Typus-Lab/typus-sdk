@@ -10,8 +10,8 @@ const provider = new SuiClient({
 
 (async () => {
     const markets = await getMarkets(provider, config);
-    console.log(markets);
+    console.log(markets[0]);
 
     const symbolMarkets = await getSymbolMarkets(provider, markets[0]);
-    console.log(symbolMarkets);
+    console.log(symbolMarkets); // marketInfo
 })();
