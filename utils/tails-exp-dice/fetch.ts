@@ -5,8 +5,11 @@ import { assetToDecimal, typeArgToAsset } from "../token";
 
 export async function getPlaygrounds(provider: SuiClient, diceRegistry: string) {
     const playgroundIds = (await provider.getDynamicFields({ parentId: diceRegistry })).data
+        .filter((a) => a.objectType.endsWith("Playground"))
         .sort((a, b) => Number(a.name.value) - Number(b.name.value))
         .map((x) => x.objectId as string);
+
+    // console.log(playgroundIds);
 
     const objects = await provider.multiGetObjects({
         ids: playgroundIds,
