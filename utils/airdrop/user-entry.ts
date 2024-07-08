@@ -19,7 +19,7 @@ export function getClaimAirdropTx(input: {
         ],
     });
     input.tx.moveCall({
-        target: `${input.typusPackageId}::utils::transfer_balance_opt`,
+        target: `${input.typusPackageId}::utility::transfer_balance_opt`,
         typeArguments: [input.typeArguments[0]],
         arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
     });

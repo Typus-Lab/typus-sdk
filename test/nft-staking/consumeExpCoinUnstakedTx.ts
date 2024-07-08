@@ -1,18 +1,20 @@
 import "../load_env";
-import config from "../../config_v2.json";
-import { consumeExpCoinUnstakedTx } from "../../utils/nft-staking/user-entry";
+import configs from "../../config.json";
+import { getConsumeExpCoinUnstakedTx } from "../../utils/tails-exp-dice/user-entry";
 import { KioskClient, Network } from "@mysten/kiosk";
 import { getTailsIds, getkioskOwnerCaps } from "../../utils/typus-nft/fetch";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { getExpUpWithoutStakingTx } from "../../utils/tails-staking/user-entry";
 
+const config = configs.TESTNET;
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });
-const gasBudget = 100000000;
 
-const amount = "1000";
+const amount = "1";
 
 (async () => {
     const address = keypair.toSuiAddress();
@@ -44,35 +46,53 @@ const amount = "1000";
 
     const personalKioskRulePackageId = kioskClient.getRulePackageId("personalKioskRulePackageId");
 
-    const tailsIds = await getTailsIds(kioskClient, config, kioskOwnerCaps);
+    const tailsIds = await getTailsIds(kioskClient, config.PACKAGE_ORIGIN.NFT, kioskOwnerCaps);
     console.log(tailsIds);
     console.log(tailsIds.length);
 
     if (tailsIds.length > 0) {
-        let nft = tailsIds.find((x) => x.isPersonal);
+        let nft = tailsIds[0];
+        // let nft = tailsIds.find((x) => x.isPersonal)!;
+        console.log(nft);
 
-        if (nft) {
-            const coinType = `${config.EXP_GUESS_PACKAGE_ORIGIN}::tails_exp::TAILS_EXP`;
+        const coinType = `${config.PACKAGE_ORIGIN.TAILS_EXP}::tails_exp::TAILS_EXP`;
 
-            let coins = (await provider.getCoins({ owner: address, coinType })).data.map((coin) => coin.coinObjectId);
-            // console.log(coins);
+        let coins = (await provider.getCoins({ owner: address, coinType })).data.map((coin) => coin.coinObjectId);
+        console.log(coins);
 
-            let transactionBlock = await consumeExpCoinUnstakedTx(
-                gasBudget,
-                config.SINGLE_COLLATERAL_PACKAGE,
-                [coinType],
-                config.SINGLE_COLLATERAL_REGISTRY,
-                personalKioskRulePackageId,
-                nft,
-                coins,
-                amount
-            );
+        let tx = new TransactionBlock();
 
-            const result = await provider.signAndExecuteTransactionBlock({
-                signer: keypair,
-                transactionBlock,
-            });
-            console.log(result);
-        }
+        getConsumeExpCoinUnstakedTx({
+            tx,
+            packageId: config.PACKAGE.TAILS_EXP,
+            tailsExpRegistry: config.REGISTRY.TAILS_EXP,
+            typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
+            tailsStakingRegistry: config.REGISTRY.TAILS_STAKING,
+            kiosk: nft.kiosk,
+            kioskCap: nft.kioskCap,
+            tails: nft.nftId,
+            coins,
+            amount,
+            personalKioskPackageId: nft.isPersonal ? personalKioskRulePackageId : undefined,
+        });
+
+        // getExpUpWithoutStakingTx({
+        //     tx,
+        //     typusPackageId: config.PACKAGE.TYPUS,
+        //     typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
+        //     typusTailsStakingRegistry: config.REGISTRY.TAILS_STAKING,
+        //     typusUserRegistry: config.REGISTRY.USER,
+        //     kiosk: nft.kiosk,
+        //     kioskCap: nft.kioskCap,
+        //     tails: nft.nftId,
+        //     amount,
+        //     personalKioskPackageId: nft.isPersonal ? personalKioskRulePackageId : undefined,
+        // });
+
+        const result = await provider.signAndExecuteTransactionBlock({
+            signer: keypair,
+            transactionBlock: tx,
+        });
+        console.log(result);
     }
 })();
