@@ -53,7 +53,7 @@
             "TGLD_TOKEN_POLICY": "0xd9461bd329f1df24be9698131b6e2c2b9eaac7c9cf6d76689112f2e57be12009",
             "NFT_TRANSFER_POLICY": "0x55475b9e16d9a0176dcef37f83a1921b15f2cbd2711a5f30b9d952c0c8f5f957",
             "STRATEGY_POOL": "0x2c60ddd50d76beb00faa025962d566359a6ea05b1f7f19ac6bd050f4db8c885c",
-            "TAILS_IDS": ""
+            "TAILS_IDS": "0x3a6a403eb7c123b6f4d25081078b6f07c0ee5987d3ac8ab3e6bcf707c1b0e778"
         }
     },
     "TESTNET": {
