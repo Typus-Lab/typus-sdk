@@ -1,11 +1,12 @@
 import "../load_env";
-import config from "../../config_v2.json";
+import configs from "../../config.json";
 import { KioskClient, Network } from "@mysten/kiosk";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getUnstakeNftTx } from "../../utils/nft-staking/user-entry";
 import { getkioskOwnerCaps } from "../../utils/typus-nft/fetch";
 
+const config = configs.TESTNET;
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
@@ -50,8 +51,8 @@ const gasBudget = 100000000;
 
         let transactionBlock = await getUnstakeNftTx(
             gasBudget,
-            config.SINGLE_COLLATERAL_PACKAGE,
-            config.SINGLE_COLLATERAL_REGISTRY,
+            config.PACKAGE.DOV_SINGLE,
+            config.REGISTRY.DOV_SINGLE,
             typeArguments,
             kioskOwnerCap,
             personalKioskRulePackageId

@@ -130,14 +130,14 @@ export function getkioskOwnerCaps(datas: SuiObjectResponse[]): kioskOwnerCap[] {
     return kioskOwnerCaps;
 }
 
-export async function getTailsIds(kioskClient: KioskClient, nftConfig, kioskOwnerCaps: kioskOwnerCap[]) {
+export async function getTailsIds(kioskClient: KioskClient, NFT_PACKAGE_ORIGIN: string, kioskOwnerCaps: kioskOwnerCap[]) {
     let Tails: TailsId[] = [];
 
     for (let kioskOwnerCap of kioskOwnerCaps) {
         const res = await kioskClient.getKiosk({ id: kioskOwnerCap.kioskId });
         // console.log(res);
         const tails: TailsId[] = res.items
-            .filter((item) => item.type == `${nftConfig.NFT_PACKAGE_ORIGIN}::typus_nft::Tails`)
+            .filter((item) => item.type == `${NFT_PACKAGE_ORIGIN}::typus_nft::Tails`)
             .map((item) => {
                 // console.log(item.data);
                 // @ts-ignore

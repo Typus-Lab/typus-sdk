@@ -174,7 +174,7 @@ export function depositAndLockReceipt(input: {
                         type: `${input.typusFrameworkOriginPackageId}::vault::TypusDepositReceipt`,
                         objects: input.receipts.map((receipt) => input.tx.object(receipt)),
                     }),
-                    input.tx.pure(CLOCK),
+                    input.tx.object(CLOCK),
                 ],
             });
             input.tx.moveCall({

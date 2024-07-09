@@ -1,23 +1,37 @@
 import "../load_env";
-import config from "../../config.json";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
+import configs from "../../config.json";
+import { SuiClient } from "@mysten/sui.js/client";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getSnapshotTx } from "../../utils/nft-staking/user-entry";
 
+const config = configs.MAINNET;
+
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-// const client = new SuiClient({ url: config.RPC_ENDPOINT });
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const signer = new RawSigner(keypair, provider);
+
+const provider = new SuiClient({
+    url: config.RPC_ENDPOINT,
+});
 
 const gasBudget = 100000000;
 
 (async () => {
-    const address = await signer.getAddress();
+    const address = keypair.toSuiAddress();
     console.log(address);
 
-    let transactionBlock = await getSnapshotTx(gasBudget, config.SINGLE_COLLATERAL_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY);
+    const amount = "10000";
 
-    // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
-    let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
+    console.log(config.OBJECT.TYPUS_VERSION, config.REGISTRY.USER, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE);
+
+    let transactionBlock = await getSnapshotTx(
+        gasBudget,
+        config.OBJECT.TYPUS_VERSION,
+        config.REGISTRY.USER,
+        config.PACKAGE.DOV_SINGLE,
+        config.REGISTRY.DOV_SINGLE,
+        amount
+    );
+
+    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
 
     console.log(res);
 })();

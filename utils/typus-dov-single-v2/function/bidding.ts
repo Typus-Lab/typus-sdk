@@ -65,6 +65,14 @@ export const ASSET_INFO = {
         product: new PublicKey("AykbyeHZbUbEtEAPVpBLoPAMHBrUrDMtXJkPWZw4TRDX"),
         price: new PublicKey("g6eRCbboSwK4tSWngn773RCMexr1APQr4uA9bGZBYfo"),
     },
+    HASUI: {
+        product: new PublicKey("FGJutsZ3Hr9BaamiNUq369AamUEMArCxFeMnjZZ1u4oG"),
+        price: new PublicKey("7Y9jRRHvqig2wdSkjnACwt1SV1qocjY81C9nKKVJ6zJs"),
+    },
+    VSUI: {
+        product: new PublicKey("9L4zWUnRWEqHT9fvH5WkmQgXf7qrr97SGV4pofTSdK5k"),
+        price: new PublicKey("6vWPEigSDaAi6m6HuX24aK4fJGJxvQZ8TLQKADC65S2S"),
+    },
 };
 
 export const tokenOrder: { [key: string]: number } = {
@@ -90,6 +98,7 @@ export const tokenOrder: { [key: string]: number } = {
     USDC: 16,
     USDT: 17,
     USDY: 18,
+    VSUI: 20,
 };
 
 export const optionTypeOrder: { [key: string]: number } = {
@@ -172,6 +181,8 @@ const DefaultOracleDecimal: { [key: string]: string } = {
     MFUD: "8",
     INJ: "8",
     SCA: "8",
+    VSUI: "8",
+    HASUI: "8",
 };
 
 export const parsePythOracleData = (data: PriceData[], decimals: { [key: string]: string }) => {

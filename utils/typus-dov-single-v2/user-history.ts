@@ -87,7 +87,12 @@ export async function parseTxHistory(
     const results = await datas
         .filter((event) => {
             const type: string = event.type;
-            return event.packageId == originPackage || type.includes("typus_nft::First") || type.includes("typus_nft::ExpUpEvent");
+            return (
+                event.packageId == originPackage ||
+                type.includes("typus_nft::First") ||
+                type.includes("typus_nft::ExpUpEvent") ||
+                type.includes("tails_staking")
+            );
         })
         .sort((a, b) => {
             // From Old to New!
@@ -121,6 +126,52 @@ export async function parseTxHistory(
             }
 
             switch (action) {
+                // new version events
+                case "StakeTailsEvent":
+                    Action = "Stake";
+                    Amount = "0.05 SUI";
+                    Tails = `#${event.parsedJson!.log[0]}`;
+                    break;
+                case "UnstakeTailsEvent":
+                    Action = "Unstake";
+                    Tails = `#${event.parsedJson!.log[0]}`;
+                    break;
+                case "DailySignUpEvent":
+                    Action = "Check In";
+                    Tails = event.parsedJson!.tails.map((num) => `#${num}`).join(" ");
+                    Exp = event.parsedJson!.log[0];
+                    break;
+                case "TransferTailsEvent":
+                    Action = "Transfer";
+                    Amount = "0.01 SUI";
+                    Tails = `#${event.parsedJson!.log[0]}`;
+                    break;
+                case "ExpUpEvent":
+                    if (event.parsedJson!.log) {
+                        Action = "Train Tail";
+                        Tails = `#${event.parsedJson!.log[0]}`;
+                        Exp = event.parsedJson!.log[1];
+                        if (Number(Exp) == 0) {
+                            return txHistory;
+                        }
+                    }
+                    break;
+                case "LevelUpEvent":
+                    if (event.parsedJson!.log) {
+                        Action = `Level Up to Level ${event.parsedJson!.log[1]}`;
+                        Tails = `#${event.parsedJson!.log[0]}`;
+                    }
+                    break;
+                case "ClaimProfitSharingEvent":
+                    if (event.parsedJson!.profit_asset) {
+                        var token = typeArgToAsset("0x" + event.parsedJson!.profit_asset.name);
+                        var amount = Number(event.parsedJson!.log[0]) / 10 ** assetToDecimal(token)!;
+                        Action = "Harvest Dice Profit";
+                        Tails = event.parsedJson!.tails.map((num) => `#${num}`).join(" ");
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                    }
+                    break;
+                // old version events
                 case "StakeNftEvent":
                     Action = "Stake";
                     Amount = "0.05 SUI";
@@ -200,6 +251,151 @@ export async function parseTxHistory(
                         return txHistory;
                     }
                     break;
+                case "RaiseFundEvent":
+                    Index = event.parsedJson!.log[0];
+                    [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, Index!, action);
+                    var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
+                    if (event.parsedJson!.log[4] > 0) {
+                        // deposit
+                        Action = "Deposit";
+                        var amount = Number(event.parsedJson!.log[4]) / 10 ** assetToDecimal(token)!;
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                    } else if (event.parsedJson!.log[5] > 0) {
+                        // compound
+                        Action = "Compound";
+                        var amount = Number(event.parsedJson!.log[5]) / 10 ** assetToDecimal(token)!;
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                    }
+                    break;
+                case "ReduceFundEvent":
+                    Index = event.parsedJson!.log[0];
+                    [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, Index!, action);
+                    if (event.parsedJson!.log[4] > 0) {
+                        // withdraw
+                        Action = "Withdraw";
+                        var token = typeArgToAsset("0x" + event.parsedJson!.d_token.name);
+                        var amount = Number(event.parsedJson!.log[4]) / 10 ** assetToDecimal(token)!;
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                        txHistory.push({
+                            Index,
+                            Period,
+                            Action,
+                            Amount,
+                            Vault,
+                            RiskLevel,
+                            Tails,
+                            Exp,
+                            Date: new Date(Number(event.timestampMs)),
+                            txDigest: event.id.txDigest,
+                        });
+                    }
+                    if (event.parsedJson!.log[5] > 0) {
+                        // unsubscribe
+                        Action = "Unsubscribe";
+                        var token = typeArgToAsset("0x" + event.parsedJson!.d_token.name);
+                        var amount = Number(event.parsedJson!.log[5]) / 10 ** assetToDecimal(token)!;
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                        txHistory.push({
+                            Index,
+                            Period,
+                            Action,
+                            Amount,
+                            Vault,
+                            RiskLevel,
+                            Tails,
+                            Exp,
+                            Date: new Date(Number(event.timestampMs)),
+                            txDigest: event.id.txDigest,
+                        });
+                    }
+                    if (event.parsedJson!.log[9] > 0) {
+                        // claim
+                        Action = "Claim";
+                        var token = typeArgToAsset("0x" + event.parsedJson!.d_token.name);
+                        var amount = Number(event.parsedJson!.log[9]) / 10 ** assetToDecimal(token)!;
+                        Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                        txHistory.push({
+                            Index,
+                            Period,
+                            Action,
+                            Amount,
+                            Vault,
+                            RiskLevel,
+                            Tails,
+                            Exp,
+                            Date: new Date(Number(event.timestampMs)),
+                            txDigest: event.id.txDigest,
+                        });
+                    }
+                    if (event.parsedJson!.log[6] > 0 && event.parsedJson!.log[10] > 0) {
+                        // Harvest d token and i token
+                        Action = "Harvest Reward";
+                        var b_token_name = typeArgToAsset("0x" + event.parsedJson!.b_token.name);
+                        var b_token_amount = Number(event.parsedJson!.log[6]) / 10 ** assetToDecimal(b_token_name)!;
+
+                        var i_token_name = typeArgToAsset("0x" + event.parsedJson!.i_token.name);
+                        var i_token_amount = Number(event.parsedJson!.log[10]) / 10 ** assetToDecimal(i_token_name)!;
+
+                        Amount = `${BigNumber(b_token_amount).toFixed()} ${b_token_name!}\n${BigNumber(i_token_amount).toFixed()} ${i_token_name!}`;
+
+                        // var amount =
+                        //     Number(event.parsedJson!.log[6]) / 10 ** assetToDecimal(token)!
+                        //     Number(event.parsedJson!.log[10]) / 10 ** assetToDecimal(token)!;
+                        // Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                        txHistory.push({
+                            Index,
+                            Period,
+                            Action,
+                            Amount,
+                            Vault,
+                            RiskLevel,
+                            Tails,
+                            Exp,
+                            Date: new Date(Number(event.timestampMs)),
+                            txDigest: event.id.txDigest,
+                        });
+                    } else {
+                        if (event.parsedJson!.log[6] > 0) {
+                            // harvest
+                            Action = "Harvest Reward";
+                            var token = typeArgToAsset("0x" + event.parsedJson!.b_token.name);
+                            var amount = Number(event.parsedJson!.log[6]) / 10 ** assetToDecimal(token)!;
+                            Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                            txHistory.push({
+                                Index,
+                                Period,
+                                Action,
+                                Amount,
+                                Vault,
+                                RiskLevel,
+                                Tails,
+                                Exp,
+                                Date: new Date(Number(event.timestampMs)),
+                                txDigest: event.id.txDigest,
+                            });
+                        }
+                        if (event.parsedJson!.log[10] > 0) {
+                            // redeem
+                            Action = "Harvest Reward";
+                            var token = typeArgToAsset("0x" + event.parsedJson!.i_token.name);
+                            var amount = Number(event.parsedJson!.log[10]) / 10 ** assetToDecimal(token)!;
+                            Amount = `${BigNumber(amount).toFixed()} ${token}`;
+                            txHistory.push({
+                                Index,
+                                Period,
+                                Action,
+                                Amount,
+                                Vault,
+                                RiskLevel,
+                                Tails,
+                                Exp,
+                                Date: new Date(Number(event.timestampMs)),
+                                txDigest: event.id.txDigest,
+                            });
+                        }
+                    }
+
+                    return txHistory;
                 case "NewStrategyEventV2":
                     Action = "Create Strategy";
                     var deposit_amount = Number(event.parsedJson!.deposit_amount) / 10 ** assetToDecimal(b_token!)!;
