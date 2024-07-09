@@ -7,6 +7,7 @@ import { createPythClient } from "../../../../utils/pyth/pythClient";
 import { tokenType } from "../../../../utils/token";
 import { mintStakeLp } from "../../../../utils/typus_perp/user/tlp";
 import { NETWORK } from "../../../../utils/typus_perp";
+import { getUserStake } from "../../../../utils/typus_perp/fetch";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
@@ -18,8 +19,8 @@ const provider = new SuiClient({
 const gasBudget = 100000000;
 
 (async () => {
-    const address = keypair.toSuiAddress();
-    console.log(address);
+    const user = keypair.toSuiAddress();
+    console.log(user);
 
     const lpPoolRegistry = await Registry.fetch(provider, config.REGISTRY.LP_POOL_REGISTRY);
     // console.log(lpPoolRegistry);
@@ -34,6 +35,8 @@ const gasBudget = 100000000;
 
     const pythClient = createPythClient(provider, NETWORK);
 
+    const stakes = await getUserStake(provider, config, user);
+
     // INPUT
     const cTOKEN = "USDT";
     const cToken = tokenType[NETWORK][cTOKEN];
@@ -41,7 +44,7 @@ const gasBudget = 100000000;
     // coins
     const coins = (
         await provider.getCoins({
-            owner: address,
+            owner: user,
             coinType: cToken,
         })
     ).data.map((coin) => coin.coinObjectId);
@@ -57,12 +60,12 @@ const gasBudget = 100000000;
         coins,
         cTOKEN,
         amount: "1000000",
-        userShareId: null,
+        userShareId: stakes.length > 0 ? stakes[0].userShareId.toString() : null,
     });
 
     let dryrunRes = await provider.devInspectTransactionBlock({
         transactionBlock: tx,
-        sender: address,
+        sender: user,
     });
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("MintLpEvent")));
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("StakeEvent")));
