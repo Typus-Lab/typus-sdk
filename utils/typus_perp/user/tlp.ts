@@ -4,7 +4,7 @@ import { CLOCK } from "../../../constants";
 import { LiquidityPool } from "../lp-pool/structs";
 import { PythClient, createPythClient, updatePyth } from "../../pyth/pythClient";
 import { tokenType, typeArgToAsset, TOKEN } from "../../token";
-import { stake, unstake } from "../stake-pool/functions";
+import { harvestPerUserShare, stake, unstake } from "../stake-pool/functions";
 import { swap as _swap } from "../lp-pool/functions";
 import { unsubscribe as _unsubscribe } from "../stake-pool/functions";
 import { priceInfoObjectIds, pythStateId } from "../../pyth/constant";
@@ -192,7 +192,7 @@ export async function swap(
 
 export async function unsubscribe(
     config: {
-        REGISTRY: { LP_POOL_REGISTRY: string; TREASURY_CAPS: string; STAKE_POOL_REGISTRY: string };
+        REGISTRY: { STAKE_POOL_REGISTRY: string };
         OBJECT: { TYPUS_PERP_VERSION: string };
         TOKEN: { TLP: string };
     },
@@ -209,6 +209,26 @@ export async function unsubscribe(
         userShareId: BigInt(input.userShareId),
         clock: CLOCK,
         unsubscribedShares: input.share ? BigInt(input.share) : null,
+    });
+    return input.tx;
+}
+
+export async function harvest(
+    config: {
+        REGISTRY: { STAKE_POOL_REGISTRY: string };
+        OBJECT: { TYPUS_PERP_VERSION: string };
+    },
+    input: {
+        tx: TransactionBlock;
+        userShareId: string;
+    }
+): Promise<TransactionBlock> {
+    harvestPerUserShare(input.tx, "0x2::sui::SUI", {
+        version: config.OBJECT.TYPUS_PERP_VERSION,
+        registry: config.REGISTRY.STAKE_POOL_REGISTRY,
+        index: BigInt(0),
+        userShareId: BigInt(input.userShareId),
+        clock: CLOCK,
     });
     return input.tx;
 }
