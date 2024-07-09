@@ -6,7 +6,7 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { readVecOrder, readVecPosition, readVecShares } from "./readVec";
 import { TradingOrder, Position } from "./position/structs";
 import { getUserShares } from "./stake-pool/functions";
-import { LpUserShare } from "./stake-pool/structs";
+import { LpUserShare, StakePool } from "./stake-pool/structs";
 import { CLOCK } from "../../constants";
 import { tokenType, typeArgToToken } from "../token";
 import { priceInfoObjectIds, pythStateId } from "../pyth/constant";
@@ -39,6 +39,29 @@ export async function getLpPools(
     }
 
     return lpPools;
+}
+
+export async function getStakePools(
+    provider: SuiClient,
+    config: {
+        REGISTRY: {
+            STAKE_POOL_REGISTRY: string;
+        };
+    }
+): Promise<StakePool[]> {
+    const dynamicFields = await provider.getDynamicFields({
+        parentId: config.REGISTRY.STAKE_POOL_REGISTRY,
+    });
+
+    const stakePools: StakePool[] = [];
+
+    for (const field of dynamicFields.data) {
+        const stakePool = await StakePool.fetch(provider, field.objectId);
+        // console.log(stakePool);
+        stakePools.push(stakePool);
+    }
+
+    return stakePools;
 }
 
 export async function getMarkets(provider: SuiClient, config: { REGISTRY: { MARKET_REGISTRY: string } }): Promise<Markets[]> {
