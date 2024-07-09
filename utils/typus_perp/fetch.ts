@@ -1,12 +1,18 @@
 import { SuiClient } from "@mysten/sui.js/client";
 import { LiquidityPool, Registry } from "./lp-pool/structs";
 import { MarketRegistry, Markets, SymbolMarket } from "./trading/structs";
-import { getUserOrders as _getUserOrders, getUserPositions as _getUserPositions } from "./trading/functions";
+import { getUserOrders as _getUserOrders, getUserPositions as _getUserPositions, getEstimatedLiquidationPrice } from "./trading/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { readVecOrder, readVecPosition, readVecShares } from "./readVec";
 import { TradingOrder, Position } from "./position/structs";
 import { getUserShares } from "./stake-pool/functions";
 import { LpUserShare } from "./stake-pool/structs";
+import { CLOCK } from "../../constants";
+import { tokenType, typeArgToToken } from "../token";
+import { priceInfoObjectIds, pythStateId } from "../pyth/constant";
+import { NETWORK } from ".";
+import { PythClient, updatePyth } from "../pyth/pythClient";
+import { BcsReader, bcs } from "@mysten/bcs";
 
 export async function getLpPools(
     provider: SuiClient,
@@ -162,4 +168,63 @@ export async function getUserStake(
     } else {
         return [];
     }
+}
+
+export async function getLiquidationPrice(
+    provider: SuiClient,
+    config: {
+        OBJECT: { TYPUS_PERP_VERSION: string };
+        REGISTRY: {
+            LP_POOL_REGISTRY: string;
+            MARKET_REGISTRY: string;
+        };
+    },
+    input: {
+        pythClient: PythClient;
+        positions: Position[];
+        user: string;
+    }
+) {
+    let tx = new TransactionBlock();
+
+    const pythTokens: string[] = [];
+
+    for (let position of input.positions) {
+        // parse from Position
+        const TOKEN = typeArgToToken(position.collateralToken.name);
+        const BASE_TOKEN = typeArgToToken(position.symbol.baseToken.name);
+        pythTokens.push(TOKEN);
+        pythTokens.push(BASE_TOKEN);
+    }
+
+    await updatePyth(input.pythClient, tx, Array.from(new Set(pythTokens)));
+
+    for (let position of input.positions) {
+        // parse from Position
+        const TOKEN = typeArgToToken(position.collateralToken.name);
+        const BASE_TOKEN = typeArgToToken(position.symbol.baseToken.name);
+
+        const cToken = tokenType[NETWORK][TOKEN];
+        const baseToken = tokenType[NETWORK][BASE_TOKEN];
+
+        getEstimatedLiquidationPrice(tx, [cToken, baseToken], {
+            version: config.OBJECT.TYPUS_PERP_VERSION,
+            registry: config.REGISTRY.MARKET_REGISTRY,
+            poolRegistry: config.REGISTRY.LP_POOL_REGISTRY,
+            marketIndex: BigInt(0),
+            poolIndex: BigInt(0),
+            pythState: pythStateId[NETWORK],
+            oracleCToken: priceInfoObjectIds[NETWORK][TOKEN],
+            oracleTradingSymbol: priceInfoObjectIds[NETWORK][BASE_TOKEN],
+            clock: CLOCK,
+            positionId: position.positionId,
+        });
+    }
+
+    let res = await provider.devInspectTransactionBlock({ sender: input.user, transactionBlock: tx });
+    // console.log(res);
+
+    const prices = res.results?.slice(-input.positions.length).map((x) => bcs.u64().parse(Uint8Array.from(x.returnValues![0][0])));
+    // console.log(prices);
+    return prices;
 }
