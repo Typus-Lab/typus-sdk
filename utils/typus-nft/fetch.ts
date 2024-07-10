@@ -1,5 +1,5 @@
 import { SuiClient, SuiEventFilter, SuiObjectResponse } from "@mysten/sui.js/client";
-import { KioskClient } from "@mysten/kiosk";
+import { KioskClient, KioskListing } from "@mysten/kiosk";
 
 export async function getPool(provider: SuiClient, pool: string) {
     const res = await provider.getObject({ id: pool, options: { showContent: true } });
@@ -101,8 +101,9 @@ export interface TailsId {
     nftId: string;
     kiosk: string;
     kioskCap: string;
-    tails: Tails;
+    tails: Tails | undefined;
     isPersonal: boolean;
+    listing?: KioskListing;
 }
 
 export interface kioskOwnerCap {
@@ -139,7 +140,7 @@ export async function getTailsIds(kioskClient: KioskClient, NFT_PACKAGE_ORIGIN: 
         const tails: TailsId[] = res.items
             .filter((item) => item.type == `${NFT_PACKAGE_ORIGIN}::typus_nft::Tails`)
             .map((item) => {
-                // console.log(item.data);
+                // console.log(item);
                 // @ts-ignore
                 const tails = item.data as Tails;
                 let t: TailsId = {
@@ -147,6 +148,7 @@ export async function getTailsIds(kioskClient: KioskClient, NFT_PACKAGE_ORIGIN: 
                     kioskCap: kioskOwnerCap.objectId,
                     isPersonal: kioskOwnerCap.isPersonal,
                     nftId: item.objectId,
+                    listing: item.listing,
                     tails,
                 };
 
