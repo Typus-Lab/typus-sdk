@@ -122,7 +122,7 @@ export async function parseTxHistory(
 
             Index = event.parsedJson!.index || event.parsedJson!.vault_index;
             if (Index) {
-                [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, Index, action);
+                [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, Index, action, event.parsedJson!.log);
             }
 
             switch (action) {
@@ -253,7 +253,7 @@ export async function parseTxHistory(
                     break;
                 case "RaiseFundEvent":
                     Index = event.parsedJson!.log[0];
-                    [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, Index!, action);
+                    [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, Index!, action, event.parsedJson!.log);
                     var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
                     if (event.parsedJson!.log[4] > 0) {
                         // deposit
@@ -269,7 +269,7 @@ export async function parseTxHistory(
                     break;
                 case "ReduceFundEvent":
                     Index = event.parsedJson!.log[0];
-                    [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, Index!, action);
+                    [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, Index!, action, event.parsedJson!.log);
                     if (event.parsedJson!.log[4] > 0) {
                         // withdraw
                         Action = "Withdraw";
@@ -663,7 +663,7 @@ export async function getExerciseFromSentio(vaults: { [key: string]: Vault }, us
     });
 }
 
-function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action: string) {
+function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action: string, eventLog?: string[]) {
     let v = vaults[Index];
 
     let Period: string | undefined;
@@ -753,6 +753,25 @@ function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action:
                     case "HarvestEvent":
                     case "RedeemEvent":
                         optionType = "Call Selling";
+                    case "ReduceFundEvent":
+                        if (
+                            (eventLog && Number(eventLog[4]) > 0) ||
+                            (eventLog && Number(eventLog[5]) > 0) ||
+                            (eventLog && Number(eventLog[9]) > 0) ||
+                            (eventLog && Number(eventLog[6]) > 0) ||
+                            (eventLog && Number(eventLog[10]) > 0)
+                        ) {
+                            optionType = "Call Selling";
+                        } else {
+                            optionType = "Capped Call";
+                        }
+                        break;
+                    case "RaiseFundEvent":
+                        if ((eventLog && Number(eventLog[4]) > 0) || (eventLog && Number(eventLog[5]) > 0)) {
+                            optionType = "Call Selling";
+                        } else {
+                            optionType = "Capped Call";
+                        }
                         break;
                     default:
                         optionType = "Capped Call";
@@ -782,5 +801,6 @@ function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action:
         b_token = typeArgToAsset("0x" + v.info.bidToken);
         o_token = typeArgToAsset("0x" + v.info.settlementBase);
     }
+
     return [Period, Vault, RiskLevel, d_token, b_token, o_token];
 }
