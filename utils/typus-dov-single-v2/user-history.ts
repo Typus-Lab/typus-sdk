@@ -708,6 +708,8 @@ function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action:
                     case "CompoundEvent":
                     case "HarvestEvent":
                     case "RedeemEvent":
+                    case "ReduceFundEvent":
+                    case "RaiseFundEvent":
                         optionType = "Covered Call";
                         break;
                     default:
@@ -724,6 +726,8 @@ function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action:
                     case "CompoundEvent":
                     case "HarvestEvent":
                     case "RedeemEvent":
+                    case "ReduceFundEvent":
+                    case "RaiseFundEvent":
                         optionType = "Put Selling";
                         break;
                     default:
@@ -752,28 +756,13 @@ function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action:
                     case "CompoundEvent":
                     case "HarvestEvent":
                     case "RedeemEvent":
-                        optionType = "Call Selling";
                     case "ReduceFundEvent":
-                        if (
-                            (eventLog && Number(eventLog[4]) > 0) ||
-                            (eventLog && Number(eventLog[5]) > 0) ||
-                            (eventLog && Number(eventLog[9]) > 0) ||
-                            (eventLog && Number(eventLog[6]) > 0) ||
-                            (eventLog && Number(eventLog[10]) > 0)
-                        ) {
-                            optionType = "Call Selling";
-                        } else {
-                            optionType = "Capped Call";
-                        }
-                        break;
                     case "RaiseFundEvent":
-                        if ((eventLog && Number(eventLog[4]) > 0) || (eventLog && Number(eventLog[5]) > 0)) {
-                            optionType = "Call Selling";
-                        } else {
-                            optionType = "Capped Call";
-                        }
+                        // for depositor
+                        optionType = "Call Selling";
                         break;
                     default:
+                        // for bidder
                         optionType = "Capped Call";
                         break;
                 }
