@@ -43,7 +43,7 @@ export async function getTotalPremium(): Promise<number> {
         queries: [
             {
                 metricsQuery: {
-                    query: "PremiumUSD",
+                    query: "AccumulatedPremiumUSD",
                     alias: "",
                     id: "a",
                     labelSelector: {},
@@ -51,19 +51,7 @@ export async function getTotalPremium(): Promise<number> {
                         op: "SUM",
                         grouping: ["chain"],
                     },
-                    functions: [
-                        {
-                            name: "sum_over_time",
-                            arguments: [
-                                {
-                                    durationValue: {
-                                        value: 520,
-                                        unit: "w",
-                                    },
-                                },
-                            ],
-                        },
-                    ],
+                    functions: [],
                     disabled: false,
                 },
                 dataSource: "METRICS",
