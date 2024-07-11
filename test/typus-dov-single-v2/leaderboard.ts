@@ -1,5 +1,5 @@
 import config from "../../config_v2.json";
-import { testnetConnection } from "../../constants";
+import { testnetConnection } from "@/constants";
 import {
     getUsersBidEvents,
     sumUsersBidPremium,

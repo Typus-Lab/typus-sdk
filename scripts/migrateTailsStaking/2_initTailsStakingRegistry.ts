@@ -3,7 +3,7 @@ import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import configs from "../../config.json";
-import { CLOCK } from "../../constants";
+import { CLOCK } from "@/constants";
 import * as fs from "fs";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
