@@ -1,2 +1,0 @@
-export const PACKAGE_ID = "0x9c564002970ce40370b0c1a8328d2e91924dab43ca2cb483af67aaf0f7cbe44e";
-export const PUBLISHED_AT = "0x9c564002970ce40370b0c1a8328d2e91924dab43ca2cb483af67aaf0f7cbe44e";

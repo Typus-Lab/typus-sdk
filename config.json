@@ -8,7 +8,8 @@
             "MFUD": "0xd8f04cd2a16c19c17428c3b4c22b01dd06740423b93fb7ee88fbe2676a82849d",
             "NFT": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
             "ORACLE": "0x855eb2d260ee42b898266e6df90bfd3c4ed821ccb253a352c159c223244a4b8a",
-            "TYPUS": "0x4b0f4ee1a40ce37ec81c987cc4e76a665419e74b863319492fc7d26f708b835a"
+            "TYPUS": "0x4b0f4ee1a40ce37ec81c987cc4e76a665419e74b863319492fc7d26f708b835a",
+            "PERP": ""
         },
         "PACKAGE": {
             "DOV_SINGLE": "0x81398b9385545e1ed051092d990159a1a896bceeb796923ca43b6c9be96c83f4",
@@ -17,7 +18,8 @@
             "MFUD": "0xd8f04cd2a16c19c17428c3b4c22b01dd06740423b93fb7ee88fbe2676a82849d",
             "NFT": "0xba06aae31d9b7c9f651e783272c7e4f776fb5ae17e89d525b75a17b099f58202",
             "ORACLE": "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd",
-            "TYPUS": "0xf5c7e61fd28d1ed38711f03e1c5ffc6c5b8435eff386132fc5822efe6d90b138"
+            "TYPUS": "0xf5c7e61fd28d1ed38711f03e1c5ffc6c5b8435eff386132fc5822efe6d90b138",
+            "PERP": ""
         },
         "REGISTRY": {
             "AIRDROP": "0x4b451f4632bd64af82d5e6fe46e20705c9468bd46d6758a0f7093fde2930d084",
@@ -60,13 +62,15 @@
         "RPC_ENDPOINT": "https://sui-testnet.blastapi.io:443/7f446a12-c4ab-4e3c-b2d8-ebb0fcbe5cdd",
         "PACKAGE_ORIGIN": {
             "DOV_SINGLE": "0x6c9a394a43844fc09d9617bc8a8e775a4521f0e28e83de1da780d043a498671f",
+            "TAILS_EXP": "0x9b43ee208a3b235810c145bca1161d1a71d08bfe76b1e55bb3db319ea95d0149",
             "EXP_GUESS": "0x9b43ee208a3b235810c145bca1161d1a71d08bfe76b1e55bb3db319ea95d0149",
             "FRAMEWORK": "0x908a10789a1a6953e0b73a997c10e3552f7ce4e2907afd00a334ed74bd973ded",
             "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c",
             "NFT": "0x5cfd0819411be98034cba544cbffab192c2c35674a05ff57f4f1c5042875b828",
             "ORACLE": "0x1d17058789bd1e1e79f1a92424519a88146f191f58a06cc4d9ab23d17d46ab73",
             "TYPUS": "0x4213e12a2220f15f1837a76897110d2260786558169bd8d0847f21e9b551f277",
-            "LOCKED_VAULT": "0xe79b7ba69b750d30ac7ae171483a4064d0bb34090493fef3c844a11b05818d79"
+            "LOCKED_VAULT": "0xe79b7ba69b750d30ac7ae171483a4064d0bb34090493fef3c844a11b05818d79",
+            "PERP": "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c"
         },
         "PACKAGE": {
             "DOV_SINGLE": "0x2e462aa0224bec76acaea81c51ca5b9ae4b27ec50281a764797c84148c8a463f",
@@ -75,18 +79,26 @@
             "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c",
             "NFT": "0x0f5162014f18686640b8d0adefd60c3fe5b377413ec4f1e77001c67d96f8501a",
             "ORACLE": "0x71fbc7acaf513561dabdeb846e7dd5288108e56edb0b6de8d4999c4dfce21f66",
-            "TYPUS": "0x88124ef8caf346cc19bf7447e72cf540fb6f228f16806effdc3dafccee747264"
+            "TYPUS": "0x88124ef8caf346cc19bf7447e72cf540fb6f228f16806effdc3dafccee747264",
+            "PERP": "0x5ff329ee25f3936b7f3e191de702cc0dd8beca7e1ac833f7d73ea653d47ef4ad"
         },
         "REGISTRY": {
             "AIRDROP": "0xfb2fbf261f6050d100bcd026ffa0076e088506b1bec26313947239303e2a0224",
             "DOV_SINGLE": "0x0285cbf4aa8585be6c978235d11d06fa35773266ede040d38d34e1d79b049460",
             "LEADERBOARD": "0x4faabe5a4a509a145fc9bae95761d34c11571da4cb25d681f06ffcbadbc355e7",
             "MFUD": "0x7ad87901531693f1baa541712947860dcc543617e11b14993ad70d20daf159c6",
+            "TAILS_EXP": "0x37e0c8c80a5099d5dfe1b0aeae62e3f01916be73935090efb9c95279b7bb1ce7",
             "EXP_GUESS": "0x37e0c8c80a5099d5dfe1b0aeae62e3f01916be73935090efb9c95279b7bb1ce7",
             "TAILS_STAKING": "0x989bd585b580dfc22d9d7656a5807b2f6c8fe36260a2003ef697adc8a38d21af",
             "TGLD": "0x2118b4056c89d90a6dc40d198fbe239cb8e83f7ea20daaf4ea53341c7fdb043c",
             "USER": "0x5f1894a3680949111a7530d63ceda6857d31521ab2de625e9f826cae17c9a7f3",
-            "LOCKED_VAULT": "0x50f1fc44c907f8738b098abf2b594e523739df7d40df8164154cfe6f60513302"
+            "LOCKED_VAULT": "0x50f1fc44c907f8738b098abf2b594e523739df7d40df8164154cfe6f60513302",
+            "STAKE_POOL_REGISTRY": "0xc853c36a9317a709ac92b611daa910b43805876ba6ca78fbbab9d51359994c5b",
+            "LP_POOL_REGISTRY": "0x0a213c906f7a9fc369f1e7d0ffabb7701bfd1cdff04679b1132c5838306e3394",
+            "LIQUIDITY_POOL_REGISTRY": "0x40d1ea0f0dfebbe0b130f08c0c62bfee1c58f6a99c0960cb4f08fd3040bf4714",
+            "MARKET_REGISTRY": "0xa522a55413d109c568c3d42cbcd0e344000d61086f390df672663424e0329288",
+            "TLP_REGISTRY": "0x4e40c46ebe73b3fdca694040747b99a1b25600ddeae26f9fbb8cda5a683d26de",
+            "TREASURY_CAPS": "0xeb835b5db70144d098f7b4885ac525900fb5a6b47565f31d2275e34479ef7889"
         },
         "TOKEN": {
             "FUD": "0x461efa7ee5aa1b27e44450d79e2104e7fc0991461e9eb1c2a3fc1f44cd554856::fud::FUD",
@@ -94,6 +106,8 @@
             "SUI": "0x2::sui::SUI",
             "TGLD": "0x4213e12a2220f15f1837a76897110d2260786558169bd8d0847f21e9b551f277::tgld::TGLD",
             "USDT": "0xa38dad920880f81ea514de6db007d3a84e9116a29c60b3e69bbe418c2d9f553c::usdt::USDT",
+            "TLP": "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::tlp::TLP",
+            "USD": "0x01a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::USD",
             "AFSUI": "0xd31923b6821fb7ba32d23e514b43d307da6ef991f9ef1af2cc4e26a0992ac87a::afsui::AFSUI"
         },
         "ORACLE": {
@@ -119,7 +133,8 @@
             "TGLD_TOKEN_POLICY": "0x17875c2f772053cd148bd2b8b8a40160db3f841825d8963192f8394d5c18974c",
             "NFT_TRANSFER_POLICY": "0x1c62271ecc443c3d92a8fe8f5662e877856d26b971d967f66937a65f55160831",
             "STRATEGY_POOL": "0x50b01081469d032e04bfcbd057614b1359376920f55c7bebd076e0e2af07a57f",
-            "TAILS_IDS": "0xf4ea1c4432823ebde3b0c1f0705a45b08571b48237db879502b8ba336ea5b916"
+            "TAILS_IDS": "0xf4ea1c4432823ebde3b0c1f0705a45b08571b48237db879502b8ba336ea5b916",
+            "TYPUS_PERP_VERSION": "0x3aafe933e23a9e10f3a34febf6a2996961989558315bae46458fd234496e8a97"
         }
     },
     "MOVEMENT": {

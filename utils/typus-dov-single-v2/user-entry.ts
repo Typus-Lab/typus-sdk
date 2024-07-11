@@ -383,6 +383,48 @@ export function getTransferBidReceiptTx(input: {
 
     return input.tx;
 }
+
+export function getSplitBidReceiptTx(input: {
+    tx: TransactionBlock;
+    typusFrameworkOriginPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    index: string;
+    receipts: string[];
+    share: string;
+    recipient: string;
+}) {
+    const result = input.tx.moveCall({
+        target: `${input.typusDovSinglePackageId}::tds_user_entry::simple_split_bid_receipt`,
+        typeArguments: [],
+        arguments: [
+            input.tx.object(input.typusDovSingleRegistry),
+            input.tx.pure(input.index),
+            input.tx.makeMoveVec({
+                type: `${input.typusFrameworkOriginPackageId}::vault::TypusBidReceipt`,
+                objects: input.receipts.map((receipt) => input.tx.object(receipt)),
+            }),
+            input.tx.pure([input.share]),
+        ],
+    });
+
+    const unwrap0 = input.tx.moveCall({
+        target: `0x1::option::destroy_some`,
+        typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusBidReceipt`],
+        arguments: [input.tx.object(result[0])],
+    });
+
+    const unwrap1 = input.tx.moveCall({
+        target: `0x1::option::destroy_some`,
+        typeArguments: [`${input.typusFrameworkOriginPackageId}::vault::TypusBidReceipt`],
+        arguments: [input.tx.object(result[1])],
+    });
+
+    input.tx.transferObjects([unwrap1], input.recipient);
+
+    return unwrap0;
+}
+
 export function getMultiTransferBidReceiptTx(input: {
     typusFrameworkPackageId: string;
     typusFrameworkOriginPackageId: string;
