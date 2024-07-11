@@ -80,8 +80,8 @@
     ],
     "types": "lib/index.d.ts",
     "scripts": {
-        "test": "rm -rf lib && tsc && ts-mocha test/test*.ts",
-        "build": "rm -rf lib && tsc"
+        "test": "rm -rf lib && tsc -p tsconfig.build.json && ts-mocha test/test*.ts",
+        "build": "rm -rf lib && tsc -p tsconfig.build.json"
     },
     "repository": {
         "type": "git",
