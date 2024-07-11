@@ -56,6 +56,7 @@
         "superstruct": "^1.0.3",
         "supports-color": "^9.4.0",
         "ts-mocha": "^10.0.0",
+        "tsconfig-paths": "^4.2.0",
         "tslib": "^2.6.0",
         "tsutils": "^3.21.0",
         "turbos-clmm-sdk": "^2.0.3",
@@ -80,8 +81,9 @@
     ],
     "types": "lib/index.d.ts",
     "scripts": {
-        "test": "rm -rf lib && tsc -p tsconfig.build.json && ts-mocha test/test*.ts",
-        "build": "rm -rf lib && tsc -p tsconfig.build.json"
+        "ts-node": "ts-node -r tsconfig-paths/register",
+        "build": "rm -rf lib && tsc -p tsconfig.build.json",
+        "test": "rm -rf lib && tsc -p tsconfig.build.json && ts-mocha test/test*.ts"
     },
     "repository": {
         "type": "git",
