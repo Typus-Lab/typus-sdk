@@ -1,4 +1,4 @@
-import "../../load_env";
+import "@/utils/load_env";
 import config from "../../../config_v2.json";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";

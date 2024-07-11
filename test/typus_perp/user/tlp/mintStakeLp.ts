@@ -2,12 +2,12 @@ import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { LiquidityPool, Registry } from "../../../../utils/typus_perp/lp-pool/structs";
-import { createPythClient } from "../../../../utils/pyth/pythClient";
-import { tokenType } from "../../../../utils/token";
-import { mintStakeLp } from "../../../../utils/typus_perp/user/tlp";
-import { NETWORK } from "../../../../utils/typus_perp";
-import { getUserStake } from "../../../../utils/typus_perp/fetch";
+import { LiquidityPool, Registry } from "@/typus-perp/lp-pool/structs";
+import { createPythClient } from "@/utils/pyth/pythClient";
+import { tokenType } from "@/constants/token";
+import { mintStakeLp } from "@/typus-perp/user/tlp";
+import { NETWORK } from "@/typus-perp";
+import { getUserStake } from "@/typus-perp/fetch";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 

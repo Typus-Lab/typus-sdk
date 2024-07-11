@@ -1,4 +1,4 @@
-import "../../load_env";
+import "@/utils/load_env";
 import config_v2 from "../../../mainnet.json";
 import { getKioskOwner, getTailsDynamicField, getTailsKiosk } from "../../../utils/typus-nft/fetch";
 import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";

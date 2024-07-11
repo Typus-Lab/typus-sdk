@@ -1,4 +1,4 @@
-import "../../load_env";
+import "@/utils/load_env";
 import config_v2 from "../../../mainnet.json";
 import { calculateLevelReward } from "../../../utils/tails-exp-dice/fetch";
 import { getTails } from "../../../utils/typus-nft/fetch";

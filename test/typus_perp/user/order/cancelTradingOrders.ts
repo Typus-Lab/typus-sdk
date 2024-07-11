@@ -2,9 +2,9 @@ import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { cancelTradingOrder } from "../../../../utils/typus_perp/user/order";
-import { getUserOrders } from "../../../../utils/typus_perp/fetch";
-import "../../../load_env";
+import { cancelTradingOrder } from "@/typus-perp/user/order";
+import { getUserOrders } from "@/typus-perp/fetch";
+import "@/utils/load_env";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 

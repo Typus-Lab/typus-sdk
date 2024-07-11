@@ -3,11 +3,11 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "@/constants";
-import { unstakeBurn } from "../../../../utils/typus_perp/user/tlp";
-import { getUserStake } from "../../../../utils/typus_perp/fetch";
-import { createPythClient } from "../../../../utils/pyth/pythClient";
-import { NETWORK } from "../../../../utils/typus_perp";
-import { LiquidityPool, Registry } from "../../../../utils/typus_perp/lp-pool/structs";
+import { unstakeBurn } from "@/typus-perp/user/tlp";
+import { getUserStake } from "@/typus-perp/fetch";
+import { createPythClient } from "@/utils/pyth/pythClient";
+import { NETWORK } from "@/typus-perp";
+import { LiquidityPool, Registry } from "@/typus-perp/lp-pool/structs";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const config = configs.TESTNET;

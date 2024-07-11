@@ -1,10 +1,10 @@
 import configs from "../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getLiquidationPrice, getUserPositions } from "../../../utils/typus_perp/fetch";
-import "../../load_env";
-import { createPythClient } from "../../../utils/pyth/pythClient";
-import { NETWORK } from "../../../utils/typus_perp";
+import { getLiquidationPrice, getUserPositions } from "@/typus-perp/fetch";
+import "@/utils/load_env";
+import { createPythClient } from "@/utils/pyth/pythClient";
+import { NETWORK } from "@/typus-perp";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 

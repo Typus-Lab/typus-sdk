@@ -1,4 +1,4 @@
-import "../../load_env";
+import "@/utils/load_env";
 import config_v2 from "../../../config_v2.json";
 import { getProfitSharing } from "../../../utils/tails-exp-dice/fetch";
 

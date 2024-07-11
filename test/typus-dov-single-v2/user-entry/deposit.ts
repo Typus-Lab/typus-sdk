@@ -1,4 +1,4 @@
-import "../../load_env";
+import "@/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getRaiseFundTx } from "../../../utils/typus-dov-single-v2/user-entry";
 import { SuiClient } from "@mysten/sui.js/client";

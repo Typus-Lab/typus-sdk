@@ -1,7 +1,7 @@
 import configs from "../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { installEcosystemManagerCapEntry } from "../../../utils/typus_perp/admin/functions";
+import { installEcosystemManagerCapEntry } from "@/typus-perp/admin/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 import mnemonic from "../../../mnemonic.json";

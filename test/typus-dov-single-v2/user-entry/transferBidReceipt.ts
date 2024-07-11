@@ -1,4 +1,4 @@
-import "../../load_env";
+import "@/utils/load_env";
 import { getTransferBidReceiptTx } from "../../../utils/typus-dov-single-v2/user-entry";
 import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
 import config from "../config.json";

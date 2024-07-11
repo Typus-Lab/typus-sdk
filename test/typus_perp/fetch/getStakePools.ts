@@ -1,6 +1,6 @@
 import configs from "../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
-import { getStakePools } from "../../../utils/typus_perp/fetch";
+import { getStakePools } from "@/typus-perp/fetch";
 
 const config = configs.TESTNET;
 

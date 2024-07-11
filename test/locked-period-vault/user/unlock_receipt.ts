@@ -4,7 +4,7 @@ import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { unlockReceipt } from "../../../utils/locked-period-vault/locked-period-vault/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "@/constants";
-import "../../load_env";
+import "@/utils/load_env";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 

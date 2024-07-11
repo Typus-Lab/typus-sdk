@@ -2,10 +2,10 @@ import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { createPythClient } from "../../../../utils/pyth/pythClient";
-import { NETWORK } from "../../../../utils/typus_perp";
-import { createTradingOrderWithBidReceipt } from "../../../../utils/typus_perp/user/orderWithBidReceipt";
-import "../../../load_env";
+import { createPythClient } from "@/utils/pyth/pythClient";
+import { NETWORK } from "@/typus-perp";
+import { createTradingOrderWithBidReceipt } from "@/typus-perp/user/orderWithBidReceipt";
+import "@/utils/load_env";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
