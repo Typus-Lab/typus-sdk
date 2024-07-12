@@ -1,0 +1,189 @@
+{
+    "MAINNET": {
+        "RPC_ENDPOINT": "https://fullnode.mainnet.sui.io:443",
+        "PACKAGE_ORIGIN": {
+            "DOV_SINGLE": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+            "FRAMEWORK": "0xb4f25230ba74837d8299e92951306100c4a532e8c48cc3d8828abe9b91c8b274",
+            "EXP_GUESS": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
+            "MFUD": "0xd8f04cd2a16c19c17428c3b4c22b01dd06740423b93fb7ee88fbe2676a82849d",
+            "NFT": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+            "ORACLE": "0x855eb2d260ee42b898266e6df90bfd3c4ed821ccb253a352c159c223244a4b8a",
+            "TYPUS": "0x4b0f4ee1a40ce37ec81c987cc4e76a665419e74b863319492fc7d26f708b835a",
+            "PERP": ""
+        },
+        "PACKAGE": {
+            "DOV_SINGLE": "0x81398b9385545e1ed051092d990159a1a896bceeb796923ca43b6c9be96c83f4",
+            "FRAMEWORK": "0x083b89937db53d8dd797dee3ba431083fee43c6bf5993005886daba19e942fb2",
+            "EXP_GUESS": "0xb1cc7379a7375808eaf4cda927a6f3a14363b6d131c020f4828119b87731fe03",
+            "MFUD": "0xd8f04cd2a16c19c17428c3b4c22b01dd06740423b93fb7ee88fbe2676a82849d",
+            "NFT": "0xba06aae31d9b7c9f651e783272c7e4f776fb5ae17e89d525b75a17b099f58202",
+            "ORACLE": "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd",
+            "TYPUS": "0xf5c7e61fd28d1ed38711f03e1c5ffc6c5b8435eff386132fc5822efe6d90b138",
+            "PERP": ""
+        },
+        "REGISTRY": {
+            "AIRDROP": "0x4b451f4632bd64af82d5e6fe46e20705c9468bd46d6758a0f7093fde2930d084",
+            "DOV_SINGLE": "0x3d70b09359e3ca8301ae0abeda4f2fdf72ce313ba58c919ce568e5f535fd2ea8",
+            "EXP_GUESS": "0x7679ab7157f13ec945579e3098ba589eb8b4eec841c775799d2aa22b565187c7",
+            "LEADERBOARD": "0xc515a3e7fd12ba902f7f1ebe52c676136e1b34cb614ae9c79a46b257ca7d5534",
+            "MFUD": "0xb8d7e7ab783e56700c0212bd9f0938bba9dd3e7241c149e6c52b21334ec45ece",
+            "TAILS_STAKING": "0xeca3e88577dc3f45df8b7bace51f26b126271ce4c5fa33b3739fd7b69fc16559",
+            "TGLD": "0x8ee1af362fe9e0a29f6bad48d8ff44249ece5aaa77a4302c2ffcc90950e52ed2",
+            "USER": "0xb1b16eb4845b5ee1a29432b1f2bcfe8cbb33c234492baf31a706d82e28e18bce"
+        },
+        "TOKEN": {
+            "FUD": "0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1::fud::FUD",
+            "MFUD": "0xd8f04cd2a16c19c17428c3b4c22b01dd06740423b93fb7ee88fbe2676a82849d::mfud::MFUD",
+            "SUI": "0x2::sui::SUI",
+            "TGLD": "0x4b0f4ee1a40ce37ec81c987cc4e76a665419e74b863319492fc7d26f708b835a::tgld::TGLD"
+        },
+        "ORACLE": {
+            "APT": "0x401ed2a4de92950351c54edaa9a8dce5e38bdb6b06e248935c6f6f7d361a99d6",
+            "CETUS": "0xaedaa2e76661471924c1ca7edae069317cbe082798dd3bfa31694dc873102532",
+            "JUP": "0xd4a5fe0b48a6f8cbe528b5760462f0d9cad8080c8aebb1a9c63c2176c58fb3b3",
+            "NAVX": "0x726c5bafa4e8240d36bb42493c82bca30b920e2bcab1da1dca973322352e9f63",
+            "SCA": "0x8eb94035d6d54ad6b444dd67310b9ff54a05a54ecf77d5b22a43a75495774bb6",
+            "SOL": "0x9712ad1cba00a437fb669e4df1a59568e4267bd8a8ce989452fb63c9f00b59ab",
+            "SUI": "0xeb6b3e3300ff884604ead6172b0aeadee3854980cab65a7feb57300b04b74cc1",
+            "TURBOS": "0x819ff07b5768d7b9b428b69b123140f6a74b04eaa978a4cbab9055025bd1536d",
+            "WBTC": "0x61813dc2e46dba41b14507857827f0ed7e99b0be242548828769728b81c8fab5",
+            "WETH": "0x253bbaaa35275240cf6df03258489707ea059762831e4102ebaabafd442bc935"
+        },
+        "OBJECT": {
+            "TYPUS_VERSION": "0xd2882b992e986250b3304b59530700bc3850939f9a77e9e9dfa9cf1656f84b3d",
+            "TGLD_COIN_METADATA": "0x3a070c729606334a2be7c51ab28da9a1101b0de01452dd62c10cda0f7a5795d2",
+            "TGLD_TOKEN_POLICY": "0xd9461bd329f1df24be9698131b6e2c2b9eaac7c9cf6d76689112f2e57be12009",
+            "NFT_TRANSFER_POLICY": "0x55475b9e16d9a0176dcef37f83a1921b15f2cbd2711a5f30b9d952c0c8f5f957",
+            "STRATEGY_POOL": "0x2c60ddd50d76beb00faa025962d566359a6ea05b1f7f19ac6bd050f4db8c885c",
+            "TAILS_IDS": "0x3a6a403eb7c123b6f4d25081078b6f07c0ee5987d3ac8ab3e6bcf707c1b0e778"
+        }
+    },
+    "TESTNET": {
+        "RPC_ENDPOINT": "https://sui-testnet.blastapi.io:443/7f446a12-c4ab-4e3c-b2d8-ebb0fcbe5cdd",
+        "PACKAGE_ORIGIN": {
+            "DOV_SINGLE": "0x6c9a394a43844fc09d9617bc8a8e775a4521f0e28e83de1da780d043a498671f",
+            "TAILS_EXP": "0x9b43ee208a3b235810c145bca1161d1a71d08bfe76b1e55bb3db319ea95d0149",
+            "EXP_GUESS": "0x9b43ee208a3b235810c145bca1161d1a71d08bfe76b1e55bb3db319ea95d0149",
+            "FRAMEWORK": "0x908a10789a1a6953e0b73a997c10e3552f7ce4e2907afd00a334ed74bd973ded",
+            "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c",
+            "NFT": "0x5cfd0819411be98034cba544cbffab192c2c35674a05ff57f4f1c5042875b828",
+            "ORACLE": "0x1d17058789bd1e1e79f1a92424519a88146f191f58a06cc4d9ab23d17d46ab73",
+            "TYPUS": "0x4213e12a2220f15f1837a76897110d2260786558169bd8d0847f21e9b551f277",
+            "LOCKED_VAULT": "0xe79b7ba69b750d30ac7ae171483a4064d0bb34090493fef3c844a11b05818d79",
+            "PERP": "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c"
+        },
+        "PACKAGE": {
+            "DOV_SINGLE": "0x2e462aa0224bec76acaea81c51ca5b9ae4b27ec50281a764797c84148c8a463f",
+            "EXP_GUESS": "0x4aab9bfc3efe279981d73eca80129356238508d3f2ffdda38a4832faf94e0b9a",
+            "FRAMEWORK": "0x90ca6e2393e3adc91b4e9b70ab16c017e5f70f7094b6f09b913fef2833a656e9",
+            "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c",
+            "NFT": "0x0f5162014f18686640b8d0adefd60c3fe5b377413ec4f1e77001c67d96f8501a",
+            "ORACLE": "0x71fbc7acaf513561dabdeb846e7dd5288108e56edb0b6de8d4999c4dfce21f66",
+            "TYPUS": "0x88124ef8caf346cc19bf7447e72cf540fb6f228f16806effdc3dafccee747264",
+            "PERP": "0x5ff329ee25f3936b7f3e191de702cc0dd8beca7e1ac833f7d73ea653d47ef4ad"
+        },
+        "REGISTRY": {
+            "AIRDROP": "0xfb2fbf261f6050d100bcd026ffa0076e088506b1bec26313947239303e2a0224",
+            "DOV_SINGLE": "0x0285cbf4aa8585be6c978235d11d06fa35773266ede040d38d34e1d79b049460",
+            "LEADERBOARD": "0x4faabe5a4a509a145fc9bae95761d34c11571da4cb25d681f06ffcbadbc355e7",
+            "MFUD": "0x7ad87901531693f1baa541712947860dcc543617e11b14993ad70d20daf159c6",
+            "TAILS_EXP": "0x37e0c8c80a5099d5dfe1b0aeae62e3f01916be73935090efb9c95279b7bb1ce7",
+            "EXP_GUESS": "0x37e0c8c80a5099d5dfe1b0aeae62e3f01916be73935090efb9c95279b7bb1ce7",
+            "TAILS_STAKING": "0x989bd585b580dfc22d9d7656a5807b2f6c8fe36260a2003ef697adc8a38d21af",
+            "TGLD": "0x2118b4056c89d90a6dc40d198fbe239cb8e83f7ea20daaf4ea53341c7fdb043c",
+            "USER": "0x5f1894a3680949111a7530d63ceda6857d31521ab2de625e9f826cae17c9a7f3",
+            "LOCKED_VAULT": "0x50f1fc44c907f8738b098abf2b594e523739df7d40df8164154cfe6f60513302",
+            "STAKE_POOL_REGISTRY": "0xc853c36a9317a709ac92b611daa910b43805876ba6ca78fbbab9d51359994c5b",
+            "LP_POOL_REGISTRY": "0x0a213c906f7a9fc369f1e7d0ffabb7701bfd1cdff04679b1132c5838306e3394",
+            "LIQUIDITY_POOL_REGISTRY": "0x40d1ea0f0dfebbe0b130f08c0c62bfee1c58f6a99c0960cb4f08fd3040bf4714",
+            "MARKET_REGISTRY": "0xa522a55413d109c568c3d42cbcd0e344000d61086f390df672663424e0329288",
+            "TLP_REGISTRY": "0x4e40c46ebe73b3fdca694040747b99a1b25600ddeae26f9fbb8cda5a683d26de",
+            "TREASURY_CAPS": "0xeb835b5db70144d098f7b4885ac525900fb5a6b47565f31d2275e34479ef7889"
+        },
+        "TOKEN": {
+            "FUD": "0x461efa7ee5aa1b27e44450d79e2104e7fc0991461e9eb1c2a3fc1f44cd554856::fud::FUD",
+            "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c::mfud::MFUD",
+            "SUI": "0x2::sui::SUI",
+            "TGLD": "0x4213e12a2220f15f1837a76897110d2260786558169bd8d0847f21e9b551f277::tgld::TGLD",
+            "USDT": "0xa38dad920880f81ea514de6db007d3a84e9116a29c60b3e69bbe418c2d9f553c::usdt::USDT",
+            "TLP": "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::tlp::TLP",
+            "USD": "0x01a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::USD",
+            "AFSUI": "0xd31923b6821fb7ba32d23e514b43d307da6ef991f9ef1af2cc4e26a0992ac87a::afsui::AFSUI"
+        },
+        "ORACLE": {
+            "AFSUI": "0xacd75f051b8be445226f92d873fbf9bbc26fe25cec5708b1aeec44286dbbef5b",
+            "APT": "0x984e79d6cf30cc518e5e69dacacfa8db3e5f0674535c533061a7990c8a714c48",
+            "BUCK": "0x22ef75c17468f6ed24574f26011f7fcf61a7b983009c9ba6cacc28ae24ff1782",
+            "CETUS": "0xe8142c490363475a4ad0b9af02ac5a543962584f3a99cdb8754d909be6ec550d",
+            "INJ": "0xcdf04e2c9f400a713dc46748bc6eddddf472e669e604d13ed1eae8895a46d6c9",
+            "JUP": "0xd4a5fe0b48a6f8cbe528b5760462f0d9cad8080c8aebb1a9c63c2176c58fb3b3",
+            "NAVX": "0x726c5bafa4e8240d36bb42493c82bca30b920e2bcab1da1dca973322352e9f63",
+            "SCA": "0x8eb94035d6d54ad6b444dd67310b9ff54a05a54ecf77d5b22a43a75495774bb6",
+            "SEI": "0x3ad81c9951cb4e2e8908c184cea7e9cb52822ef7679f166ef9acf870bfc8e4f2",
+            "SOL": "0x0edabd97c679967e00d508c766fb4be0195890f96343bd3a58e10fa5e8063c96",
+            "SUI": "0x770f17817e809f22d3cf3ba5f452056622a31dd6a1db7c60c94c5a598aff9a29",
+            "TURBOS": "0x9fb8a445ba7ed37251f0ccd778b6cd7010174734562a18921d0684d4e01afe34",
+            "USDY": "0x604408004efddc03323cd6f6a72b98695dbdced57a630ca2622e6b96fc94a3f6",
+            "WBTC": "0xaa72a2b370cf45a7b1363a2b9e3f0c57c05863375b984e2ca0928973574404f2",
+            "WETH": "0x0ac9f9275eb0ac33b7f59741b1df67a6783af2db6d2a4e5aba8ce350d5b6b260"
+        },
+        "OBJECT": {
+            "TYPUS_VERSION": "0x2edc980f55e31ba3c660f4e2650e915fd47fb33b524b01a52a116719adac8be7",
+            "TGLD_COIN_METADATA": "0xf77f8aabe64dccef0e568f2ef58a6ca74bdfb31786507cc35b7626a4df0d0ebc",
+            "TGLD_TOKEN_POLICY": "0x17875c2f772053cd148bd2b8b8a40160db3f841825d8963192f8394d5c18974c",
+            "NFT_TRANSFER_POLICY": "0x1c62271ecc443c3d92a8fe8f5662e877856d26b971d967f66937a65f55160831",
+            "STRATEGY_POOL": "0x50b01081469d032e04bfcbd057614b1359376920f55c7bebd076e0e2af07a57f",
+            "TAILS_IDS": "0xf4ea1c4432823ebde3b0c1f0705a45b08571b48237db879502b8ba336ea5b916",
+            "TYPUS_PERP_VERSION": "0x3aafe933e23a9e10f3a34febf6a2996961989558315bae46458fd234496e8a97"
+        }
+    },
+    "MOVEMENT": {
+        "RPC_ENDPOINT": "https://sui.devnet.m2.movementlabs.xyz:443",
+        "TYPUS_VERSION": "0x78f91a4142a62881bc5ac6f84d43144e02ba32ddec3e0bb2985f6980d044032a",
+        "PACKAGE_ORIGIN": {
+            "DOV_SINGLE": "0x773fbd026bcdffa6ca746c995a440b711e4b55fb220a6552e12041ede12a5b6b",
+            "FRAMEWORK": "0x421b30b0ebf1a60834adaa946cbb8fd0595c42d90c99bfac79a7f450b55c1a44",
+            "ORACLE": "0xbf0ff0490f2c33fe0dfea8407cca4c4d4be30a877f5dbffcbad1a078673845da",
+            "TOKEN": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e",
+            "TYPUS": "0xc7dc8f963a06a3675d9d423435d65c1144b0df1a17aa67b2ec7acabad96be2a4"
+        },
+        "PACKAGE": {
+            "DOV_SINGLE": "0x773fbd026bcdffa6ca746c995a440b711e4b55fb220a6552e12041ede12a5b6b",
+            "FRAMEWORK": "0x421b30b0ebf1a60834adaa946cbb8fd0595c42d90c99bfac79a7f450b55c1a44",
+            "ORACLE": "0xbf0ff0490f2c33fe0dfea8407cca4c4d4be30a877f5dbffcbad1a078673845da",
+            "TOKEN": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e",
+            "TYPUS": "0xc7dc8f963a06a3675d9d423435d65c1144b0df1a17aa67b2ec7acabad96be2a4"
+        },
+        "REGISTRY": {
+            "AIRDROP": "0x4300030cda3b3c4774f2bf108fc0461e9d48f6ab91ddd38da80cd4e51f509303",
+            "DOV_SINGLE": "0x2cdcf02854b3d75bb3abd2589a20f1288e2b80a4e7021fd8ade30c765d4b477b",
+            "LEADERBOARD": "0xf7991a4cbd5ec7977c9950d77ee0e944e8e84b768048ca9c3296acd7226cdcf9"
+        },
+        "TOKEN_REGISTRY": {
+            "BTC": "0x811bed2a13066c606638d71e695799022752291c94e46c334511a837cee7603f",
+            "ETH": "0x07323910600d887a12694c8c5dd3c61d919d711a8f34236d385d88a4881b08b5",
+            "SOL": "0x10dcc6468670b773e0ab1cbdb57e5e0fd79f29ec259bdbd45ba81a7b9675106c",
+            "USDC": "0x6ad27e79cd914de17e68a4cd2a564de65e9cce4b57798c93e96354d8a00e965e",
+            "USDT": "0xf9a3d1334132dd916e65abf23680d618b39de0fed6c92a338f30895fe0b134fe"
+        },
+        "TOKEN": {
+            "SUI": "0x2::sui::SUI",
+            "BTC": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e::btc::BTC",
+            "ETH": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e::eth::ETH",
+            "SOL": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e::sol::SOL",
+            "USDC": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e::usdc::USDC",
+            "USDT": "0xad00cb50c52af6e61b2dc45e7c80a4e0bf6149a5e45b08623fcec33a83361d2e::usdt::USDT"
+        },
+        "ORACLE_MANAGER_CAP": {
+            "SUIUSDC": "0xcda9da5c6fc39bde7adae554b192d9a50c5ff65b8e0c815d646623ab065d63b4",
+            "SUIUSDT": "0xcda9da5c6fc39bde7adae554b192d9a50c5ff65b8e0c815d646623ab065d63b4"
+        },
+        "ORACLE": {
+            "SUIUSDC": "0xf7d081223650168e7e7ea02fc2289e6e0795decdbeddb951c1609937b9dfe0cf",
+            "SUIUSDT": "0xf26ff14cc14e9342139d6a6c45775f98f006f8d39c8e8dee0aadf8127ce9118f"
+        },
+        "VAULT": {
+            "0": "2hkoQrhPcvch8CMtVx3XkwPDjDDEwr89bkn8Qq5VAg24"
+        }
+    }
+}

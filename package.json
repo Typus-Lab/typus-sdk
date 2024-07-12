@@ -2,7 +2,7 @@
     "name": "@typus/typus-sdk",
     "author": "Typus",
     "description": "typus sdk",
-    "version": "1.4.3-a",
+    "version": "1.4.3-b",
     "dependencies": {
         "@mysten/bcs": "^0.11.1",
         "@mysten/kiosk": "0.8.10",
@@ -75,15 +75,15 @@
         "tslint-config-prettier": "^1.18.0",
         "typescript": "^5.1.6"
     },
-    "main": "lib/src/index.js",
+    "main": "dist/src/index.js",
     "files": [
-        "lib"
+        "dist"
     ],
-    "types": "lib/src/index.d.ts",
+    "types": "dist/src/index.d.ts",
     "scripts": {
         "ts-node": "ts-node -r tsconfig-paths/register",
-        "build": "rm -rf lib && tsc -p tsconfig.build.json",
-        "test": "rm -rf lib && tsc -p tsconfig.build.json && ts-mocha test/test*.ts"
+        "build": "rm -rf dist && tsc -p tsconfig.build.json",
+        "test": "rm -rf dist && tsc -p tsconfig.build.json && ts-mocha test/test*.ts"
     },
     "repository": {
         "type": "git",

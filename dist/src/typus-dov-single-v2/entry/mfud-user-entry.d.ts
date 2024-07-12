@@ -1,0 +1,126 @@
+import { TransactionBlock, TransactionObjectArgument } from "@mysten/sui.js/transactions";
+export declare function getMfudRaiseFundTx(input: {
+    tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    typusUserRegistry: string;
+    typusLeaderboardRegistry: string;
+    typusFrameworkOriginPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typusTokenPackageId: string;
+    typusTokenRegistry: string;
+    typusTokenType: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    raiseCoins: string[];
+    raiseAmount: string;
+    raiseFromPremium: boolean;
+    raiseFromInactive: boolean;
+    user: string;
+}): TransactionBlock;
+export declare function getMfudReduceFundTx(input: {
+    tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    typusUserRegistry: string;
+    typusLeaderboardRegistry: string;
+    typusFrameworkOriginPackageId: string;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    typusTokenPackageId: string;
+    typusTokenRegistry: string;
+    typusTokenType: string;
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    reduceFromWarmup: string;
+    reduceFromActive: string;
+    reduceFromPremium: boolean;
+    reduceFromInactive: boolean;
+    reduceFromIncentive: boolean;
+    user: string;
+}): TransactionBlock;
+export declare function getMfudDepositTx(input: {
+    tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    typusUserRegistry: string;
+    typusLeaderboardRegistry: string;
+    typusFrameworkOriginPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    mfudPackageId: string;
+    mfudRegistry: string;
+    mfudAmount: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    user: string;
+    coins: string[];
+}): TransactionBlock;
+export declare function getMfudNewBidTx(input: {
+    tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    typusUserRegistry: string;
+    tgldRegistry: string;
+    typusLeaderboardRegistry: string;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    mfudPackageId: string;
+    mfudRegistry: string;
+    typeArguments: string[];
+    index: string;
+    coins: string[];
+    size: string;
+    premium_required: string;
+    user: string;
+}): TransactionBlock;
+export declare function getMfudExerciseTx(input: {
+    tx: TransactionBlock;
+    typusFrameworkOriginPackageId: string;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    mfudPackageId: string;
+    mfudRegistry: string;
+    typeArguments: string[];
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    user: string;
+}): TransactionBlock;
+export declare function getMfudRebateTx(input: {
+    tx: TransactionBlock;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    mfudPackageId: string;
+    mfudRegistry: string;
+    typeArgument: string;
+    user: string;
+}): TransactionBlock;
+export declare function getMfudNewStrategyTx(gasBudget: number, packageId: string, typeArguments: string[], // D_TOKEN, B_TOKEN
+registry: string, strategy_pool: string, vault_index: string, signal_index: string, coins: string[], mfudPackageId: string, mfudRegistry: string, mfudAmount: string, size: string, price_percentage: string, max_times: string, target_rounds: string[]): TransactionBlock;
+export declare function getMfudUpdateStrategyTx(gasBudget: number, packageId: string, typeArguments: string[], // D_TOKEN, B_TOKEN
+registry: string, strategy_pool: string, vault_index: string, signal_index: string, strategy_index: string, coins: string[], mfudPackageId: string, mfudRegistry: string, mfudAmount: string, size: string | null, price_percentage: string | null, max_times: string | null, target_rounds: string[]): TransactionBlock;
+export declare function getMfudCloseStrategyTx(gasBudget: number, packageId: string, typeArguments: string[], // D_TOKEN, B_TOKEN
+registry: string, strategy_pool: string, vault_index: string, signal_index: string, strategy_index: string, mfudPackageId: string, mfudRegistry: string, sender: string): TransactionBlock;
+export declare function getMfudWithdrawProfitStrategyTx(gasBudget: number, packageId: string, typeArguments: string[], // D_TOKEN, B_TOKEN
+registry: string, strategy_pool: string, vault_index: string, signal_index: string, strategy_index: string, mfudPackageId: string, mfudRegistry: string, sender: string, txBlock?: TransactionBlock): TransactionBlock;
+export declare function getMfudCompoundWithRedeemTx(input: {
+    tx: TransactionBlock;
+    typusEcosystemVersion: string;
+    typusUserRegistry: string;
+    typusLeaderboardRegistry: string;
+    typusFrameworkOriginPackageId: string;
+    typusFrameworkPackageId: string;
+    typusDovSinglePackageId: string;
+    typusDovSingleRegistry: string;
+    typeArguments: string[];
+    typusTokenPackageId: string;
+    typusTokenRegistry: string;
+    typusTokenType: string;
+    index: string;
+    receipts: string[] | TransactionObjectArgument[];
+    user: string;
+}): TransactionBlock;
