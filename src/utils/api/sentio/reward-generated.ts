@@ -1,3 +1,6 @@
+import { assetToDecimal, typeArgToAsset } from "../../../constants/token";
+import { SuiClient, SuiEvent } from "@mysten/sui.js/client";
+
 const headers = {
     "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
     "Content-Type": "application/json",
@@ -192,8 +195,6 @@ export async function getTotalProfitSharingClaimed(): Promise<TokenAmount[]> {
     return data.result.rows as TokenAmount[];
 }
 
-import { SuiClient, SuiEvent } from "@mysten/sui.js/client";
-
 export async function getTotalProfitSharing(provider: SuiClient): Promise<TokenAmount[]> {
     var hasNextPage = true;
     var cursor: any | undefined = undefined;
@@ -368,25 +369,3 @@ export async function getAccumulatedNotionalVolumeUSD(): Promise<number[]> {
 
     return result;
 }
-
-import configs from "../../../../config.json";
-import { assetToDecimal, typeArgToAsset } from "@/constants/token";
-
-(async () => {
-    // const res1 = await getTotalDepositorIncentive();
-    // console.log(res1);
-    // const res2 = await getTotalPremium();
-    // console.log(res2);
-    // const res12 = await getAccumulatedRewardGeneratedUSD();
-    // console.log(res12);
-    // const res3 = await getTotalProfitSharingClaimed();
-    // console.log(res3);
-    // const config = configs.MAINNET;
-    // const provider = new SuiClient({ url: config.RPC_ENDPOINT });
-    // const res4 = await getTotalProfitSharing(provider);
-    // console.log(res4);
-    // const res5 = await getAccumulatedUser();
-    // console.log(res5);
-    // const res6 = await getAccumulatedNotionalVolumeUSD();
-    // console.log(res6);
-})();

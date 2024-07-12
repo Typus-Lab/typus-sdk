@@ -6,10 +6,10 @@ import {
     releaseCollateral as _releaseCollateral,
 } from "../trading/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "@/constants";
-import { PythClient, createPythClient, updatePyth } from "@/utils/pyth/pythClient";
-import { priceInfoObjectIds, pythStateId } from "@/utils/pyth/constant";
-import { tokenType, TOKEN, typeArgToToken } from "@/constants/token";
+import { CLOCK } from "../../constants";
+import { PythClient, createPythClient, updatePyth } from "../../utils/pyth/pythClient";
+import { priceInfoObjectIds, pythStateId } from "../../utils/pyth/constant";
+import { tokenType, TOKEN, typeArgToToken } from "../../constants/token";
 import { NETWORK } from "..";
 import { Position, TradingOrder } from "../position/structs";
 

@@ -8,12 +8,12 @@ import {
 } from "../trading/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "src/constants";
-import { PythClient, createPythClient, updatePyth, updateOracleWithPyth } from "@/utils/pyth/pythClient";
-import { priceInfoObjectIds, pythStateId } from "@/utils/pyth/constant";
-import { tokenType, TOKEN, typeArgToToken } from "@/constants/token";
+import { PythClient, createPythClient, updatePyth, updateOracleWithPyth } from "../../utils/pyth/pythClient";
+import { priceInfoObjectIds, pythStateId } from "../../utils/pyth/constant";
+import { tokenType, TOKEN, typeArgToToken } from "../../constants/token";
 import { NETWORK } from "..";
 import { Position, TradingOrder } from "../position/structs";
-import { getSplitBidReceiptTx } from "@/typus-dov-single-v2/entry/user-entry";
+import { getSplitBidReceiptTx } from "../../typus-dov-single-v2/entry/user-entry";
 
 export async function createTradingOrderWithBidReceipt(
     config: {

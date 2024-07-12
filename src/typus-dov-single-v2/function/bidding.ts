@@ -7,11 +7,11 @@ import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
 import { Auction, BidShare, Vault, getAuctions, getMyBids, getVaults } from "../view-function";
 import { AbbrStrategyName, Period, parseAssets } from "./vault";
 import { StableCoin, getTokenName } from "./token";
-import { checkNumber, countFloating, insertAt } from "@/utils/tools";
-import { getUserStrategies } from "@/auto-bid/view-function";
-import { typeArgsToAssets } from "@/constants/token";
+import { checkNumber, countFloating, insertAt } from "../../utils/tools";
+import { getUserStrategies } from "../../auto-bid/view-function";
+import { typeArgsToAssets } from "../../constants/token";
 import { WrappedToken } from "./token";
-import { getLatestPrice } from "@/utils/api/price";
+import { getLatestPrice } from "../../utils/api/price";
 import config from "../../../config.json";
 
 const PriceDecimal = BigNumber(10).pow(8);

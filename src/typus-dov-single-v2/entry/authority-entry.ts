@@ -1,5 +1,5 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "@/constants";
+import { CLOCK } from "../../constants";
 
 /**
     public(friend) entry fun otc<D_TOKEN, B_TOKEN>(

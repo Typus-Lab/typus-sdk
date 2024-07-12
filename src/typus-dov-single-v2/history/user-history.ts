@@ -1,6 +1,6 @@
 import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
 import { Vault } from "../view-function";
-import { assetToDecimal, typeArgToAsset } from "@/constants/token";
+import { assetToDecimal, typeArgToAsset } from "../../constants/token";
 import BigNumber from "bignumber.js";
 
 export async function getUserEvents(

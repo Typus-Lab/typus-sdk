@@ -1,5 +1,5 @@
 import { BcsReader } from "@mysten/bcs";
-import { AddressFromBytes } from "@/utils/tools";
+import { AddressFromBytes } from "../utils/tools";
 // import { Position, TradingOrder } from "./position/structs";
 
 export function readVecPosition(bytes: Uint8Array) {

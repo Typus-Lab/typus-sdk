@@ -7,11 +7,11 @@ import { readVecOrder, readVecPosition, readVecShares } from "./readVec";
 import { TradingOrder, Position } from "./position/structs";
 import { getUserShares } from "./stake-pool/functions";
 import { LpUserShare, StakePool } from "./stake-pool/structs";
-import { CLOCK } from "@/constants";
-import { tokenType, typeArgToToken } from "@/constants/token";
-import { priceInfoObjectIds, pythStateId } from "@/utils/pyth/constant";
+import { CLOCK } from "../constants";
+import { tokenType, typeArgToToken } from "../constants/token";
+import { priceInfoObjectIds, pythStateId } from "../utils/pyth/constant";
 import { NETWORK } from ".";
-import { PythClient, updatePyth } from "@/utils/pyth/pythClient";
+import { PythClient, updatePyth } from "../utils/pyth/pythClient";
 import { BcsReader, bcs } from "@mysten/bcs";
 
 export async function getLpPools(

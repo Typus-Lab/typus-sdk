@@ -1,13 +1,13 @@
 import { burnLp, mintLp, updateLiquidityValue } from "../lp-pool/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "@/constants";
+import { CLOCK } from "../../constants";
 import { LiquidityPool } from "../lp-pool/structs";
-import { PythClient, createPythClient, updatePyth } from "@/utils/pyth/pythClient";
-import { tokenType, typeArgToAsset, TOKEN } from "@/constants/token";
+import { PythClient, createPythClient, updatePyth } from "../../utils/pyth/pythClient";
+import { tokenType, typeArgToAsset, TOKEN } from "../../constants/token";
 import { harvestPerUserShare, stake, unstake } from "../stake-pool/functions";
 import { swap as _swap } from "../lp-pool/functions";
 import { unsubscribe as _unsubscribe } from "../stake-pool/functions";
-import { priceInfoObjectIds, pythStateId } from "@/utils/pyth/constant";
+import { priceInfoObjectIds, pythStateId } from "../../utils/pyth/constant";
 import { NETWORK } from "..";
 
 export async function mintStakeLp(
