@@ -2,7 +2,7 @@
     "name": "@typus/typus-sdk",
     "author": "Typus",
     "description": "typus sdk",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "dependencies": {
         "@mysten/bcs": "^0.11.1",
         "@mysten/kiosk": "0.8.10",
@@ -75,11 +75,11 @@
         "tslint-config-prettier": "^1.18.0",
         "typescript": "^5.1.6"
     },
-    "main": "lib/index.js",
+    "main": "lib/src/index.js",
     "files": [
         "lib"
     ],
-    "types": "lib/index.d.ts",
+    "types": "lib/src/index.d.ts",
     "scripts": {
         "ts-node": "ts-node -r tsconfig-paths/register",
         "build": "rm -rf lib && tsc -p tsconfig.build.json",
