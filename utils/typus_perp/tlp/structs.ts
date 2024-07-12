@@ -18,7 +18,7 @@ import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
 export function isLpRegistry(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::tlp::LpRegistry";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::tlp::LpRegistry";
 }
 
 export interface LpRegistryFields {
@@ -28,19 +28,22 @@ export interface LpRegistryFields {
 export type LpRegistryReified = Reified<LpRegistry, LpRegistryFields>;
 
 export class LpRegistry implements StructClass {
-    static readonly $typeName = "0x0::tlp::LpRegistry";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::tlp::LpRegistry";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LpRegistry.$typeName;
 
-    readonly $fullTypeName: "0x0::tlp::LpRegistry";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::tlp::LpRegistry";
 
     readonly $typeArgs: [];
 
     readonly id: ToField<UID>;
 
     private constructor(typeArgs: [], fields: LpRegistryFields) {
-        this.$fullTypeName = composeSuiType(LpRegistry.$typeName, ...typeArgs) as "0x0::tlp::LpRegistry";
+        this.$fullTypeName = composeSuiType(
+            LpRegistry.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::tlp::LpRegistry";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -49,7 +52,10 @@ export class LpRegistry implements StructClass {
     static reified(): LpRegistryReified {
         return {
             typeName: LpRegistry.$typeName,
-            fullTypeName: composeSuiType(LpRegistry.$typeName, ...[]) as "0x0::tlp::LpRegistry",
+            fullTypeName: composeSuiType(
+                LpRegistry.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::tlp::LpRegistry",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LpRegistry.fromFields(fields),
@@ -148,7 +154,7 @@ export class LpRegistry implements StructClass {
 
 export function isTLP(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::tlp::TLP";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::tlp::TLP";
 }
 
 export interface TLPFields {
@@ -158,19 +164,22 @@ export interface TLPFields {
 export type TLPReified = Reified<TLP, TLPFields>;
 
 export class TLP implements StructClass {
-    static readonly $typeName = "0x0::tlp::TLP";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::tlp::TLP";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = TLP.$typeName;
 
-    readonly $fullTypeName: "0x0::tlp::TLP";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::tlp::TLP";
 
     readonly $typeArgs: [];
 
     readonly dummyField: ToField<"bool">;
 
     private constructor(typeArgs: [], fields: TLPFields) {
-        this.$fullTypeName = composeSuiType(TLP.$typeName, ...typeArgs) as "0x0::tlp::TLP";
+        this.$fullTypeName = composeSuiType(
+            TLP.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::tlp::TLP";
         this.$typeArgs = typeArgs;
 
         this.dummyField = fields.dummyField;
@@ -179,7 +188,10 @@ export class TLP implements StructClass {
     static reified(): TLPReified {
         return {
             typeName: TLP.$typeName,
-            fullTypeName: composeSuiType(TLP.$typeName, ...[]) as "0x0::tlp::TLP",
+            fullTypeName: composeSuiType(
+                TLP.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::tlp::TLP",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => TLP.fromFields(fields),

@@ -20,11 +20,161 @@ import { Symbol } from "../symbol/structs";
 import { bcs, fromB64, fromHEX, toHEX } from "@mysten/bcs";
 import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
+/* ============================== OptionCollateralInfo =============================== */
+
+export function isOptionCollateralInfo(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OptionCollateralInfo";
+}
+
+export interface OptionCollateralInfoFields {
+    index: ToField<"u64">;
+    bidToken: ToField<TypeName>;
+}
+
+export type OptionCollateralInfoReified = Reified<OptionCollateralInfo, OptionCollateralInfoFields>;
+
+export class OptionCollateralInfo implements StructClass {
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OptionCollateralInfo";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = OptionCollateralInfo.$typeName;
+
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OptionCollateralInfo";
+
+    readonly $typeArgs: [];
+
+    readonly index: ToField<"u64">;
+    readonly bidToken: ToField<TypeName>;
+
+    private constructor(typeArgs: [], fields: OptionCollateralInfoFields) {
+        this.$fullTypeName = composeSuiType(
+            OptionCollateralInfo.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OptionCollateralInfo";
+        this.$typeArgs = typeArgs;
+
+        this.index = fields.index;
+        this.bidToken = fields.bidToken;
+    }
+
+    static reified(): OptionCollateralInfoReified {
+        return {
+            typeName: OptionCollateralInfo.$typeName,
+            fullTypeName: composeSuiType(
+                OptionCollateralInfo.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OptionCollateralInfo",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => OptionCollateralInfo.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => OptionCollateralInfo.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => OptionCollateralInfo.fromBcs(data),
+            bcs: OptionCollateralInfo.bcs,
+            fromJSONField: (field: any) => OptionCollateralInfo.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => OptionCollateralInfo.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => OptionCollateralInfo.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => OptionCollateralInfo.fetch(client, id),
+            new: (fields: OptionCollateralInfoFields) => {
+                return new OptionCollateralInfo([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return OptionCollateralInfo.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<OptionCollateralInfo>> {
+        return phantom(OptionCollateralInfo.reified());
+    }
+    static get p() {
+        return OptionCollateralInfo.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("OptionCollateralInfo", {
+            index: bcs.u64(),
+            bid_token: TypeName.bcs,
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): OptionCollateralInfo {
+        return OptionCollateralInfo.reified().new({
+            index: decodeFromFields("u64", fields.index),
+            bidToken: decodeFromFields(TypeName.reified(), fields.bid_token),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): OptionCollateralInfo {
+        if (!isOptionCollateralInfo(item.type)) {
+            throw new Error("not a OptionCollateralInfo type");
+        }
+
+        return OptionCollateralInfo.reified().new({
+            index: decodeFromFieldsWithTypes("u64", item.fields.index),
+            bidToken: decodeFromFieldsWithTypes(TypeName.reified(), item.fields.bid_token),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): OptionCollateralInfo {
+        return OptionCollateralInfo.fromFields(OptionCollateralInfo.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            index: this.index.toString(),
+            bidToken: this.bidToken.toJSONField(),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): OptionCollateralInfo {
+        return OptionCollateralInfo.reified().new({
+            index: decodeFromJSONField("u64", field.index),
+            bidToken: decodeFromJSONField(TypeName.reified(), field.bidToken),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): OptionCollateralInfo {
+        if (json.$typeName !== OptionCollateralInfo.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return OptionCollateralInfo.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): OptionCollateralInfo {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isOptionCollateralInfo(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a OptionCollateralInfo object`);
+        }
+        return OptionCollateralInfo.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<OptionCollateralInfo> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching OptionCollateralInfo object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isOptionCollateralInfo(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a OptionCollateralInfo object`);
+        }
+        return OptionCollateralInfo.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
 /* ============================== OrderFilledEvent =============================== */
 
 export function isOrderFilledEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::position::OrderFilledEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OrderFilledEvent";
 }
 
 export interface OrderFilledEventFields {
@@ -39,18 +189,20 @@ export interface OrderFilledEventFields {
     positionSide: ToField<"bool">;
     positionSize: ToField<"u64">;
     positionAveragePrice: ToField<"u64">;
+    realizedTradingFee: ToField<"u64">;
+    realizedBorrowFee: ToField<"u64">;
     u64Padding: ToField<Vector<"u64">>;
 }
 
 export type OrderFilledEventReified = Reified<OrderFilledEvent, OrderFilledEventFields>;
 
 export class OrderFilledEvent implements StructClass {
-    static readonly $typeName = "0x0::position::OrderFilledEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OrderFilledEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = OrderFilledEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::position::OrderFilledEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OrderFilledEvent";
 
     readonly $typeArgs: [];
 
@@ -65,10 +217,15 @@ export class OrderFilledEvent implements StructClass {
     readonly positionSide: ToField<"bool">;
     readonly positionSize: ToField<"u64">;
     readonly positionAveragePrice: ToField<"u64">;
+    readonly realizedTradingFee: ToField<"u64">;
+    readonly realizedBorrowFee: ToField<"u64">;
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: OrderFilledEventFields) {
-        this.$fullTypeName = composeSuiType(OrderFilledEvent.$typeName, ...typeArgs) as "0x0::position::OrderFilledEvent";
+        this.$fullTypeName = composeSuiType(
+            OrderFilledEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OrderFilledEvent";
         this.$typeArgs = typeArgs;
 
         this.user = fields.user;
@@ -82,13 +239,18 @@ export class OrderFilledEvent implements StructClass {
         this.positionSide = fields.positionSide;
         this.positionSize = fields.positionSize;
         this.positionAveragePrice = fields.positionAveragePrice;
+        this.realizedTradingFee = fields.realizedTradingFee;
+        this.realizedBorrowFee = fields.realizedBorrowFee;
         this.u64Padding = fields.u64Padding;
     }
 
     static reified(): OrderFilledEventReified {
         return {
             typeName: OrderFilledEvent.$typeName,
-            fullTypeName: composeSuiType(OrderFilledEvent.$typeName, ...[]) as "0x0::position::OrderFilledEvent",
+            fullTypeName: composeSuiType(
+                OrderFilledEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OrderFilledEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => OrderFilledEvent.fromFields(fields),
@@ -130,6 +292,8 @@ export class OrderFilledEvent implements StructClass {
             position_side: bcs.bool(),
             position_size: bcs.u64(),
             position_average_price: bcs.u64(),
+            realized_trading_fee: bcs.u64(),
+            realized_borrow_fee: bcs.u64(),
             u64_padding: bcs.vector(bcs.u64()),
         });
     }
@@ -147,6 +311,8 @@ export class OrderFilledEvent implements StructClass {
             positionSide: decodeFromFields("bool", fields.position_side),
             positionSize: decodeFromFields("u64", fields.position_size),
             positionAveragePrice: decodeFromFields("u64", fields.position_average_price),
+            realizedTradingFee: decodeFromFields("u64", fields.realized_trading_fee),
+            realizedBorrowFee: decodeFromFields("u64", fields.realized_borrow_fee),
             u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
         });
     }
@@ -168,6 +334,8 @@ export class OrderFilledEvent implements StructClass {
             positionSide: decodeFromFieldsWithTypes("bool", item.fields.position_side),
             positionSize: decodeFromFieldsWithTypes("u64", item.fields.position_size),
             positionAveragePrice: decodeFromFieldsWithTypes("u64", item.fields.position_average_price),
+            realizedTradingFee: decodeFromFieldsWithTypes("u64", item.fields.realized_trading_fee),
+            realizedBorrowFee: decodeFromFieldsWithTypes("u64", item.fields.realized_borrow_fee),
             u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
         });
     }
@@ -189,6 +357,8 @@ export class OrderFilledEvent implements StructClass {
             positionSide: this.positionSide,
             positionSize: this.positionSize.toString(),
             positionAveragePrice: this.positionAveragePrice.toString(),
+            realizedTradingFee: this.realizedTradingFee.toString(),
+            realizedBorrowFee: this.realizedBorrowFee.toString(),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
         };
     }
@@ -210,6 +380,8 @@ export class OrderFilledEvent implements StructClass {
             positionSide: decodeFromJSONField("bool", field.positionSide),
             positionSize: decodeFromJSONField("u64", field.positionSize),
             positionAveragePrice: decodeFromJSONField("u64", field.positionAveragePrice),
+            realizedTradingFee: decodeFromJSONField("u64", field.realizedTradingFee),
+            realizedBorrowFee: decodeFromJSONField("u64", field.realizedBorrowFee),
             u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
         });
     }
@@ -248,13 +420,15 @@ export class OrderFilledEvent implements StructClass {
 
 export function isPosition(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::position::Position";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::Position";
 }
 
 export interface PositionFields {
     id: ToField<UID>;
     createTsMs: ToField<"u64">;
     positionId: ToField<"u64">;
+    linkedOrderIds: ToField<Vector<"u64">>;
+    linkedOrderPrices: ToField<Vector<"u64">>;
     user: ToField<"address">;
     isLong: ToField<"bool">;
     size: ToField<"u64">;
@@ -265,28 +439,35 @@ export interface PositionFields {
     collateralAmount: ToField<"u64">;
     reserveAmount: ToField<"u64">;
     averagePrice: ToField<"u64">;
-    entryFundingIndex: ToField<"u64">;
-    realizedHasProfit: ToField<"bool">;
-    unrealizedCost: ToField<"u64">;
+    entryBorrowIndex: ToField<"u64">;
+    entryFundingRateIndexSign: ToField<"bool">;
+    entryFundingRateIndex: ToField<"u64">;
+    unrealizedLoss: ToField<"u64">;
+    unrealizedFundingSign: ToField<"bool">;
+    unrealizedFundingFee: ToField<"u64">;
+    unrealizedBorrowFee: ToField<"u64">;
     unrealizedRebate: ToField<"u64">;
+    optionCollateralInfo: ToField<Option<OptionCollateralInfo>>;
     u64Padding: ToField<Vector<"u64">>;
 }
 
 export type PositionReified = Reified<Position, PositionFields>;
 
 export class Position implements StructClass {
-    static readonly $typeName = "0x0::position::Position";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::Position";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = Position.$typeName;
 
-    readonly $fullTypeName: "0x0::position::Position";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::Position";
 
     readonly $typeArgs: [];
 
     readonly id: ToField<UID>;
     readonly createTsMs: ToField<"u64">;
     readonly positionId: ToField<"u64">;
+    readonly linkedOrderIds: ToField<Vector<"u64">>;
+    readonly linkedOrderPrices: ToField<Vector<"u64">>;
     readonly user: ToField<"address">;
     readonly isLong: ToField<"bool">;
     readonly size: ToField<"u64">;
@@ -297,19 +478,29 @@ export class Position implements StructClass {
     readonly collateralAmount: ToField<"u64">;
     readonly reserveAmount: ToField<"u64">;
     readonly averagePrice: ToField<"u64">;
-    readonly entryFundingIndex: ToField<"u64">;
-    readonly realizedHasProfit: ToField<"bool">;
-    readonly unrealizedCost: ToField<"u64">;
+    readonly entryBorrowIndex: ToField<"u64">;
+    readonly entryFundingRateIndexSign: ToField<"bool">;
+    readonly entryFundingRateIndex: ToField<"u64">;
+    readonly unrealizedLoss: ToField<"u64">;
+    readonly unrealizedFundingSign: ToField<"bool">;
+    readonly unrealizedFundingFee: ToField<"u64">;
+    readonly unrealizedBorrowFee: ToField<"u64">;
     readonly unrealizedRebate: ToField<"u64">;
+    readonly optionCollateralInfo: ToField<Option<OptionCollateralInfo>>;
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: PositionFields) {
-        this.$fullTypeName = composeSuiType(Position.$typeName, ...typeArgs) as "0x0::position::Position";
+        this.$fullTypeName = composeSuiType(
+            Position.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::Position";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
         this.createTsMs = fields.createTsMs;
         this.positionId = fields.positionId;
+        this.linkedOrderIds = fields.linkedOrderIds;
+        this.linkedOrderPrices = fields.linkedOrderPrices;
         this.user = fields.user;
         this.isLong = fields.isLong;
         this.size = fields.size;
@@ -320,17 +511,25 @@ export class Position implements StructClass {
         this.collateralAmount = fields.collateralAmount;
         this.reserveAmount = fields.reserveAmount;
         this.averagePrice = fields.averagePrice;
-        this.entryFundingIndex = fields.entryFundingIndex;
-        this.realizedHasProfit = fields.realizedHasProfit;
-        this.unrealizedCost = fields.unrealizedCost;
+        this.entryBorrowIndex = fields.entryBorrowIndex;
+        this.entryFundingRateIndexSign = fields.entryFundingRateIndexSign;
+        this.entryFundingRateIndex = fields.entryFundingRateIndex;
+        this.unrealizedLoss = fields.unrealizedLoss;
+        this.unrealizedFundingSign = fields.unrealizedFundingSign;
+        this.unrealizedFundingFee = fields.unrealizedFundingFee;
+        this.unrealizedBorrowFee = fields.unrealizedBorrowFee;
         this.unrealizedRebate = fields.unrealizedRebate;
+        this.optionCollateralInfo = fields.optionCollateralInfo;
         this.u64Padding = fields.u64Padding;
     }
 
     static reified(): PositionReified {
         return {
             typeName: Position.$typeName,
-            fullTypeName: composeSuiType(Position.$typeName, ...[]) as "0x0::position::Position",
+            fullTypeName: composeSuiType(
+                Position.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::Position",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => Position.fromFields(fields),
@@ -364,6 +563,8 @@ export class Position implements StructClass {
             id: UID.bcs,
             create_ts_ms: bcs.u64(),
             position_id: bcs.u64(),
+            linked_order_ids: bcs.vector(bcs.u64()),
+            linked_order_prices: bcs.vector(bcs.u64()),
             user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
             is_long: bcs.bool(),
             size: bcs.u64(),
@@ -374,10 +575,15 @@ export class Position implements StructClass {
             collateral_amount: bcs.u64(),
             reserve_amount: bcs.u64(),
             average_price: bcs.u64(),
-            entry_funding_index: bcs.u64(),
-            realized_has_profit: bcs.bool(),
-            unrealized_cost: bcs.u64(),
+            entry_borrow_index: bcs.u64(),
+            entry_funding_rate_index_sign: bcs.bool(),
+            entry_funding_rate_index: bcs.u64(),
+            unrealized_loss: bcs.u64(),
+            unrealized_funding_sign: bcs.bool(),
+            unrealized_funding_fee: bcs.u64(),
+            unrealized_borrow_fee: bcs.u64(),
             unrealized_rebate: bcs.u64(),
+            option_collateral_info: Option.bcs(OptionCollateralInfo.bcs),
             u64_padding: bcs.vector(bcs.u64()),
         });
     }
@@ -387,6 +593,8 @@ export class Position implements StructClass {
             id: decodeFromFields(UID.reified(), fields.id),
             createTsMs: decodeFromFields("u64", fields.create_ts_ms),
             positionId: decodeFromFields("u64", fields.position_id),
+            linkedOrderIds: decodeFromFields(reified.vector("u64"), fields.linked_order_ids),
+            linkedOrderPrices: decodeFromFields(reified.vector("u64"), fields.linked_order_prices),
             user: decodeFromFields("address", fields.user),
             isLong: decodeFromFields("bool", fields.is_long),
             size: decodeFromFields("u64", fields.size),
@@ -397,10 +605,15 @@ export class Position implements StructClass {
             collateralAmount: decodeFromFields("u64", fields.collateral_amount),
             reserveAmount: decodeFromFields("u64", fields.reserve_amount),
             averagePrice: decodeFromFields("u64", fields.average_price),
-            entryFundingIndex: decodeFromFields("u64", fields.entry_funding_index),
-            realizedHasProfit: decodeFromFields("bool", fields.realized_has_profit),
-            unrealizedCost: decodeFromFields("u64", fields.unrealized_cost),
+            entryBorrowIndex: decodeFromFields("u64", fields.entry_borrow_index),
+            entryFundingRateIndexSign: decodeFromFields("bool", fields.entry_funding_rate_index_sign),
+            entryFundingRateIndex: decodeFromFields("u64", fields.entry_funding_rate_index),
+            unrealizedLoss: decodeFromFields("u64", fields.unrealized_loss),
+            unrealizedFundingSign: decodeFromFields("bool", fields.unrealized_funding_sign),
+            unrealizedFundingFee: decodeFromFields("u64", fields.unrealized_funding_fee),
+            unrealizedBorrowFee: decodeFromFields("u64", fields.unrealized_borrow_fee),
             unrealizedRebate: decodeFromFields("u64", fields.unrealized_rebate),
+            optionCollateralInfo: decodeFromFields(Option.reified(OptionCollateralInfo.reified()), fields.option_collateral_info),
             u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
         });
     }
@@ -414,6 +627,8 @@ export class Position implements StructClass {
             id: decodeFromFieldsWithTypes(UID.reified(), item.fields.id),
             createTsMs: decodeFromFieldsWithTypes("u64", item.fields.create_ts_ms),
             positionId: decodeFromFieldsWithTypes("u64", item.fields.position_id),
+            linkedOrderIds: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.linked_order_ids),
+            linkedOrderPrices: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.linked_order_prices),
             user: decodeFromFieldsWithTypes("address", item.fields.user),
             isLong: decodeFromFieldsWithTypes("bool", item.fields.is_long),
             size: decodeFromFieldsWithTypes("u64", item.fields.size),
@@ -424,10 +639,18 @@ export class Position implements StructClass {
             collateralAmount: decodeFromFieldsWithTypes("u64", item.fields.collateral_amount),
             reserveAmount: decodeFromFieldsWithTypes("u64", item.fields.reserve_amount),
             averagePrice: decodeFromFieldsWithTypes("u64", item.fields.average_price),
-            entryFundingIndex: decodeFromFieldsWithTypes("u64", item.fields.entry_funding_index),
-            realizedHasProfit: decodeFromFieldsWithTypes("bool", item.fields.realized_has_profit),
-            unrealizedCost: decodeFromFieldsWithTypes("u64", item.fields.unrealized_cost),
+            entryBorrowIndex: decodeFromFieldsWithTypes("u64", item.fields.entry_borrow_index),
+            entryFundingRateIndexSign: decodeFromFieldsWithTypes("bool", item.fields.entry_funding_rate_index_sign),
+            entryFundingRateIndex: decodeFromFieldsWithTypes("u64", item.fields.entry_funding_rate_index),
+            unrealizedLoss: decodeFromFieldsWithTypes("u64", item.fields.unrealized_loss),
+            unrealizedFundingSign: decodeFromFieldsWithTypes("bool", item.fields.unrealized_funding_sign),
+            unrealizedFundingFee: decodeFromFieldsWithTypes("u64", item.fields.unrealized_funding_fee),
+            unrealizedBorrowFee: decodeFromFieldsWithTypes("u64", item.fields.unrealized_borrow_fee),
             unrealizedRebate: decodeFromFieldsWithTypes("u64", item.fields.unrealized_rebate),
+            optionCollateralInfo: decodeFromFieldsWithTypes(
+                Option.reified(OptionCollateralInfo.reified()),
+                item.fields.option_collateral_info
+            ),
             u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
         });
     }
@@ -441,6 +664,8 @@ export class Position implements StructClass {
             id: this.id,
             createTsMs: this.createTsMs.toString(),
             positionId: this.positionId.toString(),
+            linkedOrderIds: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.linkedOrderIds),
+            linkedOrderPrices: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.linkedOrderPrices),
             user: this.user,
             isLong: this.isLong,
             size: this.size.toString(),
@@ -451,10 +676,18 @@ export class Position implements StructClass {
             collateralAmount: this.collateralAmount.toString(),
             reserveAmount: this.reserveAmount.toString(),
             averagePrice: this.averagePrice.toString(),
-            entryFundingIndex: this.entryFundingIndex.toString(),
-            realizedHasProfit: this.realizedHasProfit,
-            unrealizedCost: this.unrealizedCost.toString(),
+            entryBorrowIndex: this.entryBorrowIndex.toString(),
+            entryFundingRateIndexSign: this.entryFundingRateIndexSign,
+            entryFundingRateIndex: this.entryFundingRateIndex.toString(),
+            unrealizedLoss: this.unrealizedLoss.toString(),
+            unrealizedFundingSign: this.unrealizedFundingSign,
+            unrealizedFundingFee: this.unrealizedFundingFee.toString(),
+            unrealizedBorrowFee: this.unrealizedBorrowFee.toString(),
             unrealizedRebate: this.unrealizedRebate.toString(),
+            optionCollateralInfo: fieldToJSON<Option<OptionCollateralInfo>>(
+                `0x1::option::Option<0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::OptionCollateralInfo>`,
+                this.optionCollateralInfo
+            ),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
         };
     }
@@ -468,6 +701,8 @@ export class Position implements StructClass {
             id: decodeFromJSONField(UID.reified(), field.id),
             createTsMs: decodeFromJSONField("u64", field.createTsMs),
             positionId: decodeFromJSONField("u64", field.positionId),
+            linkedOrderIds: decodeFromJSONField(reified.vector("u64"), field.linkedOrderIds),
+            linkedOrderPrices: decodeFromJSONField(reified.vector("u64"), field.linkedOrderPrices),
             user: decodeFromJSONField("address", field.user),
             isLong: decodeFromJSONField("bool", field.isLong),
             size: decodeFromJSONField("u64", field.size),
@@ -478,10 +713,15 @@ export class Position implements StructClass {
             collateralAmount: decodeFromJSONField("u64", field.collateralAmount),
             reserveAmount: decodeFromJSONField("u64", field.reserveAmount),
             averagePrice: decodeFromJSONField("u64", field.averagePrice),
-            entryFundingIndex: decodeFromJSONField("u64", field.entryFundingIndex),
-            realizedHasProfit: decodeFromJSONField("bool", field.realizedHasProfit),
-            unrealizedCost: decodeFromJSONField("u64", field.unrealizedCost),
+            entryBorrowIndex: decodeFromJSONField("u64", field.entryBorrowIndex),
+            entryFundingRateIndexSign: decodeFromJSONField("bool", field.entryFundingRateIndexSign),
+            entryFundingRateIndex: decodeFromJSONField("u64", field.entryFundingRateIndex),
+            unrealizedLoss: decodeFromJSONField("u64", field.unrealizedLoss),
+            unrealizedFundingSign: decodeFromJSONField("bool", field.unrealizedFundingSign),
+            unrealizedFundingFee: decodeFromJSONField("u64", field.unrealizedFundingFee),
+            unrealizedBorrowFee: decodeFromJSONField("u64", field.unrealizedBorrowFee),
             unrealizedRebate: decodeFromJSONField("u64", field.unrealizedRebate),
+            optionCollateralInfo: decodeFromJSONField(Option.reified(OptionCollateralInfo.reified()), field.optionCollateralInfo),
             u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
         });
     }
@@ -516,11 +756,621 @@ export class Position implements StructClass {
     }
 }
 
+/* ============================== RealizeFundingEvent =============================== */
+
+export function isRealizeFundingEvent(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizeFundingEvent";
+}
+
+export interface RealizeFundingEventFields {
+    user: ToField<"address">;
+    collateralToken: ToField<TypeName>;
+    symbol: ToField<Symbol>;
+    positionId: ToField<"u64">;
+    realizedFundingSign: ToField<"bool">;
+    realizedFundingFee: ToField<"u64">;
+    u64Padding: ToField<Vector<"u64">>;
+}
+
+export type RealizeFundingEventReified = Reified<RealizeFundingEvent, RealizeFundingEventFields>;
+
+export class RealizeFundingEvent implements StructClass {
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizeFundingEvent";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = RealizeFundingEvent.$typeName;
+
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizeFundingEvent";
+
+    readonly $typeArgs: [];
+
+    readonly user: ToField<"address">;
+    readonly collateralToken: ToField<TypeName>;
+    readonly symbol: ToField<Symbol>;
+    readonly positionId: ToField<"u64">;
+    readonly realizedFundingSign: ToField<"bool">;
+    readonly realizedFundingFee: ToField<"u64">;
+    readonly u64Padding: ToField<Vector<"u64">>;
+
+    private constructor(typeArgs: [], fields: RealizeFundingEventFields) {
+        this.$fullTypeName = composeSuiType(
+            RealizeFundingEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizeFundingEvent";
+        this.$typeArgs = typeArgs;
+
+        this.user = fields.user;
+        this.collateralToken = fields.collateralToken;
+        this.symbol = fields.symbol;
+        this.positionId = fields.positionId;
+        this.realizedFundingSign = fields.realizedFundingSign;
+        this.realizedFundingFee = fields.realizedFundingFee;
+        this.u64Padding = fields.u64Padding;
+    }
+
+    static reified(): RealizeFundingEventReified {
+        return {
+            typeName: RealizeFundingEvent.$typeName,
+            fullTypeName: composeSuiType(
+                RealizeFundingEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizeFundingEvent",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => RealizeFundingEvent.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => RealizeFundingEvent.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => RealizeFundingEvent.fromBcs(data),
+            bcs: RealizeFundingEvent.bcs,
+            fromJSONField: (field: any) => RealizeFundingEvent.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => RealizeFundingEvent.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => RealizeFundingEvent.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => RealizeFundingEvent.fetch(client, id),
+            new: (fields: RealizeFundingEventFields) => {
+                return new RealizeFundingEvent([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return RealizeFundingEvent.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<RealizeFundingEvent>> {
+        return phantom(RealizeFundingEvent.reified());
+    }
+    static get p() {
+        return RealizeFundingEvent.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("RealizeFundingEvent", {
+            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            collateral_token: TypeName.bcs,
+            symbol: Symbol.bcs,
+            position_id: bcs.u64(),
+            realized_funding_sign: bcs.bool(),
+            realized_funding_fee: bcs.u64(),
+            u64_padding: bcs.vector(bcs.u64()),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): RealizeFundingEvent {
+        return RealizeFundingEvent.reified().new({
+            user: decodeFromFields("address", fields.user),
+            collateralToken: decodeFromFields(TypeName.reified(), fields.collateral_token),
+            symbol: decodeFromFields(Symbol.reified(), fields.symbol),
+            positionId: decodeFromFields("u64", fields.position_id),
+            realizedFundingSign: decodeFromFields("bool", fields.realized_funding_sign),
+            realizedFundingFee: decodeFromFields("u64", fields.realized_funding_fee),
+            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): RealizeFundingEvent {
+        if (!isRealizeFundingEvent(item.type)) {
+            throw new Error("not a RealizeFundingEvent type");
+        }
+
+        return RealizeFundingEvent.reified().new({
+            user: decodeFromFieldsWithTypes("address", item.fields.user),
+            collateralToken: decodeFromFieldsWithTypes(TypeName.reified(), item.fields.collateral_token),
+            symbol: decodeFromFieldsWithTypes(Symbol.reified(), item.fields.symbol),
+            positionId: decodeFromFieldsWithTypes("u64", item.fields.position_id),
+            realizedFundingSign: decodeFromFieldsWithTypes("bool", item.fields.realized_funding_sign),
+            realizedFundingFee: decodeFromFieldsWithTypes("u64", item.fields.realized_funding_fee),
+            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): RealizeFundingEvent {
+        return RealizeFundingEvent.fromFields(RealizeFundingEvent.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            user: this.user,
+            collateralToken: this.collateralToken.toJSONField(),
+            symbol: this.symbol.toJSONField(),
+            positionId: this.positionId.toString(),
+            realizedFundingSign: this.realizedFundingSign,
+            realizedFundingFee: this.realizedFundingFee.toString(),
+            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): RealizeFundingEvent {
+        return RealizeFundingEvent.reified().new({
+            user: decodeFromJSONField("address", field.user),
+            collateralToken: decodeFromJSONField(TypeName.reified(), field.collateralToken),
+            symbol: decodeFromJSONField(Symbol.reified(), field.symbol),
+            positionId: decodeFromJSONField("u64", field.positionId),
+            realizedFundingSign: decodeFromJSONField("bool", field.realizedFundingSign),
+            realizedFundingFee: decodeFromJSONField("u64", field.realizedFundingFee),
+            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): RealizeFundingEvent {
+        if (json.$typeName !== RealizeFundingEvent.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return RealizeFundingEvent.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): RealizeFundingEvent {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isRealizeFundingEvent(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a RealizeFundingEvent object`);
+        }
+        return RealizeFundingEvent.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<RealizeFundingEvent> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching RealizeFundingEvent object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isRealizeFundingEvent(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a RealizeFundingEvent object`);
+        }
+        return RealizeFundingEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
+/* ============================== RealizedPnlEvent =============================== */
+
+export function isRealizedPnlEvent(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizedPnlEvent";
+}
+
+export interface RealizedPnlEventFields {
+    user: ToField<"address">;
+    collateralToken: ToField<TypeName>;
+    symbol: ToField<Symbol>;
+    positionId: ToField<"u64">;
+    positionAverageEntryPrice: ToField<"u64">;
+    filledPrice: ToField<"u64">;
+    realizedPnlSign: ToField<"bool">;
+    realizedPnl: ToField<"u64">;
+    realizedTradingFee: ToField<"u64">;
+    realizedBorrowFee: ToField<"u64">;
+    u64Padding: ToField<Vector<"u64">>;
+}
+
+export type RealizedPnlEventReified = Reified<RealizedPnlEvent, RealizedPnlEventFields>;
+
+export class RealizedPnlEvent implements StructClass {
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizedPnlEvent";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = RealizedPnlEvent.$typeName;
+
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizedPnlEvent";
+
+    readonly $typeArgs: [];
+
+    readonly user: ToField<"address">;
+    readonly collateralToken: ToField<TypeName>;
+    readonly symbol: ToField<Symbol>;
+    readonly positionId: ToField<"u64">;
+    readonly positionAverageEntryPrice: ToField<"u64">;
+    readonly filledPrice: ToField<"u64">;
+    readonly realizedPnlSign: ToField<"bool">;
+    readonly realizedPnl: ToField<"u64">;
+    readonly realizedTradingFee: ToField<"u64">;
+    readonly realizedBorrowFee: ToField<"u64">;
+    readonly u64Padding: ToField<Vector<"u64">>;
+
+    private constructor(typeArgs: [], fields: RealizedPnlEventFields) {
+        this.$fullTypeName = composeSuiType(
+            RealizedPnlEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizedPnlEvent";
+        this.$typeArgs = typeArgs;
+
+        this.user = fields.user;
+        this.collateralToken = fields.collateralToken;
+        this.symbol = fields.symbol;
+        this.positionId = fields.positionId;
+        this.positionAverageEntryPrice = fields.positionAverageEntryPrice;
+        this.filledPrice = fields.filledPrice;
+        this.realizedPnlSign = fields.realizedPnlSign;
+        this.realizedPnl = fields.realizedPnl;
+        this.realizedTradingFee = fields.realizedTradingFee;
+        this.realizedBorrowFee = fields.realizedBorrowFee;
+        this.u64Padding = fields.u64Padding;
+    }
+
+    static reified(): RealizedPnlEventReified {
+        return {
+            typeName: RealizedPnlEvent.$typeName,
+            fullTypeName: composeSuiType(
+                RealizedPnlEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RealizedPnlEvent",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => RealizedPnlEvent.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => RealizedPnlEvent.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => RealizedPnlEvent.fromBcs(data),
+            bcs: RealizedPnlEvent.bcs,
+            fromJSONField: (field: any) => RealizedPnlEvent.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => RealizedPnlEvent.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => RealizedPnlEvent.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => RealizedPnlEvent.fetch(client, id),
+            new: (fields: RealizedPnlEventFields) => {
+                return new RealizedPnlEvent([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return RealizedPnlEvent.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<RealizedPnlEvent>> {
+        return phantom(RealizedPnlEvent.reified());
+    }
+    static get p() {
+        return RealizedPnlEvent.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("RealizedPnlEvent", {
+            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            collateral_token: TypeName.bcs,
+            symbol: Symbol.bcs,
+            position_id: bcs.u64(),
+            position_average_entry_price: bcs.u64(),
+            filled_price: bcs.u64(),
+            realized_pnl_sign: bcs.bool(),
+            realized_pnl: bcs.u64(),
+            realized_trading_fee: bcs.u64(),
+            realized_borrow_fee: bcs.u64(),
+            u64_padding: bcs.vector(bcs.u64()),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): RealizedPnlEvent {
+        return RealizedPnlEvent.reified().new({
+            user: decodeFromFields("address", fields.user),
+            collateralToken: decodeFromFields(TypeName.reified(), fields.collateral_token),
+            symbol: decodeFromFields(Symbol.reified(), fields.symbol),
+            positionId: decodeFromFields("u64", fields.position_id),
+            positionAverageEntryPrice: decodeFromFields("u64", fields.position_average_entry_price),
+            filledPrice: decodeFromFields("u64", fields.filled_price),
+            realizedPnlSign: decodeFromFields("bool", fields.realized_pnl_sign),
+            realizedPnl: decodeFromFields("u64", fields.realized_pnl),
+            realizedTradingFee: decodeFromFields("u64", fields.realized_trading_fee),
+            realizedBorrowFee: decodeFromFields("u64", fields.realized_borrow_fee),
+            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): RealizedPnlEvent {
+        if (!isRealizedPnlEvent(item.type)) {
+            throw new Error("not a RealizedPnlEvent type");
+        }
+
+        return RealizedPnlEvent.reified().new({
+            user: decodeFromFieldsWithTypes("address", item.fields.user),
+            collateralToken: decodeFromFieldsWithTypes(TypeName.reified(), item.fields.collateral_token),
+            symbol: decodeFromFieldsWithTypes(Symbol.reified(), item.fields.symbol),
+            positionId: decodeFromFieldsWithTypes("u64", item.fields.position_id),
+            positionAverageEntryPrice: decodeFromFieldsWithTypes("u64", item.fields.position_average_entry_price),
+            filledPrice: decodeFromFieldsWithTypes("u64", item.fields.filled_price),
+            realizedPnlSign: decodeFromFieldsWithTypes("bool", item.fields.realized_pnl_sign),
+            realizedPnl: decodeFromFieldsWithTypes("u64", item.fields.realized_pnl),
+            realizedTradingFee: decodeFromFieldsWithTypes("u64", item.fields.realized_trading_fee),
+            realizedBorrowFee: decodeFromFieldsWithTypes("u64", item.fields.realized_borrow_fee),
+            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): RealizedPnlEvent {
+        return RealizedPnlEvent.fromFields(RealizedPnlEvent.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            user: this.user,
+            collateralToken: this.collateralToken.toJSONField(),
+            symbol: this.symbol.toJSONField(),
+            positionId: this.positionId.toString(),
+            positionAverageEntryPrice: this.positionAverageEntryPrice.toString(),
+            filledPrice: this.filledPrice.toString(),
+            realizedPnlSign: this.realizedPnlSign,
+            realizedPnl: this.realizedPnl.toString(),
+            realizedTradingFee: this.realizedTradingFee.toString(),
+            realizedBorrowFee: this.realizedBorrowFee.toString(),
+            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): RealizedPnlEvent {
+        return RealizedPnlEvent.reified().new({
+            user: decodeFromJSONField("address", field.user),
+            collateralToken: decodeFromJSONField(TypeName.reified(), field.collateralToken),
+            symbol: decodeFromJSONField(Symbol.reified(), field.symbol),
+            positionId: decodeFromJSONField("u64", field.positionId),
+            positionAverageEntryPrice: decodeFromJSONField("u64", field.positionAverageEntryPrice),
+            filledPrice: decodeFromJSONField("u64", field.filledPrice),
+            realizedPnlSign: decodeFromJSONField("bool", field.realizedPnlSign),
+            realizedPnl: decodeFromJSONField("u64", field.realizedPnl),
+            realizedTradingFee: decodeFromJSONField("u64", field.realizedTradingFee),
+            realizedBorrowFee: decodeFromJSONField("u64", field.realizedBorrowFee),
+            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): RealizedPnlEvent {
+        if (json.$typeName !== RealizedPnlEvent.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return RealizedPnlEvent.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): RealizedPnlEvent {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isRealizedPnlEvent(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a RealizedPnlEvent object`);
+        }
+        return RealizedPnlEvent.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<RealizedPnlEvent> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching RealizedPnlEvent object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isRealizedPnlEvent(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a RealizedPnlEvent object`);
+        }
+        return RealizedPnlEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
+/* ============================== RemovePositionEvent =============================== */
+
+export function isRemovePositionEvent(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RemovePositionEvent";
+}
+
+export interface RemovePositionEventFields {
+    user: ToField<"address">;
+    collateralToken: ToField<TypeName>;
+    symbol: ToField<Symbol>;
+    linkedOrderIds: ToField<Vector<"u64">>;
+    linkedOrderPrices: ToField<Vector<"u64">>;
+    remainingCollateralAmount: ToField<"u64">;
+    realizedBorrowFeeAmount: ToField<"u64">;
+    u64Padding: ToField<Vector<"u64">>;
+}
+
+export type RemovePositionEventReified = Reified<RemovePositionEvent, RemovePositionEventFields>;
+
+export class RemovePositionEvent implements StructClass {
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RemovePositionEvent";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = RemovePositionEvent.$typeName;
+
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RemovePositionEvent";
+
+    readonly $typeArgs: [];
+
+    readonly user: ToField<"address">;
+    readonly collateralToken: ToField<TypeName>;
+    readonly symbol: ToField<Symbol>;
+    readonly linkedOrderIds: ToField<Vector<"u64">>;
+    readonly linkedOrderPrices: ToField<Vector<"u64">>;
+    readonly remainingCollateralAmount: ToField<"u64">;
+    readonly realizedBorrowFeeAmount: ToField<"u64">;
+    readonly u64Padding: ToField<Vector<"u64">>;
+
+    private constructor(typeArgs: [], fields: RemovePositionEventFields) {
+        this.$fullTypeName = composeSuiType(
+            RemovePositionEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RemovePositionEvent";
+        this.$typeArgs = typeArgs;
+
+        this.user = fields.user;
+        this.collateralToken = fields.collateralToken;
+        this.symbol = fields.symbol;
+        this.linkedOrderIds = fields.linkedOrderIds;
+        this.linkedOrderPrices = fields.linkedOrderPrices;
+        this.remainingCollateralAmount = fields.remainingCollateralAmount;
+        this.realizedBorrowFeeAmount = fields.realizedBorrowFeeAmount;
+        this.u64Padding = fields.u64Padding;
+    }
+
+    static reified(): RemovePositionEventReified {
+        return {
+            typeName: RemovePositionEvent.$typeName,
+            fullTypeName: composeSuiType(
+                RemovePositionEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::RemovePositionEvent",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => RemovePositionEvent.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => RemovePositionEvent.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => RemovePositionEvent.fromBcs(data),
+            bcs: RemovePositionEvent.bcs,
+            fromJSONField: (field: any) => RemovePositionEvent.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => RemovePositionEvent.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => RemovePositionEvent.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => RemovePositionEvent.fetch(client, id),
+            new: (fields: RemovePositionEventFields) => {
+                return new RemovePositionEvent([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return RemovePositionEvent.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<RemovePositionEvent>> {
+        return phantom(RemovePositionEvent.reified());
+    }
+    static get p() {
+        return RemovePositionEvent.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("RemovePositionEvent", {
+            user: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            collateral_token: TypeName.bcs,
+            symbol: Symbol.bcs,
+            linked_order_ids: bcs.vector(bcs.u64()),
+            linked_order_prices: bcs.vector(bcs.u64()),
+            remaining_collateral_amount: bcs.u64(),
+            realized_borrow_fee_amount: bcs.u64(),
+            u64_padding: bcs.vector(bcs.u64()),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): RemovePositionEvent {
+        return RemovePositionEvent.reified().new({
+            user: decodeFromFields("address", fields.user),
+            collateralToken: decodeFromFields(TypeName.reified(), fields.collateral_token),
+            symbol: decodeFromFields(Symbol.reified(), fields.symbol),
+            linkedOrderIds: decodeFromFields(reified.vector("u64"), fields.linked_order_ids),
+            linkedOrderPrices: decodeFromFields(reified.vector("u64"), fields.linked_order_prices),
+            remainingCollateralAmount: decodeFromFields("u64", fields.remaining_collateral_amount),
+            realizedBorrowFeeAmount: decodeFromFields("u64", fields.realized_borrow_fee_amount),
+            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): RemovePositionEvent {
+        if (!isRemovePositionEvent(item.type)) {
+            throw new Error("not a RemovePositionEvent type");
+        }
+
+        return RemovePositionEvent.reified().new({
+            user: decodeFromFieldsWithTypes("address", item.fields.user),
+            collateralToken: decodeFromFieldsWithTypes(TypeName.reified(), item.fields.collateral_token),
+            symbol: decodeFromFieldsWithTypes(Symbol.reified(), item.fields.symbol),
+            linkedOrderIds: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.linked_order_ids),
+            linkedOrderPrices: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.linked_order_prices),
+            remainingCollateralAmount: decodeFromFieldsWithTypes("u64", item.fields.remaining_collateral_amount),
+            realizedBorrowFeeAmount: decodeFromFieldsWithTypes("u64", item.fields.realized_borrow_fee_amount),
+            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): RemovePositionEvent {
+        return RemovePositionEvent.fromFields(RemovePositionEvent.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            user: this.user,
+            collateralToken: this.collateralToken.toJSONField(),
+            symbol: this.symbol.toJSONField(),
+            linkedOrderIds: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.linkedOrderIds),
+            linkedOrderPrices: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.linkedOrderPrices),
+            remainingCollateralAmount: this.remainingCollateralAmount.toString(),
+            realizedBorrowFeeAmount: this.realizedBorrowFeeAmount.toString(),
+            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): RemovePositionEvent {
+        return RemovePositionEvent.reified().new({
+            user: decodeFromJSONField("address", field.user),
+            collateralToken: decodeFromJSONField(TypeName.reified(), field.collateralToken),
+            symbol: decodeFromJSONField(Symbol.reified(), field.symbol),
+            linkedOrderIds: decodeFromJSONField(reified.vector("u64"), field.linkedOrderIds),
+            linkedOrderPrices: decodeFromJSONField(reified.vector("u64"), field.linkedOrderPrices),
+            remainingCollateralAmount: decodeFromJSONField("u64", field.remainingCollateralAmount),
+            realizedBorrowFeeAmount: decodeFromJSONField("u64", field.realizedBorrowFeeAmount),
+            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): RemovePositionEvent {
+        if (json.$typeName !== RemovePositionEvent.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return RemovePositionEvent.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): RemovePositionEvent {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isRemovePositionEvent(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a RemovePositionEvent object`);
+        }
+        return RemovePositionEvent.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<RemovePositionEvent> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching RemovePositionEvent object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isRemovePositionEvent(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a RemovePositionEvent object`);
+        }
+        return RemovePositionEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
 /* ============================== TradingOrder =============================== */
 
 export function isTradingOrder(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::position::TradingOrder";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::TradingOrder";
 }
 
 export interface TradingOrderFields {
@@ -546,12 +1396,12 @@ export interface TradingOrderFields {
 export type TradingOrderReified = Reified<TradingOrder, TradingOrderFields>;
 
 export class TradingOrder implements StructClass {
-    static readonly $typeName = "0x0::position::TradingOrder";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::TradingOrder";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = TradingOrder.$typeName;
 
-    readonly $fullTypeName: "0x0::position::TradingOrder";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::TradingOrder";
 
     readonly $typeArgs: [];
 
@@ -574,7 +1424,10 @@ export class TradingOrder implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: TradingOrderFields) {
-        this.$fullTypeName = composeSuiType(TradingOrder.$typeName, ...typeArgs) as "0x0::position::TradingOrder";
+        this.$fullTypeName = composeSuiType(
+            TradingOrder.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::TradingOrder";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -599,7 +1452,10 @@ export class TradingOrder implements StructClass {
     static reified(): TradingOrderReified {
         return {
             typeName: TradingOrder.$typeName,
-            fullTypeName: composeSuiType(TradingOrder.$typeName, ...[]) as "0x0::position::TradingOrder",
+            fullTypeName: composeSuiType(
+                TradingOrder.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::position::TradingOrder",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => TradingOrder.fromFields(fields),

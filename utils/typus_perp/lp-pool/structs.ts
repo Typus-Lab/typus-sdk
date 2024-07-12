@@ -18,11 +18,185 @@ import { FieldsWithTypes, composeSuiType, compressSuiType } from "../../_framewo
 import { bcs, fromB64, fromHEX, toHEX } from "@mysten/bcs";
 import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
+/* ============================== Config =============================== */
+
+export function isConfig(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::Config";
+}
+
+export interface ConfigFields {
+    oracleId: ToField<"address">;
+    liquidityTokenDecimal: ToField<"u64">;
+    spotConfig: ToField<SpotConfig>;
+    marginConfig: ToField<MarginConfig>;
+    u64Padding: ToField<Vector<"u64">>;
+}
+
+export type ConfigReified = Reified<Config, ConfigFields>;
+
+export class Config implements StructClass {
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::Config";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = Config.$typeName;
+
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::Config";
+
+    readonly $typeArgs: [];
+
+    readonly oracleId: ToField<"address">;
+    readonly liquidityTokenDecimal: ToField<"u64">;
+    readonly spotConfig: ToField<SpotConfig>;
+    readonly marginConfig: ToField<MarginConfig>;
+    readonly u64Padding: ToField<Vector<"u64">>;
+
+    private constructor(typeArgs: [], fields: ConfigFields) {
+        this.$fullTypeName = composeSuiType(
+            Config.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::Config";
+        this.$typeArgs = typeArgs;
+
+        this.oracleId = fields.oracleId;
+        this.liquidityTokenDecimal = fields.liquidityTokenDecimal;
+        this.spotConfig = fields.spotConfig;
+        this.marginConfig = fields.marginConfig;
+        this.u64Padding = fields.u64Padding;
+    }
+
+    static reified(): ConfigReified {
+        return {
+            typeName: Config.$typeName,
+            fullTypeName: composeSuiType(
+                Config.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::Config",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => Config.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => Config.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => Config.fromBcs(data),
+            bcs: Config.bcs,
+            fromJSONField: (field: any) => Config.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => Config.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => Config.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => Config.fetch(client, id),
+            new: (fields: ConfigFields) => {
+                return new Config([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return Config.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<Config>> {
+        return phantom(Config.reified());
+    }
+    static get p() {
+        return Config.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("Config", {
+            oracle_id: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            liquidity_token_decimal: bcs.u64(),
+            spot_config: SpotConfig.bcs,
+            margin_config: MarginConfig.bcs,
+            u64_padding: bcs.vector(bcs.u64()),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): Config {
+        return Config.reified().new({
+            oracleId: decodeFromFields("address", fields.oracle_id),
+            liquidityTokenDecimal: decodeFromFields("u64", fields.liquidity_token_decimal),
+            spotConfig: decodeFromFields(SpotConfig.reified(), fields.spot_config),
+            marginConfig: decodeFromFields(MarginConfig.reified(), fields.margin_config),
+            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): Config {
+        if (!isConfig(item.type)) {
+            throw new Error("not a Config type");
+        }
+
+        return Config.reified().new({
+            oracleId: decodeFromFieldsWithTypes("address", item.fields.oracle_id),
+            liquidityTokenDecimal: decodeFromFieldsWithTypes("u64", item.fields.liquidity_token_decimal),
+            spotConfig: decodeFromFieldsWithTypes(SpotConfig.reified(), item.fields.spot_config),
+            marginConfig: decodeFromFieldsWithTypes(MarginConfig.reified(), item.fields.margin_config),
+            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): Config {
+        return Config.fromFields(Config.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            oracleId: this.oracleId,
+            liquidityTokenDecimal: this.liquidityTokenDecimal.toString(),
+            spotConfig: this.spotConfig.toJSONField(),
+            marginConfig: this.marginConfig.toJSONField(),
+            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): Config {
+        return Config.reified().new({
+            oracleId: decodeFromJSONField("address", field.oracleId),
+            liquidityTokenDecimal: decodeFromJSONField("u64", field.liquidityTokenDecimal),
+            spotConfig: decodeFromJSONField(SpotConfig.reified(), field.spotConfig),
+            marginConfig: decodeFromJSONField(MarginConfig.reified(), field.marginConfig),
+            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): Config {
+        if (json.$typeName !== Config.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return Config.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): Config {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isConfig(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a Config object`);
+        }
+        return Config.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<Config> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching Config object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isConfig(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a Config object`);
+        }
+        return Config.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
 /* ============================== State =============================== */
 
 export function isState(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::State";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::State";
 }
 
 export interface StateFields {
@@ -30,21 +204,23 @@ export interface StateFields {
     valueInUsd: ToField<"u64">;
     reservedAmount: ToField<"u64">;
     updateTsMs: ToField<"u64">;
-    lastFundingTsMs: ToField<"u64">;
-    cumulativeFundingRate: ToField<"u64">;
     isActive: ToField<"bool">;
+    lastBorrowRateTsMs: ToField<"u64">;
+    cumulativeBorrowRate: ToField<"u64">;
+    previousLastBorrowRateTsMs: ToField<"u64">;
+    previousCumulativeBorrowRate: ToField<"u64">;
     u64Padding: ToField<Vector<"u64">>;
 }
 
 export type StateReified = Reified<State, StateFields>;
 
 export class State implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::State";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::State";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = State.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::State";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::State";
 
     readonly $typeArgs: [];
 
@@ -52,29 +228,39 @@ export class State implements StructClass {
     readonly valueInUsd: ToField<"u64">;
     readonly reservedAmount: ToField<"u64">;
     readonly updateTsMs: ToField<"u64">;
-    readonly lastFundingTsMs: ToField<"u64">;
-    readonly cumulativeFundingRate: ToField<"u64">;
     readonly isActive: ToField<"bool">;
+    readonly lastBorrowRateTsMs: ToField<"u64">;
+    readonly cumulativeBorrowRate: ToField<"u64">;
+    readonly previousLastBorrowRateTsMs: ToField<"u64">;
+    readonly previousCumulativeBorrowRate: ToField<"u64">;
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: StateFields) {
-        this.$fullTypeName = composeSuiType(State.$typeName, ...typeArgs) as "0x0::lp_pool::State";
+        this.$fullTypeName = composeSuiType(
+            State.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::State";
         this.$typeArgs = typeArgs;
 
         this.liquidityAmount = fields.liquidityAmount;
         this.valueInUsd = fields.valueInUsd;
         this.reservedAmount = fields.reservedAmount;
         this.updateTsMs = fields.updateTsMs;
-        this.lastFundingTsMs = fields.lastFundingTsMs;
-        this.cumulativeFundingRate = fields.cumulativeFundingRate;
         this.isActive = fields.isActive;
+        this.lastBorrowRateTsMs = fields.lastBorrowRateTsMs;
+        this.cumulativeBorrowRate = fields.cumulativeBorrowRate;
+        this.previousLastBorrowRateTsMs = fields.previousLastBorrowRateTsMs;
+        this.previousCumulativeBorrowRate = fields.previousCumulativeBorrowRate;
         this.u64Padding = fields.u64Padding;
     }
 
     static reified(): StateReified {
         return {
             typeName: State.$typeName,
-            fullTypeName: composeSuiType(State.$typeName, ...[]) as "0x0::lp_pool::State",
+            fullTypeName: composeSuiType(
+                State.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::State",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => State.fromFields(fields),
@@ -109,9 +295,11 @@ export class State implements StructClass {
             value_in_usd: bcs.u64(),
             reserved_amount: bcs.u64(),
             update_ts_ms: bcs.u64(),
-            last_funding_ts_ms: bcs.u64(),
-            cumulative_funding_rate: bcs.u64(),
             is_active: bcs.bool(),
+            last_borrow_rate_ts_ms: bcs.u64(),
+            cumulative_borrow_rate: bcs.u64(),
+            previous_last_borrow_rate_ts_ms: bcs.u64(),
+            previous_cumulative_borrow_rate: bcs.u64(),
             u64_padding: bcs.vector(bcs.u64()),
         });
     }
@@ -122,9 +310,11 @@ export class State implements StructClass {
             valueInUsd: decodeFromFields("u64", fields.value_in_usd),
             reservedAmount: decodeFromFields("u64", fields.reserved_amount),
             updateTsMs: decodeFromFields("u64", fields.update_ts_ms),
-            lastFundingTsMs: decodeFromFields("u64", fields.last_funding_ts_ms),
-            cumulativeFundingRate: decodeFromFields("u64", fields.cumulative_funding_rate),
             isActive: decodeFromFields("bool", fields.is_active),
+            lastBorrowRateTsMs: decodeFromFields("u64", fields.last_borrow_rate_ts_ms),
+            cumulativeBorrowRate: decodeFromFields("u64", fields.cumulative_borrow_rate),
+            previousLastBorrowRateTsMs: decodeFromFields("u64", fields.previous_last_borrow_rate_ts_ms),
+            previousCumulativeBorrowRate: decodeFromFields("u64", fields.previous_cumulative_borrow_rate),
             u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
         });
     }
@@ -139,9 +329,11 @@ export class State implements StructClass {
             valueInUsd: decodeFromFieldsWithTypes("u64", item.fields.value_in_usd),
             reservedAmount: decodeFromFieldsWithTypes("u64", item.fields.reserved_amount),
             updateTsMs: decodeFromFieldsWithTypes("u64", item.fields.update_ts_ms),
-            lastFundingTsMs: decodeFromFieldsWithTypes("u64", item.fields.last_funding_ts_ms),
-            cumulativeFundingRate: decodeFromFieldsWithTypes("u64", item.fields.cumulative_funding_rate),
             isActive: decodeFromFieldsWithTypes("bool", item.fields.is_active),
+            lastBorrowRateTsMs: decodeFromFieldsWithTypes("u64", item.fields.last_borrow_rate_ts_ms),
+            cumulativeBorrowRate: decodeFromFieldsWithTypes("u64", item.fields.cumulative_borrow_rate),
+            previousLastBorrowRateTsMs: decodeFromFieldsWithTypes("u64", item.fields.previous_last_borrow_rate_ts_ms),
+            previousCumulativeBorrowRate: decodeFromFieldsWithTypes("u64", item.fields.previous_cumulative_borrow_rate),
             u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
         });
     }
@@ -156,9 +348,11 @@ export class State implements StructClass {
             valueInUsd: this.valueInUsd.toString(),
             reservedAmount: this.reservedAmount.toString(),
             updateTsMs: this.updateTsMs.toString(),
-            lastFundingTsMs: this.lastFundingTsMs.toString(),
-            cumulativeFundingRate: this.cumulativeFundingRate.toString(),
             isActive: this.isActive,
+            lastBorrowRateTsMs: this.lastBorrowRateTsMs.toString(),
+            cumulativeBorrowRate: this.cumulativeBorrowRate.toString(),
+            previousLastBorrowRateTsMs: this.previousLastBorrowRateTsMs.toString(),
+            previousCumulativeBorrowRate: this.previousCumulativeBorrowRate.toString(),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
         };
     }
@@ -173,9 +367,11 @@ export class State implements StructClass {
             valueInUsd: decodeFromJSONField("u64", field.valueInUsd),
             reservedAmount: decodeFromJSONField("u64", field.reservedAmount),
             updateTsMs: decodeFromJSONField("u64", field.updateTsMs),
-            lastFundingTsMs: decodeFromJSONField("u64", field.lastFundingTsMs),
-            cumulativeFundingRate: decodeFromJSONField("u64", field.cumulativeFundingRate),
             isActive: decodeFromJSONField("bool", field.isActive),
+            lastBorrowRateTsMs: decodeFromJSONField("u64", field.lastBorrowRateTsMs),
+            cumulativeBorrowRate: decodeFromJSONField("u64", field.cumulativeBorrowRate),
+            previousLastBorrowRateTsMs: decodeFromJSONField("u64", field.previousLastBorrowRateTsMs),
+            previousCumulativeBorrowRate: decodeFromJSONField("u64", field.previousCumulativeBorrowRate),
             u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
         });
     }
@@ -214,7 +410,7 @@ export class State implements StructClass {
 
 export function isAddLiquidityTokenEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::AddLiquidityTokenEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::AddLiquidityTokenEvent";
 }
 
 export interface AddLiquidityTokenEventFields {
@@ -229,12 +425,12 @@ export interface AddLiquidityTokenEventFields {
 export type AddLiquidityTokenEventReified = Reified<AddLiquidityTokenEvent, AddLiquidityTokenEventFields>;
 
 export class AddLiquidityTokenEvent implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::AddLiquidityTokenEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::AddLiquidityTokenEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = AddLiquidityTokenEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::AddLiquidityTokenEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::AddLiquidityTokenEvent";
 
     readonly $typeArgs: [];
 
@@ -246,7 +442,10 @@ export class AddLiquidityTokenEvent implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: AddLiquidityTokenEventFields) {
-        this.$fullTypeName = composeSuiType(AddLiquidityTokenEvent.$typeName, ...typeArgs) as "0x0::lp_pool::AddLiquidityTokenEvent";
+        this.$fullTypeName = composeSuiType(
+            AddLiquidityTokenEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::AddLiquidityTokenEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -260,7 +459,10 @@ export class AddLiquidityTokenEvent implements StructClass {
     static reified(): AddLiquidityTokenEventReified {
         return {
             typeName: AddLiquidityTokenEvent.$typeName,
-            fullTypeName: composeSuiType(AddLiquidityTokenEvent.$typeName, ...[]) as "0x0::lp_pool::AddLiquidityTokenEvent",
+            fullTypeName: composeSuiType(
+                AddLiquidityTokenEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::AddLiquidityTokenEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => AddLiquidityTokenEvent.fromFields(fields),
@@ -390,7 +592,7 @@ export class AddLiquidityTokenEvent implements StructClass {
 
 export function isBurnLpEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::BurnLpEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::BurnLpEvent";
 }
 
 export interface BurnLpEventFields {
@@ -408,12 +610,12 @@ export interface BurnLpEventFields {
 export type BurnLpEventReified = Reified<BurnLpEvent, BurnLpEventFields>;
 
 export class BurnLpEvent implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::BurnLpEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::BurnLpEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = BurnLpEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::BurnLpEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::BurnLpEvent";
 
     readonly $typeArgs: [];
 
@@ -428,7 +630,10 @@ export class BurnLpEvent implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: BurnLpEventFields) {
-        this.$fullTypeName = composeSuiType(BurnLpEvent.$typeName, ...typeArgs) as "0x0::lp_pool::BurnLpEvent";
+        this.$fullTypeName = composeSuiType(
+            BurnLpEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::BurnLpEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -445,7 +650,10 @@ export class BurnLpEvent implements StructClass {
     static reified(): BurnLpEventReified {
         return {
             typeName: BurnLpEvent.$typeName,
-            fullTypeName: composeSuiType(BurnLpEvent.$typeName, ...[]) as "0x0::lp_pool::BurnLpEvent",
+            fullTypeName: composeSuiType(
+                BurnLpEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::BurnLpEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => BurnLpEvent.fromFields(fields),
@@ -586,179 +794,11 @@ export class BurnLpEvent implements StructClass {
     }
 }
 
-/* ============================== Config =============================== */
-
-export function isConfig(type: string): boolean {
-    type = compressSuiType(type);
-    return type === "0x0::lp_pool::Config";
-}
-
-export interface ConfigFields {
-    oracleId: ToField<"address">;
-    liquidityTokenDecimal: ToField<"u64">;
-    spotConfig: ToField<SpotConfig>;
-    marginConfig: ToField<MarginConfig>;
-    u64Padding: ToField<Vector<"u64">>;
-}
-
-export type ConfigReified = Reified<Config, ConfigFields>;
-
-export class Config implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::Config";
-    static readonly $numTypeParams = 0;
-
-    readonly $typeName = Config.$typeName;
-
-    readonly $fullTypeName: "0x0::lp_pool::Config";
-
-    readonly $typeArgs: [];
-
-    readonly oracleId: ToField<"address">;
-    readonly liquidityTokenDecimal: ToField<"u64">;
-    readonly spotConfig: ToField<SpotConfig>;
-    readonly marginConfig: ToField<MarginConfig>;
-    readonly u64Padding: ToField<Vector<"u64">>;
-
-    private constructor(typeArgs: [], fields: ConfigFields) {
-        this.$fullTypeName = composeSuiType(Config.$typeName, ...typeArgs) as "0x0::lp_pool::Config";
-        this.$typeArgs = typeArgs;
-
-        this.oracleId = fields.oracleId;
-        this.liquidityTokenDecimal = fields.liquidityTokenDecimal;
-        this.spotConfig = fields.spotConfig;
-        this.marginConfig = fields.marginConfig;
-        this.u64Padding = fields.u64Padding;
-    }
-
-    static reified(): ConfigReified {
-        return {
-            typeName: Config.$typeName,
-            fullTypeName: composeSuiType(Config.$typeName, ...[]) as "0x0::lp_pool::Config",
-            typeArgs: [] as [],
-            reifiedTypeArgs: [],
-            fromFields: (fields: Record<string, any>) => Config.fromFields(fields),
-            fromFieldsWithTypes: (item: FieldsWithTypes) => Config.fromFieldsWithTypes(item),
-            fromBcs: (data: Uint8Array) => Config.fromBcs(data),
-            bcs: Config.bcs,
-            fromJSONField: (field: any) => Config.fromJSONField(field),
-            fromJSON: (json: Record<string, any>) => Config.fromJSON(json),
-            fromSuiParsedData: (content: SuiParsedData) => Config.fromSuiParsedData(content),
-            fetch: async (client: SuiClient, id: string) => Config.fetch(client, id),
-            new: (fields: ConfigFields) => {
-                return new Config([], fields);
-            },
-            kind: "StructClassReified",
-        };
-    }
-
-    static get r() {
-        return Config.reified();
-    }
-
-    static phantom(): PhantomReified<ToTypeStr<Config>> {
-        return phantom(Config.reified());
-    }
-    static get p() {
-        return Config.phantom();
-    }
-
-    static get bcs() {
-        return bcs.struct("Config", {
-            oracle_id: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
-            liquidity_token_decimal: bcs.u64(),
-            spot_config: SpotConfig.bcs,
-            margin_config: MarginConfig.bcs,
-            u64_padding: bcs.vector(bcs.u64()),
-        });
-    }
-
-    static fromFields(fields: Record<string, any>): Config {
-        return Config.reified().new({
-            oracleId: decodeFromFields("address", fields.oracle_id),
-            liquidityTokenDecimal: decodeFromFields("u64", fields.liquidity_token_decimal),
-            spotConfig: decodeFromFields(SpotConfig.reified(), fields.spot_config),
-            marginConfig: decodeFromFields(MarginConfig.reified(), fields.margin_config),
-            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
-        });
-    }
-
-    static fromFieldsWithTypes(item: FieldsWithTypes): Config {
-        if (!isConfig(item.type)) {
-            throw new Error("not a Config type");
-        }
-
-        return Config.reified().new({
-            oracleId: decodeFromFieldsWithTypes("address", item.fields.oracle_id),
-            liquidityTokenDecimal: decodeFromFieldsWithTypes("u64", item.fields.liquidity_token_decimal),
-            spotConfig: decodeFromFieldsWithTypes(SpotConfig.reified(), item.fields.spot_config),
-            marginConfig: decodeFromFieldsWithTypes(MarginConfig.reified(), item.fields.margin_config),
-            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
-        });
-    }
-
-    static fromBcs(data: Uint8Array): Config {
-        return Config.fromFields(Config.bcs.parse(data));
-    }
-
-    toJSONField() {
-        return {
-            oracleId: this.oracleId,
-            liquidityTokenDecimal: this.liquidityTokenDecimal.toString(),
-            spotConfig: this.spotConfig.toJSONField(),
-            marginConfig: this.marginConfig.toJSONField(),
-            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
-        };
-    }
-
-    toJSON() {
-        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
-    }
-
-    static fromJSONField(field: any): Config {
-        return Config.reified().new({
-            oracleId: decodeFromJSONField("address", field.oracleId),
-            liquidityTokenDecimal: decodeFromJSONField("u64", field.liquidityTokenDecimal),
-            spotConfig: decodeFromJSONField(SpotConfig.reified(), field.spotConfig),
-            marginConfig: decodeFromJSONField(MarginConfig.reified(), field.marginConfig),
-            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
-        });
-    }
-
-    static fromJSON(json: Record<string, any>): Config {
-        if (json.$typeName !== Config.$typeName) {
-            throw new Error("not a WithTwoGenerics json object");
-        }
-
-        return Config.fromJSONField(json);
-    }
-
-    static fromSuiParsedData(content: SuiParsedData): Config {
-        if (content.dataType !== "moveObject") {
-            throw new Error("not an object");
-        }
-        if (!isConfig(content.type)) {
-            throw new Error(`object at ${(content.fields as any).id} is not a Config object`);
-        }
-        return Config.fromFieldsWithTypes(content);
-    }
-
-    static async fetch(client: SuiClient, id: string): Promise<Config> {
-        const res = await client.getObject({ id, options: { showBcs: true } });
-        if (res.error) {
-            throw new Error(`error fetching Config object at id ${id}: ${res.error.code}`);
-        }
-        if (res.data?.bcs?.dataType !== "moveObject" || !isConfig(res.data.bcs.type)) {
-            throw new Error(`object at id ${id} is not a Config object`);
-        }
-        return Config.fromBcs(fromB64(res.data.bcs.bcsBytes));
-    }
-}
-
 /* ============================== LiquidityPool =============================== */
 
 export function isLiquidityPool(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::LiquidityPool";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::LiquidityPool";
 }
 
 export interface LiquidityPoolFields {
@@ -775,12 +815,12 @@ export interface LiquidityPoolFields {
 export type LiquidityPoolReified = Reified<LiquidityPool, LiquidityPoolFields>;
 
 export class LiquidityPool implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::LiquidityPool";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::LiquidityPool";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LiquidityPool.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::LiquidityPool";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::LiquidityPool";
 
     readonly $typeArgs: [];
 
@@ -794,7 +834,10 @@ export class LiquidityPool implements StructClass {
     readonly bcsPadding: ToField<Vector<"u8">>;
 
     private constructor(typeArgs: [], fields: LiquidityPoolFields) {
-        this.$fullTypeName = composeSuiType(LiquidityPool.$typeName, ...typeArgs) as "0x0::lp_pool::LiquidityPool";
+        this.$fullTypeName = composeSuiType(
+            LiquidityPool.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::LiquidityPool";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -810,7 +853,10 @@ export class LiquidityPool implements StructClass {
     static reified(): LiquidityPoolReified {
         return {
             typeName: LiquidityPool.$typeName,
-            fullTypeName: composeSuiType(LiquidityPool.$typeName, ...[]) as "0x0::lp_pool::LiquidityPool",
+            fullTypeName: composeSuiType(
+                LiquidityPool.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::LiquidityPool",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LiquidityPool.fromFields(fields),
@@ -892,7 +938,10 @@ export class LiquidityPool implements StructClass {
             index: this.index.toString(),
             lpTokenType: this.lpTokenType.toJSONField(),
             liquidityTokens: fieldToJSON<Vector<TypeName>>(`vector<0x1::type_name::TypeName>`, this.liquidityTokens),
-            tokenPools: fieldToJSON<Vector<TokenPool>>(`vector<0x0::lp_pool::TokenPool>`, this.tokenPools),
+            tokenPools: fieldToJSON<Vector<TokenPool>>(
+                `vector<0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::TokenPool>`,
+                this.tokenPools
+            ),
             poolInfo: this.poolInfo.toJSONField(),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
             bcsPadding: fieldToJSON<Vector<"u8">>(`vector<u8>`, this.bcsPadding),
@@ -950,7 +999,7 @@ export class LiquidityPool implements StructClass {
 
 export function isLiquidityPoolInfo(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::LiquidityPoolInfo";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::LiquidityPoolInfo";
 }
 
 export interface LiquidityPoolInfoFields {
@@ -963,12 +1012,12 @@ export interface LiquidityPoolInfoFields {
 export type LiquidityPoolInfoReified = Reified<LiquidityPoolInfo, LiquidityPoolInfoFields>;
 
 export class LiquidityPoolInfo implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::LiquidityPoolInfo";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::LiquidityPoolInfo";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = LiquidityPoolInfo.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::LiquidityPoolInfo";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::LiquidityPoolInfo";
 
     readonly $typeArgs: [];
 
@@ -978,7 +1027,10 @@ export class LiquidityPoolInfo implements StructClass {
     readonly isActive: ToField<"bool">;
 
     private constructor(typeArgs: [], fields: LiquidityPoolInfoFields) {
-        this.$fullTypeName = composeSuiType(LiquidityPoolInfo.$typeName, ...typeArgs) as "0x0::lp_pool::LiquidityPoolInfo";
+        this.$fullTypeName = composeSuiType(
+            LiquidityPoolInfo.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::LiquidityPoolInfo";
         this.$typeArgs = typeArgs;
 
         this.lpTokenDecimal = fields.lpTokenDecimal;
@@ -990,7 +1042,10 @@ export class LiquidityPoolInfo implements StructClass {
     static reified(): LiquidityPoolInfoReified {
         return {
             typeName: LiquidityPoolInfo.$typeName,
-            fullTypeName: composeSuiType(LiquidityPoolInfo.$typeName, ...[]) as "0x0::lp_pool::LiquidityPoolInfo",
+            fullTypeName: composeSuiType(
+                LiquidityPoolInfo.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::LiquidityPoolInfo",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => LiquidityPoolInfo.fromFields(fields),
@@ -1110,44 +1165,65 @@ export class LiquidityPoolInfo implements StructClass {
 
 export function isMarginConfig(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::MarginConfig";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::MarginConfig";
 }
 
 export interface MarginConfigFields {
-    basicFundingRate: ToField<"u64">;
-    fundingIntervalTsMs: ToField<"u64">;
+    basicBorrowRate0: ToField<"u64">;
+    basicBorrowRate1: ToField<"u64">;
+    basicBorrowRate2: ToField<"u64">;
+    utilizationThresholdBp0: ToField<"u64">;
+    utilizationThresholdBp1: ToField<"u64">;
+    borrowIntervalTsMs: ToField<"u64">;
+    maxOrderReserveRatioBp: ToField<"u64">;
     u64Padding: ToField<Vector<"u64">>;
 }
 
 export type MarginConfigReified = Reified<MarginConfig, MarginConfigFields>;
 
 export class MarginConfig implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::MarginConfig";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::MarginConfig";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = MarginConfig.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::MarginConfig";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::MarginConfig";
 
     readonly $typeArgs: [];
 
-    readonly basicFundingRate: ToField<"u64">;
-    readonly fundingIntervalTsMs: ToField<"u64">;
+    readonly basicBorrowRate0: ToField<"u64">;
+    readonly basicBorrowRate1: ToField<"u64">;
+    readonly basicBorrowRate2: ToField<"u64">;
+    readonly utilizationThresholdBp0: ToField<"u64">;
+    readonly utilizationThresholdBp1: ToField<"u64">;
+    readonly borrowIntervalTsMs: ToField<"u64">;
+    readonly maxOrderReserveRatioBp: ToField<"u64">;
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: MarginConfigFields) {
-        this.$fullTypeName = composeSuiType(MarginConfig.$typeName, ...typeArgs) as "0x0::lp_pool::MarginConfig";
+        this.$fullTypeName = composeSuiType(
+            MarginConfig.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::MarginConfig";
         this.$typeArgs = typeArgs;
 
-        this.basicFundingRate = fields.basicFundingRate;
-        this.fundingIntervalTsMs = fields.fundingIntervalTsMs;
+        this.basicBorrowRate0 = fields.basicBorrowRate0;
+        this.basicBorrowRate1 = fields.basicBorrowRate1;
+        this.basicBorrowRate2 = fields.basicBorrowRate2;
+        this.utilizationThresholdBp0 = fields.utilizationThresholdBp0;
+        this.utilizationThresholdBp1 = fields.utilizationThresholdBp1;
+        this.borrowIntervalTsMs = fields.borrowIntervalTsMs;
+        this.maxOrderReserveRatioBp = fields.maxOrderReserveRatioBp;
         this.u64Padding = fields.u64Padding;
     }
 
     static reified(): MarginConfigReified {
         return {
             typeName: MarginConfig.$typeName,
-            fullTypeName: composeSuiType(MarginConfig.$typeName, ...[]) as "0x0::lp_pool::MarginConfig",
+            fullTypeName: composeSuiType(
+                MarginConfig.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::MarginConfig",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => MarginConfig.fromFields(fields),
@@ -1178,16 +1254,26 @@ export class MarginConfig implements StructClass {
 
     static get bcs() {
         return bcs.struct("MarginConfig", {
-            basic_funding_rate: bcs.u64(),
-            funding_interval_ts_ms: bcs.u64(),
+            basic_borrow_rate_0: bcs.u64(),
+            basic_borrow_rate_1: bcs.u64(),
+            basic_borrow_rate_2: bcs.u64(),
+            utilization_threshold_bp_0: bcs.u64(),
+            utilization_threshold_bp_1: bcs.u64(),
+            borrow_interval_ts_ms: bcs.u64(),
+            max_order_reserve_ratio_bp: bcs.u64(),
             u64_padding: bcs.vector(bcs.u64()),
         });
     }
 
     static fromFields(fields: Record<string, any>): MarginConfig {
         return MarginConfig.reified().new({
-            basicFundingRate: decodeFromFields("u64", fields.basic_funding_rate),
-            fundingIntervalTsMs: decodeFromFields("u64", fields.funding_interval_ts_ms),
+            basicBorrowRate0: decodeFromFields("u64", fields.basic_borrow_rate_0),
+            basicBorrowRate1: decodeFromFields("u64", fields.basic_borrow_rate_1),
+            basicBorrowRate2: decodeFromFields("u64", fields.basic_borrow_rate_2),
+            utilizationThresholdBp0: decodeFromFields("u64", fields.utilization_threshold_bp_0),
+            utilizationThresholdBp1: decodeFromFields("u64", fields.utilization_threshold_bp_1),
+            borrowIntervalTsMs: decodeFromFields("u64", fields.borrow_interval_ts_ms),
+            maxOrderReserveRatioBp: decodeFromFields("u64", fields.max_order_reserve_ratio_bp),
             u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
         });
     }
@@ -1198,8 +1284,13 @@ export class MarginConfig implements StructClass {
         }
 
         return MarginConfig.reified().new({
-            basicFundingRate: decodeFromFieldsWithTypes("u64", item.fields.basic_funding_rate),
-            fundingIntervalTsMs: decodeFromFieldsWithTypes("u64", item.fields.funding_interval_ts_ms),
+            basicBorrowRate0: decodeFromFieldsWithTypes("u64", item.fields.basic_borrow_rate_0),
+            basicBorrowRate1: decodeFromFieldsWithTypes("u64", item.fields.basic_borrow_rate_1),
+            basicBorrowRate2: decodeFromFieldsWithTypes("u64", item.fields.basic_borrow_rate_2),
+            utilizationThresholdBp0: decodeFromFieldsWithTypes("u64", item.fields.utilization_threshold_bp_0),
+            utilizationThresholdBp1: decodeFromFieldsWithTypes("u64", item.fields.utilization_threshold_bp_1),
+            borrowIntervalTsMs: decodeFromFieldsWithTypes("u64", item.fields.borrow_interval_ts_ms),
+            maxOrderReserveRatioBp: decodeFromFieldsWithTypes("u64", item.fields.max_order_reserve_ratio_bp),
             u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
         });
     }
@@ -1210,8 +1301,13 @@ export class MarginConfig implements StructClass {
 
     toJSONField() {
         return {
-            basicFundingRate: this.basicFundingRate.toString(),
-            fundingIntervalTsMs: this.fundingIntervalTsMs.toString(),
+            basicBorrowRate0: this.basicBorrowRate0.toString(),
+            basicBorrowRate1: this.basicBorrowRate1.toString(),
+            basicBorrowRate2: this.basicBorrowRate2.toString(),
+            utilizationThresholdBp0: this.utilizationThresholdBp0.toString(),
+            utilizationThresholdBp1: this.utilizationThresholdBp1.toString(),
+            borrowIntervalTsMs: this.borrowIntervalTsMs.toString(),
+            maxOrderReserveRatioBp: this.maxOrderReserveRatioBp.toString(),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
         };
     }
@@ -1222,8 +1318,13 @@ export class MarginConfig implements StructClass {
 
     static fromJSONField(field: any): MarginConfig {
         return MarginConfig.reified().new({
-            basicFundingRate: decodeFromJSONField("u64", field.basicFundingRate),
-            fundingIntervalTsMs: decodeFromJSONField("u64", field.fundingIntervalTsMs),
+            basicBorrowRate0: decodeFromJSONField("u64", field.basicBorrowRate0),
+            basicBorrowRate1: decodeFromJSONField("u64", field.basicBorrowRate1),
+            basicBorrowRate2: decodeFromJSONField("u64", field.basicBorrowRate2),
+            utilizationThresholdBp0: decodeFromJSONField("u64", field.utilizationThresholdBp0),
+            utilizationThresholdBp1: decodeFromJSONField("u64", field.utilizationThresholdBp1),
+            borrowIntervalTsMs: decodeFromJSONField("u64", field.borrowIntervalTsMs),
+            maxOrderReserveRatioBp: decodeFromJSONField("u64", field.maxOrderReserveRatioBp),
             u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
         });
     }
@@ -1262,7 +1363,7 @@ export class MarginConfig implements StructClass {
 
 export function isMintLpEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::MintLpEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::MintLpEvent";
 }
 
 export interface MintLpEventFields {
@@ -1280,12 +1381,12 @@ export interface MintLpEventFields {
 export type MintLpEventReified = Reified<MintLpEvent, MintLpEventFields>;
 
 export class MintLpEvent implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::MintLpEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::MintLpEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = MintLpEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::MintLpEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::MintLpEvent";
 
     readonly $typeArgs: [];
 
@@ -1300,7 +1401,10 @@ export class MintLpEvent implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: MintLpEventFields) {
-        this.$fullTypeName = composeSuiType(MintLpEvent.$typeName, ...typeArgs) as "0x0::lp_pool::MintLpEvent";
+        this.$fullTypeName = composeSuiType(
+            MintLpEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::MintLpEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -1317,7 +1421,10 @@ export class MintLpEvent implements StructClass {
     static reified(): MintLpEventReified {
         return {
             typeName: MintLpEvent.$typeName,
-            fullTypeName: composeSuiType(MintLpEvent.$typeName, ...[]) as "0x0::lp_pool::MintLpEvent",
+            fullTypeName: composeSuiType(
+                MintLpEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::MintLpEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => MintLpEvent.fromFields(fields),
@@ -1462,7 +1569,7 @@ export class MintLpEvent implements StructClass {
 
 export function isNewLiquidityPoolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::NewLiquidityPoolEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::NewLiquidityPoolEvent";
 }
 
 export interface NewLiquidityPoolEventFields {
@@ -1476,12 +1583,12 @@ export interface NewLiquidityPoolEventFields {
 export type NewLiquidityPoolEventReified = Reified<NewLiquidityPoolEvent, NewLiquidityPoolEventFields>;
 
 export class NewLiquidityPoolEvent implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::NewLiquidityPoolEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::NewLiquidityPoolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = NewLiquidityPoolEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::NewLiquidityPoolEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::NewLiquidityPoolEvent";
 
     readonly $typeArgs: [];
 
@@ -1492,7 +1599,10 @@ export class NewLiquidityPoolEvent implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: NewLiquidityPoolEventFields) {
-        this.$fullTypeName = composeSuiType(NewLiquidityPoolEvent.$typeName, ...typeArgs) as "0x0::lp_pool::NewLiquidityPoolEvent";
+        this.$fullTypeName = composeSuiType(
+            NewLiquidityPoolEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::NewLiquidityPoolEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -1505,7 +1615,10 @@ export class NewLiquidityPoolEvent implements StructClass {
     static reified(): NewLiquidityPoolEventReified {
         return {
             typeName: NewLiquidityPoolEvent.$typeName,
-            fullTypeName: composeSuiType(NewLiquidityPoolEvent.$typeName, ...[]) as "0x0::lp_pool::NewLiquidityPoolEvent",
+            fullTypeName: composeSuiType(
+                NewLiquidityPoolEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::NewLiquidityPoolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => NewLiquidityPoolEvent.fromFields(fields),
@@ -1630,7 +1743,7 @@ export class NewLiquidityPoolEvent implements StructClass {
 
 export function isRegistry(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::Registry";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::Registry";
 }
 
 export interface RegistryFields {
@@ -1642,12 +1755,12 @@ export interface RegistryFields {
 export type RegistryReified = Reified<Registry, RegistryFields>;
 
 export class Registry implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::Registry";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::Registry";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = Registry.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::Registry";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::Registry";
 
     readonly $typeArgs: [];
 
@@ -1656,7 +1769,10 @@ export class Registry implements StructClass {
     readonly liquidityPoolRegistry: ToField<UID>;
 
     private constructor(typeArgs: [], fields: RegistryFields) {
-        this.$fullTypeName = composeSuiType(Registry.$typeName, ...typeArgs) as "0x0::lp_pool::Registry";
+        this.$fullTypeName = composeSuiType(
+            Registry.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::Registry";
         this.$typeArgs = typeArgs;
 
         this.id = fields.id;
@@ -1667,7 +1783,10 @@ export class Registry implements StructClass {
     static reified(): RegistryReified {
         return {
             typeName: Registry.$typeName,
-            fullTypeName: composeSuiType(Registry.$typeName, ...[]) as "0x0::lp_pool::Registry",
+            fullTypeName: composeSuiType(
+                Registry.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::Registry",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => Registry.fromFields(fields),
@@ -1782,7 +1901,7 @@ export class Registry implements StructClass {
 
 export function isResumePoolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::ResumePoolEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::ResumePoolEvent";
 }
 
 export interface ResumePoolEventFields {
@@ -1794,12 +1913,12 @@ export interface ResumePoolEventFields {
 export type ResumePoolEventReified = Reified<ResumePoolEvent, ResumePoolEventFields>;
 
 export class ResumePoolEvent implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::ResumePoolEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::ResumePoolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = ResumePoolEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::ResumePoolEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::ResumePoolEvent";
 
     readonly $typeArgs: [];
 
@@ -1808,7 +1927,10 @@ export class ResumePoolEvent implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: ResumePoolEventFields) {
-        this.$fullTypeName = composeSuiType(ResumePoolEvent.$typeName, ...typeArgs) as "0x0::lp_pool::ResumePoolEvent";
+        this.$fullTypeName = composeSuiType(
+            ResumePoolEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::ResumePoolEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -1819,7 +1941,10 @@ export class ResumePoolEvent implements StructClass {
     static reified(): ResumePoolEventReified {
         return {
             typeName: ResumePoolEvent.$typeName,
-            fullTypeName: composeSuiType(ResumePoolEvent.$typeName, ...[]) as "0x0::lp_pool::ResumePoolEvent",
+            fullTypeName: composeSuiType(
+                ResumePoolEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::ResumePoolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => ResumePoolEvent.fromFields(fields),
@@ -1934,7 +2059,7 @@ export class ResumePoolEvent implements StructClass {
 
 export function isResumeTokenPoolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::ResumeTokenPoolEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::ResumeTokenPoolEvent";
 }
 
 export interface ResumeTokenPoolEventFields {
@@ -1947,12 +2072,12 @@ export interface ResumeTokenPoolEventFields {
 export type ResumeTokenPoolEventReified = Reified<ResumeTokenPoolEvent, ResumeTokenPoolEventFields>;
 
 export class ResumeTokenPoolEvent implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::ResumeTokenPoolEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::ResumeTokenPoolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = ResumeTokenPoolEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::ResumeTokenPoolEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::ResumeTokenPoolEvent";
 
     readonly $typeArgs: [];
 
@@ -1962,7 +2087,10 @@ export class ResumeTokenPoolEvent implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: ResumeTokenPoolEventFields) {
-        this.$fullTypeName = composeSuiType(ResumeTokenPoolEvent.$typeName, ...typeArgs) as "0x0::lp_pool::ResumeTokenPoolEvent";
+        this.$fullTypeName = composeSuiType(
+            ResumeTokenPoolEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::ResumeTokenPoolEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -1974,7 +2102,10 @@ export class ResumeTokenPoolEvent implements StructClass {
     static reified(): ResumeTokenPoolEventReified {
         return {
             typeName: ResumeTokenPoolEvent.$typeName,
-            fullTypeName: composeSuiType(ResumeTokenPoolEvent.$typeName, ...[]) as "0x0::lp_pool::ResumeTokenPoolEvent",
+            fullTypeName: composeSuiType(
+                ResumeTokenPoolEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::ResumeTokenPoolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => ResumeTokenPoolEvent.fromFields(fields),
@@ -2094,7 +2225,7 @@ export class ResumeTokenPoolEvent implements StructClass {
 
 export function isSpotConfig(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::SpotConfig";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SpotConfig";
 }
 
 export interface SpotConfigFields {
@@ -2106,18 +2237,19 @@ export interface SpotConfigFields {
     basicBurnFeeBp: ToField<"u64">;
     additionalBurnFeeBp: ToField<"u64">;
     swapFeeBp: ToField<"u64">;
+    swapFeeProtocolShareBp: ToField<"u64">;
     u64Padding: ToField<Vector<"u64">>;
 }
 
 export type SpotConfigReified = Reified<SpotConfig, SpotConfigFields>;
 
 export class SpotConfig implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::SpotConfig";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SpotConfig";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = SpotConfig.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::SpotConfig";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SpotConfig";
 
     readonly $typeArgs: [];
 
@@ -2129,10 +2261,14 @@ export class SpotConfig implements StructClass {
     readonly basicBurnFeeBp: ToField<"u64">;
     readonly additionalBurnFeeBp: ToField<"u64">;
     readonly swapFeeBp: ToField<"u64">;
+    readonly swapFeeProtocolShareBp: ToField<"u64">;
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: SpotConfigFields) {
-        this.$fullTypeName = composeSuiType(SpotConfig.$typeName, ...typeArgs) as "0x0::lp_pool::SpotConfig";
+        this.$fullTypeName = composeSuiType(
+            SpotConfig.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SpotConfig";
         this.$typeArgs = typeArgs;
 
         this.minDeposit = fields.minDeposit;
@@ -2143,13 +2279,17 @@ export class SpotConfig implements StructClass {
         this.basicBurnFeeBp = fields.basicBurnFeeBp;
         this.additionalBurnFeeBp = fields.additionalBurnFeeBp;
         this.swapFeeBp = fields.swapFeeBp;
+        this.swapFeeProtocolShareBp = fields.swapFeeProtocolShareBp;
         this.u64Padding = fields.u64Padding;
     }
 
     static reified(): SpotConfigReified {
         return {
             typeName: SpotConfig.$typeName,
-            fullTypeName: composeSuiType(SpotConfig.$typeName, ...[]) as "0x0::lp_pool::SpotConfig",
+            fullTypeName: composeSuiType(
+                SpotConfig.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SpotConfig",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => SpotConfig.fromFields(fields),
@@ -2188,6 +2328,7 @@ export class SpotConfig implements StructClass {
             basic_burn_fee_bp: bcs.u64(),
             additional_burn_fee_bp: bcs.u64(),
             swap_fee_bp: bcs.u64(),
+            swap_fee_protocol_share_bp: bcs.u64(),
             u64_padding: bcs.vector(bcs.u64()),
         });
     }
@@ -2202,6 +2343,7 @@ export class SpotConfig implements StructClass {
             basicBurnFeeBp: decodeFromFields("u64", fields.basic_burn_fee_bp),
             additionalBurnFeeBp: decodeFromFields("u64", fields.additional_burn_fee_bp),
             swapFeeBp: decodeFromFields("u64", fields.swap_fee_bp),
+            swapFeeProtocolShareBp: decodeFromFields("u64", fields.swap_fee_protocol_share_bp),
             u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
         });
     }
@@ -2220,6 +2362,7 @@ export class SpotConfig implements StructClass {
             basicBurnFeeBp: decodeFromFieldsWithTypes("u64", item.fields.basic_burn_fee_bp),
             additionalBurnFeeBp: decodeFromFieldsWithTypes("u64", item.fields.additional_burn_fee_bp),
             swapFeeBp: decodeFromFieldsWithTypes("u64", item.fields.swap_fee_bp),
+            swapFeeProtocolShareBp: decodeFromFieldsWithTypes("u64", item.fields.swap_fee_protocol_share_bp),
             u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
         });
     }
@@ -2238,6 +2381,7 @@ export class SpotConfig implements StructClass {
             basicBurnFeeBp: this.basicBurnFeeBp.toString(),
             additionalBurnFeeBp: this.additionalBurnFeeBp.toString(),
             swapFeeBp: this.swapFeeBp.toString(),
+            swapFeeProtocolShareBp: this.swapFeeProtocolShareBp.toString(),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
         };
     }
@@ -2256,6 +2400,7 @@ export class SpotConfig implements StructClass {
             basicBurnFeeBp: decodeFromJSONField("u64", field.basicBurnFeeBp),
             additionalBurnFeeBp: decodeFromJSONField("u64", field.additionalBurnFeeBp),
             swapFeeBp: decodeFromJSONField("u64", field.swapFeeBp),
+            swapFeeProtocolShareBp: decodeFromJSONField("u64", field.swapFeeProtocolShareBp),
             u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
         });
     }
@@ -2294,7 +2439,7 @@ export class SpotConfig implements StructClass {
 
 export function isSuspendPoolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::SuspendPoolEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SuspendPoolEvent";
 }
 
 export interface SuspendPoolEventFields {
@@ -2306,12 +2451,12 @@ export interface SuspendPoolEventFields {
 export type SuspendPoolEventReified = Reified<SuspendPoolEvent, SuspendPoolEventFields>;
 
 export class SuspendPoolEvent implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::SuspendPoolEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SuspendPoolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = SuspendPoolEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::SuspendPoolEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SuspendPoolEvent";
 
     readonly $typeArgs: [];
 
@@ -2320,7 +2465,10 @@ export class SuspendPoolEvent implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: SuspendPoolEventFields) {
-        this.$fullTypeName = composeSuiType(SuspendPoolEvent.$typeName, ...typeArgs) as "0x0::lp_pool::SuspendPoolEvent";
+        this.$fullTypeName = composeSuiType(
+            SuspendPoolEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SuspendPoolEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -2331,7 +2479,10 @@ export class SuspendPoolEvent implements StructClass {
     static reified(): SuspendPoolEventReified {
         return {
             typeName: SuspendPoolEvent.$typeName,
-            fullTypeName: composeSuiType(SuspendPoolEvent.$typeName, ...[]) as "0x0::lp_pool::SuspendPoolEvent",
+            fullTypeName: composeSuiType(
+                SuspendPoolEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SuspendPoolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => SuspendPoolEvent.fromFields(fields),
@@ -2446,7 +2597,7 @@ export class SuspendPoolEvent implements StructClass {
 
 export function isSuspendTokenPoolEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::SuspendTokenPoolEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SuspendTokenPoolEvent";
 }
 
 export interface SuspendTokenPoolEventFields {
@@ -2459,12 +2610,12 @@ export interface SuspendTokenPoolEventFields {
 export type SuspendTokenPoolEventReified = Reified<SuspendTokenPoolEvent, SuspendTokenPoolEventFields>;
 
 export class SuspendTokenPoolEvent implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::SuspendTokenPoolEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SuspendTokenPoolEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = SuspendTokenPoolEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::SuspendTokenPoolEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SuspendTokenPoolEvent";
 
     readonly $typeArgs: [];
 
@@ -2474,7 +2625,10 @@ export class SuspendTokenPoolEvent implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: SuspendTokenPoolEventFields) {
-        this.$fullTypeName = composeSuiType(SuspendTokenPoolEvent.$typeName, ...typeArgs) as "0x0::lp_pool::SuspendTokenPoolEvent";
+        this.$fullTypeName = composeSuiType(
+            SuspendTokenPoolEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SuspendTokenPoolEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -2486,7 +2640,10 @@ export class SuspendTokenPoolEvent implements StructClass {
     static reified(): SuspendTokenPoolEventReified {
         return {
             typeName: SuspendTokenPoolEvent.$typeName,
-            fullTypeName: composeSuiType(SuspendTokenPoolEvent.$typeName, ...[]) as "0x0::lp_pool::SuspendTokenPoolEvent",
+            fullTypeName: composeSuiType(
+                SuspendTokenPoolEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SuspendTokenPoolEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => SuspendTokenPoolEvent.fromFields(fields),
@@ -2606,7 +2763,7 @@ export class SuspendTokenPoolEvent implements StructClass {
 
 export function isSwapEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::SwapEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SwapEvent";
 }
 
 export interface SwapEventFields {
@@ -2625,12 +2782,12 @@ export interface SwapEventFields {
 export type SwapEventReified = Reified<SwapEvent, SwapEventFields>;
 
 export class SwapEvent implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::SwapEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SwapEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = SwapEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::SwapEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SwapEvent";
 
     readonly $typeArgs: [];
 
@@ -2646,7 +2803,10 @@ export class SwapEvent implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: SwapEventFields) {
-        this.$fullTypeName = composeSuiType(SwapEvent.$typeName, ...typeArgs) as "0x0::lp_pool::SwapEvent";
+        this.$fullTypeName = composeSuiType(
+            SwapEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SwapEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -2664,7 +2824,10 @@ export class SwapEvent implements StructClass {
     static reified(): SwapEventReified {
         return {
             typeName: SwapEvent.$typeName,
-            fullTypeName: composeSuiType(SwapEvent.$typeName, ...[]) as "0x0::lp_pool::SwapEvent",
+            fullTypeName: composeSuiType(
+                SwapEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::SwapEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => SwapEvent.fromFields(fields),
@@ -2814,7 +2977,7 @@ export class SwapEvent implements StructClass {
 
 export function isTokenPool(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::TokenPool";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::TokenPool";
 }
 
 export interface TokenPoolFields {
@@ -2826,12 +2989,12 @@ export interface TokenPoolFields {
 export type TokenPoolReified = Reified<TokenPool, TokenPoolFields>;
 
 export class TokenPool implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::TokenPool";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::TokenPool";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = TokenPool.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::TokenPool";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::TokenPool";
 
     readonly $typeArgs: [];
 
@@ -2840,7 +3003,10 @@ export class TokenPool implements StructClass {
     readonly state: ToField<State>;
 
     private constructor(typeArgs: [], fields: TokenPoolFields) {
-        this.$fullTypeName = composeSuiType(TokenPool.$typeName, ...typeArgs) as "0x0::lp_pool::TokenPool";
+        this.$fullTypeName = composeSuiType(
+            TokenPool.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::TokenPool";
         this.$typeArgs = typeArgs;
 
         this.tokenType = fields.tokenType;
@@ -2851,7 +3017,10 @@ export class TokenPool implements StructClass {
     static reified(): TokenPoolReified {
         return {
             typeName: TokenPool.$typeName,
-            fullTypeName: composeSuiType(TokenPool.$typeName, ...[]) as "0x0::lp_pool::TokenPool",
+            fullTypeName: composeSuiType(
+                TokenPool.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::TokenPool",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => TokenPool.fromFields(fields),
@@ -2962,147 +3131,153 @@ export class TokenPool implements StructClass {
     }
 }
 
-/* ============================== UpdateFundingInfoEvent =============================== */
+/* ============================== UpdateBorrowInfoEvent =============================== */
 
-export function isUpdateFundingInfoEvent(type: string): boolean {
+export function isUpdateBorrowInfoEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::UpdateFundingInfoEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateBorrowInfoEvent";
 }
 
-export interface UpdateFundingInfoEventFields {
+export interface UpdateBorrowInfoEventFields {
     index: ToField<"u64">;
     liquidityTokenType: ToField<TypeName>;
-    previousFundingTsMs: ToField<"u64">;
-    previousCumulativeFundingRate: ToField<"u64">;
-    fundingIntervalTsMs: ToField<"u64">;
-    lastFundingTsMs: ToField<"u64">;
-    lastCumulativeFundingRate: ToField<"u64">;
+    previousBorrowTsMs: ToField<"u64">;
+    previousCumulativeBorrowRate: ToField<"u64">;
+    borrowIntervalTsMs: ToField<"u64">;
+    lastBorrowRateTsMs: ToField<"u64">;
+    lastCumulativeBorrowRate: ToField<"u64">;
     u64Padding: ToField<Vector<"u64">>;
 }
 
-export type UpdateFundingInfoEventReified = Reified<UpdateFundingInfoEvent, UpdateFundingInfoEventFields>;
+export type UpdateBorrowInfoEventReified = Reified<UpdateBorrowInfoEvent, UpdateBorrowInfoEventFields>;
 
-export class UpdateFundingInfoEvent implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::UpdateFundingInfoEvent";
+export class UpdateBorrowInfoEvent implements StructClass {
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateBorrowInfoEvent";
     static readonly $numTypeParams = 0;
 
-    readonly $typeName = UpdateFundingInfoEvent.$typeName;
+    readonly $typeName = UpdateBorrowInfoEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::UpdateFundingInfoEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateBorrowInfoEvent";
 
     readonly $typeArgs: [];
 
     readonly index: ToField<"u64">;
     readonly liquidityTokenType: ToField<TypeName>;
-    readonly previousFundingTsMs: ToField<"u64">;
-    readonly previousCumulativeFundingRate: ToField<"u64">;
-    readonly fundingIntervalTsMs: ToField<"u64">;
-    readonly lastFundingTsMs: ToField<"u64">;
-    readonly lastCumulativeFundingRate: ToField<"u64">;
+    readonly previousBorrowTsMs: ToField<"u64">;
+    readonly previousCumulativeBorrowRate: ToField<"u64">;
+    readonly borrowIntervalTsMs: ToField<"u64">;
+    readonly lastBorrowRateTsMs: ToField<"u64">;
+    readonly lastCumulativeBorrowRate: ToField<"u64">;
     readonly u64Padding: ToField<Vector<"u64">>;
 
-    private constructor(typeArgs: [], fields: UpdateFundingInfoEventFields) {
-        this.$fullTypeName = composeSuiType(UpdateFundingInfoEvent.$typeName, ...typeArgs) as "0x0::lp_pool::UpdateFundingInfoEvent";
+    private constructor(typeArgs: [], fields: UpdateBorrowInfoEventFields) {
+        this.$fullTypeName = composeSuiType(
+            UpdateBorrowInfoEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateBorrowInfoEvent";
         this.$typeArgs = typeArgs;
 
         this.index = fields.index;
         this.liquidityTokenType = fields.liquidityTokenType;
-        this.previousFundingTsMs = fields.previousFundingTsMs;
-        this.previousCumulativeFundingRate = fields.previousCumulativeFundingRate;
-        this.fundingIntervalTsMs = fields.fundingIntervalTsMs;
-        this.lastFundingTsMs = fields.lastFundingTsMs;
-        this.lastCumulativeFundingRate = fields.lastCumulativeFundingRate;
+        this.previousBorrowTsMs = fields.previousBorrowTsMs;
+        this.previousCumulativeBorrowRate = fields.previousCumulativeBorrowRate;
+        this.borrowIntervalTsMs = fields.borrowIntervalTsMs;
+        this.lastBorrowRateTsMs = fields.lastBorrowRateTsMs;
+        this.lastCumulativeBorrowRate = fields.lastCumulativeBorrowRate;
         this.u64Padding = fields.u64Padding;
     }
 
-    static reified(): UpdateFundingInfoEventReified {
+    static reified(): UpdateBorrowInfoEventReified {
         return {
-            typeName: UpdateFundingInfoEvent.$typeName,
-            fullTypeName: composeSuiType(UpdateFundingInfoEvent.$typeName, ...[]) as "0x0::lp_pool::UpdateFundingInfoEvent",
+            typeName: UpdateBorrowInfoEvent.$typeName,
+            fullTypeName: composeSuiType(
+                UpdateBorrowInfoEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateBorrowInfoEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
-            fromFields: (fields: Record<string, any>) => UpdateFundingInfoEvent.fromFields(fields),
-            fromFieldsWithTypes: (item: FieldsWithTypes) => UpdateFundingInfoEvent.fromFieldsWithTypes(item),
-            fromBcs: (data: Uint8Array) => UpdateFundingInfoEvent.fromBcs(data),
-            bcs: UpdateFundingInfoEvent.bcs,
-            fromJSONField: (field: any) => UpdateFundingInfoEvent.fromJSONField(field),
-            fromJSON: (json: Record<string, any>) => UpdateFundingInfoEvent.fromJSON(json),
-            fromSuiParsedData: (content: SuiParsedData) => UpdateFundingInfoEvent.fromSuiParsedData(content),
-            fetch: async (client: SuiClient, id: string) => UpdateFundingInfoEvent.fetch(client, id),
-            new: (fields: UpdateFundingInfoEventFields) => {
-                return new UpdateFundingInfoEvent([], fields);
+            fromFields: (fields: Record<string, any>) => UpdateBorrowInfoEvent.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => UpdateBorrowInfoEvent.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => UpdateBorrowInfoEvent.fromBcs(data),
+            bcs: UpdateBorrowInfoEvent.bcs,
+            fromJSONField: (field: any) => UpdateBorrowInfoEvent.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => UpdateBorrowInfoEvent.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => UpdateBorrowInfoEvent.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => UpdateBorrowInfoEvent.fetch(client, id),
+            new: (fields: UpdateBorrowInfoEventFields) => {
+                return new UpdateBorrowInfoEvent([], fields);
             },
             kind: "StructClassReified",
         };
     }
 
     static get r() {
-        return UpdateFundingInfoEvent.reified();
+        return UpdateBorrowInfoEvent.reified();
     }
 
-    static phantom(): PhantomReified<ToTypeStr<UpdateFundingInfoEvent>> {
-        return phantom(UpdateFundingInfoEvent.reified());
+    static phantom(): PhantomReified<ToTypeStr<UpdateBorrowInfoEvent>> {
+        return phantom(UpdateBorrowInfoEvent.reified());
     }
     static get p() {
-        return UpdateFundingInfoEvent.phantom();
+        return UpdateBorrowInfoEvent.phantom();
     }
 
     static get bcs() {
-        return bcs.struct("UpdateFundingInfoEvent", {
+        return bcs.struct("UpdateBorrowInfoEvent", {
             index: bcs.u64(),
             liquidity_token_type: TypeName.bcs,
-            previous_funding_ts_ms: bcs.u64(),
-            previous_cumulative_funding_rate: bcs.u64(),
-            funding_interval_ts_ms: bcs.u64(),
-            last_funding_ts_ms: bcs.u64(),
-            last_cumulative_funding_rate: bcs.u64(),
+            previous_borrow_ts_ms: bcs.u64(),
+            previous_cumulative_borrow_rate: bcs.u64(),
+            borrow_interval_ts_ms: bcs.u64(),
+            last_borrow_rate_ts_ms: bcs.u64(),
+            last_cumulative_borrow_rate: bcs.u64(),
             u64_padding: bcs.vector(bcs.u64()),
         });
     }
 
-    static fromFields(fields: Record<string, any>): UpdateFundingInfoEvent {
-        return UpdateFundingInfoEvent.reified().new({
+    static fromFields(fields: Record<string, any>): UpdateBorrowInfoEvent {
+        return UpdateBorrowInfoEvent.reified().new({
             index: decodeFromFields("u64", fields.index),
             liquidityTokenType: decodeFromFields(TypeName.reified(), fields.liquidity_token_type),
-            previousFundingTsMs: decodeFromFields("u64", fields.previous_funding_ts_ms),
-            previousCumulativeFundingRate: decodeFromFields("u64", fields.previous_cumulative_funding_rate),
-            fundingIntervalTsMs: decodeFromFields("u64", fields.funding_interval_ts_ms),
-            lastFundingTsMs: decodeFromFields("u64", fields.last_funding_ts_ms),
-            lastCumulativeFundingRate: decodeFromFields("u64", fields.last_cumulative_funding_rate),
+            previousBorrowTsMs: decodeFromFields("u64", fields.previous_borrow_ts_ms),
+            previousCumulativeBorrowRate: decodeFromFields("u64", fields.previous_cumulative_borrow_rate),
+            borrowIntervalTsMs: decodeFromFields("u64", fields.borrow_interval_ts_ms),
+            lastBorrowRateTsMs: decodeFromFields("u64", fields.last_borrow_rate_ts_ms),
+            lastCumulativeBorrowRate: decodeFromFields("u64", fields.last_cumulative_borrow_rate),
             u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
         });
     }
 
-    static fromFieldsWithTypes(item: FieldsWithTypes): UpdateFundingInfoEvent {
-        if (!isUpdateFundingInfoEvent(item.type)) {
-            throw new Error("not a UpdateFundingInfoEvent type");
+    static fromFieldsWithTypes(item: FieldsWithTypes): UpdateBorrowInfoEvent {
+        if (!isUpdateBorrowInfoEvent(item.type)) {
+            throw new Error("not a UpdateBorrowInfoEvent type");
         }
 
-        return UpdateFundingInfoEvent.reified().new({
+        return UpdateBorrowInfoEvent.reified().new({
             index: decodeFromFieldsWithTypes("u64", item.fields.index),
             liquidityTokenType: decodeFromFieldsWithTypes(TypeName.reified(), item.fields.liquidity_token_type),
-            previousFundingTsMs: decodeFromFieldsWithTypes("u64", item.fields.previous_funding_ts_ms),
-            previousCumulativeFundingRate: decodeFromFieldsWithTypes("u64", item.fields.previous_cumulative_funding_rate),
-            fundingIntervalTsMs: decodeFromFieldsWithTypes("u64", item.fields.funding_interval_ts_ms),
-            lastFundingTsMs: decodeFromFieldsWithTypes("u64", item.fields.last_funding_ts_ms),
-            lastCumulativeFundingRate: decodeFromFieldsWithTypes("u64", item.fields.last_cumulative_funding_rate),
+            previousBorrowTsMs: decodeFromFieldsWithTypes("u64", item.fields.previous_borrow_ts_ms),
+            previousCumulativeBorrowRate: decodeFromFieldsWithTypes("u64", item.fields.previous_cumulative_borrow_rate),
+            borrowIntervalTsMs: decodeFromFieldsWithTypes("u64", item.fields.borrow_interval_ts_ms),
+            lastBorrowRateTsMs: decodeFromFieldsWithTypes("u64", item.fields.last_borrow_rate_ts_ms),
+            lastCumulativeBorrowRate: decodeFromFieldsWithTypes("u64", item.fields.last_cumulative_borrow_rate),
             u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
         });
     }
 
-    static fromBcs(data: Uint8Array): UpdateFundingInfoEvent {
-        return UpdateFundingInfoEvent.fromFields(UpdateFundingInfoEvent.bcs.parse(data));
+    static fromBcs(data: Uint8Array): UpdateBorrowInfoEvent {
+        return UpdateBorrowInfoEvent.fromFields(UpdateBorrowInfoEvent.bcs.parse(data));
     }
 
     toJSONField() {
         return {
             index: this.index.toString(),
             liquidityTokenType: this.liquidityTokenType.toJSONField(),
-            previousFundingTsMs: this.previousFundingTsMs.toString(),
-            previousCumulativeFundingRate: this.previousCumulativeFundingRate.toString(),
-            fundingIntervalTsMs: this.fundingIntervalTsMs.toString(),
-            lastFundingTsMs: this.lastFundingTsMs.toString(),
-            lastCumulativeFundingRate: this.lastCumulativeFundingRate.toString(),
+            previousBorrowTsMs: this.previousBorrowTsMs.toString(),
+            previousCumulativeBorrowRate: this.previousCumulativeBorrowRate.toString(),
+            borrowIntervalTsMs: this.borrowIntervalTsMs.toString(),
+            lastBorrowRateTsMs: this.lastBorrowRateTsMs.toString(),
+            lastCumulativeBorrowRate: this.lastCumulativeBorrowRate.toString(),
             u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
         };
     }
@@ -3111,46 +3286,236 @@ export class UpdateFundingInfoEvent implements StructClass {
         return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
     }
 
-    static fromJSONField(field: any): UpdateFundingInfoEvent {
-        return UpdateFundingInfoEvent.reified().new({
+    static fromJSONField(field: any): UpdateBorrowInfoEvent {
+        return UpdateBorrowInfoEvent.reified().new({
             index: decodeFromJSONField("u64", field.index),
             liquidityTokenType: decodeFromJSONField(TypeName.reified(), field.liquidityTokenType),
-            previousFundingTsMs: decodeFromJSONField("u64", field.previousFundingTsMs),
-            previousCumulativeFundingRate: decodeFromJSONField("u64", field.previousCumulativeFundingRate),
-            fundingIntervalTsMs: decodeFromJSONField("u64", field.fundingIntervalTsMs),
-            lastFundingTsMs: decodeFromJSONField("u64", field.lastFundingTsMs),
-            lastCumulativeFundingRate: decodeFromJSONField("u64", field.lastCumulativeFundingRate),
+            previousBorrowTsMs: decodeFromJSONField("u64", field.previousBorrowTsMs),
+            previousCumulativeBorrowRate: decodeFromJSONField("u64", field.previousCumulativeBorrowRate),
+            borrowIntervalTsMs: decodeFromJSONField("u64", field.borrowIntervalTsMs),
+            lastBorrowRateTsMs: decodeFromJSONField("u64", field.lastBorrowRateTsMs),
+            lastCumulativeBorrowRate: decodeFromJSONField("u64", field.lastCumulativeBorrowRate),
             u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
         });
     }
 
-    static fromJSON(json: Record<string, any>): UpdateFundingInfoEvent {
-        if (json.$typeName !== UpdateFundingInfoEvent.$typeName) {
+    static fromJSON(json: Record<string, any>): UpdateBorrowInfoEvent {
+        if (json.$typeName !== UpdateBorrowInfoEvent.$typeName) {
             throw new Error("not a WithTwoGenerics json object");
         }
 
-        return UpdateFundingInfoEvent.fromJSONField(json);
+        return UpdateBorrowInfoEvent.fromJSONField(json);
     }
 
-    static fromSuiParsedData(content: SuiParsedData): UpdateFundingInfoEvent {
+    static fromSuiParsedData(content: SuiParsedData): UpdateBorrowInfoEvent {
         if (content.dataType !== "moveObject") {
             throw new Error("not an object");
         }
-        if (!isUpdateFundingInfoEvent(content.type)) {
-            throw new Error(`object at ${(content.fields as any).id} is not a UpdateFundingInfoEvent object`);
+        if (!isUpdateBorrowInfoEvent(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a UpdateBorrowInfoEvent object`);
         }
-        return UpdateFundingInfoEvent.fromFieldsWithTypes(content);
+        return UpdateBorrowInfoEvent.fromFieldsWithTypes(content);
     }
 
-    static async fetch(client: SuiClient, id: string): Promise<UpdateFundingInfoEvent> {
+    static async fetch(client: SuiClient, id: string): Promise<UpdateBorrowInfoEvent> {
         const res = await client.getObject({ id, options: { showBcs: true } });
         if (res.error) {
-            throw new Error(`error fetching UpdateFundingInfoEvent object at id ${id}: ${res.error.code}`);
+            throw new Error(`error fetching UpdateBorrowInfoEvent object at id ${id}: ${res.error.code}`);
         }
-        if (res.data?.bcs?.dataType !== "moveObject" || !isUpdateFundingInfoEvent(res.data.bcs.type)) {
-            throw new Error(`object at id ${id} is not a UpdateFundingInfoEvent object`);
+        if (res.data?.bcs?.dataType !== "moveObject" || !isUpdateBorrowInfoEvent(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a UpdateBorrowInfoEvent object`);
         }
-        return UpdateFundingInfoEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
+        return UpdateBorrowInfoEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
+    }
+}
+
+/* ============================== UpdateLiquidityValueEvent =============================== */
+
+export function isUpdateLiquidityValueEvent(type: string): boolean {
+    type = compressSuiType(type);
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateLiquidityValueEvent";
+}
+
+export interface UpdateLiquidityValueEventFields {
+    sender: ToField<"address">;
+    index: ToField<"u64">;
+    liquidityToken: ToField<TypeName>;
+    price: ToField<"u64">;
+    valueInUsd: ToField<"u64">;
+    lpPoolTvlUsd: ToField<"u64">;
+    u64Padding: ToField<Vector<"u64">>;
+}
+
+export type UpdateLiquidityValueEventReified = Reified<UpdateLiquidityValueEvent, UpdateLiquidityValueEventFields>;
+
+export class UpdateLiquidityValueEvent implements StructClass {
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateLiquidityValueEvent";
+    static readonly $numTypeParams = 0;
+
+    readonly $typeName = UpdateLiquidityValueEvent.$typeName;
+
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateLiquidityValueEvent";
+
+    readonly $typeArgs: [];
+
+    readonly sender: ToField<"address">;
+    readonly index: ToField<"u64">;
+    readonly liquidityToken: ToField<TypeName>;
+    readonly price: ToField<"u64">;
+    readonly valueInUsd: ToField<"u64">;
+    readonly lpPoolTvlUsd: ToField<"u64">;
+    readonly u64Padding: ToField<Vector<"u64">>;
+
+    private constructor(typeArgs: [], fields: UpdateLiquidityValueEventFields) {
+        this.$fullTypeName = composeSuiType(
+            UpdateLiquidityValueEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateLiquidityValueEvent";
+        this.$typeArgs = typeArgs;
+
+        this.sender = fields.sender;
+        this.index = fields.index;
+        this.liquidityToken = fields.liquidityToken;
+        this.price = fields.price;
+        this.valueInUsd = fields.valueInUsd;
+        this.lpPoolTvlUsd = fields.lpPoolTvlUsd;
+        this.u64Padding = fields.u64Padding;
+    }
+
+    static reified(): UpdateLiquidityValueEventReified {
+        return {
+            typeName: UpdateLiquidityValueEvent.$typeName,
+            fullTypeName: composeSuiType(
+                UpdateLiquidityValueEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateLiquidityValueEvent",
+            typeArgs: [] as [],
+            reifiedTypeArgs: [],
+            fromFields: (fields: Record<string, any>) => UpdateLiquidityValueEvent.fromFields(fields),
+            fromFieldsWithTypes: (item: FieldsWithTypes) => UpdateLiquidityValueEvent.fromFieldsWithTypes(item),
+            fromBcs: (data: Uint8Array) => UpdateLiquidityValueEvent.fromBcs(data),
+            bcs: UpdateLiquidityValueEvent.bcs,
+            fromJSONField: (field: any) => UpdateLiquidityValueEvent.fromJSONField(field),
+            fromJSON: (json: Record<string, any>) => UpdateLiquidityValueEvent.fromJSON(json),
+            fromSuiParsedData: (content: SuiParsedData) => UpdateLiquidityValueEvent.fromSuiParsedData(content),
+            fetch: async (client: SuiClient, id: string) => UpdateLiquidityValueEvent.fetch(client, id),
+            new: (fields: UpdateLiquidityValueEventFields) => {
+                return new UpdateLiquidityValueEvent([], fields);
+            },
+            kind: "StructClassReified",
+        };
+    }
+
+    static get r() {
+        return UpdateLiquidityValueEvent.reified();
+    }
+
+    static phantom(): PhantomReified<ToTypeStr<UpdateLiquidityValueEvent>> {
+        return phantom(UpdateLiquidityValueEvent.reified());
+    }
+    static get p() {
+        return UpdateLiquidityValueEvent.phantom();
+    }
+
+    static get bcs() {
+        return bcs.struct("UpdateLiquidityValueEvent", {
+            sender: bcs.bytes(32).transform({ input: (val: string) => fromHEX(val), output: (val: Uint8Array) => toHEX(val) }),
+            index: bcs.u64(),
+            liquidity_token: TypeName.bcs,
+            price: bcs.u64(),
+            value_in_usd: bcs.u64(),
+            lp_pool_tvl_usd: bcs.u64(),
+            u64_padding: bcs.vector(bcs.u64()),
+        });
+    }
+
+    static fromFields(fields: Record<string, any>): UpdateLiquidityValueEvent {
+        return UpdateLiquidityValueEvent.reified().new({
+            sender: decodeFromFields("address", fields.sender),
+            index: decodeFromFields("u64", fields.index),
+            liquidityToken: decodeFromFields(TypeName.reified(), fields.liquidity_token),
+            price: decodeFromFields("u64", fields.price),
+            valueInUsd: decodeFromFields("u64", fields.value_in_usd),
+            lpPoolTvlUsd: decodeFromFields("u64", fields.lp_pool_tvl_usd),
+            u64Padding: decodeFromFields(reified.vector("u64"), fields.u64_padding),
+        });
+    }
+
+    static fromFieldsWithTypes(item: FieldsWithTypes): UpdateLiquidityValueEvent {
+        if (!isUpdateLiquidityValueEvent(item.type)) {
+            throw new Error("not a UpdateLiquidityValueEvent type");
+        }
+
+        return UpdateLiquidityValueEvent.reified().new({
+            sender: decodeFromFieldsWithTypes("address", item.fields.sender),
+            index: decodeFromFieldsWithTypes("u64", item.fields.index),
+            liquidityToken: decodeFromFieldsWithTypes(TypeName.reified(), item.fields.liquidity_token),
+            price: decodeFromFieldsWithTypes("u64", item.fields.price),
+            valueInUsd: decodeFromFieldsWithTypes("u64", item.fields.value_in_usd),
+            lpPoolTvlUsd: decodeFromFieldsWithTypes("u64", item.fields.lp_pool_tvl_usd),
+            u64Padding: decodeFromFieldsWithTypes(reified.vector("u64"), item.fields.u64_padding),
+        });
+    }
+
+    static fromBcs(data: Uint8Array): UpdateLiquidityValueEvent {
+        return UpdateLiquidityValueEvent.fromFields(UpdateLiquidityValueEvent.bcs.parse(data));
+    }
+
+    toJSONField() {
+        return {
+            sender: this.sender,
+            index: this.index.toString(),
+            liquidityToken: this.liquidityToken.toJSONField(),
+            price: this.price.toString(),
+            valueInUsd: this.valueInUsd.toString(),
+            lpPoolTvlUsd: this.lpPoolTvlUsd.toString(),
+            u64Padding: fieldToJSON<Vector<"u64">>(`vector<u64>`, this.u64Padding),
+        };
+    }
+
+    toJSON() {
+        return { $typeName: this.$typeName, $typeArgs: this.$typeArgs, ...this.toJSONField() };
+    }
+
+    static fromJSONField(field: any): UpdateLiquidityValueEvent {
+        return UpdateLiquidityValueEvent.reified().new({
+            sender: decodeFromJSONField("address", field.sender),
+            index: decodeFromJSONField("u64", field.index),
+            liquidityToken: decodeFromJSONField(TypeName.reified(), field.liquidityToken),
+            price: decodeFromJSONField("u64", field.price),
+            valueInUsd: decodeFromJSONField("u64", field.valueInUsd),
+            lpPoolTvlUsd: decodeFromJSONField("u64", field.lpPoolTvlUsd),
+            u64Padding: decodeFromJSONField(reified.vector("u64"), field.u64Padding),
+        });
+    }
+
+    static fromJSON(json: Record<string, any>): UpdateLiquidityValueEvent {
+        if (json.$typeName !== UpdateLiquidityValueEvent.$typeName) {
+            throw new Error("not a WithTwoGenerics json object");
+        }
+
+        return UpdateLiquidityValueEvent.fromJSONField(json);
+    }
+
+    static fromSuiParsedData(content: SuiParsedData): UpdateLiquidityValueEvent {
+        if (content.dataType !== "moveObject") {
+            throw new Error("not an object");
+        }
+        if (!isUpdateLiquidityValueEvent(content.type)) {
+            throw new Error(`object at ${(content.fields as any).id} is not a UpdateLiquidityValueEvent object`);
+        }
+        return UpdateLiquidityValueEvent.fromFieldsWithTypes(content);
+    }
+
+    static async fetch(client: SuiClient, id: string): Promise<UpdateLiquidityValueEvent> {
+        const res = await client.getObject({ id, options: { showBcs: true } });
+        if (res.error) {
+            throw new Error(`error fetching UpdateLiquidityValueEvent object at id ${id}: ${res.error.code}`);
+        }
+        if (res.data?.bcs?.dataType !== "moveObject" || !isUpdateLiquidityValueEvent(res.data.bcs.type)) {
+            throw new Error(`object at id ${id} is not a UpdateLiquidityValueEvent object`);
+        }
+        return UpdateLiquidityValueEvent.fromBcs(fromB64(res.data.bcs.bcsBytes));
     }
 }
 
@@ -3158,7 +3523,7 @@ export class UpdateFundingInfoEvent implements StructClass {
 
 export function isUpdateMarginConfigEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::UpdateMarginConfigEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateMarginConfigEvent";
 }
 
 export interface UpdateMarginConfigEventFields {
@@ -3173,12 +3538,12 @@ export interface UpdateMarginConfigEventFields {
 export type UpdateMarginConfigEventReified = Reified<UpdateMarginConfigEvent, UpdateMarginConfigEventFields>;
 
 export class UpdateMarginConfigEvent implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::UpdateMarginConfigEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateMarginConfigEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UpdateMarginConfigEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::UpdateMarginConfigEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateMarginConfigEvent";
 
     readonly $typeArgs: [];
 
@@ -3190,7 +3555,10 @@ export class UpdateMarginConfigEvent implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: UpdateMarginConfigEventFields) {
-        this.$fullTypeName = composeSuiType(UpdateMarginConfigEvent.$typeName, ...typeArgs) as "0x0::lp_pool::UpdateMarginConfigEvent";
+        this.$fullTypeName = composeSuiType(
+            UpdateMarginConfigEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateMarginConfigEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -3204,7 +3572,10 @@ export class UpdateMarginConfigEvent implements StructClass {
     static reified(): UpdateMarginConfigEventReified {
         return {
             typeName: UpdateMarginConfigEvent.$typeName,
-            fullTypeName: composeSuiType(UpdateMarginConfigEvent.$typeName, ...[]) as "0x0::lp_pool::UpdateMarginConfigEvent",
+            fullTypeName: composeSuiType(
+                UpdateMarginConfigEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateMarginConfigEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UpdateMarginConfigEvent.fromFields(fields),
@@ -3334,7 +3705,7 @@ export class UpdateMarginConfigEvent implements StructClass {
 
 export function isUpdateSpotConfigEvent(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::lp_pool::UpdateSpotConfigEvent";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateSpotConfigEvent";
 }
 
 export interface UpdateSpotConfigEventFields {
@@ -3349,12 +3720,12 @@ export interface UpdateSpotConfigEventFields {
 export type UpdateSpotConfigEventReified = Reified<UpdateSpotConfigEvent, UpdateSpotConfigEventFields>;
 
 export class UpdateSpotConfigEvent implements StructClass {
-    static readonly $typeName = "0x0::lp_pool::UpdateSpotConfigEvent";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateSpotConfigEvent";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = UpdateSpotConfigEvent.$typeName;
 
-    readonly $fullTypeName: "0x0::lp_pool::UpdateSpotConfigEvent";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateSpotConfigEvent";
 
     readonly $typeArgs: [];
 
@@ -3366,7 +3737,10 @@ export class UpdateSpotConfigEvent implements StructClass {
     readonly u64Padding: ToField<Vector<"u64">>;
 
     private constructor(typeArgs: [], fields: UpdateSpotConfigEventFields) {
-        this.$fullTypeName = composeSuiType(UpdateSpotConfigEvent.$typeName, ...typeArgs) as "0x0::lp_pool::UpdateSpotConfigEvent";
+        this.$fullTypeName = composeSuiType(
+            UpdateSpotConfigEvent.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateSpotConfigEvent";
         this.$typeArgs = typeArgs;
 
         this.sender = fields.sender;
@@ -3380,7 +3754,10 @@ export class UpdateSpotConfigEvent implements StructClass {
     static reified(): UpdateSpotConfigEventReified {
         return {
             typeName: UpdateSpotConfigEvent.$typeName,
-            fullTypeName: composeSuiType(UpdateSpotConfigEvent.$typeName, ...[]) as "0x0::lp_pool::UpdateSpotConfigEvent",
+            fullTypeName: composeSuiType(
+                UpdateSpotConfigEvent.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::lp_pool::UpdateSpotConfigEvent",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => UpdateSpotConfigEvent.fromFields(fields),

@@ -18,7 +18,7 @@ import { SuiClient, SuiParsedData } from "@mysten/sui.js/client";
 
 export function isSymbol(type: string): boolean {
     type = compressSuiType(type);
-    return type === "0x0::symbol::Symbol";
+    return type === "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::symbol::Symbol";
 }
 
 export interface SymbolFields {
@@ -29,12 +29,12 @@ export interface SymbolFields {
 export type SymbolReified = Reified<Symbol, SymbolFields>;
 
 export class Symbol implements StructClass {
-    static readonly $typeName = "0x0::symbol::Symbol";
+    static readonly $typeName = "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::symbol::Symbol";
     static readonly $numTypeParams = 0;
 
     readonly $typeName = Symbol.$typeName;
 
-    readonly $fullTypeName: "0x0::symbol::Symbol";
+    readonly $fullTypeName: "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::symbol::Symbol";
 
     readonly $typeArgs: [];
 
@@ -42,7 +42,10 @@ export class Symbol implements StructClass {
     readonly quoteToken: ToField<TypeName>;
 
     private constructor(typeArgs: [], fields: SymbolFields) {
-        this.$fullTypeName = composeSuiType(Symbol.$typeName, ...typeArgs) as "0x0::symbol::Symbol";
+        this.$fullTypeName = composeSuiType(
+            Symbol.$typeName,
+            ...typeArgs
+        ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::symbol::Symbol";
         this.$typeArgs = typeArgs;
 
         this.baseToken = fields.baseToken;
@@ -52,7 +55,10 @@ export class Symbol implements StructClass {
     static reified(): SymbolReified {
         return {
             typeName: Symbol.$typeName,
-            fullTypeName: composeSuiType(Symbol.$typeName, ...[]) as "0x0::symbol::Symbol",
+            fullTypeName: composeSuiType(
+                Symbol.$typeName,
+                ...[]
+            ) as "0x4bcf9eade4480bcb9fcd3139ec8d22afda34b25af06092904fcccb06e1b8043c::symbol::Symbol",
             typeArgs: [] as [],
             reifiedTypeArgs: [],
             fromFields: (fields: Record<string, any>) => Symbol.fromFields(fields),
