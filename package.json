@@ -2,7 +2,7 @@
     "name": "@typus/typus-sdk",
     "author": "Typus",
     "description": "typus sdk",
-    "version": "1.4.3-d",
+    "version": "1.4.3-e",
     "dependencies": {
         "@mysten/bcs": "^0.11.1",
         "@mysten/kiosk": "0.8.10",
@@ -77,8 +77,16 @@
     },
     "main": "dist/src/index.js",
     "files": [
-        "dist"
+        "dist",
+        "src"
     ],
+    "exports": {
+        ".": {
+            "source": "./src/index.d.ts",
+            "require": "./dist/index.js",
+            "default": "./dist/index.js"
+        }
+    },
     "types": "dist/src/index.d.ts",
     "scripts": {
         "ts-node": "ts-node -r tsconfig-paths/register",
