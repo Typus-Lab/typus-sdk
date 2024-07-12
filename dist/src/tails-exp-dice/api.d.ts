@@ -1,1 +1,0 @@
-export declare function getDrawResult(network: "mainnet" | "testnet", packageId: string, registry: string, index: string, amount: string, guess_1: string, larger_than_1: boolean, guess_2: string, larger_than_2: boolean, vrf_input_1: number[], vrf_input_2: number[]): Promise<any>;
