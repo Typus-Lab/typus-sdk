@@ -1,9 +1,9 @@
 import "../load_env";
-import config from "../../config.json";
-import { getMintTx } from "../../utils/typus-nft/user-entry";
-import { getPool } from "../../utils/typus-nft/fetch";
+import configs from "../../config.json";
+import { getMintTx, getPool } from "../../src";
 import { getFullnodeUrl, SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+const config = configs.TESTNET;
 
 // Generate a new Ed25519 Keypair
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -29,7 +29,7 @@ const necklace = "typus";
     const wlTokens = objs.data.filter(
         (obj) =>
             // @ts-ignore
-            obj.data?.type?.startsWith(config.NFT_PACKAGE_ORIGIN) && obj.data?.content?.fields.for == pool
+            obj.data?.type?.startsWith(config.PACKAGE_ORIGIN.NFT) && obj.data?.content?.fields.for == pool
     );
 
     // console.log(wlTokens);
@@ -41,7 +41,7 @@ const necklace = "typus";
     if (wlTokens.length > 0) {
         const wlToken = wlTokens[0].data?.objectId!;
 
-        let transactionBlock = await getMintTx(gasBudget, config.NFT_PACKAGE_ORIGIN, config.NFT_TRANSFER_POLICY, pool, wlToken);
+        let transactionBlock = await getMintTx(gasBudget, config.PACKAGE_ORIGIN.NFT, config.OBJECT.NFT_TRANSFER_POLICY, pool, wlToken);
 
         const result = await provider.signAndExecuteTransactionBlock({
             signer: keypair,

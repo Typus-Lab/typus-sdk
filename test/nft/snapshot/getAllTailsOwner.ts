@@ -1,12 +1,13 @@
-import "@/utils/load_env";
-import config_v2 from "../../../mainnet.json";
-import { getKioskOwner, getTailsDynamicField, getTailsKiosk } from "../../../utils/typus-nft/fetch";
-import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
-import * as fs from "fs";
 import * as json2csv from "json2csv";
 import { normalizeSuiAddress } from "@mysten/sui.js/utils";
+import { SuiClient } from "@mysten/sui.js/client";
+import * as fs from "fs";
+import configs from "../../../config.json";
+import { getTailsKiosk } from "../../../src";
+import "../../src/utils/load_env";
+const config = configs.TESTNET;
 
-const provider = new SuiClient({ url: config_v2.RPC_ENDPOINT });
+const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 (async () => {
     var raw = fs.readFileSync("tailsDynamicField.csv", "utf-8");

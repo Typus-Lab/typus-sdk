@@ -5,7 +5,7 @@ import { getTails } from "../../../utils/typus-nft/fetch";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getNftTable } from "../../../utils/nft-staking/fetch";
 
-const provider = new SuiClient({ url: config_v2.RPC_ENDPOINT });
+const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 const totalRewards = 6666666666_00000;
 const levelShares = [0, 0.02, 0.06, 0.1, 0.14, 0.24, 0.44];
