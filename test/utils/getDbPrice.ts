@@ -1,4 +1,4 @@
-import { getPairPrices, getLatestPrice } from "../utils/price";
+import { getPairPrices, getLatestPrice } from "../../src";
 
 (async () => {
     const pair = "SUIFUD"; // SUIBUCK, SUIFUD, SUIAFSUI
