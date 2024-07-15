@@ -62,8 +62,8 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
         var transactionBlock = await getRemoveProfitSharingTx(
             gasBudget,
-            config.SINGLE_COLLATERAL_PACKAGE,
-            config.SINGLE_COLLATERAL_REGISTRY,
+            config.PACKAGE.DOV_SINGLE,
+            config.REGISTRY.DOV_SINGLE,
             NAME,
             typeArgumentsRemove
         );
@@ -82,8 +82,8 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     var transactionBlock = await getSetProfitSharingTx(
         gasBudget,
-        config.SINGLE_COLLATERAL_PACKAGE,
-        config.SINGLE_COLLATERAL_REGISTRY,
+        config.PACKAGE.DOV_SINGLE,
+        config.REGISTRY.DOV_SINGLE,
         NAME,
         levelProfits,
         sum,
@@ -103,8 +103,8 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
         console.log(input.length);
         var transactionBlock = await getAllocateProfitSharingTx(
             gasBudget,
-            config.SINGLE_COLLATERAL_PACKAGE,
-            config.SINGLE_COLLATERAL_REGISTRY,
+            config.PACKAGE.DOV_SINGLE,
+            config.REGISTRY.DOV_SINGLE,
             input,
             typeArguments
         );

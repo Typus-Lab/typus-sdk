@@ -29,7 +29,7 @@ const gasBudget = 100000000;
 
     let portfolioVaults = await getPortfolioVaults(
         provider,
-        config.SINGLE_COLLATERAL_REGISTRY,
+        config.REGISTRY.DOV_SINGLE,
         config.SINGLE_COLLATERAL_DEPOSIT_VAULT_REGISTRY,
         config.SINGLE_COLLATERAL_BID_VAULT_REGISTRY
     );
@@ -42,9 +42,9 @@ const gasBudget = 100000000;
     if (!staking_nft?.first_deposit) {
         transactionBlock = await getDepositTx(
             gasBudget,
-            config.SINGLE_COLLATERAL_PACKAGE,
+            config.PACKAGE.DOV_SINGLE,
             portfolioVaults[index].typeArgs,
-            config.SINGLE_COLLATERAL_REGISTRY,
+            config.REGISTRY.DOV_SINGLE,
             config.SINGLE_COLLATERAL_AC_REGISTRY,
             portfolioVaults[index].info.index,
             coins,
@@ -53,9 +53,9 @@ const gasBudget = 100000000;
     } else {
         transactionBlock = await getDepositTx(
             gasBudget,
-            config.SINGLE_COLLATERAL_PACKAGE,
+            config.PACKAGE.DOV_SINGLE,
             portfolioVaults[index].typeArgs,
-            config.SINGLE_COLLATERAL_REGISTRY,
+            config.REGISTRY.DOV_SINGLE,
             config.SINGLE_COLLATERAL_AC_REGISTRY,
             portfolioVaults[index].info.index,
             coins,

@@ -19,9 +19,9 @@ const gasBudget = 100000000;
     let fudToken = "0x461efa7ee5aa1b27e44450d79e2104e7fc0991461e9eb1c2a3fc1f44cd554856::fud::FUD";
     let mFudToken = "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c::mfud::MFUD";
 
-    let packageId = config.SINGLE_COLLATERAL_PACKAGE;
+    let packageId = config.PACKAGE.DOV_SINGLE;
     let typeArguments = [mFudToken, mFudToken];
-    let strategy_pool = config.STRATEGY_POOL;
+    let strategy_pool = config.OBJECT.STRATEGY_POOL;
 
     let vault_index = "38";
     let signal_index = "0";
@@ -32,7 +32,7 @@ const gasBudget = 100000000;
         gasBudget,
         packageId,
         typeArguments,
-        config.SINGLE_COLLATERAL_REGISTRY,
+        config.REGISTRY.DOV_SINGLE,
         strategy_pool,
         vault_index,
         signal_index,

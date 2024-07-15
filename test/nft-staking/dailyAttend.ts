@@ -18,7 +18,7 @@ const gasBudget = 100000000;
     let dailyAttendExp = await getDailyAttendExp(provider, config.dailyAttendExp);
     console.log("Earn Exp: " + dailyAttendExp);
 
-    let transactionBlock = await getDailyAttendTx(gasBudget, config.SINGLE_COLLATERAL_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY);
+    let transactionBlock = await getDailyAttendTx(gasBudget, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE);
 
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
     console.log(res);

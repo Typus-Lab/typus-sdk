@@ -12,7 +12,7 @@ const provider = new SuiClient({
 const sender = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d484107";
 
 (async () => {
-    const vaults = await getVaults(provider, config.SINGLE_COLLATERAL_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY, []);
+    const vaults = await getVaults(provider, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE, []);
 
     // 1. Get User Events
     const localCacheFile = fs.readFileSync("localCacheEvents.json", "utf-8");

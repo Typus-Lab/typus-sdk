@@ -8,7 +8,7 @@ const provider = new SuiClient({
 });
 
 (async () => {
-    const vaults = await getVaults(provider, config.SINGLE_COLLATERAL_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY, []);
+    const vaults = await getVaults(provider, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE, []);
     const datas = await getVaultHistoryEvents(provider, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, 1704931200000);
 
     const bidEvents = await parseBidEvents(datas, 1705017600000);
