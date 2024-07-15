@@ -2,12 +2,8 @@ import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { tokenType, typeArgToToken } from "@/constants/token";
-import { createPythClient } from "@/utils/pyth/pythClient";
-import { releaseCollateral } from "@/typus-perp/user/order";
-import { getUserPositions } from "@/typus-perp/fetch";
-import { NETWORK } from "@/typus-perp";
-import "@/utils/load_env";
+import { tokenType, typeArgToToken, createPythClient, releaseCollateral, getUserPositions, NETWORK } from "../../../../src";
+import "../../../../src/utils/load_env";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 

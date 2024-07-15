@@ -1,6 +1,6 @@
 import configs from "../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
-import { getMarkets, getSymbolMarkets } from "@/typus-perp/fetch";
+import { getMarkets, getSymbolMarkets } from "../../../src";
 
 const config = configs.TESTNET;
 
