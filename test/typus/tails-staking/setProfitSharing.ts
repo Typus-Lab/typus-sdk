@@ -7,17 +7,17 @@ import * as readline from "readline/promises";
 import configs from "../../../config.json";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 
-const config = configs.TESTNET;
+const config = configs.MAINNET;
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
 const rewards = 1888_000000000;
-const token = config.TOKEN.AFSUI;
-const nextWeekRewards = 3333_000000000;
+const token = config.TOKEN.SUI;
+const nextWeekRewards = 1888_000000000;
 const nextWeekToken = config.TOKEN.SUI;
-const nextWeekTsMs = 1720422000000;
+const nextWeekTsMs = (Math.floor(Date.now() / 86400000 / 7) + 1) * (86400000 * 7) + 370800000;
 
 (async () => {
     console.log("token: " + token);

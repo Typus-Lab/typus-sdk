@@ -7,11 +7,11 @@ import { CLOCK } from "../../constants";
 import * as fs from "fs";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-const config = configs.TESTNET;
+const config = configs.MAINNET;
 const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });
-const tailsManagerCap = "0xf02cfb741434e40e861f038c05f0c3cadae69ed07b089284afbd70870d145ddd";
-const transferPolicy = "0x6a41a805050984afb72b3bee40420670289ac00f08fa23878c006205bbd70aa0";
+const tailsManagerCap = "0xd16ea0aa917512d26f45444c44175fbf3464f472194397fb8fe56ac4de544bc7";
+const transferPolicy = "0x699c9cde27922c353e45716a4eca7adad436e08d7258629f6afde8e64f22314b";
 const tailsStakingRegistry = config.REGISTRY.TAILS_STAKING;
 
 (async () => {
@@ -20,8 +20,8 @@ const tailsStakingRegistry = config.REGISTRY.TAILS_STAKING;
     // await step2();
     // await step3();
     // await step4();
-    // await step5();
-    await hotfix();
+    await step5();
+    // await hotfix();
 })();
 
 async function step1() {
