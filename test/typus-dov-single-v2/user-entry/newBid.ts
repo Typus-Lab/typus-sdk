@@ -1,27 +1,40 @@
-import "@/utils/load_env";
-import { getNewBidTx } from "../../../utils/typus-dov-single-v2/user-entry";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
-import config from "../config.json";
+import "../../../src/utils/load_env";
+import { getNewBidTx } from "../../../src";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui.js/client";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
+import configs from "../../../config.json";
 
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const signer = new RawSigner(keypair, provider);
+const config = configs.TESTNET;
+const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+const provider = new SuiClient({ url: config.RPC_ENDPOINT });
+const user = signer.toSuiAddress();
 
 (async () => {
     let depositToken = "0x2::sui::SUI";
     let bidToken = "0x2::sui::SUI";
-    let gasBudget = 100000000;
-    let packageId = config.PACKAGE;
     let typeArguments = [depositToken, bidToken];
-    let registry = config.REGISTRY;
     let index = "1";
-    let coins = (await provider.getCoins({ owner: await signer.getAddress(), coinType: depositToken })).data.map(
-        (coin) => coin.coinObjectId
-    );
+    let coins = (await provider.getCoins({ owner: user, coinType: depositToken })).data.map((coin) => coin.coinObjectId);
     let size = "1000000000";
     let premium_required = "1000000000";
 
-    let transactionBlock = await getNewBidTx(gasBudget, packageId, typeArguments, registry, index, coins, size, premium_required);
-    let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
+    let transactionBlock = getNewBidTx({
+        tx: new TransactionBlock(),
+        typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
+        typusUserRegistry: config.REGISTRY.USER,
+        tgldRegistry: config.REGISTRY.TGLD,
+        typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD,
+        typusFrameworkPackageId: config.PACKAGE.FRAMEWORK,
+        typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
+        typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
+        typeArguments,
+        index,
+        coins,
+        size,
+        premium_required,
+        user,
+    });
+    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);
 })();

@@ -1,6 +1,6 @@
-import "@/utils/load_env";
+import "../../../src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getRebateTx } from "../../../utils/typus-dov-single-v2/user-entry";
+import { getRebateTx } from "../../../src";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import configs from "../../../config.json";

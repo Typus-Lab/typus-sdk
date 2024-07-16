@@ -1,11 +1,14 @@
-import "@/utils/load_env";
-import { getExerciseTx } from "../../../utils/typus-dov-single-v2/user-entry";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
-import config from "../config.json";
+import "../../../src/utils/load_env";
+import { getExerciseTx } from "../../../src";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui.js/client";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
+import configs from "../../../config.json";
 
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const signer = new RawSigner(keypair, provider);
+const config = configs.TESTNET;
+const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+const user = signer.toSuiAddress();
+const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 (async () => {
     let depositToken = "0x2::sui::SUI";
@@ -21,6 +24,6 @@ const signer = new RawSigner(keypair, provider);
 
     // @ts-ignore
     let transactionBlock = await getExerciseTx(gasBudget, typusFrameworkPackageId, packageId, registry, request);
-    let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
+    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);
 })();
