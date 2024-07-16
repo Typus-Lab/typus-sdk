@@ -7,7 +7,7 @@ import {
     reduceOptionCollateralPositionSize as _reduceOptionCollateralPositionSize,
 } from "../trading/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "src/constants";
+import { CLOCK } from "../../constants";
 import { PythClient, createPythClient, updatePyth, updateOracleWithPyth } from "../../utils/pyth/pythClient";
 import { priceInfoObjectIds, pythStateId } from "../../utils/pyth/constant";
 import { tokenType, TOKEN, typeArgToToken } from "../../constants/token";
