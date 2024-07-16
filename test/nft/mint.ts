@@ -8,7 +8,7 @@ const config = configs.TESTNET;
 // Generate a new Ed25519 Keypair
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const provider = new SuiClient({
-    url: getFullnodeUrl("testnet"),
+    url: config.RPC_ENDPOINT,
 });
 
 const gasBudget = 100000000;

@@ -1,17 +1,17 @@
-import "@/utils/load_env";
-import config from "../../../config_v2.json";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getWithdrawProfitStrategyTx } from "../../../utils/typus-dov-single-v2/mfud-user-entry";
+import configs from "../../../config.json";
+import { getWithdrawProfitStrategyTx } from "../../../src";
+import "../../../src/utils/load_env";
+const config = configs.TESTNET;
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
 // import mnemonic from "../../mnemonic.json";
-
 // const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 
 const provider = new SuiClient({
-    url: getFullnodeUrl("testnet"),
+    url: config.RPC_ENDPOINT,
 });
 const gasBudget = 100000000;
 
@@ -37,8 +37,6 @@ const gasBudget = 100000000;
         vault_index,
         signal_index,
         strategy_index,
-        config.TYPUS_TOKEN_PACKAGE,
-        config.TYPUS_TOKEN_MFUD_REGISTRY,
         keypair.toSuiAddress()
     );
     var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });

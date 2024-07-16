@@ -15,7 +15,7 @@ import drawKeys from "../../drawKeys.json";
 //         network in Network && network === Network.MAINNET ? new SentryHttpTransport(networkUrl) : new SuiHTTPTransport({ url: networkUrl }),
 // });
 
-// const provider = new SuiClient({ url: getFullnodeUrl("testnet") });
+// const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 const provider = new SuiClient({
     transport: new SuiHTTPTransport({
