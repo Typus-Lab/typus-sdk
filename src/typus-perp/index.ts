@@ -12,6 +12,3 @@ export { installEcosystemManagerCapEntry } from "./admin/functions";
 export * from "./readVec";
 export * from "./fetch";
 export * from "./user";
-
-export * from "./lp-pool/structs";
-export * from "./stake-pool/structs";
