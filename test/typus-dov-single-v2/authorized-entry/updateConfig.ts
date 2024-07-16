@@ -1,9 +1,9 @@
-import "@/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getUpdateConfigTx, UpdateConfigRequests } from "../../../utils/typus-dov-single-v2/authorized-entry";
+import { getUpdateConfigTx, UpdateConfigRequests } from "../../../src";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import configs from "../../../config.json";
+import "../../../src/utils/load_env";
 
 const config = configs.MAINNET;
 const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));

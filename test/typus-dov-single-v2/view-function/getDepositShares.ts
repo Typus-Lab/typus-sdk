@@ -1,9 +1,20 @@
+import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
+import {
+    DepositShare,
+    getDepositShares,
+    getVaults,
+    getUserEvents,
+    getAutoBidEvents,
+    parseTxHistory,
+    getNewBidFromSentio,
+    getDepositorCashFlows,
+    typeArgToAsset,
+    assetToDecimal,
+} from "../../../src";
+import * as fs from "fs";
 import configs from "../../../config.json";
-import { SuiClient } from "@mysten/sui.js/client";
-import { getDepositShares, getVaults } from "../../../utils/typus-dov-single-v2/view-function";
-import { typeArgToAsset, assetToDecimal } from "../../../utils/token";
-
 const config = configs.TESTNET;
+
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });
