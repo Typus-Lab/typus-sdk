@@ -1,14 +1,15 @@
-import "../load_env";
-import config from "../../config_v2.json";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
-import { getVaults } from "../../utils/auto-bid/view-function";
+import configs from "../../config.json";
+import { getStrategyPool } from "../../src";
+import "../../src/utils/load_env";
+const config = configs.TESTNET;
 
 const provider = new SuiClient({
-    url: getFullnodeUrl("testnet"),
+    url: config.RPC_ENDPOINT,
 });
 
 (async () => {
-    let strategy_pool_id = config.STRATEGY_POOL;
-    let strategy_pool = await getVaults(provider, strategy_pool_id);
+    let strategy_pool_id = config.OBJECT.STRATEGY_POOL;
+    let strategy_pool = await getStrategyPool(provider, strategy_pool_id);
     console.log(strategy_pool);
 })();

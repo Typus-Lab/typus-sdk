@@ -1,36 +1,34 @@
-import "../../load_env";
-import { getTransferBidReceiptTx } from "../../../utils/typus-dov-single-v2/user-entry";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
-import config from "../config.json";
+import "../../../src/utils/load_env";
+import { getTransferBidReceiptTx } from "../../../src";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui.js/client";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
+import configs from "../../../config.json";
 
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const signer = new RawSigner(keypair, provider);
+const config = configs.TESTNET;
+const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 (async () => {
     let depositToken = "0x2::sui::SUI";
     let bidToken = "0x2::sui::SUI";
-    let gasBudget = 100000000;
-    let typusFrameworkPackageId = config.PACKAGE.FRAMEWORK;
-    let packageId = config.PACKAGE;
     let typeArguments = [depositToken, bidToken];
-    let registry = config.REGISTRY;
     let index = "0";
     let receipts = [];
-    let recipient = await signer.getAddress();
+    let recipient = signer.toSuiAddress();
     let share = "100";
 
-    let transactionBlock = await getTransferBidReceiptTx({
-        gasBudget,
-        typusFrameworkPackageId,
-        packageId,
+    let transactionBlock = getTransferBidReceiptTx({
         typeArguments,
-        registry,
         index,
         receipts,
         share,
         recipient,
+        tx: new TransactionBlock(),
+        typusFrameworkOriginPackageId: config.PACKAGE_ORIGIN.FRAMEWORK,
+        typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
+        typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
     });
-    let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
+    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);
 })();

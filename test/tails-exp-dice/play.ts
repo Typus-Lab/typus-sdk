@@ -1,11 +1,7 @@
-import "../load_env";
+import "../../src/utils/load_env";
 import configs from "../../config.json";
-import { waitHistory, getPlaygrounds, parseHistory } from "../../utils/tails-exp-dice/fetch";
-import { newGamePlayGuessTx } from "../../utils/tails-exp-dice/user-entry";
+import { waitHistory, getPlaygrounds, parseHistory, newGamePlayGuessTx, simulateGame, DrawResult, getDrawResult } from "../../src";
 import { SuiClient, SuiHTTPTransport, getFullnodeUrl } from "@mysten/sui.js/client";
-// import { WebSocket } from "ws";
-import { simulateGame, DrawResult } from "../../utils/tails-exp-dice/view-function";
-import { getDrawResult } from "../../utils/tails-exp-dice/api";
 
 const config = configs.MAINNET;
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });

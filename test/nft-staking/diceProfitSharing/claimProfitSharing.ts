@@ -1,4 +1,4 @@
-import "../../load_env";
+import "@/utils/load_env";
 import config_v2 from "../../../config_v2.json";
 import { getClaimProfitSharingTx } from "../../../utils/nft-staking/user-entry";
 import { getUserStake } from "../../../utils/nft-staking/fetch";
@@ -9,7 +9,7 @@ import { getProfitSharing } from "../../../utils/tails-exp-dice/fetch";
 // Generate a new Ed25519 Keypair
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const provider = new SuiClient({
-    url: config_v2.RPC_ENDPOINT,
+    url: config.RPC_ENDPOINT,
 });
 
 const gasBudget = 100000000;

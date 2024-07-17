@@ -1,6 +1,4 @@
-import { calculateLevelReward } from "../../../utils/tails-exp-dice/fetch";
-import { getLevelCounts } from "../../../utils/tails-staking/view-function";
-import { getSetProfitSharingTx } from "../../../utils/tails-staking/authorized-entry";
+import { calculateLevelReward, getLevelCounts, getSetProfitSharingTx } from "../../../src";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import * as readline from "readline/promises";

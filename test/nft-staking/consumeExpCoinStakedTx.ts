@@ -28,9 +28,9 @@ const amount = "10";
 
         let transactionBlock = await consumeExpCoinStakedTx(
             gasBudget,
-            config.SINGLE_COLLATERAL_PACKAGE,
+            config.PACKAGE.DOV_SINGLE,
             [config.NFT_EXP_TOKEN],
-            config.SINGLE_COLLATERAL_REGISTRY,
+            config.REGISTRY.DOV_SINGLE,
             coins,
             amount
         );

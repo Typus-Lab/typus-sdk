@@ -1,8 +1,8 @@
 import configs from "../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
-import { getMyBids } from "../../../utils/typus-dov-single-v2/view-function";
-
+import { getMyBids } from "../../../src";
 const config = configs.MAINNET;
+
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });

@@ -1,12 +1,5 @@
 import configs from "../../config.json";
-import {
-    getUserEvents,
-    getAutoBidEvents,
-    parseTxHistory,
-    getNewBidFromSentio,
-    getExerciseFromSentio,
-} from "../../utils/typus-dov-single-v2/user-history";
-import { getVaults } from "../../utils/typus-dov-single-v2/view-function";
+import { getVaults, getUserEvents, getAutoBidEvents, parseTxHistory, getNewBidFromSentio, getExerciseFromSentio } from "../../src";
 import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
 import * as fs from "fs";
 
@@ -69,7 +62,7 @@ const fileName = "testnetLocalCacheEvents.json";
     console.log(cursor);
 
     // 2. Get AutoBid Events
-    // const datas2 = await getAutoBidEvents(provider, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, 1710892800000);
+    // const datas2 = await getAutoBidEvents(provider, config.PACKAGE_ORIGIN.DOV_SINGLE, 1710892800000);
     // console.log(datas2.length);
 
     // 3. Parese User History

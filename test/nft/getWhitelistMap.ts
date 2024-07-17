@@ -1,24 +1,25 @@
-import "../load_env";
-import config from "../../config.json";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
-import { getPoolMap, PoolData, getWhitelistMap } from "../../utils/typus-nft/fetch";
+import configs from "../../config.json";
+import { KioskClient, Network } from "@mysten/kiosk";
+import { getWhitelistMap } from "../../src";
+import "../../src/utils/load_env";
+import { getFullnodeUrl, SuiClient } from "@mysten/sui.js/client";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+const config = configs.MAINNET;
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-// const client = new SuiClient({ url: config.RPC_ENDPOINT });
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const signer = new RawSigner(keypair, provider);
+const client = new SuiClient({ url: config.RPC_ENDPOINT });
 
 (async () => {
-    const address = await signer.getAddress();
+    const address = keypair.toSuiAddress();
     console.log(address);
 
-    const objs = await provider.getOwnedObjects({
+    const objs = await client.getOwnedObjects({
         owner: address,
         options: { showType: true, showContent: true },
     });
     // console.log(objs);
 
-    const wlTokens = objs.data.filter((obj) => obj.data?.type! == `${config.NFT_PACKAGE_ORIGIN}::typus_nft::Whitelist`);
+    const wlTokens = objs.data.filter((obj) => obj.data?.type! == `${config.PACKAGE_ORIGIN.NFT}::typus_nft::Whitelist`);
     // console.log(wlTokens);
 
     const wlTokensFor = await getWhitelistMap(config, wlTokens);
