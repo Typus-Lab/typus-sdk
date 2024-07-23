@@ -1,14 +1,13 @@
-import "../load_env";
-import config from "../../config.json";
-import { getMintToKioskTx } from "../../utils/typus-nft/user-entry";
-import { getPool } from "../../utils/typus-nft/fetch";
-import { JsonRpcProvider, Ed25519Keypair, RawSigner, Connection } from "@mysten/sui.js";
-import { getOwnedKiosks } from "@mysten/kiosk";
+import "../../src/utils/load_env";
+import configs from "../../config.json";
+import { getMintToKioskTx, getPool } from "../../src";
+import { getFullnodeUrl, SuiClient } from "@mysten/sui.js/client";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { KioskClient, Network } from "@mysten/kiosk";
+const config = configs.TESTNET;
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-// const client = new SuiClient({ url: config.RPC_ENDPOINT });
-const provider = new JsonRpcProvider(new Connection({ fullnode: config.RPC_ENDPOINT }));
-const signer = new RawSigner(keypair, provider);
+const client = new SuiClient({ url: config.RPC_ENDPOINT });
 
 const gasBudget = 100000000;
 // const address = keypair.toSuiAddress();
@@ -17,11 +16,11 @@ const necklace = "kriya_dex";
 (async () => {
     const pool = config[necklace];
 
-    const address = await signer.getAddress();
+    const address = keypair.toSuiAddress();
 
     console.log(address);
 
-    var result = await provider.getOwnedObjects({
+    var result = await client.getOwnedObjects({
         owner: address,
         options: { showType: true, showContent: true },
     });
@@ -29,7 +28,7 @@ const necklace = "kriya_dex";
     var datas = result.data;
 
     while (result.hasNextPage) {
-        result = await provider.getOwnedObjects({
+        result = await client.getOwnedObjects({
             owner: address,
             options: { showType: true, showContent: true },
             cursor: result.nextCursor,
@@ -40,16 +39,21 @@ const necklace = "kriya_dex";
     const wlTokens = datas.filter((data) => {
         // console.log(data);
         // @ts-ignore
-        return data.data?.type?.startsWith(config.NFT_PACKAGE_ORIGIN) && data.data?.content?.fields.for == pool;
+        return data.data?.type?.startsWith(config.PACKAGE_ORIGIN.NFT) && data.data?.content?.fields.for == pool;
     });
 
     console.log(wlTokens.length);
 
-    const poolData = await getPool(provider, pool);
+    const poolData = await getPool(client, pool);
 
     console.log(poolData);
 
-    const kiosks = await getOwnedKiosks(provider, address);
+    const kioskClient = new KioskClient({
+        client,
+        network: Network.TESTNET,
+    });
+
+    const kiosks = await kioskClient.getOwnedKiosks({ address });
 
     if (wlTokens.length > 0 && kiosks.kioskOwnerCaps.length > 0) {
         const wlToken = wlTokens[0].data?.objectId!;
@@ -60,17 +64,15 @@ const necklace = "kriya_dex";
         if (kioskOwnerCap.kioskId == kiosk) {
             let transactionBlock = await getMintToKioskTx(
                 gasBudget,
-                config.NFT_PACKAGE_ORIGIN,
+                config.PACKAGE_ORIGIN.NFT,
                 pool,
-                config.NFT_TRANSFER_POLICY,
+                config.OBJECT.NFT_TRANSFER_POLICY,
                 wlToken,
                 kiosk,
                 kioskOwnerCap.objectId
             );
 
-            // let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
-            let res = await signer.signAndExecuteTransactionBlock({ transactionBlock });
-
+            let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
             console.log(res);
         }
     }

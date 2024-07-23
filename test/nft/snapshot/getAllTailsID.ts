@@ -1,10 +1,11 @@
-import "../../load_env";
-import config_v2 from "../../../mainnet.json";
-import { getTails } from "../../../utils/typus-nft/fetch";
-import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui.js/client";
 import * as fs from "fs";
+import configs from "../../../config.json";
+import { getTails } from "../../../src";
+import "../../src/utils/load_env";
+const config = configs.TESTNET;
 
-const provider = new SuiClient({ url: config_v2.RPC_ENDPOINT });
+const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 (async () => {
     var hasNextPage = true;
@@ -14,7 +15,7 @@ const provider = new SuiClient({ url: config_v2.RPC_ENDPOINT });
 
     while (hasNextPage) {
         var result = await provider.queryEvents({
-            query: { MoveEventType: `${config_v2.NFT_PACKAGE_ORIGIN}::typus_nft::MintEvent` },
+            query: { MoveEventType: `${config.PACKAGE_ORIGIN.NFT}::typus_nft::MintEvent` },
             order: "descending",
             cursor,
         });

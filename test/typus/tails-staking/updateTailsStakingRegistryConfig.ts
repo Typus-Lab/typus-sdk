@@ -1,7 +1,6 @@
-import { getUpdateTailsStakingRegistryConfigTx } from "../../../utils/tails-staking/authorized-entry";
+import { getUpdateTailsStakingRegistryConfigTx } from "../../../src";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import * as readline from "readline/promises";
 import configs from "../../../config.json";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 

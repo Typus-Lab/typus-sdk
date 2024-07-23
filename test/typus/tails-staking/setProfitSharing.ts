@@ -1,36 +1,35 @@
-import { calculateLevelReward } from "../../../utils/tails-exp-dice/fetch";
-import { getLevelCounts } from "../../../utils/tails-staking/view-function";
-import { getSetProfitSharingTx } from "../../../utils/tails-staking/authorized-entry";
+import { calculateLevelReward, getLevelCounts, getSetProfitSharingTx } from "../../../src";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import * as readline from "readline/promises";
 import configs from "../../../config.json";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 
-const config = configs.TESTNET;
+const process = require("process");
+process.removeAllListeners("warning");
+const config = configs.MAINNET;
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
 const rewards = 1888_000000000;
-const token = config.TOKEN.AFSUI;
-const nextWeekRewards = 3333_000000000;
+const token = config.TOKEN.SUI;
+const nextWeekRewards = 1888_000000000;
 const nextWeekToken = config.TOKEN.SUI;
-const nextWeekTsMs = 1720422000000;
+const nextWeekTsMs = (Math.floor(Date.now() / 86400000 / 7) + 1) * (86400000 * 7) + 370800000;
 
 (async () => {
-    console.log("token: " + token);
-    console.log("rewards: " + rewards);
+    console.log(`token: ${token}`);
     let levelCounts = await getLevelCounts({
         provider,
         typusPackageId: config.PACKAGE.TYPUS,
         typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
         typusTailsStakingRegistry: config.REGISTRY.TAILS_STAKING,
     });
-    console.log("levelCounts: " + levelCounts);
+    console.log(`levelCounts: ${levelCounts}`);
     let levelProfits = calculateLevelReward(rewards, levelShares, levelCounts);
-    console.log("levelProfits: " + levelProfits);
+    console.log(`levelProfits: ${levelProfits}`);
     let profitAsset = (await provider.getDynamicFields({ parentId: config.REGISTRY.TAILS_STAKING })).data
         .filter((x) => x.objectType.includes(token))
         .map((x) => x.objectId as string)[0];
@@ -38,16 +37,27 @@ const nextWeekTsMs = 1720422000000;
         ? // @ts-ignore
           Number.parseInt((await provider.getObject({ id: profitAsset, options: { showContent: true } })).data?.content.fields.value)
         : 0;
-    console.log("remainingProfit: " + remainingProfit);
+    console.log(`rewards:         ${rewards}`);
+    console.log(`remainingProfit: ${remainingProfit}`);
+    let walletBalance = Number.parseInt((await provider.getBalance({ owner: keypair.toSuiAddress(), coinType: token })).totalBalance);
     let spendingProfit = 0;
     for (let i = 0; i < 7; i++) {
         spendingProfit += levelCounts[i] * levelProfits[i];
     }
     spendingProfit -= remainingProfit;
-    console.log("spendingProfit: " + spendingProfit);
-    console.log("nextWeekRewards: " + nextWeekRewards);
-    console.log("nextWeekToken: " + nextWeekToken);
+    if (walletBalance < spendingProfit) {
+        console.log(`spendingProfit:  ${spendingProfit}`);
+        console.log(`lack:            ${spendingProfit - walletBalance}`);
+    } else {
+        console.log(`spendingProfit:  ${spendingProfit}`);
+    }
+    console.log(`nextWeekRewards: ${nextWeekRewards}`);
+    console.log(`nextWeekToken: ${nextWeekToken}`);
     console.log(`nextWeekTsMs: ${nextWeekTsMs} (${new Date(nextWeekTsMs)})`);
+    if (walletBalance < spendingProfit) {
+        console.log("INSUFFICIENT BALANCE");
+        return;
+    }
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,

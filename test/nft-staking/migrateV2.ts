@@ -18,9 +18,9 @@ const gasBudget = 100000000;
     let tx = new TransactionBlock();
 
     const [table, nft_manager_cap, policy, coin] = tx.moveCall({
-        target: `${config.SINGLE_COLLATERAL_PACKAGE}::tails_staking::migrate_nft_extension`,
+        target: `${config.PACKAGE.DOV_SINGLE}::tails_staking::migrate_nft_extension`,
         typeArguments: [],
-        arguments: [tx.object(config.SINGLE_COLLATERAL_REGISTRY), tx.object(config.SINGLE_COLLATERAL_MANAGER_CAP)],
+        arguments: [tx.object(config.REGISTRY.DOV_SINGLE), tx.object(config.SINGLE_COLLATERAL_MANAGER_CAP)],
     });
 
     tx.moveCall({

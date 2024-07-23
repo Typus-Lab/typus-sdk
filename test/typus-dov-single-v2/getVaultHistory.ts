@@ -1,19 +1,14 @@
-import config from "../../mainnet.json";
-import {
-    getVaultHistoryEvents,
-    parseGroupEvents,
-    parseVaultHistory,
-    getVaultHistoryFromDB,
-    VaultHistory,
-} from "../../utils/typus-dov-single-v2/vault-history";
+import configs from "../../config.json";
+import { getVaultHistoryFromDB, VaultHistory } from "../../src";
 import { SuiClient } from "@mysten/sui.js/client";
+const config = configs.TESTNET;
 
-const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
-});
+// const provider = new SuiClient({
+//     url: config.RPC_ENDPOINT,
+// });
 
 (async () => {
-    // const datas = await getVaultHistoryEvents(provider, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, 1702278000000);
+    // const datas = await getVaultHistoryEvents(provider, config.PACKAGE_ORIGIN.DOV_SINGLE, 1702278000000);
     // const groupEvents = await parseGroupEvents(datas);
     // const vaultHistory = await parseVaultHistory(groupEvents);
 

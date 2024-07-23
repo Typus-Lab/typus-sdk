@@ -1,14 +1,11 @@
-import "../load_env";
 import configs from "../../config.json";
 import { KioskClient, Network } from "@mysten/kiosk";
-// import { fetchKiosk, getOwnedKiosks } from "@mysten/kiosk/src/query/kiosk";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
-import { getTails, getTailsIds, getkioskOwnerCaps, kioskOwnerCap } from "../../utils/typus-nft/fetch";
-// import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { getTails, getTailsIds, getkioskOwnerCaps, kioskOwnerCap } from "../../src";
+import "../../src/utils/load_env";
 
 const config = configs.MAINNET;
 
-// const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });

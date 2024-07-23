@@ -54,8 +54,8 @@ const receiver = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3
         if (nft) {
             let transactionBlock = await getTransferNftTx(
                 gasBudget,
-                config.SINGLE_COLLATERAL_PACKAGE,
-                config.SINGLE_COLLATERAL_REGISTRY,
+                config.PACKAGE.DOV_SINGLE,
+                config.REGISTRY.DOV_SINGLE,
                 personalKioskRulePackageId,
                 nft,
                 receiver

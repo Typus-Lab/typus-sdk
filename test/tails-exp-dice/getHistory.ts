@@ -1,15 +1,17 @@
-import config from "../../dice_config.json";
-import { getHistory, getLeaderBoard, getPlaygrounds } from "../../utils/tails-exp-dice/fetch";
+import configs from "../../config.json";
+import { getHistory, getLeaderBoard, getPlaygrounds } from "../../src";
 import { SuiClient } from "@mysten/sui.js/client";
+import "../../src/utils/load_env";
+const config = configs.TESTNET;
 
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });
 
 (async () => {
-    const playgrounds = await getPlaygrounds(provider, config.REGISTRY);
+    const playgrounds = await getPlaygrounds(provider, config.REGISTRY.EXP_GUESS);
 
-    const history = await getHistory(provider, config.PACKAGE_ORIGIN, playgrounds);
+    const history = await getHistory(provider, config.PACKAGE_ORIGIN.EXP_GUESS, playgrounds);
     console.log(history);
 
     const leaderBoard = await getLeaderBoard(history);

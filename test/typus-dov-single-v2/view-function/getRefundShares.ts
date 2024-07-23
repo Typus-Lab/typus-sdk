@@ -1,8 +1,8 @@
 import configs from "../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
-import { getRefundShares } from "../../../utils/typus-dov-single-v2/view-function";
-
+import { getRefundShares } from "../../../src";
 const config = configs.TESTNET;
+
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });

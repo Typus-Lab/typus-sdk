@@ -51,8 +51,8 @@ const gasBudget = 100000000;
 
         let transactionBlock = await getStakeNftTx(
             gasBudget,
-            config.SINGLE_COLLATERAL_PACKAGE,
-            config.SINGLE_COLLATERAL_REGISTRY,
+            config.PACKAGE.DOV_SINGLE,
+            config.REGISTRY.DOV_SINGLE,
             personalKioskRulePackageId,
             nft
         );

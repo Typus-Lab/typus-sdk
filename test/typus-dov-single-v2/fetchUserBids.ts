@@ -1,16 +1,17 @@
-import config from "../../config.json";
+import configs from "../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
-import { fetchUserBids, fetchPrices } from "../../utils/typus-dov-single-v2/function/bidding";
+import { fetchUserBids, fetchPrices } from "../../src";
+const config = configs.TESTNET;
 
 const provider = new SuiClient({
-    url: "https://fullnode.testnet.sui.io:443",
+    url: config.RPC_ENDPOINT,
 });
 
-const packageAddress = config["TESTNET"].PACKAGE.DOV_SINGLE;
-const registryAddress = config["TESTNET"].REGISTRY.DOV_SINGLE;
-const originFramworkAddress = config["TESTNET"].PACKAGE_ORIGIN.FRAMEWORK;
-const framwokrAddress = config["TESTNET"].PACKAGE.FRAMEWORK;
-const strategyPoolAddress = config["TESTNET"].STRATEGY_POOL;
+const packageAddress = config.PACKAGE.DOV_SINGLE;
+const registryAddress = config.REGISTRY.DOV_SINGLE;
+const originFramworkAddress = config.PACKAGE_ORIGIN.FRAMEWORK;
+const framwokrAddress = config.PACKAGE.FRAMEWORK;
+const strategyPoolAddress = config.OBJECT.STRATEGY_POOL;
 
 (async () => {
     const userBids = await fetchUserBids(

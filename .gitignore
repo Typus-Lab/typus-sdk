@@ -13,3 +13,4 @@ localCacheEvents.json
 *LocalCacheEvents.json
 vaultHistory.json
 *.txt
+dist

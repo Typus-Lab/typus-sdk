@@ -1,9 +1,17 @@
-import config from "../../../mainnet.json";
 import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
-import { DepositShare, getDepositShares, getVaults } from "../../../utils/typus-dov-single-v2/view-function";
-import { getUserEvents, getAutoBidEvents, parseTxHistory, getNewBidFromSentio } from "../../../utils/typus-dov-single-v2/user-history";
-import { getDepositorCashFlows } from "../../../utils/typus-dov-single-v2/depositorPnl";
+import {
+    DepositShare,
+    getDepositShares,
+    getVaults,
+    getUserEvents,
+    getAutoBidEvents,
+    parseTxHistory,
+    getNewBidFromSentio,
+    getDepositorCashFlows,
+} from "../../../src";
 import * as fs from "fs";
+import configs from "../../../config.json";
+const config = configs.TESTNET;
 
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
@@ -12,7 +20,7 @@ const provider = new SuiClient({
 const sender = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d484107";
 
 (async () => {
-    const vaults = await getVaults(provider, config.SINGLE_COLLATERAL_PACKAGE, config.SINGLE_COLLATERAL_REGISTRY, []);
+    const vaults = await getVaults(provider, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE, []);
 
     // 1. Get User Events
     const localCacheFile = fs.readFileSync("localCacheEvents.json", "utf-8");
@@ -59,7 +67,7 @@ const sender = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d4841
 
     const datas = localCacheEvents;
 
-    const txHistory = await parseTxHistory(datas, config.SINGLE_COLLATERAL_PACKAGE_ORIGIN, vaults);
+    const txHistory = await parseTxHistory(datas, config.PACKAGE_ORIGIN.DOV_SINGLE, vaults);
     // console.log(txHistory.reverse());
 
     const newBidHistory = await getNewBidFromSentio(vaults, sender, 0);

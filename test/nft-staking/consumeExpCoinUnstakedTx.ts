@@ -1,12 +1,9 @@
-import "../load_env";
 import configs from "../../config.json";
-import { getConsumeExpCoinUnstakedTx } from "../../utils/tails-exp-dice/user-entry";
+import { getConsumeExpCoinUnstakedTx, getTailsIds, getkioskOwnerCaps, getExpUpWithoutStakingTx } from "../../src";
 import { KioskClient, Network } from "@mysten/kiosk";
-import { getTailsIds, getkioskOwnerCaps } from "../../utils/typus-nft/fetch";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { getExpUpWithoutStakingTx } from "../../utils/tails-staking/user-entry";
 
 const config = configs.TESTNET;
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -55,7 +52,7 @@ const amount = "1";
         // let nft = tailsIds.find((x) => x.isPersonal)!;
         console.log(nft);
 
-        const coinType = `${config.PACKAGE_ORIGIN.TAILS_EXP}::tails_exp::TAILS_EXP`;
+        const coinType = `${config.PACKAGE_ORIGIN.EXP_GUESS}::tails_exp::TAILS_EXP`;
 
         let coins = (await provider.getCoins({ owner: address, coinType })).data.map((coin) => coin.coinObjectId);
         console.log(coins);
@@ -64,8 +61,8 @@ const amount = "1";
 
         getConsumeExpCoinUnstakedTx({
             tx,
-            packageId: config.PACKAGE.TAILS_EXP,
-            tailsExpRegistry: config.REGISTRY.TAILS_EXP,
+            packageId: config.PACKAGE.EXP_GUESS,
+            tailsExpRegistry: config.REGISTRY.EXP_GUESS,
             typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
             tailsStakingRegistry: config.REGISTRY.TAILS_STAKING,
             kiosk: nft.kiosk,

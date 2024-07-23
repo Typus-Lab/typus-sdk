@@ -2,7 +2,7 @@
     "name": "@typus/typus-sdk",
     "author": "Typus",
     "description": "typus sdk",
-    "version": "1.3.25",
+    "version": "1.4.6",
     "dependencies": {
         "@mysten/bcs": "^0.11.1",
         "@mysten/kiosk": "0.8.10",
@@ -56,6 +56,7 @@
         "superstruct": "^1.0.3",
         "supports-color": "^9.4.0",
         "ts-mocha": "^10.0.0",
+        "tsconfig-paths": "^4.2.0",
         "tslib": "^2.6.0",
         "tsutils": "^3.21.0",
         "turbos-clmm-sdk": "^2.0.3",
@@ -74,14 +75,15 @@
         "tslint-config-prettier": "^1.18.0",
         "typescript": "^5.1.6"
     },
-    "main": "lib/index.js",
+    "main": "dist/src/index.js",
+    "types": "dist/src/index.d.ts",
     "files": [
-        "lib"
+        "dist"
     ],
-    "types": "lib/index.d.ts",
     "scripts": {
-        "test": "rm -rf lib && tsc && ts-mocha test/test*.ts",
-        "build": "rm -rf lib && tsc"
+        "ts-node": "ts-node -r tsconfig-paths/register",
+        "build": "rm -rf dist && tsc -p tsconfig.build.json",
+        "test": "rm -rf dist && tsc -p tsconfig.build.json && ts-mocha test/test*.ts"
     },
     "repository": {
         "type": "git",
