@@ -12,6 +12,7 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 export async function newGameTx(
     gasBudget: number,
     packageId: string,
+    module: "tails_exp" | "combo_dice",
     typeArguments: string[], // [TOKEN]
     registry: string,
     index: string,
@@ -20,7 +21,7 @@ export async function newGameTx(
 ) {
     let tx = new TransactionBlock();
     tx.moveCall({
-        target: `${packageId}::tails_exp::new_game`,
+        target: `${packageId}::${module}::new_game`,
         typeArguments,
         arguments: [tx.object(registry), tx.pure(index), tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }), tx.pure(amount)],
     });
@@ -44,6 +45,7 @@ export async function newGameTx(
 export async function playGuessTx(
     gasBudget: number,
     packageId: string,
+    module: "tails_exp" | "combo_dice",
     registry: string,
     index: string,
     guess_1: string,
@@ -54,7 +56,7 @@ export async function playGuessTx(
     let tx = new TransactionBlock();
 
     tx.moveCall({
-        target: `${packageId}::tails_exp::play_guess`,
+        target: `${packageId}::${module}::play_guess`,
         typeArguments: [],
         arguments: [
             tx.object(registry),
@@ -73,8 +75,10 @@ export async function playGuessTx(
 export async function newGamePlayGuessTx(
     gasBudget: number,
     packageId: string,
+    module: "tails_exp" | "combo_dice",
     typeArguments: string[], // [TOKEN]
     registry: string,
+    expRegistry: string,
     index: string,
     coins: string[],
     amount: string,
@@ -91,13 +95,16 @@ export async function newGamePlayGuessTx(
     ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
         tx.moveCall({
-            target: `${packageId}::tails_exp::new_game`,
+            target: `${packageId}::${module}::new_game`,
             typeArguments,
-            arguments: [tx.object(registry), tx.pure(index), tx.makeMoveVec({ objects: [coin] }), tx.pure(amount)],
+            arguments:
+                module == "combo_dice"
+                    ? [tx.object(registry), tx.object(expRegistry), tx.pure(index), tx.makeMoveVec({ objects: [coin] }), tx.pure(amount)]
+                    : [tx.object(registry), tx.pure(index), tx.makeMoveVec({ objects: [coin] }), tx.pure(amount)],
         });
     } else {
         tx.moveCall({
-            target: `${packageId}::tails_exp::new_game`,
+            target: `${packageId}::${module}::new_game`,
             typeArguments,
             arguments: [
                 tx.object(registry),
@@ -109,7 +116,7 @@ export async function newGamePlayGuessTx(
     }
 
     tx.moveCall({
-        target: `${packageId}::tails_exp::play_guess`,
+        target: `${packageId}::${module}::play_guess`,
         typeArguments: [],
         arguments: [
             tx.object(registry),
@@ -118,9 +125,24 @@ export async function newGamePlayGuessTx(
             tx.pure(larger_than_1),
             tx.pure(guess_2),
             tx.pure(larger_than_2),
-            // tx.object("0x8"),        // TODO: waiting for upgrade
         ],
     });
+
+    // TODO: waiting for upgrade
+    // tx.moveCall({
+    //     target: `${packageId}::${module}::play_guess_with_random`,
+    //     typeArguments: module == "combo_dice" ? typeArguments : [],
+    //     arguments: [
+    //         tx.object(registry),
+    //         tx.pure(index),
+    //         tx.pure(guess_1),
+    //         tx.pure(larger_than_1),
+    //         tx.pure(guess_2),
+    //         tx.pure(larger_than_2),
+    //         tx.object("0x8"),
+    //     ],
+    // });
+
     tx.setGasBudget(gasBudget);
 
     return tx;

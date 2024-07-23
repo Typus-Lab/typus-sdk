@@ -4,7 +4,7 @@
         "PACKAGE_ORIGIN": {
             "DOV_SINGLE": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
             "FRAMEWORK": "0xb4f25230ba74837d8299e92951306100c4a532e8c48cc3d8828abe9b91c8b274",
-            "EXP_GUESS": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
+            "DICE": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
             "MFUD": "0xd8f04cd2a16c19c17428c3b4c22b01dd06740423b93fb7ee88fbe2676a82849d",
             "NFT": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
             "ORACLE": "0x855eb2d260ee42b898266e6df90bfd3c4ed821ccb253a352c159c223244a4b8a",
@@ -14,7 +14,8 @@
         "PACKAGE": {
             "DOV_SINGLE": "0xf7ef57f3bd98455262417886b17eb4d5af1a18d2dec19c5b34e512bf4fc10acf",
             "FRAMEWORK": "0x5c6648fb219c046256488486d23d4af7bc562d5ab5c382e1f4b558066a327fe8",
-            "EXP_GUESS": "0xb1cc7379a7375808eaf4cda927a6f3a14363b6d131c020f4828119b87731fe03",
+            "DICE": "0xda804c7136e8fda3c9abb25e028fdc006c0adf2be1e58d8f0cce77e743373fca",
+            "DICE_0x8": "0xb1cc7379a7375808eaf4cda927a6f3a14363b6d131c020f4828119b87731fe03",
             "MFUD": "0xd8f04cd2a16c19c17428c3b4c22b01dd06740423b93fb7ee88fbe2676a82849d",
             "NFT": "0xba06aae31d9b7c9f651e783272c7e4f776fb5ae17e89d525b75a17b099f58202",
             "ORACLE": "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd",
@@ -62,8 +63,7 @@
         "RPC_ENDPOINT": "https://sui-testnet.blastapi.io:443/7f446a12-c4ab-4e3c-b2d8-ebb0fcbe5cdd",
         "PACKAGE_ORIGIN": {
             "DOV_SINGLE": "0x6c9a394a43844fc09d9617bc8a8e775a4521f0e28e83de1da780d043a498671f",
-            "TAILS_EXP": "0x9b43ee208a3b235810c145bca1161d1a71d08bfe76b1e55bb3db319ea95d0149",
-            "EXP_GUESS": "0x9b43ee208a3b235810c145bca1161d1a71d08bfe76b1e55bb3db319ea95d0149",
+            "DICE": "0x9b43ee208a3b235810c145bca1161d1a71d08bfe76b1e55bb3db319ea95d0149",
             "FRAMEWORK": "0x908a10789a1a6953e0b73a997c10e3552f7ce4e2907afd00a334ed74bd973ded",
             "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c",
             "NFT": "0x5cfd0819411be98034cba544cbffab192c2c35674a05ff57f4f1c5042875b828",
@@ -74,7 +74,7 @@
         },
         "PACKAGE": {
             "DOV_SINGLE": "0x2e462aa0224bec76acaea81c51ca5b9ae4b27ec50281a764797c84148c8a463f",
-            "EXP_GUESS": "0x4aab9bfc3efe279981d73eca80129356238508d3f2ffdda38a4832faf94e0b9a",
+            "DICE": "0x112321a74fb0903aff5c654603c19060552a704b5fb13a6cefa84e1147e66db8",
             "FRAMEWORK": "0x90ca6e2393e3adc91b4e9b70ab16c017e5f70f7094b6f09b913fef2833a656e9",
             "MFUD": "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c",
             "NFT": "0x0f5162014f18686640b8d0adefd60c3fe5b377413ec4f1e77001c67d96f8501a",
@@ -88,6 +88,7 @@
             "LEADERBOARD": "0x4faabe5a4a509a145fc9bae95761d34c11571da4cb25d681f06ffcbadbc355e7",
             "MFUD": "0x7ad87901531693f1baa541712947860dcc543617e11b14993ad70d20daf159c6",
             "TAILS_EXP": "0x37e0c8c80a5099d5dfe1b0aeae62e3f01916be73935090efb9c95279b7bb1ce7",
+            "TYPUS_DICE": "0x034f58472d9604eee3e1fb5896e4d6a14f426c17c504cdb9dcdc7269ca4ad3b4",
             "EXP_GUESS": "0x37e0c8c80a5099d5dfe1b0aeae62e3f01916be73935090efb9c95279b7bb1ce7",
             "TAILS_STAKING": "0x989bd585b580dfc22d9d7656a5807b2f6c8fe36260a2003ef697adc8a38d21af",
             "TGLD": "0x2118b4056c89d90a6dc40d198fbe239cb8e83f7ea20daaf4ea53341c7fdb043c",

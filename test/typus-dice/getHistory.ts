@@ -9,10 +9,10 @@ const provider = new SuiClient({
 });
 
 (async () => {
-    const playgrounds = await getPlaygrounds(provider, config.REGISTRY.EXP_GUESS);
+    const playgrounds = await getPlaygrounds(provider, config.REGISTRY.TYPUS_DICE);
     console.log(playgrounds);
 
-    const history = await getHistory(provider, config.PACKAGE_ORIGIN.DICE, "tails_exp", playgrounds);
+    const history = await getHistory(provider, config.PACKAGE_ORIGIN.DICE, "combo_dice", playgrounds);
     console.log(history);
 
     // const leaderBoard = await getLeaderBoard(history);
