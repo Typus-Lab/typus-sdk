@@ -158,7 +158,15 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
         }
 
         const stake_amount = Number(drawEvent.stake_amount) / 10 ** decimal;
-        const amount = stake_amount > 1000000 ? `${stake_amount / 1000000} m` : stake_amount;
+        let amount;
+        if (asset == "FUD") {
+            amount = `${stake_amount / 1000000}m`;
+        } else {
+            amount = stake_amount;
+        }
+
+        const exp = Number(drawEvent.exp) | Number(drawEvent.exp_amount);
+        // console.log(drawEvent);
 
         const display: DrawDisplay = {
             game_id: drawEvent.game_id,
@@ -168,9 +176,18 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
             result_1,
             result_2,
             bet_amount: `${amount} ${asset}`,
-            exp: `${Number(drawEvent.exp)} EXP`,
+            exp: `${exp} EXP`,
             timestampMs: drawEvent.timestampMs,
         };
+
+        if (drawEvent.reward) {
+            const reward = Number(drawEvent.reward) / 10 ** decimal;
+            if (asset == "FUD") {
+                display.reward = `${reward / 1000000}m ${asset}`;
+            } else {
+                display.reward = `${reward} ${asset}`;
+            }
+        }
 
         return display;
     });
@@ -181,7 +198,6 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
 export interface DrawEvent {
     answer_1: string;
     answer_2: string;
-    exp: string;
     game_id: string;
     guess_1: string;
     guess_2: string;
@@ -197,6 +213,9 @@ export interface DrawEvent {
     signer: string;
     stake_amount: string;
     timestampMs: string;
+    exp?: string;
+    exp_amount?: string;
+    reward?: string;
 }
 
 export interface DrawDisplay {
@@ -209,6 +228,7 @@ export interface DrawDisplay {
     bet_amount: string;
     exp: string;
     timestampMs: string;
+    reward?: string;
 }
 
 // export interface LeaderBoard {
