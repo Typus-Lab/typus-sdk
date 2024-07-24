@@ -44,6 +44,9 @@ export async function getPlaygrounds(provider: SuiClient, diceRegistry: string) 
                 game_config,
                 is_active: fields.is_active,
             };
+            if (fields.exp_config) {
+                playground.exp_config = fields.exp_config.fields;
+            }
             // console.log(playground);
             return playground;
         });
@@ -60,15 +63,24 @@ export interface Playground {
     opened_games: Map<string, Game>; // <address, Game>
     game_config: GameConfig;
     is_active: boolean;
+    exp_config?: ExpConfig;
 }
 
 export interface GameConfig {
     max_stake: string;
     min_stake: string;
     stake_lot_size: string;
-    base_exp_divisor: string; // e.g. 1_000_000_000, so 10^9 Mist SUI => 1 exp if odd = 1
-    losses_multiplier_bp: string;
     critical_hits_multiplier_bp: string;
+    base_exp_divisor?: string; // e.g. 1_000_000_000, so 10^9 Mist SUI => 1 exp if odd = 1
+    losses_multiplier_bp?: string;
+    banker_edge_bp?: string;
+    max_single_game_loss_ratio_bp?: string;
+    u64_padding?: string[];
+}
+
+export interface ExpConfig {
+    base_exp_divisor: string;
+    u64_padding: string[];
 }
 
 export interface Game {
