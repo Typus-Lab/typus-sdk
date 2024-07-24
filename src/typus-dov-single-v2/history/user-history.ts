@@ -690,7 +690,7 @@ function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action:
                 period = "Hourly";
                 break;
             case "4":
-                period = "10Min";
+                period = "10min";
                 break;
             default:
                 period = "";
