@@ -1,5 +1,3 @@
-// import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
-// import { JsonRpcProvider } from "@mysten/sui.js/dist/cjs/providers/json-rpc-provider";
 import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
 import { assetToDecimal, typeArgToAsset } from "../constants/token";
 
@@ -24,13 +22,16 @@ export async function getPlaygrounds(provider: SuiClient, diceRegistry: string) 
             const fields = object.data?.content.fields;
             // console.log(fields);
 
-            const opened_games = fields.opened_games.fields.contents.reduce((acc, curr) => {
-                acc.set(curr.fields.key, curr.fields.value.fields as Game);
-                return acc;
-            }, new Map<number, Game>());
-            const game_config = fields.game_config.fields as GameConfig;
-
+            const opened_games = new Map<string, Game>();
+            if (fields.opened_games.fields) {
+                for (let curr of fields.opened_games.fields.contents) {
+                    // console.log(curr);
+                    opened_games.set(curr.fields.key, curr.fields.value.fields as Game);
+                }
+            }
             // console.log(opened_games);
+
+            const game_config = fields.game_config.fields as GameConfig;
             // console.log(game_config);
 
             const playground: Playground = {
@@ -43,6 +44,9 @@ export async function getPlaygrounds(provider: SuiClient, diceRegistry: string) 
                 game_config,
                 is_active: fields.is_active,
             };
+            if (fields.exp_config) {
+                playground.exp_config = fields.exp_config.fields;
+            }
             // console.log(playground);
             return playground;
         });
@@ -59,15 +63,24 @@ export interface Playground {
     opened_games: Map<string, Game>; // <address, Game>
     game_config: GameConfig;
     is_active: boolean;
+    exp_config?: ExpConfig;
 }
 
 export interface GameConfig {
     max_stake: string;
     min_stake: string;
     stake_lot_size: string;
-    base_exp_divisor: string; // e.g. 1_000_000_000, so 10^9 Mist SUI => 1 exp if odd = 1
-    losses_multiplier_bp: string;
     critical_hits_multiplier_bp: string;
+    base_exp_divisor?: string; // e.g. 1_000_000_000, so 10^9 Mist SUI => 1 exp if odd = 1
+    losses_multiplier_bp?: string;
+    banker_edge_bp?: string;
+    max_single_game_loss_ratio_bp?: string;
+    u64_padding?: string[];
+}
+
+export interface ExpConfig {
+    base_exp_divisor: string;
+    u64_padding: string[];
 }
 
 export interface Game {
@@ -82,9 +95,14 @@ export interface Game {
     vrf_input_2: number[] | null;
 }
 
-export async function getHistory(provider: SuiClient, dicePackage: string, playgrounds: Playground[]): Promise<DrawDisplay[]> {
+export async function getHistory(
+    provider: SuiClient,
+    dicePackage: string,
+    module: "tails_exp" | "combo_dice",
+    playgrounds: Playground[]
+): Promise<DrawDisplay[]> {
     const eventFilter: SuiEventFilter = {
-        MoveEventType: `${dicePackage}::tails_exp::Draw`,
+        MoveEventType: `${dicePackage}::${module}::Draw`,
     };
 
     var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
@@ -99,18 +117,6 @@ export async function getHistory(provider: SuiClient, dicePackage: string, playg
     }
 
     return history;
-}
-
-export async function waitHistory(provider: SuiClient, dicePackage: string, onMessage) {
-    const eventFilter: SuiEventFilter = {
-        MoveEventType: `${dicePackage}::tails_exp::Draw`,
-    };
-    const unsubscribe = await provider.subscribeEvent({
-        filter: eventFilter,
-        onMessage,
-    });
-
-    return unsubscribe;
 }
 
 export async function parseHistory(datas, playgrounds: Playground[]): Promise<DrawDisplay[]> {
@@ -152,7 +158,15 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
         }
 
         const stake_amount = Number(drawEvent.stake_amount) / 10 ** decimal;
-        const amount = stake_amount > 1000000 ? `${stake_amount / 1000000}m` : stake_amount;
+        let amount;
+        if (asset == "FUD") {
+            amount = `${stake_amount / 1000000}m`;
+        } else {
+            amount = stake_amount;
+        }
+
+        const exp = Number(drawEvent.exp) | Number(drawEvent.exp_amount);
+        // console.log(drawEvent);
 
         const display: DrawDisplay = {
             game_id: drawEvent.game_id,
@@ -162,9 +176,18 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
             result_1,
             result_2,
             bet_amount: `${amount} ${asset}`,
-            exp: `${Number(drawEvent.exp)} EXP`,
+            exp: `${exp} EXP`,
             timestampMs: drawEvent.timestampMs,
         };
+
+        if (drawEvent.reward) {
+            const reward = Number(drawEvent.reward) / 10 ** decimal;
+            if (asset == "FUD") {
+                display.reward = `${reward / 1000000}m ${asset}`;
+            } else {
+                display.reward = `${reward} ${asset}`;
+            }
+        }
 
         return display;
     });
@@ -175,7 +198,6 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
 export interface DrawEvent {
     answer_1: string;
     answer_2: string;
-    exp: string;
     game_id: string;
     guess_1: string;
     guess_2: string;
@@ -191,6 +213,9 @@ export interface DrawEvent {
     signer: string;
     stake_amount: string;
     timestampMs: string;
+    exp?: string;
+    exp_amount?: string;
+    reward?: string;
 }
 
 export interface DrawDisplay {
@@ -203,33 +228,34 @@ export interface DrawDisplay {
     bet_amount: string;
     exp: string;
     timestampMs: string;
+    reward?: string;
 }
 
-export interface LeaderBoard {
-    player: string;
-    total_bet_amount: number;
-    total_earn_exp: number;
-}
+// export interface LeaderBoard {
+//     player: string;
+//     total_bet_amount: number;
+//     total_earn_exp: number;
+// }
 
-export async function getLeaderBoard(drawDisplays: DrawDisplay[]): Promise<LeaderBoard[]> {
-    let leaderBoard: LeaderBoard[] = [];
+// export async function getLeaderBoard(drawDisplays: DrawDisplay[]): Promise<LeaderBoard[]> {
+//     let leaderBoard: LeaderBoard[] = [];
 
-    for (let drawDisplay of drawDisplays) {
-        let i = leaderBoard.findIndex((x) => x.player == drawDisplay.player);
-        if (i == -1) {
-            leaderBoard.push({
-                player: drawDisplay.player,
-                total_bet_amount: Number(drawDisplay.bet_amount.split(" ")[0]),
-                total_earn_exp: Number(drawDisplay.exp.split(" ")[0]),
-            } as LeaderBoard);
-        } else {
-            leaderBoard[i].total_bet_amount += Number(drawDisplay.bet_amount.split(" ")[0]);
-            leaderBoard[i].total_earn_exp += Number(drawDisplay.exp.split(" ")[0]);
-        }
-    }
+//     for (let drawDisplay of drawDisplays) {
+//         let i = leaderBoard.findIndex((x) => x.player == drawDisplay.player);
+//         if (i == -1) {
+//             leaderBoard.push({
+//                 player: drawDisplay.player,
+//                 total_bet_amount: Number(drawDisplay.bet_amount.split(" ")[0]),
+//                 total_earn_exp: Number(drawDisplay.exp.split(" ")[0]),
+//             } as LeaderBoard);
+//         } else {
+//             leaderBoard[i].total_bet_amount += Number(drawDisplay.bet_amount.split(" ")[0]);
+//             leaderBoard[i].total_earn_exp += Number(drawDisplay.exp.split(" ")[0]);
+//         }
+//     }
 
-    return leaderBoard;
-}
+//     return leaderBoard;
+// }
 
 export interface ProfitSharing {
     level_profits: string[];

@@ -2,7 +2,7 @@ export * from "./airdrop";
 export * from "./auto-bid";
 export * from "./constants";
 export * from "./leaderboard";
-export * from "./tails-exp-dice";
+export * from "./dice";
 export * from "./tails-staking";
 export * from "./typus-dov-single-v2";
 export * from "./typus-nft";

@@ -1,8 +1,7 @@
-const apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/draw-result-1";
-
 export async function getDrawResult(
     network: "mainnet" | "testnet",
     packageId: string,
+    module: "tails_exp" | "combo_dice",
     registry: string,
     index: string,
     amount: string,
@@ -28,7 +27,15 @@ export async function getDrawResult(
     const vrf_input_1_string = JSON.stringify(vrf_input_1);
     const vrf_input_2_string = JSON.stringify(vrf_input_2);
 
+    let apiUrl: string;
+    if (module === "tails_exp") {
+        apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/draw-result-1";
+    } else if (module === "combo_dice") {
+        apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/draw-result-2";
+    }
+
     // Append the query parameters to the URL
+    // @ts-ignore
     const apiUrlWithParams = `${apiUrl}?${queryParams.toString()}&vrf_input_1=${vrf_input_1_string}&vrf_input_2=${vrf_input_2_string}`;
     // console.log(apiUrlWithParams);
 

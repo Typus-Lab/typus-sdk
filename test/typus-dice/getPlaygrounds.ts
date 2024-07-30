@@ -9,6 +9,6 @@ import "../../src/utils/load_env";
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
 (async () => {
-    const playgrounds = await getPlaygrounds(provider, config.REGISTRY.EXP_GUESS);
+    const playgrounds = await getPlaygrounds(provider, config.REGISTRY.TYPUS_DICE);
     console.log(playgrounds);
 })();

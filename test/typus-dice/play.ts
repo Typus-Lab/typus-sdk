@@ -33,9 +33,9 @@ const larger_than_2 = true;
     let transactionBlock = await newGamePlayGuessTx(
         gasBudget,
         config.PACKAGE.DICE,
-        "tails_exp",
+        "combo_dice", // different from exp dice
         [coinType],
-        config.REGISTRY.EXP_GUESS,
+        config.REGISTRY.TYPUS_DICE, // different from exp dice
         config.REGISTRY.EXP_GUESS,
         index.toString(),
         coins,
@@ -61,8 +61,8 @@ const larger_than_2 = true;
         const drawResultV1 = await getDrawResult(
             "testnet",
             config.PACKAGE.DICE,
-            "tails_exp",
-            config.REGISTRY.EXP_GUESS,
+            "combo_dice", // different from exp dice
+            config.REGISTRY.TYPUS_DICE, // different from exp dice
             index.toString(),
             amount,
             guess_1,

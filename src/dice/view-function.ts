@@ -15,6 +15,7 @@ export interface DrawResult {
 export async function simulateGame(
     network: "mainnet" | "testnet",
     packageId: string,
+    module: "tails_exp" | "combo_dice",
     registry: string,
     index: string,
     amount: string,
@@ -30,7 +31,7 @@ export async function simulateGame(
     const provider = new SuiClient({ url: getFullnodeUrl(network) });
 
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::tails_exp::simulate_game` as any;
+    let target = `${packageId}::${module}::simulate_game` as any;
 
     const BLS = await loadBls();
     const PRIVATE_KEY = Uint8Array.from(drawKeys[network][index]); // your draw key. TODO: use env for cloud function
