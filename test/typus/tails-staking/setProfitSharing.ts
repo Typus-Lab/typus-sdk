@@ -20,6 +20,7 @@ const nextWeekToken = config.TOKEN.SUI;
 const nextWeekTsMs = (Math.floor(Date.now() / 86400000 / 7) + 1) * (86400000 * 7) + 370800000;
 
 (async () => {
+    console.log(`wallet: ${keypair.toSuiAddress()}`);
     console.log(`token: ${token}`);
     let levelCounts = await getLevelCounts({
         provider,
