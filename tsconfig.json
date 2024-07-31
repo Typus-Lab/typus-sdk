@@ -2,5 +2,6 @@
 {
     "extends": "./tsconfig.build.json",
     "include": ["src", "test"],
-    "exclude": ["node_modules", "**/__tests__/*", "scripts", "_deprecated"]
+    "exclude": ["node_modules", "**/__tests__/*", "scripts", "_deprecated"],
+    "compilerOptions": { "strictPropertyInitialization": false }
 }
