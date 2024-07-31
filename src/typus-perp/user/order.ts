@@ -16,10 +16,10 @@ import { Position, TradingOrder } from "../position/structs";
 export async function createTradingOrder(
     config: {
         REGISTRY: {
-            MARKET_REGISTRY: string;
+            MARKET: string;
             USER: string;
             LEADERBOARD: string;
-            LP_POOL_REGISTRY: string;
+            LP_POOL: string;
         };
         OBJECT: {
             TYPUS_VERSION: string;
@@ -65,8 +65,8 @@ export async function createTradingOrder(
 
     _createTradingOrder(input.tx, [cToken, baseToken], {
         version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.MARKET_REGISTRY,
-        poolRegistry: config.REGISTRY.LP_POOL_REGISTRY,
+        registry: config.REGISTRY.MARKET,
+        poolRegistry: config.REGISTRY.LP_POOL,
         marketIndex: BigInt(0),
         poolIndex: BigInt(0),
         pythState: pythStateId[NETWORK],
@@ -91,7 +91,7 @@ export async function createTradingOrder(
 export async function cancelTradingOrder(
     config: {
         REGISTRY: {
-            MARKET_REGISTRY: string;
+            MARKET: string;
         };
         OBJECT: {
             TYPUS_PERP_VERSION: string;
@@ -108,7 +108,7 @@ export async function cancelTradingOrder(
 
     const coin = _cancelTradingOrder(input.tx, [cToken, BASE_TOKEN], {
         version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.MARKET_REGISTRY,
+        registry: config.REGISTRY.MARKET,
         marketIndex: BigInt(0),
         orderId: input.order.orderId,
         triggerPrice: input.order.triggerPrice,
@@ -122,8 +122,8 @@ export async function cancelTradingOrder(
 export async function increaseCollateral(
     config: {
         REGISTRY: {
-            MARKET_REGISTRY: string;
-            LP_POOL_REGISTRY: string;
+            MARKET: string;
+            LP_POOL: string;
         };
         OBJECT: {
             TYPUS_PERP_VERSION: string;
@@ -161,8 +161,8 @@ export async function increaseCollateral(
 
     _increaseCollateral(input.tx, [cToken, baseToken], {
         version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.MARKET_REGISTRY,
-        poolRegistry: config.REGISTRY.LP_POOL_REGISTRY,
+        registry: config.REGISTRY.MARKET,
+        poolRegistry: config.REGISTRY.LP_POOL,
         marketIndex: BigInt(0),
         poolIndex: BigInt(0),
         pythState: pythStateId[NETWORK],
@@ -179,8 +179,8 @@ export async function increaseCollateral(
 export async function releaseCollateral(
     config: {
         REGISTRY: {
-            MARKET_REGISTRY: string;
-            LP_POOL_REGISTRY: string;
+            MARKET: string;
+            LP_POOL: string;
         };
         OBJECT: {
             TYPUS_PERP_VERSION: string;
@@ -203,8 +203,8 @@ export async function releaseCollateral(
 
     const coin = _releaseCollateral(input.tx, [cToken, baseToken], {
         version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.MARKET_REGISTRY,
-        poolRegistry: config.REGISTRY.LP_POOL_REGISTRY,
+        registry: config.REGISTRY.MARKET,
+        poolRegistry: config.REGISTRY.LP_POOL,
         marketIndex: BigInt(0),
         poolIndex: BigInt(0),
         pythState: pythStateId[NETWORK],

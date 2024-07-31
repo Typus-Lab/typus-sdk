@@ -12,8 +12,8 @@ import { NETWORK } from "..";
 
 export async function mintStakeLp(
     config: {
-        REGISTRY: { LP_POOL_REGISTRY: string; TREASURY_CAPS: string; STAKE_POOL_REGISTRY: string };
-        OBJECT: { TYPUS_PERP_VERSION: string };
+        REGISTRY: { LP_POOL: string; STAKE_POOL: string };
+        OBJECT: { TYPUS_PERP_VERSION: string; TLP_TREASURY_CAP: string };
         TOKEN: { TLP: string };
     },
     input: {
@@ -35,7 +35,7 @@ export async function mintStakeLp(
     for (let token of tokens) {
         updateLiquidityValue(input.tx, tokenType[NETWORK][token], {
             version: config.OBJECT.TYPUS_PERP_VERSION,
-            registry: config.REGISTRY.LP_POOL_REGISTRY,
+            registry: config.REGISTRY.LP_POOL,
             index: BigInt(0),
             pythState: pythStateId[NETWORK],
             oracle: priceInfoObjectIds[NETWORK][token],
@@ -59,8 +59,8 @@ export async function mintStakeLp(
 
     const lpCoin = mintLp(input.tx, [cToken, config.TOKEN.TLP], {
         version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.LP_POOL_REGISTRY,
-        treasuryCaps: config.REGISTRY.TREASURY_CAPS,
+        registry: config.REGISTRY.LP_POOL,
+        treasuryCaps: config.OBJECT.TLP_TREASURY_CAP,
         index: BigInt(0),
         pythState: pythStateId[NETWORK],
         oracle: priceInfoObjectIds[NETWORK][input.cTOKEN],
@@ -70,7 +70,7 @@ export async function mintStakeLp(
 
     stake(input.tx, config.TOKEN.TLP, {
         version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.STAKE_POOL_REGISTRY,
+        registry: config.REGISTRY.STAKE_POOL,
         index: BigInt(0),
         lpToken: lpCoin,
         clock: CLOCK,
@@ -82,8 +82,8 @@ export async function mintStakeLp(
 
 export async function unstakeBurn(
     config: {
-        REGISTRY: { LP_POOL_REGISTRY: string; TREASURY_CAPS: string; STAKE_POOL_REGISTRY: string };
-        OBJECT: { TYPUS_PERP_VERSION: string };
+        REGISTRY: { LP_POOL: string; STAKE_POOL: string };
+        OBJECT: { TYPUS_PERP_VERSION: string; TLP_TREASURY_CAP: string };
         TOKEN: { TLP: string };
     },
     input: {
@@ -106,7 +106,7 @@ export async function unstakeBurn(
     for (let token of tokens) {
         updateLiquidityValue(input.tx, tokenType[NETWORK][token], {
             version: config.OBJECT.TYPUS_PERP_VERSION,
-            registry: config.REGISTRY.LP_POOL_REGISTRY,
+            registry: config.REGISTRY.LP_POOL,
             index: BigInt(0),
             pythState: pythStateId[NETWORK],
             oracle: priceInfoObjectIds[NETWORK][token],
@@ -116,7 +116,7 @@ export async function unstakeBurn(
 
     const lpCoin = unstake(input.tx, config.TOKEN.TLP, {
         version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.STAKE_POOL_REGISTRY,
+        registry: config.REGISTRY.STAKE_POOL,
         index: BigInt(0),
         userShareId: BigInt(input.userShareId),
         clock: CLOCK,
@@ -125,8 +125,8 @@ export async function unstakeBurn(
 
     const coin = burnLp(input.tx, [cToken, config.TOKEN.TLP], {
         version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.LP_POOL_REGISTRY,
-        treasuryCaps: config.REGISTRY.TREASURY_CAPS,
+        registry: config.REGISTRY.LP_POOL,
+        treasuryCaps: config.OBJECT.TLP_TREASURY_CAP,
         index: BigInt(0),
         pythState: pythStateId[NETWORK],
         oracle,
@@ -141,7 +141,7 @@ export async function unstakeBurn(
 
 export async function swap(
     config: {
-        REGISTRY: { LP_POOL_REGISTRY: string; TREASURY_CAPS: string; STAKE_POOL_REGISTRY: string };
+        REGISTRY: { LP_POOL: string; STAKE_POOL: string };
         OBJECT: { TYPUS_PERP_VERSION: string };
         TOKEN: { TLP: string };
     },
@@ -175,7 +175,7 @@ export async function swap(
 
     const token = _swap(input.tx, [fromToken, toToken], {
         version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.LP_POOL_REGISTRY,
+        registry: config.REGISTRY.LP_POOL,
         pythState: pythStateId[NETWORK],
         clock: CLOCK,
         index: BigInt(0),
@@ -192,7 +192,7 @@ export async function swap(
 
 export async function unsubscribe(
     config: {
-        REGISTRY: { STAKE_POOL_REGISTRY: string };
+        REGISTRY: { STAKE_POOL: string };
         OBJECT: { TYPUS_PERP_VERSION: string };
         TOKEN: { TLP: string };
     },
@@ -204,7 +204,7 @@ export async function unsubscribe(
 ): Promise<TransactionBlock> {
     _unsubscribe(input.tx, config.TOKEN.TLP, {
         version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.STAKE_POOL_REGISTRY,
+        registry: config.REGISTRY.STAKE_POOL,
         index: BigInt(0),
         userShareId: BigInt(input.userShareId),
         clock: CLOCK,
@@ -215,7 +215,7 @@ export async function unsubscribe(
 
 export async function harvest(
     config: {
-        REGISTRY: { STAKE_POOL_REGISTRY: string };
+        REGISTRY: { STAKE_POOL: string };
         OBJECT: { TYPUS_PERP_VERSION: string };
     },
     input: {
@@ -225,7 +225,7 @@ export async function harvest(
 ): Promise<TransactionBlock> {
     harvestPerUserShare(input.tx, "0x2::sui::SUI", {
         version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.STAKE_POOL_REGISTRY,
+        registry: config.REGISTRY.STAKE_POOL,
         index: BigInt(0),
         userShareId: BigInt(input.userShareId),
         clock: CLOCK,

@@ -24,10 +24,10 @@ export async function createTradingOrderWithBidReceipt(
         };
         REGISTRY: {
             DOV_SINGLE: string;
-            MARKET_REGISTRY: string;
+            MARKET: string;
             USER: string;
             LEADERBOARD: string;
-            LP_POOL_REGISTRY: string;
+            LP_POOL: string;
         };
         OBJECT: {
             TYPUS_VERSION: string;
@@ -78,8 +78,8 @@ export async function createTradingOrderWithBidReceipt(
 
     _createTradingOrderWithBidReceipt(input.tx, [cToken, bToken, baseToken], {
         version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.MARKET_REGISTRY,
-        poolRegistry: config.REGISTRY.LP_POOL_REGISTRY,
+        registry: config.REGISTRY.MARKET,
+        poolRegistry: config.REGISTRY.LP_POOL,
         marketIndex: BigInt(0),
         poolIndex: BigInt(0),
         pythState: pythStateId[NETWORK],
@@ -108,10 +108,10 @@ export async function reduceOptionCollateralPositionSize(
         };
         REGISTRY: {
             DOV_SINGLE: string;
-            MARKET_REGISTRY: string;
+            MARKET: string;
             USER: string;
             LEADERBOARD: string;
-            LP_POOL_REGISTRY: string;
+            LP_POOL: string;
         };
         OBJECT: {
             TYPUS_VERSION: string;
@@ -155,8 +155,8 @@ export async function reduceOptionCollateralPositionSize(
 
     // _reduceOptionCollateralPositionSize(input.tx, [cToken, bToken, baseToken], {
     //     version: config.OBJECT.TYPUS_PERP_VERSION,
-    //     registry: config.REGISTRY.MARKET_REGISTRY,
-    //     poolRegistry: config.REGISTRY.LP_POOL_REGISTRY,
+    //     registry: config.REGISTRY.MARKET,
+    //     poolRegistry: config.REGISTRY.LP_POOL,
     //     marketIndex: BigInt(0),
     //     poolIndex: BigInt(0),
     //     pythState: pythStateId[NETWORK],
