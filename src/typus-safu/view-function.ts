@@ -37,7 +37,7 @@ export async function getVaultData(
         [key: string]: Vault;
     } = {};
     reader.readVec((reader) => {
-        reader.read16();
+        reader.readULEB();
         let id = AddressFromBytes(reader.readBytes(32));
         let depositToken = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
         let rewardToken = reader.readVec((reader) => {
@@ -75,6 +75,56 @@ export async function getVaultData(
             u64Padding,
             bcsPadding,
         };
+    });
+
+    return result;
+}
+
+export interface Share {
+    user: string;
+    share: string[];
+    u64Padding: string[];
+    bcsPadding: string[];
+}
+export async function getShareData(
+    config: TypusConfig,
+    input: {
+        provider: SuiClient;
+        indexes: string[];
+    }
+): Promise<{ [key: string]: Share }> {
+    let transactionBlock = new TransactionBlock();
+    transactionBlock.moveCall({
+        target: `${config.package.safu}::view_function::get_share_data_bcs`,
+        typeArguments: [],
+        arguments: [transactionBlock.pure(config.registry.safu.safu), transactionBlock.pure(input.indexes)],
+    });
+    let results = (await input.provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    // console.log(JSON.stringify(results));
+    // @ts-ignore
+    let bytes = results[results.length - 1].returnValues[0][0];
+    // console.log(JSON.stringify(bytes));
+    let reader = new BcsReader(new Uint8Array(bytes));
+    let result: {
+        [key: string]: Share;
+    } = {};
+    reader.readVec((reader, i) => {
+        let share = reader.readVec((reader) => {
+            return {
+                user: AddressFromBytes(reader.readBytes(32)),
+                share: reader.readVec((reader) => {
+                    return reader.read64();
+                }),
+                u64Padding: reader.readVec((reader) => {
+                    return reader.read64();
+                }),
+                bcsPadding: reader.readVec((reader) => {
+                    return reader.read8();
+                }),
+            };
+        });
+
+        result[input.indexes[i]] = share[0];
     });
 
     return result;
