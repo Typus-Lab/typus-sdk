@@ -1,5 +1,5 @@
-import configs from "../../config.json";
-import { getVaultHistoryEvents, parseBidEvents, getVaults } from "../../src";
+import configs from "config.json";
+import { getVaultHistoryEvents, parseBidEvents, getVaults } from "src/typus-dov-single-v2";
 import { SuiClient } from "@mysten/sui.js/client";
 const config = configs.TESTNET;
 

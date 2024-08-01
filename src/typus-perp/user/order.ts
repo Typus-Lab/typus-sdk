@@ -1,17 +1,15 @@
-import { SuiClient } from "@mysten/sui.js/client";
 import {
     createTradingOrder as _createTradingOrder,
     cancelTradingOrder as _cancelTradingOrder,
     increaseCollateral as _increaseCollateral,
     releaseCollateral as _releaseCollateral,
 } from "../trading/functions";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../constants";
-import { PythClient, createPythClient, updatePyth } from "../../utils/pyth/pythClient";
-import { priceInfoObjectIds, pythStateId } from "../../utils/pyth/constant";
-import { tokenType, TOKEN, typeArgToToken } from "../../constants/token";
 import { NETWORK } from "..";
 import { Position, TradingOrder } from "../position/structs";
+import { PythClient, updatePyth, priceInfoObjectIds, pythStateId } from "../../utils";
+import { tokenType, TOKEN, typeArgToToken } from "../../constants";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 export async function createTradingOrder(
     config: {

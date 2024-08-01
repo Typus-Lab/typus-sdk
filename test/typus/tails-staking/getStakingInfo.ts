@@ -1,6 +1,6 @@
-import configs from "../../../config.json";
+import configs from "config.json";
 import { SuiClient } from "@mysten/sui.js/client";
-import { getStakingInfo } from "../../../src";
+import { getStakingInfo } from "src/typus/tails-staking";
 
 const config = configs.TESTNET;
 const provider = new SuiClient({

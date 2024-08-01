@@ -1,9 +1,8 @@
-import configs from "../../../config.json";
-import { getOtcTx } from "../../../src";
+import configs from "config.json";
+import { getOtcTx } from "src/typus-dov-single-v2";
 import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import "../../../src/utils/load_env";
+import "src/utils/load_env";
 const config = configs.TESTNET;
 
 const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));

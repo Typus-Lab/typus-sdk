@@ -1,6 +1,6 @@
 import { SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
 import { OracleInfo, PayoffConfig, VaultConfig } from "../view-function";
-import { assetToDecimal, typeArgToAsset } from "../../constants/token";
+import { assetToDecimal, typeArgToAsset } from "../../constants";
 
 export async function getVaultHistoryEvents(provider: SuiClient, originPackage: string, startTimeMs: number) {
     const senderFilter: SuiEventFilter = {

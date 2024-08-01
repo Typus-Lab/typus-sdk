@@ -1,4 +1,4 @@
-import { TransactionBlock, TransactionObjectArgument } from "@mysten/sui.js/transactions";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 export function getClaimAirdropTx(input: {
     tx: TransactionBlock;

@@ -1,16 +1,7 @@
 import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
-import {
-    DepositShare,
-    getDepositShares,
-    getVaults,
-    getUserEvents,
-    getAutoBidEvents,
-    parseTxHistory,
-    getNewBidFromSentio,
-    getDepositorCashFlows,
-} from "../../../src";
+import { getVaults, getUserEvents, parseTxHistory, getNewBidFromSentio, getDepositorCashFlows } from "src/typus-dov-single-v2";
 import * as fs from "fs";
-import configs from "../../../config.json";
+import configs from "config.json";
 const config = configs.TESTNET;
 
 const provider = new SuiClient({

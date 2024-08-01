@@ -1,9 +1,10 @@
-import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import configs from "../../config.json";
-import { getCloseStrategyTx, getVaults, getUserStrategies } from "../../src";
-import "../../src/utils/load_env";
+import configs from "config.json";
+import { getCloseStrategyTx, getUserStrategies } from "src/auto-bid";
+import { getVaults } from "src/typus-dov-single-v2";
+import "src/utils/load_env";
 const config = configs.TESTNET;
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));

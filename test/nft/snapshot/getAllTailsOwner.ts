@@ -2,9 +2,8 @@ import * as json2csv from "json2csv";
 import { normalizeSuiAddress } from "@mysten/sui.js/utils";
 import { SuiClient } from "@mysten/sui.js/client";
 import * as fs from "fs";
-import configs from "../../../config.json";
-import { getTailsKiosk } from "../../../src";
-import "../../src/utils/load_env";
+import configs from "config.json";
+import "src/utils/load_env";
 const config = configs.TESTNET;
 
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });

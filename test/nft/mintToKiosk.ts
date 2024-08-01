@@ -1,7 +1,7 @@
-import "../../src/utils/load_env";
-import configs from "../../config.json";
-import { getMintToKioskTx, getPool } from "../../src";
-import { getFullnodeUrl, SuiClient } from "@mysten/sui.js/client";
+import "src/utils/load_env";
+import configs from "config.json";
+import { getMintToKioskTx, getPool } from "src/typus-nft";
+import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { KioskClient, Network } from "@mysten/kiosk";
 const config = configs.TESTNET;

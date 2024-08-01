@@ -1,4 +1,4 @@
-import { assetToDecimal, typeArgToAsset } from "../../../constants/token";
+import { assetToDecimal, typeArgToAsset } from "../../../constants";
 import { SuiClient, SuiEvent } from "@mysten/sui.js/client";
 
 const headers = {

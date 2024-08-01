@@ -1,6 +1,6 @@
 import { SuiClient } from "@mysten/sui.js/client";
-import { LiquidityPool, Registry } from "./lp-pool/structs";
-import { MarketRegistry, Markets, SymbolMarket } from "./trading/structs";
+import { LiquidityPool } from "./lp-pool/structs";
+import { Markets, SymbolMarket } from "./trading/structs";
 import { getUserOrders as _getUserOrders, getUserPositions as _getUserPositions, getEstimatedLiquidationPrice } from "./trading/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { readVecOrder, readVecPosition, readVecShares } from "./readVec";
@@ -8,11 +8,10 @@ import { TradingOrder, Position } from "./position/structs";
 import { getUserShares } from "./stake-pool/functions";
 import { LpUserShare, StakePool } from "./stake-pool/structs";
 import { CLOCK } from "../constants";
-import { tokenType, typeArgToToken } from "../constants/token";
-import { priceInfoObjectIds, pythStateId } from "../utils/pyth/constant";
+import { tokenType, typeArgToToken } from "../constants";
+import { priceInfoObjectIds, pythStateId, PythClient, updatePyth } from "../utils";
 import { NETWORK } from ".";
-import { PythClient, updatePyth } from "../utils/pyth/pythClient";
-import { BcsReader, bcs } from "@mysten/bcs";
+import { bcs } from "@mysten/bcs";
 
 export async function getLpPools(
     provider: SuiClient,

@@ -1,5 +1,5 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../constants";
+import { CLOCK } from "../../constants";
 import { KIOSK_TYPE, KioskClient, KioskTransaction } from "@mysten/kiosk";
 /**
     public fun stake_tails(

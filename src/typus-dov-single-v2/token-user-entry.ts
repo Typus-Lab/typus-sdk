@@ -1,5 +1,5 @@
 import { TransactionBlock, TransactionObjectArgument } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../constants";
+import { CLOCK } from "../constants";
 
 export function getMfudRaiseFundTx(input: {
     tx: TransactionBlock;

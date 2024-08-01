@@ -1,8 +1,8 @@
-import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import configs from "../../../config.json";
-import { getUpdateStrategyTx } from "../../../src";
-import "../../../src/utils/load_env";
+import configs from "config.json";
+import { getUpdateStrategyTx } from "src/auto-bid";
+import "src/utils/load_env";
 const config = configs.TESTNET;
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));

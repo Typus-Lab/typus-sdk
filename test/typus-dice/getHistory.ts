@@ -1,9 +1,9 @@
-import configs from "../../config.json";
-import { getHistory, getPlaygrounds } from "../../src";
+import configs from "config.json";
+import { getHistory, getPlaygrounds } from "src/dice";
 import { SuiClient } from "@mysten/sui.js/client";
-import "../../src/utils/load_env";
-const config = configs.TESTNET;
+import "src/utils/load_env";
 
+const config = configs.TESTNET;
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });

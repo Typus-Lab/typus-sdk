@@ -1,5 +1,5 @@
 import configs from "../../config.json";
-import { getTotalDepositorIncentive, getTotalPremium, getTotalProfitSharing, getTotalProfitSharingClaimed } from "../../src";
+import { getTotalDepositorIncentive, getTotalPremium, getTotalProfitSharing, getTotalProfitSharingClaimed } from "src/utils";
 import { SuiClient } from "@mysten/sui.js/client";
 
 (async () => {

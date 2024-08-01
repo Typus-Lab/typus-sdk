@@ -1,5 +1,5 @@
 import { Info } from "../view-function";
-import { typeArgsToAssets } from "../../constants/token";
+import { typeArgsToAssets } from "../../constants";
 
 export const Period: { [key: number]: string } = {
     0: "daily",

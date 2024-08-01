@@ -1,7 +1,4 @@
-import configs from "../../config.json";
-import { getVaultHistoryFromDB, VaultHistory } from "../../src";
-import { SuiClient } from "@mysten/sui.js/client";
-const config = configs.TESTNET;
+import { getVaultHistoryFromDB, VaultHistory } from "src/typus-dov-single-v2";
 
 // const provider = new SuiClient({
 //     url: config.RPC_ENDPOINT,

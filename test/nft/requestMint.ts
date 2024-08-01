@@ -1,9 +1,8 @@
-import "../../src/utils/load_env";
-import configs from "../../config.json";
-import { getIsWhitelistTx, getRequestMintTx, getDiscountPool, getMintHistory } from "../../src";
+import "src/utils/load_env";
+import configs from "config.json";
+import { getIsWhitelistTx, getRequestMintTx, getDiscountPool, getMintHistory } from "src/typus-nft";
 import { getFullnodeUrl, SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { KioskClient, Network } from "@mysten/kiosk";
 const config = configs.TESTNET;
 
 // Generate a new Ed25519 Keypair

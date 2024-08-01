@@ -1,6 +1,6 @@
-import configs from "../../../config.json";
+import configs from "config.json";
 import { SuiClient } from "@mysten/sui.js/client";
-import { getDeactivateLeaderboardTx } from "../../../src";
+import { getDeactivateLeaderboardTx } from "src/typus/leaderboard";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 
 import mnemonic from "../../../mnemonic.json";

@@ -1,8 +1,8 @@
-import configs from "../../../config.json";
+import configs from "config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getUserStake } from "../../../src";
-import "../../../src/utils/load_env";
+import { getUserStake } from "src/typus-perp";
+import "src/utils/load_env";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 

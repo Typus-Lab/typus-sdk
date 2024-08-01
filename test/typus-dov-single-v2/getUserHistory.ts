@@ -1,6 +1,6 @@
-import configs from "../../config.json";
-import { getVaults, getUserEvents, getAutoBidEvents, parseTxHistory, getNewBidFromSentio, getExerciseFromSentio } from "../../src";
-import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
+import configs from "config.json";
+import { getVaults, getUserEvents, parseTxHistory, getNewBidFromSentio, getExerciseFromSentio } from "src/typus-dov-single-v2";
+import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
 import * as fs from "fs";
 
 const config = configs.TESTNET;

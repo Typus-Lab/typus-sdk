@@ -1,7 +1,7 @@
-import "../../src/utils/load_env";
-import configs from "../../config.json";
-import { getPlaygrounds, parseHistory, newGamePlayGuessTx, simulateGame, DrawResult, getDrawResult } from "../../src";
-import { SuiClient, SuiHTTPTransport, getFullnodeUrl } from "@mysten/sui.js/client";
+import "src/utils/load_env";
+import configs from "config.json";
+import { getPlaygrounds, newGamePlayGuessTx, DrawResult, getDrawResult } from "src/dice";
+import { SuiClient } from "@mysten/sui.js/client";
 
 const config = configs.TESTNET;
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });

@@ -1,7 +1,7 @@
-import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
-import configs from "../../config.json";
-import { getStrategies, getStrategyIds, getStrategyPool } from "../../src";
-import "../../src/utils/load_env";
+import { SuiClient } from "@mysten/sui.js/client";
+import configs from "config.json";
+import { getStrategies, getStrategyIds, getStrategyPool } from "src/auto-bid";
+import "src/utils/load_env";
 const config = configs.TESTNET;
 
 const provider = new SuiClient({

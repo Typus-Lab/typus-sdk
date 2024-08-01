@@ -1,7 +1,7 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
-import { AddressFromBytes } from "../utils/tools";
+import { AddressFromBytes } from "../../utils";
 
 export interface Rankings {
     user_score: string;

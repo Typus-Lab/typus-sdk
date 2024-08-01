@@ -1,6 +1,6 @@
-import configs from "../../../config.json";
+import configs from "config.json";
 import { SuiClient } from "@mysten/sui.js/client";
-import { getLpPools } from "../../../src";
+import { getLpPools } from "src/typus-perp";
 
 const config = configs.TESTNET;
 

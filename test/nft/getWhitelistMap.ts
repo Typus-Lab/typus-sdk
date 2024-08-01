@@ -1,8 +1,7 @@
-import configs from "../../config.json";
-import { KioskClient, Network } from "@mysten/kiosk";
-import { getWhitelistMap } from "../../src";
-import "../../src/utils/load_env";
-import { getFullnodeUrl, SuiClient } from "@mysten/sui.js/client";
+import configs from "config.json";
+import { getWhitelistMap } from "src/typus-nft";
+import "src/utils/load_env";
+import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 const config = configs.MAINNET;
 

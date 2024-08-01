@@ -1,8 +1,8 @@
-import configs from "../../config.json";
+import configs from "config.json";
 import { KioskClient, Network } from "@mysten/kiosk";
-import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
-import { getTails, getTailsIds, getkioskOwnerCaps, kioskOwnerCap } from "../../src";
-import "../../src/utils/load_env";
+import { SuiClient } from "@mysten/sui.js/client";
+import { getTailsIds, getkioskOwnerCaps } from "src/typus-nft";
+import "src/utils/load_env";
 
 const config = configs.MAINNET;
 

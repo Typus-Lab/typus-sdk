@@ -2,7 +2,9 @@ import configs from "../../../../config.json";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { LiquidityPool, Registry, createPythClient, tokenType, swap, NETWORK } from "../../../../src";
+import { tokenType } from "src/constants";
+import { NETWORK, swap } from "src/typus-perp";
+import { createPythClient } from "src/utils";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 

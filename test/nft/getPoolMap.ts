@@ -1,7 +1,7 @@
 import { SuiClient } from "@mysten/sui.js/client";
-import configs from "../../config.json";
-import { PoolData, getPoolMap, getTableTails } from "../../src";
-import "../../src/utils/load_env";
+import configs from "config.json";
+import { PoolData, getPoolMap, getTableTails } from "src/typus-nft";
+import "src/utils/load_env";
 const config = configs.TESTNET;
 
 const provider = new SuiClient({

@@ -1,8 +1,7 @@
 import { SuiPriceServiceConnection, SuiPythClient } from "@pythnetwork/pyth-sui-js";
 import { pythStateId, wormholeStateId, priceIDs, priceInfoObjectIds } from "./constant";
-import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { TOKEN } from "../../constants/token";
+import { TOKEN } from "../../constants";
 import { ObjectId } from "@pythnetwork/pyth-sui-js/lib/client";
 
 export declare class PythClient {

@@ -1,6 +1,6 @@
-import configs from "../../../config.json";
+import configs from "config.json";
 import { SuiClient } from "@mysten/sui.js/client";
-import { getMyBids } from "../../../src";
+import { getMyBids } from "src/typus-dov-single-v2";
 const config = configs.MAINNET;
 
 const provider = new SuiClient({
