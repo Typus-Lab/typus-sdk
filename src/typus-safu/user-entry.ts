@@ -132,3 +132,34 @@ export function getReduceFundTx(
 
     return input.tx;
 }
+
+/**
+    public fun claim_reward<R_TOKEN>(
+        version: &Version,
+        registry: &mut Registry,
+        index: u64,
+        ctx: &TxContext,
+    ): Balance<R_TOKEN> {
+ */
+export function getClaimRewardTx(
+    config: TypusConfig,
+    input: {
+        tx: TransactionBlock;
+        typeArguments: string[];
+        index: string;
+        user: string;
+    }
+) {
+    let result = input.tx.moveCall({
+        target: `${config.package.safu}::safu::claim_reward`,
+        typeArguments: input.typeArguments,
+        arguments: [input.tx.object(config.version.safu), input.tx.object(config.registry.safu.safu), input.tx.pure(input.index)],
+    });
+    input.tx.moveCall({
+        target: `${config.package.framework}::utils::transfer_balance`,
+        typeArguments: [input.typeArguments[0]],
+        arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
+    });
+
+    return input.tx;
+}
