@@ -53,6 +53,9 @@
             "TAILS_STAKING": "0xeca3e88577dc3f45df8b7bace51f26b126271ce4c5fa33b3739fd7b69fc16559",
             "USER": "0xb1b16eb4845b5ee1a29432b1f2bcfe8cbb33c234492baf31a706d82e28e18bce",
             "TGLD": "0x8ee1af362fe9e0a29f6bad48d8ff44249ece5aaa77a4302c2ffcc90950e52ed2"
+        },
+        "SAFU": {
+            "SAFU": ""
         }
     },
     "OBJECT": {

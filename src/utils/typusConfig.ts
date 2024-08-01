@@ -44,6 +44,9 @@ export interface Registry {
         stakePool: string;
         tlp: string;
     };
+    safu: {
+        safu: string;
+    };
     token: {
         inj: string;
         mfud: string;
