@@ -163,3 +163,40 @@ export function getClaimRewardTx(
 
     return input.tx;
 }
+
+/**
+    public fun snapshot(
+        typus_version: &TypusVersion,
+        typus_leaderboard_registry: &mut TypusLeaderboardRegistry,
+        typus_user_registry: &mut TypusUserRegistry,
+        version: &Version,
+        registry: &mut Registry,
+        index: u64,
+        clock: &Clock,
+        ctx: &mut TxContext,
+    ) {
+ */
+export function getSnapshotTx(
+    config: TypusConfig,
+    input: {
+        tx: TransactionBlock;
+        typeArguments: string[];
+        index: string;
+    }
+) {
+    let result = input.tx.moveCall({
+        target: `${config.package.safu}::safu::snapshot`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            input.tx.object(config.version.typus),
+            input.tx.object(config.registry.typus.leaderboard),
+            input.tx.object(config.registry.typus.user),
+            input.tx.object(config.version.safu),
+            input.tx.object(config.registry.safu.safu),
+            input.tx.pure(input.index),
+            input.tx.object(CLOCK),
+        ],
+    });
+
+    return input.tx;
+}
