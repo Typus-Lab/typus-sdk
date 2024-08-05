@@ -95,6 +95,9 @@
         "types": ["node"],
         "typeRoots": ["node_modules/@types"]
     },
+    "ts-node": {
+        "require": ["tsconfig-paths/register"]
+    },
     "include": ["src"],
     "exclude": ["node_modules", "**/__tests__/*", "scripts", "_deprecated", "test"]
 }
