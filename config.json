@@ -9,6 +9,7 @@
             "NFT": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
             "ORACLE": "0x855eb2d260ee42b898266e6df90bfd3c4ed821ccb253a352c159c223244a4b8a",
             "TYPUS": "0x4b0f4ee1a40ce37ec81c987cc4e76a665419e74b863319492fc7d26f708b835a",
+            "SAFU": "0x4a68c41bfa2b908ce449e411d0e16718839a62780df0fee568bc027ee2d14ebb",
             "PERP": ""
         },
         "PACKAGE": {
@@ -19,6 +20,7 @@
             "NFT": "0xba06aae31d9b7c9f651e783272c7e4f776fb5ae17e89d525b75a17b099f58202",
             "ORACLE": "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd",
             "TYPUS": "0xf5c7e61fd28d1ed38711f03e1c5ffc6c5b8435eff386132fc5822efe6d90b138",
+            "SAFU": "0xdda1734b67dca059111849d17a54a095d5e3847eafcd7bf5636c6972f12a9050",
             "PERP": ""
         },
         "REGISTRY": {
@@ -30,7 +32,8 @@
             "MFUD": "0xb8d7e7ab783e56700c0212bd9f0938bba9dd3e7241c149e6c52b21334ec45ece",
             "TAILS_STAKING": "0xeca3e88577dc3f45df8b7bace51f26b126271ce4c5fa33b3739fd7b69fc16559",
             "TGLD": "0x8ee1af362fe9e0a29f6bad48d8ff44249ece5aaa77a4302c2ffcc90950e52ed2",
-            "USER": "0xb1b16eb4845b5ee1a29432b1f2bcfe8cbb33c234492baf31a706d82e28e18bce"
+            "USER": "0xb1b16eb4845b5ee1a29432b1f2bcfe8cbb33c234492baf31a706d82e28e18bce",
+            "SAFU": "0x855b51c812e593d1eb563430593ff42a966b5704e98e93e58a94b555fd25ceeb"
         },
         "TOKEN": {
             "FUD": "0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1::fud::FUD",
@@ -56,7 +59,8 @@
             "TGLD_TOKEN_POLICY": "0xd9461bd329f1df24be9698131b6e2c2b9eaac7c9cf6d76689112f2e57be12009",
             "NFT_TRANSFER_POLICY": "0x55475b9e16d9a0176dcef37f83a1921b15f2cbd2711a5f30b9d952c0c8f5f957",
             "STRATEGY_POOL": "0x2c60ddd50d76beb00faa025962d566359a6ea05b1f7f19ac6bd050f4db8c885c",
-            "TAILS_IDS": "0x3a6a403eb7c123b6f4d25081078b6f07c0ee5987d3ac8ab3e6bcf707c1b0e778"
+            "TAILS_IDS": "0x3a6a403eb7c123b6f4d25081078b6f07c0ee5987d3ac8ab3e6bcf707c1b0e778",
+            "SAFU_VERSION": "0x63702bd95f1359399e8b26830905e35867310a88a029963ddfa50f7e55c63e79"
         }
     },
     "TESTNET": {

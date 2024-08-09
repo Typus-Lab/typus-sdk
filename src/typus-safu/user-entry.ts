@@ -76,7 +76,7 @@ export function getRaiseFundTx(
             input.tx.object(CLOCK),
         ],
     });
-    input.tx.transferObjects([input.tx.object(result[0])], input.user);
+    // input.tx.transferObjects([input.tx.object(result[0])], input.user);
 
     return input.tx;
 }
