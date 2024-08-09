@@ -7,7 +7,7 @@ import slack from "slack";
 
 const process = require("process");
 process.removeAllListeners("warning");
-const config = configs.TESTNET;
+const config = configs.MAINNET;
 const provider = new SuiClient({
     url: config.RPC_ENDPOINT,
 });
@@ -143,7 +143,7 @@ function log(material: Material, digest?: string) {
     console.log(msg);
     slack.chat.postMessage({
         token: String(process.env.SLACK_BOT_TOKEN),
-        channel: "test-alert",
+        channel: "tails-by-typus",
         text: `\`\`\`${msg}\`\`\``,
     });
 }
