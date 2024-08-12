@@ -55,7 +55,7 @@ export const priceInfoObjectIds = {
 // Get the state IDs of the Pyth and Wormhole contracts from
 // https://docs.pyth.network/price-feeds/contract-addresses/sui
 export const wormholeStateId = {
-    MAINNET: "0x5306f64e312b581766351c07af79c72fcb1cd25147157fdc2f8ad76de9a3fb6a",
+    MAINNET: "0xaeab97f96cf9877fee2883315d459552b2b921edc16d7ceac6eab944dd88919c",
     TESTNET: "0x31358d198147da50db32eda2562951d53973a0c0ad5ed738e9b17d88b213d790",
 };
 export const pythStateId = {

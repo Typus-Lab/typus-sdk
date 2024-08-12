@@ -12,7 +12,7 @@ export declare class PythClient {
 
 export function createPythClient(provider: any, network: "MAINNET" | "TESTNET"): PythClient {
     const client = new SuiPythClient(provider, pythStateId[network], wormholeStateId[network]);
-    const connection = new SuiPriceServiceConnection("https://hermes-beta.pyth.network");
+    const connection = network == "MAINNET"? new SuiPriceServiceConnection("https://hermes.pyth.network") : new SuiPriceServiceConnection("https://hermes-beta.pyth.network");
     const pythClient = { network, client, connection };
     return pythClient;
 }
