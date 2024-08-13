@@ -104,7 +104,7 @@ export function getReduceFundTx(
         index: string;
         reduceFromWarmup: string;
         reduceFromActive: string;
-        reduceFromInactive: boolean;
+        reduceFromInactive: string;
         user: string;
     }
 ) {

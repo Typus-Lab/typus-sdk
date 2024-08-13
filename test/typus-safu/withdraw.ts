@@ -1,6 +1,6 @@
 import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getRaiseFundTx, NETWORK } from "src/typus-safu";
+import { getRaiseFundTx, getReduceFundTx, NETWORK } from "src/typus-safu";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import config_json from "config-mainnet.json";
@@ -14,8 +14,7 @@ const provider = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
     // INPUT
-    const cTOKEN = "USDC";
-    console.log(NETWORK);
+    const cTOKEN = "SUI";
     const cToken = tokenType[NETWORK][cTOKEN];
     const coins = (
         await provider.getCoins({
@@ -26,16 +25,15 @@ const provider = new SuiClient({ url: config.rpcEndpoint });
 
 
     let transactionBlock = new TransactionBlock();
-    transactionBlock = getRaiseFundTx(
+
+    transactionBlock = getReduceFundTx(
         config, {
         tx: transactionBlock,
         typeArguments: [cToken],
-        index: "1",
-        raiseCoins: coins,
-        raiseAmount: "1000000",
-        raiseFromDeactivating: "0",
-        raiseFromInactive: "0",
-        raiseFromReward: "0",
+        index: "0",
+        reduceFromWarmup: "0",
+        reduceFromActive: "0",
+        reduceFromInactive: "3000571893",
         user
     });
 
