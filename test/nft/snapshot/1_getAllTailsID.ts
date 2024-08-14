@@ -2,7 +2,7 @@ import { SuiClient } from "@mysten/sui.js/client";
 import * as fs from "fs";
 import configs from "config.json";
 import "src/utils/load_env";
-const config = configs.TESTNET;
+const config = configs.MAINNET;
 
 const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
@@ -18,7 +18,7 @@ const provider = new SuiClient({ url: config.RPC_ENDPOINT });
             order: "descending",
             cursor,
         });
-        console.log(result);
+        // console.log(result);
 
         hasNextPage = result.hasNextPage;
         cursor = result.nextCursor;

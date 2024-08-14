@@ -197,6 +197,7 @@ export async function getTailsDynamicField(provider: SuiClient, tailsIds: string
         let len = tailsIds.length > 50 ? 50 : tailsIds.length;
 
         const results = await provider.multiGetObjects({ ids: tailsIds.splice(0, len), options: { showContent: true, showOwner: true } });
+        // console.log(results);
 
         for (let result of results) {
             // @ts-ignore
@@ -204,6 +205,7 @@ export async function getTailsDynamicField(provider: SuiClient, tailsIds: string
 
             // @ts-ignore
             const fields = result.data?.content.fields;
+            // console.log(fields);
 
             const tails = fieldsToTails(fields);
 
