@@ -90,6 +90,7 @@ export async function getShareData(
     config: TypusConfig,
     input: {
         provider: SuiClient;
+        user: string;
         indexes: string[];
     }
 ): Promise<{ [key: string]: Share }> {
@@ -97,7 +98,7 @@ export async function getShareData(
     transactionBlock.moveCall({
         target: `${config.package.safu}::view_function::get_share_data_bcs`,
         typeArguments: [],
-        arguments: [transactionBlock.pure(config.registry.safu.safu), transactionBlock.pure(input.indexes)],
+        arguments: [transactionBlock.pure(config.registry.safu.safu), transactionBlock.pure(input.user), transactionBlock.pure(input.indexes)],
     });
     let results = (await input.provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
     // console.log(JSON.stringify(results));
@@ -109,6 +110,7 @@ export async function getShareData(
         [key: string]: Share;
     } = {};
     reader.readVec((reader, i) => {
+        reader.read8();
         let share = reader.readVec((reader) => {
             return {
                 user: AddressFromBytes(reader.readBytes(32)),
