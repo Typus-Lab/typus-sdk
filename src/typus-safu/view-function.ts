@@ -1,7 +1,7 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
-import { AddressFromBytes, TypusConfig } from "src/utils";
+import { AddressFromBytes, TypusConfig } from "../utils";
 
 const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 export interface Vault {
@@ -98,7 +98,11 @@ export async function getShareData(
     transactionBlock.moveCall({
         target: `${config.package.safu}::view_function::get_share_data_bcs`,
         typeArguments: [],
-        arguments: [transactionBlock.pure(config.registry.safu.safu), transactionBlock.pure(input.user), transactionBlock.pure(input.indexes)],
+        arguments: [
+            transactionBlock.pure(config.registry.safu.safu),
+            transactionBlock.pure(input.user),
+            transactionBlock.pure(input.indexes),
+        ],
     });
     let results = (await input.provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
     // console.log(JSON.stringify(results));
