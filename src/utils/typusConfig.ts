@@ -92,6 +92,7 @@ export interface Token {
     sui: string;
     tgld: string;
     tlp: string;
+    usdc: string;
     usd: string;
     usdt: string;
 }

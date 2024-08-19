@@ -93,7 +93,7 @@ export async function getShareData(
         user: string;
         indexes: string[];
     }
-): Promise<{ [key: string]: Share }> {
+): Promise<{ [key: string]: Share[] }> {
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${config.package.safu}::view_function::get_share_data_bcs`,
@@ -107,7 +107,7 @@ export async function getShareData(
     // console.log(JSON.stringify(bytes));
     let reader = new BcsReader(new Uint8Array(bytes));
     let result: {
-        [key: string]: Share;
+        [key: string]: Share[];
     } = {};
     reader.readVec((reader, i) => {
         reader.read8();
@@ -125,8 +125,8 @@ export async function getShareData(
                 }),
             };
         });
-
-        result[input.indexes[i]] = share[0];
+        let index = input.indexes.pop()!;
+        result[index] = share;
     });
 
     return result;
