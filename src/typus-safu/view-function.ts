@@ -8,11 +8,40 @@ export interface Vault {
     id: string;
     depositToken: string;
     rewardToken: string[];
-    info: string[];
-    config: string[];
-    shareSupply: string[];
+    info: Info;
+    config: Config;
+    shareSupply: ShareSupply;
     u64Padding: string[];
     bcsPadding: string[];
+}
+export interface Info {
+    index: string,
+    round: string,
+    portfolio_vault_index: string,
+    refresh_ts_ms: string,
+    status: string,
+    lending_enabled: string,
+    price_bp: string,
+    bp_incentivised: string,
+    fixed_incentivised: string,
+    token_decimal: string,
+}
+export interface Config {
+    capacity: string,
+    lot_size: string,
+    min_size: string,
+    fee_bp: string,
+    utilization_rate_bp: string,
+    point_per_hour_bp: string,
+    incentive_bp: string,
+    incentive_fixed: string,
+}
+export interface ShareSupply {
+    active_share: string,
+    deactivating_share: string,
+    inactive_share: string,
+    warmup_share: string,
+    snapshot_share: string,
 }
 export async function getVaultData(
     config: TypusConfig,
@@ -43,21 +72,52 @@ export async function getVaultData(
         let rewardToken = reader.readVec((reader) => {
             return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
         });
-        let info = reader.readVec((reader) => {
+        let infoArray = reader.readVec((reader) => {
             return reader.read64();
         });
-        let config = reader.readVec((reader) => {
+        let configArray = reader.readVec((reader) => {
             return reader.read64();
         });
+        let info = {
+            index: infoArray[0],
+            round: infoArray[1],
+            portfolio_vault_index: infoArray[2],
+            refresh_ts_ms: infoArray[3],
+            status: infoArray[4],
+            lending_enabled: infoArray[5],
+            price_bp: infoArray[6],
+            bp_incentivised: infoArray[7],
+            fixed_incentivised: infoArray[8],
+            token_decimal: infoArray[9],
+        };
+        let config = {
+            capacity: configArray[0],
+            lot_size: configArray[1],
+            min_size: configArray[2],
+            fee_bp: configArray[3],
+            utilization_rate_bp: configArray[4],
+            point_per_hour_bp: configArray[5],
+            incentive_bp: configArray[6],
+            incentive_fixed: configArray[7],
+        };
         // skip BigVector
         reader.readBytes(32); // id
         reader.readBytes(reader.read8()); // element_type
         reader.read64(); // slice_idx
         reader.read32(); // slice_size
         reader.read64(); // length
-        let shareSupply = reader.readVec((reader) => {
+
+        let shareSupplyArray = reader.readVec((reader) => {
             return reader.read64();
         });
+
+        let shareSupply = {
+            active_share: shareSupplyArray[0],
+            deactivating_share: shareSupplyArray[1],
+            inactive_share: shareSupplyArray[2],
+            warmup_share: shareSupplyArray[3],
+            snapshot_share: shareSupplyArray[4],
+        };
         let u64Padding = reader.readVec((reader) => {
             return reader.read64();
         });
@@ -65,7 +125,7 @@ export async function getVaultData(
             return reader.read8();
         });
 
-        result[info[0]] = {
+        result[info.index] = {
             id,
             depositToken,
             rewardToken,
