@@ -110,7 +110,6 @@ export async function getVaultData(
         let shareSupplyArray = reader.readVec((reader) => {
             return reader.read64();
         });
-
         let shareSupply = {
             active_share: shareSupplyArray[0],
             deactivating_share: shareSupplyArray[1],
@@ -142,7 +141,7 @@ export async function getVaultData(
 
 export interface Share {
     user: string;
-    share: string[];
+    share: ShareSupply;
     u64Padding: string[];
     bcsPadding: string[];
 }
@@ -172,11 +171,20 @@ export async function getShareData(
     reader.readVec((reader, i) => {
         reader.read8();
         let share = reader.readVec((reader) => {
+            let user = AddressFromBytes(reader.readBytes(32));
+            let shareSupplyArray = reader.readVec((reader) => {
+                return reader.read64();
+            });
+            let shareSupply = {
+                active_share: shareSupplyArray[0],
+                deactivating_share: shareSupplyArray[1],
+                inactive_share: shareSupplyArray[2],
+                warmup_share: shareSupplyArray[3],
+                snapshot_share: shareSupplyArray[4],
+            };
             return {
-                user: AddressFromBytes(reader.readBytes(32)),
-                share: reader.readVec((reader) => {
-                    return reader.read64();
-                }),
+                user,
+                share: shareSupply,
                 u64Padding: reader.readVec((reader) => {
                     return reader.read64();
                 }),
