@@ -17,7 +17,7 @@ const provider = new SuiClient({ url: config.rpcEndpoint });
         config,
         {
             provider,
-            indexes: ["0", "1"]
+            indexes: ["0", "1", "2", "3"]
         });
     console.log(share);
 })();
