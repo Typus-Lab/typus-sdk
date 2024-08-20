@@ -1,10 +1,10 @@
 import { SuiClient } from "@mysten/sui.js/client";
 import { getDepositShares } from "src/typus-dov-single-v2";
-import configs from "config.json";
-const config = configs.TESTNET;
+import { TypusConfig } from "src/utils";
+const config = TypusConfig.default("TESTNET");
 
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 
 (async () => {
@@ -27,15 +27,15 @@ const provider = new SuiClient({
     }
 
     const receipts = datas
-        .filter((obj) => obj.data?.type! == `${config.PACKAGE_ORIGIN.FRAMEWORK}::vault::TypusDepositReceipt`)
+        .filter((obj) => obj.data?.type! == `${config.packageOrigin.framework}::vault::TypusDepositReceipt`)
         .map((obj) => obj.data?.objectId!);
     console.log(receipts);
 
     const depositShares = await getDepositShares(
         provider,
-        config.PACKAGE_ORIGIN.FRAMEWORK,
-        config.PACKAGE.DOV_SINGLE,
-        config.REGISTRY.DOV_SINGLE,
+        config.packageOrigin.framework,
+        config.package.dovSingle,
+        config.registry.dov.dovSingle,
         receipts,
         user
     );
@@ -44,7 +44,7 @@ const provider = new SuiClient({
     // const keys = Object.keys(depositShares);
     // // console.log(keys);
 
-    // const vaults = await getVaults(provider, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE, keys);
+    // const vaults = await getVaults(provider, config.package.dovSingle, config.registry.dov.dovSingle, keys);
     // // console.log(JSON.stringify(vaults, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 
     // const symbolMap = new Map<string, [number, number]>();

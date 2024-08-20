@@ -1,9 +1,9 @@
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { getNewStrategyTx } from "src/auto-bid";
 import "src/utils/load_env";
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
@@ -11,7 +11,7 @@ const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 // const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 const gasBudget = 100000000;
 
@@ -19,9 +19,9 @@ const gasBudget = 100000000;
     let fudToken = "0x461efa7ee5aa1b27e44450d79e2104e7fc0991461e9eb1c2a3fc1f44cd554856::fud::FUD";
     let mFudToken = "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c::mfud::MFUD";
 
-    let packageId = config.PACKAGE.DOV_SINGLE;
+    let packageId = config.package.dovSingle;
     let typeArguments = [mFudToken, mFudToken];
-    let strategy_pool = config.OBJECT.STRATEGY_POOL;
+    let strategy_pool = config.object.strategyPool;
 
     let vault_index = "38";
     let signal_index = "0";
@@ -37,7 +37,7 @@ const gasBudget = 100000000;
         gasBudget,
         packageId,
         typeArguments,
-        config.REGISTRY.DOV_SINGLE,
+        config.registry.dov.dovSingle,
         strategy_pool,
         vault_index,
         signal_index,

@@ -1,14 +1,14 @@
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getActivateLeaderboardTx } from "src/typus/leaderboard";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 
 import mnemonic from "../../../mnemonic.json";
 
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 const gasBudget = 100000000;
 
@@ -22,9 +22,9 @@ const start_ts_ms = 1716278400000;
 
     var transactionBlock = await getActivateLeaderboardTx(
         gasBudget,
-        config.PACKAGE.TYPUS,
-        config.OBJECT.TYPUS_VERSION,
-        config.REGISTRY.LEADERBOARD,
+        config.package.typus,
+        config.version.typus,
+        config.registry.typus.leaderboard,
         KEY,
         start_ts_ms.toString(),
         (start_ts_ms + 100 * 365 * 24 * 3600 * 1000).toString()

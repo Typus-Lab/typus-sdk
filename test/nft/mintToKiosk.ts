@@ -1,13 +1,13 @@
 import "src/utils/load_env";
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { getMintToKioskTx, getPool } from "src/typus-nft";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { KioskClient, Network } from "@mysten/kiosk";
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const client = new SuiClient({ url: config.RPC_ENDPOINT });
+const client = new SuiClient({ url: config.rpcEndpoint });
 
 const gasBudget = 100000000;
 // const address = keypair.toSuiAddress();
@@ -39,7 +39,7 @@ const necklace = "kriya_dex";
     const wlTokens = datas.filter((data) => {
         // console.log(data);
         // @ts-ignore
-        return data.data?.type?.startsWith(config.PACKAGE_ORIGIN.NFT) && data.data?.content?.fields.for == pool;
+        return data.data?.type?.startsWith(config.packageOrigin.nft) && data.data?.content?.fields.for == pool;
     });
 
     console.log(wlTokens.length);
@@ -64,9 +64,9 @@ const necklace = "kriya_dex";
         if (kioskOwnerCap.kioskId == kiosk) {
             let transactionBlock = await getMintToKioskTx(
                 gasBudget,
-                config.PACKAGE_ORIGIN.NFT,
+                config.packageOrigin.nft,
                 pool,
-                config.OBJECT.NFT_TRANSFER_POLICY,
+                config.object.nftTransferPolicy,
                 wlToken,
                 kiosk,
                 kioskOwnerCap.objectId

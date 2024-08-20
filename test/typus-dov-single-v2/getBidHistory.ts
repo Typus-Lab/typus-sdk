@@ -1,15 +1,15 @@
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { getVaultHistoryEvents, parseBidEvents, getVaults } from "src/typus-dov-single-v2";
 import { SuiClient } from "@mysten/sui.js/client";
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 
 (async () => {
-    const vaults = await getVaults(provider, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE, []);
-    const datas = await getVaultHistoryEvents(provider, config.PACKAGE_ORIGIN.DOV_SINGLE, 1704931200000);
+    const vaults = await getVaults(provider, config.package.dovSingle, config.registry.dov.dovSingle, []);
+    const datas = await getVaultHistoryEvents(provider, config.packageOrigin.dovSingle, 1704931200000);
 
     const bidEvents = await parseBidEvents(datas, 1705017600000);
     console.log(20);

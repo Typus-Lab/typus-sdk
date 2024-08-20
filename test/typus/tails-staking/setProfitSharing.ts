@@ -1,16 +1,16 @@
 import { getLevelCounts, getSetProfitSharingTx } from "src/typus/tails-staking";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import slack from "slack";
 import { calculateLevelReward } from "src/typus-nft";
 
 const process = require("process");
 process.removeAllListeners("warning");
-const config = configs.MAINNET;
+const config = TypusConfig.default("MAINNET");
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
@@ -23,7 +23,7 @@ const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
     }
     let tx = new TransactionBlock();
     let mergedCoin = tx.gas;
-    if (material.token != config.TOKEN.SUI) {
+    if (material.token != config.token.sui) {
         let coins = (await provider.getCoins({ owner: keypair.toSuiAddress(), coinType: material.token })).data.map(
             (coin) => coin.coinObjectId
         );
@@ -39,9 +39,9 @@ const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
     let [inputCoin] = tx.splitCoins(mergedCoin, [tx.pure(material.spendingProfit)]);
     tx = getSetProfitSharingTx({
         tx,
-        typusPackageId: config.PACKAGE.TYPUS,
-        typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
-        typusTailsStakingRegistry: config.REGISTRY.TAILS_STAKING,
+        typusPackageId: config.package.typus,
+        typusEcosystemVersion: config.version.typus,
+        typusTailsStakingRegistry: config.registry.typus.tailsStaking,
         typeArguments: [material.token, material.nextWeekToken],
         levelProfits: material.levelProfits.map((x) => x.toString()),
         coin: inputCoin,
@@ -76,12 +76,12 @@ async function init(): Promise<Material> {
     let token = String(process.env.TOKEN);
     let levelCounts = await getLevelCounts({
         provider,
-        typusPackageId: config.PACKAGE.TYPUS,
-        typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
-        typusTailsStakingRegistry: config.REGISTRY.TAILS_STAKING,
+        typusPackageId: config.package.typus,
+        typusEcosystemVersion: config.version.typus,
+        typusTailsStakingRegistry: config.registry.typus.tailsStaking,
     });
     let levelProfits = calculateLevelReward(rewards, levelShares, levelCounts);
-    let profitAsset = (await provider.getDynamicFields({ parentId: config.REGISTRY.TAILS_STAKING })).data
+    let profitAsset = (await provider.getDynamicFields({ parentId: config.registry.typus.tailsStaking })).data
         .filter((x) => x.objectType.includes(token))
         .map((x) => x.objectId as string)[0];
     let remainingProfit = profitAsset

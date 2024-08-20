@@ -1,18 +1,18 @@
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { getHistory, getPlaygrounds } from "src/dice";
 import { SuiClient } from "@mysten/sui.js/client";
 import "src/utils/load_env";
 
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 
 (async () => {
-    const playgrounds = await getPlaygrounds(provider, config.REGISTRY.EXP_GUESS);
+    const playgrounds = await getPlaygrounds(provider, config.registry.dice.tailsExp);
     console.log(playgrounds);
 
-    const history = await getHistory(provider, config.PACKAGE_ORIGIN.DICE, "tails_exp", playgrounds);
+    const history = await getHistory(provider, config.packageOrigin.dice, "tails_exp", playgrounds);
     console.log(history);
 
     // const leaderBoard = await getLeaderBoard(history);

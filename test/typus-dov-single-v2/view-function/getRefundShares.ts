@@ -1,10 +1,10 @@
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getRefundShares } from "src/typus-dov-single-v2";
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 
 (async () => {
@@ -15,6 +15,6 @@ const provider = new SuiClient({
         "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::eth::ETH",
         "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC",
     ];
-    let result = await getRefundShares(provider, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE, typeArguments, user);
+    let result = await getRefundShares(provider, config.package.dovSingle, config.registry.dov.dovSingle, typeArguments, user);
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();

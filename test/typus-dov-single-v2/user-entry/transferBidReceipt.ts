@@ -3,11 +3,11 @@ import { getTransferBidReceiptTx } from "src/typus-dov-single-v2";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const provider = new SuiClient({ url: config.RPC_ENDPOINT });
+const provider = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
     let depositToken = "0x2::sui::SUI";
@@ -25,9 +25,9 @@ const provider = new SuiClient({ url: config.RPC_ENDPOINT });
         share,
         recipient,
         tx: new TransactionBlock(),
-        typusFrameworkOriginPackageId: config.PACKAGE_ORIGIN.FRAMEWORK,
-        typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
-        typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
+        typusFrameworkOriginPackageId: config.packageOrigin.framework,
+        typusDovSinglePackageId: config.package.dovSingle,
+        typusDovSingleRegistry: config.registry.dov.dovSingle,
     });
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);

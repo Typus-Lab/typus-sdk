@@ -1,10 +1,10 @@
 import { SuiClient } from "@mysten/sui.js/client";
 import * as fs from "fs";
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import "src/utils/load_env";
-const config = configs.MAINNET;
+const config = TypusConfig.default("MAINNET");
 
-const provider = new SuiClient({ url: config.RPC_ENDPOINT });
+const provider = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
     var hasNextPage = true;
@@ -14,7 +14,7 @@ const provider = new SuiClient({ url: config.RPC_ENDPOINT });
 
     while (hasNextPage) {
         var result = await provider.queryEvents({
-            query: { MoveEventType: `${config.PACKAGE_ORIGIN.NFT}::typus_nft::MintEvent` },
+            query: { MoveEventType: `${config.packageOrigin.nft}::typus_nft::MintEvent` },
             order: "descending",
             cursor,
         });
