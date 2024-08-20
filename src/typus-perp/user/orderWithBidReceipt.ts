@@ -7,32 +7,14 @@ import {
     reduceOptionCollateralPositionSize as _reduceOptionCollateralPositionSize,
 } from "../trading/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { PythClient, updatePyth, updateOracleWithPyth, priceInfoObjectIds, pythStateId } from "../../utils";
+import { PythClient, updatePyth, updateOracleWithPyth, priceInfoObjectIds, pythStateId, TypusConfig } from "../../utils";
 import { tokenType, TOKEN, CLOCK } from "../../constants";
 import { NETWORK } from "..";
 import { Position, TradingOrder } from "../position/structs";
 import { getSplitBidReceiptTx } from "../../typus-dov-single-v2/";
 
 export async function createTradingOrderWithBidReceipt(
-    config: {
-        PACKAGE_ORIGIN: { FRAMEWORK: string };
-        PACKAGE: {
-            DOV_SINGLE: string;
-            ORACLE: string;
-        };
-        REGISTRY: {
-            DOV_SINGLE: string;
-            MARKET: string;
-            USER: string;
-            LEADERBOARD: string;
-            LP_POOL: string;
-        };
-        OBJECT: {
-            TYPUS_VERSION: string;
-            TYPUS_PERP_VERSION: string;
-        };
-        ORACLE: {};
-    },
+    config: TypusConfig,
     input: {
         pythClient: PythClient;
         tx: TransactionBlock;
@@ -55,16 +37,23 @@ export async function createTradingOrderWithBidReceipt(
     const bToken = tokenType[NETWORK][input.bToken];
     const baseToken = tokenType[NETWORK][BASE_TOKEN];
 
-    updateOracleWithPyth(input.pythClient, input.tx, config.PACKAGE.ORACLE, config.ORACLE[BASE_TOKEN], BASE_TOKEN, "USDC");
+    updateOracleWithPyth(
+        input.pythClient,
+        input.tx,
+        config.package.oracle,
+        config.oracle[BASE_TOKEN.toLocaleLowerCase()],
+        BASE_TOKEN,
+        "USDC"
+    );
 
     // split bid receipt
     var collateralBidReceipt;
     if (input.share) {
         collateralBidReceipt = getSplitBidReceiptTx({
             tx: input.tx,
-            typusFrameworkOriginPackageId: config.PACKAGE_ORIGIN.FRAMEWORK,
-            typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
-            typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
+            typusFrameworkOriginPackageId: config.packageOrigin.framework,
+            typusDovSinglePackageId: config.package.dovSingle,
+            typusDovSingleRegistry: config.registry.dov.dovSingle,
             index: input.index,
             receipts: [input.bidReceipt],
             share: input.share,
@@ -75,21 +64,21 @@ export async function createTradingOrderWithBidReceipt(
     }
 
     _createTradingOrderWithBidReceipt(input.tx, [cToken, bToken, baseToken], {
-        version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.MARKET,
-        poolRegistry: config.REGISTRY.LP_POOL,
+        version: config.version.perp,
+        registry: config.registry.perp.market,
+        poolRegistry: config.registry.perp.lpPool,
         marketIndex: BigInt(0),
         poolIndex: BigInt(0),
         pythState: pythStateId[NETWORK],
         oracleCToken: priceInfoObjectIds[NETWORK][TOKEN],
         oracleTradingSymbol: priceInfoObjectIds[NETWORK][BASE_TOKEN],
         clock: CLOCK,
-        typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
-        typusUserRegistry: config.REGISTRY.USER,
-        typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD,
+        typusEcosystemVersion: config.version.typus,
+        typusUserRegistry: config.registry.typus.user,
+        typusLeaderboardRegistry: config.registry.typus.leaderboard,
         isLong: input.isLong,
-        dovRegistry: config.REGISTRY.DOV_SINGLE,
-        typusOracle: config.ORACLE[BASE_TOKEN],
+        dovRegistry: config.registry.dov.dovSingle,
+        typusOracle: config.oracle[BASE_TOKEN.toLocaleLowerCase()],
         collateralBidReceipt,
         user: input.user,
     });
@@ -98,25 +87,7 @@ export async function createTradingOrderWithBidReceipt(
 }
 
 export async function reduceOptionCollateralPositionSize(
-    config: {
-        PACKAGE_ORIGIN: { FRAMEWORK: string };
-        PACKAGE: {
-            DOV_SINGLE: string;
-            ORACLE: string;
-        };
-        REGISTRY: {
-            DOV_SINGLE: string;
-            MARKET: string;
-            USER: string;
-            LEADERBOARD: string;
-            LP_POOL: string;
-        };
-        OBJECT: {
-            TYPUS_VERSION: string;
-            TYPUS_PERP_VERSION: string;
-        };
-        ORACLE: {};
-    },
+    config: TypusConfig,
     input: {
         pythClient: PythClient;
         tx: TransactionBlock;
@@ -132,16 +103,16 @@ export async function reduceOptionCollateralPositionSize(
     // const bToken = tokenType[NETWORK][input.bToken];
     // const baseToken = tokenType[NETWORK][BASE_TOKEN];
 
-    // updateOracleWithPyth(input.pythClient, input.tx, config.PACKAGE.ORACLE, config.ORACLE[BASE_TOKEN], BASE_TOKEN, "USDC");
+    // updateOracleWithPyth(input.pythClient, input.tx, config.package.oracle, config.oracle[BASE_TOKEN.toLocaleLowerCase()], BASE_TOKEN, "USDC");
 
     // // split bid receipt
     // var collateralBidReceipt;
     // if (input.share) {
     //     collateralBidReceipt = getSplitBidReceiptTx({
     //         tx: input.tx,
-    //         typusFrameworkOriginPackageId: config.PACKAGE_ORIGIN.FRAMEWORK,
-    //         typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
-    //         typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
+    //         typusFrameworkOriginPackageId: config.packageOrigin.framework,
+    //         typusDovSinglePackageId: config.package.dovSingle,
+    //         typusDovSingleRegistry: config.registry.dov.dovSingle,
     //         index: input.index,
     //         receipts: [input.bidReceipt],
     //         share: input.share,
@@ -152,20 +123,20 @@ export async function reduceOptionCollateralPositionSize(
     // }
 
     // _reduceOptionCollateralPositionSize(input.tx, [cToken, bToken, baseToken], {
-    //     version: config.OBJECT.TYPUS_PERP_VERSION,
-    //     registry: config.REGISTRY.MARKET,
-    //     poolRegistry: config.REGISTRY.LP_POOL,
+    //     version: config.version.perp,
+    //     registry: config.registry.perp.market,
+    //     poolRegistry: config.registry.perp.lpPool,
     //     marketIndex: BigInt(0),
     //     poolIndex: BigInt(0),
     //     pythState: pythStateId[NETWORK],
     //     oracleCToken: priceInfoObjectIds[NETWORK][TOKEN],
     //     oracleTradingSymbol: priceInfoObjectIds[NETWORK][BASE_TOKEN],
     //     clock: CLOCK,
-    //     typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
-    //     typusUserRegistry: config.REGISTRY.USER,
-    //     typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD,
-    //     dovRegistry: config.REGISTRY.DOV_SINGLE,
-    //     typusOracle: config.ORACLE[BASE_TOKEN],
+    //     typusEcosystemVersion: config.version.typus,
+    //     typusUserRegistry: config.registry.typus.user,
+    //     typusLeaderboardRegistry: config.registry.typus.leaderboard,
+    //     dovRegistry: config.registry.dov.dovSingle,
+    //     typusOracle: config.oracle[BASE_TOKEN.toLocaleLowerCase()],
     //     positionId: BigInt(123),
     //     orderSize: null,
     // });

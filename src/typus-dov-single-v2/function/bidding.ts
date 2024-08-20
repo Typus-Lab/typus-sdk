@@ -9,7 +9,7 @@ import { StableCoin, getTokenName, WrappedToken } from "./token";
 import { SuiClient } from "@mysten/sui.js/dist/cjs/client";
 import { typeArgsToAssets } from "../../constants";
 import BigNumber from "bignumber.js";
-import config from "../../../config.json";
+import { TypusConfig } from "src/utils";
 import moment from "moment";
 
 const PriceDecimal = BigNumber(10).pow(8);
@@ -213,9 +213,9 @@ export const parsePythOracleData = (data: PriceData[], decimals: { [key: string]
     return prices;
 };
 
-export const fetchPrices = async (provider: SuiClient, network: string): Promise<{ [key: string]: CoinInfo }> => {
+export const fetchPrices = async (provider: SuiClient, config: TypusConfig): Promise<{ [key: string]: CoinInfo }> => {
     const coinObjects = await provider.multiGetObjects({
-        ids: Object.values(config[network.toUpperCase()].ORACLE),
+        ids: Object.values(config.oracle),
         options: { showContent: true },
     });
 
@@ -619,7 +619,7 @@ export const parseBid = (
     };
 };
 
-export const getUserBidReceipts = async (provider: SuiClient, network: string, originFramworkAddress: string, userAddress: string) => {
+export const getUserBidReceipts = async (provider: SuiClient, originFramworkAddress: string, userAddress: string) => {
     const bidReceipts: { [key: string]: Receipt[] } = {};
     let result = await provider.getOwnedObjects({ owner: userAddress, options: { showType: true, showContent: true } });
 
@@ -691,22 +691,22 @@ export const getUserBidReceipts = async (provider: SuiClient, network: string, o
  */
 export const fetchUserBids = async (
     provider: SuiClient,
-    network: string,
-    packageAddress: string,
-    framworkAddress: string,
-    originFramworkAddress: string,
-    registryAddress: string,
-    strategyPoolAddress: string,
+    config: TypusConfig,
     userAddress: string,
     prices?: { [key: string]: CoinInfo }
 ) => {
+    const packageAddress = config.package.dovSingle;
+    const registryAddress = config.registry.dov.dovSingle;
+    const originFramworkAddress = config.packageOrigin.framework;
+    const framworkAddress = config.package.framework;
+    const strategyPoolAddress = config.object.strategyPool;
     // Step 1: get user bid receipts, vaults info, user strategies, auction data, prices
     const vaultsInfo = await getVaults(provider, packageAddress, registryAddress, []);
-    const userReceipts = await getUserBidReceipts(provider, network, originFramworkAddress, userAddress);
+    const userReceipts = await getUserBidReceipts(provider, originFramworkAddress, userAddress);
     const userStrategies = await getUserStrategies(provider, packageAddress, registryAddress, strategyPoolAddress, userAddress);
     const auctions = await getAuctions(provider, packageAddress, registryAddress, []);
     if (typeof prices === "undefined") {
-        prices = await fetchPrices(provider, "testnet");
+        prices = await fetchPrices(provider, config);
     }
     // Step 2: sort receipts and flat receipts
     const { sortedBidReceipts, bidVaultsInfo } = parseBidReceipt(Object.values(vaultsInfo), userReceipts);

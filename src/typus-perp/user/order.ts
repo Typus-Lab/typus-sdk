@@ -7,23 +7,12 @@ import {
 import { CLOCK } from "../../constants";
 import { NETWORK } from "..";
 import { Position, TradingOrder } from "../position/structs";
-import { PythClient, updatePyth, priceInfoObjectIds, pythStateId } from "../../utils";
+import { PythClient, updatePyth, priceInfoObjectIds, pythStateId, TypusConfig } from "../../utils";
 import { tokenType, TOKEN, typeArgToToken } from "../../constants";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 export async function createTradingOrder(
-    config: {
-        REGISTRY: {
-            MARKET: string;
-            USER: string;
-            LEADERBOARD: string;
-            LP_POOL: string;
-        };
-        OBJECT: {
-            TYPUS_VERSION: string;
-            TYPUS_PERP_VERSION: string;
-        };
-    },
+    config: TypusConfig,
     input: {
         pythClient: PythClient;
         tx: TransactionBlock;
@@ -62,18 +51,18 @@ export async function createTradingOrder(
     }
 
     _createTradingOrder(input.tx, [cToken, baseToken], {
-        version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.MARKET,
-        poolRegistry: config.REGISTRY.LP_POOL,
+        version: config.version.perp,
+        registry: config.registry.perp.market,
+        poolRegistry: config.registry.perp.lpPool,
         marketIndex: BigInt(0),
         poolIndex: BigInt(0),
         pythState: pythStateId[NETWORK],
         oracleCToken: priceInfoObjectIds[NETWORK][TOKEN],
         oracleTradingSymbol: priceInfoObjectIds[NETWORK][BASE_TOKEN],
         clock: CLOCK,
-        typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
-        typusUserRegistry: config.REGISTRY.USER,
-        typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD,
+        typusEcosystemVersion: config.version.typus,
+        typusUserRegistry: config.registry.typus.user,
+        typusLeaderboardRegistry: config.registry.typus.leaderboard,
         collateral: coin,
         size: BigInt(input.size),
         triggerPrice: BigInt(input.triggerPrice),
@@ -87,14 +76,7 @@ export async function createTradingOrder(
 }
 
 export async function cancelTradingOrder(
-    config: {
-        REGISTRY: {
-            MARKET: string;
-        };
-        OBJECT: {
-            TYPUS_PERP_VERSION: string;
-        };
-    },
+    config: TypusConfig,
     input: {
         tx: TransactionBlock;
         order: TradingOrder;
@@ -105,8 +87,8 @@ export async function cancelTradingOrder(
     const BASE_TOKEN = "0x" + input.order.symbol.baseToken.name;
 
     const coin = _cancelTradingOrder(input.tx, [cToken, BASE_TOKEN], {
-        version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.MARKET,
+        version: config.version.perp,
+        registry: config.registry.perp.market,
         marketIndex: BigInt(0),
         orderId: input.order.orderId,
         triggerPrice: input.order.triggerPrice,
@@ -118,15 +100,7 @@ export async function cancelTradingOrder(
 }
 
 export async function increaseCollateral(
-    config: {
-        REGISTRY: {
-            MARKET: string;
-            LP_POOL: string;
-        };
-        OBJECT: {
-            TYPUS_PERP_VERSION: string;
-        };
-    },
+    config: TypusConfig,
     input: {
         pythClient: PythClient;
         tx: TransactionBlock;
@@ -158,9 +132,9 @@ export async function increaseCollateral(
     }
 
     _increaseCollateral(input.tx, [cToken, baseToken], {
-        version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.MARKET,
-        poolRegistry: config.REGISTRY.LP_POOL,
+        version: config.version.perp,
+        registry: config.registry.perp.market,
+        poolRegistry: config.registry.perp.lpPool,
         marketIndex: BigInt(0),
         poolIndex: BigInt(0),
         pythState: pythStateId[NETWORK],
@@ -175,15 +149,7 @@ export async function increaseCollateral(
 }
 
 export async function releaseCollateral(
-    config: {
-        REGISTRY: {
-            MARKET: string;
-            LP_POOL: string;
-        };
-        OBJECT: {
-            TYPUS_PERP_VERSION: string;
-        };
-    },
+    config: TypusConfig,
     input: {
         pythClient: PythClient;
         tx: TransactionBlock;
@@ -200,9 +166,9 @@ export async function releaseCollateral(
     const baseToken = tokenType[NETWORK][BASE_TOKEN];
 
     const coin = _releaseCollateral(input.tx, [cToken, baseToken], {
-        version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.MARKET,
-        poolRegistry: config.REGISTRY.LP_POOL,
+        version: config.version.perp,
+        registry: config.registry.perp.market,
+        poolRegistry: config.registry.perp.lpPool,
         marketIndex: BigInt(0),
         poolIndex: BigInt(0),
         pythState: pythStateId[NETWORK],
