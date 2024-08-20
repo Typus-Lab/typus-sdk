@@ -1,4 +1,6 @@
 import camelcaseKeysDeep = require("camelcase-keys-deep");
+import config_mainnet from "config-mainnet.json";
+import config_testnet from "config-testnet.json";
 
 export class TypusConfig {
     rpcEndpoint: string;
@@ -11,6 +13,14 @@ export class TypusConfig {
     token: Token;
     static parse(json): TypusConfig {
         return JSON.parse(JSON.stringify(camelcaseKeysDeep(json)));
+    }
+    static default(network: "MAINNET" | "TESTNET"): TypusConfig {
+        switch (network) {
+            case "MAINNET":
+                return JSON.parse(JSON.stringify(camelcaseKeysDeep(config_mainnet)));
+            case "TESTNET":
+                return JSON.parse(JSON.stringify(camelcaseKeysDeep(config_testnet)));
+        }
     }
 }
 export interface Package {
