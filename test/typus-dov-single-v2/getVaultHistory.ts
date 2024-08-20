@@ -1,11 +1,11 @@
 import { getVaultHistoryFromDB, VaultHistory } from "src/typus-dov-single-v2";
 
 // const provider = new SuiClient({
-//     url: config.RPC_ENDPOINT,
+//     url: config.rpcEndpoint,
 // });
 
 (async () => {
-    // const datas = await getVaultHistoryEvents(provider, config.PACKAGE_ORIGIN.DOV_SINGLE, 1702278000000);
+    // const datas = await getVaultHistoryEvents(provider, config.packageOrigin.dovSingle, 1702278000000);
     // const groupEvents = await parseGroupEvents(datas);
     // const vaultHistory = await parseVaultHistory(groupEvents);
 

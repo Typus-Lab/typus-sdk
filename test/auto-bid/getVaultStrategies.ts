@@ -1,15 +1,15 @@
 import { SuiClient } from "@mysten/sui.js/client";
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { getStrategies, getStrategyIds, getStrategyPool } from "src/auto-bid";
 import "src/utils/load_env";
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 
 (async () => {
-    let strategy_pool = await getStrategyPool(provider, config.OBJECT.STRATEGY_POOL);
+    let strategy_pool = await getStrategyPool(provider, config.object.strategyPool);
     // console.log(strategy_pool);
 
     let parentId = strategy_pool.strategies.get("20")?.get("0")!;

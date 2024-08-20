@@ -1,10 +1,10 @@
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getMyBids } from "src/typus-dov-single-v2";
-const config = configs.MAINNET;
+const config = TypusConfig.default("MAINNET");
 
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 
 (async () => {
@@ -27,10 +27,10 @@ const provider = new SuiClient({
     }
 
     const receipts = datas
-        .filter((obj) => obj.data?.type! == `${config.PACKAGE_ORIGIN.FRAMEWORK}::vault::TypusBidReceipt`)
+        .filter((obj) => obj.data?.type! == `${config.packageOrigin.framework}::vault::TypusBidReceipt`)
         .map((obj) => obj.data?.objectId!);
     // console.log(receipts);
 
-    let result = await getMyBids(provider, config.PACKAGE.FRAMEWORK, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE, receipts);
+    let result = await getMyBids(provider, config.package.framework, config.package.dovSingle, config.registry.dov.dovSingle, receipts);
     console.log(JSON.stringify(result, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 })();

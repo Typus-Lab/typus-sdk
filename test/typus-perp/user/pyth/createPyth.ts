@@ -2,14 +2,14 @@ import { SuiPriceServiceConnection, SuiPythClient } from "@pythnetwork/pyth-sui-
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 
 import mnemonic from "../../../../mnemonic.json";
 
 // Get the Stable Hermes service URL from https://docs.pyth.network/price-feeds/api-instances-and-providers/hermes
 const connection = new SuiPriceServiceConnection("https://hermes-beta.pyth.network");
 
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 
 const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 
@@ -26,7 +26,7 @@ const priceIDs = [
 ];
 
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 
 // Get the state IDs of the Pyth and Wormhole contracts from

@@ -1,13 +1,13 @@
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { KioskClient, Network } from "@mysten/kiosk";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getTailsIds, getkioskOwnerCaps } from "src/typus-nft";
 import "src/utils/load_env";
 
-const config = configs.MAINNET;
+const config = TypusConfig.default("MAINNET");
 
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 
 (async () => {
@@ -38,7 +38,7 @@ const provider = new SuiClient({
         network: Network.MAINNET,
     });
 
-    const tailsIds = await getTailsIds(kioskClient, config.PACKAGE_ORIGIN.NFT, kioskOwnerCaps);
+    const tailsIds = await getTailsIds(kioskClient, config.packageOrigin.nft, kioskOwnerCaps);
     console.log(tailsIds);
     console.log(tailsIds.length);
 

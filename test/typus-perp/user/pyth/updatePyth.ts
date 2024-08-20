@@ -1,17 +1,17 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { createPythClient, updatePyth } from "src/utils";
 
 import mnemonic from "../../../../mnemonic.json";
 
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 
 const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 
 (async () => {

@@ -1,17 +1,17 @@
 import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
 import { getVaults, getUserEvents, parseTxHistory, getNewBidFromSentio, getDepositorCashFlows } from "src/typus-dov-single-v2";
 import * as fs from "fs";
-import configs from "config.json";
-const config = configs.TESTNET;
+import { TypusConfig } from "src/utils";
+const config = TypusConfig.default("TESTNET");
 
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 
 const sender = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d484107";
 
 (async () => {
-    const vaults = await getVaults(provider, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE, []);
+    const vaults = await getVaults(provider, config.package.dovSingle, config.registry.dov.dovSingle, []);
 
     // 1. Get User Events
     const localCacheFile = fs.readFileSync("localCacheEvents.json", "utf-8");
@@ -58,7 +58,7 @@ const sender = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d4841
 
     const datas = localCacheEvents;
 
-    const txHistory = await parseTxHistory(datas, config.PACKAGE_ORIGIN.DOV_SINGLE, vaults);
+    const txHistory = await parseTxHistory(datas, config.packageOrigin.dovSingle, vaults);
     // console.log(txHistory.reverse());
 
     const newBidHistory = await getNewBidFromSentio(vaults, sender, 0);

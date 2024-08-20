@@ -3,11 +3,11 @@ import { getNewBidTx } from "src/typus-dov-single-v2";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const provider = new SuiClient({ url: config.RPC_ENDPOINT });
+const provider = new SuiClient({ url: config.rpcEndpoint });
 const user = signer.toSuiAddress();
 
 (async () => {
@@ -21,13 +21,13 @@ const user = signer.toSuiAddress();
 
     let transactionBlock = getNewBidTx({
         tx: new TransactionBlock(),
-        typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
-        typusUserRegistry: config.REGISTRY.USER,
-        tgldRegistry: config.REGISTRY.TGLD,
-        typusLeaderboardRegistry: config.REGISTRY.LEADERBOARD,
-        typusFrameworkPackageId: config.PACKAGE.FRAMEWORK,
-        typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
-        typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
+        typusEcosystemVersion: config.version.typus,
+        typusUserRegistry: config.registry.typus.user,
+        tgldRegistry: config.registry.typus.tgld,
+        typusLeaderboardRegistry: config.registry.typus.leaderboard,
+        typusFrameworkPackageId: config.package.framework,
+        typusDovSinglePackageId: config.package.dovSingle,
+        typusDovSingleRegistry: config.registry.dov.dovSingle,
         typeArguments,
         index,
         coins,

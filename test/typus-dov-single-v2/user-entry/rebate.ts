@@ -3,21 +3,21 @@ import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getRebateTx } from "src/typus-dov-single-v2";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const user = signer.toSuiAddress();
-const provider = new SuiClient({ url: config.RPC_ENDPOINT });
+const provider = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
     let transactionBlock = new TransactionBlock();
     transactionBlock = getRebateTx({
         tx: transactionBlock,
-        typusFrameworkPackageId: config.PACKAGE.FRAMEWORK,
-        typusDovSinglePackageId: config.PACKAGE.DOV_SINGLE,
-        typusDovSingleRegistry: config.REGISTRY.DOV_SINGLE,
-        typeArgument: config.TOKEN.SUI,
+        typusFrameworkPackageId: config.package.framework,
+        typusDovSinglePackageId: config.package.dovSingle,
+        typusDovSingleRegistry: config.registry.dov.dovSingle,
+        typeArgument: config.token.sui,
         user,
     });
     transactionBlock.setGasBudget(100000000);

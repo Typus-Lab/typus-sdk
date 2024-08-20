@@ -1,4 +1,4 @@
-import configs from "../../../../config.json";
+import { TypusConfig } from "src/utils";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
@@ -8,10 +8,10 @@ import { createPythClient } from "src/utils";
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 const gasBudget = 100000000;
 

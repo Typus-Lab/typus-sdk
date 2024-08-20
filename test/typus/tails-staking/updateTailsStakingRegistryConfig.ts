@@ -1,12 +1,12 @@
 import { getUpdateTailsStakingRegistryConfigTx } from "src/typus/tails-staking";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const IMaxStakeAmount = "0";
@@ -18,9 +18,9 @@ const IDailySignUpExp = "3";
     let tx = new TransactionBlock();
     tx = getUpdateTailsStakingRegistryConfigTx({
         tx,
-        typusPackageId: config.PACKAGE.TYPUS,
-        typusEcosystemVersion: config.OBJECT.TYPUS_VERSION,
-        typusTailsStakingRegistry: config.REGISTRY.TAILS_STAKING,
+        typusPackageId: config.package.typus,
+        typusEcosystemVersion: config.version.typus,
+        typusTailsStakingRegistry: config.registry.typus.tailsStaking,
         index: IDailySignUpExp,
         value: "10",
     });

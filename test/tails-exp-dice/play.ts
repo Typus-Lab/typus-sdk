@@ -1,10 +1,10 @@
 import "src/utils/load_env";
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { getPlaygrounds, newGamePlayGuessTx, DrawResult, getDrawResult } from "src/dice";
 import { SuiClient } from "@mysten/sui.js/client";
 
-const config = configs.TESTNET;
-const provider = new SuiClient({ url: config.RPC_ENDPOINT });
+const config = TypusConfig.default("TESTNET");
+const provider = new SuiClient({ url: config.rpcEndpoint });
 
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -21,7 +21,7 @@ const larger_than_2 = true;
     const address = keypair.toSuiAddress();
     console.log(address);
 
-    const playgrounds = await getPlaygrounds(provider, config.REGISTRY.EXP_GUESS);
+    const playgrounds = await getPlaygrounds(provider, config.registry.dice.tailsExp);
     const playground = playgrounds[index];
     console.log(playground);
 
@@ -32,11 +32,11 @@ const larger_than_2 = true;
 
     let transactionBlock = await newGamePlayGuessTx(
         gasBudget,
-        config.PACKAGE.DICE,
+        config.package.dice,
         "tails_exp",
         [coinType],
-        config.REGISTRY.EXP_GUESS,
-        config.REGISTRY.EXP_GUESS,
+        config.registry.dice.tailsExp,
+        config.registry.dice.tailsExp,
         index.toString(),
         coins,
         amount,
@@ -60,9 +60,9 @@ const larger_than_2 = true;
 
         const drawResultV1 = await getDrawResult(
             "testnet",
-            config.PACKAGE.DICE,
+            config.package.dice,
             "tails_exp",
-            config.REGISTRY.EXP_GUESS,
+            config.registry.dice.tailsExp,
             index.toString(),
             amount,
             guess_1,

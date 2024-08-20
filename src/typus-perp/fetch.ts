@@ -9,24 +9,16 @@ import { getUserShares } from "./stake-pool/functions";
 import { LpUserShare, StakePool } from "./stake-pool/structs";
 import { CLOCK } from "../constants";
 import { tokenType, typeArgToToken } from "../constants";
-import { priceInfoObjectIds, pythStateId, PythClient, updatePyth } from "../utils";
+import { priceInfoObjectIds, pythStateId, PythClient, updatePyth, TypusConfig } from "../utils";
 import { NETWORK } from ".";
 import { bcs } from "@mysten/bcs";
 
-export async function getLpPools(
-    provider: SuiClient,
-    config: {
-        REGISTRY: {
-            LP_POOL: string;
-            LIQUIDITY_POOL: string;
-        };
-    }
-): Promise<LiquidityPool[]> {
-    // const lpPoolRegistry = await Registry.fetch(provider, config.REGISTRY.LP_POOL);
+export async function getLpPools(provider: SuiClient, config: TypusConfig): Promise<LiquidityPool[]> {
+    // const lpPoolRegistry = await Registry.fetch(provider, config.registry.LP_POOL);
     // console.log(lpPoolRegistry);
 
     const dynamicFields = await provider.getDynamicFields({
-        parentId: config.REGISTRY.LIQUIDITY_POOL,
+        parentId: config.registry.perp.liquidityPool,
     });
 
     const lpPools: LiquidityPool[] = [];
@@ -40,16 +32,9 @@ export async function getLpPools(
     return lpPools;
 }
 
-export async function getStakePools(
-    provider: SuiClient,
-    config: {
-        REGISTRY: {
-            STAKE_POOL: string;
-        };
-    }
-): Promise<StakePool[]> {
+export async function getStakePools(provider: SuiClient, config: TypusConfig): Promise<StakePool[]> {
     const dynamicFields = await provider.getDynamicFields({
-        parentId: config.REGISTRY.STAKE_POOL,
+        parentId: config.registry.perp.stakePool,
     });
 
     const stakePools: StakePool[] = [];
@@ -63,8 +48,8 @@ export async function getStakePools(
     return stakePools;
 }
 
-export async function getMarkets(provider: SuiClient, config: { REGISTRY: { MARKET: string } }): Promise<Markets[]> {
-    // const marketRegistry = await MarketRegistry.fetch(provider, config.REGISTRY.MARKET);
+export async function getMarkets(provider: SuiClient, config: TypusConfig): Promise<Markets[]> {
+    // const marketRegistry = await MarketRegistry.fetch(provider, config.registry.perp.market);
     // console.log(marketRegistry);
     // MarketRegistry {
     //   '$typeName': '0x1a05edb0e5e670196de98fbbf544180d129dd4ec11c3c57f742badf0304650d::trading::MarketRegistry',
@@ -77,7 +62,7 @@ export async function getMarkets(provider: SuiClient, config: { REGISTRY: { MARK
     // }
 
     const dynamicFields = await provider.getDynamicFields({
-        parentId: config.REGISTRY.MARKET,
+        parentId: config.registry.perp.market,
     });
 
     const markets: Markets[] = [];
@@ -109,16 +94,12 @@ export async function getSymbolMarkets(provider: SuiClient, market: Markets): Pr
     return symbolMarkets;
 }
 
-export async function getUserOrders(
-    provider: SuiClient,
-    config: { OBJECT: { TYPUS_PERP_VERSION: string }; REGISTRY: { MARKET: string } },
-    user: string
-) {
+export async function getUserOrders(provider: SuiClient, config: TypusConfig, user: string) {
     let tx = new TransactionBlock();
 
     _getUserOrders(tx, {
-        version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.MARKET,
+        version: config.version.perp,
+        registry: config.registry.perp.market,
         marketIndex: BigInt(0),
         user,
     });
@@ -135,16 +116,12 @@ export async function getUserOrders(
     return orders;
 }
 
-export async function getUserPositions(
-    provider: SuiClient,
-    config: { OBJECT: { TYPUS_PERP_VERSION: string }; REGISTRY: { MARKET: string } },
-    user: string
-) {
+export async function getUserPositions(provider: SuiClient, config: TypusConfig, user: string) {
     let tx = new TransactionBlock();
 
     _getUserPositions(tx, {
-        version: config.OBJECT.TYPUS_PERP_VERSION,
-        registry: config.REGISTRY.MARKET,
+        version: config.version.perp,
+        registry: config.registry.perp.market,
         marketIndex: BigInt(0),
         user,
     });
@@ -161,15 +138,11 @@ export async function getUserPositions(
     return positions;
 }
 
-export async function getUserStake(
-    provider: SuiClient,
-    config: { REGISTRY: { STAKE_POOL: string } },
-    user: string
-): Promise<LpUserShare[]> {
+export async function getUserStake(provider: SuiClient, config: TypusConfig, user: string): Promise<LpUserShare[]> {
     let tx = new TransactionBlock();
 
     getUserShares(tx, {
-        registry: config.REGISTRY.STAKE_POOL,
+        registry: config.registry.perp.stakePool,
         index: BigInt(0),
         user,
     });
@@ -194,13 +167,7 @@ export async function getUserStake(
 
 export async function getLiquidationPrice(
     provider: SuiClient,
-    config: {
-        OBJECT: { TYPUS_PERP_VERSION: string };
-        REGISTRY: {
-            LP_POOL: string;
-            MARKET: string;
-        };
-    },
+    config: TypusConfig,
     input: {
         pythClient: PythClient;
         positions: Position[];
@@ -230,9 +197,9 @@ export async function getLiquidationPrice(
         const baseToken = tokenType[NETWORK][BASE_TOKEN];
 
         getEstimatedLiquidationPrice(tx, [cToken, baseToken], {
-            version: config.OBJECT.TYPUS_PERP_VERSION,
-            registry: config.REGISTRY.MARKET,
-            poolRegistry: config.REGISTRY.LP_POOL,
+            version: config.version.perp,
+            registry: config.registry.perp.market,
+            poolRegistry: config.registry.perp.lpPool,
             marketIndex: BigInt(0),
             poolIndex: BigInt(0),
             pythState: pythStateId[NETWORK],

@@ -1,19 +1,19 @@
-import configs from "config.json";
+import { TypusConfig } from "src/utils";
 import { getVaults, getUserEvents, parseTxHistory, getNewBidFromSentio, getExerciseFromSentio } from "src/typus-dov-single-v2";
 import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
 import * as fs from "fs";
 
-const config = configs.TESTNET;
+const config = TypusConfig.default("TESTNET");
 
 const provider = new SuiClient({
-    url: config.RPC_ENDPOINT,
+    url: config.rpcEndpoint,
 });
 
 const sender = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9";
 const fileName = "testnetLocalCacheEvents.json";
 
 (async () => {
-    const vaults = await getVaults(provider, config.PACKAGE.DOV_SINGLE, config.REGISTRY.DOV_SINGLE, []);
+    const vaults = await getVaults(provider, config.package.dovSingle, config.registry.dov.dovSingle, []);
 
     // 1. Get User Events
     var localCacheEvents: SuiEvent[] = [];
@@ -62,7 +62,7 @@ const fileName = "testnetLocalCacheEvents.json";
     console.log(cursor);
 
     // 2. Get AutoBid Events
-    // const datas2 = await getAutoBidEvents(provider, config.PACKAGE_ORIGIN.DOV_SINGLE, 1710892800000);
+    // const datas2 = await getAutoBidEvents(provider, config.packageOrigin.dovSingle, 1710892800000);
     // console.log(datas2.length);
 
     // 3. Parese User History
@@ -82,7 +82,7 @@ const fileName = "testnetLocalCacheEvents.json";
 
     const datas = localCacheEvents;
 
-    const txHistory = await parseTxHistory(datas, config.PACKAGE_ORIGIN.DOV_SINGLE, vaults);
+    const txHistory = await parseTxHistory(datas, config.packageOrigin.dovSingle, vaults);
     // console.log(txHistory.reverse());
 
     const newBidHistory = await getNewBidFromSentio(vaults, sender, 0);
