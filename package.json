@@ -84,7 +84,6 @@
         "dist"
     ],
     "scripts": {
-        "ts-node": "ts-node -r tsconfig-paths/register",
         "build": "rm -rf dist && tsc -p tsconfig.build.json",
         "test": "rm -rf dist && tsc -p tsconfig.build.json && ts-mocha test/test*.ts"
     },
