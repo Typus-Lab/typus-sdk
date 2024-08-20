@@ -82,8 +82,8 @@ export interface Oracle {
     sui: string;
     turbos: string;
     usdy: string;
-    wbtc: string;
-    weth: string;
+    btc: string;
+    eth: string;
 }
 export interface Token {
     afsui: string;
