@@ -1,86 +1,6 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../constants";
-
-/**
-    public(friend) entry fun otc<D_TOKEN, B_TOKEN>(
-        registry: &mut Registry,
-        index: u64,
-        coins: vector<Coin<B_TOKEN>>,
-        delivery_price: u64,
-        delivery_size: u64,
-        bidder_bid_value: u64,
-        bidder_fee_balance_value: u64,
-        incentive_bid_value: u64,
-        incentive_fee_balance_value: u64,
-        depositor_incentive_value: u64,
-        clock: &Clock,
-        ctx: &mut TxContext,
-    )
-*/
-export async function getOtcTx(
-    gasBudget: number,
-    packageId: string,
-    typeArguments: string[],
-    registry: string,
-    index: string,
-    coins: string[],
-    deliveryPrice: string,
-    deliverySize: string,
-    bidderBidValue: string,
-    bidderFeeBalanceValue: string,
-    incentiveBidValue: string,
-    incentiveFeeBalanceValue: string,
-    depositorIncentiveValue: string,
-    usingSponsoredGasCoin = false
-) {
-    let tx = new TransactionBlock();
-    if (
-        !usingSponsoredGasCoin &&
-        (typeArguments[0] == "0x2::sui::SUI" ||
-            typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI")
-    ) {
-        let amount = BigInt(bidderBidValue) + BigInt(bidderFeeBalanceValue);
-        let [coin] = tx.splitCoins(tx.gas, [tx.pure(amount.toString())]);
-        tx.moveCall({
-            target: `${packageId}::tds_authorized_entry::otc`,
-            typeArguments,
-            arguments: [
-                tx.object(registry),
-                tx.pure(index),
-                tx.makeMoveVec({ objects: [coin] }),
-                tx.pure(deliveryPrice),
-                tx.pure(deliverySize),
-                tx.pure(bidderBidValue),
-                tx.pure(bidderFeeBalanceValue),
-                tx.pure(incentiveBidValue),
-                tx.pure(incentiveFeeBalanceValue),
-                tx.pure(depositorIncentiveValue),
-                tx.object(CLOCK),
-            ],
-        });
-    } else {
-        tx.moveCall({
-            target: `${packageId}::tds_authorized_entry::otc`,
-            typeArguments,
-            arguments: [
-                tx.object(registry),
-                tx.pure(index),
-                tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
-                tx.pure(deliveryPrice),
-                tx.pure(deliverySize),
-                tx.pure(bidderBidValue),
-                tx.pure(bidderFeeBalanceValue),
-                tx.pure(incentiveBidValue),
-                tx.pure(incentiveFeeBalanceValue),
-                tx.pure(depositorIncentiveValue),
-                tx.object(CLOCK),
-            ],
-        });
-    }
-    tx.setGasBudget(gasBudget);
-
-    return tx;
-}
+import { TypusConfig } from "src/utils";
 
 /**
     public(friend) entry fun update_config(
@@ -133,39 +53,65 @@ export interface UpdateConfigRequests {
         depositIncentiveBpDivisorDecimal?: string;
     };
 }
-export async function getUpdateConfigTx(gasBudget: number, packageId: string, registry: string, requests: UpdateConfigRequests[]) {
-    let tx = new TransactionBlock();
+export async function getUpdateConfigTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    requests: {
+        index: string;
+        input: {
+            oracleId?: string;
+            depositLotSize?: string;
+            bidLotSize?: string;
+            minDepositSize?: string;
+            minBidSize?: string;
+            maxDepositEntry?: string;
+            maxBidEntry?: string;
+            depositFeeBp?: string;
+            depositFeeShareBp?: string;
+            depositSharedFeePool?: string;
+            bidFeeBp?: string;
+            depositIncentiveBp?: string;
+            bidIncentiveBp?: string;
+            auctionDelayTsMs?: string;
+            auctionDurationTsMs?: string;
+            recoupDelayTsMs?: string;
+            capacity?: string;
+            leverage?: string;
+            riskLevel?: string;
+            depositIncentiveBpDivisorDecimal?: string;
+        };
+    }[]
+) {
     requests.forEach((request) => {
         tx.moveCall({
-            target: `${packageId}::tds_authorized_entry::update_config`,
+            target: `${config.package.dovSingle}::tds_authorized_entry::update_config`,
             typeArguments: [],
             arguments: [
-                tx.object(registry),
+                tx.object(config.registry.dov.dovSingle),
                 tx.pure(request.index),
-                tx.pure(request.config.oracleId ? [request.config.oracleId] : []),
-                tx.pure(request.config.depositLotSize ? [request.config.depositLotSize] : []),
-                tx.pure(request.config.bidLotSize ? [request.config.bidLotSize] : []),
-                tx.pure(request.config.minDepositSize ? [request.config.minDepositSize] : []),
-                tx.pure(request.config.minBidSize ? [request.config.minBidSize] : []),
-                tx.pure(request.config.maxDepositEntry ? [request.config.maxDepositEntry] : []),
-                tx.pure(request.config.maxBidEntry ? [request.config.maxBidEntry] : []),
-                tx.pure(request.config.depositFeeBp ? [request.config.depositFeeBp] : []),
-                tx.pure(request.config.depositFeeShareBp ? [request.config.depositFeeShareBp] : []),
-                tx.pure(request.config.depositSharedFeePool ? [request.config.depositSharedFeePool] : []),
-                tx.pure(request.config.bidFeeBp ? [request.config.bidFeeBp] : []),
-                tx.pure(request.config.depositIncentiveBp ? [request.config.depositIncentiveBp] : []),
-                tx.pure(request.config.bidIncentiveBp ? [request.config.bidIncentiveBp] : []),
-                tx.pure(request.config.auctionDelayTsMs ? [request.config.auctionDelayTsMs] : []),
-                tx.pure(request.config.auctionDurationTsMs ? [request.config.auctionDurationTsMs] : []),
-                tx.pure(request.config.recoupDelayTsMs ? [request.config.recoupDelayTsMs] : []),
-                tx.pure(request.config.capacity ? [request.config.capacity] : []),
-                tx.pure(request.config.leverage ? [request.config.leverage] : []),
-                tx.pure(request.config.riskLevel ? [request.config.riskLevel] : []),
-                tx.pure(request.config.depositIncentiveBpDivisorDecimal ? [request.config.depositIncentiveBpDivisorDecimal] : []),
+                tx.pure(request.input.oracleId ? [request.input.oracleId] : []),
+                tx.pure(request.input.depositLotSize ? [request.input.depositLotSize] : []),
+                tx.pure(request.input.bidLotSize ? [request.input.bidLotSize] : []),
+                tx.pure(request.input.minDepositSize ? [request.input.minDepositSize] : []),
+                tx.pure(request.input.minBidSize ? [request.input.minBidSize] : []),
+                tx.pure(request.input.maxDepositEntry ? [request.input.maxDepositEntry] : []),
+                tx.pure(request.input.maxBidEntry ? [request.input.maxBidEntry] : []),
+                tx.pure(request.input.depositFeeBp ? [request.input.depositFeeBp] : []),
+                tx.pure(request.input.depositFeeShareBp ? [request.input.depositFeeShareBp] : []),
+                tx.pure(request.input.depositSharedFeePool ? [request.input.depositSharedFeePool] : []),
+                tx.pure(request.input.bidFeeBp ? [request.input.bidFeeBp] : []),
+                tx.pure(request.input.depositIncentiveBp ? [request.input.depositIncentiveBp] : []),
+                tx.pure(request.input.bidIncentiveBp ? [request.input.bidIncentiveBp] : []),
+                tx.pure(request.input.auctionDelayTsMs ? [request.input.auctionDelayTsMs] : []),
+                tx.pure(request.input.auctionDurationTsMs ? [request.input.auctionDurationTsMs] : []),
+                tx.pure(request.input.recoupDelayTsMs ? [request.input.recoupDelayTsMs] : []),
+                tx.pure(request.input.capacity ? [request.input.capacity] : []),
+                tx.pure(request.input.leverage ? [request.input.leverage] : []),
+                tx.pure(request.input.riskLevel ? [request.input.riskLevel] : []),
+                tx.pure(request.input.depositIncentiveBpDivisorDecimal ? [request.input.depositIncentiveBpDivisorDecimal] : []),
             ],
         });
     });
-    tx.setGasBudget(gasBudget);
 
     return tx;
 }

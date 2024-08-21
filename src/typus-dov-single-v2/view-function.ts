@@ -1,7 +1,7 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
-import { AddressFromBytes } from "../utils";
+import { AddressFromBytes, TypusConfig } from "src/utils";
 
 const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 export interface Vault {
@@ -135,21 +135,21 @@ export interface DepositVault {
     bcsPadding: string[];
 }
 export async function getVaults(
+    config: TypusConfig,
     provider: SuiClient,
-    packageId: string,
-    registry: string,
-    indexes: string[],
-    sender = SENDER
+    input: {
+        indexes: string[];
+    }
 ): Promise<{ [key: string]: Vault }> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::tds_view_function::get_vault_data_bcs` as any;
-    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(indexes)];
+    let target = `${config.package.dovSingle}::tds_view_function::get_vault_data_bcs` as any;
+    let transactionBlockArguments = [transactionBlock.pure(config.registry.dov.dovSingle), transactionBlock.pure(input.indexes)];
     transactionBlock.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     // console.log(JSON.stringify(bytes));
@@ -386,21 +386,21 @@ export interface Auction {
     bidIndex: string;
 }
 export async function getAuctions(
+    config: TypusConfig,
     provider: SuiClient,
-    packageId: string,
-    registry: string,
-    indexes: string[],
-    sender = SENDER
+    input: {
+        indexes: string[];
+    }
 ): Promise<{ [key: string]: Auction }> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::tds_view_function::get_auction_bcs` as any;
-    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(indexes)];
+    let target = `${config.package.dovSingle}::tds_view_function::get_auction_bcs` as any;
+    let transactionBlockArguments = [transactionBlock.pure(config.registry.dov.dovSingle), transactionBlock.pure(input.indexes)];
     transactionBlock.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     // console.log(JSON.stringify(bytes));
@@ -464,22 +464,16 @@ export interface AuctionBid {
     feeDiscount: string;
     tsMs: string;
 }
-export async function getAuctionBids(
-    provider: SuiClient,
-    packageId: string,
-    registry: string,
-    index: string,
-    sender = SENDER
-): Promise<AuctionBid[]> {
+export async function getAuctionBids(config: TypusConfig, provider: SuiClient, input: { index: string }): Promise<AuctionBid[]> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::tds_view_function::get_auction_bids_bcs` as any;
-    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(index)];
+    let target = `${config.package.dovSingle}::tds_view_function::get_auction_bids_bcs` as any;
+    let transactionBlockArguments = [transactionBlock.pure(config.registry.dov.dovSingle), transactionBlock.pure(input.index)];
     transactionBlock.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -520,30 +514,29 @@ export interface RRR {
     b: DepositSnapshot;
 }
 export async function getDepositShares(
+    config: TypusConfig,
     provider: SuiClient,
-    typusFrameworkPackageId: string,
-    packageId: string,
-    registry: string,
-    receipts: string[],
-    user: string,
-    sender = SENDER
+    input: {
+        receipts: string[];
+        user: string;
+    }
 ): Promise<{ depositShare: { [key: string]: DepositShare }; depositSnapshot: DepositSnapshot }> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::tds_view_function::get_deposit_shares_bcs` as any;
+    let target = `${config.package.dovSingle}::tds_view_function::get_deposit_shares_bcs` as any;
     let transactionBlockArguments = [
-        transactionBlock.pure(registry),
+        transactionBlock.pure(config.registry.dov.dovSingle),
         transactionBlock.makeMoveVec({
-            type: `${typusFrameworkPackageId}::vault::TypusDepositReceipt`,
-            objects: receipts.map((id) => transactionBlock.object(id)),
+            type: `${config.package.framework}::vault::TypusDepositReceipt`,
+            objects: input.receipts.map((id) => transactionBlock.object(id)),
         }),
-        transactionBlock.pure(user),
+        transactionBlock.pure(input.user),
     ];
     transactionBlock.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -604,20 +597,19 @@ export interface BidShare {
     share: string;
 }
 export async function getMyBids(
+    config: TypusConfig,
     provider: SuiClient,
-    typusFrameworkPackageId: string,
-    packageId: string,
-    registry: string,
-    receipts: string[],
-    sender = SENDER
+    input: {
+        receipts: string[];
+    }
 ): Promise<{ [key: string]: BidShare }> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::tds_view_function::get_my_bids_bcs` as any;
+    let target = `${config.package.dovSingle}::tds_view_function::get_my_bids_bcs` as any;
     let transactionBlockArguments = [
-        transactionBlock.pure(registry),
+        transactionBlock.pure(config.registry.dov.dovSingle),
         transactionBlock.makeMoveVec({
-            type: `${typusFrameworkPackageId}::vault::TypusBidReceipt`,
-            objects: receipts.map((id) => transactionBlock.object(id)),
+            type: `${config.package.framework}::vault::TypusBidReceipt`,
+            objects: input.receipts.map((id) => transactionBlock.object(id)),
         }),
     ];
     transactionBlock.moveCall({
@@ -625,7 +617,7 @@ export async function getMyBids(
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -665,16 +657,16 @@ export async function getMyBids(
 }
 
 export async function getRefundShares(
+    config: TypusConfig,
     provider: SuiClient,
-    packageId: string,
-    registry: string,
-    typeArguments: string[],
-    sender = SENDER
+    input: {
+        typeArguments: string[];
+    }
 ): Promise<{ [key: string]: string }> {
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::tds_view_function::get_refund_shares_bcs` as any;
-    let transactionBlockArguments = [transactionBlock.pure(registry)];
-    typeArguments.forEach((typeArgument) => {
+    let target = `${config.package.dovSingle}::tds_view_function::get_refund_shares_bcs` as any;
+    let transactionBlockArguments = [transactionBlock.pure(config.registry.dov.dovSingle)];
+    input.typeArguments.forEach((typeArgument) => {
         transactionBlock.moveCall({
             target,
             typeArguments: [typeArgument],
@@ -684,7 +676,7 @@ export async function getRefundShares(
     let results = (
         await provider.devInspectTransactionBlock({
             transactionBlock,
-            sender,
+            sender: SENDER,
         })
     ).results;
     let refundShares = Array.from(new Map()).reduce((map, [key, value]) => {

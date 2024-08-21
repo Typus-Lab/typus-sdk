@@ -698,13 +698,12 @@ export const fetchUserBids = async (
     const packageAddress = config.package.dovSingle;
     const registryAddress = config.registry.dov.dovSingle;
     const originFramworkAddress = config.packageOrigin.framework;
-    const framworkAddress = config.package.framework;
     const strategyPoolAddress = config.object.strategyPool;
     // Step 1: get user bid receipts, vaults info, user strategies, auction data, prices
-    const vaultsInfo = await getVaults(provider, packageAddress, registryAddress, []);
+    const vaultsInfo = await getVaults(config, provider, { indexes: [] });
     const userReceipts = await getUserBidReceipts(provider, originFramworkAddress, userAddress);
     const userStrategies = await getUserStrategies(provider, packageAddress, registryAddress, strategyPoolAddress, userAddress);
-    const auctions = await getAuctions(provider, packageAddress, registryAddress, []);
+    const auctions = await getAuctions(config, provider, { indexes: [] });
     if (typeof prices === "undefined") {
         prices = await fetchPrices(provider, config);
     }
@@ -712,7 +711,7 @@ export const fetchUserBids = async (
     const { sortedBidReceipts, bidVaultsInfo } = parseBidReceipt(Object.values(vaultsInfo), userReceipts);
 
     // Step 3: get bid shares info
-    const bidShares = await getMyBids(provider, framworkAddress, packageAddress, registryAddress, sortedBidReceipts);
+    const bidShares = await getMyBids(config, provider, { receipts: sortedBidReceipts });
 
     // Step 4: parse bids from bid shares
     const bidsFromBidShares: Bid[] = [];

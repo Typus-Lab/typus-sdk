@@ -32,6 +32,7 @@ export interface Package {
     oracle: string;
     perp: string;
     safu: string;
+    token: string;
     typus: string;
 }
 export interface Version {
