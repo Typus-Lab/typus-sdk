@@ -1,22 +1,23 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
+import { TypusConfig } from "src/utils";
 
 const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-export async function getUserMetadata(input: {
-    provider: SuiClient;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusUserRegistry: string;
-    user: string;
-}): Promise<string[]> {
+export async function getUserMetadata(
+    config: TypusConfig,
+    input: {
+        provider: SuiClient;
+        user: string;
+    }
+): Promise<string[]> {
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
-        target: `${input.typusPackageId}::user::get_user_metadata`,
+        target: `${config.package.typus}::user::get_user_metadata`,
         typeArguments: [],
         arguments: [
-            transactionBlock.pure(input.typusEcosystemVersion),
-            transactionBlock.pure(input.typusUserRegistry),
+            transactionBlock.pure(config.version.typus),
+            transactionBlock.pure(config.registry.typus.user),
             transactionBlock.pure(input.user),
         ],
     });
