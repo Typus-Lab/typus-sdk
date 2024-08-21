@@ -1,4 +1,5 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { TypusConfig } from "src/utils";
 
 /**
     public fun remove_airdrop<TOKEN>(
@@ -9,31 +10,25 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
     ): Balance<TOKEN>
 */
 export async function getRemoveAirdropTx(
-    gasBudget: number,
-    packageId: string,
-    version: string,
-    typusLeaderboardRegistry: string,
-    key: string,
-    typeArguments: string[],
-    sender: string
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        typeArguments: string[];
+        key: string;
+        sender: string;
+    }
 ) {
-    let tx = new TransactionBlock();
-
     const balance = tx.moveCall({
-        target: `${packageId}::airdrop::remove_airdrop`,
-        typeArguments,
-        arguments: [tx.object(version), tx.object(typusLeaderboardRegistry), tx.object(key)],
+        target: `${config.package.typus}::airdrop::remove_airdrop`,
+        typeArguments: input.typeArguments,
+        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.airdrop), tx.object(input.key)],
     });
-
     const coin = tx.moveCall({
         target: `0x2::coin::from_balance`,
-        typeArguments,
+        typeArguments: input.typeArguments,
         arguments: [balance],
     });
-
-    tx.transferObjects([coin], sender);
-
-    tx.setGasBudget(gasBudget);
+    tx.transferObjects([coin], input.sender);
 
     return tx;
 }
@@ -50,52 +45,48 @@ export async function getRemoveAirdropTx(
     )
 */
 export async function getSetAirdropTx(
-    gasBudget: number,
-    packageId: string,
-    version: string,
-    typusLeaderboardRegistry: string,
-    key: string,
-    coins: string[],
-    amount: string,
-    users: string[],
-    values: string[],
-    typeArguments: string[]
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        typeArguments: string[];
+        key: string;
+        coins: string[];
+        amount: string;
+        users: string[];
+        values: string[];
+    }
 ) {
-    let tx = new TransactionBlock();
-
     if (
-        typeArguments[0] == "0x2::sui::SUI" ||
-        typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
+        input.typeArguments[0] == "0x2::sui::SUI" ||
+        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
     ) {
-        let [coin] = tx.splitCoins(tx.gas, [tx.pure(amount)]);
+        let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.amount)]);
         tx.moveCall({
-            target: `${packageId}::airdrop::set_airdrop`,
-            typeArguments,
+            target: `${config.package.typus}::airdrop::set_airdrop`,
+            typeArguments: input.typeArguments,
             arguments: [
-                tx.object(version),
-                tx.object(typusLeaderboardRegistry),
-                tx.object(key),
+                tx.object(config.version.typus),
+                tx.object(config.registry.typus.airdrop),
+                tx.object(input.key),
                 tx.makeMoveVec({ objects: [coin] }),
-                tx.pure(users),
-                tx.pure(values),
+                tx.pure(input.users),
+                tx.pure(input.values),
             ],
         });
     } else {
         tx.moveCall({
-            target: `${packageId}::airdrop::set_airdrop`,
-            typeArguments,
+            target: `${config.package.typus}::airdrop::set_airdrop`,
+            typeArguments: input.typeArguments,
             arguments: [
-                tx.object(version),
-                tx.object(typusLeaderboardRegistry),
-                tx.object(key),
-                tx.makeMoveVec({ objects: coins.map((id) => tx.object(id)) }),
-                tx.pure(users),
-                tx.pure(values),
+                tx.object(config.version.typus),
+                tx.object(config.registry.typus.airdrop),
+                tx.object(input.key),
+                tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
+                tx.pure(input.users),
+                tx.pure(input.values),
             ],
         });
     }
-
-    tx.setGasBudget(gasBudget);
 
     return tx;
 }

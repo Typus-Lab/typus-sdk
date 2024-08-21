@@ -1,28 +1,29 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
+import { TypusConfig } from "src/utils";
 
-export async function getAirdrop(input: {
-    provider: SuiClient;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusAirdropRegistry: string;
-    key: string;
-    user: string;
-}): Promise<string[]> {
+export async function getAirdrop(
+    config: TypusConfig,
+    provider: SuiClient,
+    input: {
+        key: string;
+        user: string;
+    }
+): Promise<string[]> {
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
-        target: `${input.typusPackageId}::airdrop::get_airdrop`,
+        target: `${config.package.typus}::airdrop::get_airdrop`,
         typeArguments: [],
         arguments: [
-            transactionBlock.pure(input.typusEcosystemVersion),
-            transactionBlock.pure(input.typusAirdropRegistry),
+            transactionBlock.pure(config.version.typus),
+            transactionBlock.pure(config.registry.typus.airdrop),
             transactionBlock.pure(input.key),
             transactionBlock.pure(input.user),
         ],
     });
     let results = (
-        await input.provider.devInspectTransactionBlock({
+        await provider.devInspectTransactionBlock({
             sender: "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
             transactionBlock,
         })

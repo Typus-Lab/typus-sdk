@@ -1,24 +1,25 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { TypusConfig } from "src/utils";
 
-export function getClaimAirdropTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusAirdropRegistry: string;
-    typeArguments: string[];
-    key: string;
-    user: string;
-}) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::airdrop::claim_airdrop`,
+export function getClaimAirdropTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        typeArguments: string[];
+        key: string;
+        user: string;
+    }
+) {
+    let result = tx.moveCall({
+        target: `${config.package.typus}::airdrop::claim_airdrop`,
         typeArguments: input.typeArguments,
-        arguments: [input.tx.object(input.typusEcosystemVersion), input.tx.object(input.typusAirdropRegistry), input.tx.pure(input.key)],
+        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.airdrop), tx.pure(input.key)],
     });
-    input.tx.moveCall({
-        target: `${input.typusPackageId}::utility::transfer_balance_opt`,
+    tx.moveCall({
+        target: `${config.package.typus}::utility::transfer_balance_opt`,
         typeArguments: [input.typeArguments[0]],
-        arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
+        arguments: [tx.object(result[0]), tx.pure(input.user)],
     });
 
-    return input.tx;
+    return tx;
 }
