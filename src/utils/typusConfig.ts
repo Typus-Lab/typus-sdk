@@ -1,6 +1,6 @@
 import camelcaseKeysDeep = require("camelcase-keys-deep");
-import config_mainnet from "config-mainnet.json";
-import config_testnet from "config-testnet.json";
+import config_mainnet from "../../config-mainnet.json";
+import config_testnet from "../../config-testnet.json";
 
 export class TypusConfig {
     rpcEndpoint: string;
