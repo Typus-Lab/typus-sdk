@@ -1,4 +1,5 @@
 import { TransactionBlock, TransactionObjectInput } from "@mysten/sui.js/transactions";
+import { TypusConfig } from "src/utils";
 
 /**
     entry fun upload_ids(
@@ -8,24 +9,20 @@ import { TransactionBlock, TransactionObjectInput } from "@mysten/sui.js/transac
         ctx: &TxContext,
     ) {
 */
-export function getUploadIdsTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    ids: string[];
-}) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::upload_ids`,
+export function getUploadIdsTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        ids: string[];
+    }
+) {
+    let result = tx.moveCall({
+        target: `${config.package.typus}::tails_staking::upload_ids`,
         typeArguments: [],
-        arguments: [
-            input.tx.object(input.typusEcosystemVersion),
-            input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.pure(input.ids),
-        ],
+        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.tailsStaking), tx.pure(input.ids)],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -36,24 +33,20 @@ export function getUploadIdsTx(input: {
         ctx: &TxContext,
     ) {
 */
-export function getRemoveIdsTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    count: string;
-}) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::remove_ids`,
+export function getRemoveIdsTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        count: string;
+    }
+) {
+    let result = tx.moveCall({
+        target: `${config.package.typus}::tails_staking::remove_ids`,
         typeArguments: [],
-        arguments: [
-            input.tx.object(input.typusEcosystemVersion),
-            input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.pure(input.count),
-        ],
+        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.tailsStaking), tx.pure(input.count)],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -64,24 +57,20 @@ export function getRemoveIdsTx(input: {
         ctx: &TxContext,
     ) {
 */
-export function getUploadLevelsTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    count: string;
-}) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::upload_levels`,
+export function getUploadLevelsTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        count: string;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::upload_levels`,
         typeArguments: [],
-        arguments: [
-            input.tx.object(input.typusEcosystemVersion),
-            input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.pure(input.count),
-        ],
+        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.tailsStaking), tx.pure(input.count)],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -92,24 +81,20 @@ export function getUploadLevelsTx(input: {
         ctx: &TxContext,
     ) {
 */
-export function getRemoveLevelsTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    count: string;
-}) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::remove_levels`,
+export function getRemoveLevelsTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        count: string;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::remove_levels`,
         typeArguments: [],
-        arguments: [
-            input.tx.object(input.typusEcosystemVersion),
-            input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.pure(input.count),
-        ],
+        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.tailsStaking), tx.pure(input.count)],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -121,26 +106,26 @@ export function getRemoveLevelsTx(input: {
         ctx: &TxContext,
     ) {
 */
-export function getUploadIpfsUrlsTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    level: string;
-    urls: string[][];
-}) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::upload_ipfs_urls`,
+export function getUploadIpfsUrlsTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        level: string;
+        urls: string[][];
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::upload_ipfs_urls`,
         typeArguments: [],
         arguments: [
-            input.tx.object(input.typusEcosystemVersion),
-            input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.pure(input.level),
-            input.tx.pure(input.urls),
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.tailsStaking),
+            tx.pure(input.level),
+            tx.pure(input.urls),
         ],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -151,24 +136,20 @@ export function getUploadIpfsUrlsTx(input: {
         ctx: &mut TxContext,
     ) {
 */
-export function getRemoveIpfsUrlsTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    level: string;
-}) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::remove_ipfs_urls`,
+export function getRemoveIpfsUrlsTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        level: string;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::remove_ipfs_urls`,
         typeArguments: [],
-        arguments: [
-            input.tx.object(input.typusEcosystemVersion),
-            input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.pure(input.level),
-        ],
+        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.tailsStaking), tx.pure(input.level)],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -181,28 +162,28 @@ export function getRemoveIpfsUrlsTx(input: {
         ctx: &TxContext,
     ) {
 */
-export function getUploadWebpBytesTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    number: string;
-    level: string;
-    bytes: string[];
-}) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::upload_webp_bytes`,
+export function getUploadWebpBytesTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        number: string;
+        level: string;
+        bytes: string[];
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::upload_webp_bytes`,
         typeArguments: [],
         arguments: [
-            input.tx.object(input.typusEcosystemVersion),
-            input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.pure(input.number),
-            input.tx.pure(input.level),
-            input.tx.pure(input.bytes),
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.tailsStaking),
+            tx.pure(input.number),
+            tx.pure(input.level),
+            tx.pure(input.bytes),
         ],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -214,26 +195,26 @@ export function getUploadWebpBytesTx(input: {
         ctx: &TxContext,
     ) {
 */
-export function getRemoveWebpBytesTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    number: string;
-    level: string;
-}) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::remove_webp_bytes`,
+export function getRemoveWebpBytesTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        number: string;
+        level: string;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::remove_webp_bytes`,
         typeArguments: [],
         arguments: [
-            input.tx.object(input.typusEcosystemVersion),
-            input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.pure(input.number),
-            input.tx.pure(input.level),
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.tailsStaking),
+            tx.pure(input.number),
+            tx.pure(input.level),
         ],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -245,26 +226,26 @@ export function getRemoveWebpBytesTx(input: {
         ctx: &TxContext,
     ) {
 */
-export function getUpdateTailsStakingRegistryConfigTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    index: string;
-    value: string;
-}) {
-    input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::update_tails_staking_registry_config`,
+export function getUpdateTailsStakingRegistryConfigTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        index: string;
+        value: string;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::update_tails_staking_registry_config`,
         typeArguments: [],
         arguments: [
-            input.tx.object(input.typusEcosystemVersion),
-            input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.pure(input.index),
-            input.tx.pure(input.value),
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.tailsStaking),
+            tx.pure(input.index),
+            tx.pure(input.value),
         ],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -276,31 +257,31 @@ export function getUpdateTailsStakingRegistryConfigTx(input: {
         ctx: &TxContext,
     ) {
 */
-export function getSetProfitSharingTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    typeArguments: string[];
-    levelProfits: string[];
-    coin: TransactionObjectInput;
-    amount: string;
-    tsMs: string;
-}) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::set_profit_sharing`,
+export function getSetProfitSharingTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        typeArguments: string[];
+        levelProfits: string[];
+        coin: TransactionObjectInput;
+        amount: string;
+        tsMs: string;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::set_profit_sharing`,
         typeArguments: input.typeArguments,
         arguments: [
-            input.tx.object(input.typusEcosystemVersion),
-            input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.pure(input.levelProfits),
-            input.tx.object(input.coin),
-            input.tx.pure(input.amount),
-            input.tx.pure(input.tsMs),
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.tailsStaking),
+            tx.pure(input.levelProfits),
+            tx.object(input.coin),
+            tx.pure(input.amount),
+            tx.pure(input.tsMs),
         ],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -311,23 +292,19 @@ export function getSetProfitSharingTx(input: {
         ctx: &mut TxContext,
     ) {
 */
-export function getRemoveProfitSharingTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    typeArguments: string[];
-    recipient: string;
-}) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::remove_profit_sharing`,
+export function getRemoveProfitSharingTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        typeArguments: string[];
+        recipient: string;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::remove_profit_sharing`,
         typeArguments: input.typeArguments,
-        arguments: [
-            input.tx.object(input.typusEcosystemVersion),
-            input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.pure(input.recipient),
-        ],
+        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.tailsStaking), tx.pure(input.recipient)],
     });
 
-    return input.tx;
+    return tx;
 }

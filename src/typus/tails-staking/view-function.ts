@@ -1,7 +1,7 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
-import { AddressFromBytes } from "../../utils";
+import { AddressFromBytes, TypusConfig } from "src/utils";
 
 export interface StakingInfo {
     user: string;
@@ -9,25 +9,25 @@ export interface StakingInfo {
     profits: string[];
     u64Padding: string[];
 }
-export async function getStakingInfo(input: {
-    provider: SuiClient;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    user: string;
-}): Promise<StakingInfo> {
+export async function getStakingInfo(
+    config: TypusConfig,
+    provider: SuiClient,
+    input: {
+        user: string;
+    }
+): Promise<StakingInfo> {
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
-        target: `${input.typusPackageId}::tails_staking::get_staking_info`,
+        target: `${config.package.typus}::tails_staking::get_staking_info`,
         typeArguments: [],
         arguments: [
-            transactionBlock.pure(input.typusEcosystemVersion),
-            transactionBlock.pure(input.typusTailsStakingRegistry),
+            transactionBlock.pure(config.version.typus),
+            transactionBlock.pure(config.registry.typus.tailsStaking),
             transactionBlock.pure(input.user),
         ],
     });
     let results = (
-        await input.provider.devInspectTransactionBlock({
+        await provider.devInspectTransactionBlock({
             sender: "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
             transactionBlock,
         })
@@ -59,20 +59,15 @@ export async function getStakingInfo(input: {
     }
 }
 
-export async function getLevelCounts(input: {
-    provider: SuiClient;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-}): Promise<number[]> {
+export async function getLevelCounts(config: TypusConfig, provider: SuiClient): Promise<number[]> {
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
-        target: `${input.typusPackageId}::tails_staking::get_level_counts`,
+        target: `${config.package.typus}::tails_staking::get_level_counts`,
         typeArguments: [],
-        arguments: [transactionBlock.pure(input.typusEcosystemVersion), transactionBlock.pure(input.typusTailsStakingRegistry)],
+        arguments: [transactionBlock.pure(config.version.typus), transactionBlock.pure(config.registry.typus.tailsStaking)],
     });
     let results = (
-        await input.provider.devInspectTransactionBlock({
+        await provider.devInspectTransactionBlock({
             sender: "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
             transactionBlock,
         })

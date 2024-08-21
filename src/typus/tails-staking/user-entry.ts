@@ -1,6 +1,7 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "../../constants";
 import { KIOSK_TYPE, KioskClient, KioskTransaction } from "@mysten/kiosk";
+import { TypusConfig } from "src/utils";
 /**
     public fun stake_tails(
         version: &mut Version,
@@ -12,56 +13,56 @@ import { KIOSK_TYPE, KioskClient, KioskTransaction } from "@mysten/kiosk";
         ctx: &mut TxContext,
     ) {
 */
-export async function getStakeTailsTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    kiosk: string;
-    kioskCap: string;
-    tails: string;
-    fee: string;
-    personalKioskPackageId: string | undefined;
-}) {
-    let [coin] = input.tx.splitCoins(input.tx.gas, [input.tx.pure(input.fee)]);
+export async function getStakeTailsTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        kiosk: string;
+        kioskCap: string;
+        tails: string;
+        fee: string;
+        personalKioskPackageId: string | undefined;
+    }
+) {
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.fee)]);
 
     if (input.personalKioskPackageId) {
-        const [personalKioskCap, borrow] = input.tx.moveCall({
+        const [personalKioskCap, borrow] = tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
-            arguments: [input.tx.object(input.kioskCap)],
+            arguments: [tx.object(input.kioskCap)],
         });
-        input.tx.moveCall({
-            target: `${input.typusPackageId}::tails_staking::stake_tails`,
+        tx.moveCall({
+            target: `${config.package.typus}::tails_staking::stake_tails`,
             typeArguments: [],
             arguments: [
-                input.tx.object(input.typusEcosystemVersion),
-                input.tx.object(input.typusTailsStakingRegistry),
-                input.tx.object(input.kiosk),
+                tx.object(config.version.typus),
+                tx.object(config.registry.typus.tailsStaking),
+                tx.object(input.kiosk),
                 personalKioskCap,
-                input.tx.pure(input.tails),
+                tx.pure(input.tails),
                 coin,
             ],
         });
-        input.tx.moveCall({
+        tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::return_val`,
-            arguments: [input.tx.object(input.kioskCap), personalKioskCap, borrow],
+            arguments: [tx.object(input.kioskCap), personalKioskCap, borrow],
         });
     } else {
-        input.tx.moveCall({
-            target: `${input.typusPackageId}::tails_staking::stake_tails`,
+        tx.moveCall({
+            target: `${config.package.typus}::tails_staking::stake_tails`,
             typeArguments: [],
             arguments: [
-                input.tx.object(input.typusEcosystemVersion),
-                input.tx.object(input.typusTailsStakingRegistry),
-                input.tx.object(input.kiosk),
-                input.tx.object(input.kioskCap),
-                input.tx.pure(input.tails),
+                tx.object(config.version.typus),
+                tx.object(config.registry.typus.tailsStaking),
+                tx.object(input.kiosk),
+                tx.object(input.kioskCap),
+                tx.pure(input.tails),
                 coin,
             ],
         });
     }
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -74,51 +75,51 @@ export async function getStakeTailsTx(input: {
         ctx: &TxContext,
     ) {
 */
-export async function getUnstakeTailsTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    kiosk: string;
-    kioskCap: string;
-    tails: string;
-    personalKioskPackageId: string | undefined;
-}) {
+export async function getUnstakeTailsTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        kiosk: string;
+        kioskCap: string;
+        tails: string;
+        personalKioskPackageId: string | undefined;
+    }
+) {
     if (input.personalKioskPackageId) {
-        const [personalKioskCap, borrow] = input.tx.moveCall({
+        const [personalKioskCap, borrow] = tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
-            arguments: [input.tx.object(input.kioskCap)],
+            arguments: [tx.object(input.kioskCap)],
         });
-        input.tx.moveCall({
-            target: `${input.typusPackageId}::tails_staking::unstake_tails`,
+        tx.moveCall({
+            target: `${config.package.typus}::tails_staking::unstake_tails`,
             typeArguments: [],
             arguments: [
-                input.tx.object(input.typusEcosystemVersion),
-                input.tx.object(input.typusTailsStakingRegistry),
-                input.tx.object(input.kiosk),
+                tx.object(config.version.typus),
+                tx.object(config.registry.typus.tailsStaking),
+                tx.object(input.kiosk),
                 personalKioskCap,
-                input.tx.pure(input.tails),
+                tx.pure(input.tails),
             ],
         });
-        input.tx.moveCall({
+        tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::return_val`,
-            arguments: [input.tx.object(input.kioskCap), personalKioskCap, borrow],
+            arguments: [tx.object(input.kioskCap), personalKioskCap, borrow],
         });
     } else {
-        input.tx.moveCall({
-            target: `${input.typusPackageId}::tails_staking::unstake_tails`,
+        tx.moveCall({
+            target: `${config.package.typus}::tails_staking::unstake_tails`,
             typeArguments: [],
             arguments: [
-                input.tx.object(input.typusEcosystemVersion),
-                input.tx.object(input.typusTailsStakingRegistry),
-                input.tx.object(input.kiosk),
-                input.tx.object(input.kioskCap),
-                input.tx.pure(input.tails),
+                tx.object(config.version.typus),
+                tx.object(config.registry.typus.tailsStaking),
+                tx.object(input.kiosk),
+                tx.object(input.kioskCap),
+                tx.pure(input.tails),
             ],
         });
     }
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -133,59 +134,59 @@ export async function getUnstakeTailsTx(input: {
         ctx: &mut TxContext,
     ) {
 */
-export async function getTransferTailsTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    kiosk: string;
-    kioskCap: string;
-    tails: string;
-    recipient: string;
-    fee: string;
-    personalKioskPackageId: string | undefined;
-}) {
-    let [coin] = input.tx.splitCoins(input.tx.gas, [input.tx.pure(input.fee)]);
+export async function getTransferTailsTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        kiosk: string;
+        kioskCap: string;
+        tails: string;
+        recipient: string;
+        fee: string;
+        personalKioskPackageId: string | undefined;
+    }
+) {
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.fee)]);
 
     if (input.personalKioskPackageId) {
-        const [personalKioskCap, borrow] = input.tx.moveCall({
+        const [personalKioskCap, borrow] = tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
-            arguments: [input.tx.object(input.kioskCap)],
+            arguments: [tx.object(input.kioskCap)],
         });
-        input.tx.moveCall({
-            target: `${input.typusPackageId}::tails_staking::transfer_tails`,
+        tx.moveCall({
+            target: `${config.package.typus}::tails_staking::transfer_tails`,
             typeArguments: [],
             arguments: [
-                input.tx.object(input.typusEcosystemVersion),
-                input.tx.object(input.typusTailsStakingRegistry),
-                input.tx.object(input.kiosk),
+                tx.object(config.version.typus),
+                tx.object(config.registry.typus.tailsStaking),
+                tx.object(input.kiosk),
                 personalKioskCap,
-                input.tx.pure(input.tails),
+                tx.pure(input.tails),
                 coin,
-                input.tx.pure(input.recipient),
+                tx.pure(input.recipient),
             ],
         });
-        input.tx.moveCall({
+        tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::return_val`,
-            arguments: [input.tx.object(input.kioskCap), personalKioskCap, borrow],
+            arguments: [tx.object(input.kioskCap), personalKioskCap, borrow],
         });
     } else {
-        input.tx.moveCall({
-            target: `${input.typusPackageId}::tails_staking::transfer_tails`,
+        tx.moveCall({
+            target: `${config.package.typus}::tails_staking::transfer_tails`,
             typeArguments: [],
             arguments: [
-                input.tx.object(input.typusEcosystemVersion),
-                input.tx.object(input.typusTailsStakingRegistry),
-                input.tx.object(input.kiosk),
-                input.tx.object(input.kioskCap),
-                input.tx.pure(input.tails),
+                tx.object(config.version.typus),
+                tx.object(config.registry.typus.tailsStaking),
+                tx.object(input.kiosk),
+                tx.object(input.kioskCap),
+                tx.pure(input.tails),
                 coin,
-                input.tx.pure(input.recipient),
+                tx.pure(input.recipient),
             ],
         });
     }
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -196,19 +197,14 @@ export async function getTransferTailsTx(input: {
         ctx: &TxContext,
     ) {
 */
-export async function getDailySignUpTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-}) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::daily_sign_up`,
+export async function getDailySignUpTx(config: TypusConfig, tx: TransactionBlock) {
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::daily_sign_up`,
         typeArguments: [],
-        arguments: [input.tx.object(input.typusEcosystemVersion), input.tx.object(input.typusTailsStakingRegistry), input.tx.pure(CLOCK)],
+        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.tailsStaking), tx.pure(CLOCK)],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -218,26 +214,26 @@ export async function getDailySignUpTx(input: {
         ctx: &mut TxContext,
     ): Balance<TOKEN>
 */
-export async function getClaimProfitSharingTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    typeArguments: string[];
-    user: string;
-}) {
-    let result = input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::claim_profit_sharing`,
+export async function getClaimProfitSharingTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        typeArguments: string[];
+        user: string;
+    }
+) {
+    let result = tx.moveCall({
+        target: `${config.package.typus}::tails_staking::claim_profit_sharing`,
         typeArguments: input.typeArguments,
-        arguments: [input.tx.object(input.typusEcosystemVersion), input.tx.object(input.typusTailsStakingRegistry)],
+        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.tailsStaking)],
     });
-    input.tx.moveCall({
-        target: `${input.typusPackageId}::utility::transfer_balance`,
+    tx.moveCall({
+        target: `${config.package.typus}::utility::transfer_balance`,
         typeArguments: input.typeArguments,
-        arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
+        arguments: [tx.object(result[0]), tx.pure(input.user)],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -248,26 +244,26 @@ export async function getClaimProfitSharingTx(input: {
         raw: bool,
     ) {
 */
-export async function getLevelUpTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    tails: string;
-    raw: boolean;
-}) {
-    input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::level_up`,
+export async function getLevelUpTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        tails: string;
+        raw: boolean;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::level_up`,
         typeArguments: [],
         arguments: [
-            input.tx.object(input.typusEcosystemVersion),
-            input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.pure(input.tails),
-            input.tx.pure(input.raw),
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.tailsStaking),
+            tx.pure(input.tails),
+            tx.pure(input.raw),
         ],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -280,28 +276,27 @@ export async function getLevelUpTx(input: {
         ctx: &TxContext,
     ) {
 */
-export async function getExpUpTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    typusUserRegistry: string;
-    tails: string;
-    amount: string;
-}) {
-    input.tx.moveCall({
-        target: `${input.typusPackageId}::tails_staking::exp_up`,
+export async function getExpUpTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        tails: string;
+        amount: string;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::exp_up`,
         typeArguments: [],
         arguments: [
-            input.tx.object(input.typusEcosystemVersion),
-            input.tx.object(input.typusTailsStakingRegistry),
-            input.tx.object(input.typusUserRegistry),
-            input.tx.pure(input.tails),
-            input.tx.pure(input.amount),
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.tailsStaking),
+            tx.object(config.registry.typus.user),
+            tx.pure(input.tails),
+            tx.pure(input.amount),
         ],
     });
 
-    return input.tx;
+    return tx;
 }
 /**
     entry fun exp_up_without_staking(
@@ -315,84 +310,84 @@ export async function getExpUpTx(input: {
         ctx: &TxContext,
     ) {
 */
-export async function getExpUpWithoutStakingTx(input: {
-    tx: TransactionBlock;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusTailsStakingRegistry: string;
-    typusUserRegistry: string;
-    kiosk: string;
-    kioskCap: string;
-    tails: string;
-    amount: string;
-    personalKioskPackageId: string | undefined;
-}) {
+export async function getExpUpWithoutStakingTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        kiosk: string;
+        kioskCap: string;
+        tails: string;
+        amount: string;
+        personalKioskPackageId: string | undefined;
+    }
+) {
     if (input.personalKioskPackageId) {
-        const [personalKioskCap, borrow] = input.tx.moveCall({
+        const [personalKioskCap, borrow] = tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
-            arguments: [input.tx.object(input.kioskCap)],
+            arguments: [tx.object(input.kioskCap)],
         });
-        input.tx.moveCall({
-            target: `${input.typusPackageId}::tails_staking::exp_up_without_staking`,
+        tx.moveCall({
+            target: `${config.package.typus}::tails_staking::exp_up_without_staking`,
             typeArguments: [],
             arguments: [
-                input.tx.object(input.typusEcosystemVersion),
-                input.tx.object(input.typusTailsStakingRegistry),
-                input.tx.object(input.typusUserRegistry),
-                input.tx.object(input.kiosk),
+                tx.object(config.version.typus),
+                tx.object(config.registry.typus.tailsStaking),
+                tx.object(config.registry.typus.user),
+                tx.object(input.kiosk),
                 personalKioskCap,
-                input.tx.pure(input.tails),
-                input.tx.pure(input.amount),
+                tx.pure(input.tails),
+                tx.pure(input.amount),
             ],
         });
-        input.tx.moveCall({
+        tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::return_val`,
-            arguments: [input.tx.object(input.kioskCap), personalKioskCap, borrow],
+            arguments: [tx.object(input.kioskCap), personalKioskCap, borrow],
         });
     } else {
-        input.tx.moveCall({
-            target: `${input.typusPackageId}::tails_staking::exp_up_without_staking`,
+        tx.moveCall({
+            target: `${config.package.typus}::tails_staking::exp_up_without_staking`,
             typeArguments: [],
             arguments: [
-                input.tx.object(input.typusEcosystemVersion),
-                input.tx.object(input.typusTailsStakingRegistry),
-                input.tx.object(input.typusUserRegistry),
-                input.tx.object(input.kiosk),
-                input.tx.object(input.kioskCap),
-                input.tx.pure(input.tails),
-                input.tx.pure(input.amount),
+                tx.object(config.version.typus),
+                tx.object(config.registry.typus.tailsStaking),
+                tx.object(config.registry.typus.user),
+                tx.object(input.kiosk),
+                tx.object(input.kioskCap),
+                tx.pure(input.tails),
+                tx.pure(input.amount),
             ],
         });
     }
 
-    return input.tx;
+    return tx;
 }
 
 export async function getCreateKioskAndLockNftTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
     kioskClient: KioskClient,
-    gasBudget: number,
-    nftPackageId: string,
-    policy: string,
-    nft_id: string,
-    singer: string
+    input: {
+        nft_policy: string;
+        nft_id: string;
+        user: string;
+    }
 ) {
-    let tx = new TransactionBlock();
-
     const kioskTx = new KioskTransaction({ transactionBlock: tx, kioskClient });
     kioskTx.create();
-    // @ts-ignore
-    kioskTx.lock({ itemType: `${nftPackageId}::typus_nft::Tails`, itemId: nft_id, policy, item: nft_id });
-
+    kioskTx.lock({
+        itemType: `${config.package.nft}::typus_nft::Tails`,
+        itemId: input.nft_id,
+        policy: input.nft_policy,
+        item: input.nft_id,
+    });
     const { kiosk, kioskCap } = kioskTx;
-
     if (kiosk && kioskCap) {
         tx.moveCall({
             target: `0x2::transfer::public_share_object`,
             typeArguments: [KIOSK_TYPE],
             arguments: [kiosk],
         });
-        tx.transferObjects([kioskCap], tx.pure(singer));
-        tx.setGasBudget(gasBudget);
+        tx.transferObjects([kioskCap], tx.pure(input.user));
     } else {
         console.error("Fail to Create Kiosk Tx!!");
     }

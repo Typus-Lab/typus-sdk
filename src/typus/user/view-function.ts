@@ -6,8 +6,8 @@ import { TypusConfig } from "src/utils";
 const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 export async function getUserMetadata(
     config: TypusConfig,
+    provider: SuiClient,
     input: {
-        provider: SuiClient;
         user: string;
     }
 ): Promise<string[]> {
@@ -21,7 +21,7 @@ export async function getUserMetadata(
             transactionBlock.pure(input.user),
         ],
     });
-    let results = (await input.provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
     // console.log(JSON.stringify(results));
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
