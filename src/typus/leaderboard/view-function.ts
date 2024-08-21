@@ -1,7 +1,7 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
-import { AddressFromBytes } from "../../utils";
+import { AddressFromBytes, TypusConfig } from "src/utils";
 
 export interface Rankings {
     user_score: string;
@@ -11,24 +11,24 @@ export interface Ranks {
     score: string;
     users: string[];
 }
-export async function getRankings(input: {
-    provider: SuiClient;
-    typusPackageId: string;
-    typusEcosystemVersion: string;
-    typusLeaderboardRegistry: string;
-    key: string;
-    id: string;
-    ranks: number;
-    user: string;
-    active: boolean;
-}): Promise<Rankings> {
+export async function getRankings(
+    config: TypusConfig,
+    provider: SuiClient,
+    input: {
+        key: string;
+        id: string;
+        ranks: number;
+        user: string;
+        active: boolean;
+    }
+): Promise<Rankings> {
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
-        target: `${input.typusPackageId}::leaderboard::get_rankings`,
+        target: `${config.package.typus}::leaderboard::get_rankings`,
         typeArguments: [],
         arguments: [
-            transactionBlock.pure(input.typusEcosystemVersion),
-            transactionBlock.pure(input.typusLeaderboardRegistry),
+            transactionBlock.pure(config.version.typus),
+            transactionBlock.pure(config.registry.typus.leaderboard),
             transactionBlock.pure(input.key),
             transactionBlock.pure(input.id),
             transactionBlock.pure(input.ranks),
@@ -37,7 +37,7 @@ export async function getRankings(input: {
         ],
     });
     let results = (
-        await input.provider.devInspectTransactionBlock({
+        await provider.devInspectTransactionBlock({
             sender: "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
             transactionBlock,
         })

@@ -1,4 +1,5 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { TypusConfig } from "src/utils";
 
 /**
     public fun activate_leaderboard(
@@ -11,23 +12,25 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
     )
 */
 export async function getActivateLeaderboardTx(
-    gasBudget: number,
-    packageId: string,
-    version: string,
-    typusLeaderboardRegistry: string,
-    key: string,
-    start_ts_ms: string,
-    end_ts_ms: string
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        key: string;
+        start_ts_ms: string;
+        end_ts_ms: string;
+    }
 ) {
-    let tx = new TransactionBlock();
-
     tx.moveCall({
-        target: `${packageId}::leaderboard::activate_leaderboard`,
+        target: `${config.package.typus}::leaderboard::activate_leaderboard`,
         typeArguments: [],
-        arguments: [tx.object(version), tx.object(typusLeaderboardRegistry), tx.pure(key), tx.pure(start_ts_ms), tx.pure(end_ts_ms)],
+        arguments: [
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.leaderboard),
+            tx.pure(input.key),
+            tx.pure(input.start_ts_ms),
+            tx.pure(input.end_ts_ms),
+        ],
     });
-
-    tx.setGasBudget(gasBudget);
 
     return tx;
 }
@@ -42,22 +45,18 @@ export async function getActivateLeaderboardTx(
     )
 */
 export async function getDeactivateLeaderboardTx(
-    gasBudget: number,
-    packageId: string,
-    version: string,
-    typusLeaderboardRegistry: string,
-    key: string,
-    id: string
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        key: string;
+        id: string;
+    }
 ) {
-    let tx = new TransactionBlock();
-
     tx.moveCall({
-        target: `${packageId}::leaderboard::deactivate_leaderboard`,
+        target: `${config.package.typus}::leaderboard::deactivate_leaderboard`,
         typeArguments: [],
-        arguments: [tx.object(version), tx.object(typusLeaderboardRegistry), tx.pure(key), tx.pure(id)],
+        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.leaderboard), tx.pure(input.key), tx.pure(input.id)],
     });
-
-    tx.setGasBudget(gasBudget);
 
     return tx;
 }
