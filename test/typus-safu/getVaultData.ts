@@ -13,11 +13,12 @@ const provider = new SuiClient({ url: config.rpcEndpoint });
     const user = keypair.toSuiAddress();
     console.log(user);
 
-    const share = await getVaultData(
+    const vault = await getVaultData(
         config,
         {
             provider,
             indexes: ["0", "1", "2", "3"]
         });
-    console.log(share);
+    console.log(vault);
+    // console.log(vault["2"]["shareSupply"]);
 })();

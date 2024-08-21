@@ -42,6 +42,7 @@ export interface ShareSupply {
     inactive_share: string,
     warmup_share: string,
     snapshot_share: string,
+    reward_share: string[]
 }
 export async function getVaultData(
     config: TypusConfig,
@@ -116,6 +117,7 @@ export async function getVaultData(
             inactive_share: shareSupplyArray[2],
             warmup_share: shareSupplyArray[3],
             snapshot_share: shareSupplyArray[4],
+            reward_share: shareSupplyArray.slice(5)
         };
         let u64Padding = reader.readVec((reader) => {
             return reader.read64();
@@ -185,6 +187,7 @@ export async function getShareData(
                 inactive_share: shareSupplyArray[2],
                 warmup_share: shareSupplyArray[3],
                 snapshot_share: shareSupplyArray[4],
+                reward_share: shareSupplyArray.slice(5)
             };
             return {
                 user,

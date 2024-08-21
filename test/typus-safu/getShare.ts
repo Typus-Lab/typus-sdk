@@ -12,6 +12,7 @@ const provider = new SuiClient({ url: config.rpcEndpoint });
 (async () => {
     const user = keypair.toSuiAddress();
     console.log(user);
+    // const user = "0x8b21d27b7de562512b71ced257825f61fe51f2802e2896312ddc32764ed28cd5";
 
     const share = await getShareData(
         config,
@@ -21,4 +22,5 @@ const provider = new SuiClient({ url: config.rpcEndpoint });
             indexes: ["0", "1", "2", "3"]
         });
     console.log(share);
+    // console.log(share["3"][0]["share"]);
 })();
