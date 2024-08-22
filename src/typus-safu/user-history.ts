@@ -89,11 +89,11 @@ export async function parseTxHistory(
                     }
                     break;
                 case "reduce_fund":
-                    if (Number(log[2]) + Number(log[4]) > 0) {
+                    if (Number(log[2]) > 0) {
                         txHistory.push({
                             Action: "Withdraw",
                             Index: log[0],
-                            Amount: (Number(log[2]) + Number(log[4])).toString(),
+                            Amount: Number(log[2]).toString(),
                             Exp: log[5],
                             Date: new Date(Number(event.timestampMs)),
                             txDigest: event.id.txDigest,
@@ -111,10 +111,21 @@ export async function parseTxHistory(
                             log: log,
                         });
                     }
+                    if (Number(log[4]) > 0) {
+                        txHistory.push({
+                            Action: "Claim",
+                            Index: log[0],
+                            Amount: Number(log[4]).toString(),
+                            Exp: log[5],
+                            Date: new Date(Number(event.timestampMs)),
+                            txDigest: event.id.txDigest,
+                            log: log,
+                        });
+                    }
                     break;
                 case "claim_reward":
                     txHistory.push({
-                        Action: "Claim",
+                        Action: "Harvest Options Profit",
                         Index: log[0],
                         Amount: Number(log[2]).toString(),
                         Exp: undefined,
