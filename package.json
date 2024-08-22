@@ -84,7 +84,7 @@
         "dist"
     ],
     "scripts": {
-        "build": "rm -rf dist && tsc -p tsconfig.build.json",
+        "build": "rm -rf dist && tsc -p tsconfig.build.json && tsc-alias",
         "test": "rm -rf dist && tsc -p tsconfig.build.json && ts-mocha test/test*.ts"
     },
     "repository": {
