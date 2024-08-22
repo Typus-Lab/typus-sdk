@@ -1,5 +1,4 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../constants";
 import { TypusConfig } from "src/utils";
 
 /**
@@ -28,31 +27,6 @@ import { TypusConfig } from "src/utils";
         ctx: &TxContext,
     ) {
  */
-export interface UpdateConfigRequests {
-    index: string;
-    config: {
-        oracleId?: string;
-        depositLotSize?: string;
-        bidLotSize?: string;
-        minDepositSize?: string;
-        minBidSize?: string;
-        maxDepositEntry?: string;
-        maxBidEntry?: string;
-        depositFeeBp?: string;
-        depositFeeShareBp?: string;
-        depositSharedFeePool?: string;
-        bidFeeBp?: string;
-        depositIncentiveBp?: string;
-        bidIncentiveBp?: string;
-        auctionDelayTsMs?: string;
-        auctionDurationTsMs?: string;
-        recoupDelayTsMs?: string;
-        capacity?: string;
-        leverage?: string;
-        riskLevel?: string;
-        depositIncentiveBpDivisorDecimal?: string;
-    };
-}
 export async function getUpdateConfigTx(
     config: TypusConfig,
     tx: TransactionBlock,

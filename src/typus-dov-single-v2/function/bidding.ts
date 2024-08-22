@@ -619,15 +619,16 @@ export const parseBid = (
     };
 };
 
-export const getUserBidReceipts = async (provider: SuiClient, originFramworkAddress: string, userAddress: string) => {
+export const getUserBidReceipts = async (config: TypusConfig, input: { user: string }) => {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     const bidReceipts: { [key: string]: Receipt[] } = {};
-    let result = await provider.getOwnedObjects({ owner: userAddress, options: { showType: true, showContent: true } });
+    let result = await provider.getOwnedObjects({ owner: input.user, options: { showType: true, showContent: true } });
 
     let hasNextPage = result.hasNextPage;
     let data = result.data;
     let nextCursor = result.nextCursor;
     while (hasNextPage) {
-        result = await provider.getOwnedObjects({ owner: userAddress, cursor: nextCursor, options: { showType: true, showContent: true } });
+        result = await provider.getOwnedObjects({ owner: input.user, cursor: nextCursor, options: { showType: true, showContent: true } });
         data = [...data, ...result.data];
         hasNextPage = result.hasNextPage;
         nextCursor = result.nextCursor;
@@ -648,7 +649,7 @@ export const getUserBidReceipts = async (provider: SuiClient, originFramworkAddr
             const type = typeComponents[typeComponents.length - 1];
             const typePackage = typeComponents[0];
 
-            if (type === "TypusBidReceipt" && originFramworkAddress == typePackage) {
+            if (type === "TypusBidReceipt" && config.packageOrigin.framework == typePackage) {
                 // @ts-ignore
                 const vaultIndex = content.fields.index;
                 const receipt = {
@@ -685,25 +686,21 @@ export const getUserBidReceipts = async (provider: SuiClient, originFramworkAddr
  * @param originFramworkAddress - Typus intial framwork package address.
  * @param registryAddress - Typus registry package address.
  * @param strategyPoolAddress - strategy pool package address.
- * @param userAddress - user's wallet address.
+ * @param user - user's wallet address.
  * @param prices - tokens prices (usd pair on Pyth)
  * @return User Bids.
  */
-export const fetchUserBids = async (
-    provider: SuiClient,
-    config: TypusConfig,
-    userAddress: string,
-    prices?: { [key: string]: CoinInfo }
-) => {
+export const fetchUserBids = async (config: TypusConfig, user: string, prices?: { [key: string]: CoinInfo }) => {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     const packageAddress = config.package.dovSingle;
     const registryAddress = config.registry.dov.dovSingle;
     const originFramworkAddress = config.packageOrigin.framework;
-    const strategyPoolAddress = config.object.strategyPool;
+    const strategyPool = config.object.strategyPool;
     // Step 1: get user bid receipts, vaults info, user strategies, auction data, prices
-    const vaultsInfo = await getVaults(config, provider, { indexes: [] });
-    const userReceipts = await getUserBidReceipts(provider, originFramworkAddress, userAddress);
-    const userStrategies = await getUserStrategies(provider, packageAddress, registryAddress, strategyPoolAddress, userAddress);
-    const auctions = await getAuctions(config, provider, { indexes: [] });
+    const vaultsInfo = await getVaults(config, { indexes: [] });
+    const userReceipts = await getUserBidReceipts(config, { user });
+    const userStrategies = await getUserStrategies(config, { strategyPool, user });
+    const auctions = await getAuctions(config, { indexes: [] });
     if (typeof prices === "undefined") {
         prices = await fetchPrices(provider, config);
     }
@@ -711,7 +708,7 @@ export const fetchUserBids = async (
     const { sortedBidReceipts, bidVaultsInfo } = parseBidReceipt(Object.values(vaultsInfo), userReceipts);
 
     // Step 3: get bid shares info
-    const bidShares = await getMyBids(config, provider, { receipts: sortedBidReceipts });
+    const bidShares = await getMyBids(config, { receipts: sortedBidReceipts });
 
     // Step 4: parse bids from bid shares
     const bidsFromBidShares: Bid[] = [];

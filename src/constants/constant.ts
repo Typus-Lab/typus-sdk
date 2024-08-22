@@ -1,6 +1,7 @@
 import { SuiClient } from "@mysten/sui.js/client";
 
 export const CLOCK = "0x6";
+export const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
 export const PRICE_DECIMAL = 8;
 export const TOKEN_DECIMAL = 9;

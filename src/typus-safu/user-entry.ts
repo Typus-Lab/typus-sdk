@@ -20,8 +20,8 @@ import { TypusConfig } from "src/utils";
  */
 export function getRaiseFundTx(
     config: TypusConfig,
+    tx: TransactionBlock,
     input: {
-        tx: TransactionBlock;
         typeArguments: string[];
         index: string;
         raiseCoins: string[];
@@ -35,50 +35,50 @@ export function getRaiseFundTx(
     let raiseBalance =
         input.typeArguments[0] == "0x2::sui::SUI" ||
         input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-            ? input.tx.moveCall({
+            ? tx.moveCall({
                   target: `${config.package.framework}::utils::delegate_extract_balance`,
                   typeArguments: [input.typeArguments[0]],
                   arguments: [
-                      input.tx.pure(input.user),
-                      input.tx.makeMoveVec({
+                      tx.pure(input.user),
+                      tx.makeMoveVec({
                           type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          objects: [input.tx.splitCoins(input.tx.gas, [input.tx.pure(input.raiseAmount)])],
+                          objects: [tx.splitCoins(tx.gas, [tx.pure(input.raiseAmount)])],
                       }),
-                      input.tx.pure(input.raiseAmount),
+                      tx.pure(input.raiseAmount),
                   ],
               })
-            : input.tx.moveCall({
+            : tx.moveCall({
                   target: `${config.package.framework}::utils::delegate_extract_balance`,
                   typeArguments: [input.typeArguments[0]],
                   arguments: [
-                      input.tx.pure(input.user),
-                      input.tx.makeMoveVec({
+                      tx.pure(input.user),
+                      tx.makeMoveVec({
                           type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          objects: input.raiseCoins.map((coin) => input.tx.object(coin)),
+                          objects: input.raiseCoins.map((coin) => tx.object(coin)),
                       }),
-                      input.tx.pure(input.raiseAmount),
+                      tx.pure(input.raiseAmount),
                   ],
               });
-    let result = input.tx.moveCall({
+    let result = tx.moveCall({
         target: `${config.package.safu}::safu::raise_fund`,
         typeArguments: input.typeArguments,
         arguments: [
-            input.tx.object(config.version.typus),
-            input.tx.object(config.registry.typus.leaderboard),
-            input.tx.object(config.registry.typus.user),
-            input.tx.object(config.version.safu),
-            input.tx.object(config.registry.safu.safu),
-            input.tx.pure(input.index),
-            input.tx.object(raiseBalance),
-            input.tx.pure(input.raiseFromDeactivating),
-            input.tx.pure(input.raiseFromInactive),
-            input.tx.pure(input.raiseFromReward),
-            input.tx.object(CLOCK),
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.leaderboard),
+            tx.object(config.registry.typus.user),
+            tx.object(config.version.safu),
+            tx.object(config.registry.safu.safu),
+            tx.pure(input.index),
+            tx.object(raiseBalance),
+            tx.pure(input.raiseFromDeactivating),
+            tx.pure(input.raiseFromInactive),
+            tx.pure(input.raiseFromReward),
+            tx.object(CLOCK),
         ],
     });
-    // input.tx.transferObjects([input.tx.object(result[0])], input.user);
+    // tx.transferObjects([tx.object(result[0])], input.user);
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -98,8 +98,8 @@ export function getRaiseFundTx(
  */
 export function getReduceFundTx(
     config: TypusConfig,
+    tx: TransactionBlock,
     input: {
-        tx: TransactionBlock;
         typeArguments: string[];
         index: string;
         reduceFromWarmup: string;
@@ -108,29 +108,29 @@ export function getReduceFundTx(
         user: string;
     }
 ) {
-    let result = input.tx.moveCall({
+    let result = tx.moveCall({
         target: `${config.package.safu}::safu::reduce_fund`,
         typeArguments: input.typeArguments,
         arguments: [
-            input.tx.object(config.version.typus),
-            input.tx.object(config.registry.typus.leaderboard),
-            input.tx.object(config.registry.typus.user),
-            input.tx.object(config.version.safu),
-            input.tx.object(config.registry.safu.safu),
-            input.tx.pure(input.index),
-            input.tx.pure(input.reduceFromWarmup),
-            input.tx.pure(input.reduceFromActive),
-            input.tx.pure(input.reduceFromInactive),
-            input.tx.object(CLOCK),
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.leaderboard),
+            tx.object(config.registry.typus.user),
+            tx.object(config.version.safu),
+            tx.object(config.registry.safu.safu),
+            tx.pure(input.index),
+            tx.pure(input.reduceFromWarmup),
+            tx.pure(input.reduceFromActive),
+            tx.pure(input.reduceFromInactive),
+            tx.object(CLOCK),
         ],
     });
-    input.tx.moveCall({
+    tx.moveCall({
         target: `${config.package.framework}::utils::transfer_balance`,
         typeArguments: [input.typeArguments[0]],
-        arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
+        arguments: [tx.object(result[0]), tx.pure(input.user)],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -143,25 +143,25 @@ export function getReduceFundTx(
  */
 export function getClaimRewardTx(
     config: TypusConfig,
+    tx: TransactionBlock,
     input: {
-        tx: TransactionBlock;
         typeArguments: string[];
         index: string;
         user: string;
     }
 ) {
-    let result = input.tx.moveCall({
+    let result = tx.moveCall({
         target: `${config.package.safu}::safu::claim_reward`,
         typeArguments: input.typeArguments,
-        arguments: [input.tx.object(config.version.safu), input.tx.object(config.registry.safu.safu), input.tx.pure(input.index)],
+        arguments: [tx.object(config.version.safu), tx.object(config.registry.safu.safu), tx.pure(input.index)],
     });
-    input.tx.moveCall({
+    tx.moveCall({
         target: `${config.package.framework}::utils::transfer_balance`,
         typeArguments: [input.typeArguments[0]],
-        arguments: [input.tx.object(result[0]), input.tx.pure(input.user)],
+        arguments: [tx.object(result[0]), tx.pure(input.user)],
     });
 
-    return input.tx;
+    return tx;
 }
 
 /**
@@ -178,25 +178,25 @@ export function getClaimRewardTx(
  */
 export function getSnapshotTx(
     config: TypusConfig,
+    tx: TransactionBlock,
     input: {
-        tx: TransactionBlock;
         typeArguments: string[];
         index: string;
     }
 ) {
-    let result = input.tx.moveCall({
+    let result = tx.moveCall({
         target: `${config.package.safu}::safu::snapshot`,
         typeArguments: input.typeArguments,
         arguments: [
-            input.tx.object(config.version.typus),
-            input.tx.object(config.registry.typus.leaderboard),
-            input.tx.object(config.registry.typus.user),
-            input.tx.object(config.version.safu),
-            input.tx.object(config.registry.safu.safu),
-            input.tx.pure(input.index),
-            input.tx.object(CLOCK),
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.leaderboard),
+            tx.object(config.registry.typus.user),
+            tx.object(config.version.safu),
+            tx.object(config.registry.safu.safu),
+            tx.pure(input.index),
+            tx.object(CLOCK),
         ],
     });
 
-    return input.tx;
+    return tx;
 }

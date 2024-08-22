@@ -204,7 +204,7 @@ export function getTokenNewBidTx(
             console.log("No such token exists!");
             break;
     }
-    let mfud = tx.moveCall({
+    let mToken = tx.moveCall({
         target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::mint`,
         arguments: [
             tx.object(typusTokenRegistry),
@@ -222,7 +222,7 @@ export function getTokenNewBidTx(
             tx.object(config.registry.typus.leaderboard),
             tx.object(config.registry.dov.dovSingle),
             tx.pure(input.index),
-            tx.makeMoveVec({ objects: [mfud] }),
+            tx.makeMoveVec({ objects: [mToken] }),
             tx.pure(input.size),
             tx.pure("0x6"),
         ],
@@ -268,16 +268,16 @@ export function getTokenExerciseTx(
             }),
         ],
     });
-    let mfud_coin = tx.moveCall({
+    let mToken = tx.moveCall({
         target: `0x2::coin::from_balance`,
         typeArguments: [input.typeArguments[0]],
         arguments: [tx.object(result[0])],
     });
-    let fud_coin = tx.moveCall({
+    let token = tx.moveCall({
         target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::burn`,
-        arguments: [tx.object(typusTokenRegistry), tx.object(mfud_coin)],
+        arguments: [tx.object(typusTokenRegistry), tx.object(mToken)],
     });
-    tx.transferObjects([tx.object(fud_coin)], input.user);
+    tx.transferObjects([tx.object(token)], input.user);
 
     return tx;
 }
@@ -310,16 +310,16 @@ export function getTokenRebateTx(
         typeArguments: [`0x2::balance::Balance<${input.typeArgument}>`],
         arguments: [tx.object(result[0])],
     });
-    let mfud_coin = tx.moveCall({
+    let mToken = tx.moveCall({
         target: `0x2::coin::from_balance`,
         typeArguments: [input.typeArgument],
         arguments: [tx.object(balance)],
     });
-    let fud_coin = tx.moveCall({
+    let token = tx.moveCall({
         target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::burn`,
-        arguments: [tx.object(typusTokenRegistry), tx.object(mfud_coin)],
+        arguments: [tx.object(typusTokenRegistry), tx.object(mToken)],
     });
-    tx.transferObjects([tx.object(fud_coin)], input.user);
+    tx.transferObjects([tx.object(token)], input.user);
 
     return tx;
 }

@@ -2,15 +2,15 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
 import { TypusConfig } from "src/utils";
+import { SENDER } from "src/constants";
 
-const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 export async function getUserMetadata(
     config: TypusConfig,
-    provider: SuiClient,
     input: {
         user: string;
     }
 ): Promise<string[]> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${config.package.typus}::user::get_user_metadata`,

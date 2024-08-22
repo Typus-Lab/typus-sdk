@@ -2,6 +2,7 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
 import { AddressFromBytes, TypusConfig } from "src/utils";
+import { SENDER } from "src/constants";
 
 export interface StakingInfo {
     user: string;
@@ -11,11 +12,11 @@ export interface StakingInfo {
 }
 export async function getStakingInfo(
     config: TypusConfig,
-    provider: SuiClient,
     input: {
         user: string;
     }
 ): Promise<StakingInfo> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${config.package.typus}::tails_staking::get_staking_info`,
@@ -28,7 +29,7 @@ export async function getStakingInfo(
     });
     let results = (
         await provider.devInspectTransactionBlock({
-            sender: "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            sender: SENDER,
             transactionBlock,
         })
     ).results;
@@ -59,7 +60,8 @@ export async function getStakingInfo(
     }
 }
 
-export async function getLevelCounts(config: TypusConfig, provider: SuiClient): Promise<number[]> {
+export async function getLevelCounts(config: TypusConfig): Promise<number[]> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${config.package.typus}::tails_staking::get_level_counts`,
@@ -68,7 +70,7 @@ export async function getLevelCounts(config: TypusConfig, provider: SuiClient): 
     });
     let results = (
         await provider.devInspectTransactionBlock({
-            sender: "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            sender: SENDER,
             transactionBlock,
         })
     ).results;

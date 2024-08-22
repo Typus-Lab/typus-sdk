@@ -2,8 +2,8 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
 import { AddressFromBytes, TypusConfig } from "../utils";
+import { SENDER } from "src/constants";
 
-const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 export interface Vault {
     id: string;
     depositToken: string;
@@ -15,49 +15,49 @@ export interface Vault {
     bcsPadding: string[];
 }
 export interface Info {
-    index: string,
-    round: string,
-    portfolio_vault_index: string,
-    refresh_ts_ms: string,
-    status: string,
-    lending_enabled: string,
-    price_bp: string,
-    bp_incentivised: string,
-    fixed_incentivised: string,
-    token_decimal: string,
+    index: string;
+    round: string;
+    portfolio_vault_index: string;
+    refresh_ts_ms: string;
+    status: string;
+    lending_enabled: string;
+    price_bp: string;
+    bp_incentivised: string;
+    fixed_incentivised: string;
+    token_decimal: string;
 }
 export interface Config {
-    capacity: string,
-    lot_size: string,
-    min_size: string,
-    fee_bp: string,
-    utilization_rate_bp: string,
-    point_per_hour_bp: string,
-    incentive_bp: string,
-    incentive_fixed: string,
+    capacity: string;
+    lot_size: string;
+    min_size: string;
+    fee_bp: string;
+    utilization_rate_bp: string;
+    point_per_hour_bp: string;
+    incentive_bp: string;
+    incentive_fixed: string;
 }
 export interface ShareSupply {
-    active_share: string,
-    deactivating_share: string,
-    inactive_share: string,
-    warmup_share: string,
-    snapshot_share: string,
-    reward_share: string[]
+    active_share: string;
+    deactivating_share: string;
+    inactive_share: string;
+    warmup_share: string;
+    snapshot_share: string;
+    reward_share: string[];
 }
 export async function getVaultData(
     config: TypusConfig,
     input: {
-        provider: SuiClient;
         indexes: string[];
     }
 ): Promise<{ [key: string]: Vault }> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${config.package.safu}::view_function::get_vault_data_bcs`,
         typeArguments: [],
         arguments: [transactionBlock.pure(config.registry.safu.safu), transactionBlock.pure(input.indexes)],
     });
-    let results = (await input.provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
     // console.log(JSON.stringify(results));
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
@@ -117,7 +117,7 @@ export async function getVaultData(
             inactive_share: shareSupplyArray[2],
             warmup_share: shareSupplyArray[3],
             snapshot_share: shareSupplyArray[4],
-            reward_share: shareSupplyArray.slice(5)
+            reward_share: shareSupplyArray.slice(5),
         };
         let u64Padding = reader.readVec((reader) => {
             return reader.read64();
@@ -150,11 +150,11 @@ export interface Share {
 export async function getShareData(
     config: TypusConfig,
     input: {
-        provider: SuiClient;
         user: string;
         indexes: string[];
     }
 ): Promise<{ [key: string]: Share[] }> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${config.package.safu}::view_function::get_share_data_bcs`,
@@ -165,7 +165,7 @@ export async function getShareData(
             transactionBlock.pure(input.indexes),
         ],
     });
-    let results = (await input.provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
     // console.log(JSON.stringify(results));
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
@@ -187,7 +187,7 @@ export async function getShareData(
                 inactive_share: shareSupplyArray[2],
                 warmup_share: shareSupplyArray[3],
                 snapshot_share: shareSupplyArray[4],
-                reward_share: shareSupplyArray.slice(5)
+                reward_share: shareSupplyArray.slice(5),
             };
             return {
                 user,

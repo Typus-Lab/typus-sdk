@@ -9,9 +9,9 @@ import { NETWORK } from "..";
 
 export async function mintStakeLp(
     config: TypusConfig,
+    tx: TransactionBlock,
+    pythClient: PythClient,
     input: {
-        pythClient: PythClient;
-        tx: TransactionBlock;
         lpPool: LiquidityPool;
         coins: string[];
         cTOKEN: TOKEN;
@@ -22,11 +22,11 @@ export async function mintStakeLp(
     // update pyth oracle
     const tokens = input.lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
 
-    await updatePyth(input.pythClient, input.tx, tokens);
+    await updatePyth(pythClient, tx, tokens);
     const cToken = tokenType[NETWORK][input.cTOKEN];
 
     for (let token of tokens) {
-        updateLiquidityValue(input.tx, tokenType[NETWORK][token], {
+        updateLiquidityValue(tx, tokenType[NETWORK][token], {
             version: config.version.perp,
             registry: config.registry.perp.lpPool,
             index: BigInt(0),
@@ -39,18 +39,18 @@ export async function mintStakeLp(
     var coin;
 
     if (input.cTOKEN == "SUI") {
-        [coin] = input.tx.splitCoins(input.tx.gas, [input.amount]);
+        [coin] = tx.splitCoins(tx.gas, [input.amount]);
     } else {
         const destination = input.coins.pop()!;
 
         if (input.coins.length > 0) {
-            input.tx.mergeCoins(destination, input.coins);
+            tx.mergeCoins(destination, input.coins);
         }
 
-        [coin] = input.tx.splitCoins(destination, [input.amount]);
+        [coin] = tx.splitCoins(destination, [input.amount]);
     }
 
-    const lpCoin = mintLp(input.tx, [cToken, config.token.tlp], {
+    const lpCoin = mintLp(tx, [cToken, config.token.tlp], {
         version: config.version.perp,
         registry: config.registry.perp.lpPool,
         treasuryCaps: config.object.tlpTreasuryCap,
@@ -61,7 +61,7 @@ export async function mintStakeLp(
         clock: CLOCK,
     });
 
-    stake(input.tx, config.token.tlp, {
+    stake(tx, config.token.tlp, {
         version: config.version.perp,
         registry: config.registry.perp.stakePool,
         index: BigInt(0),
@@ -70,14 +70,14 @@ export async function mintStakeLp(
         userShareId: input.userShareId ? BigInt(input.userShareId) : null,
     });
 
-    return input.tx;
+    return tx;
 }
 
 export async function unstakeBurn(
     config: TypusConfig,
+    tx: TransactionBlock,
+    pythClient: PythClient,
     input: {
-        pythClient: PythClient;
-        tx: TransactionBlock;
         lpPool: LiquidityPool;
         cTOKEN: TOKEN;
         userShareId: string;
@@ -88,12 +88,12 @@ export async function unstakeBurn(
     // update pyth oracle
     const tokens = input.lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
 
-    await updatePyth(input.pythClient, input.tx, tokens);
+    await updatePyth(pythClient, tx, tokens);
     const cToken = tokenType[NETWORK][input.cTOKEN];
     const oracle = priceInfoObjectIds[NETWORK][input.cTOKEN];
 
     for (let token of tokens) {
-        updateLiquidityValue(input.tx, tokenType[NETWORK][token], {
+        updateLiquidityValue(tx, tokenType[NETWORK][token], {
             version: config.version.perp,
             registry: config.registry.perp.lpPool,
             index: BigInt(0),
@@ -103,7 +103,7 @@ export async function unstakeBurn(
         });
     }
 
-    const lpCoin = unstake(input.tx, config.token.tlp, {
+    const lpCoin = unstake(tx, config.token.tlp, {
         version: config.version.perp,
         registry: config.registry.perp.stakePool,
         index: BigInt(0),
@@ -112,7 +112,7 @@ export async function unstakeBurn(
         unstakedShares: input.share ? BigInt(input.share) : null,
     });
 
-    const coin = burnLp(input.tx, [cToken, config.token.tlp], {
+    const coin = burnLp(tx, [cToken, config.token.tlp], {
         version: config.version.perp,
         registry: config.registry.perp.lpPool,
         treasuryCaps: config.object.tlpTreasuryCap,
@@ -123,16 +123,16 @@ export async function unstakeBurn(
         clock: CLOCK,
     });
 
-    input.tx.transferObjects([coin], input.user);
+    tx.transferObjects([coin], input.user);
 
-    return input.tx;
+    return tx;
 }
 
 export async function swap(
     config: TypusConfig,
+    tx: TransactionBlock,
+    pythClient: PythClient,
     input: {
-        pythClient: PythClient;
-        tx: TransactionBlock;
         coins: string[];
         FROM_TOKEN: TOKEN;
         TO_TOKEN: TOKEN;
@@ -140,25 +140,25 @@ export async function swap(
         user: string;
     }
 ): Promise<TransactionBlock> {
-    await updatePyth(input.pythClient, input.tx, [input.FROM_TOKEN, input.TO_TOKEN]);
+    await updatePyth(pythClient, tx, [input.FROM_TOKEN, input.TO_TOKEN]);
     const fromToken = tokenType[NETWORK][input.FROM_TOKEN];
     const toToken = tokenType[NETWORK][input.TO_TOKEN];
 
     var coin;
 
     if (input.FROM_TOKEN == "SUI") {
-        [coin] = input.tx.splitCoins(input.tx.gas, [input.amount]);
+        [coin] = tx.splitCoins(tx.gas, [input.amount]);
     } else {
         const destination = input.coins.pop()!;
 
         if (input.coins.length > 0) {
-            input.tx.mergeCoins(destination, input.coins);
+            tx.mergeCoins(destination, input.coins);
         }
 
-        [coin] = input.tx.splitCoins(destination, [input.amount]);
+        [coin] = tx.splitCoins(destination, [input.amount]);
     }
 
-    const token = _swap(input.tx, [fromToken, toToken], {
+    const token = _swap(tx, [fromToken, toToken], {
         version: config.version.perp,
         registry: config.registry.perp.lpPool,
         pythState: pythStateId[NETWORK],
@@ -170,20 +170,20 @@ export async function swap(
         minToAmount: BigInt(0),
     });
 
-    input.tx.transferObjects([token], input.user);
+    tx.transferObjects([token], input.user);
 
-    return input.tx;
+    return tx;
 }
 
 export async function unsubscribe(
     config: TypusConfig,
+    tx: TransactionBlock,
     input: {
-        tx: TransactionBlock;
         userShareId: string;
         share: string | null;
     }
 ): Promise<TransactionBlock> {
-    _unsubscribe(input.tx, config.token.tlp, {
+    _unsubscribe(tx, config.token.tlp, {
         version: config.version.perp,
         registry: config.registry.perp.stakePool,
         index: BigInt(0),
@@ -191,22 +191,22 @@ export async function unsubscribe(
         clock: CLOCK,
         unsubscribedShares: input.share ? BigInt(input.share) : null,
     });
-    return input.tx;
+    return tx;
 }
 
 export async function harvest(
     config: TypusConfig,
+    tx: TransactionBlock,
     input: {
-        tx: TransactionBlock;
         userShareId: string;
     }
 ): Promise<TransactionBlock> {
-    harvestPerUserShare(input.tx, "0x2::sui::SUI", {
+    harvestPerUserShare(tx, "0x2::sui::SUI", {
         version: config.version.perp,
         registry: config.registry.perp.stakePool,
         index: BigInt(0),
         userShareId: BigInt(input.userShareId),
         clock: CLOCK,
     });
-    return input.tx;
+    return tx;
 }

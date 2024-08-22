@@ -15,9 +15,9 @@ import { getSplitBidReceiptTx } from "../../typus-dov-single-v2/";
 
 export async function createTradingOrderWithBidReceipt(
     config: TypusConfig,
+    tx: TransactionBlock,
+    pythClient: PythClient,
     input: {
-        pythClient: PythClient;
-        tx: TransactionBlock;
         cToken: TOKEN;
         tradingToken: TOKEN;
         isLong: boolean;
@@ -32,25 +32,18 @@ export async function createTradingOrderWithBidReceipt(
     const TOKEN = input.cToken;
     const BASE_TOKEN = input.tradingToken;
 
-    await updatePyth(input.pythClient, input.tx, [TOKEN, BASE_TOKEN]);
+    await updatePyth(pythClient, tx, [TOKEN, BASE_TOKEN]);
     const cToken = tokenType[NETWORK][TOKEN];
     const bToken = tokenType[NETWORK][input.bToken];
     const baseToken = tokenType[NETWORK][BASE_TOKEN];
 
-    updateOracleWithPyth(
-        input.pythClient,
-        input.tx,
-        config.package.oracle,
-        config.oracle[BASE_TOKEN.toLocaleLowerCase()],
-        BASE_TOKEN,
-        "USDC"
-    );
+    updateOracleWithPyth(pythClient, tx, config.package.oracle, config.oracle[BASE_TOKEN.toLocaleLowerCase()], BASE_TOKEN, "USDC");
 
     // split bid receipt
     var collateralBidReceipt;
 
     if (input.share) {
-        collateralBidReceipt = getSplitBidReceiptTx(config, input.tx, {
+        collateralBidReceipt = getSplitBidReceiptTx(config, tx, {
             index: input.index,
             receipts: [input.bidReceipt],
             share: input.share,
@@ -60,7 +53,7 @@ export async function createTradingOrderWithBidReceipt(
         collateralBidReceipt = input.bidReceipt;
     }
 
-    _createTradingOrderWithBidReceipt(input.tx, [cToken, bToken, baseToken], {
+    _createTradingOrderWithBidReceipt(tx, [cToken, bToken, baseToken], {
         version: config.version.perp,
         registry: config.registry.perp.market,
         poolRegistry: config.registry.perp.lpPool,
@@ -80,63 +73,64 @@ export async function createTradingOrderWithBidReceipt(
         user: input.user,
     });
 
-    return input.tx;
+    return tx;
 }
 
 export async function reduceOptionCollateralPositionSize(
     config: TypusConfig,
+    tx: TransactionBlock,
+    pythClient: PythClient,
     input: {
-        pythClient: PythClient;
-        tx: TransactionBlock;
-        position: Position;
-        size: string | null;
+        cToken: TOKEN;
+        tradingToken: TOKEN;
+        bToken: string;
+        share: string | null;
+        index: string;
+        user: string;
+        bidReceipt: string;
     }
 ): Promise<TransactionBlock> {
-    // const TOKEN = input.cToken;
-    // const BASE_TOKEN = input.tradingToken;
+    const TOKEN = input.cToken;
+    const BASE_TOKEN = input.tradingToken;
 
-    // await updatePyth(input.pythClient, input.tx, [TOKEN, BASE_TOKEN]);
-    // const cToken = tokenType[NETWORK][TOKEN];
-    // const bToken = tokenType[NETWORK][input.bToken];
-    // const baseToken = tokenType[NETWORK][BASE_TOKEN];
+    await updatePyth(pythClient, tx, [TOKEN, BASE_TOKEN]);
+    const cToken = tokenType[NETWORK][TOKEN];
+    const bToken = tokenType[NETWORK][input.bToken];
+    const baseToken = tokenType[NETWORK][BASE_TOKEN];
 
-    // updateOracleWithPyth(input.pythClient, input.tx, config.package.oracle, config.oracle[BASE_TOKEN.toLocaleLowerCase()], BASE_TOKEN, "USDC");
+    updateOracleWithPyth(pythClient, tx, config.package.oracle, config.oracle[BASE_TOKEN.toLocaleLowerCase()], BASE_TOKEN, "USDC");
 
-    // // split bid receipt
-    // var collateralBidReceipt;
-    // if (input.share) {
-    //     collateralBidReceipt = getSplitBidReceiptTx({
-    //         tx: input.tx,
-    //         typusFrameworkOriginPackageId: config.packageOrigin.framework,
-    //         typusDovSinglePackageId: config.package.dovSingle,
-    //         typusDovSingleRegistry: config.registry.dov.dovSingle,
-    //         index: input.index,
-    //         receipts: [input.bidReceipt],
-    //         share: input.share,
-    //         recipient: input.user,
-    //     });
-    // } else {
-    //     collateralBidReceipt = input.bidReceipt;
-    // }
+    // split bid receipt
+    var collateralBidReceipt;
+    if (input.share) {
+        collateralBidReceipt = getSplitBidReceiptTx(config, tx, {
+            index: input.index,
+            receipts: [input.bidReceipt],
+            share: input.share,
+            recipient: input.user,
+        });
+    } else {
+        collateralBidReceipt = input.bidReceipt;
+    }
 
-    // _reduceOptionCollateralPositionSize(input.tx, [cToken, bToken, baseToken], {
-    //     version: config.version.perp,
-    //     registry: config.registry.perp.market,
-    //     poolRegistry: config.registry.perp.lpPool,
-    //     marketIndex: BigInt(0),
-    //     poolIndex: BigInt(0),
-    //     pythState: pythStateId[NETWORK],
-    //     oracleCToken: priceInfoObjectIds[NETWORK][TOKEN],
-    //     oracleTradingSymbol: priceInfoObjectIds[NETWORK][BASE_TOKEN],
-    //     clock: CLOCK,
-    //     typusEcosystemVersion: config.version.typus,
-    //     typusUserRegistry: config.registry.typus.user,
-    //     typusLeaderboardRegistry: config.registry.typus.leaderboard,
-    //     dovRegistry: config.registry.dov.dovSingle,
-    //     typusOracle: config.oracle[BASE_TOKEN.toLocaleLowerCase()],
-    //     positionId: BigInt(123),
-    //     orderSize: null,
-    // });
+    _reduceOptionCollateralPositionSize(tx, [cToken, bToken, baseToken], {
+        version: config.version.perp,
+        registry: config.registry.perp.market,
+        poolRegistry: config.registry.perp.lpPool,
+        marketIndex: BigInt(0),
+        poolIndex: BigInt(0),
+        pythState: pythStateId[NETWORK],
+        oracleCToken: priceInfoObjectIds[NETWORK][TOKEN],
+        oracleTradingSymbol: priceInfoObjectIds[NETWORK][BASE_TOKEN],
+        clock: CLOCK,
+        typusEcosystemVersion: config.version.typus,
+        typusUserRegistry: config.registry.typus.user,
+        typusLeaderboardRegistry: config.registry.typus.leaderboard,
+        dovRegistry: config.registry.dov.dovSingle,
+        typusOracle: config.oracle[BASE_TOKEN.toLocaleLowerCase()],
+        positionId: BigInt(123),
+        orderSize: null,
+    });
 
-    return input.tx;
+    return tx;
 }

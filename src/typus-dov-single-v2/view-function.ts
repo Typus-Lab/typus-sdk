@@ -2,8 +2,8 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
 import { AddressFromBytes, TypusConfig } from "src/utils";
+import { SENDER } from "src/constants";
 
-const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 export interface Vault {
     id: string;
     info: Info;
@@ -136,11 +136,11 @@ export interface DepositVault {
 }
 export async function getVaults(
     config: TypusConfig,
-    provider: SuiClient,
     input: {
         indexes: string[];
     }
 ): Promise<{ [key: string]: Vault }> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     let target = `${config.package.dovSingle}::tds_view_function::get_vault_data_bcs` as any;
     let transactionBlockArguments = [transactionBlock.pure(config.registry.dov.dovSingle), transactionBlock.pure(input.indexes)];
@@ -387,11 +387,11 @@ export interface Auction {
 }
 export async function getAuctions(
     config: TypusConfig,
-    provider: SuiClient,
     input: {
         indexes: string[];
     }
 ): Promise<{ [key: string]: Auction }> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     let target = `${config.package.dovSingle}::tds_view_function::get_auction_bcs` as any;
     let transactionBlockArguments = [transactionBlock.pure(config.registry.dov.dovSingle), transactionBlock.pure(input.indexes)];
@@ -464,7 +464,13 @@ export interface AuctionBid {
     feeDiscount: string;
     tsMs: string;
 }
-export async function getAuctionBids(config: TypusConfig, provider: SuiClient, input: { index: string }): Promise<AuctionBid[]> {
+export async function getAuctionBids(
+    config: TypusConfig,
+    input: {
+        index: string;
+    }
+): Promise<AuctionBid[]> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     let target = `${config.package.dovSingle}::tds_view_function::get_auction_bids_bcs` as any;
     let transactionBlockArguments = [transactionBlock.pure(config.registry.dov.dovSingle), transactionBlock.pure(input.index)];
@@ -515,12 +521,12 @@ export interface RRR {
 }
 export async function getDepositShares(
     config: TypusConfig,
-    provider: SuiClient,
     input: {
         receipts: string[];
         user: string;
     }
 ): Promise<{ depositShare: { [key: string]: DepositShare }; depositSnapshot: DepositSnapshot }> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     let target = `${config.package.dovSingle}::tds_view_function::get_deposit_shares_bcs` as any;
     let transactionBlockArguments = [
@@ -598,11 +604,11 @@ export interface BidShare {
 }
 export async function getMyBids(
     config: TypusConfig,
-    provider: SuiClient,
     input: {
         receipts: string[];
     }
 ): Promise<{ [key: string]: BidShare }> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     let target = `${config.package.dovSingle}::tds_view_function::get_my_bids_bcs` as any;
     let transactionBlockArguments = [
@@ -658,11 +664,11 @@ export async function getMyBids(
 
 export async function getRefundShares(
     config: TypusConfig,
-    provider: SuiClient,
     input: {
         typeArguments: string[];
     }
 ): Promise<{ [key: string]: string }> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     let target = `${config.package.dovSingle}::tds_view_function::get_refund_shares_bcs` as any;
     let transactionBlockArguments = [transactionBlock.pure(config.registry.dov.dovSingle)];

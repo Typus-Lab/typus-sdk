@@ -1,8 +1,26 @@
 import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
 import { assetToDecimal, typeArgToAsset } from "../constants";
+import { TypusConfig } from "src/utils";
 
-export async function getPlaygrounds(provider: SuiClient, diceRegistry: string) {
-    const playgroundIds = (await provider.getDynamicFields({ parentId: diceRegistry })).data
+export async function getPlaygrounds(
+    config: TypusConfig,
+    input: {
+        module: "tails_exp" | "combo_dice";
+    }
+) {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let registry = "";
+    switch (input.module) {
+        case "tails_exp":
+            registry = config.registry.dice.tailsExp;
+            break;
+        case "combo_dice":
+            registry = config.registry.dice.comboDice;
+            break;
+        default:
+            break;
+    }
+    const playgroundIds = (await provider.getDynamicFields({ parentId: registry })).data
         .filter((a) => a.objectType.endsWith("Playground"))
         .sort((a, b) => Number(a.name.value) - Number(b.name.value))
         .map((x) => x.objectId as string);
@@ -96,23 +114,36 @@ export interface Game {
 }
 
 export async function getHistory(
-    provider: SuiClient,
-    dicePackage: string,
-    module: "tails_exp" | "combo_dice",
-    playgrounds: Playground[]
+    config: TypusConfig,
+    input: {
+        module: "tails_exp" | "combo_dice";
+        playgrounds: Playground[];
+    }
 ): Promise<DrawDisplay[]> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let registry = "";
+    switch (input.module) {
+        case "tails_exp":
+            registry = config.registry.dice.tailsExp;
+            break;
+        case "combo_dice":
+            registry = config.registry.dice.comboDice;
+            break;
+        default:
+            break;
+    }
     const eventFilter: SuiEventFilter = {
-        MoveEventType: `${dicePackage}::${module}::Draw`,
+        MoveEventType: `${registry}::${module}::Draw`,
     };
 
     var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
     // console.log(result);
 
-    var history = await parseHistory(result.data, playgrounds);
+    var history = await parseHistory(result.data, input.playgrounds);
 
     while (result.hasNextPage && history.length <= 60) {
         result = await provider.queryEvents({ query: eventFilter, order: "descending", cursor: result.nextCursor });
-        const nextPage = await parseHistory(result.data, playgrounds);
+        const nextPage = await parseHistory(result.data, input.playgrounds);
         history = history.concat(nextPage);
     }
 
@@ -257,28 +288,28 @@ export interface DrawDisplay {
 //     return leaderBoard;
 // }
 
-export interface ProfitSharing {
-    level_profits: string[];
-    level_users: string[];
-    pool: string;
-    remaining: string;
-    total: string;
-    tokenType: string;
-}
+// export interface ProfitSharing {
+//     level_profits: string[];
+//     level_users: string[];
+//     pool: string;
+//     remaining: string;
+//     total: string;
+//     tokenType: string;
+// }
 
-export async function getProfitSharing(provider: SuiClient, diceProfitSharing: string) {
-    const object = await provider.getObject({
-        id: diceProfitSharing,
-        options: { showContent: true },
-    });
+// export async function getProfitSharing(provider: SuiClient, diceProfitSharing: string) {
+//     const object = await provider.getObject({
+//         id: diceProfitSharing,
+//         options: { showContent: true },
+//     });
 
-    // @ts-ignore
-    const type: string = object.data?.content.type;
-    const tokenType = type.split("<").at(-1)?.replace(">>", "")!;
+//     // @ts-ignore
+//     const type: string = object.data?.content.type;
+//     const tokenType = type.split("<").at(-1)?.replace(">>", "")!;
 
-    // @ts-ignore
-    const result = object.data?.content?.fields.value.fields as ProfitSharing;
-    result.tokenType = tokenType;
+//     // @ts-ignore
+//     const result = object.data?.content?.fields.value.fields as ProfitSharing;
+//     result.tokenType = tokenType;
 
-    return result;
-}
+//     return result;
+// }

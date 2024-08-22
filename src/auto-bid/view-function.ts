@@ -3,6 +3,7 @@ import { BCS, BcsReader, getSuiMoveConfig } from "@mysten/bcs";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { AddressFromBytes } from "../utils/tools";
 import { BidShare, BidVault } from "../typus-dov-single-v2/view-function";
+import { TypusConfig } from "src/utils";
 
 let bcs = new BCS(getSuiMoveConfig());
 bcs.registerStructType("StrategyV2", {
@@ -56,22 +57,27 @@ bcs.registerStructType("TypusBidReceipt", {
 });
 
 export async function getUserStrategies(
-    provider: SuiClient,
-    packageId: string,
-    registry: string,
-    strategyPool: string,
-    user: string
+    config: TypusConfig,
+    input: {
+        strategyPool: string;
+        user: string;
+    }
     // typeArguments: string[] // [D_TOKEN, B_TOKEN]
 ) {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
-    let target = `${packageId}::auto_bid::view_user_strategies` as any;
-    let transactionBlockArguments = [transactionBlock.pure(registry), transactionBlock.pure(strategyPool), transactionBlock.pure(user)];
+    let target = `${config.package.dovSingle}::auto_bid::view_user_strategies` as any;
+    let transactionBlockArguments = [
+        transactionBlock.pure(config.registry.dov.dovSingle),
+        transactionBlock.object(input.strategyPool),
+        transactionBlock.pure(input.user),
+    ];
     transactionBlock.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: user })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: input.user })).results;
 
     // @ts-ignore
     let objBCS = results[0].returnValues[0][0];
@@ -176,7 +182,8 @@ export async function getUserStrategies(
     return strategies;
 }
 
-export async function getStrategyPool(provider: SuiClient, strategyPool: string) {
+export async function getStrategyPool(config: TypusConfig, strategyPool: string) {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     // @ts-ignore
     const pool = (await provider.getObject({ id: strategyPool, options: { showContent: true } })).data?.content.fields;
     // console.log(pool);
@@ -247,7 +254,8 @@ export interface TypusBidReceipt {
     u64_padding: string[];
 }
 
-export async function getStrategies(provider: SuiClient, strategyIds: string[]) {
+export async function getStrategies(config: TypusConfig, strategyIds: string[]) {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let strategies = new Map<string, StrategyV2>();
 
     while (strategyIds.length > 0) {
@@ -265,7 +273,8 @@ export async function getStrategies(provider: SuiClient, strategyIds: string[]) 
     return strategies;
 }
 
-export async function getStrategyIds(provider: SuiClient, parentId: string) {
+export async function getStrategyIds(config: TypusConfig, parentId: string) {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     var result = await provider.getDynamicFields({
         parentId,
     });

@@ -1,11 +1,13 @@
 import { SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
 import { OracleInfo, PayoffConfig, VaultConfig } from "../view-function";
-import { assetToDecimal, typeArgToAsset } from "../../constants";
+import { assetToDecimal, typeArgToAsset } from "src/constants";
+import { TypusConfig } from "src/utils";
 
-export async function getVaultHistoryEvents(provider: SuiClient, originPackage: string, startTimeMs: number) {
+export async function getVaultHistoryEvents(config: TypusConfig, startTimeMs: number) {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     const senderFilter: SuiEventFilter = {
         MoveEventModule: {
-            package: originPackage,
+            package: config.packageOrigin.dovSingle,
             module: "typus_dov_single",
         },
     };

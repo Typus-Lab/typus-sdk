@@ -13,9 +13,9 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 export async function createTradingOrder(
     config: TypusConfig,
+    tx: TransactionBlock,
+    pythClient: PythClient,
     input: {
-        pythClient: PythClient;
-        tx: TransactionBlock;
         coins: string[];
         cToken: TOKEN;
         amount: string;
@@ -32,25 +32,25 @@ export async function createTradingOrder(
     const TOKEN = input.cToken;
     const BASE_TOKEN = input.tradingToken;
 
-    await updatePyth(input.pythClient, input.tx, [TOKEN, BASE_TOKEN]);
+    await updatePyth(pythClient, tx, [TOKEN, BASE_TOKEN]);
     const cToken = tokenType[NETWORK][TOKEN];
     const baseToken = tokenType[NETWORK][BASE_TOKEN];
 
     var coin;
 
     if (TOKEN == "SUI") {
-        [coin] = input.tx.splitCoins(input.tx.gas, [input.amount]);
+        [coin] = tx.splitCoins(tx.gas, [input.amount]);
     } else {
         const destination = input.coins.pop()!;
 
         if (input.coins.length > 0) {
-            input.tx.mergeCoins(destination, input.coins);
+            tx.mergeCoins(destination, input.coins);
         }
 
-        [coin] = input.tx.splitCoins(destination, [input.amount]);
+        [coin] = tx.splitCoins(destination, [input.amount]);
     }
 
-    _createTradingOrder(input.tx, [cToken, baseToken], {
+    _createTradingOrder(tx, [cToken, baseToken], {
         version: config.version.perp,
         registry: config.registry.perp.market,
         poolRegistry: config.registry.perp.lpPool,
@@ -72,13 +72,13 @@ export async function createTradingOrder(
         linkedPositionId: input.linkedPositionId ? BigInt(input.linkedPositionId) : null,
     });
 
-    return input.tx;
+    return tx;
 }
 
 export async function cancelTradingOrder(
     config: TypusConfig,
+    tx: TransactionBlock,
     input: {
-        tx: TransactionBlock;
         order: TradingOrder;
         user: string;
     }
@@ -86,7 +86,7 @@ export async function cancelTradingOrder(
     const cToken = "0x" + input.order.collateralToken.name;
     const BASE_TOKEN = "0x" + input.order.symbol.baseToken.name;
 
-    const coin = _cancelTradingOrder(input.tx, [cToken, BASE_TOKEN], {
+    const coin = _cancelTradingOrder(tx, [cToken, BASE_TOKEN], {
         version: config.version.perp,
         registry: config.registry.perp.market,
         marketIndex: BigInt(0),
@@ -94,16 +94,16 @@ export async function cancelTradingOrder(
         triggerPrice: input.order.triggerPrice,
     });
 
-    input.tx.transferObjects([coin], input.user);
+    tx.transferObjects([coin], input.user);
 
-    return input.tx;
+    return tx;
 }
 
 export async function increaseCollateral(
     config: TypusConfig,
+    tx: TransactionBlock,
+    pythClient: PythClient,
     input: {
-        pythClient: PythClient;
-        tx: TransactionBlock;
         coins: string[];
         amount: string;
         position: Position;
@@ -113,25 +113,25 @@ export async function increaseCollateral(
     const TOKEN = typeArgToToken(input.position.collateralToken.name);
     const BASE_TOKEN = typeArgToToken(input.position.symbol.baseToken.name);
 
-    await updatePyth(input.pythClient, input.tx, [TOKEN, BASE_TOKEN]);
+    await updatePyth(pythClient, tx, [TOKEN, BASE_TOKEN]);
     const cToken = tokenType[NETWORK][TOKEN];
     const baseToken = tokenType[NETWORK][BASE_TOKEN];
 
     var coin;
 
     if (TOKEN == "SUI") {
-        [coin] = input.tx.splitCoins(input.tx.gas, [input.amount]);
+        [coin] = tx.splitCoins(tx.gas, [input.amount]);
     } else {
         const destination = input.coins.pop()!;
 
         if (input.coins.length > 0) {
-            input.tx.mergeCoins(destination, input.coins);
+            tx.mergeCoins(destination, input.coins);
         }
 
-        [coin] = input.tx.splitCoins(destination, [input.amount]);
+        [coin] = tx.splitCoins(destination, [input.amount]);
     }
 
-    _increaseCollateral(input.tx, [cToken, baseToken], {
+    _increaseCollateral(tx, [cToken, baseToken], {
         version: config.version.perp,
         registry: config.registry.perp.market,
         poolRegistry: config.registry.perp.lpPool,
@@ -145,14 +145,14 @@ export async function increaseCollateral(
         collateral: coin,
     });
 
-    return input.tx;
+    return tx;
 }
 
 export async function releaseCollateral(
     config: TypusConfig,
+    tx: TransactionBlock,
+    pythClient: PythClient,
     input: {
-        pythClient: PythClient;
-        tx: TransactionBlock;
         position: Position;
         amount: string;
     }
@@ -161,11 +161,11 @@ export async function releaseCollateral(
     const TOKEN = typeArgToToken(input.position.collateralToken.name);
     const BASE_TOKEN = typeArgToToken(input.position.symbol.baseToken.name);
 
-    await updatePyth(input.pythClient, input.tx, [TOKEN, BASE_TOKEN]);
+    await updatePyth(pythClient, tx, [TOKEN, BASE_TOKEN]);
     const cToken = tokenType[NETWORK][TOKEN];
     const baseToken = tokenType[NETWORK][BASE_TOKEN];
 
-    const coin = _releaseCollateral(input.tx, [cToken, baseToken], {
+    const coin = _releaseCollateral(tx, [cToken, baseToken], {
         version: config.version.perp,
         registry: config.registry.perp.market,
         poolRegistry: config.registry.perp.lpPool,
@@ -179,7 +179,7 @@ export async function releaseCollateral(
         releaseAmount: BigInt(input.amount),
     });
 
-    input.tx.transferObjects([coin], input.position.user);
+    tx.transferObjects([coin], input.position.user);
 
-    return input.tx;
+    return tx;
 }

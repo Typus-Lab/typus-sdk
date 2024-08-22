@@ -2,6 +2,7 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
 import { AddressFromBytes, TypusConfig } from "src/utils";
+import { SENDER } from "src/constants";
 
 export interface Rankings {
     user_score: string;
@@ -13,7 +14,6 @@ export interface Ranks {
 }
 export async function getRankings(
     config: TypusConfig,
-    provider: SuiClient,
     input: {
         key: string;
         id: string;
@@ -22,6 +22,7 @@ export async function getRankings(
         active: boolean;
     }
 ): Promise<Rankings> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${config.package.typus}::leaderboard::get_rankings`,
@@ -38,7 +39,7 @@ export async function getRankings(
     });
     let results = (
         await provider.devInspectTransactionBlock({
-            sender: "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            sender: SENDER,
             transactionBlock,
         })
     ).results;

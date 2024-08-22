@@ -13,10 +13,11 @@ import { priceInfoObjectIds, pythStateId, PythClient, updatePyth, TypusConfig } 
 import { NETWORK } from ".";
 import { bcs } from "@mysten/bcs";
 
-export async function getLpPools(provider: SuiClient, config: TypusConfig): Promise<LiquidityPool[]> {
+export async function getLpPools(config: TypusConfig): Promise<LiquidityPool[]> {
     // const lpPoolRegistry = await Registry.fetch(provider, config.registry.LP_POOL);
     // console.log(lpPoolRegistry);
 
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     const dynamicFields = await provider.getDynamicFields({
         parentId: config.registry.perp.liquidityPool,
     });
@@ -32,7 +33,8 @@ export async function getLpPools(provider: SuiClient, config: TypusConfig): Prom
     return lpPools;
 }
 
-export async function getStakePools(provider: SuiClient, config: TypusConfig): Promise<StakePool[]> {
+export async function getStakePools(config: TypusConfig): Promise<StakePool[]> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     const dynamicFields = await provider.getDynamicFields({
         parentId: config.registry.perp.stakePool,
     });
@@ -48,7 +50,7 @@ export async function getStakePools(provider: SuiClient, config: TypusConfig): P
     return stakePools;
 }
 
-export async function getMarkets(provider: SuiClient, config: TypusConfig): Promise<Markets[]> {
+export async function getMarkets(config: TypusConfig): Promise<Markets[]> {
     // const marketRegistry = await MarketRegistry.fetch(provider, config.registry.perp.market);
     // console.log(marketRegistry);
     // MarketRegistry {
@@ -61,6 +63,7 @@ export async function getMarkets(provider: SuiClient, config: TypusConfig): Prom
     //   u64Padding: []
     // }
 
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     const dynamicFields = await provider.getDynamicFields({
         parentId: config.registry.perp.market,
     });
@@ -94,7 +97,8 @@ export async function getSymbolMarkets(provider: SuiClient, market: Markets): Pr
     return symbolMarkets;
 }
 
-export async function getUserOrders(provider: SuiClient, config: TypusConfig, user: string) {
+export async function getUserOrders(config: TypusConfig, user: string) {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let tx = new TransactionBlock();
 
     _getUserOrders(tx, {
@@ -116,7 +120,8 @@ export async function getUserOrders(provider: SuiClient, config: TypusConfig, us
     return orders;
 }
 
-export async function getUserPositions(provider: SuiClient, config: TypusConfig, user: string) {
+export async function getUserPositions(config: TypusConfig, user: string) {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let tx = new TransactionBlock();
 
     _getUserPositions(tx, {
@@ -138,7 +143,8 @@ export async function getUserPositions(provider: SuiClient, config: TypusConfig,
     return positions;
 }
 
-export async function getUserStake(provider: SuiClient, config: TypusConfig, user: string): Promise<LpUserShare[]> {
+export async function getUserStake(config: TypusConfig, user: string): Promise<LpUserShare[]> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let tx = new TransactionBlock();
 
     getUserShares(tx, {
@@ -166,14 +172,14 @@ export async function getUserStake(provider: SuiClient, config: TypusConfig, use
 }
 
 export async function getLiquidationPrice(
-    provider: SuiClient,
     config: TypusConfig,
+    pythClient: PythClient,
     input: {
-        pythClient: PythClient;
         positions: Position[];
         user: string;
     }
 ) {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let tx = new TransactionBlock();
 
     const pythTokens: string[] = [];
@@ -186,7 +192,7 @@ export async function getLiquidationPrice(
         pythTokens.push(BASE_TOKEN);
     }
 
-    await updatePyth(input.pythClient, tx, Array.from(new Set(pythTokens)));
+    await updatePyth(pythClient, tx, Array.from(new Set(pythTokens)));
 
     for (let position of input.positions) {
         // parse from Position

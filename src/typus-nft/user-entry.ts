@@ -1,5 +1,6 @@
 import { TransactionArgument, TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../constants";
+import { CLOCK } from "src/constants";
+import { TypusConfig } from "src/utils";
 
 /**
     entry fun free_mint(
@@ -8,15 +9,19 @@ import { CLOCK } from "../constants";
         ctx: &mut TxContext,
     )
 */
-export async function getMintTx(gasBudget: number, nftPackageId: string, policy: string, pool: string, whitelist_token: string) {
-    let tx = new TransactionBlock();
-
+export async function getMintTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        pool: string;
+        whitelist_token: string;
+    }
+) {
     tx.moveCall({
-        target: `${nftPackageId}::typus_nft::free_mint`,
+        target: `${config.package.nft}::typus_nft::free_mint`,
         typeArguments: [],
-        arguments: [tx.object(pool), tx.object(policy), tx.object(whitelist_token), tx.object(CLOCK)],
+        arguments: [tx.object(input.pool), tx.object(config.object.nftTransferPolicy), tx.object(input.whitelist_token), tx.object(CLOCK)],
     });
-    tx.setGasBudget(gasBudget);
 
     return tx;
 }
@@ -31,45 +36,50 @@ export async function getMintTx(gasBudget: number, nftPackageId: string, policy:
     )
 */
 export async function getMintToKioskTx(
-    gasBudget: number,
-    nftPackageId: string,
-    pool: string,
-    policy: string,
-    whitelist_token: string,
-    kiosk: string,
-    kiosk_cap: string
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        pool: string;
+        whitelist_token: string;
+        kiosk: string;
+        kiosk_cap: string;
+    }
 ) {
-    let tx = new TransactionBlock();
-
     tx.moveCall({
-        target: `${nftPackageId}::typus_nft::free_mint_into_kiosk`,
+        target: `${config.package.nft}::typus_nft::free_mint_into_kiosk`,
         typeArguments: [],
         arguments: [
-            tx.object(pool),
-            tx.object(policy),
-            tx.object(whitelist_token),
-            tx.object(kiosk),
-            tx.object(kiosk_cap),
+            tx.object(input.pool),
+            tx.object(config.object.nftTransferPolicy),
+            tx.object(input.whitelist_token),
+            tx.object(input.kiosk),
+            tx.object(input.kiosk_cap),
             tx.object(CLOCK),
         ],
     });
-    tx.setGasBudget(gasBudget);
 
     return tx;
 }
 
 /**
     public fun pay<T>(
-        policy: &mut TransferPolicy<T>,
+        config.object.nftTransferPolicy: &mut TransferPolicy<T>,
         request: &mut TransferRequest<T>,
         payment: Coin<SUI>
     )
 */
-export async function getPayRoyaltyTx(tx: TransactionBlock, nftPackageId: string, policy: string, request: TransactionArgument, coin) {
+export async function getPayRoyaltyTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        request: TransactionArgument;
+        coin: string;
+    }
+) {
     tx.moveCall({
-        target: `${nftPackageId}::royalty_rule::pay`,
-        typeArguments: [`${nftPackageId}::typus_nft::Tails`],
-        arguments: [tx.object(policy), request, coin],
+        target: `${config.package.nft}::royalty_rule::pay`,
+        typeArguments: [`${config.package.nft}::typus_nft::Tails`],
+        arguments: [tx.object(config.object.nftTransferPolicy), input.request, tx.object(input.coin)],
     });
 
     return tx;
@@ -84,30 +94,39 @@ export async function getPayRoyaltyTx(tx: TransactionBlock, nftPackageId: string
         ctx: & TxContext
     )
 */
-export async function getRequestMintTx(gasBudget: number, nftPackageId: string, pool: string, seed: string, price: string) {
-    let tx = new TransactionBlock();
-
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure(price)]);
+export async function getRequestMintTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        pool: string;
+        seed: string;
+        price: string;
+    }
+) {
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.price)]);
 
     tx.moveCall({
-        target: `${nftPackageId}::discount_mint::request_mint`,
+        target: `${config.package.nft}::discount_mint::request_mint`,
         typeArguments: [],
-        arguments: [tx.object(pool), tx.pure(seed), coin, tx.object(CLOCK)],
+        arguments: [tx.object(input.pool), tx.pure(input.seed), coin, tx.object(CLOCK)],
     });
-    tx.setGasBudget(gasBudget);
 
     return tx;
 }
 
-export async function getIsWhitelistTx(gasBudget: number, nftPackageId: string, pool: string, user: string) {
-    let tx = new TransactionBlock();
-
+export async function getIsWhitelistTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        pool: string;
+        user: string;
+    }
+) {
     tx.moveCall({
-        target: `${nftPackageId}::discount_mint::is_whitelist`,
+        target: `${config.package.nft}::discount_mint::is_whitelist`,
         typeArguments: [],
-        arguments: [tx.object(pool), tx.pure(user)],
+        arguments: [tx.object(input.pool), tx.pure(input.user)],
     });
-    tx.setGasBudget(gasBudget);
 
     return tx;
 }

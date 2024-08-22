@@ -16,7 +16,7 @@ export function getUploadIdsTx(
         ids: string[];
     }
 ) {
-    let result = tx.moveCall({
+    tx.moveCall({
         target: `${config.package.typus}::tails_staking::upload_ids`,
         typeArguments: [],
         arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.tailsStaking), tx.pure(input.ids)],
@@ -40,7 +40,7 @@ export function getRemoveIdsTx(
         count: string;
     }
 ) {
-    let result = tx.moveCall({
+    tx.moveCall({
         target: `${config.package.typus}::tails_staking::remove_ids`,
         typeArguments: [],
         arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.tailsStaking), tx.pure(input.count)],
