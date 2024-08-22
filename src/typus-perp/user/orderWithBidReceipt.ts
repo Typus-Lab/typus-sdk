@@ -48,12 +48,9 @@ export async function createTradingOrderWithBidReceipt(
 
     // split bid receipt
     var collateralBidReceipt;
+
     if (input.share) {
-        collateralBidReceipt = getSplitBidReceiptTx({
-            tx: input.tx,
-            typusFrameworkOriginPackageId: config.packageOrigin.framework,
-            typusDovSinglePackageId: config.package.dovSingle,
-            typusDovSingleRegistry: config.registry.dov.dovSingle,
+        collateralBidReceipt = getSplitBidReceiptTx(config, input.tx, {
             index: input.index,
             receipts: [input.bidReceipt],
             share: input.share,
