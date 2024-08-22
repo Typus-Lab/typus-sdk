@@ -666,6 +666,7 @@ export async function getRefundShares(
     config: TypusConfig,
     input: {
         typeArguments: string[];
+        user: string;
     }
 ): Promise<{ [key: string]: string }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
@@ -682,7 +683,7 @@ export async function getRefundShares(
     let results = (
         await provider.devInspectTransactionBlock({
             transactionBlock,
-            sender: SENDER,
+            sender: input.user,
         })
     ).results;
     let refundShares = Array.from(new Map()).reduce((map, [key, value]) => {
