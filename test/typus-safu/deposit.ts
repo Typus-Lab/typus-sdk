@@ -27,8 +27,8 @@ const provider = new SuiClient({ url: config.rpcEndpoint });
 
     let transactionBlock = new TransactionBlock();
     transactionBlock = getRaiseFundTx(
-        config, {
-        tx: transactionBlock,
+        config,
+        transactionBlock, {
         typeArguments: [cToken],
         index: "1",
         raiseCoins: coins,

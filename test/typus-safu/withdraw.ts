@@ -27,8 +27,8 @@ const provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
 
     transactionBlock = getReduceFundTx(
-        config, {
-        tx: transactionBlock,
+        config,
+        transactionBlock, {
         typeArguments: [cToken],
         index: "0",
         reduceFromWarmup: "0",

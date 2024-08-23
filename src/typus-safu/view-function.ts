@@ -3,7 +3,7 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
 import { AddressFromBytes, TypusConfig } from "src/utils";
 import { SENDER } from "src/constants";
-
+import { TypusBidReceipt } from "src/auto-bid/view-function";
 export interface Vault {
     id: string;
     depositToken: string;
@@ -49,12 +49,14 @@ export async function getVaultData(
     input: {
         indexes: string[];
     }
-): Promise<{ [key: string]: Vault }> {
+): Promise<{ [key: string]: [Vault, TypusBidReceipt | null] }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${config.package.safu}::view_function::get_vault_data_bcs`,
-        typeArguments: [],
+        typeArguments: [
+            `${config.package.framework}::vault::TypusBidReceipt`
+        ],
         arguments: [transactionBlock.pure(config.registry.safu.safu), transactionBlock.pure(input.indexes)],
     });
     let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
@@ -64,7 +66,7 @@ export async function getVaultData(
     // console.log(JSON.stringify(bytes));
     let reader = new BcsReader(new Uint8Array(bytes));
     let result: {
-        [key: string]: Vault;
+        [key: string]: [Vault, TypusBidReceipt | null];
     } = {};
     reader.readVec((reader) => {
         reader.readULEB();
@@ -126,16 +128,45 @@ export async function getVaultData(
             return reader.read8();
         });
 
-        result[info.index] = {
-            id,
-            depositToken,
-            rewardToken,
-            info,
-            config,
-            shareSupply,
-            u64Padding,
-            bcsPadding,
-        };
+        let has_bid_receipt = reader.read8() > 0;
+        if (has_bid_receipt) {
+            result[info.index] = [
+                {
+                    id,
+                    depositToken,
+                    rewardToken,
+                    info,
+                    config,
+                    shareSupply,
+                    u64Padding,
+                    bcsPadding,
+                },
+                {
+                    id: AddressFromBytes(reader.readBytes(32)),
+                    vid: AddressFromBytes(reader.readBytes(32)),
+                    index: reader.read64(),
+                    metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                    u64_padding: reader.readVec((reader) => {
+                        return reader.read64();
+                    })
+                }
+            ];
+        } else {
+            result[info.index] = [
+                {
+                    id,
+                    depositToken,
+                    rewardToken,
+                    info,
+                    config,
+                    shareSupply,
+                    u64Padding,
+                    bcsPadding,
+                },
+                null
+            ];
+        }
+
     });
 
     return result;

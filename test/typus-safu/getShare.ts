@@ -17,7 +17,6 @@ const provider = new SuiClient({ url: config.rpcEndpoint });
     const share = await getShareData(
         config,
         {
-            provider,
             user,
             indexes: ["0", "1", "2", "3"]
         });
