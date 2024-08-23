@@ -121,19 +121,23 @@ export async function getHistory(
     }
 ): Promise<DrawDisplay[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let registry = "";
+    let MoveEventType = "";
     switch (input.module) {
         case "tails_exp":
-            registry = config.registry.dice.tailsExp;
+            MoveEventType = `${config.packageOrigin.dice}::tails_exp::Draw`;
             break;
         case "combo_dice":
-            registry = config.registry.dice.comboDice;
+            if (config.rpcEndpoint.includes("mainnet")) {
+                MoveEventType = `0xdd2265bf4ee2190ec67d646ac6552bc4ef4da104af948aa8447e50e7e94a0c9f::combo_dice::Draw`;
+            } else {
+                MoveEventType = `0xf1d628b4f14f9dae42d73a6cdee9b5f80567fee323166c4ecfb124de7d4ff254::combo_dice::Draw`;
+            }
             break;
         default:
             break;
     }
     let eventFilter: SuiEventFilter = {
-        MoveEventType: `${registry}::${input.module}::Draw`,
+        MoveEventType,
     };
 
     var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
