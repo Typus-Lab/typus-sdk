@@ -1,7 +1,7 @@
 import { SuiPriceServiceConnection, SuiPythClient } from "@pythnetwork/pyth-sui-js";
 import { pythStateId, wormholeStateId, priceIDs, priceInfoObjectIds } from "./constant";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { TOKEN } from "../../constants";
+import { TOKEN } from "src/constants";
 import { ObjectId } from "@pythnetwork/pyth-sui-js/lib/client";
 
 export declare class PythClient {
@@ -12,7 +12,10 @@ export declare class PythClient {
 
 export function createPythClient(provider: any, network: "MAINNET" | "TESTNET"): PythClient {
     const client = new SuiPythClient(provider, pythStateId[network], wormholeStateId[network]);
-    const connection = network == "MAINNET"? new SuiPriceServiceConnection("https://hermes.pyth.network") : new SuiPriceServiceConnection("https://hermes-beta.pyth.network");
+    const connection =
+        network == "MAINNET"
+            ? new SuiPriceServiceConnection("https://hermes.pyth.network")
+            : new SuiPriceServiceConnection("https://hermes-beta.pyth.network");
     const pythClient = { network, client, connection };
     return pythClient;
 }

@@ -1,8 +1,8 @@
 import { SuiClient } from "@mysten/sui.js/client";
 import { BCS, BcsReader, getSuiMoveConfig } from "@mysten/bcs";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { AddressFromBytes } from "../utils/tools";
-import { BidShare, BidVault } from "../typus-dov-single-v2/view-function";
+import { AddressFromBytes } from "src/utils/tools";
+import { BidShare, BidVault } from "src/typus-dov-single-v2/view-function";
 import { TypusConfig } from "src/utils";
 
 let bcs = new BCS(getSuiMoveConfig());

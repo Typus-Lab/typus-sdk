@@ -1,6 +1,6 @@
 import camelcaseKeysDeep = require("camelcase-keys-deep");
-import config_mainnet from "../../config-mainnet.json";
-import config_testnet from "../../config-testnet.json";
+import config_mainnet from "config-mainnet.json";
+import config_testnet from "config-testnet.json";
 
 export class TypusConfig {
     rpcEndpoint: string;
@@ -109,7 +109,7 @@ export interface Token {
 }
 
 // (async () => {
-//     const { default: json } = await import("../../config-testnet.json");
+//     const { default: json } = await import("config-testnet.json");
 //     let config = TypusConfig.parse(json);
 //     console.log(config);
 //     console.log(config.rpcEndpoint);

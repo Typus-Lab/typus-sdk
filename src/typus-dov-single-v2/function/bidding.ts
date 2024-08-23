@@ -1,13 +1,13 @@
 import { AbbrStrategyName, Period, parseAssets } from "./vault";
-import { Auction, BidShare, Vault, getAuctions, getMyBids, getVaults } from "../view-function";
-import { checkNumber, countFloating, insertAt, getLatestPrice } from "../../utils";
+import { Auction, BidShare, Vault, getAuctions, getMyBids, getVaults } from "src/typus-dov-single-v2";
+import { checkNumber, countFloating, insertAt, getLatestPrice } from "src/utils";
 import { Connection, PublicKey } from "@solana/web3.js";
-import { getUserStrategies } from "../../auto-bid";
+import { getUserStrategies } from "src/auto-bid";
 import { orderBy } from "lodash";
 import { PythHttpClient, getPythClusterApiUrl, getPythProgramKeyForCluster, PythCluster, PriceData } from "@pythnetwork/client";
 import { StableCoin, getTokenName, WrappedToken } from "./token";
 import { SuiClient } from "@mysten/sui.js/client";
-import { typeArgsToAssets } from "../../constants";
+import { typeArgsToAssets } from "src/constants";
 import BigNumber from "bignumber.js";
 import { TypusConfig } from "src/utils";
 import moment from "moment";

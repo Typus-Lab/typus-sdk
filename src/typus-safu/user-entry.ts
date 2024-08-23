@@ -1,5 +1,5 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../constants";
+import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
 /**

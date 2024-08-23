@@ -7,11 +7,10 @@ import {
     reduceOptionCollateralPositionSize as _reduceOptionCollateralPositionSize,
 } from "../trading/functions";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { PythClient, updatePyth, updateOracleWithPyth, priceInfoObjectIds, pythStateId, TypusConfig } from "../../utils";
-import { tokenType, TOKEN, CLOCK } from "../../constants";
+import { PythClient, updatePyth, updateOracleWithPyth, priceInfoObjectIds, pythStateId, TypusConfig } from "src/utils";
+import { tokenType, TOKEN, CLOCK } from "src/constants";
 import { NETWORK } from "..";
-import { Position, TradingOrder } from "../position/structs";
-import { getSplitBidReceiptTx } from "../../typus-dov-single-v2/";
+import { getSplitBidReceiptTx } from "src/typus-dov-single-v2/";
 
 export async function createTradingOrderWithBidReceipt(
     config: TypusConfig,

@@ -1,5 +1,5 @@
-import { Info } from "../view-function";
-import { typeArgsToAssets } from "../../constants";
+import { Info } from "src/typus-dov-single-v2";
+import { typeArgsToAssets } from "src/constants";
 
 export const Period: { [key: number]: string } = {
     0: "daily",

@@ -1,5 +1,5 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../constants";
+import { CLOCK } from "src/constants";
 import { KIOSK_TYPE, KioskClient, KioskTransaction } from "@mysten/kiosk";
 import { TypusConfig } from "src/utils";
 /**

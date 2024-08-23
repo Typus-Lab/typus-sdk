@@ -1,10 +1,10 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { CLOCK } from "../../constants";
+import { CLOCK } from "src/constants";
 import { LiquidityPool } from "../lp-pool/structs";
 import { burnLp, mintLp, updateLiquidityValue, swap as _swap } from "../lp-pool/functions";
 import { harvestPerUserShare, stake, unstake, unsubscribe as _unsubscribe } from "../stake-pool/functions";
-import { PythClient, updatePyth, priceInfoObjectIds, pythStateId, TypusConfig } from "../../utils";
-import { tokenType, typeArgToAsset, TOKEN } from "../../constants";
+import { PythClient, updatePyth, priceInfoObjectIds, pythStateId, TypusConfig } from "src/utils";
+import { tokenType, typeArgToAsset, TOKEN } from "src/constants";
 import { NETWORK } from "..";
 
 export async function mintStakeLp(

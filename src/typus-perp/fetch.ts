@@ -7,9 +7,9 @@ import { readVecOrder, readVecPosition, readVecShares } from "./readVec";
 import { TradingOrder, Position } from "./position/structs";
 import { getUserShares } from "./stake-pool/functions";
 import { LpUserShare, StakePool } from "./stake-pool/structs";
-import { CLOCK } from "../constants";
-import { tokenType, typeArgToToken } from "../constants";
-import { priceInfoObjectIds, pythStateId, PythClient, updatePyth, TypusConfig } from "../utils";
+import { CLOCK } from "src/constants";
+import { tokenType, typeArgToToken } from "src/constants";
+import { priceInfoObjectIds, pythStateId, PythClient, updatePyth, TypusConfig } from "src/utils";
 import { NETWORK } from ".";
 import { bcs } from "@mysten/bcs";
 

@@ -4,11 +4,11 @@ import {
     increaseCollateral as _increaseCollateral,
     releaseCollateral as _releaseCollateral,
 } from "../trading/functions";
-import { CLOCK } from "../../constants";
+import { CLOCK } from "src/constants";
 import { NETWORK } from "..";
 import { Position, TradingOrder } from "../position/structs";
-import { PythClient, updatePyth, priceInfoObjectIds, pythStateId, TypusConfig } from "../../utils";
-import { tokenType, TOKEN, typeArgToToken } from "../../constants";
+import { PythClient, updatePyth, priceInfoObjectIds, pythStateId, TypusConfig } from "src/utils";
+import { tokenType, TOKEN, typeArgToToken } from "src/constants";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 export async function createTradingOrder(

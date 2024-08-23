@@ -1,7 +1,7 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
-import { AddressFromBytes, TypusConfig } from "../utils";
+import { AddressFromBytes, TypusConfig } from "src/utils";
 import { SENDER } from "src/constants";
 
 export interface Vault {
