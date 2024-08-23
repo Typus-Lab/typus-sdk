@@ -18,14 +18,14 @@ export async function getLpPools(config: TypusConfig): Promise<LiquidityPool[]> 
     // console.log(lpPoolRegistry);
 
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    const dynamicFields = await provider.getDynamicFields({
+    let dynamicFields = await provider.getDynamicFields({
         parentId: config.registry.perp.liquidityPool,
     });
 
-    const lpPools: LiquidityPool[] = [];
+    let lpPools: LiquidityPool[] = [];
 
     for (const field of dynamicFields.data) {
-        const lpPool = await LiquidityPool.fetch(provider, field.objectId);
+        let lpPool = await LiquidityPool.fetch(provider, field.objectId);
         // console.log(lpPool);
         lpPools.push(lpPool);
     }
@@ -35,14 +35,14 @@ export async function getLpPools(config: TypusConfig): Promise<LiquidityPool[]> 
 
 export async function getStakePools(config: TypusConfig): Promise<StakePool[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    const dynamicFields = await provider.getDynamicFields({
+    let dynamicFields = await provider.getDynamicFields({
         parentId: config.registry.perp.stakePool,
     });
 
-    const stakePools: StakePool[] = [];
+    let stakePools: StakePool[] = [];
 
     for (const field of dynamicFields.data) {
-        const stakePool = await StakePool.fetch(provider, field.objectId);
+        let stakePool = await StakePool.fetch(provider, field.objectId);
         // console.log(stakePool);
         stakePools.push(stakePool);
     }
@@ -64,14 +64,14 @@ export async function getMarkets(config: TypusConfig): Promise<Markets[]> {
     // }
 
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    const dynamicFields = await provider.getDynamicFields({
+    let dynamicFields = await provider.getDynamicFields({
         parentId: config.registry.perp.market,
     });
 
-    const markets: Markets[] = [];
+    let markets: Markets[] = [];
 
     for (const field of dynamicFields.data) {
-        const market = await Markets.fetch(provider, field.objectId);
+        let market = await Markets.fetch(provider, field.objectId);
         // console.log(market);
         markets.push(market);
     }
@@ -79,16 +79,16 @@ export async function getMarkets(config: TypusConfig): Promise<Markets[]> {
 }
 
 export async function getSymbolMarkets(provider: SuiClient, market: Markets): Promise<Map<string, SymbolMarket>> {
-    const symbolMarkets = new Map<string, SymbolMarket>();
+    let symbolMarkets = new Map<string, SymbolMarket>();
 
-    const dynamicFields = await provider.getDynamicFields({
+    let dynamicFields = await provider.getDynamicFields({
         parentId: market.symbolMarkets.id,
     });
 
     for (const field of dynamicFields.data) {
-        const symbolMarket = await SymbolMarket.fetch(provider, field.objectId);
+        let symbolMarket = await SymbolMarket.fetch(provider, field.objectId);
         // @ts-ignore
-        const key = field.name.value.name;
+        let key = field.name.value.name;
         // console.log(key);
         // console.log(symbolMarket);
         symbolMarkets.set(key, symbolMarket);
@@ -112,10 +112,10 @@ export async function getUserOrders(config: TypusConfig, user: string) {
     // console.log(res);
 
     // @ts-ignore
-    const returnValues = res.results[0].returnValues[0][0];
+    let returnValues = res.results[0].returnValues[0][0];
     // console.log(returnValues);
 
-    const orders: TradingOrder[] = readVecOrder(Uint8Array.from(returnValues));
+    let orders: TradingOrder[] = readVecOrder(Uint8Array.from(returnValues));
     // console.log(orders);
     return orders;
 }
@@ -135,10 +135,10 @@ export async function getUserPositions(config: TypusConfig, user: string) {
     // console.log(res);
 
     // @ts-ignore
-    const returnValues = res.results[0].returnValues[0][0];
+    let returnValues = res.results[0].returnValues[0][0];
     // console.log(returnValues);
 
-    const positions: Position[] = readVecPosition(Uint8Array.from(returnValues));
+    let positions: Position[] = readVecPosition(Uint8Array.from(returnValues));
     // console.log(positions);
     return positions;
 }
@@ -158,10 +158,10 @@ export async function getUserStake(config: TypusConfig, user: string): Promise<L
 
     if (res.results) {
         // @ts-ignore
-        const returnValues = res.results[0].returnValues[0][0];
+        let returnValues = res.results[0].returnValues[0][0];
         // console.log(returnValues);
 
-        const stake: LpUserShare[] = readVecShares(Uint8Array.from(returnValues));
+        let stake: LpUserShare[] = readVecShares(Uint8Array.from(returnValues));
         // console.log(stake);
         // console.log(stake[0].deactivatingShares);
         // console.log(stake[0].lastIncentivePriceIndex);
@@ -182,12 +182,12 @@ export async function getLiquidationPrice(
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let tx = new TransactionBlock();
 
-    const pythTokens: string[] = [];
+    let pythTokens: string[] = [];
 
     for (let position of input.positions) {
         // parse from Position
-        const TOKEN = typeArgToToken(position.collateralToken.name);
-        const BASE_TOKEN = typeArgToToken(position.symbol.baseToken.name);
+        let TOKEN = typeArgToToken(position.collateralToken.name);
+        let BASE_TOKEN = typeArgToToken(position.symbol.baseToken.name);
         pythTokens.push(TOKEN);
         pythTokens.push(BASE_TOKEN);
     }
@@ -196,11 +196,11 @@ export async function getLiquidationPrice(
 
     for (let position of input.positions) {
         // parse from Position
-        const TOKEN = typeArgToToken(position.collateralToken.name);
-        const BASE_TOKEN = typeArgToToken(position.symbol.baseToken.name);
+        let TOKEN = typeArgToToken(position.collateralToken.name);
+        let BASE_TOKEN = typeArgToToken(position.symbol.baseToken.name);
 
-        const cToken = tokenType[NETWORK][TOKEN];
-        const baseToken = tokenType[NETWORK][BASE_TOKEN];
+        let cToken = tokenType[NETWORK][TOKEN];
+        let baseToken = tokenType[NETWORK][BASE_TOKEN];
 
         getEstimatedLiquidationPrice(tx, [cToken, baseToken], {
             version: config.version.perp,
@@ -219,7 +219,7 @@ export async function getLiquidationPrice(
     let res = await provider.devInspectTransactionBlock({ sender: input.user, transactionBlock: tx });
     // console.log(res);
 
-    const prices = res.results?.slice(-input.positions.length).map((x) => bcs.u64().parse(Uint8Array.from(x.returnValues![0][0])));
+    let prices = res.results?.slice(-input.positions.length).map((x) => bcs.u64().parse(Uint8Array.from(x.returnValues![0][0])));
     // console.log(prices);
     return prices;
 }

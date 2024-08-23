@@ -20,27 +20,27 @@ export async function getPlaygrounds(
         default:
             break;
     }
-    const playgroundIds = (await provider.getDynamicFields({ parentId: registry })).data
+    let playgroundIds = (await provider.getDynamicFields({ parentId: registry })).data
         .filter((a) => a.objectType.endsWith("Playground"))
         .sort((a, b) => Number(a.name.value) - Number(b.name.value))
         .map((x) => x.objectId as string);
 
     // console.log(playgroundIds);
 
-    const objects = await provider.multiGetObjects({
+    let objects = await provider.multiGetObjects({
         ids: playgroundIds,
         options: { showContent: true },
     });
 
-    const result = objects
+    let result = objects
         // @ts-ignore
         .filter((object) => object.data?.content?.type.endsWith("Playground"))
         .map((object) => {
             // @ts-ignore
-            const fields = object.data?.content.fields;
+            let fields = object.data?.content.fields;
             // console.log(fields);
 
-            const opened_games = new Map<string, Game>();
+            let opened_games = new Map<string, Game>();
             if (fields.opened_games.fields) {
                 for (let curr of fields.opened_games.fields.contents) {
                     // console.log(curr);
@@ -49,10 +49,10 @@ export async function getPlaygrounds(
             }
             // console.log(opened_games);
 
-            const game_config = fields.game_config.fields as GameConfig;
+            let game_config = fields.game_config.fields as GameConfig;
             // console.log(game_config);
 
-            const playground: Playground = {
+            let playground: Playground = {
                 id: fields.id.id,
                 house_whitelist: fields.house_whitelist,
                 public_key: fields.public_key,
@@ -132,7 +132,7 @@ export async function getHistory(
         default:
             break;
     }
-    const eventFilter: SuiEventFilter = {
+    let eventFilter: SuiEventFilter = {
         MoveEventType: `${registry}::${input.module}::Draw`,
     };
 
@@ -143,7 +143,7 @@ export async function getHistory(
 
     while (result.hasNextPage && history.length <= 60) {
         result = await provider.queryEvents({ query: eventFilter, order: "descending", cursor: result.nextCursor });
-        const nextPage = await parseHistory(result.data, input.playgrounds);
+        let nextPage = await parseHistory(result.data, input.playgrounds);
         history = history.concat(nextPage);
     }
 
@@ -151,18 +151,18 @@ export async function getHistory(
 }
 
 export async function parseHistory(datas, playgrounds: Playground[]): Promise<DrawDisplay[]> {
-    const result = datas.map((event) => {
-        const drawEvent = event.parsedJson as DrawEvent;
+    let result = datas.map((event) => {
+        let drawEvent = event.parsedJson as DrawEvent;
         drawEvent.timestampMs = event.timestampMs;
 
-        const playground = playgrounds[Number(drawEvent.index)];
+        let playground = playgrounds[Number(drawEvent.index)];
 
-        const coinType = "0x" + playground.stake_token;
-        const asset = typeArgToAsset(coinType);
-        const decimal = assetToDecimal(asset)!;
+        let coinType = "0x" + playground.stake_token;
+        let asset = typeArgToAsset(coinType);
+        let decimal = assetToDecimal(asset)!;
 
-        const guess_1 = (drawEvent.larger_than_1 ? `> ` : `< `) + `${Number(drawEvent.guess_1) / 100}`;
-        const guess_2 = (drawEvent.larger_than_2 ? `> ` : `< `) + `${Number(drawEvent.guess_2) / 100}`;
+        let guess_1 = (drawEvent.larger_than_1 ? `> ` : `< `) + `${Number(drawEvent.guess_1) / 100}`;
+        let guess_2 = (drawEvent.larger_than_2 ? `> ` : `< `) + `${Number(drawEvent.guess_2) / 100}`;
         var result_1 = `${Number(drawEvent.answer_1) / 100}`;
         switch (drawEvent.result_1) {
             case "0":
@@ -188,7 +188,7 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
                 break;
         }
 
-        const stake_amount = Number(drawEvent.stake_amount) / 10 ** decimal;
+        let stake_amount = Number(drawEvent.stake_amount) / 10 ** decimal;
         let amount;
         if (asset == "FUD") {
             amount = `${stake_amount / 1000000}m`;
@@ -196,10 +196,10 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
             amount = stake_amount;
         }
 
-        const exp = Number(drawEvent.exp) | Number(drawEvent.exp_amount);
+        let exp = Number(drawEvent.exp) | Number(drawEvent.exp_amount);
         // console.log(drawEvent);
 
-        const display: DrawDisplay = {
+        let display: DrawDisplay = {
             game_id: drawEvent.game_id,
             player: drawEvent.player,
             guess_1,
@@ -212,7 +212,7 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
         };
 
         if (drawEvent.reward) {
-            const reward = Number(drawEvent.reward) / 10 ** decimal;
+            let reward = Number(drawEvent.reward) / 10 ** decimal;
             if (asset == "FUD") {
                 display.reward = `${reward / 1000000}m ${asset}`;
             } else {
@@ -298,17 +298,17 @@ export interface DrawDisplay {
 // }
 
 // export async function getProfitSharing(provider: SuiClient, diceProfitSharing: string) {
-//     const object = await provider.getObject({
+//     let object = await provider.getObject({
 //         id: diceProfitSharing,
 //         options: { showContent: true },
 //     });
 
 //     // @ts-ignore
-//     const type: string = object.data?.content.type;
-//     const tokenType = type.split("<").at(-1)?.replace(">>", "")!;
+//     let type: string = object.data?.content.type;
+//     let tokenType = type.split("<").at(-1)?.replace(">>", "")!;
 
 //     // @ts-ignore
-//     const result = object.data?.content?.fields.value.fields as ProfitSharing;
+//     let result = object.data?.content?.fields.value.fields as ProfitSharing;
 //     result.tokenType = tokenType;
 
 //     return result;

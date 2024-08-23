@@ -7,13 +7,13 @@ import { TypusConfig } from "src/utils";
 import mnemonic from "../../../../mnemonic.json";
 
 // Get the Stable Hermes service URL from https://docs.pyth.network/price-feeds/api-instances-and-providers/hermes
-const connection = new SuiPriceServiceConnection("https://hermes-beta.pyth.network");
+let connection = new SuiPriceServiceConnection("https://hermes-beta.pyth.network");
 
-const config = TypusConfig.default("TESTNET");
+let config = TypusConfig.default("TESTNET");
 
-const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+let keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 
-const priceIDs = [
+let priceIDs = [
     // You can find the IDs of prices at https://pyth.network/developers/price-feed-ids
     // "0xf9c0172ba10dfa4d19088d94f5bf61d3b54d5bd7483a322a982e1373ee8ea31b", // BTC/USD price ID
     "0x41f3625971ca2ed2263e78573fe5ce23e13d2558ed3f2e47ab0f84fb9e7ae722", // USDC
@@ -25,31 +25,29 @@ const priceIDs = [
     "0xeacabc6304d11fc10a757f63286ef44415d8e91b7a1a525ae94a7ec9398b73f3", // SCA
 ];
 
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
+let provider = new SuiClient({ url: config.rpcEndpoint });
 
 // Get the state IDs of the Pyth and Wormhole contracts from
 // https://docs.pyth.network/price-feeds/contract-addresses/sui
-const pythStateId = "0x243759059f4c3111179da5878c12f68d612c21a8d54d85edc86164bb18be1c7c";
-const wormholeStateId = "0x31358d198147da50db32eda2562951d53973a0c0ad5ed738e9b17d88b213d790";
+let pythStateId = "0x243759059f4c3111179da5878c12f68d612c21a8d54d85edc86164bb18be1c7c";
+let wormholeStateId = "0x31358d198147da50db32eda2562951d53973a0c0ad5ed738e9b17d88b213d790";
 
 (async () => {
     // @ts-ignore
-    const client = new SuiPythClient(provider, pythStateId, wormholeStateId);
-    const tx = new TransactionBlock();
+    let client = new SuiPythClient(provider, pythStateId, wormholeStateId);
+    let tx = new TransactionBlock();
 
-    const priceFeedUpdateData = await connection.getPriceFeedsUpdateData(priceIDs);
+    let priceFeedUpdateData = await connection.getPriceFeedsUpdateData(priceIDs);
 
-    const pythPackageId = await client.getPythPackageId();
+    let pythPackageId = await client.getPythPackageId();
     console.log("Pyth package ID:", pythPackageId);
 
     // @ts-ignore
-    // const priceInfoObjectIds = await client.updatePriceFeeds(tx, priceFeedUpdateData, priceIDs);
+    // letpriceInfoObjectIds = await client.updatePriceFeeds(tx, priceFeedUpdateData, priceIDs);
 
-    const priceInfoObjectIds = await client.createPriceFeed(tx, priceFeedUpdateData);
+    let priceInfoObjectIds = await client.createPriceFeed(tx, priceFeedUpdateData);
 
-    const res = await provider.signAndExecuteTransactionBlock({
+    let res = await provider.signAndExecuteTransactionBlock({
         signer: keypair,
         transactionBlock: tx,
         options: {

@@ -20,10 +20,10 @@ export async function mintStakeLp(
     }
 ): Promise<TransactionBlock> {
     // update pyth oracle
-    const tokens = input.lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
+    let tokens = input.lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
 
     await updatePyth(pythClient, tx, tokens);
-    const cToken = tokenType[NETWORK][input.cTOKEN];
+    let cToken = tokenType[NETWORK][input.cTOKEN];
 
     for (let token of tokens) {
         updateLiquidityValue(tx, tokenType[NETWORK][token], {
@@ -41,7 +41,7 @@ export async function mintStakeLp(
     if (input.cTOKEN == "SUI") {
         [coin] = tx.splitCoins(tx.gas, [input.amount]);
     } else {
-        const destination = input.coins.pop()!;
+        let destination = input.coins.pop()!;
 
         if (input.coins.length > 0) {
             tx.mergeCoins(destination, input.coins);
@@ -50,7 +50,7 @@ export async function mintStakeLp(
         [coin] = tx.splitCoins(destination, [input.amount]);
     }
 
-    const lpCoin = mintLp(tx, [cToken, config.token.tlp], {
+    let lpCoin = mintLp(tx, [cToken, config.token.tlp], {
         version: config.version.perp,
         registry: config.registry.perp.lpPool,
         treasuryCaps: config.object.tlpTreasuryCap,
@@ -86,11 +86,11 @@ export async function unstakeBurn(
     }
 ): Promise<TransactionBlock> {
     // update pyth oracle
-    const tokens = input.lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
+    let tokens = input.lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
 
     await updatePyth(pythClient, tx, tokens);
-    const cToken = tokenType[NETWORK][input.cTOKEN];
-    const oracle = priceInfoObjectIds[NETWORK][input.cTOKEN];
+    let cToken = tokenType[NETWORK][input.cTOKEN];
+    let oracle = priceInfoObjectIds[NETWORK][input.cTOKEN];
 
     for (let token of tokens) {
         updateLiquidityValue(tx, tokenType[NETWORK][token], {
@@ -103,7 +103,7 @@ export async function unstakeBurn(
         });
     }
 
-    const lpCoin = unstake(tx, config.token.tlp, {
+    let lpCoin = unstake(tx, config.token.tlp, {
         version: config.version.perp,
         registry: config.registry.perp.stakePool,
         index: BigInt(0),
@@ -112,7 +112,7 @@ export async function unstakeBurn(
         unstakedShares: input.share ? BigInt(input.share) : null,
     });
 
-    const coin = burnLp(tx, [cToken, config.token.tlp], {
+    let coin = burnLp(tx, [cToken, config.token.tlp], {
         version: config.version.perp,
         registry: config.registry.perp.lpPool,
         treasuryCaps: config.object.tlpTreasuryCap,
@@ -141,15 +141,15 @@ export async function swap(
     }
 ): Promise<TransactionBlock> {
     await updatePyth(pythClient, tx, [input.FROM_TOKEN, input.TO_TOKEN]);
-    const fromToken = tokenType[NETWORK][input.FROM_TOKEN];
-    const toToken = tokenType[NETWORK][input.TO_TOKEN];
+    let fromToken = tokenType[NETWORK][input.FROM_TOKEN];
+    let toToken = tokenType[NETWORK][input.TO_TOKEN];
 
     var coin;
 
     if (input.FROM_TOKEN == "SUI") {
         [coin] = tx.splitCoins(tx.gas, [input.amount]);
     } else {
-        const destination = input.coins.pop()!;
+        let destination = input.coins.pop()!;
 
         if (input.coins.length > 0) {
             tx.mergeCoins(destination, input.coins);
@@ -158,7 +158,7 @@ export async function swap(
         [coin] = tx.splitCoins(destination, [input.amount]);
     }
 
-    const token = _swap(tx, [fromToken, toToken], {
+    let token = _swap(tx, [fromToken, toToken], {
         version: config.version.perp,
         registry: config.registry.perp.lpPool,
         pythState: pythStateId[NETWORK],

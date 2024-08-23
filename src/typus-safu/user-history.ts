@@ -7,16 +7,16 @@ export async function getUserEvents(
     sender: string,
     cursor?: EventId | null
 ): Promise<[SuiEvent[], EventId | null | undefined]> {
-    const senderFilter: SuiEventFilter = {
+    let senderFilter: SuiEventFilter = {
         Sender: sender,
     };
 
     var hasNextPage = true;
 
-    const datas: SuiEvent[] = [];
+    let datas: SuiEvent[] = [];
 
     while (hasNextPage) {
-        const result = await provider.queryEvents({
+        let result = await provider.queryEvents({
             query: senderFilter,
             order: "ascending",
             cursor,
@@ -48,7 +48,7 @@ export async function parseTxHistory(
     datas: Array<any>,
     originPackage: string // safu package
 ): Promise<Array<TxHistory>> {
-    const results = await datas
+    let results = await datas
         .filter((event) => {
             return event.packageId == originPackage;
         })
@@ -64,14 +64,14 @@ export async function parseTxHistory(
             let txHistory: TxHistory[] = await promise;
             // console.log(event);
 
-            const action = event.parsedJson!.action;
-            const log = event.parsedJson!.log;
+            let action = event.parsedJson!.action;
+            let log = event.parsedJson!.log;
             // skip the event without tokenType
             if (event.parsedJson!.bcs_padding.length > 0) {
-                const reader = new BcsReader(new Uint8Array(event.parsedJson!.bcs_padding[0]));
-                const Token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
-                const asset = typeArgToAsset(Token);
-                const decimal = assetToDecimal(asset);
+                let reader = new BcsReader(new Uint8Array(event.parsedJson!.bcs_padding[0]));
+                let Token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+                let asset = typeArgToAsset(Token);
+                let decimal = assetToDecimal(asset);
                 // console.log(asset, decimal);
 
                 switch (action) {
@@ -168,8 +168,8 @@ export function getDepositorCashFlows(userHistory: TxHistory[]) {
     let depositorCashFlows = new Map<string, DepositorCashFlow>();
 
     for (let history of userHistory) {
-        const index = history.Index!;
-        const [amount, token] = [history.Amount, history.Token];
+        let index = history.Index!;
+        let [amount, token] = [history.Amount, history.Token];
         if (history.Action! == "Harvest Options Profit") {
             if (depositorCashFlows.has(index)) {
                 let depositorCashFlow = depositorCashFlows.get(index)!;

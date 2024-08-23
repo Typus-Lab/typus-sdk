@@ -60,7 +60,7 @@
 //     if (step) {
 //         depositorRequestData.timeRange.step = step;
 //     }
-//     const jsonData = JSON.stringify(depositorRequestData);
+//     let jsonData = JSON.stringify(depositorRequestData);
 
 //     let response = await fetch(apiUrl, {
 //         method: "POST",
@@ -86,7 +86,7 @@
 //             })
 //             .filter((element) => element.score != 0);
 
-//         const userScoreMap: { [key: string]: number } = leader_board.reduce((map, obj) => {
+//         let userScoreMap: { [key: string]: number } = leader_board.reduce((map, obj) => {
 //             if (map[obj.user]) {
 //                 map[obj.user] += obj.score;
 //             } else {
@@ -95,7 +95,7 @@
 //             return map;
 //         }, {});
 
-//         const result: LeaderBoard[] = Object.entries(userScoreMap).map(([user, score]) => ({ user, score }));
+//         let result: LeaderBoard[] = Object.entries(userScoreMap).map(([user, score]) => ({ user, score }));
 //         result.sort((a, b) => b.score - a.score);
 //         // console.log(result);
 //         return result;
@@ -137,7 +137,7 @@
 //     if (end) {
 //         bidderRequestData.timeRange.end = end;
 //     }
-//     const jsonData = JSON.stringify(bidderRequestData);
+//     let jsonData = JSON.stringify(bidderRequestData);
 
 //     let response = await fetch(apiUrl, {
 //         method: "POST",
@@ -167,7 +167,7 @@
 //             })
 //             .filter((element) => element.score != 0);
 
-//         const userScoreMap: { [key: string]: number } = leader_board.reduce((map, obj) => {
+//         let userScoreMap: { [key: string]: number } = leader_board.reduce((map, obj) => {
 //             if (map[obj.user]) {
 //                 map[obj.user] += obj.score;
 //             } else {
@@ -176,7 +176,7 @@
 //             return map;
 //         }, {});
 
-//         const result: LeaderBoard[] = Object.entries(userScoreMap).map(([user, score]) => ({ user, score }));
+//         let result: LeaderBoard[] = Object.entries(userScoreMap).map(([user, score]) => ({ user, score }));
 //         result.sort((a, b) => b.score - a.score);
 //         // console.log(result);
 //         return result;
@@ -209,11 +209,11 @@ const headers = {
 };
 
 export async function getExpLeaderBoard(startTimestamp: string, endTimestamp?: string): Promise<ExpLeaderBoard[]> {
-    const apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
+    let apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
 
-    const _endTimestamp = endTimestamp ? endTimestamp : "9999999999";
+    let _endTimestamp = endTimestamp ? endTimestamp : "9999999999";
 
-    const requestData = {
+    let requestData = {
         sqlQuery: {
             // sql: `SELECT S.distinct_id AS owner, SUM(E.exp_earn) AS total_exp_earn
             //         FROM ExpUp E
@@ -240,7 +240,7 @@ export async function getExpLeaderBoard(startTimestamp: string, endTimestamp?: s
         },
     };
 
-    const jsonData = JSON.stringify(requestData);
+    let jsonData = JSON.stringify(requestData);
 
     let response = await fetch(apiUrl, {
         method: "POST",
@@ -254,6 +254,6 @@ export async function getExpLeaderBoard(startTimestamp: string, endTimestamp?: s
 }
 
 // (async () => {
-//     const res1 = await getExpLeaderBoard("0");
+//     let res1 = await getExpLeaderBoard("0");
 //     console.log(res1);
 // })();

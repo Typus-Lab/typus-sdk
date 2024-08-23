@@ -1,18 +1,18 @@
 import { getVaultHistoryFromDB, VaultHistory } from "src/typus-dov-single-v2";
 
-// const provider = new SuiClient({
+// let provider = new SuiClient({
 //     url: config.rpcEndpoint,
 // });
 
 (async () => {
-    // const datas = await getVaultHistoryEvents(provider, config.packageOrigin.dovSingle, 1702278000000);
-    // const groupEvents = await parseGroupEvents(datas);
-    // const vaultHistory = await parseVaultHistory(groupEvents);
+    // letdatas = await getVaultHistoryEvents(provider, config.packageOrigin.dovSingle, 1702278000000);
+    // letgroupEvents = await parseGroupEvents(datas);
+    // letvaultHistory = await parseVaultHistory(groupEvents);
 
-    const index = undefined;
-    const startTs = "1708300420000";
-    const endTs = "1708340420000";
-    const vaultHistory = await getVaultHistoryFromDB(index, startTs, endTs);
+    let index = undefined;
+    let startTs = "1708300420000";
+    let endTs = "1708340420000";
+    let vaultHistory = await getVaultHistoryFromDB(index, startTs, endTs);
     console.log(vaultHistory);
 
     // writeResultToJson(vaultHistory, "vaultHistory.json");
@@ -21,9 +21,9 @@ import { getVaultHistoryFromDB, VaultHistory } from "src/typus-dov-single-v2";
 import * as fs from "fs";
 
 function writeResultToJson(result: Map<string, Map<string, VaultHistory | undefined>>, filePath: string): void {
-    const resultObject: { [key: string]: { [key: string]: VaultHistory | undefined } } = {};
+    let resultObject: { [key: string]: { [key: string]: VaultHistory | undefined } } = {};
     result.forEach((innerMap, outerKey) => {
-        const innerObject: { [key: string]: VaultHistory | undefined } = {};
+        let innerObject: { [key: string]: VaultHistory | undefined } = {};
 
         innerMap.forEach((vaultHistory, innerKey) => {
             innerObject[innerKey] = vaultHistory;
@@ -31,6 +31,6 @@ function writeResultToJson(result: Map<string, Map<string, VaultHistory | undefi
 
         resultObject[outerKey] = innerObject;
     });
-    const jsonString = JSON.stringify(resultObject, null, 2);
+    let jsonString = JSON.stringify(resultObject, null, 2);
     fs.writeFileSync(filePath, jsonString, "utf-8");
 }

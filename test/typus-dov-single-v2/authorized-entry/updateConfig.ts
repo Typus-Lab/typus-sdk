@@ -1,22 +1,20 @@
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getUpdateConfigTx, UpdateConfigRequests } from "src/typus-dov-single-v2";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TypusConfig } from "src/utils";
 import "src/utils/load_env";
-
-const config = TypusConfig.default("MAINNET");
-const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const user = signer.toSuiAddress();
-const provider = new SuiClient({ url: config.rpcEndpoint });
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui.js/client";
+import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
+import { getUpdateConfigTx } from "src/typus-dov-single-v2";
+import { TypusConfig } from "src/utils";
 
 (async () => {
-    let gasBudget = 1000000000;
-    let packageId = config.package.dovSingle;
-    let registry = config.registry.dov.dovSingle;
-    let requests: UpdateConfigRequests[] = [];
-    requests.push({ index: "21", config: { capacity: "2100000000000000" } });
+    let config = TypusConfig.default("MAINNET");
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let provider = new SuiClient({ url: config.rpcEndpoint });
 
-    let transactionBlock = await getUpdateConfigTx(gasBudget, packageId, registry, requests);
+    let transactionBlock = await getUpdateConfigTx(config, new TransactionBlock(), [
+        { index: "21", input: { capacity: "2100000000000000" } },
+    ]);
+    transactionBlock.setGasBudget(100000000);
+
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);
 })();

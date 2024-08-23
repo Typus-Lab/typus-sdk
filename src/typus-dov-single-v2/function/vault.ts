@@ -18,7 +18,7 @@ export const AbbrStrategyName: { [key: string]: string } = {
 };
 
 export const parseAssets = (info: Info) => {
-    const { depositToken: dToken, bidToken: bToken, settlementBase: oToken } = info;
+    let { depositToken: dToken, bidToken: bToken, settlementBase: oToken } = info;
 
     return typeArgsToAssets([dToken, bToken, oToken]);
 };

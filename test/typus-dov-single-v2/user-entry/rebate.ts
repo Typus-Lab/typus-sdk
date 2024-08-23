@@ -5,18 +5,13 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { TypusConfig } from "src/utils";
 
-const config = TypusConfig.default("TESTNET");
-const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const user = signer.toSuiAddress();
-const provider = new SuiClient({ url: config.rpcEndpoint });
-
 (async () => {
-    let transactionBlock = new TransactionBlock();
-    transactionBlock = getRebateTx({
-        tx: transactionBlock,
-        typusFrameworkPackageId: config.package.framework,
-        typusDovSinglePackageId: config.package.dovSingle,
-        typusDovSingleRegistry: config.registry.dov.dovSingle,
+    let config = TypusConfig.default("TESTNET");
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let user = signer.toSuiAddress();
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
+    let transactionBlock = getRebateTx(config, new TransactionBlock(), {
         typeArgument: config.token.sui,
         user,
     });

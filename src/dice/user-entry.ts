@@ -258,7 +258,7 @@ export function getConsumeExpCoinUnstakedTx(
     }
     let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
     if (input.personalKioskPackageId) {
-        const [personalKioskCap, borrow] = tx.moveCall({
+        let [personalKioskCap, borrow] = tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
             arguments: [tx.object(input.kioskCap)],
         });

@@ -20,15 +20,14 @@ export function getNewStrategyTx(
     tx: TransactionBlock,
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
-        strategy_pool: string;
-        vault_index: string;
-        signal_index: string;
+        vaultIndex: string;
+        signalIndex: string;
         coins: string[];
         amount: string;
         size: string;
-        price_percentage: string;
-        max_times: string;
-        target_rounds: string[];
+        pricePercentage: string;
+        maxTimes: string;
+        targetRounds: string[];
     }
 ) {
     if (
@@ -42,18 +41,18 @@ export function getNewStrategyTx(
             typeArguments: input.typeArguments,
             arguments: [
                 tx.object(config.registry.dov.dovSingle),
-                tx.object(input.strategy_pool),
-                tx.pure(input.vault_index),
-                tx.pure(input.signal_index),
+                tx.object(config.registry.dov.autoBid),
+                tx.pure(input.vaultIndex),
+                tx.pure(input.signalIndex),
                 tx.pure(input.size),
-                tx.pure(input.price_percentage),
-                tx.pure(input.max_times),
-                tx.pure(input.target_rounds),
+                tx.pure(input.pricePercentage),
+                tx.pure(input.maxTimes),
+                tx.pure(input.targetRounds),
                 input_coin,
             ],
         });
     } else {
-        const coin = input.coins.pop()!;
+        let coin = input.coins.pop()!;
 
         if (input.coins.length > 0) {
             tx.mergeCoins(
@@ -69,13 +68,13 @@ export function getNewStrategyTx(
             typeArguments: input.typeArguments,
             arguments: [
                 tx.object(config.registry.dov.dovSingle),
-                tx.object(input.strategy_pool),
-                tx.pure(input.vault_index),
-                tx.pure(input.signal_index),
+                tx.object(config.registry.dov.autoBid),
+                tx.pure(input.vaultIndex),
+                tx.pure(input.signalIndex),
                 tx.pure(input.size),
-                tx.pure(input.price_percentage),
-                tx.pure(input.max_times),
-                tx.pure(input.target_rounds),
+                tx.pure(input.pricePercentage),
+                tx.pure(input.maxTimes),
+                tx.pure(input.targetRounds),
                 input_coin,
             ],
         });
@@ -87,9 +86,9 @@ export function getNewStrategyTx(
 /**
     entry fun close_strategy<D_TOKEN, B_TOKEN>(
         strategy_pool: &mut StrategyPoolV2,
-        vault_index: u64,
-        signal_index: u64,
-        strategy_index: u64,
+        vaultIndex: u64,
+        signalIndex: u64,
+        strategyIndex: u64,
         ctx: &mut TxContext
     )
 */
@@ -99,10 +98,9 @@ export function getCloseStrategyTx(
     tx: TransactionBlock,
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
-        strategy_pool: string;
-        vault_index: string;
-        signal_index: string;
-        strategy_index: string;
+        vaultIndex: string;
+        signalIndex: string;
+        strategyIndex: string;
         user: string;
     }
 ) {
@@ -111,10 +109,10 @@ export function getCloseStrategyTx(
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
-            tx.object(input.strategy_pool),
-            tx.pure(input.vault_index),
-            tx.pure(input.signal_index),
-            tx.pure(input.strategy_index),
+            tx.object(config.registry.dov.autoBid),
+            tx.pure(input.vaultIndex),
+            tx.pure(input.signalIndex),
+            tx.pure(input.strategyIndex),
         ],
     });
 
@@ -128,10 +126,9 @@ export function getWithdrawProfitStrategyTx(
     tx: TransactionBlock,
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
-        strategy_pool: string;
-        vault_index: string;
-        signal_index: string;
-        strategy_index: string;
+        vaultIndex: string;
+        signalIndex: string;
+        strategyIndex: string;
         user: string;
     }
 ) {
@@ -140,10 +137,10 @@ export function getWithdrawProfitStrategyTx(
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
-            tx.object(input.strategy_pool),
-            tx.pure(input.vault_index),
-            tx.pure(input.signal_index),
-            tx.pure(input.strategy_index),
+            tx.object(config.registry.dov.autoBid),
+            tx.pure(input.vaultIndex),
+            tx.pure(input.signalIndex),
+            tx.pure(input.strategyIndex),
         ],
     });
 
@@ -155,9 +152,9 @@ export function getWithdrawProfitStrategyTx(
 /**
     entry fun update_strategy<D_TOKEN, B_TOKEN>(
         strategy_pool: &mut StrategyPoolV2,
-        vault_index: u64,
-        signal_index: u64,
-        strategy_index: u64,
+        vaultIndex: u64,
+        signalIndex: u64,
+        strategyIndex: u64,
         size: Option<u64>,
         price_percentage: Option<u64>,
         max_times: Option<u64>,
@@ -172,16 +169,15 @@ export function getUpdateStrategyTx(
     tx: TransactionBlock,
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
-        strategy_pool: string;
-        vault_index: string;
-        signal_index: string;
-        strategy_index: string;
+        vaultIndex: string;
+        signalIndex: string;
+        strategyIndex: string;
         coins: string[];
         amount: string;
         size: string | null;
-        price_percentage: string | null;
-        max_times: string | null;
-        target_rounds: string[];
+        pricePercentage: string | null;
+        maxTimes: string | null;
+        targetRounds: string[];
     }
 ) {
     if (
@@ -190,21 +186,21 @@ export function getUpdateStrategyTx(
         input.typeArguments[1] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
     ) {
         if (input.amount) {
-            const [input_coin] = tx.splitCoins(tx.gas, [tx.pure(input.amount)]);
+            let [input_coin] = tx.splitCoins(tx.gas, [tx.pure(input.amount)]);
 
             tx.moveCall({
                 target: `${config.package.dovSingle}::auto_bid::update_strategy`,
                 typeArguments: input.typeArguments,
                 arguments: [
                     tx.object(config.registry.dov.dovSingle),
-                    tx.object(input.strategy_pool),
-                    tx.pure(input.vault_index),
-                    tx.pure(input.signal_index),
-                    tx.pure(input.strategy_index),
+                    tx.object(config.registry.dov.autoBid),
+                    tx.pure(input.vaultIndex),
+                    tx.pure(input.signalIndex),
+                    tx.pure(input.strategyIndex),
                     tx.pure(input.size ? [input.size] : []),
-                    tx.pure(input.price_percentage ? [input.price_percentage] : []),
-                    tx.pure(input.max_times ? [input.max_times] : []),
-                    tx.pure(input.target_rounds),
+                    tx.pure(input.pricePercentage ? [input.pricePercentage] : []),
+                    tx.pure(input.maxTimes ? [input.maxTimes] : []),
+                    tx.pure(input.targetRounds),
                     tx.makeMoveVec({ objects: [input_coin] }),
                 ],
             });
@@ -214,20 +210,20 @@ export function getUpdateStrategyTx(
                 typeArguments: input.typeArguments,
                 arguments: [
                     tx.object(config.registry.dov.dovSingle),
-                    tx.object(input.strategy_pool),
-                    tx.pure(input.vault_index),
-                    tx.pure(input.signal_index),
-                    tx.pure(input.strategy_index),
+                    tx.object(config.registry.dov.autoBid),
+                    tx.pure(input.vaultIndex),
+                    tx.pure(input.signalIndex),
+                    tx.pure(input.strategyIndex),
                     tx.pure(input.size ? [input.size] : []),
-                    tx.pure(input.price_percentage ? [input.price_percentage] : []),
-                    tx.pure(input.max_times ? [input.max_times] : []),
-                    tx.pure(input.target_rounds),
+                    tx.pure(input.pricePercentage ? [input.pricePercentage] : []),
+                    tx.pure(input.maxTimes ? [input.maxTimes] : []),
+                    tx.pure(input.targetRounds),
                     tx.makeMoveVec({ objects: [] }),
                 ],
             });
         }
     } else {
-        const coin = input.coins.pop()!;
+        let coin = input.coins.pop()!;
 
         if (input.coins.length > 0) {
             tx.mergeCoins(
@@ -236,21 +232,21 @@ export function getUpdateStrategyTx(
             );
         }
 
-        const [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+        let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
 
         tx.moveCall({
             target: `${config.package.dovSingle}::auto_bid::update_strategy`,
             typeArguments: input.typeArguments,
             arguments: [
                 tx.object(config.registry.dov.dovSingle),
-                tx.object(input.strategy_pool),
-                tx.pure(input.vault_index),
-                tx.pure(input.signal_index),
-                tx.pure(input.strategy_index),
+                tx.object(config.registry.dov.autoBid),
+                tx.pure(input.vaultIndex),
+                tx.pure(input.signalIndex),
+                tx.pure(input.strategyIndex),
                 tx.pure(input.size ? [input.size] : []),
-                tx.pure(input.price_percentage ? [input.price_percentage] : []),
-                tx.pure(input.max_times ? [input.max_times] : []),
-                tx.pure(input.target_rounds),
+                tx.pure(input.pricePercentage ? [input.pricePercentage] : []),
+                tx.pure(input.maxTimes ? [input.maxTimes] : []),
+                tx.pure(input.targetRounds),
                 tx.makeMoveVec({ objects: [input_coin] }),
             ],
         });

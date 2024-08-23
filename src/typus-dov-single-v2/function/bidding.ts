@@ -184,13 +184,13 @@ const DefaultOracleDecimal: { [key: string]: string } = {
 };
 
 export const parsePythOracleData = (data: PriceData[], decimals: { [key: string]: string }) => {
-    const prices: { [key: string]: CoinInfo } = {};
+    let prices: { [key: string]: CoinInfo } = {};
     Object.entries(ASSET_INFO).forEach((p) => {
-        const asset = p[0].toUpperCase();
-        const coinData = data.find((s) => {
+        let asset = p[0].toUpperCase();
+        let coinData = data.find((s) => {
             return s.productAccountKey.equals(p[1].product);
         });
-        const decimal = decimals[asset];
+        let decimal = decimals[asset];
         if (decimal && coinData) {
             prices[asset.toLowerCase()] = {
                 price: BigNumber(coinData.price ?? 0)
@@ -214,12 +214,12 @@ export const parsePythOracleData = (data: PriceData[], decimals: { [key: string]
 };
 
 export const fetchPrices = async (provider: SuiClient, config: TypusConfig): Promise<{ [key: string]: CoinInfo }> => {
-    const coinObjects = await provider.multiGetObjects({
+    let coinObjects = await provider.multiGetObjects({
         ids: Object.values(config.oracle),
         options: { showContent: true },
     });
 
-    const oracleDecimal: { [key: string]: string } = {
+    let oracleDecimal: { [key: string]: string } = {
         ...DefaultOracleDecimal,
     };
 
@@ -230,32 +230,32 @@ export const fetchPrices = async (provider: SuiClient, config: TypusConfig): Pro
             c.data?.content.fields.decimal;
     });
 
-    const PYTHNET_CLUSTER_NAME: PythCluster = "pythnet";
-    const connection = new Connection(getPythClusterApiUrl(PYTHNET_CLUSTER_NAME));
-    const pythPublicKey = getPythProgramKeyForCluster(PYTHNET_CLUSTER_NAME);
-    const pythClient = new PythHttpClient(connection, pythPublicKey);
-    const priceData = await pythClient.getAssetPricesFromAccounts(Object.values(ASSET_INFO).map((a) => a.price));
-    const prices = parsePythOracleData(priceData, oracleDecimal);
+    let PYTHNET_CLUSTER_NAME: PythCluster = "pythnet";
+    let connection = new Connection(getPythClusterApiUrl(PYTHNET_CLUSTER_NAME));
+    let pythPublicKey = getPythProgramKeyForCluster(PYTHNET_CLUSTER_NAME);
+    let pythClient = new PythHttpClient(connection, pythPublicKey);
+    let priceData = await pythClient.getAssetPricesFromAccounts(Object.values(ASSET_INFO).map((a) => a.price));
+    let prices = parsePythOracleData(priceData, oracleDecimal);
 
-    const suiusd = BigNumber(prices["sui"]?.price ?? 0);
+    let suiusd = BigNumber(prices["sui"]?.price ?? 0);
 
-    const suifud = await getLatestPrice("SUIFUD");
-    const fudusd = suifud == "0" ? BigNumber(0) : suiusd.div(suifud);
+    let suifud = await getLatestPrice("SUIFUD");
+    let fudusd = suifud == "0" ? BigNumber(0) : suiusd.div(suifud);
 
-    const suiafsui = await getLatestPrice("SUIAFSUI");
-    const afsuiusd = suiafsui == "0" ? BigNumber(0) : suiusd.div(suiafsui);
+    let suiafsui = await getLatestPrice("SUIAFSUI");
+    let afsuiusd = suiafsui == "0" ? BigNumber(0) : suiusd.div(suiafsui);
 
-    const suinavx = await getLatestPrice("SUINAVX");
-    const navxusd = suiusd.div(suinavx);
+    let suinavx = await getLatestPrice("SUINAVX");
+    let navxusd = suiusd.div(suinavx);
 
-    const suibuck = await getLatestPrice("SUIBUCK");
-    const buckusd = BigNumber(suibuck).lte(0) ? "0" : suiusd.div(suibuck);
+    let suibuck = await getLatestPrice("SUIBUCK");
+    let buckusd = BigNumber(suibuck).lte(0) ? "0" : suiusd.div(suibuck);
 
-    const usdyusdc = await getLatestPrice("USDYUSDC");
-    const usdyusdcWithDecimal = BigNumber(usdyusdc).multipliedBy(BigNumber(10).pow(8));
+    let usdyusdc = await getLatestPrice("USDYUSDC");
+    let usdyusdcWithDecimal = BigNumber(usdyusdc).multipliedBy(BigNumber(10).pow(8));
 
-    const scasui = await getLatestPrice("SCASUI");
-    const scausd = suiusd.eq(0) ? BigNumber(0) : BigNumber(scasui).multipliedBy(suiusd);
+    let scasui = await getLatestPrice("SCASUI");
+    let scausd = suiusd.eq(0) ? BigNumber(0) : BigNumber(scasui).multipliedBy(suiusd);
 
     return {
         fud: { price: fudusd.toString(), decimal: "8", quote: "usd" },
@@ -270,7 +270,7 @@ export const fetchPrices = async (provider: SuiClient, config: TypusConfig): Pro
 };
 
 export const calcIncentiveRate = (incentiveBp) => {
-    const incentiveRateBp = BigNumber(incentiveBp).div(BigNumber(10).pow(IncentiveRateBp));
+    let incentiveRateBp = BigNumber(incentiveBp).div(BigNumber(10).pow(IncentiveRateBp));
     let incentiveRate = 1;
     if (incentiveRateBp.gt(0)) {
         incentiveRate = 1 - Number(incentiveRateBp);
@@ -280,7 +280,7 @@ export const calcIncentiveRate = (incentiveBp) => {
 };
 
 export const calcDeliveryPrice = (bidShare: BidShare, vaultInfo: Vault) => {
-    const {
+    let {
         info: { bTokenDecimal },
     } = vaultInfo;
     let deliveryPrice = BigNumber("0");
@@ -288,8 +288,8 @@ export const calcDeliveryPrice = (bidShare: BidShare, vaultInfo: Vault) => {
     if (bidShare.bidVault.u64Padding[1]) {
         deliveryPrice = BigNumber(bidShare.bidVault.u64Padding[1]);
     } else {
-        const deliveryInfos = vaultInfo.info.deliveryInfos.deliveryInfo;
-        const deliveryInfo = deliveryInfos[deliveryInfos.length - 1];
+        let deliveryInfos = vaultInfo.info.deliveryInfos.deliveryInfo;
+        let deliveryInfo = deliveryInfos[deliveryInfos.length - 1];
         deliveryPrice = deliveryInfo ? BigNumber(deliveryInfo.deliveryPrice) : BigNumber("0");
     }
     deliveryPrice = BigNumber(deliveryPrice).div(BigNumber(10).pow(BigNumber(bTokenDecimal)));
@@ -372,11 +372,11 @@ export const calcEstPnl = (
 ) => {
     let profit = "0";
     let cost = "0";
-    const [dToken, bToken, oToken] = typeArgsToAssets(assets);
-    const dTokenWrappedName = getTokenName({ token: dToken, wrapped: true });
-    const bTokenWrappedName = getTokenName({ token: bToken, wrapped: true });
-    const estPnls: TokenAmount[] = [];
-    const referencePrice =
+    let [dToken, bToken, oToken] = typeArgsToAssets(assets);
+    let dTokenWrappedName = getTokenName({ token: dToken, wrapped: true });
+    let bTokenWrappedName = getTokenName({ token: bToken, wrapped: true });
+    let estPnls: TokenAmount[] = [];
+    let referencePrice =
         bidShare.bidVault.u64Padding.length > 0 ? BigNumber(bidShare.bidVault.u64Padding[0]).div(PriceDecimal) : BigNumber(oTokenPrice);
 
     if (optionType === "0") {
@@ -493,7 +493,7 @@ export const parseBidReceipt = (vaults: Vault[], bidReceipts: { [key: string]: R
 
                 // Filer out autoBidReceiptsData receipts cuz it's wrapped in strategy and
                 // SDK getMyBids can't retrieve it!
-                const data = vidMap.get(receipt.vid);
+                let data = vidMap.get(receipt.vid);
                 if (!data) {
                     vidMap.set(receipt.vid, [receipt.id]);
                 } else {
@@ -503,7 +503,7 @@ export const parseBidReceipt = (vaults: Vault[], bidReceipts: { [key: string]: R
 
                 bidVaultsInfo.push({ vaultInfo: v, receipt: receipt });
             });
-            const values = Array.from(vidMap.values());
+            let values = Array.from(vidMap.values());
 
             sortedBidReceipts = values.reduce(function (previousValue, currentValue, currentIndex, array) {
                 return previousValue.concat(currentValue);
@@ -520,7 +520,7 @@ export const parseBid = (
     oTokenPrice: string,
     isAutoBid: boolean
 ): Bid & OrderBy => {
-    const {
+    let {
         vaultInfo,
         vaultInfo: {
             info,
@@ -530,22 +530,22 @@ export const parseBid = (
         receipt,
     } = bidVaultInfo;
 
-    const incentiveRate = calcIncentiveRate(bidIncentiveBp);
+    let incentiveRate = calcIncentiveRate(bidIncentiveBp);
 
-    const [dToken, bToken, oToken] = parseAssets(info);
+    let [dToken, bToken, oToken] = parseAssets(info);
 
-    const oTokenName = getTokenName({ token: oToken });
-    const dTokenWrappedName = getTokenName({ token: dToken, wrapped: true });
-    const bTokenWrappedName = getTokenName({ token: bToken, wrapped: true });
+    let oTokenName = getTokenName({ token: oToken });
+    let dTokenWrappedName = getTokenName({ token: dToken, wrapped: true });
+    let bTokenWrappedName = getTokenName({ token: bToken, wrapped: true });
 
-    const metadata = bidShare.bidVault.metadata;
+    let metadata = bidShare.bidVault.metadata;
 
-    const tokenLabel = metadata.split("-")[0];
-    const periodLabel = Period[Number(period)].charAt(0).toUpperCase() + Period[Number(period)].slice(1);
+    let tokenLabel = metadata.split("-")[0];
+    let periodLabel = Period[Number(period)].charAt(0).toUpperCase() + Period[Number(period)].slice(1);
 
-    const optionTypeLabel = AbbrStrategyName[optionType];
+    let optionTypeLabel = AbbrStrategyName[optionType];
 
-    const bidsSize = Number(bidShare.share) / 10 ** Number(oTokenDecimal);
+    let bidsSize = Number(bidShare.share) / 10 ** Number(oTokenDecimal);
 
     let expirationDate = moment(metadata.split("-")[1], "DDMMMYY").format("yyyy-MM-DD");
 
@@ -554,28 +554,28 @@ export const parseBid = (
         .local()
         .format("DD MMM YY, HH:mm");
 
-    const live = !auction
+    let live = !auction
         ? false
         : moment.unix(Number(auction.endTsMs) / 1000).isAfter(moment()) &&
           moment.unix(Number(auction.startTsMs) / 1000).isBefore(moment()) &&
           moment(expirationDate, "DD MMM YY, HH:mm").isAfter(moment.unix(Number(auction.endTsMs) / 1000));
 
-    const deliveryPrice = calcDeliveryPrice(bidShare, vaultInfo);
+    let deliveryPrice = calcDeliveryPrice(bidShare, vaultInfo);
 
     let initialPrice: any = auction?.initialPrice ?? 0;
     initialPrice = BigNumber(initialPrice).div(BigNumber(10).pow(BigNumber(bTokenDecimal)));
 
-    const strikes = parseStrikes(period, optionType, metadata);
+    let strikes = parseStrikes(period, optionType, metadata);
 
-    const breakEvenPriceReference = live ? initialPrice : deliveryPrice;
-    const breakEvenPrice = calcBreakEvenPrice(optionType, period, strikes, bToken, breakEvenPriceReference, incentiveRate);
+    let breakEvenPriceReference = live ? initialPrice : deliveryPrice;
+    let breakEvenPrice = calcBreakEvenPrice(optionType, period, strikes, bToken, breakEvenPriceReference, incentiveRate);
 
-    const defaultMinBidSize = BigNumber(lotSize).div(BigNumber(10).pow(oTokenDecimal));
-    const bidSize = bidsSize.toFixed(countFloating(defaultMinBidSize.toNumber()));
+    let defaultMinBidSize = BigNumber(lotSize).div(BigNumber(10).pow(oTokenDecimal));
+    let bidSize = bidsSize.toFixed(countFloating(defaultMinBidSize.toNumber()));
 
-    const settlePrice = BigNumber(bidShare.bidVault.u64Padding[0] ?? "0").div(PriceDecimal);
+    let settlePrice = BigNumber(bidShare.bidVault.u64Padding[0] ?? "0").div(PriceDecimal);
 
-    const estPnls = calcEstPnl(
+    let estPnls = calcEstPnl(
         live,
         incentiveRate,
         bidSize,
@@ -621,7 +621,7 @@ export const parseBid = (
 
 export const getUserBidReceipts = async (config: TypusConfig, input: { user: string }) => {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    const bidReceipts: { [key: string]: Receipt[] } = {};
+    let bidReceipts: { [key: string]: Receipt[] } = {};
     let result = await provider.getOwnedObjects({ owner: input.user, options: { showType: true, showContent: true } });
 
     let hasNextPage = result.hasNextPage;
@@ -640,19 +640,19 @@ export const getUserBidReceipts = async (config: TypusConfig, input: { user: str
 
     for (const object of data) {
         try {
-            const { content } = object.data || {};
+            let { content } = object.data || {};
             if (!content) continue;
 
-            const typeStringComponents = ((content as any).type || "").split("<");
-            const subtype = (typeStringComponents[1] || "").replace(/>/, "");
-            const typeComponents = typeStringComponents[0].split("::");
-            const type = typeComponents[typeComponents.length - 1];
-            const typePackage = typeComponents[0];
+            let typeStringComponents = ((content as any).type || "").split("<");
+            let subtype = (typeStringComponents[1] || "").replace(/>/, "");
+            let typeComponents = typeStringComponents[0].split("::");
+            let type = typeComponents[typeComponents.length - 1];
+            let typePackage = typeComponents[0];
 
             if (type === "TypusBidReceipt" && config.packageOrigin.framework == typePackage) {
                 // @ts-ignore
-                const vaultIndex = content.fields.index;
-                const receipt = {
+                let vaultIndex = content.fields.index;
+                let receipt = {
                     // @ts-ignore
                     id: content.fields.id.id,
                     // @ts-ignore
@@ -692,36 +692,32 @@ export const getUserBidReceipts = async (config: TypusConfig, input: { user: str
  */
 export const fetchUserBids = async (config: TypusConfig, user: string, prices?: { [key: string]: CoinInfo }) => {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    const packageAddress = config.package.dovSingle;
-    const registryAddress = config.registry.dov.dovSingle;
-    const originFramworkAddress = config.packageOrigin.framework;
-    const strategyPool = config.object.strategyPool;
     // Step 1: get user bid receipts, vaults info, user strategies, auction data, prices
-    const vaultsInfo = await getVaults(config, { indexes: [] });
-    const userReceipts = await getUserBidReceipts(config, { user });
-    const userStrategies = await getUserStrategies(config, { strategyPool, user });
-    const auctions = await getAuctions(config, { indexes: [] });
+    let vaultsInfo = await getVaults(config, { indexes: [] });
+    let userReceipts = await getUserBidReceipts(config, { user });
+    let userStrategies = await getUserStrategies(config, { user });
+    let auctions = await getAuctions(config, { indexes: [] });
     if (typeof prices === "undefined") {
         prices = await fetchPrices(provider, config);
     }
     // Step 2: sort receipts and flat receipts
-    const { sortedBidReceipts, bidVaultsInfo } = parseBidReceipt(Object.values(vaultsInfo), userReceipts);
+    let { sortedBidReceipts, bidVaultsInfo } = parseBidReceipt(Object.values(vaultsInfo), userReceipts);
 
     // Step 3: get bid shares info
-    const bidShares = await getMyBids(config, { receipts: sortedBidReceipts });
+    let bidShares = await getMyBids(config, { receipts: sortedBidReceipts });
 
     // Step 4: parse bids from bid shares
-    const bidsFromBidShares: Bid[] = [];
+    let bidsFromBidShares: Bid[] = [];
     for (let bidVaultInfo of bidVaultsInfo) {
-        const bidShare = bidShares[`${bidVaultInfo.receipt.index}-${bidVaultInfo.receipt.vid}`];
-        const auction = auctions ? auctions[bidVaultInfo.vaultInfo.info.index] : null;
-        const [dToken, bToken, oToken] = parseAssets(bidVaultInfo.vaultInfo.info);
+        let bidShare = bidShares[`${bidVaultInfo.receipt.index}-${bidVaultInfo.receipt.vid}`];
+        let auction = auctions ? auctions[bidVaultInfo.vaultInfo.info.index] : null;
+        let [dToken, bToken, oToken] = parseAssets(bidVaultInfo.vaultInfo.info);
         if (bidShare) {
-            const price = BigNumber(prices[oToken.toLowerCase()].price)
+            let price = BigNumber(prices[oToken.toLowerCase()].price)
                 .div(BigNumber(10).pow(prices[oToken.toLowerCase()].decimal))
                 .toString();
-            const data = parseBid(bidVaultInfo, bidShare, auction, price, false);
-            const checkExistVault = bidsFromBidShares.find(
+            let data = parseBid(bidVaultInfo, bidShare, auction, price, false);
+            let checkExistVault = bidsFromBidShares.find(
                 (p) => p.vaultIndex === bidVaultInfo.vaultInfo.info.index && p.receiptsVid.includes(bidVaultInfo.receipt.vid)
             );
 
@@ -735,15 +731,15 @@ export const fetchUserBids = async (config: TypusConfig, user: string, prices?: 
     }
 
     // Step 5: parse strategies to user receipt type
-    const autoBidsShares: { [key: string]: BidShare } = {};
-    const vaultAutoBidReceipts: {
+    let autoBidsShares: { [key: string]: BidShare } = {};
+    let vaultAutoBidReceipts: {
         [key: string]: Receipt[];
     } = {};
     for (let strategy of userStrategies) {
-        const receipts = strategy.receipts;
+        let receipts = strategy.receipts;
         for (let receiptItem of receipts) {
-            const vaultIndex = receiptItem.index;
-            const receipt = {
+            let vaultIndex = receiptItem.index;
+            let receipt = {
                 id: receiptItem.id,
                 index: vaultIndex,
                 name: "",
@@ -772,7 +768,7 @@ export const fetchUserBids = async (config: TypusConfig, user: string, prices?: 
         }
     }
 
-    const autoBidVaultInfos: { vaultInfo: Vault; receipt: Receipt }[] = [];
+    let autoBidVaultInfos: { vaultInfo: Vault; receipt: Receipt }[] = [];
     Object.values(vaultsInfo).forEach((v) => {
         let curReceipts = vaultAutoBidReceipts[v.info.index];
 
@@ -783,17 +779,17 @@ export const fetchUserBids = async (config: TypusConfig, user: string, prices?: 
         }
     });
 
-    const bidsFromStrategies: Bid[] = [];
+    let bidsFromStrategies: Bid[] = [];
     for (let autoBidVaultInfo of autoBidVaultInfos) {
-        const bidShare = autoBidsShares[`${autoBidVaultInfo.receipt.index}-${autoBidVaultInfo.receipt.vid}`];
-        const auction = auctions ? auctions[autoBidVaultInfo.vaultInfo.info.index] : null;
-        const [dToken, bToken, oToken] = parseAssets(autoBidVaultInfo.vaultInfo.info);
+        let bidShare = autoBidsShares[`${autoBidVaultInfo.receipt.index}-${autoBidVaultInfo.receipt.vid}`];
+        let auction = auctions ? auctions[autoBidVaultInfo.vaultInfo.info.index] : null;
+        let [dToken, bToken, oToken] = parseAssets(autoBidVaultInfo.vaultInfo.info);
         if (bidShare) {
-            const price = BigNumber(prices[oToken.toLowerCase()].price)
+            let price = BigNumber(prices[oToken.toLowerCase()].price)
                 .div(BigNumber(10).pow(prices[oToken.toLowerCase()].decimal))
                 .toString();
-            const data = parseBid(autoBidVaultInfo, bidShare, auction, price, false);
-            const checkExistVault = bidsFromStrategies.find(
+            let data = parseBid(autoBidVaultInfo, bidShare, auction, price, false);
+            let checkExistVault = bidsFromStrategies.find(
                 (p) => p.vaultIndex === autoBidVaultInfo.vaultInfo.info.index && p.receiptsVid.includes(autoBidVaultInfo.receipt.vid)
             );
 
@@ -807,7 +803,7 @@ export const fetchUserBids = async (config: TypusConfig, user: string, prices?: 
     }
 
     // Step 6: order bids
-    const byOrdered = orderBy(
+    let byOrdered = orderBy(
         [...bidsFromBidShares, ...bidsFromStrategies],
         ["expiry", "tokenOrder", "periodOrder", "optionTypeOrder"],
         ["asc", "asc", "asc", "asc"]

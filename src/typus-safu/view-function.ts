@@ -17,7 +17,7 @@ export interface Vault {
 export interface Info {
     index: string;
     round: string;
-    portfolio_vault_index: string;
+    portfolio_vaultIndex: string;
     refresh_ts_ms: string;
     status: string;
     lending_enabled: string;
@@ -54,9 +54,7 @@ export async function getVaultData(
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${config.package.safu}::view_function::get_vault_data_bcs`,
-        typeArguments: [
-            `${config.package.framework}::vault::TypusBidReceipt`
-        ],
+        typeArguments: [`${config.package.framework}::vault::TypusBidReceipt`],
         arguments: [transactionBlock.pure(config.registry.safu.safu), transactionBlock.pure(input.indexes)],
     });
     let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
@@ -84,7 +82,7 @@ export async function getVaultData(
         let info = {
             index: infoArray[0],
             round: infoArray[1],
-            portfolio_vault_index: infoArray[2],
+            portfolio_vaultIndex: infoArray[2],
             refresh_ts_ms: infoArray[3],
             status: infoArray[4],
             lending_enabled: infoArray[5],
@@ -148,8 +146,8 @@ export async function getVaultData(
                     metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
                     u64_padding: reader.readVec((reader) => {
                         return reader.read64();
-                    })
-                }
+                    }),
+                },
             ];
         } else {
             result[info.index] = [
@@ -163,10 +161,9 @@ export async function getVaultData(
                     u64Padding,
                     bcsPadding,
                 },
-                null
+                null,
             ];
         }
-
     });
 
     return result;

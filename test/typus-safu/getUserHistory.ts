@@ -3,30 +3,26 @@ import { getDepositorCashFlows, getUserEvents, parseTxHistory } from "src/typus-
 import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
 import * as fs from "fs";
 
-const config = TypusConfig.default("MAINNET");
-
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
-
-const sender = "0xd15f079d5f60b8fdfdcf3ca66c0d3473790c758b04b6418929d5d2991c5443ee";
-const fileName = "mainnetLocalCacheEvents.json";
-
 (async () => {
+    let config = TypusConfig.default("MAINNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let sender = "0xd15f079d5f60b8fdfdcf3ca66c0d3473790c758b04b6418929d5d2991c5443ee";
+    let fileName = "mainnetLocalCacheEvents.json";
+
     // 1. Get User Events
     var localCacheEvents: SuiEvent[] = [];
     var cursor: EventId | null | undefined = undefined;
     var localCacheMap = new Map<string, [SuiEvent[], EventId | null | undefined]>();
 
     try {
-        const localCacheFile = fs.readFileSync(fileName, "utf-8");
-        const localCache = JSON.parse(localCacheFile);
+        let localCacheFile = fs.readFileSync(fileName, "utf-8");
+        let localCache = JSON.parse(localCacheFile);
         localCacheMap = localCache.reduce((map, obj) => {
             map.set(obj.user, [obj.events, obj.cursor]);
             return map;
         }, new Map<string, [SuiEvent[], EventId | null | undefined]>());
 
-        const userCache = localCacheMap.get(sender);
+        let userCache = localCacheMap.get(sender);
         if (userCache) {
             localCacheEvents = userCache[0];
             cursor = userCache[1];
@@ -34,14 +30,14 @@ const fileName = "mainnetLocalCacheEvents.json";
         }
     } catch {}
 
-    const [datas1, cursor1] = await getUserEvents(provider, sender, cursor);
+    let [datas1, cursor1] = await getUserEvents(provider, sender, cursor);
 
     // save local cache for user
     localCacheEvents = localCacheEvents.concat(datas1);
     cursor = cursor1;
 
     localCacheMap.set(sender, [localCacheEvents, cursor]);
-    const localCacheArray = Array.from(localCacheMap.entries());
+    let localCacheArray = Array.from(localCacheMap.entries());
 
     fs.writeFileSync(
         fileName,
@@ -59,11 +55,11 @@ const fileName = "mainnetLocalCacheEvents.json";
     console.log(localCacheEvents.length);
     console.log(cursor);
 
-    const datas = localCacheEvents;
+    let datas = localCacheEvents;
 
-    const txHistory = await parseTxHistory(datas, config.packageOrigin.safu);
+    let txHistory = await parseTxHistory(datas, config.packageOrigin.safu);
     console.log(txHistory.reverse());
 
-    const cashFlow = await getDepositorCashFlows(txHistory);
+    let cashFlow = await getDepositorCashFlows(txHistory);
     console.log(cashFlow);
 })();

@@ -3,9 +3,9 @@ import * as fs from "fs";
 import { TypusConfig } from "src/utils";
 import { getTailsDynamicField } from "src/typus-nft";
 import "src/utils/load_env";
-const config = TypusConfig.default("MAINNET");
+let config = TypusConfig.default("MAINNET");
 
-const provider = new SuiClient({ url: config.rpcEndpoint });
+let provider = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
     const raw = fs.readFileSync("tails.csv", "utf-8");

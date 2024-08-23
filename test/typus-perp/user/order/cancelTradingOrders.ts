@@ -1,33 +1,29 @@
+import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { cancelTradingOrder, getUserOrders } from "src/typus-perp";
-import "src/utils/load_env";
-
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-
-const config = TypusConfig.default("TESTNET");
-
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
 
 (async () => {
-    const user = keypair.toSuiAddress();
+    let config = TypusConfig.default("TESTNET");
+    let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
+    let user = keypair.toSuiAddress();
     console.log(user);
 
     var tx = new TransactionBlock();
 
-    const orders = await getUserOrders(provider, config, user);
-    const order = orders[0];
+    let orders = await getUserOrders(config, user);
+    let order = orders[0];
     console.log(order);
 
-    tx = await cancelTradingOrder(config, {
-        tx,
+    tx = await cancelTradingOrder(config, tx, {
         order,
         user,
     });
+    tx.setGasBudget(100000000);
 
     let dryrunRes = await provider.devInspectTransactionBlock({
         transactionBlock: tx,
@@ -35,6 +31,6 @@ const provider = new SuiClient({
     });
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("CancelTradingOrderEvent"))[0].parsedJson);
 
-    const res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
+    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
     console.log(res);
 })();

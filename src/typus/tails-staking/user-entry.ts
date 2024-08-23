@@ -27,7 +27,7 @@ export async function getStakeTailsTx(
     let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.fee)]);
 
     if (input.personalKioskPackageId) {
-        const [personalKioskCap, borrow] = tx.moveCall({
+        let [personalKioskCap, borrow] = tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
             arguments: [tx.object(input.kioskCap)],
         });
@@ -86,7 +86,7 @@ export async function getUnstakeTailsTx(
     }
 ) {
     if (input.personalKioskPackageId) {
-        const [personalKioskCap, borrow] = tx.moveCall({
+        let [personalKioskCap, borrow] = tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
             arguments: [tx.object(input.kioskCap)],
         });
@@ -149,7 +149,7 @@ export async function getTransferTailsTx(
     let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.fee)]);
 
     if (input.personalKioskPackageId) {
-        const [personalKioskCap, borrow] = tx.moveCall({
+        let [personalKioskCap, borrow] = tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
             arguments: [tx.object(input.kioskCap)],
         });
@@ -322,7 +322,7 @@ export async function getExpUpWithoutStakingTx(
     }
 ) {
     if (input.personalKioskPackageId) {
-        const [personalKioskCap, borrow] = tx.moveCall({
+        let [personalKioskCap, borrow] = tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
             arguments: [tx.object(input.kioskCap)],
         });
@@ -372,7 +372,7 @@ export async function getCreateKioskAndLockNftTx(
         user: string;
     }
 ) {
-    const kioskTx = new KioskTransaction({ transactionBlock: tx, kioskClient });
+    let kioskTx = new KioskTransaction({ transactionBlock: tx, kioskClient });
     kioskTx.create();
     kioskTx.lock({
         itemType: `${config.package.nft}::typus_nft::Tails`,
@@ -380,7 +380,7 @@ export async function getCreateKioskAndLockNftTx(
         policy: input.nft_policy,
         item: input.nft_id,
     });
-    const { kiosk, kioskCap } = kioskTx;
+    let { kiosk, kioskCap } = kioskTx;
     if (kiosk && kioskCap) {
         tx.moveCall({
             target: `0x2::transfer::public_share_object`,

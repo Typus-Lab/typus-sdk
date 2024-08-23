@@ -5,12 +5,12 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { TypusConfig } from "src/utils";
 
-const config = TypusConfig.default("TESTNET");
-const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const provider = new SuiClient({ url: config.rpcEndpoint });
-const user = signer.toSuiAddress();
-
 (async () => {
+    let config = TypusConfig.default("TESTNET");
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let user = signer.toSuiAddress();
+
     let depositToken = "0x2::sui::SUI";
     let bidToken = "0x2::sui::SUI";
     let typeArguments = [depositToken, bidToken];
@@ -19,15 +19,7 @@ const user = signer.toSuiAddress();
     let size = "1000000000";
     let premium_required = "1000000000";
 
-    let transactionBlock = getNewBidTx({
-        tx: new TransactionBlock(),
-        typusEcosystemVersion: config.version.typus,
-        typusUserRegistry: config.registry.typus.user,
-        tgldRegistry: config.registry.typus.tgld,
-        typusLeaderboardRegistry: config.registry.typus.leaderboard,
-        typusFrameworkPackageId: config.package.framework,
-        typusDovSinglePackageId: config.package.dovSingle,
-        typusDovSingleRegistry: config.registry.dov.dovSingle,
+    let transactionBlock = getNewBidTx(config, new TransactionBlock(), {
         typeArguments,
         index,
         coins,

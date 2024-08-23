@@ -3,7 +3,7 @@ import { TypusConfig } from "src/utils";
 export async function getDrawResult(
     config: TypusConfig,
     input: {
-        network: "mainnet" | "testnet";
+        network: "MAINNET" | "TESTNET";
         module: "tails_exp" | "combo_dice";
         index: string;
         amount: string;
@@ -26,8 +26,8 @@ export async function getDrawResult(
         default:
             break;
     }
-    const queryParams = new URLSearchParams({
-        network: input.network,
+    let queryParams = new URLSearchParams({
+        network: input.network.toLowerCase(),
         packageId: config.package.dice,
         registry: registry,
         index: input.index,
@@ -38,8 +38,8 @@ export async function getDrawResult(
         larger_than_2: `${input.larger_than_2}`,
     });
 
-    const vrf_input_1_string = JSON.stringify(input.vrf_input_1);
-    const vrf_input_2_string = JSON.stringify(input.vrf_input_2);
+    let vrf_input_1_string = JSON.stringify(input.vrf_input_1);
+    let vrf_input_2_string = JSON.stringify(input.vrf_input_2);
 
     let apiUrl: string;
     if (input.module === "tails_exp") {
@@ -50,7 +50,7 @@ export async function getDrawResult(
 
     // Append the query parameters to the URL
     // @ts-ignore
-    const apiUrlWithParams = `${apiUrl}?${queryParams.toString()}&vrf_input_1=${vrf_input_1_string}&vrf_input_2=${vrf_input_2_string}`;
+    let apiUrlWithParams = `${apiUrl}?${queryParams.toString()}&vrf_input_1=${vrf_input_1_string}&vrf_input_2=${vrf_input_2_string}`;
     // console.log(apiUrlWithParams);
 
     let response = await fetch(apiUrlWithParams, {

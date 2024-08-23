@@ -1,29 +1,21 @@
 import { TypusConfig } from "src/utils";
 import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getLiquidationPrice, getUserPositions, NETWORK } from "src/typus-perp";
 import { createPythClient } from "src/utils";
-import "src/utils/load_env";
-
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-
-const config = TypusConfig.default("TESTNET");
-
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
 
 (async () => {
-    const user = keypair.toSuiAddress();
+    let config = TypusConfig.default("TESTNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
+    let user = "0xb6b29d18c728503fb59cc59ecbe52611d26b2746b2cedc8d38cabf81428cae6c";
     console.log(user);
 
-    const positions = await getUserPositions(provider, config, user);
+    let positions = await getUserPositions(config, user);
     console.log(positions);
 
-    const pythClient = createPythClient(provider, NETWORK);
+    let pythClient = createPythClient(provider, NETWORK);
 
-    const liquidationPrices = await getLiquidationPrice(provider, config, {
-        pythClient,
+    let liquidationPrices = await getLiquidationPrice(config, pythClient, {
         positions,
         user,
     });

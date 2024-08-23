@@ -33,6 +33,7 @@
             "TAILS_EXP": "0x7679ab7157f13ec945579e3098ba589eb8b4eec841c775799d2aa22b565187c7"
         },
         "DOV": {
+            "AUTO_BID": "0x2c60ddd50d76beb00faa025962d566359a6ea05b1f7f19ac6bd050f4db8c885c",
             "DOV_SINGLE": "0x3d70b09359e3ca8301ae0abeda4f2fdf72ce313ba58c919ce568e5f535fd2ea8"
         },
         "PERP": {
@@ -60,7 +61,6 @@
     },
     "OBJECT": {
         "NFT_TRANSFER_POLICY": "0x55475b9e16d9a0176dcef37f83a1921b15f2cbd2711a5f30b9d952c0c8f5f957",
-        "STRATEGY_POOL": "0x2c60ddd50d76beb00faa025962d566359a6ea05b1f7f19ac6bd050f4db8c885c",
         "TAILS_IDS": "0x3a6a403eb7c123b6f4d25081078b6f07c0ee5987d3ac8ab3e6bcf707c1b0e778",
         "TGLD_COIN_METADATA": "0x3a070c729606334a2be7c51ab28da9a1101b0de01452dd62c10cda0f7a5795d2",
         "TGLD_TOKEN_POLICY": "0xd9461bd329f1df24be9698131b6e2c2b9eaac7c9cf6d76689112f2e57be12009",
@@ -84,14 +84,30 @@
         "ETH": "0x253bbaaa35275240cf6df03258489707ea059762831e4102ebaabafd442bc935"
     },
     "TOKEN": {
-        "AFSUI": "",
+        "AFSUI": "0xf325ce1300e8dac124071d3152c5c5ee6174914f8bc2161e88329cf579246efc::afsui::AFSUI",
+        "APT": "0x3a5143bb1196e3bcdfab6203d1683ae29edd26294fc8bfeafe4aaa9d2704df37::coin::COIN",
+        "BTC": "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881::coin::COIN",
+        "BUCK": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BUCK",
+        "CETUS": "0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS",
+        "ETH": "0xaf8cd5edc19c4512f4259f0bee101a40d41ebed738ade5874359610ef8eeced5::coin::COIN",
         "FUD": "0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1::fud::FUD",
+        "HASUI": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d::hasui::HASUI",
+        "INJ": "0xcac46c81bbe1e516c65f4c3e5da81e7092cc2e70218deafb31f1c8d5fcc9dae3::inj::INJ",
+        "JUP": "0x3dc8710253682b53706bd110d51fd9b298d5bb923b535fb7bca88e049208c508::jup::JUP",
         "MFUD": "0xd8f04cd2a16c19c17428c3b4c22b01dd06740423b93fb7ee88fbe2676a82849d::mfud::MFUD",
+        "NAVX": "0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX",
+        "SCA": "0x7016aae72cfc67f2fadf55769c0a7dd54291a583b63051a5ed71081cce836ac6::sca::SCA",
+        "SEI": "0xcac46c81bbe1e516c65f4c3e5da81e7092cc2e70218deafb31f1c8d5fcc9dae3::sei::SEI",
+        "SOL": "0xb7844e289a8410e50fb3ca48d69eb9cf29e27d223ef90353fe1bd8e27ff8f3f8::coin::COIN",
         "SUI": "0x2::sui::SUI",
+        "TEXP": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::TAILS_EXP",
         "TGLD": "0x4b0f4ee1a40ce37ec81c987cc4e76a665419e74b863319492fc7d26f708b835a::tgld::TGLD",
         "TLP": "",
+        "TURBOS": "0x5d1f47ea69bb0de31c313d7acf89b890dbb8991ea8e03c6c355171f84bb1ba4a::turbos::TURBOS",
         "USD": "",
         "USDC": "0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf::coin::COIN",
-        "USDT": ""
+        "USDT": "0xc060006111016b8a020ad5b33834984a437aaa7d3c74c18e09a95d48aceab08c::coin::COIN",
+        "USDY": "0x960b531667636f39e85867775f52f6b1f220a058c4de786905bdf761e06a56bb::usdy::USDY",
+        "VSUI": "0x549e8b69270defbfafd4f94e17ec44cdbdd99820b33bda2278dea3b9a32d3f55::cert::CERT"
     }
 }

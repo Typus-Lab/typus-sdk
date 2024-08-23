@@ -31,8 +31,8 @@ export async function simulateGame(
 ): Promise<DrawResult> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
-    const BLS = await loadBls();
-    const PRIVATE_KEY = Uint8Array.from(input.drawKeys[input.network][input.index]); // your draw key. TODO: use env for cloud function
+    let BLS = await loadBls();
+    let PRIVATE_KEY = Uint8Array.from(input.drawKeys[input.network][input.index]); // your draw key. TODO: use env for cloud function
     let draw_private_key = BLS.PrivateKey.from_bytes(PRIVATE_KEY, true);
     let bls_signature_1 = BLS.BasicSchemeMPL.sign(draw_private_key, Uint8Array.from(input.vrf_input_1)).serialize();
     let bls_signature_2 = BLS.BasicSchemeMPL.sign(draw_private_key, Uint8Array.from(input.vrf_input_2)).serialize();
@@ -94,14 +94,14 @@ export async function simulateGame(
 }
 
 function uint8ArrayToBCSStringArray(uint8Array: Uint8Array): string[] {
-    const result: string[] = [];
+    let result: string[] = [];
 
     for (let i = 0; i < uint8Array.length; i++) {
         // Assume each byte is a UTF-8 character
-        const character = String.fromCharCode(uint8Array[i]);
+        let character = String.fromCharCode(uint8Array[i]);
 
         // Convert character to its BCS representation (you need to implement this part)
-        const bcsRepresentation = encodeToBCS(character);
+        let bcsRepresentation = encodeToBCS(character);
 
         // Add BCS representation to the result array
         result.push(bcsRepresentation);

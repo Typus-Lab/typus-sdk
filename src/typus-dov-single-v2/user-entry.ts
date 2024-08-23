@@ -215,7 +215,6 @@ export function getNewBidTx(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
-        tgldRegistry: string;
         typeArguments: string[];
         index: string;
         coins: string[];
@@ -237,7 +236,7 @@ export function getNewBidTx(
             arguments: [
                 tx.object(config.version.typus),
                 tx.object(config.registry.typus.user),
-                tx.object(input.tgldRegistry),
+                tx.object(config.registry.typus.tgld),
                 tx.object(config.registry.typus.leaderboard),
                 tx.object(config.registry.dov.dovSingle),
                 tx.pure(input.index),
@@ -269,7 +268,7 @@ export function getNewBidTx(
             arguments: [
                 tx.object(config.version.typus),
                 tx.object(config.registry.typus.user),
-                tx.object(input.tgldRegistry),
+                tx.object(config.registry.typus.tgld),
                 tx.object(config.registry.typus.leaderboard),
                 tx.object(config.registry.dov.dovSingle),
                 tx.pure(input.index),
@@ -377,7 +376,7 @@ export function getSplitBidReceiptTx(
         recipient: string;
     }
 ) {
-    const result = tx.moveCall({
+    let result = tx.moveCall({
         target: `${config.package.dovSingle}::tds_user_entry::simple_split_bid_receipt`,
         typeArguments: [],
         arguments: [
@@ -391,13 +390,13 @@ export function getSplitBidReceiptTx(
         ],
     });
 
-    const unwrap0 = tx.moveCall({
+    let unwrap0 = tx.moveCall({
         target: `0x1::option::destroy_some`,
         typeArguments: [`${config.packageOrigin.framework}::vault::TypusBidReceipt`],
         arguments: [tx.object(result[0])],
     });
 
-    const unwrap1 = tx.moveCall({
+    let unwrap1 = tx.moveCall({
         target: `0x1::option::destroy_some`,
         typeArguments: [`${config.packageOrigin.framework}::vault::TypusBidReceipt`],
         arguments: [tx.object(result[1])],
@@ -429,9 +428,9 @@ export function getMultiTransferBidReceiptTx(
 
     var i = 0;
     while (i < input.shares.length) {
-        const share = input.shares[i];
-        const recipient = input.recipients[i];
-        const result = tx.moveCall({
+        let share = input.shares[i];
+        let recipient = input.recipients[i];
+        let result = tx.moveCall({
             target: `${config.package.dovSingle}::tds_user_entry::public_transfer_bid_receipt`,
             typeArguments: input.typeArguments,
             arguments: [
@@ -443,7 +442,7 @@ export function getMultiTransferBidReceiptTx(
             ],
         });
 
-        const unwrap = tx.moveCall({
+        let unwrap = tx.moveCall({
             target: `0x1::option::destroy_some`,
             typeArguments: [`${config.packageOrigin.framework}::vault::TypusBidReceipt`],
             arguments: [tx.object(result[0])],

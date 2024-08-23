@@ -1,14 +1,11 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { getPlaygrounds } from "src/dice";
-import { SuiClient } from "@mysten/sui.js/client";
-import "src/utils/load_env";
-
-const config = TypusConfig.default("TESTNET");
-
-const provider = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
-    const playgrounds = await getPlaygrounds(provider, config.registry.dice.comboDice);
+    let config = TypusConfig.default("TESTNET");
+    let module: "combo_dice" | "tails_exp" = "combo_dice";
+
+    let playgrounds = await getPlaygrounds(config, { module });
     console.log(playgrounds);
 })();

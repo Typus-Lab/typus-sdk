@@ -9,7 +9,7 @@ import * as fs from "fs";
 import mnemonic from "../../../mnemonic.json";
 const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.NFT));
 
-const provider = new SuiClient({
+let provider = new SuiClient({
     url: "https://fullnode.mainnet.sui.io:443",
 });
 

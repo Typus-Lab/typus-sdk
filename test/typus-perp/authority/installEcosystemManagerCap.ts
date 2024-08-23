@@ -5,17 +5,15 @@ import { installEcosystemManagerCapEntry } from "src/typus-perp";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 import mnemonic from "../../../mnemonic.json";
-const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+let keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 
-const config = TypusConfig.default("TESTNET");
+let config = TypusConfig.default("TESTNET");
 
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
-const gasBudget = 100000000;
+let provider = new SuiClient({ url: config.rpcEndpoint });
+let gasBudget = 100000000;
 
 (async () => {
-    const address = keypair.toSuiAddress();
+    let address = keypair.toSuiAddress();
     console.log(address);
 
     let tx = new TransactionBlock();

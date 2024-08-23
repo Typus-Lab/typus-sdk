@@ -46,6 +46,7 @@ export interface Registry {
         tailsExp: string;
     };
     dov: {
+        autoBid: string;
         dovSingle: string;
     };
     perp: {
@@ -73,7 +74,6 @@ export interface Registry {
 }
 export interface Object {
     nftTransferPolicy: string;
-    strategyPool: string;
     tailsIds: string;
     tgldCoinMetadata: string;
     tgldTokenPolicy: string;
@@ -98,18 +98,34 @@ export interface Oracle {
 }
 export interface Token {
     afsui: string;
+    apt: string;
+    btc: string;
+    buck: string;
+    cetus: string;
+    eth: string;
     fud: string;
+    hasui: string;
+    inj: string;
+    jup: string;
     mfud: string;
+    navx: string;
+    sca: string;
+    sei: string;
+    sol: string;
     sui: string;
+    texp: string;
     tgld: string;
     tlp: string;
-    usdc: string;
+    turbos: string;
     usd: string;
+    usdc: string;
     usdt: string;
+    usdy: string;
+    vsui: string;
 }
 
 // (async () => {
-//     const { default: json } = await import("config-testnet.json");
+//     let { default: json } = await import("config-testnet.json");
 //     let config = TypusConfig.parse(json);
 //     console.log(config);
 //     console.log(config.rpcEndpoint);

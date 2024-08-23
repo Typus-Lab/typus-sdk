@@ -59,7 +59,6 @@ bcs.registerStructType("TypusBidReceipt", {
 export async function getUserStrategies(
     config: TypusConfig,
     input: {
-        strategyPool: string;
         user: string;
     }
     // typeArguments: string[] // [D_TOKEN, B_TOKEN]
@@ -69,7 +68,7 @@ export async function getUserStrategies(
     let target = `${config.package.dovSingle}::auto_bid::view_user_strategies` as any;
     let transactionBlockArguments = [
         transactionBlock.pure(config.registry.dov.dovSingle),
-        transactionBlock.object(input.strategyPool),
+        transactionBlock.object(config.registry.dov.autoBid),
         transactionBlock.pure(input.user),
     ];
     transactionBlock.moveCall({
@@ -182,10 +181,10 @@ export async function getUserStrategies(
     return strategies;
 }
 
-export async function getStrategyPool(config: TypusConfig, strategyPool: string) {
+export async function getStrategyPool(config: TypusConfig) {
     let provider = new SuiClient({ url: config.rpcEndpoint });
     // @ts-ignore
-    const pool = (await provider.getObject({ id: strategyPool, options: { showContent: true } })).data?.content.fields;
+    let pool = (await provider.getObject({ id: config.registry.dov.autoBid, options: { showContent: true } })).data?.content.fields;
     // console.log(pool);
 
     // console.log(pool.strategies.fields.contents.fields);
@@ -206,13 +205,13 @@ export async function getStrategyPool(config: TypusConfig, strategyPool: string)
         strategies.set(vault.fields.key, signals);
     }
 
-    let strategy_pool: StrategyPoolV2 = {
+    let strategyPool: StrategyPoolV2 = {
         id: pool.id.id,
         strategies,
         authority: pool.authority,
     };
 
-    return strategy_pool;
+    return strategyPool;
 }
 
 export interface StrategyPoolV2 {
@@ -261,11 +260,11 @@ export async function getStrategies(config: TypusConfig, strategyIds: string[]) 
     while (strategyIds.length > 0) {
         let len = strategyIds.length > 50 ? 50 : strategyIds.length;
 
-        const results = await provider.multiGetObjects({ ids: strategyIds.splice(0, len), options: { showContent: true } });
+        let results = await provider.multiGetObjects({ ids: strategyIds.splice(0, len), options: { showContent: true } });
 
         for (let result of results) {
             // @ts-ignore
-            const fields = result.data?.content.fields;
+            let fields = result.data?.content.fields;
             // console.log(fields);
             strategies.set(fields.name, fields.value.fields as StrategyV2);
         }

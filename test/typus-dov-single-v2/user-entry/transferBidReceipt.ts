@@ -5,11 +5,11 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { TypusConfig } from "src/utils";
 
-const config = TypusConfig.default("TESTNET");
-const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const provider = new SuiClient({ url: config.rpcEndpoint });
-
 (async () => {
+    let config = TypusConfig.default("TESTNET");
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
     let depositToken = "0x2::sui::SUI";
     let bidToken = "0x2::sui::SUI";
     let typeArguments = [depositToken, bidToken];
@@ -18,17 +18,14 @@ const provider = new SuiClient({ url: config.rpcEndpoint });
     let recipient = signer.toSuiAddress();
     let share = "100";
 
-    let transactionBlock = getTransferBidReceiptTx({
+    let transactionBlock = getTransferBidReceiptTx(config, new TransactionBlock(), {
         typeArguments,
         index,
         receipts,
         share,
         recipient,
-        tx: new TransactionBlock(),
-        typusFrameworkOriginPackageId: config.packageOrigin.framework,
-        typusDovSinglePackageId: config.package.dovSingle,
-        typusDovSingleRegistry: config.registry.dov.dovSingle,
     });
+    transactionBlock.setGasBudget(100000000);
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);
 })();

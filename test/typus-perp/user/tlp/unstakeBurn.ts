@@ -1,3 +1,4 @@
+import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
@@ -6,46 +7,41 @@ import { NETWORK, getUserStake, unstakeBurn } from "src/typus-perp";
 import { LiquidityPool, Registry } from "src/typus-perp/lp-pool/structs";
 import { createPythClient } from "src/utils";
 
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const config = TypusConfig.default("TESTNET");
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
-const gasBudget = 100000000;
-
 (async () => {
-    const user = keypair.toSuiAddress();
+    let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let config = TypusConfig.default("TESTNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
+    let user = keypair.toSuiAddress();
     console.log(user);
 
-    const lpPoolRegistry = await Registry.fetch(provider, config.registry.perp.lpPool);
+    let lpPoolRegistry = await Registry.fetch(provider, config.registry.perp.lpPool);
     // console.log(lpPoolRegistry);
 
-    const dynamicFields = await provider.getDynamicFields({
+    let dynamicFields = await provider.getDynamicFields({
         parentId: lpPoolRegistry.liquidityPoolRegistry,
     });
 
-    const field = dynamicFields.data[0];
-    const lpPool = await LiquidityPool.fetch(provider, field.objectId);
+    let field = dynamicFields.data[0];
+    let lpPool = await LiquidityPool.fetch(provider, field.objectId);
     // console.log(lpPool);
 
-    const pythClient = createPythClient(provider, NETWORK);
+    let pythClient = createPythClient(provider, NETWORK);
 
     // 1. Get user's stake
-    const stakes = await getUserStake(provider, config, user);
+    let stakes = await getUserStake(config, user);
     console.log(stakes);
 
-    const unlockedStakes = stakes.filter((s) => s.deactivatingShares.filter((d) => d.unlockedTsMs < Date.now()).length > 0);
+    let unlockedStakes = stakes.filter((s) => s.deactivatingShares.filter((d) => d.unlockedTsMs < Date.now()).length > 0);
     console.log(unlockedStakes);
 
-    const stake = unlockedStakes[0];
+    let stake = unlockedStakes[0];
     console.log(stake);
 
-    const tx = new TransactionBlock();
-    tx.setGasBudget(gasBudget);
+    let tx = new TransactionBlock();
+    tx.setGasBudget(100000000);
 
-    unstakeBurn(config, {
-        pythClient,
-        tx,
+    unstakeBurn(config, tx, pythClient, {
         userShareId: stake.userShareId.toString(),
         lpPool,
         cTOKEN: "USDC",

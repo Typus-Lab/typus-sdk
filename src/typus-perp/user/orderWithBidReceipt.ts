@@ -22,19 +22,19 @@ export async function createTradingOrderWithBidReceipt(
         isLong: boolean;
         user: string;
         index: string;
-        bToken: string;
+        bToken: TOKEN;
         bidReceipt: string;
         share: string | null;
     }
 ): Promise<TransactionBlock> {
     // INPUTS
-    const TOKEN = input.cToken;
-    const BASE_TOKEN = input.tradingToken;
+    let TOKEN = input.cToken;
+    let BASE_TOKEN = input.tradingToken;
 
     await updatePyth(pythClient, tx, [TOKEN, BASE_TOKEN]);
-    const cToken = tokenType[NETWORK][TOKEN];
-    const bToken = tokenType[NETWORK][input.bToken];
-    const baseToken = tokenType[NETWORK][BASE_TOKEN];
+    let cToken = tokenType[NETWORK][TOKEN];
+    let bToken = tokenType[NETWORK][input.bToken];
+    let baseToken = tokenType[NETWORK][BASE_TOKEN];
 
     updateOracleWithPyth(pythClient, tx, config.package.oracle, config.oracle[BASE_TOKEN.toLocaleLowerCase()], BASE_TOKEN, "USDC");
 
@@ -89,13 +89,13 @@ export async function reduceOptionCollateralPositionSize(
         bidReceipt: string;
     }
 ): Promise<TransactionBlock> {
-    const TOKEN = input.cToken;
-    const BASE_TOKEN = input.tradingToken;
+    let TOKEN = input.cToken;
+    let BASE_TOKEN = input.tradingToken;
 
     await updatePyth(pythClient, tx, [TOKEN, BASE_TOKEN]);
-    const cToken = tokenType[NETWORK][TOKEN];
-    const bToken = tokenType[NETWORK][input.bToken];
-    const baseToken = tokenType[NETWORK][BASE_TOKEN];
+    let cToken = tokenType[NETWORK][TOKEN];
+    let bToken = tokenType[NETWORK][input.bToken];
+    let baseToken = tokenType[NETWORK][BASE_TOKEN];
 
     updateOracleWithPyth(pythClient, tx, config.package.oracle, config.oracle[BASE_TOKEN.toLocaleLowerCase()], BASE_TOKEN, "USDC");
 

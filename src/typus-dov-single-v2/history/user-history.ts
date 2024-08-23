@@ -8,16 +8,16 @@ export async function getUserEvents(
     sender: string,
     cursor?: EventId | null
 ): Promise<[SuiEvent[], EventId | null | undefined]> {
-    const senderFilter: SuiEventFilter = {
+    let senderFilter: SuiEventFilter = {
         Sender: sender,
     };
 
     var hasNextPage = true;
 
-    const datas: SuiEvent[] = [];
+    let datas: SuiEvent[] = [];
 
     while (hasNextPage) {
-        const result = await provider.queryEvents({
+        let result = await provider.queryEvents({
             query: senderFilter,
             order: "ascending",
             cursor,
@@ -35,17 +35,17 @@ export async function getUserEvents(
 }
 
 export async function getAutoBidEvents(provider: SuiClient, originPackage: string, startTimeMs: number): Promise<SuiEvent[]> {
-    const moduleFilter: SuiEventFilter = {
+    let moduleFilter: SuiEventFilter = {
         MoveModule: { package: originPackage, module: "auto_bid" },
     };
 
     var hasNextPage = true;
     var cursor: any | undefined = undefined;
 
-    const datas: SuiEvent[] = [];
+    let datas: SuiEvent[] = [];
 
     while (hasNextPage) {
-        const result = await provider.queryEvents({
+        let result = await provider.queryEvents({
             query: moduleFilter,
             order: "descending",
             cursor,
@@ -84,9 +84,9 @@ export async function parseTxHistory(
     originPackage: string,
     vaults: { [key: string]: Vault }
 ): Promise<Array<TxHistory>> {
-    const results = await datas
+    let results = await datas
         .filter((event) => {
-            const type: string = event.type;
+            let type: string = event.type;
             return (
                 event.packageId == originPackage ||
                 type.includes("typus_nft::First") ||
@@ -105,8 +105,8 @@ export async function parseTxHistory(
         .reduce(async (promise, event) => {
             let txHistory: TxHistory[] = await promise;
             // console.log(event);
-            const functionType = new RegExp("^([^::]+)::([^::]+)::([^<]+)").exec(event.type)?.slice(1, 4)!;
-            const action = functionType[2];
+            let functionType = new RegExp("^([^::]+)::([^::]+)::([^<]+)").exec(event.type)?.slice(1, 4)!;
+            let action = functionType[2];
 
             let Action: string | undefined;
             let Amount: string | undefined;
@@ -120,7 +120,7 @@ export async function parseTxHistory(
             var b_token: string | undefined;
             var o_token: string | undefined;
 
-            Index = event.parsedJson!.index || event.parsedJson!.vault_index;
+            Index = event.parsedJson!.index || event.parsedJson!.vaultIndex;
             if (Index) {
                 [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, Index, action, event.parsedJson!.log);
             }
@@ -515,14 +515,14 @@ export async function parseTxHistory(
 }
 
 export async function getFromSentio(event: string, userAddress: string, startTimestamp: string): Promise<any[]> {
-    const apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
+    let apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
 
-    const headers = {
+    let headers = {
         "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
         "Content-Type": "application/json",
     };
 
-    const requestData = {
+    let requestData = {
         sqlQuery: {
             sql: `
                 SELECT *
@@ -534,7 +534,7 @@ export async function getFromSentio(event: string, userAddress: string, startTim
         },
     };
 
-    const jsonData = JSON.stringify(requestData);
+    let jsonData = JSON.stringify(requestData);
 
     let response = await fetch(apiUrl, {
         method: "POST",
@@ -548,14 +548,14 @@ export async function getFromSentio(event: string, userAddress: string, startTim
 }
 
 export async function getNewBidFromSentio(vaults: { [key: string]: Vault }, userAddress: string, startTimestamp: number) {
-    const apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
+    let apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
 
-    const headers = {
+    let headers = {
         "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
         "Content-Type": "application/json",
     };
 
-    const requestData = {
+    let requestData = {
         sqlQuery: {
             sql: `
                 SELECT *
@@ -571,7 +571,7 @@ export async function getNewBidFromSentio(vaults: { [key: string]: Vault }, user
         },
     };
 
-    const jsonData = JSON.stringify(requestData);
+    let jsonData = JSON.stringify(requestData);
 
     let response = await fetch(apiUrl, {
         method: "POST",
@@ -607,14 +607,14 @@ export async function getNewBidFromSentio(vaults: { [key: string]: Vault }, user
 }
 
 export async function getExerciseFromSentio(vaults: { [key: string]: Vault }, userAddress: string, startTimestamp: number) {
-    const apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
+    let apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
 
-    const headers = {
+    let headers = {
         "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
         "Content-Type": "application/json",
     };
 
-    const requestData = {
+    let requestData = {
         sqlQuery: {
             sql: `
                 SELECT *
@@ -626,7 +626,7 @@ export async function getExerciseFromSentio(vaults: { [key: string]: Vault }, us
         },
     };
 
-    const jsonData = JSON.stringify(requestData);
+    let jsonData = JSON.stringify(requestData);
 
     let response = await fetch(apiUrl, {
         method: "POST",
@@ -798,12 +798,12 @@ export function getDepositorCashFlows(userHistory: TxHistory[]) {
     let depositorCashFlows = new Map<string, DepositorCashFlow>();
 
     for (let history of userHistory) {
-        const index = history.Index!;
+        let index = history.Index!;
 
         if (history.Action!.startsWith("Harvest Reward")) {
             let historyAmounts = history.Amount?.split("\n")!;
             for (let historyAmount of historyAmounts) {
-                const [amount, token] = historyAmount.split(" ")!;
+                let [amount, token] = historyAmount.split(" ")!;
                 if (depositorCashFlows.has(index)) {
                     let depositorCashFlow = depositorCashFlows.get(index)!;
                     let totalHarvest = depositorCashFlow.totalHarvest;
@@ -831,7 +831,7 @@ export function getDepositorCashFlows(userHistory: TxHistory[]) {
                 }
             }
         } else if (history.Action!.startsWith("Deposit")) {
-            const [amount, token] = history.Amount?.split(" ")!;
+            let [amount, token] = history.Amount?.split(" ")!;
             if (depositorCashFlows.has(index)) {
                 let depositorCashFlow = depositorCashFlows.get(index)!;
                 depositorCashFlow.D_TOKEN = token;
@@ -850,7 +850,7 @@ export function getDepositorCashFlows(userHistory: TxHistory[]) {
                 depositorCashFlows.set(index, depositorCashFlow);
             }
         } else if (history.Action!.startsWith("Withdraw")) {
-            const [amount, token] = history.Amount?.split(" ")!;
+            let [amount, token] = history.Amount?.split(" ")!;
             if (depositorCashFlows.has(index)) {
                 let depositorCashFlow = depositorCashFlows.get(index)!;
                 depositorCashFlow.D_TOKEN = token;
@@ -869,7 +869,7 @@ export function getDepositorCashFlows(userHistory: TxHistory[]) {
                 depositorCashFlows.set(index, depositorCashFlow);
             }
         } else if (history.Action! == "Claim") {
-            const [amount, token] = history.Amount?.split(" ")!;
+            let [amount, token] = history.Amount?.split(" ")!;
             if (depositorCashFlows.has(index)) {
                 let depositorCashFlow = depositorCashFlows.get(index)!;
                 depositorCashFlow.D_TOKEN = token;
@@ -888,7 +888,7 @@ export function getDepositorCashFlows(userHistory: TxHistory[]) {
                 depositorCashFlows.set(index, depositorCashFlow);
             }
         } else if (history.Action! == "Compound") {
-            const [amount, token] = history.Amount?.split(" ")!;
+            let [amount, token] = history.Amount?.split(" ")!;
             if (depositorCashFlows.has(index)) {
                 let depositorCashFlow = depositorCashFlows.get(index)!;
                 depositorCashFlow.D_TOKEN = token;

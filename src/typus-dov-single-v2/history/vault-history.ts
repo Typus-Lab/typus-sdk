@@ -5,7 +5,7 @@ import { TypusConfig } from "src/utils";
 
 export async function getVaultHistoryEvents(config: TypusConfig, startTimeMs: number) {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    const senderFilter: SuiEventFilter = {
+    let senderFilter: SuiEventFilter = {
         MoveEventModule: {
             package: config.packageOrigin.dovSingle,
             module: "typus_dov_single",
@@ -34,26 +34,26 @@ export async function getVaultHistoryEvents(config: TypusConfig, startTimeMs: nu
 }
 
 export async function parseGroupEvents(datas: SuiEvent[]): Promise<Map<string, Map<string, GroupEvent>>> {
-    const results = await datas.reduce(async (promise, event) => {
+    let results = await datas.reduce(async (promise, event) => {
         let map: Map<string, Map<string, GroupEvent>> = await promise;
 
         // console.log(event);
 
-        const functionType = new RegExp("^([^::]+)::([^::]+)::([^<]+)").exec(event.type)!;
-        const action = functionType[3];
+        let functionType = new RegExp("^([^::]+)::([^::]+)::([^<]+)").exec(event.type)!;
+        let action = functionType[3];
         // console.log(action);
 
         if (!["ActivateEvent", "NewAuctionEvent", "DeliveryEvent", "RecoupEvent", "SettleEvent"].includes(action)) {
             return map;
         }
 
-        const parsedJson: any = event.parsedJson;
+        let parsedJson: any = event.parsedJson;
         // console.log(parsedJson);
         parsedJson.timestampMs = event.timestampMs;
         parsedJson.txDigest = event.id.txDigest;
 
-        const index: string = parsedJson.index.toString();
-        const round: string = parsedJson.round.toString();
+        let index: string = parsedJson.index.toString();
+        let round: string = parsedJson.round.toString();
         // console.log(index);
         // console.log(round);
 
@@ -132,13 +132,13 @@ export async function parseGroupEvents(datas: SuiEvent[]): Promise<Map<string, M
 export async function parseVaultHistory(
     inputMap: Map<string, Map<string, GroupEvent>>
 ): Promise<Map<string, Map<string, VaultHistory | undefined>>> {
-    const result = new Map<string, Map<string, VaultHistory | undefined>>();
+    let result = new Map<string, Map<string, VaultHistory | undefined>>();
 
     inputMap.forEach((innerMap, outerKey) => {
-        const newInnerMap = new Map<string, VaultHistory | undefined>();
+        let newInnerMap = new Map<string, VaultHistory | undefined>();
 
         innerMap.forEach(async (groupEvent, innerKey) => {
-            const vaultHistory = await convertGroupEventToVaultHistory(groupEvent);
+            let vaultHistory = await convertGroupEventToVaultHistory(groupEvent);
 
             newInnerMap.set(innerKey, vaultHistory);
         });
@@ -150,9 +150,9 @@ export async function parseVaultHistory(
 }
 
 export async function getVaultHistoryFromDB(index?: string, startTs?: string, endTs?: string, rounds?: number[]) {
-    const apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/vault-history";
+    let apiUrl = "https://us-central1-aqueous-freedom-378103.cloudfunctions.net/vault-history";
 
-    const queryParams = new URLSearchParams();
+    let queryParams = new URLSearchParams();
 
     if (index) {
         queryParams.append("index", index);
@@ -170,7 +170,7 @@ export async function getVaultHistoryFromDB(index?: string, startTs?: string, en
     var apiUrlWithParams = `${apiUrl}?${queryParams.toString()}`;
 
     if (rounds) {
-        const _rounds = JSON.stringify(rounds);
+        let _rounds = JSON.stringify(rounds);
         apiUrlWithParams += `&rounds=${_rounds}`;
     }
 
@@ -181,14 +181,14 @@ export async function getVaultHistoryFromDB(index?: string, startTs?: string, en
         headers: { "Content-Type": "application/json" },
     });
 
-    const map = new Map<string, Map<string, VaultHistory | undefined>>();
+    let map = new Map<string, Map<string, VaultHistory | undefined>>();
 
     if (response.ok) {
         let datas = await response.json();
 
         for (let data of datas) {
-            const index = data.index;
-            const round = data.round;
+            let index = data.index;
+            let round = data.round;
 
             let vaultHistory: VaultHistory = {
                 vaultIndex: index,
@@ -249,7 +249,7 @@ export async function convertGroupEventToVaultHistory(groupEvent: GroupEvent): P
             (Number(groupEvent.settleEvent?.settle_balance) - Number(groupEvent.settleEvent?.settled_balance)) /
             10 ** Number(groupEvent.settleEvent?.d_token_decimal);
 
-        const result: VaultHistory = {
+        let result: VaultHistory = {
             vaultIndex: groupEvent.activateEvent?.index!,
             round: groupEvent.activateEvent?.round!,
 
@@ -396,25 +396,25 @@ interface SettleEvent {
 }
 
 export async function parseBidEvents(datas: SuiEvent[], end_ts_ms): Promise<Map<string, NewBidEvent[]>> {
-    const results = await datas.reduce(async (promise, event) => {
+    let results = await datas.reduce(async (promise, event) => {
         let map: Map<string, NewBidEvent[]> = await promise;
 
         // console.log(event);
 
-        const functionType = new RegExp("^([^::]+)::([^::]+)::([^<]+)").exec(event.type)!;
-        const action = functionType[3];
+        let functionType = new RegExp("^([^::]+)::([^::]+)::([^<]+)").exec(event.type)!;
+        let action = functionType[3];
         // console.log(action);
 
         if (action != "NewBidEvent") {
             return map;
         }
 
-        const parsedJson: any = event.parsedJson;
+        let parsedJson: any = event.parsedJson;
         // console.log(parsedJson);
         parsedJson.timestampMs = event.timestampMs;
         parsedJson.txDigest = event.id.txDigest;
 
-        const index: string = parsedJson.index.toString();
+        let index: string = parsedJson.index.toString();
 
         let bid_event = parsedJson as NewBidEvent;
         // console.log(bid_event);

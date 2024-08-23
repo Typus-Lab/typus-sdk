@@ -3,82 +3,71 @@ import { TypusConfig } from "src/utils";
 import { getPlaygrounds, newGamePlayGuessTx, DrawResult, getDrawResult } from "src/dice";
 import { SuiClient } from "@mysten/sui.js/client";
 
-const config = TypusConfig.default("TESTNET");
-const provider = new SuiClient({ url: config.rpcEndpoint });
-
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-
-const gasBudget = 50000000;
-const index = 0; // 0 SUI
-const amount = "1000000000";
-const guess_1 = "5000";
-const larger_than_1 = true;
-const guess_2 = "5000";
-const larger_than_2 = true;
+import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
 
 (async () => {
-    const address = keypair.toSuiAddress();
-    console.log(address);
+    let network: "MAINNET" | "TESTNET" = "TESTNET";
+    let module: "combo_dice" | "tails_exp" = "tails_exp";
+    let config = TypusConfig.default(network);
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let user = keypair.toSuiAddress();
 
-    const playgrounds = await getPlaygrounds(provider, config.registry.dice.tailsExp);
-    const playground = playgrounds[index];
-    console.log(playground);
+    let index = "0";
+    let amount = "1000000000";
+    let guess_1 = "5000";
+    let larger_than_1 = true;
+    let guess_2 = "5000";
+    let larger_than_2 = true;
 
-    const coinType = "0x" + playground.stake_token;
+    let playgrounds = await getPlaygrounds(config, { module });
+    let playground = playgrounds[index];
+    let coinType = "0x" + playground.stake_token;
+    let coins = (await provider.getCoins({ owner: user, coinType })).data.map((coin) => coin.coinObjectId);
 
-    let coins = (await provider.getCoins({ owner: address, coinType })).data.map((coin) => coin.coinObjectId);
-    console.log(coins);
-
-    let transactionBlock = await newGamePlayGuessTx(
-        gasBudget,
-        config.package.dice,
-        "combo_dice", // different from exp dice
-        [coinType],
-        config.registry.dice.comboDice, // different from exp dice
-        config.registry.dice.tailsExp,
-        index.toString(),
+    let transactionBlock = await newGamePlayGuessTx(config, new TransactionBlock(), {
+        module,
+        typeArguments: [coinType],
+        index,
         coins,
         amount,
         guess_1,
         larger_than_1,
         guess_2,
-        larger_than_2
-    );
-
-    // Send Play
+        larger_than_2,
+    });
+    transactionBlock.setGasBudget(100000000);
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock, options: { showEvents: true } });
     console.log(res);
 
     try {
         // Old Version
-        const game_id = res.events![1].parsedJson!["game_id"];
+        let game_id = res.events![1].parsedJson!["game_id"];
         console.log("game_id : " + game_id);
 
-        const vrf_input_1 = res.events![1].parsedJson!["vrf_input_1"];
-        const vrf_input_2 = res.events![1].parsedJson!["vrf_input_2"];
+        let vrf_input_1 = res.events![1].parsedJson!["vrf_input_1"];
+        let vrf_input_2 = res.events![1].parsedJson!["vrf_input_2"];
 
-        const drawResultV1 = await getDrawResult(
-            "testnet",
-            config.package.dice,
-            "combo_dice", // different from exp dice
-            config.registry.dice.comboDice, // different from exp dice
-            index.toString(),
+        let drawResultV1 = await getDrawResult(config, {
+            network,
+            module,
+            index,
             amount,
             guess_1,
             larger_than_1,
             guess_2,
             larger_than_2,
             vrf_input_1,
-            vrf_input_2
-        );
+            vrf_input_2,
+        });
         console.log(drawResultV1);
     } catch (e) {}
 
     try {
         // New Version
-        const result = res.events![2].parsedJson!;
-        const drawResultV2 = result as DrawResult;
+        let result = res.events![2].parsedJson!;
+        let drawResultV2 = result as DrawResult;
         console.log(drawResultV2);
     } catch (e) {}
 })();

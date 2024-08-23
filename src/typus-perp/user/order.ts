@@ -29,19 +29,19 @@ export async function createTradingOrder(
     }
 ): Promise<TransactionBlock> {
     // INPUTS
-    const TOKEN = input.cToken;
-    const BASE_TOKEN = input.tradingToken;
+    let TOKEN = input.cToken;
+    let BASE_TOKEN = input.tradingToken;
 
     await updatePyth(pythClient, tx, [TOKEN, BASE_TOKEN]);
-    const cToken = tokenType[NETWORK][TOKEN];
-    const baseToken = tokenType[NETWORK][BASE_TOKEN];
+    let cToken = tokenType[NETWORK][TOKEN];
+    let baseToken = tokenType[NETWORK][BASE_TOKEN];
 
     var coin;
 
     if (TOKEN == "SUI") {
         [coin] = tx.splitCoins(tx.gas, [input.amount]);
     } else {
-        const destination = input.coins.pop()!;
+        let destination = input.coins.pop()!;
 
         if (input.coins.length > 0) {
             tx.mergeCoins(destination, input.coins);
@@ -83,10 +83,10 @@ export async function cancelTradingOrder(
         user: string;
     }
 ): Promise<TransactionBlock> {
-    const cToken = "0x" + input.order.collateralToken.name;
-    const BASE_TOKEN = "0x" + input.order.symbol.baseToken.name;
+    let cToken = "0x" + input.order.collateralToken.name;
+    let BASE_TOKEN = "0x" + input.order.symbol.baseToken.name;
 
-    const coin = _cancelTradingOrder(tx, [cToken, BASE_TOKEN], {
+    let coin = _cancelTradingOrder(tx, [cToken, BASE_TOKEN], {
         version: config.version.perp,
         registry: config.registry.perp.market,
         marketIndex: BigInt(0),
@@ -110,19 +110,19 @@ export async function increaseCollateral(
     }
 ): Promise<TransactionBlock> {
     // parse from Position
-    const TOKEN = typeArgToToken(input.position.collateralToken.name);
-    const BASE_TOKEN = typeArgToToken(input.position.symbol.baseToken.name);
+    let TOKEN = typeArgToToken(input.position.collateralToken.name);
+    let BASE_TOKEN = typeArgToToken(input.position.symbol.baseToken.name);
 
     await updatePyth(pythClient, tx, [TOKEN, BASE_TOKEN]);
-    const cToken = tokenType[NETWORK][TOKEN];
-    const baseToken = tokenType[NETWORK][BASE_TOKEN];
+    let cToken = tokenType[NETWORK][TOKEN];
+    let baseToken = tokenType[NETWORK][BASE_TOKEN];
 
     var coin;
 
     if (TOKEN == "SUI") {
         [coin] = tx.splitCoins(tx.gas, [input.amount]);
     } else {
-        const destination = input.coins.pop()!;
+        let destination = input.coins.pop()!;
 
         if (input.coins.length > 0) {
             tx.mergeCoins(destination, input.coins);
@@ -158,14 +158,14 @@ export async function releaseCollateral(
     }
 ): Promise<TransactionBlock> {
     // parse from Position
-    const TOKEN = typeArgToToken(input.position.collateralToken.name);
-    const BASE_TOKEN = typeArgToToken(input.position.symbol.baseToken.name);
+    let TOKEN = typeArgToToken(input.position.collateralToken.name);
+    let BASE_TOKEN = typeArgToToken(input.position.symbol.baseToken.name);
 
     await updatePyth(pythClient, tx, [TOKEN, BASE_TOKEN]);
-    const cToken = tokenType[NETWORK][TOKEN];
-    const baseToken = tokenType[NETWORK][BASE_TOKEN];
+    let cToken = tokenType[NETWORK][TOKEN];
+    let baseToken = tokenType[NETWORK][BASE_TOKEN];
 
-    const coin = _releaseCollateral(tx, [cToken, baseToken], {
+    let coin = _releaseCollateral(tx, [cToken, baseToken], {
         version: config.version.perp,
         registry: config.registry.perp.market,
         poolRegistry: config.registry.perp.lpPool,

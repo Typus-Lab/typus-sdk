@@ -3,9 +3,9 @@ import * as fs from "fs";
 import { TypusConfig } from "src/utils";
 import { getKioskOwner } from "src/typus-nft";
 import "src/utils/load_env";
-const config = TypusConfig.default("TESTNET");
+let config = TypusConfig.default("TESTNET");
 
-const provider = new SuiClient({ url: config.rpcEndpoint });
+let provider = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
     const raw = fs.readFileSync("DynamicFieldToKiosk.csv", "utf-8");

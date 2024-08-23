@@ -6,22 +6,13 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import config_json from "config-mainnet.json";
 import { TypusConfig } from "src/utils";
 
-const config = TypusConfig.parse(config_json);
-const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const user = signer.toSuiAddress();
-const provider = new SuiClient({ url: config.rpcEndpoint });
-
 (async () => {
-    let transactionBlock = new TransactionBlock();
-    transactionBlock = getRaiseFundTx({
-        tx: transactionBlock,
-        typusEcosystemVersion: config.version.typus,
-        typusUserRegistry: config.registry.typus.user,
-        typusLeaderboardRegistry: config.registry.typus.leaderboard,
-        typusFrameworkOriginPackageId: config.packageOrigin.framework,
-        typusFrameworkPackageId: config.package.framework,
-        typusDovSinglePackageId: config.package.dovSingle,
-        typusDovSingleRegistry: config.registry.dov.dovSingle,
+    let config = TypusConfig.parse(config_json);
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let user = signer.toSuiAddress();
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
+    let transactionBlock = getRaiseFundTx(config, new TransactionBlock(), {
         typeArguments: [config.token.usdc, config.token.sui],
         index: "1",
         raiseCoins: (await provider.getCoins({ owner: user, coinType: config.token.usdc })).data.map((coin) => coin.coinObjectId),

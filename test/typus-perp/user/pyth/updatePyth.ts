@@ -6,22 +6,20 @@ import { createPythClient, updatePyth } from "src/utils";
 
 import mnemonic from "../../../../mnemonic.json";
 
-const config = TypusConfig.default("TESTNET");
+let config = TypusConfig.default("TESTNET");
 
-const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+let keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
+let provider = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
-    const tx = new TransactionBlock();
+    let tx = new TransactionBlock();
 
-    const pythClient = createPythClient(provider, "TESTNET");
-    const priceInfoObjectIds = await updatePyth(pythClient, tx, ["SUI", "USDC", "USDT", "BTC", "ETH", "SOL", "CETUS", "NAVX", "SCA"]);
+    let pythClient = createPythClient(provider, "TESTNET");
+    let priceInfoObjectIds = await updatePyth(pythClient, tx, ["SUI", "USDC", "USDT", "BTC", "ETH", "SOL", "CETUS", "NAVX", "SCA"]);
     console.log(priceInfoObjectIds);
 
-    const res = await provider.signAndExecuteTransactionBlock({
+    let res = await provider.signAndExecuteTransactionBlock({
         signer: keypair,
         transactionBlock: tx,
         options: {

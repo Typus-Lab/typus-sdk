@@ -1,39 +1,30 @@
+import "src/utils/load_env";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TypusConfig } from "src/utils";
 import { getWithdrawProfitStrategyTx } from "src/auto-bid";
-import "src/utils/load_env";
-const config = TypusConfig.default("TESTNET");
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
-const gasBudget = 100000000;
+import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
 
 (async () => {
+    let config = TypusConfig.default("TESTNET");
+    let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
     let depositToken = "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC";
     let bidToken = "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC";
-
-    let packageId = config.package.dovSingle;
     let typeArguments = [depositToken, bidToken];
-    let strategy_pool = config.object.strategyPool;
+    let vaultIndex = "22";
+    let signalIndex = "0";
+    let strategyIndex = "1";
 
-    let vault_index = "22";
-    let signal_index = "0";
-    let strategy_index = "1";
-
-    let transactionBlock = getWithdrawProfitStrategyTx(
-        gasBudget,
-        packageId,
+    let transactionBlock = getWithdrawProfitStrategyTx(config, new TransactionBlock(), {
         typeArguments,
-        config.registry.dov.dovSingle,
-        strategy_pool,
-        vault_index,
-        signal_index,
-        strategy_index,
-        keypair.toSuiAddress()
-    );
+        vaultIndex,
+        signalIndex,
+        strategyIndex,
+        user: keypair.toSuiAddress(),
+    });
+    transactionBlock.setGasBudget(100000000);
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
     console.log(res);
 })();

@@ -2,21 +2,17 @@ import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
 import { getVaults, getUserEvents, parseTxHistory, getNewBidFromSentio, getDepositorCashFlows } from "src/typus-dov-single-v2";
 import * as fs from "fs";
 import { TypusConfig } from "src/utils";
-const config = TypusConfig.default("TESTNET");
-
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
-
-const sender = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d484107";
 
 (async () => {
-    const vaults = await getVaults(provider, config.package.dovSingle, config.registry.dov.dovSingle, []);
+    let config = TypusConfig.default("TESTNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let user = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d484107";
+    let vaults = await getVaults(config, { indexes: [] });
 
     // 1. Get User Events
-    const localCacheFile = fs.readFileSync("localCacheEvents.json", "utf-8");
-    const localCache = JSON.parse(localCacheFile);
-    const localCacheMap: Map<string, [SuiEvent[], EventId | null | undefined]> = localCache.reduce((map, obj) => {
+    let localCacheFile = fs.readFileSync("localCacheEvents.json", "utf-8");
+    let localCache = JSON.parse(localCacheFile);
+    let localCacheMap: Map<string, [SuiEvent[], EventId | null | undefined]> = localCache.reduce((map, obj) => {
         map.set(obj.user, [obj.events, obj.cursor]);
         return map;
     }, new Map<string, [SuiEvent[], EventId | null | undefined]>());
@@ -24,21 +20,21 @@ const sender = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d4841
     var localCacheEvents: SuiEvent[] = [];
     var cursor: EventId | null | undefined = undefined;
 
-    const userCache = localCacheMap.get(sender);
+    let userCache = localCacheMap.get(user);
     if (userCache) {
         localCacheEvents = userCache[0];
         cursor = userCache[1];
         console.log("Load from cache...");
     }
 
-    const [datas1, cursor1] = await getUserEvents(provider, sender, cursor);
+    let [datas1, cursor1] = await getUserEvents(provider, user, cursor);
 
     // save local cache for user
     localCacheEvents = localCacheEvents.concat(datas1);
     cursor = cursor1;
 
-    localCacheMap.set(sender, [localCacheEvents, cursor]);
-    const localCacheArray = Array.from(localCacheMap.entries());
+    localCacheMap.set(user, [localCacheEvents, cursor]);
+    let localCacheArray = Array.from(localCacheMap.entries());
 
     fs.writeFileSync(
         "localCacheEvents.json",
@@ -56,20 +52,20 @@ const sender = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d4841
     console.log(localCacheEvents.length);
     console.log(cursor);
 
-    const datas = localCacheEvents;
+    let datas = localCacheEvents;
 
-    const txHistory = await parseTxHistory(datas, config.packageOrigin.dovSingle, vaults);
+    let txHistory = await parseTxHistory(datas, config.packageOrigin.dovSingle, vaults);
     // console.log(txHistory.reverse());
 
-    const newBidHistory = await getNewBidFromSentio(vaults, sender, 0);
+    let newBidHistory = await getNewBidFromSentio(vaults, user, 0);
     // console.log(newBidHistory);
 
-    const userHistory = txHistory
+    let userHistory = txHistory
         .concat(newBidHistory.filter((x) => txHistory.findIndex((y) => y.txDigest == x.txDigest) == -1))
         .sort((a, b) => Number(b.Date) - Number(a.Date));
 
     // depositorCashFlows
-    const depositorCashFlows = await getDepositorCashFlows(userHistory);
+    let depositorCashFlows = await getDepositorCashFlows(userHistory);
     console.log(depositorCashFlows);
 
     //

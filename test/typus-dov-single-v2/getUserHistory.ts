@@ -3,17 +3,12 @@ import { getVaults, getUserEvents, parseTxHistory, getNewBidFromSentio, getExerc
 import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
 import * as fs from "fs";
 
-const config = TypusConfig.default("TESTNET");
-
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
-
-const sender = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9";
-const fileName = "testnetLocalCacheEvents.json";
-
 (async () => {
-    const vaults = await getVaults(provider, config.package.dovSingle, config.registry.dov.dovSingle, []);
+    let config = TypusConfig.default("TESTNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let sender = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9";
+    let fileName = "testnetLocalCacheEvents.json";
+    let vaults = await getVaults(config, { indexes: [] });
 
     // 1. Get User Events
     var localCacheEvents: SuiEvent[] = [];
@@ -21,14 +16,14 @@ const fileName = "testnetLocalCacheEvents.json";
     var localCacheMap = new Map<string, [SuiEvent[], EventId | null | undefined]>();
 
     try {
-        const localCacheFile = fs.readFileSync(fileName, "utf-8");
-        const localCache = JSON.parse(localCacheFile);
+        let localCacheFile = fs.readFileSync(fileName, "utf-8");
+        let localCache = JSON.parse(localCacheFile);
         localCacheMap = localCache.reduce((map, obj) => {
             map.set(obj.user, [obj.events, obj.cursor]);
             return map;
         }, new Map<string, [SuiEvent[], EventId | null | undefined]>());
 
-        const userCache = localCacheMap.get(sender);
+        let userCache = localCacheMap.get(sender);
         if (userCache) {
             localCacheEvents = userCache[0];
             cursor = userCache[1];
@@ -36,14 +31,14 @@ const fileName = "testnetLocalCacheEvents.json";
         }
     } catch {}
 
-    const [datas1, cursor1] = await getUserEvents(provider, sender, cursor);
+    let [datas1, cursor1] = await getUserEvents(provider, sender, cursor);
 
     // save local cache for user
     localCacheEvents = localCacheEvents.concat(datas1);
     cursor = cursor1;
 
     localCacheMap.set(sender, [localCacheEvents, cursor]);
-    const localCacheArray = Array.from(localCacheMap.entries());
+    let localCacheArray = Array.from(localCacheMap.entries());
 
     fs.writeFileSync(
         fileName,
@@ -62,11 +57,11 @@ const fileName = "testnetLocalCacheEvents.json";
     console.log(cursor);
 
     // 2. Get AutoBid Events
-    // const datas2 = await getAutoBidEvents(provider, config.packageOrigin.dovSingle, 1710892800000);
+    // let datas2 = await getAutoBidEvents(provider, config.packageOrigin.dovSingle, 1710892800000);
     // console.log(datas2.length);
 
     // 3. Parese User History
-    // const datas = localCacheEvents.concat(
+    // let datas = localCacheEvents.concat(
     //     datas2.filter((x) => {
     //         // @ts-ignore
     //         if (x.parsedJson.signer) {
@@ -80,18 +75,18 @@ const fileName = "testnetLocalCacheEvents.json";
     //     })
     // );
 
-    const datas = localCacheEvents;
+    let datas = localCacheEvents;
 
-    const txHistory = await parseTxHistory(datas, config.packageOrigin.dovSingle, vaults);
+    let txHistory = await parseTxHistory(datas, config.packageOrigin.dovSingle, vaults);
     // console.log(txHistory.reverse());
 
-    const newBidHistory = await getNewBidFromSentio(vaults, sender, 0);
+    let newBidHistory = await getNewBidFromSentio(vaults, sender, 0);
     // console.log(newBidHistory);
 
-    const exerciseHistory = await getExerciseFromSentio(vaults, sender, 0);
+    let exerciseHistory = await getExerciseFromSentio(vaults, sender, 0);
     // console.log(exerciseHistory);
 
-    const concatHistory = txHistory
+    let concatHistory = txHistory
         .concat(newBidHistory.filter((x) => txHistory.findIndex((y) => y.txDigest == x.txDigest) == -1))
         .concat(exerciseHistory.filter((x) => txHistory.findIndex((y) => y.txDigest == x.txDigest) == -1))
         .sort((a, b) => Number(b.Date) - Number(a.Date));

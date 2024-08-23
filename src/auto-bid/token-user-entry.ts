@@ -7,15 +7,14 @@ export function getTokenNewStrategyTx(
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
         typusTokenType: string;
-        strategy_pool: string;
-        vault_index: string;
-        signal_index: string;
+        vaultIndex: string;
+        signalIndex: string;
         coins: string[];
         amount: string;
         size: string;
-        price_percentage: string;
-        max_times: string;
-        target_rounds: string[];
+        pricePercentage: string;
+        maxTimes: string;
+        targetRounds: string[];
     }
 ) {
     let typusTokenRegistry = "";
@@ -41,13 +40,13 @@ export function getTokenNewStrategyTx(
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
-            tx.object(input.strategy_pool),
-            tx.pure(input.vault_index),
-            tx.pure(input.signal_index),
+            tx.object(config.registry.dov.autoBid),
+            tx.pure(input.vaultIndex),
+            tx.pure(input.signalIndex),
             tx.pure(input.size),
-            tx.pure(input.price_percentage),
-            tx.pure(input.max_times),
-            tx.pure(input.target_rounds),
+            tx.pure(input.pricePercentage),
+            tx.pure(input.maxTimes),
+            tx.pure(input.targetRounds),
             tToken,
         ],
     });
@@ -61,16 +60,15 @@ export function getTokenUpdateStrategyTx(
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
         typusTokenType: string;
-        strategy_pool: string;
-        vault_index: string;
-        signal_index: string;
-        strategy_index: string;
+        vaultIndex: string;
+        signalIndex: string;
+        strategyIndex: string;
         coins: string[];
         amount: string;
         size: string | null;
-        price_percentage: string | null;
-        max_times: string | null;
-        target_rounds: string[];
+        pricePercentage: string | null;
+        maxTimes: string | null;
+        targetRounds: string[];
     }
 ) {
     let typusTokenRegistry = "";
@@ -96,14 +94,14 @@ export function getTokenUpdateStrategyTx(
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
-            tx.object(input.strategy_pool),
-            tx.pure(input.vault_index),
-            tx.pure(input.signal_index),
-            tx.pure(input.strategy_index),
+            tx.object(config.registry.dov.autoBid),
+            tx.pure(input.vaultIndex),
+            tx.pure(input.signalIndex),
+            tx.pure(input.strategyIndex),
             tx.pure(input.size ? [input.size] : []),
-            tx.pure(input.price_percentage ? [input.price_percentage] : []),
-            tx.pure(input.max_times ? [input.max_times] : []),
-            tx.pure(input.target_rounds),
+            tx.pure(input.pricePercentage ? [input.pricePercentage] : []),
+            tx.pure(input.maxTimes ? [input.maxTimes] : []),
+            tx.pure(input.targetRounds),
             tx.makeMoveVec({ objects: [tToken] }),
         ],
     });
@@ -117,10 +115,9 @@ export function getTokenCloseStrategyTx(
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
         typusTokenType: string;
-        strategy_pool: string;
-        vault_index: string;
-        signal_index: string;
-        strategy_index: string;
+        vaultIndex: string;
+        signalIndex: string;
+        strategyIndex: string;
         user: string;
     }
 ) {
@@ -138,10 +135,10 @@ export function getTokenCloseStrategyTx(
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
-            tx.object(input.strategy_pool),
-            tx.pure(input.vault_index),
-            tx.pure(input.signal_index),
-            tx.pure(input.strategy_index),
+            tx.object(config.registry.dov.autoBid),
+            tx.pure(input.vaultIndex),
+            tx.pure(input.signalIndex),
+            tx.pure(input.strategyIndex),
         ],
     });
 
@@ -174,10 +171,9 @@ export function getTokenWithdrawProfitStrategyTx(
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
         typusTokenType: string;
-        strategy_pool: string;
-        vault_index: string;
-        signal_index: string;
-        strategy_index: string;
+        vaultIndex: string;
+        signalIndex: string;
+        strategyIndex: string;
         user: string;
     }
 ) {
@@ -195,10 +191,10 @@ export function getTokenWithdrawProfitStrategyTx(
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
-            tx.object(input.strategy_pool),
-            tx.pure(input.vault_index),
-            tx.pure(input.signal_index),
-            tx.pure(input.strategy_index),
+            tx.object(config.registry.dov.autoBid),
+            tx.pure(input.vaultIndex),
+            tx.pure(input.signalIndex),
+            tx.pure(input.strategyIndex),
         ],
     });
 

@@ -11,23 +11,23 @@ export declare class PythClient {
 }
 
 export function createPythClient(provider: any, network: "MAINNET" | "TESTNET"): PythClient {
-    const client = new SuiPythClient(provider, pythStateId[network], wormholeStateId[network]);
-    const connection =
+    let client = new SuiPythClient(provider, pythStateId[network], wormholeStateId[network]);
+    let connection =
         network == "MAINNET"
             ? new SuiPriceServiceConnection("https://hermes.pyth.network")
             : new SuiPriceServiceConnection("https://hermes-beta.pyth.network");
-    const pythClient = { network, client, connection };
+    let pythClient = { network, client, connection };
     return pythClient;
 }
 
 export async function updatePyth(pythClient: PythClient, tx: TransactionBlock, tokens: string[]): Promise<ObjectId[]> {
-    const _priceIDs = tokens.map((token) => priceIDs[pythClient.network][token]);
+    let _priceIDs = tokens.map((token) => priceIDs[pythClient.network][token]);
     // console.log(_priceIDs);
 
-    const priceFeedUpdateData = await pythClient.connection.getPriceFeedsUpdateData(_priceIDs);
+    let priceFeedUpdateData = await pythClient.connection.getPriceFeedsUpdateData(_priceIDs);
 
     // @ts-ignore
-    const priceInfoObjectIds = await pythClient.client.updatePriceFeeds(tx, priceFeedUpdateData, _priceIDs);
+    let priceInfoObjectIds = await pythClient.client.updatePriceFeeds(tx, priceFeedUpdateData, _priceIDs);
 
     return priceInfoObjectIds;
 }

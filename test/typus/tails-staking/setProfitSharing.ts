@@ -6,14 +6,12 @@ import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import slack from "slack";
 import { calculateLevelReward } from "src/typus-nft";
 
-const process = require("process");
+let process = require("process");
 process.removeAllListeners("warning");
-const config = TypusConfig.default("MAINNET");
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
+let config = TypusConfig.default("TESTNET");
+let provider = new SuiClient({ url: config.rpcEndpoint });
+let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+let levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
 
 (async () => {
     let material = await init();
@@ -37,11 +35,7 @@ const levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
         mergedCoin = tx.object(coin);
     }
     let [inputCoin] = tx.splitCoins(mergedCoin, [tx.pure(material.spendingProfit)]);
-    tx = getSetProfitSharingTx({
-        tx,
-        typusPackageId: config.package.typus,
-        typusEcosystemVersion: config.version.typus,
-        typusTailsStakingRegistry: config.registry.typus.tailsStaking,
+    tx = getSetProfitSharingTx(config, tx, {
         typeArguments: [material.token, material.nextWeekToken],
         levelProfits: material.levelProfits.map((x) => x.toString()),
         coin: inputCoin,
@@ -74,12 +68,7 @@ async function init(): Promise<Material> {
     let tsMs = Date.now();
     let rewards = Number.parseInt(String(process.env.REWARDS));
     let token = String(process.env.TOKEN);
-    let levelCounts = await getLevelCounts({
-        provider,
-        typusPackageId: config.package.typus,
-        typusEcosystemVersion: config.version.typus,
-        typusTailsStakingRegistry: config.registry.typus.tailsStaking,
-    });
+    let levelCounts = await getLevelCounts(config);
     let levelProfits = calculateLevelReward(rewards, levelShares, levelCounts);
     let profitAsset = (await provider.getDynamicFields({ parentId: config.registry.typus.tailsStaking })).data
         .filter((x) => x.objectType.includes(token))
@@ -144,7 +133,7 @@ function log(material: Material, digest?: string) {
     console.log(msg);
     slack.chat.postMessage({
         token: String(process.env.SLACK_BOT_TOKEN),
-        channel: "tails-by-typus",
+        channel: "test-alert",
         text: `\`\`\`${msg}\`\`\``,
     });
 }

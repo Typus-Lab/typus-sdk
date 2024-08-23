@@ -5,39 +5,33 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { createTradingOrderWithBidReceipt, NETWORK } from "src/typus-perp";
 import { createPythClient } from "src/utils";
 import "src/utils/load_env";
+import { TOKEN } from "src/constants";
 
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-
-const config = TypusConfig.default("TESTNET");
-
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
-const gasBudget = 100000000;
+let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+let config = TypusConfig.default("TESTNET");
+let provider = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
-    const user = keypair.toSuiAddress();
+    let user = keypair.toSuiAddress();
     console.log(user);
 
-    const pythClient = createPythClient(provider, NETWORK);
+    let pythClient = createPythClient(provider, NETWORK);
 
     var tx = new TransactionBlock();
-    tx.setGasBudget(gasBudget);
+    tx.setGasBudget(100000000);
 
     // 1. Get user's bid receipt
-    const bidReceipt = "0xb1b3e07b526a05b705dde1aadf76a9af8906a3e1479ea0d4a9eb33fafeba777c";
+    let bidReceipt = "0xb1b3e07b526a05b705dde1aadf76a9af8906a3e1479ea0d4a9eb33fafeba777c";
 
-    // 2. Get receipt detail, vault_index, dToken, bToken, oToken
-    const index = "5";
-    const cToken = "USDC"; // dToken
-    const bToken = "USDC";
-    const tradingToken = "SOL"; // oToken
-    const isLong = false; // call => short, put => long
-    const share: string | null = "100000000";
+    // 2. Get receipt detail, vaultIndex, dToken, bToken, oToken
+    let index = "5";
+    let cToken: TOKEN = "USDC"; // dToken
+    let bToken: TOKEN = "USDC";
+    let tradingToken: TOKEN = "SOL"; // oToken
+    let isLong = false; // call => short, put => long
+    let share: string | null = "100000000";
 
-    tx = await createTradingOrderWithBidReceipt(config, {
-        pythClient,
-        tx,
+    tx = await createTradingOrderWithBidReceipt(config, tx, pythClient, {
         cToken,
         tradingToken,
         isLong,

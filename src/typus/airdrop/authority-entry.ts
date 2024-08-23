@@ -18,12 +18,12 @@ export async function getRemoveAirdropTx(
         sender: string;
     }
 ) {
-    const balance = tx.moveCall({
+    let balance = tx.moveCall({
         target: `${config.package.typus}::airdrop::remove_airdrop`,
         typeArguments: input.typeArguments,
         arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.airdrop), tx.object(input.key)],
     });
-    const coin = tx.moveCall({
+    let coin = tx.moveCall({
         target: `0x2::coin::from_balance`,
         typeArguments: input.typeArguments,
         arguments: [balance],

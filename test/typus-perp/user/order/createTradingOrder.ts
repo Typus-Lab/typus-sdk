@@ -1,42 +1,36 @@
+import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { createTradingOrder, NETWORK } from "src/typus-perp";
 import { createPythClient } from "src/utils";
-import { tokenType } from "src/constants";
-import "src/utils/load_env";
-
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-
-const config = TypusConfig.default("TESTNET");
-
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
+import { TOKEN, tokenType } from "src/constants";
 
 (async () => {
-    const address = keypair.toSuiAddress();
-    console.log(address);
+    let config = TypusConfig.default("TESTNET");
+    let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
+    let user = keypair.toSuiAddress();
+    console.log(user);
 
     var tx = new TransactionBlock();
 
     // INPUTS
-    const cToken = "USDT";
-    const tradingToken = "SUI";
+    let cToken: TOKEN = "USDT";
+    let tradingToken: TOKEN = "SUI";
 
-    const pythClient = createPythClient(provider, NETWORK);
+    let pythClient = createPythClient(provider, NETWORK);
 
-    const coins = (
+    let coins = (
         await provider.getCoins({
-            owner: address,
+            owner: user,
             coinType: tokenType[NETWORK][cToken],
         })
     ).data.map((coin) => coin.coinObjectId);
 
-    tx = await createTradingOrder(config, {
-        pythClient,
-        tx,
+    tx = await createTradingOrder(config, tx, pythClient, {
         coins,
         cToken,
         amount: "1000000",
@@ -48,10 +42,11 @@ const provider = new SuiClient({
         reduceOnly: false,
         linkedPositionId: null,
     });
+    tx.setGasBudget(100000000);
 
     let dryrunRes = await provider.devInspectTransactionBlock({
         transactionBlock: tx,
-        sender: address,
+        sender: user,
     });
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("CreateTradingOrderEvent"))[0].parsedJson);
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("RealizeFundingEvent"))); // only exists if the order size is reduced ( with linked_position_id provided)

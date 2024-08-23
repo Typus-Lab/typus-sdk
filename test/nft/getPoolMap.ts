@@ -2,24 +2,18 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { TypusConfig } from "src/utils";
 import { PoolData, getPoolMap, getTableTails } from "src/typus-nft";
 import "src/utils/load_env";
-const config = TypusConfig.default("TESTNET");
-
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
 
 (async () => {
-    const poolMap = await getPoolMap(provider, config);
+    let config = TypusConfig.default("TESTNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
+    let poolMap = await getPoolMap(provider, config);
     console.log(poolMap);
 
     for (let [name, pool] of poolMap.entries()) {
         console.log(name);
         await getTableTails(provider, pool.table);
     }
-
-    // let [num, remaining] = await name(poolMap);
-    // console.log(num);
-    // console.log(remaining);
 })();
 
 async function name(poolMap: Map<string, PoolData>) {

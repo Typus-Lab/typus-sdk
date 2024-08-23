@@ -1,15 +1,10 @@
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui.js/client";
 import { getLpPools } from "src/typus-perp";
 
-const config = TypusConfig.default("TESTNET");
-
-const provider = new SuiClient({
-    url: config.rpcEndpoint,
-});
-
 (async () => {
-    const lpPools = await getLpPools(provider, config);
+    let config = TypusConfig.default("TESTNET");
+
+    let lpPools = await getLpPools(config);
     console.log(lpPools); // 1 lpPool inclueded
 
     // avaliable token types to mint the lp tokens (3 token types supported)

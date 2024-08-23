@@ -3,7 +3,7 @@ import { getWhitelistMap } from "src/typus-nft";
 import "src/utils/load_env";
 import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-const config = TypusConfig.default("MAINNET");
+let config = TypusConfig.default("MAINNET");
 
 const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 const client = new SuiClient({ url: config.rpcEndpoint });

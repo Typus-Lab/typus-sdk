@@ -2,12 +2,12 @@ import { SuiClient, SuiEventFilter, SuiObjectResponse } from "@mysten/sui.js/cli
 import { KioskClient, KioskListing } from "@mysten/kiosk";
 
 export async function getPool(provider: SuiClient, pool: string) {
-    const res = await provider.getObject({ id: pool, options: { showContent: true } });
+    let res = await provider.getObject({ id: pool, options: { showContent: true } });
 
     // @ts-ignore
-    const fields = res.data?.content.fields;
+    let fields = res.data?.content.fields;
 
-    const poolData: PoolData = {
+    let poolData: PoolData = {
         pool_id: pool,
         is_live: fields.is_live,
         start_ms: fields.start_ms,
@@ -49,17 +49,17 @@ export const necklaces = [
 export async function getPoolMap(provider: SuiClient, nftConfig) {
     let pools: string[] = necklaces.map((necklace) => nftConfig[necklace]);
 
-    const res = await provider.multiGetObjects({ ids: pools, options: { showContent: true } });
+    let res = await provider.multiGetObjects({ ids: pools, options: { showContent: true } });
 
-    const poolMap = new Map<string, PoolData>();
+    let poolMap = new Map<string, PoolData>();
 
     necklaces.forEach(async (necklace, i) => {
         // @ts-ignore
-        const fields = res[i].data?.content.fields;
+        let fields = res[i].data?.content.fields;
 
         // console.log(fields);
 
-        const poolData: PoolData = {
+        let poolData: PoolData = {
             pool_id: pools[i],
             is_live: fields.is_live,
             start_ms: fields.start_ms,
@@ -79,10 +79,10 @@ export async function getWhitelistMap(nftConfig, wlTokens) {
 
     // console.log(pools);
 
-    const whitelistMap = new Map<string, string[]>();
+    let whitelistMap = new Map<string, string[]>();
 
     necklaces.forEach(async (necklace, i) => {
-        const tokens = wlTokens.filter(
+        let tokens = wlTokens.filter(
             (wlToken) =>
                 // @ts-ignore
                 wlToken.data?.content?.fields.for == pools[i]
@@ -113,17 +113,17 @@ export interface kioskOwnerCap {
 }
 
 export function getkioskOwnerCaps(datas: SuiObjectResponse[]): kioskOwnerCap[] {
-    const kioskOwnerCaps: kioskOwnerCap[] = [];
+    let kioskOwnerCaps: kioskOwnerCap[] = [];
 
     for (let data of datas) {
         if (data.data?.type == "0x2::kiosk::KioskOwnerCap") {
             // console.log(data.data?.content);
             // @ts-ignore
-            const fields = data.data.content.fields;
+            let fields = data.data.content.fields;
             kioskOwnerCaps.push({ objectId: fields.id.id, kioskId: fields.for, isPersonal: false });
         } else if (data.data?.type?.endsWith("personal_kiosk::PersonalKioskCap")) {
             // @ts-ignore
-            const fields = data.data.content.fields;
+            let fields = data.data.content.fields;
             kioskOwnerCaps.push({ objectId: fields.id.id, kioskId: fields.cap.fields.for, isPersonal: true });
         }
     }
@@ -135,14 +135,14 @@ export async function getTailsIds(kioskClient: KioskClient, NFT_PACKAGE_ORIGIN: 
     let Tails: TailsId[] = [];
 
     for (let kioskOwnerCap of kioskOwnerCaps) {
-        const res = await kioskClient.getKiosk({ id: kioskOwnerCap.kioskId });
+        let res = await kioskClient.getKiosk({ id: kioskOwnerCap.kioskId });
         // console.log(res);
-        const tails: TailsId[] = res.items
+        let tails: TailsId[] = res.items
             .filter((item) => item.type == `${NFT_PACKAGE_ORIGIN}::typus_nft::Tails`)
             .map((item) => {
                 // console.log(item);
                 // @ts-ignore
-                const tails = item.data as Tails;
+                let tails = item.data as Tails;
                 let t: TailsId = {
                     kiosk: kioskOwnerCap.kioskId,
                     kioskCap: kioskOwnerCap.objectId,
@@ -172,13 +172,13 @@ export async function getTails(provider: SuiClient, tailsIds: string[]) {
     while (tailsIds.length > 0) {
         let len = tailsIds.length > 50 ? 50 : tailsIds.length;
 
-        const results = await provider.multiGetObjects({ ids: tailsIds.splice(0, len), options: { showContent: true } });
+        let results = await provider.multiGetObjects({ ids: tailsIds.splice(0, len), options: { showContent: true } });
 
         for (let result of results) {
             // @ts-ignore
-            const fields = result.data?.content.fields;
+            let fields = result.data?.content.fields;
 
-            const tails = fieldsToTails(fields);
+            let tails = fieldsToTails(fields);
 
             Tails.push({ ...tails, type: result.data?.type });
         }
@@ -196,18 +196,18 @@ export async function getTailsDynamicField(provider: SuiClient, tailsIds: string
     while (tailsIds.length > 0) {
         let len = tailsIds.length > 50 ? 50 : tailsIds.length;
 
-        const results = await provider.multiGetObjects({ ids: tailsIds.splice(0, len), options: { showContent: true, showOwner: true } });
+        let results = await provider.multiGetObjects({ ids: tailsIds.splice(0, len), options: { showContent: true, showOwner: true } });
         // console.log(results);
 
         for (let result of results) {
             // @ts-ignore
-            const owner = result.data?.owner.ObjectOwner;
+            let owner = result.data?.owner.ObjectOwner;
 
             // @ts-ignore
-            const fields = result.data?.content.fields;
+            let fields = result.data?.content.fields;
             // console.log(fields);
 
-            const tails = fieldsToTails(fields);
+            let tails = fieldsToTails(fields);
 
             Tails.push({ ...tails, type: result.data?.type });
 
@@ -225,21 +225,21 @@ export async function getTailsKiosk(provider: SuiClient, tailsToDynamicField: Ma
     let DynamicFieldToKiosk = new Map<string, string>();
     // let KioskToOwner = new Map<string, string>();
 
-    const dynamicFields = Array.from(tailsToDynamicField.values());
+    let dynamicFields = Array.from(tailsToDynamicField.values());
 
     var i = 0;
 
     while (dynamicFields.length > 0) {
         let len = dynamicFields.length > 50 ? 50 : dynamicFields.length;
 
-        const results = await provider.multiGetObjects({
+        let results = await provider.multiGetObjects({
             ids: dynamicFields.splice(0, len),
             options: { showOwner: true },
         });
 
         for (let result of results) {
             // @ts-ignore
-            const owner = result.data?.owner.ObjectOwner;
+            let owner = result.data?.owner.ObjectOwner;
 
             DynamicFieldToKiosk.set(dynamicFields.at(i)!, owner);
             i += 1;
@@ -251,9 +251,9 @@ export async function getTailsKiosk(provider: SuiClient, tailsToDynamicField: Ma
 export async function getKioskOwner(provider: SuiClient, DynamicFieldToKiosk: Map<string, string>) {
     let KioskToOwner = new Map<string, string>();
 
-    const kiosks = Array.from(DynamicFieldToKiosk.values());
+    let kiosks = Array.from(DynamicFieldToKiosk.values());
 
-    const uniqueKiosks = kiosks.filter((value, index, self) => {
+    let uniqueKiosks = kiosks.filter((value, index, self) => {
         return self.findIndex((obj) => obj === value) === index;
     });
 
@@ -262,14 +262,14 @@ export async function getKioskOwner(provider: SuiClient, DynamicFieldToKiosk: Ma
     while (uniqueKiosks.length > 0) {
         let len = uniqueKiosks.length > 50 ? 50 : uniqueKiosks.length;
 
-        const results = await provider.multiGetObjects({
+        let results = await provider.multiGetObjects({
             ids: uniqueKiosks.splice(0, len),
             options: { showContent: true },
         });
 
         for (let result of results) {
             // @ts-ignore
-            const owner = result.data?.content.fields.owner;
+            let owner = result.data?.content.fields.owner;
 
             KioskToOwner.set(uniqueKiosks.at(i)!, owner);
             i += 1;
@@ -284,13 +284,13 @@ export function fieldsToTails(fields) {
         fields = fields.value.fields;
     }
     // console.log(fields.attributes.fields.contents);
-    const attributes = new Map<string, string>();
+    let attributes = new Map<string, string>();
     fields.attributes.fields.contents.forEach((f) => attributes.set(f.fields.key, f.fields.value));
 
-    const u64_padding = new Map<string, string>();
+    let u64_padding = new Map<string, string>();
     fields.u64_padding.fields.contents.forEach((f) => u64_padding.set(f.fields.key, f.fields.value));
 
-    const tails: Tails = {
+    let tails: Tails = {
         id,
         name: fields.name,
         number: fields.number,
@@ -355,12 +355,12 @@ export async function getTableTails(provider: SuiClient, parentId: string): Prom
         datas = datas.concat(result.data);
     }
     // console.log(datas);
-    const tails: TailsWithType[] = await getTails(
+    let tails: TailsWithType[] = await getTails(
         provider,
         datas.map((data) => data.objectId)
     );
     // console.log(tails);
-    const levelUsers = [0, 0, 0, 0, 0, 0, 0];
+    let levelUsers = [0, 0, 0, 0, 0, 0, 0];
     tails.forEach((tail) => (levelUsers[Number(tail.level) - 1] += 1));
     console.log("Level Users: ", levelUsers);
 
@@ -368,22 +368,22 @@ export async function getTableTails(provider: SuiClient, parentId: string): Prom
 }
 
 export async function getDiscountPool(provider: SuiClient, pool: string) {
-    const res = await provider.getObject({ id: pool, options: { showContent: true } });
+    let res = await provider.getObject({ id: pool, options: { showContent: true } });
     // console.log(res);
 
     // @ts-ignore
-    const poolData = res.data?.content.fields as DiscountPoolData;
+    let poolData = res.data?.content.fields as DiscountPoolData;
 
     // @ts-ignore
-    const inventory = poolData.tails.fields.contents.fields.size - poolData.requests.length;
+    let inventory = poolData.tails.fields.contents.fields.size - poolData.requests.length;
     poolData.inventory = inventory;
 
-    const dynamicField = await provider.getDynamicFieldObject({
+    let dynamicField = await provider.getDynamicFieldObject({
         parentId: pool,
         name: { type: "0x1::string::String", value: "total" },
     });
     // @ts-ignore
-    const total = dynamicField.data?.content.fields.value;
+    let total = dynamicField.data?.content.fields.value;
     poolData.total = total;
 
     return poolData;
@@ -405,7 +405,7 @@ export interface DiscountPoolData {
 }
 
 export async function getMintHistory(provider: SuiClient, NFT_PACKAGE: string, vrf_input) {
-    const eventFilter: SuiEventFilter = {
+    let eventFilter: SuiEventFilter = {
         MoveEventType: `${NFT_PACKAGE}::discount_mint::DiscountEventV3`,
     };
 
@@ -416,10 +416,10 @@ export async function getMintHistory(provider: SuiClient, NFT_PACKAGE: string, v
     // result.data.forEach((d) => console.log(d.parsedJson.vrf_input));
 
     // @ts-ignore
-    const res = result.data.filter((d) => d.parsedJson.vrf_input.toString() == vrf_input.toString());
+    let res = result.data.filter((d) => d.parsedJson.vrf_input.toString() == vrf_input.toString());
 
     if (res.length > 0) {
-        const eventFilter: SuiEventFilter = {
+        let eventFilter: SuiEventFilter = {
             Transaction: res[0].id.txDigest,
         };
 
@@ -431,15 +431,15 @@ export async function getMintHistory(provider: SuiClient, NFT_PACKAGE: string, v
 
 export function calculateLevelReward(totalRewards: number, levelShares: number[], numOfHolders: number[]): number[] {
     // Step 1: Calculate original level rewards (per holder)
-    const totalShares: number = levelShares.reduce((acc, share) => acc + share, 0);
-    const originalRewardPerHolder: number[] = levelShares.map((levelShare, index) => {
-        const num: number = numOfHolders[index];
-        const levelRewardPerHolder: number = num > 0 ? (totalRewards * levelShare) / totalShares / num : 0;
+    let totalShares: number = levelShares.reduce((acc, share) => acc + share, 0);
+    let originalRewardPerHolder: number[] = levelShares.map((levelShare, index) => {
+        let num: number = numOfHolders[index];
+        let levelRewardPerHolder: number = num > 0 ? (totalRewards * levelShare) / totalShares / num : 0;
         return Math.floor(levelRewardPerHolder);
     });
-    const originalLevelRewards: number[] = originalRewardPerHolder.map((reward, index) => reward * numOfHolders[index]);
-    const distributedRewards: number = originalLevelRewards.reduce((acc, reward) => acc + reward, 0);
-    const emptyLevelRewards: number = totalRewards - distributedRewards;
+    let originalLevelRewards: number[] = originalRewardPerHolder.map((reward, index) => reward * numOfHolders[index]);
+    let distributedRewards: number = originalLevelRewards.reduce((acc, reward) => acc + reward, 0);
+    let emptyLevelRewards: number = totalRewards - distributedRewards;
 
     // Step 2: Distribute rewards from empty levels
     let reversedOriginalRewardPerHolder: number[] = originalRewardPerHolder.slice().reverse();
@@ -449,8 +449,8 @@ export function calculateLevelReward(totalRewards: number, levelShares: number[]
         let undistributedRewards: number = emptyLevelRewards;
         let uncalculatedDistributedRewards: number = distributedRewards;
         reversedScaledRewardPerHolder = reversedOriginalRewardPerHolder.map((rewardPerHolder, index) => {
-            const num: number = reversedNumOfHolders[index];
-            const scaledRewardPerHolder: number =
+            let num: number = reversedNumOfHolders[index];
+            let scaledRewardPerHolder: number =
                 num > 0
                     ? uncalculatedDistributedRewards > 0
                         ? (rewardPerHolder * (uncalculatedDistributedRewards + undistributedRewards)) / uncalculatedDistributedRewards
@@ -469,7 +469,7 @@ export function calculateLevelReward(totalRewards: number, levelShares: number[]
     let reversedCappedRewardPerHolder: number[] = [reversedOriginalRewardPerHolder[0]];
     var tempHighLevelReward: number = 0;
     reversedScaledRewardPerHolder.forEach((highLevelReward, index) => {
-        const lowLevelReward: number = reversedScaledRewardPerHolder[index + 1] || 0;
+        let lowLevelReward: number = reversedScaledRewardPerHolder[index + 1] || 0;
         tempHighLevelReward =
             highLevelReward > 0
                 ? tempHighLevelReward > 0
@@ -482,15 +482,15 @@ export function calculateLevelReward(totalRewards: number, levelShares: number[]
     let cappedRewardPerHolder: number[] = reversedCappedRewardPerHolder.slice().reverse();
 
     // Step 4: Distribute capped reward from Step 3 into each level
-    const distributedRewardsStep4: number = reversedCappedRewardPerHolder.reduce(
+    let distributedRewardsStep4: number = reversedCappedRewardPerHolder.reduce(
         (acc, reward, index) => acc + reward * reversedNumOfHolders[index],
         0
     );
     var undistributedRewardsStep4: number = totalRewards - distributedRewardsStep4;
     var uncalculatedDistributedRewardsStep4: number = distributedRewardsStep4;
     var levelReward: number[] = cappedRewardPerHolder.map((rewardPerHolder, index) => {
-        const num: number = reversedNumOfHolders[index];
-        const scaledRewardPerHolder: number =
+        let num: number = reversedNumOfHolders[index];
+        let scaledRewardPerHolder: number =
             uncalculatedDistributedRewardsStep4 > 0
                 ? (rewardPerHolder * (uncalculatedDistributedRewardsStep4 + undistributedRewardsStep4)) /
                   uncalculatedDistributedRewardsStep4
