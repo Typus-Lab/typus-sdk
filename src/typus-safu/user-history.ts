@@ -1,4 +1,6 @@
 import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
+import { BcsReader } from "@mysten/bcs";
+import { assetToDecimal, typeArgToAsset } from "src/constants";
 
 export async function getUserEvents(
     provider: SuiClient,
@@ -35,6 +37,7 @@ export interface TxHistory {
     Action: string;
     Index: string;
     Amount: string;
+    Token: string;
     Exp: string | undefined;
     Date: Date;
     txDigest: string;
@@ -63,83 +66,102 @@ export async function parseTxHistory(
 
             const action = event.parsedJson!.action;
             const log = event.parsedJson!.log;
-            switch (action) {
-                case "raise_fund":
-                    if (Number(log[2]) + Number(log[3]) + Number(log[4]) + Number(log[5]) > 0) {
+            // skip the event without tokenType
+            if (event.parsedJson!.bcs_padding.length > 0) {
+                const reader = new BcsReader(new Uint8Array(event.parsedJson!.bcs_padding[0]));
+                const Token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+                const asset = typeArgToAsset(Token);
+                const decimal = assetToDecimal(asset);
+                // console.log(asset, decimal);
+
+                switch (action) {
+                    case "raise_fund":
+                        if (Number(log[2]) + Number(log[3]) + Number(log[4]) > 0) {
+                            txHistory.push({
+                                Action: "Deposit",
+                                Index: log[0],
+                                Amount: divByDecimal(Number(log[2]) + Number(log[3]) + Number(log[4]), decimal!),
+                                Token,
+                                Exp: log[6],
+                                Date: new Date(Number(event.timestampMs)),
+                                txDigest: event.id.txDigest,
+                                log,
+                            });
+                        }
+                        if (Number(log[5]) > 0) {
+                            txHistory.push({
+                                Action: "Compound",
+                                Index: log[0],
+                                Amount: divByDecimal(Number(log[5]), decimal!),
+                                Token,
+                                Exp: log[6],
+                                Date: new Date(Number(event.timestampMs)),
+                                txDigest: event.id.txDigest,
+                                log,
+                            });
+                        }
+                        break;
+                    case "reduce_fund":
+                        if (Number(log[2]) > 0) {
+                            txHistory.push({
+                                Action: "Withdraw",
+                                Index: log[0],
+                                Amount: divByDecimal(Number(log[2]), decimal!),
+                                Token,
+                                Exp: log[5],
+                                Date: new Date(Number(event.timestampMs)),
+                                txDigest: event.id.txDigest,
+                                log,
+                            });
+                        }
+                        if (Number(log[3]) > 0) {
+                            txHistory.push({
+                                Action: "Unsubscribe",
+                                Index: log[0],
+                                Amount: divByDecimal(Number(log[3]), decimal!),
+                                Token,
+                                Exp: log[5],
+                                Date: new Date(Number(event.timestampMs)),
+                                txDigest: event.id.txDigest,
+                                log,
+                            });
+                        }
+                        if (Number(log[4]) > 0) {
+                            txHistory.push({
+                                Action: "Claim",
+                                Index: log[0],
+                                Amount: divByDecimal(Number(log[4]), decimal!),
+                                Token,
+                                Exp: log[5],
+                                Date: new Date(Number(event.timestampMs)),
+                                txDigest: event.id.txDigest,
+                                log,
+                            });
+                        }
+                        break;
+                    case "claim_reward":
                         txHistory.push({
-                            Action: "Deposit",
+                            Action: "Harvest Options Profit",
                             Index: log[0],
-                            Amount: (Number(log[2]) + Number(log[3]) + Number(log[4]) + Number(log[5])).toString(),
-                            Exp: log[6],
+                            Amount: divByDecimal(Number(log[2]), decimal!),
+                            Token,
+                            Exp: undefined,
                             Date: new Date(Number(event.timestampMs)),
                             txDigest: event.id.txDigest,
-                            log: log,
+                            log,
                         });
-                    }
-                    if (Number(log[5]) > 0) {
-                        txHistory.push({
-                            Action: "Compound",
-                            Index: log[0],
-                            Amount: Number(log[5]).toString(),
-                            Exp: log[6],
-                            Date: new Date(Number(event.timestampMs)),
-                            txDigest: event.id.txDigest,
-                            log: log,
-                        });
-                    }
-                    break;
-                case "reduce_fund":
-                    if (Number(log[2]) > 0) {
-                        txHistory.push({
-                            Action: "Withdraw",
-                            Index: log[0],
-                            Amount: Number(log[2]).toString(),
-                            Exp: log[5],
-                            Date: new Date(Number(event.timestampMs)),
-                            txDigest: event.id.txDigest,
-                            log: log,
-                        });
-                    }
-                    if (Number(log[3]) > 0) {
-                        txHistory.push({
-                            Action: "Unsubscribe",
-                            Index: log[0],
-                            Amount: Number(log[3]).toString(),
-                            Exp: log[5],
-                            Date: new Date(Number(event.timestampMs)),
-                            txDigest: event.id.txDigest,
-                            log: log,
-                        });
-                    }
-                    if (Number(log[4]) > 0) {
-                        txHistory.push({
-                            Action: "Claim",
-                            Index: log[0],
-                            Amount: Number(log[4]).toString(),
-                            Exp: log[5],
-                            Date: new Date(Number(event.timestampMs)),
-                            txDigest: event.id.txDigest,
-                            log: log,
-                        });
-                    }
-                    break;
-                case "claim_reward":
-                    txHistory.push({
-                        Action: "Harvest Options Profit",
-                        Index: log[0],
-                        Amount: Number(log[2]).toString(),
-                        Exp: undefined,
-                        Date: new Date(Number(event.timestampMs)),
-                        txDigest: event.id.txDigest,
-                        log: log,
-                    });
-                    break;
+                        break;
+                }
             }
 
             return txHistory;
         }, Promise.resolve(new Array<TxHistory>()));
 
     return results;
+}
+
+function divByDecimal(numerator: number, decimal: number): string {
+    return (numerator / 10 ** decimal).toString();
 }
 
 // export function getDepositorCashFlows(userHistory: TxHistory[]) {
