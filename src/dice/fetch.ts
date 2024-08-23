@@ -133,7 +133,7 @@ export async function getHistory(
             break;
     }
     const eventFilter: SuiEventFilter = {
-        MoveEventType: `${registry}::${module}::Draw`,
+        MoveEventType: `${registry}::${input.module}::Draw`,
     };
 
     var result = await provider.queryEvents({ query: eventFilter, order: "descending" });

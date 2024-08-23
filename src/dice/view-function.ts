@@ -48,7 +48,7 @@ export async function simulateGame(
             break;
     }
     transactionBlock.moveCall({
-        target: `${config.package.dice}::${module}::simulate_game`,
+        target: `${config.package.dice}::${input.module}::simulate_game`,
         typeArguments: [],
         arguments: [
             transactionBlock.object(registry),

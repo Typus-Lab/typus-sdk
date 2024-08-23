@@ -33,7 +33,7 @@ export async function newGameTx(
             break;
     }
     tx.moveCall({
-        target: `${config.package.dice}::${module}::new_game`,
+        target: `${config.package.dice}::${input.module}::new_game`,
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(registry),
@@ -82,7 +82,7 @@ export async function playGuessTx(
             break;
     }
     tx.moveCall({
-        target: `${config.package.dice}::${module}::play_guess`,
+        target: `${config.package.dice}::${input.module}::play_guess`,
         typeArguments: [],
         arguments: [
             tx.object(registry),
@@ -129,7 +129,7 @@ export async function newGamePlayGuessTx(
     ) {
         let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.amount)]);
         tx.moveCall({
-            target: `${config.package.dice}::${module}::new_game`,
+            target: `${config.package.dice}::${input.module}::new_game`,
             typeArguments: input.typeArguments,
             arguments:
                 input.module == "combo_dice"
@@ -144,7 +144,7 @@ export async function newGamePlayGuessTx(
         });
     } else {
         tx.moveCall({
-            target: `${config.package.dice}::${module}::new_game`,
+            target: `${config.package.dice}::${input.module}::new_game`,
             typeArguments: input.typeArguments,
             arguments: [
                 tx.object(registry),
@@ -156,7 +156,7 @@ export async function newGamePlayGuessTx(
     }
 
     tx.moveCall({
-        target: `${config.package.dice}::${module}::play_guess`,
+        target: `${config.package.dice}::${input.module}::play_guess`,
         typeArguments: [],
         arguments: [
             tx.object(registry),
@@ -170,7 +170,7 @@ export async function newGamePlayGuessTx(
 
     // TODO: waiting for upgrade
     // tx.moveCall({
-    //     target: `${packageId}::${module}::play_guess_with_random`,
+    //     target: `${packageId}::${input.module}::play_guess_with_random`,
     //     typeArguments: module == "combo_dice" ? typeArguments : [],
     //     arguments: [
     //         tx.object(registry),
