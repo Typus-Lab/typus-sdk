@@ -1,5 +1,5 @@
 import { TypusConfig } from "src/utils";
-import { getUserEvents, parseTxHistory } from "src/typus-safu";
+import { getDepositorCashFlows, getUserEvents, parseTxHistory } from "src/typus-safu";
 import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
 import * as fs from "fs";
 
@@ -63,4 +63,7 @@ const fileName = "mainnetLocalCacheEvents.json";
 
     const txHistory = await parseTxHistory(datas, config.packageOrigin.safu);
     console.log(txHistory.reverse());
+
+    const cashFlow = await getDepositorCashFlows(txHistory);
+    console.log(cashFlow);
 })();
