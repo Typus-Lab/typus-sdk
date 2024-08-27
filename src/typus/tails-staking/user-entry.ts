@@ -13,7 +13,7 @@ import { TypusConfig } from "src/utils";
         ctx: &mut TxContext,
     ) {
 */
-export async function getStakeTailsTx(
+export function getStakeTailsTx(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
@@ -75,7 +75,7 @@ export async function getStakeTailsTx(
         ctx: &TxContext,
     ) {
 */
-export async function getUnstakeTailsTx(
+export function getUnstakeTailsTx(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
@@ -134,7 +134,7 @@ export async function getUnstakeTailsTx(
         ctx: &mut TxContext,
     ) {
 */
-export async function getTransferTailsTx(
+export function getTransferTailsTx(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
@@ -197,11 +197,18 @@ export async function getTransferTailsTx(
         ctx: &TxContext,
     ) {
 */
-export async function getDailySignUpTx(config: TypusConfig, tx: TransactionBlock) {
+export function getDailySignUpTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        fee: string;
+    }
+) {
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.fee)]);
     tx.moveCall({
         target: `${config.package.typus}::tails_staking::daily_sign_up`,
         typeArguments: [],
-        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.tailsStaking), tx.pure(CLOCK)],
+        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.tailsStaking), tx.object(coin), tx.object(CLOCK)],
     });
 
     return tx;
@@ -214,7 +221,7 @@ export async function getDailySignUpTx(config: TypusConfig, tx: TransactionBlock
         ctx: &mut TxContext,
     ): Balance<TOKEN>
 */
-export async function getClaimProfitSharingTx(
+export function getClaimProfitSharingTx(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
@@ -244,7 +251,7 @@ export async function getClaimProfitSharingTx(
         raw: bool,
     ) {
 */
-export async function getLevelUpTx(
+export function getLevelUpTx(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
@@ -276,7 +283,7 @@ export async function getLevelUpTx(
         ctx: &TxContext,
     ) {
 */
-export async function getExpUpTx(
+export function getExpUpTx(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
@@ -310,7 +317,7 @@ export async function getExpUpTx(
         ctx: &TxContext,
     ) {
 */
-export async function getExpUpWithoutStakingTx(
+export function getExpUpWithoutStakingTx(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
@@ -362,7 +369,7 @@ export async function getExpUpWithoutStakingTx(
     return tx;
 }
 
-export async function getCreateKioskAndLockNftTx(
+export function getCreateKioskAndLockNftTx(
     config: TypusConfig,
     tx: TransactionBlock,
     kioskClient: KioskClient,

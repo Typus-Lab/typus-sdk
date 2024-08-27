@@ -14,4 +14,4 @@ localCacheEvents.json
 vaultHistory.json
 *.txt
 dist
-test.ts
+test*.ts
