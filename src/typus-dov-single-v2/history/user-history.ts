@@ -138,6 +138,9 @@ export async function parseTxHistory(
                     break;
                 case "DailySignUpEvent":
                     Action = "Check In";
+                    if (event.parsedJson!.log[1]) {
+                        Amount = `${Number(event.parsedJson!.log[1]) / 10 ** 9} SUI`;
+                    }
                     Tails = event.parsedJson!.tails.map((num) => `#${num}`).join(" ");
                     Exp = event.parsedJson!.log[0];
                     break;
