@@ -120,7 +120,7 @@ export async function parseTxHistory(
             var b_token: string | undefined;
             var o_token: string | undefined;
 
-            Index = event.parsedJson!.index || event.parsedJson!.vaultIndex;
+            Index = event.parsedJson!.index || event.parsedJson!.vault_index;
             if (Index) {
                 [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, Index, action, event.parsedJson!.log);
             }
