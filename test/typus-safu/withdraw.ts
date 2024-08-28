@@ -13,7 +13,6 @@ import { TypusConfig } from "src/utils";
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     // INPUT
-    let cToken = config.token.sui;
     let coins = (
         await provider.getCoins({
             owner: user,
@@ -22,9 +21,9 @@ import { TypusConfig } from "src/utils";
     ).data.map((coin) => coin.coinObjectId);
 
     let transactionBlock = getReduceFundTx(config, new TransactionBlock(), {
-        typeArguments: [cToken],
-        index: "0",
-        reduceFromWarmup: "0",
+        typeArguments: [config.token.usdc],
+        index: "1",
+        reduceFromWarmup: "91552",
         reduceFromActive: "0",
         reduceFromInactive: "3000571893",
         user,
