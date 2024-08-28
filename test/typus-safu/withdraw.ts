@@ -13,13 +13,6 @@ import { TypusConfig } from "src/utils";
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     // INPUT
-    let coins = (
-        await provider.getCoins({
-            owner: user,
-            coinType: cToken,
-        })
-    ).data.map((coin) => coin.coinObjectId);
-
     let transactionBlock = getReduceFundTx(config, new TransactionBlock(), {
         typeArguments: [config.token.usdc],
         index: "1",
