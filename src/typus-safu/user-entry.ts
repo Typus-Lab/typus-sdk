@@ -180,13 +180,12 @@ export function getSnapshotTx(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
-        typeArguments: string[];
         index: string;
     }
 ) {
     let result = tx.moveCall({
         target: `${config.package.safu}::safu::snapshot`,
-        typeArguments: input.typeArguments,
+        typeArguments: [],
         arguments: [
             tx.object(config.version.typus),
             tx.object(config.registry.typus.leaderboard),
