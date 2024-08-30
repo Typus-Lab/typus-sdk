@@ -4,7 +4,7 @@ import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
 import * as fs from "fs";
 
 (async () => {
-    let config = TypusConfig.default("MAINNET");
+    let config = await TypusConfig.default("MAINNET");
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let sender = "0xd15f079d5f60b8fdfdcf3ca66c0d3473790c758b04b6418929d5d2991c5443ee";
     let fileName = "mainnetLocalCacheEvents.json";

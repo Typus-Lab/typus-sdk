@@ -2,12 +2,11 @@ import { SuiClient } from "@mysten/sui.js/client";
 import * as fs from "fs";
 import { TypusConfig } from "src/utils";
 import { getTailsDynamicField } from "src/typus-nft";
-import "src/utils/load_env";
-let config = TypusConfig.default("MAINNET");
-
-let provider = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
+    let config = await TypusConfig.default("MAINNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
     const raw = fs.readFileSync("tails.csv", "utf-8");
     // console.log(nfts);
 

@@ -2,13 +2,11 @@ import { TypusConfig } from "src/utils";
 import { KioskClient, Network } from "@mysten/kiosk";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getTailsIds, getkioskOwnerCaps } from "src/typus-nft";
-import "src/utils/load_env";
-
-let config = TypusConfig.default("MAINNET");
-
-let provider = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
+    let config = await TypusConfig.default("MAINNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
     const address = "0xdbe178c2c8c8ca8b5789bbc85c1398ec3470817a1d462e6ca443e24bc3ddf54d";
     console.log(address);
 

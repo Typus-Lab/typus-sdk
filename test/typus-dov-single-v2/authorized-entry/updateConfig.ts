@@ -6,7 +6,7 @@ import { getUpdateConfigTx } from "src/typus-dov-single-v2";
 import { TypusConfig } from "src/utils";
 
 (async () => {
-    let config = TypusConfig.default("MAINNET");
+    let config = await TypusConfig.default("MAINNET");
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
 

@@ -4,7 +4,7 @@ import * as fs from "fs";
 import { TypusConfig } from "src/utils";
 
 (async () => {
-    let config = TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET");
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let user = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d484107";
     let vaults = await getVaults(config, { indexes: [] });

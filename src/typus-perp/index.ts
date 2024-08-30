@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 export const NETWORK = process.env.CLUSTER == "mainnet" ? "MAINNET" : "TESTNET";
-let config = TypusConfig.default(NETWORK);
+let config = await TypusConfig.default(NETWORK);
 export const PACKAGE_ID = config.packageOrigin.perp;
 export const PUBLISHED_AT = config.package.perp;
 

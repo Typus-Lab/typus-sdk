@@ -9,7 +9,7 @@ import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
 (async () => {
     let network: "MAINNET" | "TESTNET" = "TESTNET";
     let module: "combo_dice" | "tails_exp" = "tails_exp";
-    let config = TypusConfig.default(network);
+    let config = await TypusConfig.default(network);
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let user = keypair.toSuiAddress();

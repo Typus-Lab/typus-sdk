@@ -1,12 +1,11 @@
 import { SuiClient } from "@mysten/sui.js/client";
 import * as fs from "fs";
 import { TypusConfig } from "src/utils";
-import "src/utils/load_env";
-let config = TypusConfig.default("MAINNET");
-
-let provider = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
+    let config = await TypusConfig.default("MAINNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
     var hasNextPage = true;
     var cursor: any | undefined = undefined;
 

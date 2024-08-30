@@ -8,11 +8,6 @@ import mnemonic from "../../../../mnemonic.json";
 
 // Get the Stable Hermes service URL from https://docs.pyth.network/price-feeds/api-instances-and-providers/hermes
 let connection = new SuiPriceServiceConnection("https://hermes-beta.pyth.network");
-
-let config = TypusConfig.default("TESTNET");
-
-let keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
-
 let priceIDs = [
     // You can find the IDs of prices at https://pyth.network/developers/price-feed-ids
     // "0xf9c0172ba10dfa4d19088d94f5bf61d3b54d5bd7483a322a982e1373ee8ea31b", // BTC/USD price ID
@@ -24,15 +19,16 @@ let priceIDs = [
     "0x946292ad3f481f36f5e558726cf4974e2a7a34598bf15d2abe3619e7b6a8db91", // NAVX
     "0xeacabc6304d11fc10a757f63286ef44415d8e91b7a1a525ae94a7ec9398b73f3", // SCA
 ];
-
-let provider = new SuiClient({ url: config.rpcEndpoint });
-
 // Get the state IDs of the Pyth and Wormhole contracts from
 // https://docs.pyth.network/price-feeds/contract-addresses/sui
 let pythStateId = "0x243759059f4c3111179da5878c12f68d612c21a8d54d85edc86164bb18be1c7c";
 let wormholeStateId = "0x31358d198147da50db32eda2562951d53973a0c0ad5ed738e9b17d88b213d790";
 
 (async () => {
+    let keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+    let config = await TypusConfig.default("TESTNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
     // @ts-ignore
     let client = new SuiPythClient(provider, pythStateId, wormholeStateId);
     let tx = new TransactionBlock();

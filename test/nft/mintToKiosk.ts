@@ -5,16 +5,14 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { KioskClient, Network } from "@mysten/kiosk";
 import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
-let config = TypusConfig.default("TESTNET");
 
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const client = new SuiClient({ url: config.rpcEndpoint });
-
-const gasBudget = 100000000;
-// const address = keypair.toSuiAddress();
 const necklace = "kriya_dex";
 
 (async () => {
+    const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let config = await TypusConfig.default("TESTNET");
+    const client = new SuiClient({ url: config.rpcEndpoint });
+
     const pool = config[necklace];
 
     const address = keypair.toSuiAddress();

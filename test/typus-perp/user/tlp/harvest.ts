@@ -7,7 +7,7 @@ import { harvest, getUserStake } from "src/typus-perp";
 
 (async () => {
     let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-    let config = TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET");
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     let user = keypair.toSuiAddress();

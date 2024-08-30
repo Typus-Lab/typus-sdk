@@ -7,7 +7,7 @@ import { getCloseStrategyTx, getUserStrategies } from "src/auto-bid";
 import { getVaults } from "src/typus-dov-single-v2";
 
 (async () => {
-    let config = TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET");
     let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let user = keypair.toSuiAddress();

@@ -2,12 +2,11 @@ import { SuiClient } from "@mysten/sui.js/client";
 import * as fs from "fs";
 import { TypusConfig } from "src/utils";
 import { getKioskOwner } from "src/typus-nft";
-import "src/utils/load_env";
-let config = TypusConfig.default("TESTNET");
-
-let provider = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
+    let config = await TypusConfig.default("TESTNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
     const raw = fs.readFileSync("DynamicFieldToKiosk.csv", "utf-8");
     const dataArray = JSON.parse(raw);
     const DynamicFieldToKiosk = dataArray.reduce((map, obj) => {

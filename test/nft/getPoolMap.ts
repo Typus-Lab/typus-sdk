@@ -1,10 +1,9 @@
 import { SuiClient } from "@mysten/sui.js/client";
 import { TypusConfig } from "src/utils";
 import { PoolData, getPoolMap, getTableTails } from "src/typus-nft";
-import "src/utils/load_env";
 
 (async () => {
-    let config = TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET");
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     let poolMap = await getPoolMap(provider, config);

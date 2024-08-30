@@ -3,7 +3,7 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { getMarkets, getSymbolMarkets } from "src/typus-perp";
 
 (async () => {
-    let config = TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET");
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     let markets = await getMarkets(config);

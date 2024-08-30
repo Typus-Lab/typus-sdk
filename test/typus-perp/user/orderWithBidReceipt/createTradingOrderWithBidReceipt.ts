@@ -7,11 +7,11 @@ import { createPythClient } from "src/utils";
 import "src/utils/load_env";
 import { TOKEN } from "src/constants";
 
-let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-let config = TypusConfig.default("TESTNET");
-let provider = new SuiClient({ url: config.rpcEndpoint });
-
 (async () => {
+    let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let config = await TypusConfig.default("TESTNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
     let user = keypair.toSuiAddress();
     console.log(user);
 

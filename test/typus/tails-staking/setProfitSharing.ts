@@ -8,13 +8,68 @@ import { calculateLevelReward } from "src/typus-nft";
 
 let process = require("process");
 process.removeAllListeners("warning");
-let config = TypusConfig.default("TESTNET");
-let provider = new SuiClient({ url: config.rpcEndpoint });
-let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-let levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
+
+interface Material {
+    wallet: string;
+    token: string;
+    tokenDecimal: number;
+    rewards: number;
+    levelCounts: number[];
+    levelProfits: number[];
+    remainingProfit: number;
+    walletBalance: number;
+    spendingProfit: number;
+    tsMs: number;
+    nextWeekToken: string;
+    nextWeekTokenDecimal: number;
+    nextWeekRewards: number;
+    nextWeekTsMs: number;
+}
 
 (async () => {
-    let material = await init();
+    let config = await TypusConfig.default("MAINNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
+
+    let material = await (async () => {
+        let tsMs = Date.now();
+        let rewards = Number.parseInt(String(process.env.REWARDS));
+        let token = String(process.env.TOKEN);
+        let levelCounts = await getLevelCounts(config);
+        let levelProfits = calculateLevelReward(rewards, levelShares, levelCounts);
+        let profitAsset = (await provider.getDynamicFields({ parentId: config.registry.typus.tailsStaking })).data
+            .filter((x) => x.objectType.includes(token))
+            .map((x) => x.objectId as string)[0];
+        let remainingProfit = profitAsset
+            ? // @ts-ignore
+              Number.parseInt((await provider.getObject({ id: profitAsset, options: { showContent: true } })).data?.content.fields.value)
+            : 0;
+        let walletBalance = Number.parseInt((await provider.getBalance({ owner: keypair.toSuiAddress(), coinType: token })).totalBalance);
+        let spendingProfit = 0;
+        for (let i = 0; i < 7; i++) {
+            spendingProfit += levelCounts[i] * levelProfits[i];
+        }
+        spendingProfit -= remainingProfit;
+
+        return {
+            wallet: keypair.toSuiAddress(),
+            token,
+            tokenDecimal: Number.parseInt(String(process.env.TOKEN_DECIMAL)),
+            rewards,
+            levelCounts,
+            levelProfits,
+            remainingProfit,
+            walletBalance,
+            spendingProfit,
+            tsMs,
+            nextWeekToken: String(process.env.NEXT_WEEK_TOKEN),
+            nextWeekTokenDecimal: Number.parseInt(String(process.env.NEXT_WEEK_TOKEN_DECIMAL)),
+            nextWeekRewards: Number.parseInt(String(process.env.NEXT_WEEK_REWARDS)),
+            nextWeekTsMs: (Math.floor(tsMs / 86400000 / 7) + 1) * (86400000 * 7) + 370800000,
+        } as Material;
+    })();
+
     if (material.nextWeekTsMs - material.tsMs > 7 * 24 * 60 * 60 * 1000 || material.walletBalance < material.spendingProfit) {
         log(material);
         return;
@@ -47,61 +102,6 @@ let levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
     log(material, result.digest);
 })();
 
-interface Material {
-    wallet: string;
-    token: string;
-    tokenDecimal: number;
-    rewards: number;
-    levelCounts: number[];
-    levelProfits: number[];
-    remainingProfit: number;
-    walletBalance: number;
-    spendingProfit: number;
-    tsMs: number;
-    nextWeekToken: string;
-    nextWeekTokenDecimal: number;
-    nextWeekRewards: number;
-    nextWeekTsMs: number;
-}
-
-async function init(): Promise<Material> {
-    let tsMs = Date.now();
-    let rewards = Number.parseInt(String(process.env.REWARDS));
-    let token = String(process.env.TOKEN);
-    let levelCounts = await getLevelCounts(config);
-    let levelProfits = calculateLevelReward(rewards, levelShares, levelCounts);
-    let profitAsset = (await provider.getDynamicFields({ parentId: config.registry.typus.tailsStaking })).data
-        .filter((x) => x.objectType.includes(token))
-        .map((x) => x.objectId as string)[0];
-    let remainingProfit = profitAsset
-        ? // @ts-ignore
-          Number.parseInt((await provider.getObject({ id: profitAsset, options: { showContent: true } })).data?.content.fields.value)
-        : 0;
-    let walletBalance = Number.parseInt((await provider.getBalance({ owner: keypair.toSuiAddress(), coinType: token })).totalBalance);
-    let spendingProfit = 0;
-    for (let i = 0; i < 7; i++) {
-        spendingProfit += levelCounts[i] * levelProfits[i];
-    }
-    spendingProfit -= remainingProfit;
-
-    return {
-        wallet: keypair.toSuiAddress(),
-        token,
-        tokenDecimal: Number.parseInt(String(process.env.TOKEN_DECIMAL)),
-        rewards,
-        levelCounts,
-        levelProfits,
-        remainingProfit,
-        walletBalance,
-        spendingProfit,
-        tsMs,
-        nextWeekToken: String(process.env.NEXT_WEEK_TOKEN),
-        nextWeekTokenDecimal: Number.parseInt(String(process.env.NEXT_WEEK_TOKEN_DECIMAL)),
-        nextWeekRewards: Number.parseInt(String(process.env.NEXT_WEEK_REWARDS)),
-        nextWeekTsMs: (Math.floor(tsMs / 86400000 / 7) + 1) * (86400000 * 7) + 370800000,
-    };
-}
-
 function log(material: Material, digest?: string) {
     let msg = "<<Profit Sharing Info>>\n";
     msg += `wallet:          ${material.wallet}\n`;
@@ -133,7 +133,7 @@ function log(material: Material, digest?: string) {
     console.log(msg);
     slack.chat.postMessage({
         token: String(process.env.SLACK_BOT_TOKEN),
-        channel: "test-alert",
+        channel: String(process.env.SLACK_CHANNEL),
         text: `\`\`\`${msg}\`\`\``,
     });
 }

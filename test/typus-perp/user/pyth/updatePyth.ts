@@ -6,15 +6,12 @@ import { createPythClient, updatePyth } from "src/utils";
 
 import mnemonic from "../../../../mnemonic.json";
 
-let config = TypusConfig.default("TESTNET");
-
-let keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
-
-let provider = new SuiClient({ url: config.rpcEndpoint });
-
 (async () => {
-    let tx = new TransactionBlock();
+    let keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+    let config = await TypusConfig.default("TESTNET");
+    let provider = new SuiClient({ url: config.rpcEndpoint });
 
+    let tx = new TransactionBlock();
     let pythClient = createPythClient(provider, "TESTNET");
     let priceInfoObjectIds = await updatePyth(pythClient, tx, ["SUI", "USDC", "USDT", "BTC", "ETH", "SOL", "CETUS", "NAVX", "SCA"]);
     console.log(priceInfoObjectIds);

@@ -1,7 +1,6 @@
 import * as json2csv from "json2csv";
 import { normalizeSuiAddress } from "@mysten/sui.js/utils";
 import * as fs from "fs";
-import "src/utils/load_env";
 
 (async () => {
     var raw = fs.readFileSync("tailsDynamicField.csv", "utf-8");

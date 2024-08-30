@@ -1,16 +1,11 @@
 import { TypusConfig } from "src/utils";
 import { getWhitelistMap } from "src/typus-nft";
-import "src/utils/load_env";
 import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-let config = TypusConfig.default("MAINNET");
-
-const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-const client = new SuiClient({ url: config.rpcEndpoint });
 
 (async () => {
-    const address = keypair.toSuiAddress();
-    console.log(address);
+    let config = await TypusConfig.default("MAINNET");
+    const client = new SuiClient({ url: config.rpcEndpoint });
+    const address = "0xdbe178c2c8c8ca8b5789bbc85c1398ec3470817a1d462e6ca443e24bc3ddf54d";
 
     const objs = await client.getOwnedObjects({
         owner: address,

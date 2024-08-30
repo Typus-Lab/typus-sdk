@@ -9,7 +9,7 @@ import { SuiClient } from "@mysten/sui.js/client";
     console.log(res2);
     let res3 = await getTotalProfitSharingClaimed();
     console.log(res3);
-    let config = TypusConfig.default("MAINNET");
+    let config = await TypusConfig.default("MAINNET");
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let res4 = await getTotalProfitSharing(provider);
     console.log(res4);

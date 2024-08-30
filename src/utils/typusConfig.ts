@@ -1,6 +1,4 @@
 import camelcaseKeysDeep = require("camelcase-keys-deep");
-import config_mainnet from "config-mainnet.json";
-import config_testnet from "config-testnet.json";
 
 export class TypusConfig {
     rpcEndpoint: string;
@@ -14,12 +12,28 @@ export class TypusConfig {
     static parse(json): TypusConfig {
         return JSON.parse(JSON.stringify(camelcaseKeysDeep(json)));
     }
-    static default(network: "MAINNET" | "TESTNET"): TypusConfig {
+    static async default(network: "MAINNET" | "TESTNET", branch = "main"): Promise<TypusConfig> {
         switch (network) {
             case "MAINNET":
-                return JSON.parse(JSON.stringify(camelcaseKeysDeep(config_mainnet)));
+                return JSON.parse(
+                    JSON.stringify(
+                        camelcaseKeysDeep(
+                            await (
+                                await fetch(`https://raw.githubusercontent.com/Typus-Lab/typus-config/${branch}/config-mainnet.json`)
+                            ).json()
+                        )
+                    )
+                );
             case "TESTNET":
-                return JSON.parse(JSON.stringify(camelcaseKeysDeep(config_testnet)));
+                return JSON.parse(
+                    JSON.stringify(
+                        camelcaseKeysDeep(
+                            await (
+                                await fetch(`https://raw.githubusercontent.com/Typus-Lab/typus-config/${branch}/config-testnet.json`)
+                            ).json()
+                        )
+                    )
+                );
         }
     }
 }
@@ -125,8 +139,7 @@ export interface Token {
 }
 
 // (async () => {
-//     let { default: json } = await import("config-testnet.json");
-//     let config = TypusConfig.parse(json);
+//     let config = await TypusConfig.default("MAINNET");
 //     console.log(config);
 //     console.log(config.rpcEndpoint);
 //     console.log(config.registry.dice.comboDice);
