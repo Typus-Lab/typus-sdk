@@ -9,7 +9,7 @@
         "ORACLE": "0x855eb2d260ee42b898266e6df90bfd3c4ed821ccb253a352c159c223244a4b8a",
         "TYPUS": "0x4b0f4ee1a40ce37ec81c987cc4e76a665419e74b863319492fc7d26f708b835a",
         "PERP": "",
-        "SAFU": "0x8e4f745b9c0748d24d3c4248658a385822c5ae6c38dba4d8739ad2389a14529f"
+        "SAFU": "0xf6aa05ec1c5c8cb3ba927a0a3c4502d302692e54765677763f239da33aeec712"
     },
     "PACKAGE": {
         "DOV_SINGLE": "0xde9493877a76b518d770a0cad0eaa53d8237a9c274dc2ca7b964609f8f0dd003",
@@ -20,12 +20,12 @@
         "ORACLE": "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd",
         "TYPUS": "0x83a1e6784a74929c8b9ccbca224bc9378fa1ebec04baa552d96025fabc39834c",
         "PERP": "",
-        "SAFU": "0x95daa8858d7aeb0d79e312a82b0e5888f90fda6e279c7175d3c6140b4e901326"
+        "SAFU": "0xf6aa05ec1c5c8cb3ba927a0a3c4502d302692e54765677763f239da33aeec712"
     },
     "VERSION": {
         "TYPUS": "0xd2882b992e986250b3304b59530700bc3850939f9a77e9e9dfa9cf1656f84b3d",
         "PERP": "",
-        "SAFU": "0x340b1050764bd269739d579f1c99608a59705a23d1a2ea77e47344f695d720df"
+        "SAFU": "0x335c7e2d363c93f5f1f8acb263e455c213c6fdb3b3882520dc6813adad8eea00"
     },
     "REGISTRY": {
         "DICE": {
@@ -56,7 +56,7 @@
             "TGLD": "0x8ee1af362fe9e0a29f6bad48d8ff44249ece5aaa77a4302c2ffcc90950e52ed2"
         },
         "SAFU": {
-            "SAFU": "0x61ecdd1a8536663da6e60e93cbe14c61e2ece85366dbfa8b9509b699a52a54d0"
+            "SAFU": "0x5cd29cd2f340dc9127367dcc377ac53f1e091f61fd441ab2f88b9362f8db46a0"
         }
     },
     "OBJECT": {
