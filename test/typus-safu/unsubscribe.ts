@@ -3,14 +3,13 @@ import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { getReduceFundTx } from "src/typus-safu";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import config_json from "config-mainnet.json";
 import { tokenType } from "src/constants";
 import { TypusConfig } from "src/utils";
 
 (async () => {
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let user = signer.toSuiAddress();
-    let config = TypusConfig.parse(config_json);
+    let config = await TypusConfig.default("MAINNET");
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     // INPUT
