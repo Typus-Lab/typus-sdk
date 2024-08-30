@@ -17,14 +17,15 @@ export interface Vault {
 export interface Info {
     index: string;
     round: string;
-    portfolio_vaultIndex: string;
+    portfolio_vault_index: string;
     refresh_ts_ms: string;
     status: string;
     lending_enabled: string;
-    price_bp: string;
-    bp_incentivised: string;
+    price_mbp: string;
+    mbp_incentivised: string;
     fixed_incentivised: string;
     token_decimal: string;
+    lending_apr_mbp: string;
 }
 export interface Config {
     capacity: string;
@@ -33,7 +34,7 @@ export interface Config {
     fee_bp: string;
     utilization_rate_bp: string;
     point_per_hour_bp: string;
-    incentive_bp: string;
+    incentive_mbp: string;
     incentive_fixed: string;
 }
 export interface ShareSupply {
@@ -82,14 +83,15 @@ export async function getVaultData(
         let info = {
             index: infoArray[0],
             round: infoArray[1],
-            portfolio_vaultIndex: infoArray[2],
+            portfolio_vault_index: infoArray[2],
             refresh_ts_ms: infoArray[3],
             status: infoArray[4],
             lending_enabled: infoArray[5],
-            price_bp: infoArray[6],
-            bp_incentivised: infoArray[7],
+            price_mbp: infoArray[6],
+            mbp_incentivised: infoArray[7],
             fixed_incentivised: infoArray[8],
             token_decimal: infoArray[9],
+            lending_apr_mbp: infoArray[10],
         };
         let config = {
             capacity: configArray[0],
@@ -98,7 +100,7 @@ export async function getVaultData(
             fee_bp: configArray[3],
             utilization_rate_bp: configArray[4],
             point_per_hour_bp: configArray[5],
-            incentive_bp: configArray[6],
+            incentive_mbp: configArray[6],
             incentive_fixed: configArray[7],
         };
         // skip BigVector
