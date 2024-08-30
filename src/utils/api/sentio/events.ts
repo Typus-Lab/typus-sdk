@@ -3,13 +3,13 @@ import { parseVaultInfo, TxHistory, Vault } from "src/typus-dov-single-v2";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import BigNumber from "bignumber.js";
 
+const headers = {
+    "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
+    "Content-Type": "application/json",
+};
+
 export async function getFromSentio(event: string, userAddress: string, startTimestamp: string): Promise<any[]> {
     let apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
-
-    let headers = {
-        "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
-        "Content-Type": "application/json",
-    };
 
     let requestData = {
         sqlQuery: {
@@ -36,20 +36,14 @@ export async function getFromSentio(event: string, userAddress: string, startTim
 
     return data.result.rows as any[];
 }
-
-export async function getNewBidFromSentio(vaults: { [key: string]: Vault }, userAddress: string, startTimestamp: number) {
+export async function getFromSentioWithExpUp(event: string, userAddress: string, startTimestamp: string): Promise<any[]> {
     let apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
-
-    let headers = {
-        "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
-        "Content-Type": "application/json",
-    };
 
     let requestData = {
         sqlQuery: {
             sql: `
                 SELECT *
-                FROM NewBid N
+                FROM ${event} N
                 LEFT JOIN (
                     SELECT number, distinct_id, exp_earn, transaction_hash, log_index
                     FROM ExpUp
@@ -70,8 +64,14 @@ export async function getNewBidFromSentio(vaults: { [key: string]: Vault }, user
     });
 
     let data = await response.json();
+    // console.log(data);
 
-    return data.result.rows.map((x) => {
+    return data.result.rows as any[];
+}
+
+export async function getNewBidFromSentio(vaults: { [key: string]: Vault }, userAddress: string, startTimestamp: number) {
+    const datas = await getFromSentio("NewBid", userAddress, startTimestamp.toString());
+    return datas.map((x) => {
         let [Period, Vault, RiskLevel, d_token, b_token, o_token] = parseVaultInfo(vaults, x.index, "NewBidEvent");
 
         if (x.number == "0" && x.exp_earn == "0") {
