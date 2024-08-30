@@ -155,9 +155,22 @@ export async function newGamePlayGuessTx(
         });
     }
 
+    // tx.moveCall({
+    //     target: `${config.package.dice}::${input.module}::play_guess`,
+    //     typeArguments: [],
+    //     arguments: [
+    //         tx.object(registry),
+    //         tx.pure(input.index),
+    //         tx.pure(input.guess_1),
+    //         tx.pure(input.larger_than_1),
+    //         tx.pure(input.guess_2),
+    //         tx.pure(input.larger_than_2),
+    //     ],
+    // });
+
     tx.moveCall({
-        target: `${config.package.dice}::${input.module}::play_guess`,
-        typeArguments: [],
+        target: `${config.package.dice}::${input.module}::play_guess_with_random`,
+        typeArguments: input.module == "combo_dice" ? input.typeArguments : [],
         arguments: [
             tx.object(registry),
             tx.pure(input.index),
@@ -165,23 +178,9 @@ export async function newGamePlayGuessTx(
             tx.pure(input.larger_than_1),
             tx.pure(input.guess_2),
             tx.pure(input.larger_than_2),
+            tx.object("0x8"),
         ],
     });
-
-    // TODO: waiting for upgrade
-    // tx.moveCall({
-    //     target: `${packageId}::${input.module}::play_guess_with_random`,
-    //     typeArguments: module == "combo_dice" ? typeArguments : [],
-    //     arguments: [
-    //         tx.object(registry),
-    //         tx.pure(index),
-    //         tx.pure(guess_1),
-    //         tx.pure(larger_than_1),
-    //         tx.pure(guess_2),
-    //         tx.pure(larger_than_2),
-    //         tx.object("0x8"),
-    //     ],
-    // });
 
     return tx;
 }

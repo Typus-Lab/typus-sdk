@@ -2,16 +2,17 @@ import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { getPlaygrounds, newGamePlayGuessTx, DrawResult, getDrawResult } from "src/dice";
 import { SuiClient } from "@mysten/sui.js/client";
-
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
+
+import mnemonic from "mnemonic.json";
+const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 
 (async () => {
-    let network: "MAINNET" | "TESTNET" = "TESTNET";
+    let network: "MAINNET" | "TESTNET" = "MAINNET";
     let module: "combo_dice" | "tails_exp" = "tails_exp";
     let config = await TypusConfig.default(network);
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let user = keypair.toSuiAddress();
 
     let index = "0";
@@ -40,29 +41,6 @@ import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
     transactionBlock.setGasBudget(100000000);
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock, options: { showEvents: true } });
     console.log(res);
-
-    try {
-        // Old Version
-        let game_id = res.events![1].parsedJson!["game_id"];
-        console.log("game_id : " + game_id);
-
-        let vrf_input_1 = res.events![1].parsedJson!["vrf_input_1"];
-        let vrf_input_2 = res.events![1].parsedJson!["vrf_input_2"];
-
-        let drawResultV1 = await getDrawResult(config, {
-            network,
-            module,
-            index,
-            amount,
-            guess_1,
-            larger_than_1,
-            guess_2,
-            larger_than_2,
-            vrf_input_1,
-            vrf_input_2,
-        });
-        console.log(drawResultV1);
-    } catch (e) {}
 
     try {
         // New Version
