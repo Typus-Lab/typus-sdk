@@ -5,9 +5,15 @@ import dotenv from "dotenv";
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 export const NETWORK = process.env.CLUSTER == "mainnet" ? "MAINNET" : "TESTNET";
-let config = await TypusConfig.default(NETWORK);
-export const PACKAGE_ID = config.packageOrigin.perp;
-export const PUBLISHED_AT = config.package.perp;
+// let config = await TypusConfig.default(NETWORK);
+// export const PACKAGE_ID = config.packageOrigin.perp;
+export const PACKAGE_ID = async () => {
+    return (await TypusConfig.default(NETWORK)).packageOrigin.perp;
+};
+// export const PUBLISHED_AT = config.package.perp;
+export const PUBLISHED_AT = async () => {
+    return (await TypusConfig.default(NETWORK)).package.perp;
+};
 
 export { installEcosystemManagerCapEntry } from "./admin/functions";
 export * from "./readVec";
