@@ -26,6 +26,7 @@ export interface Info {
     fixed_incentivised: string;
     token_decimal: string;
     lending_apr_mbp: string;
+    creation_ts_ms: string;
 }
 export interface Config {
     capacity: string;
@@ -92,6 +93,7 @@ export async function getVaultData(
             fixed_incentivised: infoArray[8],
             token_decimal: infoArray[9],
             lending_apr_mbp: infoArray[10],
+            creation_ts_ms: infoArray[11],
         };
         let config = {
             capacity: configArray[0],
