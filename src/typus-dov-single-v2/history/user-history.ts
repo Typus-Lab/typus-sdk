@@ -2,6 +2,7 @@ import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/cli
 import { Vault } from "src/typus-dov-single-v2";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import BigNumber from "bignumber.js";
+export { getNewBidFromSentio, getExerciseFromSentio } from "src/utils/api/sentio/events";
 
 export async function getUserEvents(
     provider: SuiClient,
