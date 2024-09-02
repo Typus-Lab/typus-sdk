@@ -10,6 +10,7 @@ let process = require("process");
 process.removeAllListeners("warning");
 
 interface Material {
+    package: string;
     wallet: string;
     token: string;
     tokenDecimal: number;
@@ -53,6 +54,7 @@ interface Material {
         spendingProfit -= remainingProfit;
 
         return {
+            package: config.package.typus,
             wallet: keypair.toSuiAddress(),
             token,
             tokenDecimal: Number.parseInt(String(process.env.TOKEN_DECIMAL)),
@@ -104,6 +106,7 @@ interface Material {
 
 function log(material: Material, digest?: string) {
     let msg = "<<Profit Sharing Info>>\n";
+    msg += `package:         ${material.package}\n`;
     msg += `wallet:          ${material.wallet}\n`;
     msg += `token:           ${material.token}\n`;
     msg += `levelCounts:     ${material.levelCounts.join(", ")}\n`;
