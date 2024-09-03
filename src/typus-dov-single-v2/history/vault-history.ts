@@ -194,17 +194,17 @@ export async function getVaultHistoryFromDB(index?: string, startTs?: string, en
                 vaultIndex: index,
                 round: round,
                 ActivationDate: new Date(Number(data.activation_date)),
-                MaxSize: data.max_size,
+                TotalAuctioned: data.max_size,
                 SettlementTime: new Date(Number(data.settle_date)),
                 StrikePrice: data.strikes || undefined,
                 SettlePrice: data.settle_price,
-                Return: data.return,
+                ActualReturn: data.return,
                 Filled: Number(data.delivery_size) == 0 ? 0 : Number(data.delivery_size) / Number(data.max_size),
                 DeliverySize: data.delivery_size,
                 DeliveryPrice: data.delivery_price,
-                PaidToDepositors: data.paid_to_depositors,
-                PaidToBidders: data.paid_to_bidders,
-                EarnedByDepositors: data.paid_to_depositors - data.paid_to_bidders,
+                DepositorsRewards: data.paid_to_depositors,
+                BiddersPayoff: data.paid_to_bidders,
+                DepositorPnl: data.paid_to_depositors - data.paid_to_bidders,
                 ActivateTx: data.activation_tx,
                 NewAuctionTx: data.new_auction_tx,
                 DeliveryTx: data.delivery_tx,
@@ -243,9 +243,9 @@ export async function convertGroupEventToVaultHistory(groupEvent: GroupEvent): P
         let incentive_fee = Number(groupEvent.deliveryEvent.incentive_fee) / 10 ** assetToDecimal(b_token)!;
         // let depositor_incentive_value = Number(groupEvent.deliveryEvent.depositor_incentive_value) / 10 ** assetToDecimal(b_token)!;
 
-        let PaidToDepositors = bidder_bid_value + bidder_fee + incentive_bid_value + incentive_fee;
+        let DepositorsRewards = bidder_bid_value + bidder_fee + incentive_bid_value + incentive_fee;
 
-        let PaidToBidders =
+        let BiddersPayoff =
             (Number(groupEvent.settleEvent?.settle_balance) - Number(groupEvent.settleEvent?.settled_balance)) /
             10 ** Number(groupEvent.settleEvent?.d_token_decimal);
 
@@ -256,7 +256,7 @@ export async function convertGroupEventToVaultHistory(groupEvent: GroupEvent): P
             // activateEvent
             ActivateTx: groupEvent.activateEvent?.txDigest,
             ActivationDate: new Date(ActivationMs - (ActivationMs % 3600000)),
-            MaxSize: Number(groupEvent.activateEvent?.contract_size) / 10 ** Number(groupEvent.activateEvent?.o_token_decimal),
+            TotalAuctioned: Number(groupEvent.activateEvent?.contract_size) / 10 ** Number(groupEvent.activateEvent?.o_token_decimal),
 
             // newAuctionEvent
             NewAuctionTx: groupEvent.newAuctionEvent?.txDigest,
@@ -269,7 +269,7 @@ export async function convertGroupEventToVaultHistory(groupEvent: GroupEvent): P
             DeliverySize: delivery_size,
             DeliveryPrice: delivery_price,
             Filled: delivery_size == 0 ? 0 : Number(groupEvent.deliveryEvent.delivery_size) / Number(groupEvent.newAuctionEvent?.size),
-            PaidToDepositors,
+            DepositorsRewards,
 
             // recoupEvent
             RecoupTx: groupEvent.recoupEvent?.txDigest,
@@ -278,9 +278,9 @@ export async function convertGroupEventToVaultHistory(groupEvent: GroupEvent): P
             SettleTx: groupEvent.settleEvent?.txDigest,
             SettlementTime: new Date(SettlementTsMs - (SettlementTsMs % 3600000)),
             SettlePrice: Number(groupEvent.settleEvent?.oracle_price) / 10 ** 8,
-            Return: Number(groupEvent.settleEvent?.share_price) / 10 ** 8 - 1,
-            PaidToBidders,
-            EarnedByDepositors: PaidToDepositors - PaidToBidders,
+            ActualReturn: Number(groupEvent.settleEvent?.share_price) / 10 ** 8 - 1,
+            BiddersPayoff,
+            DepositorPnl: DepositorsRewards - BiddersPayoff,
         };
 
         return result;
@@ -292,17 +292,17 @@ export interface VaultHistory {
     round: string;
 
     ActivationDate: Date;
-    MaxSize: number;
     SettlementTime: Date;
     StrikePrice: number[] | undefined;
     SettlePrice: number;
-    Return: number;
+    ActualReturn: number;
+    TotalAuctioned: number; // Max Size
     Filled: number;
     DeliverySize: number;
     DeliveryPrice: number;
-    PaidToDepositors: number; // premium_value
-    PaidToBidders: number;
-    EarnedByDepositors: number;
+    DepositorsRewards: number; // premium_value
+    BiddersPayoff: number;
+    DepositorPnl: number;
     ActivateTx: string | undefined;
     NewAuctionTx: string | undefined;
     DeliveryTx: string | undefined;
@@ -327,7 +327,7 @@ interface ActivateEvent {
     contract_size: string;
     o_token_decimal: string;
     oracle_info: OracleInfo;
-    u64_padding: string[];
+    u64_padding: string[]; // [bp_incentive_amount, fixed_incentive_amount]
     timestampMs: string | null | undefined;
     txDigest: string;
 }
@@ -362,7 +362,7 @@ interface DeliveryEvent {
     b_token_decimal: string;
     b_token: { name: string };
     depositor_incentive_value: string;
-    u64_padding: string[]; // fixed_incentive_amount, portfolio_vault.info.delivery_infos.max_size
+    u64_padding: string[]; // [fixed_incentive_amount, portfolio_vault.info.delivery_infos.max_size, deposit_incentive_bp, deposit_incentive_bp_divisor, bid_incentive_bp]
     timestampMs: string | null | undefined;
     txDigest: string;
 }
