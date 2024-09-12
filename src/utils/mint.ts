@@ -1,12 +1,11 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 
-export async function getMintTokenTx(gasBudget: number, packageId: string, registry: string, moduleName: string, amount: number) {
+export async function getMintTokenTx(packageId: string, registry: string, moduleName: string, amount: number) {
     let tx = new TransactionBlock();
     tx.moveCall({
         target: `${packageId}::${moduleName}::mint`,
         arguments: [tx.pure(registry), tx.pure(amount)],
     });
-    tx.setGasBudget(gasBudget);
 
     return tx;
 }

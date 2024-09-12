@@ -77,6 +77,7 @@ export interface Registry {
         inj: string;
         mfud: string;
         sei: string;
+        mblub: string;
     };
     typus: {
         airdrop: string;
@@ -136,6 +137,8 @@ export interface Token {
     usdt: string;
     usdy: string;
     vsui: string;
+    blub: string;
+    mblub: string;
 }
 
 // (async () => {
