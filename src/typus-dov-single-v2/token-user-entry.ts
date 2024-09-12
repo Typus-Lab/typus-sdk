@@ -35,7 +35,7 @@ export function getTokenRaiseFundTx(
                   arguments: [
                       tx.object(
                           tx.moveCall({
-                              target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::mint`,
+                              target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::mint`,
                               arguments: [
                                   tx.object(typusTokenRegistry),
                                   tx.makeMoveVec({ objects: input.raiseCoins }),
@@ -131,7 +131,7 @@ export function getTokenReduceFundTx(
             arguments: [tx.object(result[1])],
         });
         let token = tx.moveCall({
-            target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::burn`,
+            target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::burn`,
             arguments: [tx.object(typusTokenRegistry), tx.object(typusToken)],
         });
         tx.transferObjects([tx.object(token)], input.user);
@@ -149,7 +149,7 @@ export function getTokenReduceFundTx(
             arguments: [tx.object(result[2])],
         });
         let token = tx.moveCall({
-            target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::burn`,
+            target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::burn`,
             arguments: [tx.object(typusTokenRegistry), tx.object(typusToken)],
         });
         tx.transferObjects([tx.object(token)], input.user);
@@ -167,7 +167,7 @@ export function getTokenReduceFundTx(
             arguments: [tx.object(result[3])],
         });
         let token = tx.moveCall({
-            target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::burn`,
+            target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::burn`,
             arguments: [tx.object(typusTokenRegistry), tx.object(typusToken)],
         });
         tx.transferObjects([tx.object(token)], input.user);
@@ -205,7 +205,7 @@ export function getTokenNewBidTx(
             break;
     }
     let mToken = tx.moveCall({
-        target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::mint`,
+        target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::mint`,
         arguments: [
             tx.object(typusTokenRegistry),
             tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
@@ -229,7 +229,7 @@ export function getTokenNewBidTx(
     });
     tx.transferObjects([tx.object(result[0])], input.user);
     let fud_coin = tx.moveCall({
-        target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::burn`,
+        target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::burn`,
         arguments: [tx.object(typusTokenRegistry), tx.object(result[1])],
     });
     tx.transferObjects([tx.object(fud_coin)], input.user);
@@ -274,7 +274,7 @@ export function getTokenExerciseTx(
         arguments: [tx.object(result[0])],
     });
     let token = tx.moveCall({
-        target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::burn`,
+        target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::burn`,
         arguments: [tx.object(typusTokenRegistry), tx.object(mToken)],
     });
     tx.transferObjects([tx.object(token)], input.user);
@@ -316,7 +316,7 @@ export function getTokenRebateTx(
         arguments: [tx.object(balance)],
     });
     let token = tx.moveCall({
-        target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::burn`,
+        target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::burn`,
         arguments: [tx.object(typusTokenRegistry), tx.object(mToken)],
     });
     tx.transferObjects([tx.object(token)], input.user);
