@@ -35,6 +35,21 @@ interface Material {
 
     let material = await (async () => {
         let tsMs = Date.now();
+        let nextWeekTsMs =
+            Number.parseInt(
+                //@ts-ignore
+                (
+                    await provider.queryEvents({
+                        query: {
+                            MoveEventType:
+                                "0xf5c7e61fd28d1ed38711f03e1c5ffc6c5b8435eff386132fc5822efe6d90b138::tails_staking::SetProfitSharingEvent",
+                        },
+                        limit: 1,
+                        order: "descending",
+                    })
+                ).data[0].parsedJson.log[3]
+            ) +
+            86400000 * 7;
         let rewards = Number.parseInt(String(process.env.REWARDS));
         let token = String(process.env.TOKEN);
         let levelCounts = await getLevelCounts(config);
@@ -68,7 +83,7 @@ interface Material {
             nextWeekToken: String(process.env.NEXT_WEEK_TOKEN),
             nextWeekTokenDecimal: Number.parseInt(String(process.env.NEXT_WEEK_TOKEN_DECIMAL)),
             nextWeekRewards: Number.parseInt(String(process.env.NEXT_WEEK_REWARDS)),
-            nextWeekTsMs: (Math.floor(tsMs / 86400000 / 7) + 1) * (86400000 * 7) + 370800000,
+            nextWeekTsMs,
         } as Material;
     })();
 
