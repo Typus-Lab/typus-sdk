@@ -27,7 +27,7 @@ export function getTokenNewStrategyTx(
             break;
     }
     let tToken = tx.moveCall({
-        target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::mint`,
+        target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::mint`,
         arguments: [
             tx.object(typusTokenRegistry),
             tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
@@ -81,7 +81,7 @@ export function getTokenUpdateStrategyTx(
             break;
     }
     let [tToken] = tx.moveCall({
-        target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::mint`,
+        target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::mint`,
         arguments: [
             tx.object(typusTokenRegistry),
             tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
@@ -144,7 +144,7 @@ export function getTokenCloseStrategyTx(
 
     if (input.typeArguments[0] == input.typusTokenType) {
         let token = tx.moveCall({
-            target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::burn`,
+            target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::burn`,
             arguments: [tx.object(typusTokenRegistry), d_token],
         });
         tx.transferObjects([tx.object(token)], input.user);
@@ -154,7 +154,7 @@ export function getTokenCloseStrategyTx(
 
     if (input.typeArguments[1] == input.typusTokenType) {
         let token = tx.moveCall({
-            target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::burn`,
+            target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::burn`,
             arguments: [tx.object(typusTokenRegistry), b_token],
         });
         tx.transferObjects([tx.object(token)], input.user);
@@ -200,7 +200,7 @@ export function getTokenWithdrawProfitStrategyTx(
 
     if (input.typeArguments[0] == input.typusTokenType) {
         let token = tx.moveCall({
-            target: `${config.package.token}::${input.typusTokenType.split("::")[1]}::burn`,
+            target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::burn`,
             arguments: [tx.object(typusTokenRegistry), d_token],
         });
         tx.transferObjects([tx.object(token)], input.user);
