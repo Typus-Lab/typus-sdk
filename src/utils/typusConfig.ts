@@ -139,6 +139,7 @@ export interface Token {
     vsui: string;
     blub: string;
     mblub: string;
+    ausd: string;
 }
 
 // (async () => {
