@@ -12,10 +12,10 @@ export class TypusConfig {
     static parse(json): TypusConfig {
         return JSON.parse(JSON.stringify(camelcaseKeysDeep(json)));
     }
-    static async default(network: "MAINNET" | "TESTNET", branch = "main"): Promise<TypusConfig> {
+    static async default(network: "MAINNET" | "TESTNET", customRpcEndpoint: string | null, branch = "main"): Promise<TypusConfig> {
         switch (network) {
-            case "MAINNET":
-                return JSON.parse(
+            case "MAINNET": {
+                let typusConfig = JSON.parse(
                     JSON.stringify(
                         camelcaseKeysDeep(
                             await (
@@ -24,8 +24,13 @@ export class TypusConfig {
                         )
                     )
                 );
-            case "TESTNET":
-                return JSON.parse(
+                if (customRpcEndpoint) {
+                    typusConfig.rpcEndpoint = customRpcEndpoint;
+                }
+                return typusConfig;
+            }
+            case "TESTNET": {
+                let typusConfig = JSON.parse(
                     JSON.stringify(
                         camelcaseKeysDeep(
                             await (
@@ -34,6 +39,11 @@ export class TypusConfig {
                         )
                     )
                 );
+                if (customRpcEndpoint) {
+                    typusConfig.rpcEndpoint = customRpcEndpoint;
+                }
+                return typusConfig;
+            }
         }
     }
 }
@@ -143,9 +153,7 @@ export interface Token {
 }
 
 // (async () => {
-//     let config = await TypusConfig.default("MAINNET");
+//     let config = await TypusConfig.default("MAINNET", null);
 //     console.log(config);
 //     console.log(config.rpcEndpoint);
-//     console.log(config.registry.dice.comboDice);
-//     console.log(config.token.tgld);
 // })();
