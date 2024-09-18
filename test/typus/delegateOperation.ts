@@ -4,7 +4,7 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { TypusConfig } from "src/utils";
 
 (async () => {
-    let config = await TypusConfig.default("MAINNET");
+    let config = await TypusConfig.default("MAINNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let transactionBlock = new TransactionBlock();

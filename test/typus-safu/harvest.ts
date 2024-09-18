@@ -9,7 +9,7 @@ import mnemonic from "mnemonic.json";
 (async () => {
     let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
     let user = signer.toSuiAddress();
-    let config = await TypusConfig.default("MAINNET");
+    let config = await TypusConfig.default("MAINNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     // INPUT

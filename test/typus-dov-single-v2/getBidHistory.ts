@@ -2,7 +2,7 @@ import { TypusConfig } from "src/utils";
 import { getVaultHistoryEvents, parseBidEvents } from "src/typus-dov-single-v2";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET", null);
 
     let datas = await getVaultHistoryEvents(config, 1704931200000);
 

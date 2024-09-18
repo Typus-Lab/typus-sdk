@@ -8,7 +8,7 @@ import { createPythClient } from "src/utils";
 import { TOKEN, tokenType } from "src/constants";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET", null);
     let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
 

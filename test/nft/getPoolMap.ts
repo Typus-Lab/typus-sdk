@@ -3,7 +3,7 @@ import { TypusConfig } from "src/utils";
 import { PoolData, getPoolMap, getTableTails } from "src/typus-nft";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     let poolMap = await getPoolMap(provider, config);

@@ -3,7 +3,7 @@ import { getWhitelistMap } from "src/typus-nft";
 import { SuiClient } from "@mysten/sui.js/client";
 
 (async () => {
-    let config = await TypusConfig.default("MAINNET");
+    let config = await TypusConfig.default("MAINNET", null);
     const client = new SuiClient({ url: config.rpcEndpoint });
     const address = "0xdbe178c2c8c8ca8b5789bbc85c1398ec3470817a1d462e6ca443e24bc3ddf54d";
 

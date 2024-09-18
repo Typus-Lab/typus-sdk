@@ -8,7 +8,7 @@ import mnemonic from "../../../mnemonic.json";
 
 (async () => {
     let keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
-    let config = await TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     let address = keypair.toSuiAddress();

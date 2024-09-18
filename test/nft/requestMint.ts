@@ -7,7 +7,7 @@ import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
 
 (async () => {
     const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-    let config = await TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     const pool = "0x7e3172a59cdde0ba50abd57ca82bd4dd9427b1a5ae3b3d386da0db251402aaae";

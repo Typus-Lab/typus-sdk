@@ -2,7 +2,7 @@ import { getShareData } from "src/typus-safu";
 import { TypusConfig } from "src/utils";
 
 (async () => {
-    let config = await TypusConfig.default("MAINNET");
+    let config = await TypusConfig.default("MAINNET", null);
     let user = "0x8b21d27b7de562512b71ced257825f61fe51f2802e2896312ddc32764ed28cd5";
     console.log(user);
 

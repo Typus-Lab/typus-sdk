@@ -6,7 +6,7 @@ import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 

@@ -28,7 +28,7 @@ interface Material {
 }
 
 (async () => {
-    let config = await TypusConfig.default("MAINNET");
+    let config = await TypusConfig.default("MAINNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];

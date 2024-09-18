@@ -6,7 +6,7 @@ import { getCloseStrategyTx } from "src/auto-bid";
 import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET", null);
     let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
 

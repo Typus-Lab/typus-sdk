@@ -5,7 +5,7 @@ import { TypusConfig } from "src/utils";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 
 (async () => {
-    let config = await TypusConfig.default("MAINNET");
+    let config = await TypusConfig.default("MAINNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let IMaxStakeAmount = "0";
