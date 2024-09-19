@@ -92,6 +92,10 @@ export function assetToDecimal(asset: string): number | undefined {
             return 9;
         case "VSUI":
             return 9;
+        case "BLUB":
+            return 2;
+        case "MBLUB":
+            return 6;
     }
 }
 
@@ -153,6 +157,8 @@ export type TOKEN =
     | "APT"
     | "FUD"
     | "MFUD"
+    | "BLUB"
+    | "MBLUB"
     | "USDT"
     | "AFSUI"
     | "INJ"

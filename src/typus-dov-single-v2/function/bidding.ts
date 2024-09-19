@@ -177,6 +177,8 @@ const DefaultOracleDecimal: { [key: string]: string } = {
     SEI: "8",
     FUD: "8",
     MFUD: "8",
+    BLUB: "8",
+    MBLUB: "8",
     INJ: "8",
     SCA: "8",
     VSUI: "8",

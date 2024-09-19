@@ -21,6 +21,8 @@ export function getTokenNewStrategyTx(
     switch (input.typusTokenType.split("::")[1]) {
         case "mfud":
             typusTokenRegistry = config.registry.token.mfud;
+        case "mblub":
+            typusTokenRegistry = config.registry.token.mblub;
             break;
         default:
             console.log("No such token exists!");
@@ -76,6 +78,9 @@ export function getTokenUpdateStrategyTx(
         case "mfud":
             typusTokenRegistry = config.registry.token.mfud;
             break;
+        case "mblub":
+            typusTokenRegistry = config.registry.token.mblub;
+            break;
         default:
             console.log("No such token exists!");
             break;
@@ -125,6 +130,9 @@ export function getTokenCloseStrategyTx(
     switch (input.typusTokenType.split("::")[1]) {
         case "mfud":
             typusTokenRegistry = config.registry.token.mfud;
+            break;
+        case "mblub":
+            typusTokenRegistry = config.registry.token.mblub;
             break;
         default:
             console.log("No such token exists!");
@@ -181,6 +189,9 @@ export function getTokenWithdrawProfitStrategyTx(
     switch (input.typusTokenType.split("::")[1]) {
         case "mfud":
             typusTokenRegistry = config.registry.token.mfud;
+            break;
+        case "mblub":
+            typusTokenRegistry = config.registry.token.mblub;
             break;
         default:
             console.log("No such token exists!");

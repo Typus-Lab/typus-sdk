@@ -12,10 +12,12 @@ export const UnwrappedToken: { [key: string]: string } = {
 
 export const MillionToken: { [key: string]: string } = {
     FUD: "MFUD",
+    BLUB: "MBLUB",
 };
 
 export const RemoveMillionToken: { [key: string]: string } = {
     MFUD: "FUD",
+    MBLUB: "MBLUB",
 };
 
 export const LST: { [key: string]: string } = {

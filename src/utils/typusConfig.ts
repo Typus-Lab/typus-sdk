@@ -51,7 +51,6 @@ export interface Package {
     dice: string;
     dovSingle: string;
     framework: string;
-    mfud: string;
     nft: string;
     oracle: string;
     perp: string;
