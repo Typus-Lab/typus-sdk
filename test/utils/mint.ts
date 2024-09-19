@@ -4,7 +4,7 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { TypusConfig, getMintTokenTx } from "src/utils";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
 

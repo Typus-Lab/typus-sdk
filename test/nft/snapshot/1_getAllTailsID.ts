@@ -3,7 +3,7 @@ import * as fs from "fs";
 import { TypusConfig } from "src/utils";
 
 (async () => {
-    let config = await TypusConfig.default("MAINNET");
+    let config = await TypusConfig.default("MAINNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     var hasNextPage = true;

@@ -26,7 +26,7 @@ let wormholeStateId = "0x31358d198147da50db32eda2562951d53973a0c0ad5ed738e9b17d8
 
 (async () => {
     let keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
-    let config = await TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     // @ts-ignore

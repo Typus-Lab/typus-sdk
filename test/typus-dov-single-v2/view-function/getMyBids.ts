@@ -3,7 +3,7 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { getMyBids } from "src/typus-dov-single-v2";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     let user = "0xe6b6849126c345010c93022f038ff1f6fb9a759dd7848e4d9e22f68c764377e7";

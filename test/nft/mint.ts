@@ -9,7 +9,7 @@ const necklace = "typus";
 
 (async () => {
     const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-    let config = await TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     const pool = config[necklace];

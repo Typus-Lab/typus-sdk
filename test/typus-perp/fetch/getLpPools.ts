@@ -2,7 +2,7 @@ import { TypusConfig } from "src/utils";
 import { getLpPools } from "src/typus-perp";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET");
+    let config = await TypusConfig.default("TESTNET", null);
 
     let lpPools = await getLpPools(config);
     console.log(lpPools); // 1 lpPool inclueded
