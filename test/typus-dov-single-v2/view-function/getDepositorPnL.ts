@@ -9,13 +9,16 @@ import { TypusConfig } from "src/utils";
     let user = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d484107";
     let vaults = await getVaults(config, { indexes: [] });
 
+    let localCacheMap: Map<string, [SuiEvent[], EventId | null | undefined]> = new Map<string, [SuiEvent[], EventId | null | undefined]>();
+
     // 1. Get User Events
-    let localCacheFile = fs.readFileSync("localCacheEvents.json", "utf-8");
-    let localCache = JSON.parse(localCacheFile);
-    let localCacheMap: Map<string, [SuiEvent[], EventId | null | undefined]> = localCache.reduce((map, obj) => {
-        map.set(obj.user, [obj.events, obj.cursor]);
-        return map;
-    }, new Map<string, [SuiEvent[], EventId | null | undefined]>());
+    try {
+        let localCacheFile = fs.readFileSync("localCacheEvents.json", "utf-8");
+        let localCache = JSON.parse(localCacheFile);
+        for (let obj of localCache) {
+            localCacheMap.set(obj.user, [obj.events, obj.cursor]);
+        }
+    } catch (e) {}
 
     var localCacheEvents: SuiEvent[] = [];
     var cursor: EventId | null | undefined = undefined;
