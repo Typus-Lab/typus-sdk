@@ -84,6 +84,8 @@ export function assetToDecimal(asset: string): number | undefined {
             return 9;
         case "AFSUI":
             return 9;
+        case "AUSD":
+            return 6;
         case "NAVX":
             return 9;
         case "SCA":
