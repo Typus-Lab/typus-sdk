@@ -23,9 +23,9 @@ export async function getPairPrices(pair: string, startTs: string, endTs: string
 
 export async function getLatestPrice(pair: string): Promise<string> {
     let currentTimestampInSeconds: number = Math.floor(new Date().getTime() / 1000);
-    let minuteAgo = currentTimestampInSeconds - 60;
+    let fiveMinuteAgo = currentTimestampInSeconds - 300;
     try {
-        let res: any[] = await getPairPrices(pair, minuteAgo.toString(), currentTimestampInSeconds.toString());
+        let res: any[] = await getPairPrices(pair, fiveMinuteAgo.toString(), currentTimestampInSeconds.toString());
         if (res.at(-1)) {
             return res.at(-1).price;
         }

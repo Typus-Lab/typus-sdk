@@ -1,7 +1,7 @@
 import { getPairPrices, getLatestPrice } from "src/utils";
 
 (async () => {
-    let pair = "SUIFUD"; // SUIBUCK, SUIFUD, SUIAFSUI
+    let pair = "MBLUBUSDC"; // MBLUBUSDC
     let currentTimestampInSeconds: number = Math.floor(new Date().getTime() / 1000);
     let hourAgo = currentTimestampInSeconds - 3600;
     let res: any[] = await getPairPrices(pair, hourAgo.toString(), currentTimestampInSeconds.toString());
