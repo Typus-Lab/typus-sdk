@@ -231,7 +231,7 @@ export interface StrategyV2 {
     target_rounds: string[];
     receipts: TypusBidReceipt[];
     active: boolean;
-    u64_padding: string[];
+    u64_padding: string[]; // [balance, profit, accumulated_cost]
     // log
     bid_times: string;
     bid_round: string;
