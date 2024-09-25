@@ -21,6 +21,7 @@ export function getTokenNewStrategyTx(
     switch (input.typusTokenType.split("::")[1]) {
         case "mfud":
             typusTokenRegistry = config.registry.token.mfud;
+            break;
         case "mblub":
             typusTokenRegistry = config.registry.token.mblub;
             break;
