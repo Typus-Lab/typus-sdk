@@ -50,3 +50,23 @@ function putDepositVault(
 
     return [tx, { depositVault: result[0], receipt: result[1] } as TakeDepositVaultResult];
 }
+
+interface TakeBidVaultResult {
+    bidVault;
+    receipt;
+}
+function takeBidVault(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        index: string;
+    }
+) {
+    let result = tx.moveCall({
+        target: `${config.package.dovSingle}::tds_registry_authorized_entry::take_bid_vault`,
+        typeArguments: [],
+        arguments: [tx.object(config.registry.dov.dovSingle), tx.pure(input.index)],
+    });
+
+    return [tx, { bidVault: result[0], receipt: result[1] } as TakeBidVaultResult];
+}
