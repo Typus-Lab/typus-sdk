@@ -26,7 +26,7 @@ export const LST: { [key: string]: string } = {
     VSUI: "SUI",
 };
 
-export const StableCoin = ["USDC", "USDT", "BUCK", "USDY"];
+export const StableCoin = ["USDC", "USDT", "BUCK", "USDY", "wUSDC"];
 
 export const getTokenName = ({ token, wrapped, million }: { token: string; wrapped?: boolean; million?: boolean }) => {
     let tokenName = token;
