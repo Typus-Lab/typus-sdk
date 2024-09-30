@@ -1,15 +1,45 @@
 import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { getRaiseFundTx } from "src/typus-dov-single-v2";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { TypusConfig } from "src/utils";
 
 (async () => {
-    let config = await TypusConfig.default("MAINNET", null);
+    await migrateDepositVault({ index: "0", migrateDepositToken: false, migrateBidToken: false });
+})();
+
+async function migrateDepositVault(input: { index: string; migrateDepositToken: boolean; migrateBidToken: boolean }) {
+    let config = await TypusConfig.default("TESTNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
-})();
+    let tx = new TransactionBlock();
+    let takeDepositVaultResult = takeDepositVault(config, tx, { index: input.index });
+    if (input.migrateDepositToken) {
+        let takeDepositVaultDepositTokenResult = takeDepositVaultDepositToken(config, tx, {
+            typeArguments: [config.token.wusdc, config.token.usdc],
+            depositVault: takeDepositVaultResult.depositVault,
+        });
+        let balance = takeDepositVaultDepositTokenResult.balance; // TODO: swap
+        putDepositVaultDepositToken(config, tx, {
+            depositVault: takeDepositVaultResult.depositVault,
+            takeDepositVaultDepositTokenResult,
+            balance,
+        });
+    }
+    if (input.migrateBidToken) {
+        let takeDepositVaultBidTokenResult = takeDepositVaultBidToken(config, tx, {
+            typeArguments: [config.token.wusdc, config.token.usdc],
+            depositVault: takeDepositVaultResult.depositVault,
+        });
+        let balance = takeDepositVaultBidTokenResult.balance; // TODO: swap
+        putDepositVaultBidToken(config, tx, {
+            depositVault: takeDepositVaultResult.depositVault,
+            takeDepositVaultBidTokenResult,
+            balance,
+        });
+    }
+    putDepositVault(config, tx, { takeDepositVaultResult });
+}
 
 interface TakeDepositVaultResult {
     depositVault;
@@ -28,13 +58,12 @@ function takeDepositVault(
         arguments: [tx.object(config.registry.dov.dovSingle), tx.pure(input.index)],
     });
 
-    return [tx, { depositVault: result[0], receipt: result[1] } as TakeDepositVaultResult];
+    return { depositVault: result[0], receipt: result[1] } as TakeDepositVaultResult;
 }
 function putDepositVault(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
-        index: string;
         takeDepositVaultResult: TakeDepositVaultResult;
     }
 ) {
@@ -48,7 +77,7 @@ function putDepositVault(
         ],
     });
 
-    return [tx, { depositVault: result[0], receipt: result[1] } as TakeDepositVaultResult];
+    return { depositVault: result[0], receipt: result[1] } as TakeDepositVaultResult;
 }
 
 interface TakeBidVaultResult {
@@ -68,7 +97,7 @@ function takeBidVault(
         arguments: [tx.object(config.registry.dov.dovSingle), tx.pure(input.index)],
     });
 
-    return [tx, { bidVault: result[0], receipt: result[1] } as TakeBidVaultResult];
+    return { bidVault: result[0], receipt: result[1] } as TakeBidVaultResult;
 }
 function takeSettledBidVault(
     config: TypusConfig,
@@ -83,7 +112,7 @@ function takeSettledBidVault(
         arguments: [tx.object(config.registry.dov.dovSingle), tx.pure(input.id)],
     });
 
-    return [tx, { bidVault: result[0], receipt: result[1] } as TakeBidVaultResult];
+    return { bidVault: result[0], receipt: result[1] } as TakeBidVaultResult;
 }
 function putBidVault(
     config: TypusConfig,
@@ -103,7 +132,7 @@ function putBidVault(
         ],
     });
 
-    return [tx, { bidVault: result[0], receipt: result[1] } as TakeBidVaultResult];
+    return { bidVault: result[0], receipt: result[1] } as TakeBidVaultResult;
 }
 
 interface TakeDepositVaultDepositTokenResult {
@@ -124,7 +153,7 @@ function takeDepositVaultDepositToken(
         arguments: [tx.object(input.depositVault)],
     });
 
-    return [tx, { balance: result[0], receipt: result[1] } as TakeDepositVaultDepositTokenResult];
+    return { balance: result[0], receipt: result[1] } as TakeDepositVaultDepositTokenResult;
 }
 function putDepositVaultDepositToken(
     config: TypusConfig,
@@ -141,7 +170,7 @@ function putDepositVaultDepositToken(
         arguments: [tx.object(input.depositVault), tx.object(input.takeDepositVaultDepositTokenResult.receipt), tx.object(input.balance)],
     });
 
-    return [tx, { depositVault: result[0], receipt: result[1] } as TakeDepositVaultResult];
+    return { depositVault: result[0], receipt: result[1] } as TakeDepositVaultResult;
 }
 
 interface TakeDepositVaultBidTokenResult {
@@ -162,7 +191,7 @@ function takeDepositVaultBidToken(
         arguments: [tx.object(input.depositVault)],
     });
 
-    return [tx, { balance: result[0], receipt: result[1] } as TakeDepositVaultBidTokenResult];
+    return { balance: result[0], receipt: result[1] } as TakeDepositVaultBidTokenResult;
 }
 function putDepositVaultBidToken(
     config: TypusConfig,
@@ -179,7 +208,7 @@ function putDepositVaultBidToken(
         arguments: [tx.object(input.depositVault), tx.object(input.takeDepositVaultBidTokenResult.receipt), tx.object(input.balance)],
     });
 
-    return [tx, { depositVault: result[0], receipt: result[1] } as TakeDepositVaultResult];
+    return { depositVault: result[0], receipt: result[1] } as TakeDepositVaultResult;
 }
 
 interface TakeBidVaultDepositTokenResult {
@@ -200,7 +229,7 @@ function takeBidVaultDepositToken(
         arguments: [tx.object(input.bidVault)],
     });
 
-    return [tx, { balance: result[0], receipt: result[1] } as TakeBidVaultDepositTokenResult];
+    return { balance: result[0], receipt: result[1] } as TakeBidVaultDepositTokenResult;
 }
 function putBidVaultDepositToken(
     config: TypusConfig,
@@ -217,5 +246,5 @@ function putBidVaultDepositToken(
         arguments: [tx.object(input.bidVault), tx.object(input.takeBidVaultDepositTokenResult.receipt), tx.object(input.balance)],
     });
 
-    return [tx, { bidVault: result[0], receipt: result[1] } as TakeBidVaultResult];
+    return { bidVault: result[0], receipt: result[1] } as TakeBidVaultResult;
 }

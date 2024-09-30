@@ -122,6 +122,8 @@ export interface Oracle {
 export interface Token {
     afsui: string;
     apt: string;
+    ausd: string;
+    blub: string;
     btc: string;
     buck: string;
     cetus: string;
@@ -130,6 +132,7 @@ export interface Token {
     hasui: string;
     inj: string;
     jup: string;
+    mblub: string;
     mfud: string;
     navx: string;
     sca: string;
@@ -145,9 +148,7 @@ export interface Token {
     usdt: string;
     usdy: string;
     vsui: string;
-    blub: string;
-    mblub: string;
-    ausd: string;
+    wusdc: string;
 }
 
 // (async () => {
