@@ -181,3 +181,24 @@ function putDepositVaultBidToken(
 
     return [tx, { depositVault: result[0], receipt: result[1] } as TakeDepositVaultResult];
 }
+
+interface TakeBidVaultDepositTokenResult {
+    balance;
+    receipt;
+}
+function takeBidVaultDepositToken(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        typeArguments: string[];
+        bidVault;
+    }
+) {
+    let result = tx.moveCall({
+        target: `${config.package.framework}::vault::take_bid_vault_deposit_token`,
+        typeArguments: input.typeArguments,
+        arguments: [tx.object(input.bidVault)],
+    });
+
+    return [tx, { balance: result[0], receipt: result[1] } as TakeBidVaultDepositTokenResult];
+}
