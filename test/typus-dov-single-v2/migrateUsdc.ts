@@ -22,7 +22,7 @@ function migrateDepositVault(config, tx, input: { index: string; migrateDepositT
             typeArguments: [config.token.wusdc, config.token.usdc],
             depositVault: takeDepositVaultResult.depositVault,
         });
-        let balance = takeDepositVaultDepositTokenResult.balance; // TODO: swap
+        let balance = swapUsdc(config, tx, { balance: takeDepositVaultDepositTokenResult.balance });
         putDepositVaultDepositToken(config, tx, {
             depositVault: takeDepositVaultResult.depositVault,
             takeDepositVaultDepositTokenResult,
@@ -34,7 +34,7 @@ function migrateDepositVault(config, tx, input: { index: string; migrateDepositT
             typeArguments: [config.token.wusdc, config.token.usdc],
             depositVault: takeDepositVaultResult.depositVault,
         });
-        let balance = takeDepositVaultBidTokenResult.balance; // TODO: swap
+        let balance = swapUsdc(config, tx, { balance: takeDepositVaultBidTokenResult.balance });
         putDepositVaultBidToken(config, tx, {
             depositVault: takeDepositVaultResult.depositVault,
             takeDepositVaultBidTokenResult,
@@ -50,7 +50,7 @@ function migrateBidVault(config, tx, input: { index: string }) {
         typeArguments: [config.token.wusdc, config.token.usdc],
         bidVault: takeBidVaultResult.bidVault,
     });
-    let balance = takeBidVaultDepositTokenResult.balance; // TODO: swap
+    let balance = swapUsdc(config, tx, { balance: takeBidVaultDepositTokenResult.balance });
     putBidVaultDepositToken(config, tx, {
         bidVault: takeBidVaultResult.bidVault,
         takeBidVaultDepositTokenResult,
@@ -65,7 +65,7 @@ function migrateSettledBidVault(config, tx, input: { id: string }) {
         typeArguments: [config.token.wusdc, config.token.usdc],
         bidVault: takeBidVaultResult.bidVault,
     });
-    let balance = takeBidVaultDepositTokenResult.balance; // TODO: swap
+    let balance = swapUsdc(config, tx, { balance: takeBidVaultDepositTokenResult.balance });
     putBidVaultDepositToken(config, tx, {
         bidVault: takeBidVaultResult.bidVault,
         takeBidVaultDepositTokenResult,
@@ -279,4 +279,25 @@ function putBidVaultDepositToken(
     });
 
     return { bidVault: result[0], receipt: result[1] } as TakeBidVaultResult;
+}
+
+function swapUsdc(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        balance;
+    }
+) {
+    let coin = tx.moveCall({
+        target: `0x0::circle_usdc::swap`,
+        typeArguments: [config.token.wusdc],
+        arguments: [tx.object("registry"), tx.object(input.balance)],
+    });
+    let balance = tx.moveCall({
+        target: `0x2::coin::into_balance`,
+        typeArguments: [config.token.usdc],
+        arguments: [tx.object(coin)],
+    });
+
+    return balance;
 }

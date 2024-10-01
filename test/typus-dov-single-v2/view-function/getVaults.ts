@@ -2,7 +2,7 @@ import { TypusConfig } from "src/utils";
 import { getVaults } from "src/typus-dov-single-v2";
 
 (async () => {
-    let config = await TypusConfig.default("MAINNET", null);
+    let config = await TypusConfig.default("TESTNET", null);
 
     let indexes = [];
     let result = await getVaults(config, { indexes });
