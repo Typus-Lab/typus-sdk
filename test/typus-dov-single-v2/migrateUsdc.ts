@@ -51,6 +51,21 @@ function migrateBidVault(config, tx, input: { index: string }) {
     putBidVault(config, tx, { takeBidVaultResult });
 }
 
+function migrateSettledBidVault(config, tx, input: { id: string }) {
+    let takeBidVaultResult = takeSettledBidVault(config, tx, { id: input.id });
+    let takeBidVaultDepositTokenResult = takeBidVaultDepositToken(config, tx, {
+        typeArguments: [config.token.wusdc, config.token.usdc],
+        bidVault: takeBidVaultResult.bidVault,
+    });
+    let balance = takeBidVaultDepositTokenResult.balance; // TODO: swap
+    putBidVaultDepositToken(config, tx, {
+        bidVault: takeBidVaultResult.bidVault,
+        takeBidVaultDepositTokenResult,
+        balance,
+    });
+    putBidVault(config, tx, { takeBidVaultResult });
+}
+
 interface TakeDepositVaultResult {
     depositVault;
     receipt;
