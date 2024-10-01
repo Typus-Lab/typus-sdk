@@ -5,14 +5,9 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { TypusConfig } from "src/utils";
 
 (async () => {
-    await migrateDepositVault({ index: "0", migrateDepositToken: false, migrateBidToken: false });
 })();
 
-async function migrateDepositVault(input: { index: string; migrateDepositToken: boolean; migrateBidToken: boolean }) {
-    let config = await TypusConfig.default("TESTNET", null);
-    let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
-    let tx = new TransactionBlock();
+function migrateDepositVault(config, tx, input: { index: string; migrateDepositToken: boolean; migrateBidToken: boolean }) {
     let takeDepositVaultResult = takeDepositVault(config, tx, { index: input.index });
     if (input.migrateDepositToken) {
         let takeDepositVaultDepositTokenResult = takeDepositVaultDepositToken(config, tx, {
@@ -39,6 +34,21 @@ async function migrateDepositVault(input: { index: string; migrateDepositToken: 
         });
     }
     putDepositVault(config, tx, { takeDepositVaultResult });
+}
+
+function migrateBidVault(config, tx, input: { index: string }) {
+    let takeBidVaultResult = takeBidVault(config, tx, { index: input.index });
+    let takeBidVaultDepositTokenResult = takeBidVaultDepositToken(config, tx, {
+        typeArguments: [config.token.wusdc, config.token.usdc],
+        bidVault: takeBidVaultResult.bidVault,
+    });
+    let balance = takeBidVaultDepositTokenResult.balance; // TODO: swap
+    putBidVaultDepositToken(config, tx, {
+        bidVault: takeBidVaultResult.bidVault,
+        takeBidVaultDepositTokenResult,
+        balance,
+    });
+    putBidVault(config, tx, { takeBidVaultResult });
 }
 
 interface TakeDepositVaultResult {
@@ -118,7 +128,6 @@ function putBidVault(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
-        index: string;
         takeBidVaultResult: TakeBidVaultResult;
     }
 ) {
