@@ -5,6 +5,14 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { TypusConfig } from "src/utils";
 
 (async () => {
+    let config = await TypusConfig.default("TESTNET", null);
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let transactionBlock = new TransactionBlock();
+    // migrateDepositVault(config, transactionBlock, { index: "0", migrateDepositToken: false, migrateBidToken: false });
+    transactionBlock.setGasBudget(1000000000);
+    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+    console.log(res);
 })();
 
 function migrateDepositVault(config, tx, input: { index: string; migrateDepositToken: boolean; migrateBidToken: boolean }) {
