@@ -71,6 +71,18 @@ export const ASSET_INFO = {
         product: new PublicKey("9L4zWUnRWEqHT9fvH5WkmQgXf7qrr97SGV4pofTSdK5k"),
         price: new PublicKey("6vWPEigSDaAi6m6HuX24aK4fJGJxvQZ8TLQKADC65S2S"),
     },
+    AUSD: {
+        product: new PublicKey("GHXtvZLRq3WGm7DWUke5UdB8P6Jb4MuSwWjd72gGFPc8"),
+        price: new PublicKey("FeHsLbpPsJ7JTBPGKqhBTzvNuX5bjrm4Q6HdgXWgKW8Z"),
+    },
+    FUD: {
+        product: new PublicKey("2fcvX3is1N5vy17xeqi2x5t7ShFKPaBx91UTH73DvTH3"),
+        price: new PublicKey("89mKNz2WRvoPXy1mbRdaptLPYHsaYBpqmh5oxk2xD4Da"),
+    },
+    USDY: {
+        product: new PublicKey("555ugWQAae89KU9t9SBWAZTHZtQNkQ18XumbzgxDXQmZ"),
+        price: new PublicKey("GKMnwKMJS97DZHQS9mBquF15cEbgNKHvoayz8uamBp1T"),
+    },
 };
 
 export const tokenOrder: { [key: string]: number } = {
@@ -216,21 +228,22 @@ export const parsePythOracleData = (data: PriceData[], decimals: { [key: string]
 };
 
 export const fetchPrices = async (provider: SuiClient, config: TypusConfig): Promise<{ [key: string]: CoinInfo }> => {
-    let coinObjects = await provider.multiGetObjects({
-        ids: Object.values(config.oracle),
-        options: { showContent: true },
-    });
+    // let coinObjects = await provider.multiGetObjects({
+    //     ids: Object.values(config.oracle),
+    //     options: { showContent: true },
+    // });
 
     let oracleDecimal: { [key: string]: string } = {
         ...DefaultOracleDecimal,
     };
+    // console.log(oracleDecimal);
 
-    coinObjects.forEach((c) => {
-        // @ts-ignore
-        oracleDecimal[c.data?.content.fields.base_token] =
-            // @ts-ignore
-            c.data?.content.fields.decimal;
-    });
+    // coinObjects.forEach((c) => {
+    //     // @ts-ignore
+    //     oracleDecimal[c.data?.content.fields.base_token] =
+    //         // @ts-ignore
+    //         c.data?.content.fields.decimal;
+    // });
 
     let PYTHNET_CLUSTER_NAME: PythCluster = "pythnet";
     let connection = new Connection(getPythClusterApiUrl(PYTHNET_CLUSTER_NAME));
@@ -238,35 +251,12 @@ export const fetchPrices = async (provider: SuiClient, config: TypusConfig): Pro
     let pythClient = new PythHttpClient(connection, pythPublicKey);
     let priceData = await pythClient.getAssetPricesFromAccounts(Object.values(ASSET_INFO).map((a) => a.price));
     let prices = parsePythOracleData(priceData, oracleDecimal);
+    // console.log(prices);
 
-    let suiusd = BigNumber(prices["sui"]?.price ?? 0);
-
-    let suifud = await getLatestPrice("SUIFUD");
-    let fudusd = suifud == "0" ? BigNumber(0) : suiusd.div(suifud);
-
-    let suiafsui = await getLatestPrice("SUIAFSUI");
-    let afsuiusd = suiafsui == "0" ? BigNumber(0) : suiusd.div(suiafsui);
-
-    let suinavx = await getLatestPrice("SUINAVX");
-    let navxusd = suiusd.div(suinavx);
-
-    let suibuck = await getLatestPrice("SUIBUCK");
-    let buckusd = BigNumber(suibuck).lte(0) ? "0" : suiusd.div(suibuck);
-
-    let usdyusdc = await getLatestPrice("USDYUSDC");
-    let usdyusdcWithDecimal = BigNumber(usdyusdc).multipliedBy(BigNumber(10).pow(8));
-
-    let scasui = await getLatestPrice("SCASUI");
-    let scausd = suiusd.eq(0) ? BigNumber(0) : BigNumber(scasui).multipliedBy(suiusd);
+    let mblub = await getLatestPrice("MBLUBUSDC");
 
     return {
-        fud: { price: fudusd.toString(), decimal: "8", quote: "usd" },
-        mfud: { price: fudusd.multipliedBy(1000000).toString(), decimal: "8", quote: "usd" },
-        afsui: { price: afsuiusd.toString(), decimal: "8", quote: "usd" },
-        navx: { price: navxusd.toString(), decimal: "8", quote: "usd" },
-        buck: { price: buckusd.toString(), decimal: "8", quote: "usd" },
-        usdy: { price: usdyusdcWithDecimal.toString(), decimal: "8", quote: "usd" },
-        sca: { price: scausd.toString(), decimal: "8", quote: "usd" },
+        mblub: { price: mblub.toString(), decimal: "8", quote: "usd" },
         ...prices,
     };
 };
@@ -697,7 +687,11 @@ export const fetchUserBids = async (config: TypusConfig, user: string, prices?: 
     // Step 1: get user bid receipts, vaults info, user strategies, auction data, prices
     let vaultsInfo = await getVaults(config, { indexes: [] });
     let userReceipts = await getUserBidReceipts(config, { user });
+    // console.log(userReceipts);
+
     let userStrategies = await getUserStrategies(config, { user });
+    // console.log(userStrategies);
+
     let auctions = await getAuctions(config, { indexes: [] });
     if (typeof prices === "undefined") {
         prices = await fetchPrices(provider, config);
