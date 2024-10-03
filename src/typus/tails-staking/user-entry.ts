@@ -370,25 +370,28 @@ export function getExpUpWithoutStakingTx(
 }
 
 /**
-    entry fun exp_down(
+    entry fun exp_down_with_fee(
         version: &Version,
         tails_staking_registry: &mut TailsStakingRegistry,
         typus_user_registry: &mut TypusUserRegistry,
         tails: address,
         amount: u64,
+        coin: Coin<SUI>,
         ctx: &TxContext,
     ) {
 */
-export function getExpDownTx(
+export function getExpDownWithFeeTx(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
+        fee: string;
         tails: string;
         amount: string;
     }
 ) {
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.fee)]);
     tx.moveCall({
-        target: `${config.package.typus}::tails_staking::exp_down`,
+        target: `${config.package.typus}::tails_staking::exp_down_with_fee`,
         typeArguments: [],
         arguments: [
             tx.object(config.version.typus),
@@ -396,13 +399,14 @@ export function getExpDownTx(
             tx.object(config.registry.typus.user),
             tx.pure(input.tails),
             tx.pure(input.amount),
+            coin,
         ],
     });
 
     return tx;
 }
 /**
-    entry fun exp_down_without_staking(
+    entry fun exp_down_without_staking_with_fee(
         version: &Version,
         tails_staking_registry: &TailsStakingRegistry,
         typus_user_registry: &mut TypusUserRegistry,
@@ -410,13 +414,15 @@ export function getExpDownTx(
         kiosk_owner_cap: &KioskOwnerCap,
         tails: address,
         amount: u64,
+        coin: Coin<SUI>,
         ctx: &TxContext,
     ) {
 */
-export function getExpDownWithoutStakingTx(
+export function getExpDownWithoutStakingWithFeeTx(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
+        fee: string;
         kiosk: string;
         kioskCap: string;
         tails: string;
@@ -424,13 +430,14 @@ export function getExpDownWithoutStakingTx(
         personalKioskPackageId: string | undefined;
     }
 ) {
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.fee)]);
     if (input.personalKioskPackageId) {
         let [personalKioskCap, borrow] = tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
             arguments: [tx.object(input.kioskCap)],
         });
         tx.moveCall({
-            target: `${config.package.typus}::tails_staking::exp_down_without_staking`,
+            target: `${config.package.typus}::tails_staking::exp_down_without_staking_with_fee`,
             typeArguments: [],
             arguments: [
                 tx.object(config.version.typus),
@@ -440,6 +447,7 @@ export function getExpDownWithoutStakingTx(
                 personalKioskCap,
                 tx.pure(input.tails),
                 tx.pure(input.amount),
+                coin,
             ],
         });
         tx.moveCall({
@@ -448,7 +456,7 @@ export function getExpDownWithoutStakingTx(
         });
     } else {
         tx.moveCall({
-            target: `${config.package.typus}::tails_staking::exp_down_without_staking`,
+            target: `${config.package.typus}::tails_staking::exp_down_without_staking_with_fee`,
             typeArguments: [],
             arguments: [
                 tx.object(config.version.typus),
@@ -458,6 +466,7 @@ export function getExpDownWithoutStakingTx(
                 tx.object(input.kioskCap),
                 tx.pure(input.tails),
                 tx.pure(input.amount),
+                coin,
             ],
         });
     }
