@@ -369,6 +369,102 @@ export function getExpUpWithoutStakingTx(
     return tx;
 }
 
+/**
+    entry fun exp_down(
+        version: &Version,
+        tails_staking_registry: &mut TailsStakingRegistry,
+        typus_user_registry: &mut TypusUserRegistry,
+        tails: address,
+        amount: u64,
+        ctx: &TxContext,
+    ) {
+*/
+export function getExpDownTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        tails: string;
+        amount: string;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::exp_down`,
+        typeArguments: [],
+        arguments: [
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.tailsStaking),
+            tx.object(config.registry.typus.user),
+            tx.pure(input.tails),
+            tx.pure(input.amount),
+        ],
+    });
+
+    return tx;
+}
+/**
+    entry fun exp_down_without_staking(
+        version: &Version,
+        tails_staking_registry: &TailsStakingRegistry,
+        typus_user_registry: &mut TypusUserRegistry,
+        kiosk: &mut Kiosk,
+        kiosk_owner_cap: &KioskOwnerCap,
+        tails: address,
+        amount: u64,
+        ctx: &TxContext,
+    ) {
+*/
+export function getExpDownWithoutStakingTx(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        kiosk: string;
+        kioskCap: string;
+        tails: string;
+        amount: string;
+        personalKioskPackageId: string | undefined;
+    }
+) {
+    if (input.personalKioskPackageId) {
+        let [personalKioskCap, borrow] = tx.moveCall({
+            target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
+            arguments: [tx.object(input.kioskCap)],
+        });
+        tx.moveCall({
+            target: `${config.package.typus}::tails_staking::exp_down_without_staking`,
+            typeArguments: [],
+            arguments: [
+                tx.object(config.version.typus),
+                tx.object(config.registry.typus.tailsStaking),
+                tx.object(config.registry.typus.user),
+                tx.object(input.kiosk),
+                personalKioskCap,
+                tx.pure(input.tails),
+                tx.pure(input.amount),
+            ],
+        });
+        tx.moveCall({
+            target: `${input.personalKioskPackageId}::personal_kiosk::return_val`,
+            arguments: [tx.object(input.kioskCap), personalKioskCap, borrow],
+        });
+    } else {
+        tx.moveCall({
+            target: `${config.package.typus}::tails_staking::exp_down_without_staking`,
+            typeArguments: [],
+            arguments: [
+                tx.object(config.version.typus),
+                tx.object(config.registry.typus.tailsStaking),
+                tx.object(config.registry.typus.user),
+                tx.object(input.kiosk),
+                tx.object(input.kioskCap),
+                tx.pure(input.tails),
+                tx.pure(input.amount),
+            ],
+        });
+    }
+
+    return tx;
+}
+
 export function getCreateKioskAndLockNftTx(
     config: TypusConfig,
     tx: TransactionBlock,
