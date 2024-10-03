@@ -369,3 +369,50 @@ export async function getAccumulatedNotionalVolumeUSD(): Promise<number[]> {
 
     return result;
 }
+
+/** Returns Safu Accumulated Rewards im USD */
+export async function getSafuAccumulatedRewardGeneratedUSD(): Promise<number> {
+    let apiUrl = "https://app.sentio.xyz/api/v1/insights/typus/typus_v2/query";
+
+    let requestData = {
+        timeRange: {
+            start: "now",
+            end: "now",
+            step: 3600,
+            timezone: "Asia/Taipei",
+        },
+        limit: 1,
+        queries: [
+            {
+                metricsQuery: {
+                    query: "SafuAccumulatedRewardGeneratedUSD",
+                    alias: "",
+                    id: "a",
+                    labelSelector: {},
+                    aggregate: {
+                        op: "SUM",
+                        grouping: [],
+                    },
+                    functions: [],
+                    disabled: false,
+                },
+                dataSource: "METRICS",
+                sourceName: "",
+            },
+        ],
+        formulas: [],
+    };
+
+    let jsonData = JSON.stringify(requestData);
+
+    let response = await fetch(apiUrl, {
+        method: "POST",
+        headers,
+        body: jsonData,
+    });
+
+    let data = await response.json();
+    // console.log(data.results[0].matrix.samples[0].values[0].value);
+
+    return data.results[0].matrix.samples[0].values[0].value;
+}
