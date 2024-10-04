@@ -33,9 +33,9 @@ export function typeArgToAsset(typeArg: string): string {
         case "0x960b531667636f39e85867775f52f6b1f220a058c4de786905bdf761e06a56bb":
             return "USDY";
         case "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519":
-            if (typeArg[1] === "usdc") {
+            if (typeArgs[1] === "usdc") {
                 return "wUSDC";
-            } else if (typeArg[1] === "btc") {
+            } else if (typeArgs[1] === "btc") {
                 return "WBTC";
             }
         default:
