@@ -1,8 +1,6 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui.js/client";
 import { getRankings, Rankings } from "src/typus/leaderboard";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import * as fs from "fs";
 
 (async () => {
