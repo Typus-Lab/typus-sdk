@@ -9,7 +9,7 @@ import * as fs from "fs";
     const bidding_leaderboard = await getRankings(config, {
         key: "bidding_leaderboard",
         id: "0x8a40d11311beee02be5ade3fc7077aefba80e4b92a02823688596cf4d0d10895",
-        ranks: 329,
+        ranks: 300,
         user: "0x0000000000000000000000000000000000000000000000000000000000000123",
         active: true,
     });
@@ -19,7 +19,7 @@ import * as fs from "fs";
     const depositor_program = await getRankings(config, {
         key: "depositor_program",
         id: "0x9b145a4d3f5ddb4594201c7df97ea9e02ef2fd77dfff53fc9a45dfde7cfb3543",
-        ranks: 329,
+        ranks: 300,
         user: "0x0000000000000000000000000000000000000000000000000000000000000123",
         active: true,
     });
@@ -29,11 +29,15 @@ import * as fs from "fs";
 })();
 
 function saveToFile(data: Rankings, filename: string) {
-    const headers = ["score", "users"];
+    const headers = ["score", "users", "percentage"];
+
+    var total = 0;
+    data.leaderboard.forEach((leader) => (total += Number(leader.score)));
+
     const csvRows = [
         headers.join(","),
         ...data.leaderboard.map((leader) => {
-            return `${leader.score},"${leader.users.join(";")}"`;
+            return `${leader.score},"${leader.users.join(";")}",${Number(leader.score) / total}`;
         }),
     ];
 
