@@ -38,6 +38,8 @@ export function typeArgToAsset(typeArg: string): string {
             } else if (typeArgs[1] === "btc") {
                 return "WBTC";
             }
+        case "0x8993129d72e733985f7f1a00396cbd055bad6f817fee36576ce483c8bbb8b87b":
+            return "HIPPO";
         default:
             if (typeArgs[2] == "BTC") {
                 return "WBTC";
@@ -106,6 +108,12 @@ export function assetToDecimal(asset: string): number | undefined {
             return 2;
         case "MBLUB":
             return 6;
+        case "HIPPO":
+            return 9;
+        case "LIQ":
+            return 6;
+        case "MLIQ":
+            return 6;
     }
 }
 
@@ -133,6 +141,9 @@ export const tokenType = {
         SCA: "0x7016aae72cfc67f2fadf55769c0a7dd54291a583b63051a5ed71081cce836ac6::sca::SCA",
         VSUI: "0x549e8b69270defbfafd4f94e17ec44cdbdd99820b33bda2278dea3b9a32d3f55::cert::CERT",
         HASUI: "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d::hasui::HASUI",
+        LIQ: "0x9c86d1926a0a39e906f20674d6a35f337be8625ebcb6b799ee8ff011f328bee2::liq::LIQ",
+        HIPPO: "0x8993129d72e733985f7f1a00396cbd055bad6f817fee36576ce483c8bbb8b87b::sudeng::SUDENG",
+        MLIQ: "9614657c9d7e8799be4f49781ef1a9247b83ee178976df6c92d29b6026b9dadf::mliq::MLIQ",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -179,6 +190,9 @@ export type TOKEN =
     | "BTC"
     | "ETH"
     | "USDC"
+    | "LIQ"
+    | "MLIQ"
+    | "HIPPO"
     | "wUSDC";
 
 export function typeArgToToken(typeArg: string): string {
@@ -207,6 +221,10 @@ export function typeArgToToken(typeArg: string): string {
             return "SCA";
         case "0x960b531667636f39e85867775f52f6b1f220a058c4de786905bdf761e06a56bb":
             return "USDY";
+        case "0x9c86d1926a0a39e906f20674d6a35f337be8625ebcb6b799ee8ff011f328bee2":
+            return "LIQ";
+        case "0x8993129d72e733985f7f1a00396cbd055bad6f817fee36576ce483c8bbb8b87b":
+            return "HIPPO";
         default:
             return typeArgs[2];
     }
