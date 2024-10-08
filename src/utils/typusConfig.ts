@@ -145,7 +145,6 @@ export interface Token {
     turbos: string;
     usd: string;
     usdc: string;
-    wusdc: string;
     usdt: string;
     usdy: string;
     vsui: string;
