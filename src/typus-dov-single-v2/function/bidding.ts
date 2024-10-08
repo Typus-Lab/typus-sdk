@@ -35,7 +35,7 @@ export const ASSET_INFO = {
         product: new PublicKey("24bB1mRGsrrDVawJTCVYXrxbEz6ozztukPUKvcZCDcPz"),
         price: new PublicKey("6cUuAyAX3eXoiWkjFF77RQBEUF15AAMQ7d1hm4EPd3tv"),
     },
-    USDC: {
+    wUSDC: {
         product: new PublicKey("8GWTTbNiXdmyZREXbjsZBmCRuzdPrW55dnZGDkTRjWvb"),
         price: new PublicKey("Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD"),
     },
@@ -106,6 +106,7 @@ export const tokenOrder: { [key: string]: number } = {
     SOL: 14,
     TURBOS: 15,
     USDC: 16,
+    wUSDC: 16,
     USDT: 17,
     USDY: 18,
     VSUI: 20,
@@ -179,6 +180,7 @@ const DefaultOracleDecimal: { [key: string]: string } = {
     APT: "8",
     SOL: "8",
     USDC: "8",
+    wUSDC: "8",
     USDT: "8",
     CETUS: "8",
     TURBOS: "8",

@@ -17,7 +17,7 @@ export function typeArgToAsset(typeArg: string): string {
         case "0xb7844e289a8410e50fb3ca48d69eb9cf29e27d223ef90353fe1bd8e27ff8f3f8":
             return "WSOL";
         case "0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf":
-            return "USDC";
+            return "wUSDC";
         case "0xc060006111016b8a020ad5b33834984a437aaa7d3c74c18e09a95d48aceab08c":
             return "USDT";
         case "0x5d1f47ea69bb0de31c313d7acf89b890dbb8991ea8e03c6c355171f84bb1ba4a":
@@ -32,6 +32,12 @@ export function typeArgToAsset(typeArg: string): string {
             return "SCA";
         case "0x960b531667636f39e85867775f52f6b1f220a058c4de786905bdf761e06a56bb":
             return "USDY";
+        case "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519":
+            if (typeArgs[1] === "usdc") {
+                return "wUSDC";
+            } else if (typeArgs[1] === "btc") {
+                return "WBTC";
+            }
         default:
             if (typeArgs[2] == "BTC") {
                 return "WBTC";
@@ -61,6 +67,8 @@ export function assetToDecimal(asset: string): number | undefined {
         case "WSOL":
             return 8;
         case "USDC":
+            return 6;
+        case "wUSDC":
             return 6;
         case "USDT":
             return 6;
@@ -106,7 +114,7 @@ export const tokenType = {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
         BTC: "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881::coin::COIN",
         ETH: "0xaf8cd5edc19c4512f4259f0bee101a40d41ebed738ade5874359610ef8eeced5::coin::COIN",
-        USDC: "0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf::coin::COIN",
+        wUSDC: "0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf::coin::COIN",
         USDT: "0xc060006111016b8a020ad5b33834984a437aaa7d3c74c18e09a95d48aceab08c::coin::COIN",
         CETUS: "0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS",
         BUCK: "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BUCK",
@@ -144,7 +152,7 @@ export const tokenType = {
         SCA: "0xd33ea459d9e667c112f5168464a885a654d7bc3fd6903720aaa8cf495a32a77e::sca::SCA",
         BTC: "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::btc::BTC",
         ETH: "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::eth::ETH",
-        USDC: "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC",
+        wUSDC: "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC",
         BLUB: "0x94b8f6dcceeb2be160f6837089cc7502458f4f070fa0814380737acb0c41fd5b::blub::BLUB",
         MBLUB: "0x4b5d0a097ee8a309a89bb2bc589403a4a9a39de639d576495b697be2a60f69bb::mblub::MBLUB",
     },
@@ -170,7 +178,8 @@ export type TOKEN =
     | "SCA"
     | "BTC"
     | "ETH"
-    | "USDC";
+    | "USDC"
+    | "wUSDC";
 
 export function typeArgToToken(typeArg: string): string {
     // console.log(typeArg);
@@ -183,7 +192,7 @@ export function typeArgToToken(typeArg: string): string {
         case "0xb7844e289a8410e50fb3ca48d69eb9cf29e27d223ef90353fe1bd8e27ff8f3f8":
             return "SOL";
         case "0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf":
-            return "USDC";
+            return "wUSDC";
         case "0xc060006111016b8a020ad5b33834984a437aaa7d3c74c18e09a95d48aceab08c":
             return "USDT";
         case "0x5d1f47ea69bb0de31c313d7acf89b890dbb8991ea8e03c6c355171f84bb1ba4a":
