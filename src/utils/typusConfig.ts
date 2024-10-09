@@ -86,6 +86,7 @@ export interface Registry {
         mfud: string;
         sei: string;
         mblub: string;
+        mliq: string;
     };
     typus: {
         airdrop: string;
@@ -118,6 +119,8 @@ export interface Oracle {
     usdy: string;
     btc: string;
     eth: string;
+    mliq: string;
+    hippo: string;
 }
 export interface Token {
     afsui: string;
@@ -149,6 +152,8 @@ export interface Token {
     usdy: string;
     vsui: string;
     wusdc: string;
+    mliq: string;
+    hippo: string;
 }
 
 // (async () => {

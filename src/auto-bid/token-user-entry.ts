@@ -25,6 +25,9 @@ export function getTokenNewStrategyTx(
         case "mblub":
             typusTokenRegistry = config.registry.token.mblub;
             break;
+        case "mliq":
+            typusTokenRegistry = config.registry.token.mliq;
+            break;
         default:
             console.log("No such token exists!");
             break;
@@ -82,6 +85,9 @@ export function getTokenUpdateStrategyTx(
         case "mblub":
             typusTokenRegistry = config.registry.token.mblub;
             break;
+        case "mliq":
+            typusTokenRegistry = config.registry.token.mliq;
+            break;
         default:
             console.log("No such token exists!");
             break;
@@ -134,6 +140,9 @@ export function getTokenCloseStrategyTx(
             break;
         case "mblub":
             typusTokenRegistry = config.registry.token.mblub;
+            break;
+        case "mliq":
+            typusTokenRegistry = config.registry.token.mliq;
             break;
         default:
             console.log("No such token exists!");
@@ -193,6 +202,9 @@ export function getTokenWithdrawProfitStrategyTx(
             break;
         case "mblub":
             typusTokenRegistry = config.registry.token.mblub;
+            break;
+        case "mliq":
+            typusTokenRegistry = config.registry.token.mliq;
             break;
         default:
             console.log("No such token exists!");

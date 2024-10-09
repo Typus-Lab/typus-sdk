@@ -26,6 +26,9 @@ export function getTokenRaiseFundTx(
         case "mblub":
             typusTokenRegistry = config.registry.token.mblub;
             break;
+        case "mliq":
+            typusTokenRegistry = config.registry.token.mliq;
+            break;
         default:
             console.log("No such token exists!");
             break;
@@ -100,6 +103,9 @@ export function getTokenReduceFundTx(
             break;
         case "mblub":
             typusTokenRegistry = config.registry.token.mblub;
+            break;
+        case "mliq":
+            typusTokenRegistry = config.registry.token.mliq;
             break;
         default:
             console.log("No such token exists!");
@@ -209,6 +215,9 @@ export function getTokenNewBidTx(
         case "mblub":
             typusTokenRegistry = config.registry.token.mblub;
             break;
+        case "mliq":
+            typusTokenRegistry = config.registry.token.mliq;
+            break;
         default:
             console.log("No such token exists!");
             break;
@@ -264,6 +273,9 @@ export function getTokenExerciseTx(
         case "mblub":
             typusTokenRegistry = config.registry.token.mblub;
             break;
+        case "mliq":
+            typusTokenRegistry = config.registry.token.mliq;
+            break;
         default:
             console.log("No such token exists!");
             break;
@@ -310,6 +322,9 @@ export function getTokenRebateTx(
             break;
         case "mblub":
             typusTokenRegistry = config.registry.token.mblub;
+            break;
+        case "mliq":
+            typusTokenRegistry = config.registry.token.mliq;
             break;
         default:
             console.log("No such token exists!");
