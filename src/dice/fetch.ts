@@ -128,7 +128,7 @@ export async function getHistory(
             break;
         case "combo_dice":
             if (config.rpcEndpoint.includes("mainnet")) {
-                MoveEventType = `0xdd2265bf4ee2190ec67d646ac6552bc4ef4da104af948aa8447e50e7e94a0c9f::combo_dice::Draw`;
+                MoveEventType = `${config.packageOrigin.dice}::combo_dice::Draw`;
             } else {
                 MoveEventType = `0xf1d628b4f14f9dae42d73a6cdee9b5f80567fee323166c4ecfb124de7d4ff254::combo_dice::Draw`;
             }
