@@ -32,14 +32,16 @@ export function typeArgToAsset(typeArg: string): string {
             return "SCA";
         case "0x960b531667636f39e85867775f52f6b1f220a058c4de786905bdf761e06a56bb":
             return "USDY";
+        case "0x8993129d72e733985f7f1a00396cbd055bad6f817fee36576ce483c8bbb8b87b":
+            return "HIPPO";
         case "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519":
             if (typeArgs[1] === "usdc") {
                 return "wUSDC";
             } else if (typeArgs[1] === "btc") {
                 return "WBTC";
+            } else if (typeArgs[1] === "eth") {
+                return "WETH";
             }
-        case "0x8993129d72e733985f7f1a00396cbd055bad6f817fee36576ce483c8bbb8b87b":
-            return "HIPPO";
         default:
             if (typeArgs[2] == "BTC") {
                 return "WBTC";
