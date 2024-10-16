@@ -116,6 +116,8 @@ export function assetToDecimal(asset: string): number | undefined {
             return 6;
         case "MLIQ":
             return 6;
+        case "DEEP":
+            return 6;
     }
 }
 
@@ -195,6 +197,7 @@ export type TOKEN =
     | "LIQ"
     | "MLIQ"
     | "HIPPO"
+    | "DEEP"
     | "wUSDC";
 
 export function typeArgToToken(typeArg: string): string {
@@ -227,6 +230,8 @@ export function typeArgToToken(typeArg: string): string {
             return "LIQ";
         case "0x8993129d72e733985f7f1a00396cbd055bad6f817fee36576ce483c8bbb8b87b":
             return "HIPPO";
+        case "0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270":
+            return "DEEP";
         default:
             return typeArgs[2];
     }
