@@ -56,6 +56,7 @@ export interface Package {
     perp: string;
     safu: string;
     typus: string;
+    launch: string;
 }
 export interface Version {
     perp: string;
@@ -102,6 +103,7 @@ export interface Object {
     tgldCoinMetadata: string;
     tgldTokenPolicy: string;
     tlpTreasuryCap: string;
+    launchAuction: string;
 }
 export interface Oracle {
     afsui: string;
