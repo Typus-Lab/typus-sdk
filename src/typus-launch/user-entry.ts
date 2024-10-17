@@ -4,12 +4,13 @@ import { TypusConfig } from "src/utils";
 
 /**
     entry fun bid(
-        typus_auction: &mut TypusAuction,
+        version: &Version,
+        auction: &mut Auction,
         size: u64,
-        coin: Coin<SUI>,
+        mut coin: Coin<SUI>,
         clock: &Clock,
-        ctx: &mut TxContext
-    )
+        ctx: &mut TxContext,
+    ) {
 */
 export async function bidTx(
     config: TypusConfig,
@@ -23,7 +24,30 @@ export async function bidTx(
 
     tx.moveCall({
         target: `${config.package.launch}::auction::bid`,
-        arguments: [tx.object(config.object.launchAuction), tx.pure(input.size), input_coin, tx.object(CLOCK)],
+        arguments: [
+            tx.object(config.version.launch),
+            tx.object(config.object.launchAuction),
+            tx.pure(input.size),
+            input_coin,
+            tx.object(CLOCK),
+        ],
+    });
+
+    return tx;
+}
+
+/**
+    entry fun claim(
+        version: &Version,
+        auction: &mut Auction,
+        clock: &Clock,
+        ctx: &mut TxContext,
+    ) {
+*/
+export async function claimTx(config: TypusConfig, tx: TransactionBlock) {
+    tx.moveCall({
+        target: `${config.package.launch}::auction::claim`,
+        arguments: [tx.object(config.version.launch), tx.object(config.object.launchAuction), tx.object(CLOCK)],
     });
 
     return tx;

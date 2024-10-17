@@ -62,6 +62,7 @@ export interface Version {
     perp: string;
     safu: string;
     typus: string;
+    launch: string;
 }
 export interface Registry {
     dice: {
