@@ -12,7 +12,7 @@ import { TypusConfig } from "src/utils";
         ctx: &mut TxContext,
     ) {
 */
-export async function bidTx(
+export function bidTx(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
@@ -44,7 +44,7 @@ export async function bidTx(
         ctx: &mut TxContext,
     ) {
 */
-export async function claimTx(config: TypusConfig, tx: TransactionBlock) {
+export function claimTx(config: TypusConfig, tx: TransactionBlock) {
     tx.moveCall({
         target: `${config.package.launch}::auction::claim`,
         arguments: [tx.object(config.version.launch), tx.object(config.object.launchAuction), tx.object(CLOCK)],

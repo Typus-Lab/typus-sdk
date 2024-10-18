@@ -1,14 +1,21 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
 import { SENDER } from "src/constants";
 import { AddressFromBytes, TypusConfig } from "src/utils";
-import { AuctionBid } from "src/typus-dov-single-v2";
 
-export async function getLaunchAuctionBids(config: TypusConfig): Promise<AuctionBid[]> {
+interface Record {
+    bidder: string;
+    price: string;
+    size: string;
+    balance: string;
+    ts_ms: string;
+}
+
+export async function getLaunchAuctionBids(config: TypusConfig): Promise<Record[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
-    let target = `${config.package.launch}::auction::get_auction_bids_bcs` as any;
+    let target = `${config.package.launch}::auction::get_records_bcs` as any;
     let transactionBlockArguments = [transactionBlock.pure(config.object.launchAuction)];
     transactionBlock.moveCall({
         target,
@@ -22,31 +29,32 @@ export async function getLaunchAuctionBids(config: TypusConfig): Promise<Auction
     let result = reader.readVec((reader, i) => {
         reader.read8();
         let bid = {
-            tsMs: reader.read64(),
             bidder: AddressFromBytes(reader.readBytes(32)),
             price: reader.read64(),
             size: reader.read64(),
-            bidderBalance: reader.read64(),
-            incentiveBalance: reader.read64(),
-            feeDiscount: reader.read64(),
-            index: reader.read64(),
-        } as AuctionBid;
+            balance: reader.read64(),
+            ts_ms: reader.read64(),
+        } as Record;
         return bid;
     });
 
     return result;
 }
 
-export interface UserLaunchData {
-    bid_size: number;
+export interface UserBidData {
+    whitelist_max_bid_size: number;
+    whitelist_total_bid_size: number;
+    total_bid_size: number;
+    total_balance: number;
     refund: number;
+    able_to_claim: boolean;
 }
 
-export async function getUserBidRebate(config: TypusConfig): Promise<UserLaunchData> {
+export async function getBidderInfo(config: TypusConfig, bidder: string): Promise<UserBidData> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
-    let target = `${config.package.launch}::auction::get_user_bid_and_rebate` as any;
-    let transactionBlockArguments = [transactionBlock.pure(config.object.launchAuction)];
+    let target = `${config.package.launch}::auction::get_bidder_info` as any;
+    let transactionBlockArguments = [transactionBlock.pure(config.object.launchAuction), transactionBlock.pure(bidder)];
     transactionBlock.moveCall({
         target,
         typeArguments: [],
@@ -58,29 +66,32 @@ export async function getUserBidRebate(config: TypusConfig): Promise<UserLaunchD
     console.log(bytes);
 
     return {
-        bid_size: bytes[0],
-        refund: bytes[1],
-    } as UserLaunchData;
+        whitelist_max_bid_size: bytes[0],
+        whitelist_total_bid_size: bytes[1],
+        total_bid_size: bytes[2],
+        total_balance: bytes[3],
+        refund: bytes[4],
+        able_to_claim: bytes[5] == 1 ? false : true,
+    } as UserBidData;
 }
 
 export interface LaunchAuction {
-    // dutch_auction: DutchAuction | null;
-    delivery_info: DeliveryInfo | null;
-    total_size: string;
-    token_to_sell: string;
-    refund_vault: string;
-    minimum_bid_size: string;
-    maximum_bid_size: string;
+    whitelist_ts_ms: string; // whitelist start timestamp in ms
+    start_ts_ms: string; // auction start timestamp in ms
+    end_ts_ms: string; // auction end timestamp in ms
+    max_size: string; // auction max total bid size
     lot_size: string;
-    start_ts_ms: string;
-    end_ts_ms: string;
-}
-
-export interface DeliveryInfo {
-    price: string;
-    total_bid_size: string;
-    total_bidder_bid_value: string;
-    remaining: string;
+    min_bid_size: string; // min bid size per user during auction
+    max_bid_size: string; // max bid size per user during auction
+    decay_speed: string;
+    initial_price: string;
+    final_price: string;
+    deliver_price: string; // last user bid price
+    token_decimal: string; // bid token
+    size_decimal: string; // contract token / contract size
+    total_bid_size: string; // sum of auction bid size including whitelist
+    bid_balance: string;
+    deliver_balance: string;
 }
 
 export async function getLaunchAuction(config: TypusConfig): Promise<null> {
