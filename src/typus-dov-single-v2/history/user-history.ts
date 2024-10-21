@@ -162,6 +162,11 @@ export async function parseTxHistory(
                         }
                     }
                     break;
+                case "ExpDownEvent":
+                    Action = "Extract Exp";
+                    Tails = `#${event.parsedJson!.log[0]}`;
+                    Exp = event.parsedJson!.log[1];
+                    break;
                 case "LevelUpEvent":
                     if (event.parsedJson!.log) {
                         Action = `Level Up to Level ${event.parsedJson!.log[1]}`;
