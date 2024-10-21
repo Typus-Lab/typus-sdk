@@ -42,11 +42,11 @@ export async function getLaunchAuctionBids(config: TypusConfig): Promise<Record[
 }
 
 export interface UserBidData {
-    whitelist_max_bid_size: number;
-    whitelist_total_bid_size: number;
-    total_bid_size: number;
-    total_balance: number;
-    refund: number;
+    whitelist_max_bid_size: string;
+    whitelist_total_bid_size: string;
+    total_bid_size: string;
+    total_balance: string;
+    refund: string;
     able_to_claim: boolean;
 }
 
@@ -63,16 +63,21 @@ export async function getBidderInfo(config: TypusConfig, bidder: string): Promis
     let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
-    console.log(bytes);
+    // console.log(bytes);
 
-    return {
-        whitelist_max_bid_size: bytes[0],
-        whitelist_total_bid_size: bytes[1],
-        total_bid_size: bytes[2],
-        total_balance: bytes[3],
-        refund: bytes[4],
-        able_to_claim: bytes[5] == 1 ? false : true,
+    let reader = new BcsReader(new Uint8Array(bytes));
+
+    reader.read8();
+    let bid = {
+        whitelist_max_bid_size: reader.read64(),
+        whitelist_total_bid_size: reader.read64(),
+        total_bid_size: reader.read64(),
+        total_balance: reader.read64(),
+        refund: reader.read64(),
+        able_to_claim: reader.read8() == 1 ? false : true,
     } as UserBidData;
+
+    return bid;
 }
 
 export interface LaunchAuction {
@@ -94,11 +99,11 @@ export interface LaunchAuction {
     deliver_balance: string;
 }
 
-export async function getLaunchAuction(config: TypusConfig): Promise<null> {
+export async function getLaunchAuction(config: TypusConfig): Promise<LaunchAuction> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
-    let response = await provider.getObject({ id: config.object.launchAuction });
-    console.log(response);
+    let response = await provider.getObject({ id: config.object.launchAuction, options: { showContent: true } });
 
-    return null;
+    // @ts-ignore
+    return response.data.content.fields as LaunchAuction;
 }
