@@ -44,9 +44,9 @@ export async function getLaunchAuctionBids(config: TypusConfig): Promise<Record[
 export interface UserBidData {
     whitelist_max_bid_size: string;
     whitelist_total_bid_size: string;
-    total_bid_size: string;
+    total_bid_size: string; // My Purchased
     total_balance: string;
-    refund: string;
+    refund: string; // My Rebate
     able_to_claim: boolean;
 }
 
