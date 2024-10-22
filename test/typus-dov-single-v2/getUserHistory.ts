@@ -77,7 +77,7 @@ import * as fs from "fs";
 
     let datas = localCacheEvents;
 
-    let txHistory = await parseTxHistory(datas, config.packageOrigin.dovSingle, vaults);
+    let txHistory = await parseTxHistory(datas, vaults);
     // console.log(txHistory.reverse());
 
     let newBidHistory = await getNewBidFromSentio(vaults, sender, 0);

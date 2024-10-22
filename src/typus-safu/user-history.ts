@@ -44,13 +44,10 @@ export interface TxHistory {
     log: string[];
 }
 
-export async function parseTxHistory(
-    datas: Array<any>,
-    originPackage: string // safu package
-): Promise<Array<TxHistory>> {
+export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory>> {
     let results = await datas
         .filter((event) => {
-            return event.packageId == originPackage || event.type.includes(originPackage);
+            return event.type.includes("safu");
         })
         .sort((a, b) => {
             // From Old to New!

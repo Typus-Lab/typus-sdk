@@ -57,9 +57,17 @@ import * as fs from "fs";
 
     let datas = localCacheEvents;
 
-    let txHistory = await parseTxHistory(datas, config.packageOrigin.safu);
+    let txHistory = await parseTxHistory(datas);
     console.log(txHistory.reverse());
 
-    let cashFlow = await getDepositorCashFlows(txHistory);
-    console.log(cashFlow);
+    let cashFlows = await getDepositorCashFlows(txHistory);
+    console.log(cashFlows);
+
+    for (let cashFlow of cashFlows) {
+        console.log(cashFlow[0]);
+        // const netDeposit = cashFlow[1].netDeposit!;
+        const harvest = cashFlow[1].totalHarvest.values().next().value || 0;
+        const profitFromOption = cashFlow[1].totalCompound + harvest;
+        console.log(profitFromOption);
+    }
 })();
