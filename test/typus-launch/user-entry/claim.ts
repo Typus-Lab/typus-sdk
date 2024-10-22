@@ -1,5 +1,5 @@
 import "src/utils/load_env";
-import { claimTx } from "src/typus-launch";
+import { claimTx } from "src/typus-launch/auction";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";

@@ -56,13 +56,15 @@ export interface Package {
     perp: string;
     safu: string;
     typus: string;
-    launch: string;
+    launchAuction: string;
+    launchOptionAirdrop: string;
 }
 export interface Version {
     perp: string;
     safu: string;
     typus: string;
-    launch: string;
+    launchAuction: string;
+    launchOptionAirdrop: string;
 }
 export interface Registry {
     dice: {
@@ -105,6 +107,7 @@ export interface Object {
     tgldTokenPolicy: string;
     tlpTreasuryCap: string;
     launchAuction: string;
+    launchSnapshot: string;
 }
 export interface Oracle {
     afsui: string;

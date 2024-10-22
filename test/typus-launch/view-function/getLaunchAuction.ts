@@ -1,4 +1,4 @@
-import { getLaunchAuction } from "src/typus-launch";
+import { getLaunchAuction } from "src/typus-launch/auction";
 import { TypusConfig } from "src/utils";
 
 (async () => {
