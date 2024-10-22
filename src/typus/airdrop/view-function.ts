@@ -7,6 +7,7 @@ import { SENDER } from "src/constants";
 export async function getAirdrop(
     config: TypusConfig,
     input: {
+        typeArguments: string[];
         key: string;
         user: string;
     }
@@ -15,7 +16,7 @@ export async function getAirdrop(
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${config.package.typus}::airdrop::get_airdrop`,
-        typeArguments: [],
+        typeArguments: input.typeArguments,
         arguments: [
             transactionBlock.pure(config.version.typus),
             transactionBlock.pure(config.registry.typus.airdrop),
