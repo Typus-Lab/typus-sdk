@@ -159,6 +159,7 @@ export interface Token {
     mliq: string;
     hippo: string;
     deep: string;
+    typus: string;
 }
 
 // (async () => {

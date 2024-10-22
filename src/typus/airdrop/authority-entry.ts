@@ -21,7 +21,7 @@ export async function getRemoveAirdropTx(
     let balance = tx.moveCall({
         target: `${config.package.typus}::airdrop::remove_airdrop`,
         typeArguments: input.typeArguments,
-        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.airdrop), tx.object(input.key)],
+        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.airdrop), tx.pure(input.key)],
     });
     let coin = tx.moveCall({
         target: `0x2::coin::from_balance`,
@@ -67,7 +67,7 @@ export async function getSetAirdropTx(
             arguments: [
                 tx.object(config.version.typus),
                 tx.object(config.registry.typus.airdrop),
-                tx.object(input.key),
+                tx.pure(input.key),
                 tx.makeMoveVec({ objects: [coin] }),
                 tx.pure(input.users),
                 tx.pure(input.values),
@@ -80,7 +80,7 @@ export async function getSetAirdropTx(
             arguments: [
                 tx.object(config.version.typus),
                 tx.object(config.registry.typus.airdrop),
-                tx.object(input.key),
+                tx.pure(input.key),
                 tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
                 tx.pure(input.users),
                 tx.pure(input.values),
