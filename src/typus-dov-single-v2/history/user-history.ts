@@ -82,7 +82,6 @@ export interface TxHistory {
 
 export async function parseTxHistory(
     datas: Array<any>,
-    packageId: string,
     originPackageId: string,
     vaults: { [key: string]: Vault }
 ): Promise<Array<TxHistory>> {
@@ -90,7 +89,6 @@ export async function parseTxHistory(
         .filter((event) => {
             let type: string = event.type;
             return (
-                event.packageId == packageId ||
                 event.packageId == originPackageId ||
                 type.includes(originPackageId) ||
                 type.includes("typus_nft::First") ||
