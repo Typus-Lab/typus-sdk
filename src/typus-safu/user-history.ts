@@ -50,7 +50,7 @@ export async function parseTxHistory(
 ): Promise<Array<TxHistory>> {
     let results = await datas
         .filter((event) => {
-            return event.packageId == originPackage;
+            return event.packageId == originPackage || event.type.includes(originPackage);
         })
         .sort((a, b) => {
             // From Old to New!

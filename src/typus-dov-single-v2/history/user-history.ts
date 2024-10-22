@@ -92,6 +92,7 @@ export async function parseTxHistory(
             return (
                 event.packageId == packageId ||
                 event.packageId == originPackageId ||
+                type.includes(originPackageId) ||
                 type.includes("typus_nft::First") ||
                 type.includes("typus_nft::ExpUpEvent") ||
                 type.includes("tails_staking")
