@@ -87,6 +87,7 @@ export async function parseTxHistory(datas: Array<any>, vaults: { [key: string]:
             return (
                 event.module == "tds_user_entry" ||
                 type.includes("typus_dov_single") ||
+                type.includes("auto_bid") ||
                 type.includes("typus_nft::First") ||
                 type.includes("typus_nft::ExpUpEvent") ||
                 type.includes("tails_staking")
