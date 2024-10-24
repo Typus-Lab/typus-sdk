@@ -14,16 +14,16 @@ import mnemonic from "mnemonic.json";
     let amount = await getAirdrop(config, {
         typeArguments: [config.token.typus],
         key: "typus_airdrop",
-        user: "0x527e28311cd7fc0a23d48039a72ecf03a75dedef1593ef5fabd29b8fa59d0d7f",
+        user: signer.toSuiAddress(),
     });
-    console.log(`Claiming ${amount[1]} TYPUS...`);
+    console.log(`Claiming ${Number(amount[1]) / 10 ** 9} TYPUS...`);
 
-    // let transactionBlock = getClaimAirdropTx(config, new TransactionBlock(), {
-    //     typeArguments: [config.token.typus],
-    //     key: "typus_airdrop",
-    //     user: signer.toSuiAddress(),
-    // });
+    let transactionBlock = getClaimAirdropTx(config, new TransactionBlock(), {
+        typeArguments: [config.token.typus],
+        key: "typus_airdrop",
+        user: signer.toSuiAddress(),
+    });
 
-    // let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
-    // console.log(res);
+    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+    console.log(res);
 })();
