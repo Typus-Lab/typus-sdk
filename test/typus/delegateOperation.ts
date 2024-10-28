@@ -33,7 +33,6 @@ import { TypusConfig } from "src/utils";
         arguments: [transactionBlock.object(config.version.typus), transactionBlock.object(managerCap)],
     });
 
-    transactionBlock.setGasBudget(100000000);
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);
 })();

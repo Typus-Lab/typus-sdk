@@ -42,7 +42,6 @@ import { TOKEN, tokenType } from "src/constants";
         reduceOnly: false,
         linkedPositionId: null,
     });
-    tx.setGasBudget(100000000);
 
     let dryrunRes = await provider.devInspectTransactionBlock({
         transactionBlock: tx,

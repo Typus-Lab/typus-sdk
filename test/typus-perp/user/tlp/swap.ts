@@ -31,7 +31,6 @@ import { createPythClient } from "src/utils";
     console.log(coins.length);
 
     let tx = new TransactionBlock();
-    tx.setGasBudget(100000000);
 
     tx = await swap(config, tx, pythClient, {
         coins,

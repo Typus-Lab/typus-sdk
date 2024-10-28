@@ -39,7 +39,6 @@ import { createPythClient } from "src/utils";
     console.log(stake);
 
     let tx = new TransactionBlock();
-    tx.setGasBudget(100000000);
 
     unstakeBurn(config, tx, pythClient, {
         userShareId: stake.userShareId.toString(),

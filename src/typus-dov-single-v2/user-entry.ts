@@ -455,8 +455,6 @@ export function getMultiTransferBidReceiptTx(
             tx.transferObjects([tx.object(unwrap)], input.sender);
         }
     }
-
-    tx.setGasBudget(100000000);
     return tx;
 }
 

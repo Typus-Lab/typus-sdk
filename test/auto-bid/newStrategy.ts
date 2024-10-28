@@ -33,7 +33,7 @@ import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
         maxTimes,
         targetRounds,
     });
-    transactionBlock.setGasBudget(100000000);
+
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
     console.log(res);
 })();

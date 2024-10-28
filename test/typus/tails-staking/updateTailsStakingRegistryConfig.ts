@@ -18,7 +18,6 @@ import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
         index: IDailySignUpFee,
         value: "0",
     });
-    tx.setGasBudget(100000000);
 
     let result = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
     console.log(result);

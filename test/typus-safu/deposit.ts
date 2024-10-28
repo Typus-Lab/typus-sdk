@@ -30,7 +30,6 @@ import { TypusConfig } from "src/utils";
         raiseFromReward: "0",
         user,
     });
-    transactionBlock.setGasBudget(100000000);
 
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);

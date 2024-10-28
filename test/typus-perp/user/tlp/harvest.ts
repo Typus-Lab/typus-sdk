@@ -20,7 +20,6 @@ import { harvest, getUserStake } from "src/typus-perp";
     console.log(stake);
 
     let tx = new TransactionBlock();
-    tx.setGasBudget(100000000);
 
     harvest(config, tx, {
         userShareId: stake.userShareId.toString(),

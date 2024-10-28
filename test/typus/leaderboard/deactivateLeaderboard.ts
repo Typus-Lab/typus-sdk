@@ -14,7 +14,6 @@ import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
     let id = "0x3017fc6d743f73ada74c3754de40aa5b399840cb09ca276cb87916660d2c2bdc";
 
     let transactionBlock = await getDeactivateLeaderboardTx(config, new TransactionBlock(), { key, id });
-    transactionBlock.setGasBudget(100000000);
 
     var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
     console.log(res);

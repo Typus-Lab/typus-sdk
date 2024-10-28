@@ -26,7 +26,6 @@ import { createPythClient } from "src/utils";
         amount: "1000000",
         position,
     });
-    tx.setGasBudget(100000000);
 
     let dryrunRes = await provider.devInspectTransactionBlock({
         transactionBlock: tx,

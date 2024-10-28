@@ -22,7 +22,6 @@ import { TypusConfig } from "src/utils";
         user,
         typusTokenType: "0x4b5d0a097ee8a309a89bb2bc589403a4a9a39de639d576495b697be2a60f69bb::mblub::MBLUB",
     });
-    transactionBlock.setGasBudget(500000000);
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
 
     console.log(res);

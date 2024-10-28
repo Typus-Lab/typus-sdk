@@ -23,7 +23,6 @@ import { cancelTradingOrder, getUserOrders } from "src/typus-perp";
         order,
         user,
     });
-    tx.setGasBudget(100000000);
 
     let dryrunRes = await provider.devInspectTransactionBlock({
         transactionBlock: tx,

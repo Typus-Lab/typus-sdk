@@ -21,7 +21,6 @@ import mnemonic from "mnemonic.json";
         reduceFromInactive: "3000571893",
         user,
     });
-    transactionBlock.setGasBudget(100000000);
 
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);

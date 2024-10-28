@@ -50,8 +50,6 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
         n += 1;
     }
 
-    transactionBlock.setGasBudget(gasBudget);
-
     const res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
     console.log(res);
 })();

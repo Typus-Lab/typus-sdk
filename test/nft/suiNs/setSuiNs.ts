@@ -46,7 +46,6 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
                     transactionBlock.pure(input.id),
                 ],
             });
-            transactionBlock.setGasBudget(gasBudget);
         }
         const res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
         console.log(res);

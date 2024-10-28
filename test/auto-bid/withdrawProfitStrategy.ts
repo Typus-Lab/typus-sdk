@@ -24,7 +24,7 @@ import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
         strategyIndex,
         user: keypair.toSuiAddress(),
     });
-    transactionBlock.setGasBudget(100000000);
+
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
     console.log(res);
 })();

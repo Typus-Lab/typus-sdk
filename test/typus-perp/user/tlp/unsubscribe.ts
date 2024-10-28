@@ -20,7 +20,6 @@ import { unsubscribe, getUserStake } from "src/typus-perp";
     console.log(stake);
 
     let tx = new TransactionBlock();
-    tx.setGasBudget(100000000);
 
     unsubscribe(config, tx, {
         userShareId: stake.userShareId.toString(),

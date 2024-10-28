@@ -67,7 +67,7 @@ const necklace = "kriya_dex";
                 kiosk,
                 kiosk_cap: kioskOwnerCap.objectId,
             });
-            transactionBlock.setGasBudget(100000000);
+
             let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
             console.log(res);
         }

@@ -114,7 +114,7 @@ interface Material {
         amount: material.nextWeekRewards.toString(),
         tsMs: material.nextWeekTsMs.toString(),
     });
-    tx.setGasBudget(100000000);
+
     let result = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
     log(material, result.digest);
 })();

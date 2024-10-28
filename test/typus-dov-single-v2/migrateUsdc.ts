@@ -10,7 +10,7 @@ import { TypusConfig } from "src/utils";
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     // migrateDepositVault(config, transactionBlock, { index: "0", migrateDepositToken: false, migrateBidToken: false });
-    transactionBlock.setGasBudget(1000000000);
+
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);
 })();

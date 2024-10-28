@@ -18,7 +18,6 @@ import { TOKEN } from "src/constants";
     let pythClient = createPythClient(provider, NETWORK);
 
     var tx = new TransactionBlock();
-    tx.setGasBudget(100000000);
 
     // 1. Get user's bid receipt
     let bidReceipt = "0xb1b3e07b526a05b705dde1aadf76a9af8906a3e1479ea0d4a9eb33fafeba777c";

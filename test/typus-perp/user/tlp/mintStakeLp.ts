@@ -45,7 +45,6 @@ import { TOKEN, tokenType } from "src/constants";
     console.log(coins.length);
 
     let tx = new TransactionBlock();
-    tx.setGasBudget(100000000);
 
     tx = await mintStakeLp(config, tx, pythClient, {
         lpPool,

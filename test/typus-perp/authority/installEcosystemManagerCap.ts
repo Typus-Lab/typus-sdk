@@ -15,7 +15,6 @@ import mnemonic from "../../../mnemonic.json";
     console.log(address);
 
     let tx = new TransactionBlock();
-    tx.setGasBudget(100000000);
 
     installEcosystemManagerCapEntry(tx, {
         version: config.version.perp,

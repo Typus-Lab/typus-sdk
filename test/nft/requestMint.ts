@@ -22,7 +22,7 @@ import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
     console.log("remaining: " + remaining);
 
     var transactionBlock = await getIsWhitelistTx(config, new TransactionBlock(), { pool, user });
-    transactionBlock.setGasBudget(100000000);
+
     let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: user })).results;
     // @ts-ignore
     const isWhitelist = results![0].returnValues[0][0] == 1;
@@ -31,7 +31,7 @@ import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
     const seed = "2"; // 0,1,2
 
     var transactionBlock = await getRequestMintTx(config, new TransactionBlock(), { pool, seed, price: poolData.price });
-    transactionBlock.setGasBudget(100000000);
+
     const result = await provider.signAndExecuteTransactionBlock({
         signer: keypair,
         transactionBlock,

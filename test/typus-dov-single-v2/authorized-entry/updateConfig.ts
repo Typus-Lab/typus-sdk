@@ -13,7 +13,6 @@ import { TypusConfig } from "src/utils";
     let transactionBlock = await getUpdateConfigTx(config, new TransactionBlock(), [
         { index: "21", input: { capacity: "2100000000000000" } },
     ]);
-    transactionBlock.setGasBudget(100000000);
 
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);

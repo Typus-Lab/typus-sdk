@@ -38,7 +38,7 @@ const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
         guess_2,
         larger_than_2,
     });
-    transactionBlock.setGasBudget(100000000);
+
     let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock, options: { showEvents: true } });
     console.log(res);
 
