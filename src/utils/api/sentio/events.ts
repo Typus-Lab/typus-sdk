@@ -16,7 +16,7 @@ export async function getFromSentio(event: string, userAddress: string, startTim
             sql: `
                 SELECT *
                 FROM ${event}
-                WHERE distinct_id = "${userAddress}" && timestamp >= ${startTimestamp}
+                WHERE distinct_id = '${userAddress}' && timestamp >= ${startTimestamp}
                 ORDER BY timestamp DESC;
             `,
             size: 1000,
@@ -48,7 +48,7 @@ export async function getFromSentioWithExpUp(event: string, userAddress: string,
                     SELECT number, distinct_id, exp_earn, transaction_hash, log_index
                     FROM ExpUp
                 ) S ON N.transaction_hash = S.transaction_hash && N.log_index + 1 = S.log_index
-                WHERE N.distinct_id = "${userAddress}" && N.timestamp >= ${startTimestamp}
+                WHERE N.distinct_id = '${userAddress}' && N.timestamp >= ${startTimestamp}
                 ORDER BY N.timestamp DESC;
             `,
             size: 1000,
