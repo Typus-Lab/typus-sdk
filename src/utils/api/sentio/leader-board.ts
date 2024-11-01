@@ -226,13 +226,13 @@ export async function getExpLeaderBoard(startTimestamp: string, endTimestamp?: s
             //                 GROUP BY number
             //             )
             //         ) S ON E.number = S.number
-            //         WHERE E.timestamp >= ${startTimestamp} && E.timestamp < ${_endTimestamp}
+            //         WHERE E.timestamp >= ${startTimestamp} AND E.timestamp < ${_endTimestamp}
             //         GROUP BY owner
             //         ORDER BY total_exp_earn DESC;`,
             sql: `
                 SELECT E.nft_id as nft_id, SUM(E.exp_earn) as total_exp_earn
                 FROM ExpUp E
-                WHERE E.timestamp >= ${startTimestamp} && E.timestamp < ${_endTimestamp}
+                WHERE E.timestamp >= ${startTimestamp} AND E.timestamp < ${_endTimestamp}
                 GROUP BY nft_id
                 ORDER BY total_exp_earn DESC;
             `,
