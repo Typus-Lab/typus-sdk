@@ -12,7 +12,11 @@ export class TypusConfig {
     static parse(json): TypusConfig {
         return JSON.parse(JSON.stringify(camelcaseKeysDeep(json)));
     }
-    static async default(network: "MAINNET" | "TESTNET", customRpcEndpoint: string | null, branch = "main"): Promise<TypusConfig> {
+    static async default(
+        network: "MAINNET" | "TESTNET",
+        customRpcEndpoint: string | null,
+        branch = "feat/testing_mainnet"
+    ): Promise<TypusConfig> {
         switch (network) {
             case "MAINNET": {
                 let typusConfig = JSON.parse(
