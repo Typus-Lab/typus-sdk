@@ -73,11 +73,13 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
 
                 switch (action) {
                     case "raise_fund":
-                        if (Number(log[2]) + Number(log[3]) + Number(log[4]) > 0) {
+                        // balance_value, deactivating_value, inactive_value,
+                        // Number(log[2]) + Number(log[3]) + Number(log[4])
+                        if (Number(log[2]) > 0) {
                             txHistory.push({
                                 Action: "Deposit",
                                 Index: log[0],
-                                Amount: divByDecimal(Number(log[2]) + Number(log[3]) + Number(log[4]), decimal!),
+                                Amount: divByDecimal(Number(log[2]), decimal!),
                                 Token,
                                 Exp: log[6],
                                 Date: new Date(Number(event.timestampMs)),
