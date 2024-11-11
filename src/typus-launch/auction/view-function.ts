@@ -15,7 +15,7 @@ interface Record {
 export async function getLaunchAuctionBids(config: TypusConfig): Promise<Record[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
-    let target = `${config.package.launchAuction}::auction::get_records_bcs` as any;
+    let target = `${config.package.launch.auction}::auction::get_records_bcs` as any;
     let transactionBlockArguments = [transactionBlock.pure(config.object.launchAuction)];
     transactionBlock.moveCall({
         target,
@@ -53,7 +53,7 @@ export interface UserBidData {
 export async function getBidderInfo(config: TypusConfig, bidder: string): Promise<UserBidData> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
-    let target = `${config.package.launchAuction}::auction::get_bidder_info` as any;
+    let target = `${config.package.launch.auction}::auction::get_bidder_info` as any;
     let transactionBlockArguments = [transactionBlock.pure(config.object.launchAuction), transactionBlock.pure(bidder)];
     transactionBlock.moveCall({
         target,

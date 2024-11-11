@@ -23,9 +23,9 @@ export function bidTx(
     let [input_coin] = tx.splitCoins(tx.gas, [tx.pure(input.amount)]);
 
     tx.moveCall({
-        target: `${config.package.launchAuction}::auction::bid`,
+        target: `${config.package.launch.auction}::auction::bid`,
         arguments: [
-            tx.object(config.version.launchAuction),
+            tx.object(config.version.launch.auction),
             tx.object(config.object.launchAuction),
             tx.pure(input.size),
             input_coin,
@@ -46,8 +46,8 @@ export function bidTx(
 */
 export function claimTx(config: TypusConfig, tx: TransactionBlock) {
     tx.moveCall({
-        target: `${config.package.launchAuction}::auction::claim`,
-        arguments: [tx.object(config.version.launchAuction), tx.object(config.object.launchAuction), tx.object(CLOCK)],
+        target: `${config.package.launch.auction}::auction::claim`,
+        arguments: [tx.object(config.version.launch.auction), tx.object(config.object.launchAuction), tx.object(CLOCK)],
     });
 
     return tx;

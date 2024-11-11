@@ -56,15 +56,21 @@ export interface Package {
     perp: string;
     safu: string;
     typus: string;
-    launchAuction: string;
-    launchOptionAirdrop: string;
+    launch: {
+        auction: string;
+        optionAirdrop: string;
+        fundingVault: string;
+    };
 }
 export interface Version {
     perp: string;
     safu: string;
     typus: string;
-    launchAuction: string;
-    launchOptionAirdrop: string;
+    launch: {
+        auction: string;
+        optionAirdrop: string;
+        fundingVault: string;
+    };
 }
 export interface Registry {
     dice: {
@@ -98,6 +104,9 @@ export interface Registry {
         tailsStaking: string;
         tgld: string;
         user: string;
+    };
+    launch: {
+        fundingVault: string;
     };
 }
 export interface Object {

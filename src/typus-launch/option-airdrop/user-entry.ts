@@ -20,9 +20,9 @@ export function addUserShare(
     }
 ) {
     tx.moveCall({
-        target: `${config.package.launchOptionAirdrop}::option_airdop::add_user_share`,
+        target: `${config.package.launch.optionAirdrop}::option_airdop::add_user_share`,
         arguments: [
-            tx.object(config.version.launchOptionAirdrop),
+            tx.object(config.version.launch.optionAirdrop),
             tx.object(config.object.launchSnapshot),
             tx.pure(input.users),
             tx.pure(input.shares),
@@ -46,8 +46,8 @@ export function removeUserShare(
     }
 ) {
     tx.moveCall({
-        target: `${config.package.launchOptionAirdrop}::option_airdop::remove_user_share`,
-        arguments: [tx.object(config.version.launchOptionAirdrop), tx.object(config.object.launchSnapshot)],
+        target: `${config.package.launch.optionAirdrop}::option_airdop::remove_user_share`,
+        arguments: [tx.object(config.version.launch.optionAirdrop), tx.object(config.object.launchSnapshot)],
     });
 }
 
@@ -73,9 +73,9 @@ export function addAirdropPlan(
     }
 ) {
     tx.moveCall({
-        target: `${config.package.launchOptionAirdrop}::option_airdop::add_airdrop_plan`,
+        target: `${config.package.launch.optionAirdrop}::option_airdop::add_airdrop_plan`,
         arguments: [
-            tx.object(config.version.launchOptionAirdrop),
+            tx.object(config.version.launch.optionAirdrop),
             tx.object(config.object.launchSnapshot),
             tx.pure(input.vault_index),
             tx.pure(input.auction_max_size),
@@ -96,9 +96,9 @@ export function addAirdropPlan(
 */
 export function airdropOtc(config: TypusConfig, tx: TransactionBlock) {
     tx.moveCall({
-        target: `${config.package.launchOptionAirdrop}::option_airdop::airdrop_otc`,
+        target: `${config.package.launch.optionAirdrop}::option_airdop::airdrop_otc`,
         arguments: [
-            tx.object(config.version.launchOptionAirdrop),
+            tx.object(config.version.launch.optionAirdrop),
             tx.object(config.object.launchSnapshot),
             tx.object(config.registry.dov.dovSingle),
             tx.object(CLOCK),
