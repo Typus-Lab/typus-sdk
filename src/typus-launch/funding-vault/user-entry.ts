@@ -3,52 +3,88 @@ import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
 /**
-    entry fun bid(
+    public fun raise_fund<TOKEN>(
         version: &Version,
-        auction: &mut Auction,
-        size: u64,
-        mut coin: Coin<SUI>,
+        registry: &mut Registry,
+        index: u64,
+        coin: Coin<TOKEN>,
         clock: &Clock,
-        ctx: &mut TxContext,
+        ctx: &TxContext,
     ) {
 */
-export function bidTx(
+export function raiseFund(
     config: TypusConfig,
     tx: TransactionBlock,
     input: {
-        size: string;
+        typeArguments: string[];
+        index: string;
+        coins: string[];
         amount: string;
     }
 ) {
-    let [input_coin] = tx.splitCoins(tx.gas, [tx.pure(input.amount)]);
-
+    let [coin] =
+        input.typeArguments[0] == "0x2::sui::SUI" ||
+        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
+            ? tx.splitCoins(tx.gas, [tx.pure(input.amount)])
+            : (() => {
+                  let coin = input.coins.pop()!;
+                  if (input.coins.length > 0) {
+                      tx.mergeCoins(
+                          tx.object(coin),
+                          input.coins.map((coin) => tx.object(coin))
+                      );
+                  }
+                  return tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+              })();
     tx.moveCall({
-        target: `${config.package.launch.auction}::auction::bid`,
+        target: `${config.package.launch.fundingVault}::funding_vault::raise_fund`,
+        typeArguments: input.typeArguments,
         arguments: [
-            tx.object(config.version.launch.auction),
-            tx.object(config.object.launchAuction),
-            tx.pure(input.size),
-            input_coin,
+            tx.object(config.version.launch.fundingVault),
+            tx.object(config.registry.launch.fundingVault),
+            tx.pure(input.index),
+            coin,
             tx.object(CLOCK),
         ],
     });
-
-    return tx;
 }
-
 /**
-    entry fun claim(
-        version: &Version,
-        auction: &mut Auction,
+    public fun reduce_fund<TOKEN>(
+        version: &mut Version,
+        registry: &mut Registry,
+        index: u64,
+        mut reduce_from_fund: u64,
+        reduce_from_refund: bool,
         clock: &Clock,
         ctx: &mut TxContext,
-    ) {
+    ): Balance<TOKEN> {
 */
-export function claimTx(config: TypusConfig, tx: TransactionBlock) {
-    tx.moveCall({
-        target: `${config.package.launch.auction}::auction::claim`,
-        arguments: [tx.object(config.version.launch.auction), tx.object(config.object.launchAuction), tx.object(CLOCK)],
+export function reduceFund(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        typeArguments: string[];
+        index: string;
+        reduceFromFund: string;
+        reduceFromRefund: boolean;
+        user: string;
+    }
+) {
+    let result = tx.moveCall({
+        target: `${config.package.launch.fundingVault}::funding_vault::reduce_fund`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            tx.object(config.version.launch.fundingVault),
+            tx.object(config.registry.launch.fundingVault),
+            tx.pure(input.index),
+            tx.pure(input.reduceFromFund),
+            tx.pure(input.reduceFromRefund),
+            tx.object(CLOCK),
+        ],
     });
-
-    return tx;
+    tx.moveCall({
+        target: `${config.package.typus}::utility::transfer_balance`,
+        typeArguments: input.typeArguments,
+        arguments: [tx.object(result[0]), tx.pure(input.user)],
+    });
 }
