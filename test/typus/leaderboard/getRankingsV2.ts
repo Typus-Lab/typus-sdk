@@ -15,6 +15,17 @@ import { SuiClient } from "@mysten/sui.js/client";
     var parentId = "0xcbc8ba339173e5696e0194d1ef00d843fad9f5fe0c6c7cbf48df38f88a1fc10c";
     var filename = "bidding_leaderboard.csv";
     getRankingsV2(provider, parentId, filename);
+
+    let response = await fetch(
+        "https://api.sm.xyz/v1/collections/holders/0x034c162f6b594cb5a1805264dd01ca5d80ce3eca6522e6ee37fd9ebfb9d3ddca::factory::PrimeMachin/",
+        {
+            method: "GET",
+        }
+    );
+    let response_json = await response.json();
+    // @ts-ignore
+    let response_array: [string, string][] = Object.entries(response_json["data"]).map(([key, value]) => [key, value.toString()]);
+    saveToFile(response_array, "prime_machin_leaderboard.csv");
 })();
 
 function saveToFile(datas: [string, string][], filename: string) {
