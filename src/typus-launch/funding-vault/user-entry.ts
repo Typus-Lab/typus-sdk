@@ -82,9 +82,5 @@ export function reduceFund(
             tx.object(CLOCK),
         ],
     });
-    tx.moveCall({
-        target: `${config.package.typus}::utility::transfer_balance`,
-        typeArguments: input.typeArguments,
-        arguments: [tx.object(result[0]), tx.pure(input.user)],
-    });
+    tx.transferObjects([result[0]], input.user);
 }

@@ -6,7 +6,7 @@ import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { TypusConfig } from "src/utils";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET", null);
+    let config = await TypusConfig.default("MAINNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
@@ -14,14 +14,15 @@ import { TypusConfig } from "src/utils";
     newVault(config, transactionBlock, {
         typeArguments: ["0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"],
         config: [
-            "1732003200000", // I_EXPIRATION_TS_MS
+            "1731484800000", // I_ACTIVATION_TS_MS
+            "1732089600000", // I_EXPIRATION_TS_MS
             "10000000000000", // I_CAPACITY
             "1000000000", // I_LOT_SIZE
             "10000000000", // I_MIN_SIZE
             "1000", // I_FEE_BP
             "1800000", // I_UNSUBSCRIBE_PERIOD
             "3000", // I_INTEREST_RATE_BP
-            "3153600000", // I_INTEREST_PERIOD
+            "31536000000", // I_INTEREST_PERIOD
         ],
     });
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
