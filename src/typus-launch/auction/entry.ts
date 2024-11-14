@@ -52,3 +52,28 @@ export function claimTx(config: TypusConfig, tx: TransactionBlock) {
 
     return tx;
 }
+
+/**
+    entry fun whitelist(
+        version: &Version,
+        auction: &mut Auction,
+        mut users: vector<address>,
+        mut sizes: vector<u64>,
+        clock: &Clock,
+        ctx: &TxContext,
+    ) {
+*/
+export function whitelistTx(config: TypusConfig, tx: TransactionBlock, users: string[], sizes: string[]) {
+    tx.moveCall({
+        target: `${config.package.launch.auction}::auction::whitelist`,
+        arguments: [
+            tx.object(config.version.launch.auction),
+            tx.object(config.object.launchAuction),
+            tx.pure(users),
+            tx.pure(sizes),
+            tx.object(CLOCK),
+        ],
+    });
+
+    return tx;
+}

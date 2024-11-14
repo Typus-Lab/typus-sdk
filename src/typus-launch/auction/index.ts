@@ -1,2 +1,2 @@
-export * from "./user-entry";
+export * from "./entry";
 export * from "./view-function";
