@@ -60,6 +60,7 @@ export interface Package {
         auction: string;
         optionAirdrop: string;
         fundingVault: string;
+        veTypus: string;
     };
 }
 export interface Version {
@@ -70,6 +71,7 @@ export interface Version {
         auction: string;
         optionAirdrop: string;
         fundingVault: string;
+        veTypus: string;
     };
 }
 export interface Registry {
@@ -107,6 +109,7 @@ export interface Registry {
     };
     launch: {
         fundingVault: string;
+        veTypus: string;
     };
 }
 export interface Object {
