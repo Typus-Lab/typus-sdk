@@ -71,3 +71,33 @@ export function burn(
     });
     tx.transferObjects([result[0]], input.user);
 }
+
+/**
+    public fun renew(
+        version: &Version,
+        registry: &mut Registry,
+        ve_typus: address,
+        lock_up_period: u64,
+        clock: &Clock,
+        ctx: &TxContext,
+    ) {
+*/
+export function renew(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        veTypus: string;
+        lockUpPeriod: string;
+    }
+) {
+    let result = tx.moveCall({
+        target: `${config.package.launch.veTypus}::ve_typus::renew`,
+        arguments: [
+            tx.object(config.version.launch.veTypus),
+            tx.object(config.registry.launch.veTypus),
+            tx.pure(input.veTypus),
+            tx.pure(input.lockUpPeriod),
+            tx.object(CLOCK),
+        ],
+    });
+}

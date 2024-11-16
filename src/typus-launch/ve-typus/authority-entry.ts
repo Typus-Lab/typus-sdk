@@ -103,3 +103,36 @@ export function delegateBurn(
         ],
     });
 }
+
+/**
+    entry fun delegate_renew(
+        version: &Version,
+        registry: &mut Registry,
+        user: address,
+        ve_typus: address,
+        lock_up_period: u64,
+        clock: &Clock,
+        ctx: &TxContext,
+    ) {
+*/
+export function delegateRenew(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        user: string;
+        veTypus: string;
+        lockUpPeriod: string;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.launch.veTypus}::ve_typus::delegate_renew`,
+        arguments: [
+            tx.object(config.version.launch.veTypus),
+            tx.object(config.registry.launch.veTypus),
+            tx.pure(input.user),
+            tx.pure(input.veTypus),
+            tx.pure(input.lockUpPeriod),
+            tx.object(CLOCK),
+        ],
+    });
+}
