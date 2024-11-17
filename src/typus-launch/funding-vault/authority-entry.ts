@@ -168,6 +168,84 @@ export function withdrawFundFromDeepbookBalanceManager(
 }
 
 /**
+    entry fun deposit_to_deepbook_balance_manager<TOKEN>(
+        version: &Version,
+        registry: &mut Registry,
+        index: u64,
+        coin: Coin<TOKEN>,
+        ctx: &mut TxContext,
+    ) {
+*/
+export function depositToDeepbookBalanceManager(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        typeArguments: string[];
+        index: string;
+        coins: string[];
+        amount: string;
+    }
+) {
+    let [coin] =
+        input.typeArguments[0] == "0x2::sui::SUI" ||
+        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
+            ? tx.splitCoins(tx.gas, [tx.pure(input.amount)])
+            : (() => {
+                  let coin = input.coins.pop()!;
+                  if (input.coins.length > 0) {
+                      tx.mergeCoins(
+                          tx.object(coin),
+                          input.coins.map((coin) => tx.object(coin))
+                      );
+                  }
+                  return tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+              })();
+    tx.moveCall({
+        target: `${config.package.launch.fundingVault}::funding_vault::deposit_to_deepbook_balance_manager`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            tx.object(config.version.launch.fundingVault),
+            tx.object(config.registry.launch.fundingVault),
+            tx.pure(input.index),
+            coin,
+        ],
+    });
+}
+
+/**
+    entry fun withdraw_from_deepbook_balance_manager<TOKEN>(
+        version: &Version,
+        registry: &mut Registry,
+        index: u64,
+        amount: Option<u64>,
+        recipient: address,
+        ctx: &mut TxContext,
+    ) {
+*/
+export function withdrawFromDeepbookBalanceManager(
+    config: TypusConfig,
+    tx: TransactionBlock,
+    input: {
+        typeArguments: string[];
+        index: string;
+        amount: string | null;
+        recipient: string;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.launch.fundingVault}::funding_vault::withdraw_from_deepbook_balance_manager`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            tx.object(config.version.launch.fundingVault),
+            tx.object(config.registry.launch.fundingVault),
+            tx.pure(input.index),
+            tx.pure(input.amount ? [input.amount] : []),
+            tx.pure(input.recipient),
+        ],
+    });
+}
+
+/**
     entry fun increase_fund<TOKEN>(
         version: &Version,
         registry: &mut Registry,
