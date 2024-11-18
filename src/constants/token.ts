@@ -59,6 +59,7 @@ export function typeArgToAsset(typeArg: string): string {
 export function assetToDecimal(asset: string): number | undefined {
     switch (asset) {
         case "SUI":
+        case "sSUI":
             return 9;
         case "BTC":
             return 8;
