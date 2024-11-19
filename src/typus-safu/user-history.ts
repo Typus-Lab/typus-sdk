@@ -47,7 +47,10 @@ export interface TxHistory {
 export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory>> {
     let results = await datas
         .filter((event) => {
-            return event.type.includes("safu");
+            return (
+                event.type.includes("safu") ||
+                event.type == "0x7dab89563066afa000ee154738aac2cc8e7d3e26cd0b470183db63630ee9f965::funding_vault::RaiseFundEvent"
+            );
         })
         .sort((a, b) => {
             // From Old to New!
@@ -60,6 +63,21 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
         .reduce(async (promise, event) => {
             let txHistory: TxHistory[] = await promise;
             // console.log(event);
+
+            if (event.type == "0x7dab89563066afa000ee154738aac2cc8e7d3e26cd0b470183db63630ee9f965::funding_vault::RaiseFundEvent") {
+                let log = event.parsedJson!.log;
+                txHistory.push({
+                    Action: "Deposit",
+                    Index: "deepbook/0",
+                    Amount: divByDecimal(Number(log[0]), 9),
+                    Token: event.parsedJson!.token.name,
+                    Exp: undefined,
+                    Date: new Date(Number(event.timestampMs)),
+                    txDigest: event.id.txDigest,
+                    log,
+                });
+                return txHistory;
+            }
 
             let action = event.parsedJson!.action;
             let log = event.parsedJson!.log;
