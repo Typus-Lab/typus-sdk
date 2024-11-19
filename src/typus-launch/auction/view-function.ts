@@ -80,6 +80,37 @@ export async function getBidderInfo(config: TypusConfig, bidder: string): Promis
     return bid;
 }
 
+export async function getBiddersInfo(config: TypusConfig, bidders: string[]): Promise<{ [key: string]: [UserBidData] }> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let transactionBlock = new TransactionBlock();
+    bidders.forEach((bidder) => {
+        transactionBlock.moveCall({
+            target: `${config.package.launch.auction}::auction::get_bidder_info`,
+            arguments: [transactionBlock.object(config.object.launchAuction), transactionBlock.pure(bidder)],
+        });
+    });
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let bids: { [key: string]: [UserBidData] } = {};
+    results?.forEach((result, i) => {
+        // @ts-ignore
+        let bytes = result.returnValues[0][0];
+        let reader = new BcsReader(new Uint8Array(bytes));
+        reader.read8();
+        let bid = {
+            whitelist_max_bid_size: reader.read64(),
+            whitelist_total_bid_size: reader.read64(),
+            total_bid_size: reader.read64(),
+            total_balance: reader.read64(),
+            refund: reader.read64(),
+            able_to_claim: reader.read8() == 1 ? false : true,
+        } as UserBidData;
+
+        bids[bidders[i]] = [bid];
+    });
+
+    return bids;
+}
+
 export interface LaunchAuction {
     whitelist_ts_ms: string; // whitelist start timestamp in ms
     start_ts_ms: string; // auction start timestamp in ms
