@@ -44,8 +44,8 @@ process.removeAllListeners("warning");
     }
     console.log(`progress: ${count}/${length}`);
 
-    let log = `<<Funding Vault Index ${index}>>`;
-    log = log.concat(`*  vault interest bp: ${getNumberStringWithDecimal(interestBp.toString(), 9)}\n`);
+    let log = `<< Funding Vault Index ${index} >>\n`;
+    log = log.concat(`*  vault interest apr: ${getNumberStringWithDecimal(interestBp.toString(), 4)}\n`);
     let lockedBalance = 0;
     let issuedInterest = 0;
     funds.forEach((fund) => {
