@@ -1,6 +1,10 @@
 import { Fund, getAllFunds, getVault } from "src/typus-launch/funding-vault";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TypusConfig } from "src/utils";
+import slack from "slack";
+
+let process = require("process");
+process.removeAllListeners("warning");
 
 (async () => {
     const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -40,7 +44,8 @@ import { TypusConfig } from "src/utils";
     }
     console.log(`progress: ${count}/${length}`);
 
-    console.log(`*  vault interest bp: ${getNumberStringWithDecimal(interestBp.toString(), 9)}`);
+    let log = `<<Funding Vault Index ${index}>>`;
+    log = log.concat(`*  vault interest bp: ${getNumberStringWithDecimal(interestBp.toString(), 9)}\n`);
     let lockedBalance = 0;
     let issuedInterest = 0;
     funds.forEach((fund) => {
@@ -52,18 +57,24 @@ import { TypusConfig } from "src/utils";
         lockedBalance += Number.parseInt(fund.balance);
         issuedInterest += interest;
     });
-    console.log(`*     locked balance: ${getNumberStringWithDecimal(lockedBalance.toString(), 9)}`);
-    console.log(`*    issued interest: ${getNumberStringWithDecimal(issuedInterest.toString(), 9)}`);
+    log = log.concat(`*     locked balance: ${getNumberStringWithDecimal(lockedBalance.toString(), 9)}\n`);
+    log = log.concat(`*    issued interest: ${getNumberStringWithDecimal(issuedInterest.toString(), 9)}\n`);
     let remainingCapacity = Number.parseInt(vault.config[2]) - lockedBalance;
     let currentTsMs = new Date().getTime();
     let unissuedInterest = Math.floor(
         Math.floor((remainingCapacity * interestBp * (Number.parseInt(vault.config[1]) - currentTsMs)) / 10000) /
             Number.parseInt(vault.config[8])
     );
-    console.log(`* remaining capacity: ${getNumberStringWithDecimal(remainingCapacity.toString(), 9)}`);
-    console.log(`*  unissued interest: ${getNumberStringWithDecimal(unissuedInterest.toString(), 9)}`);
+    log = log.concat(`* remaining capacity: ${getNumberStringWithDecimal(remainingCapacity.toString(), 9)}\n`);
+    log = log.concat(`*  unissued interest: ${getNumberStringWithDecimal(unissuedInterest.toString(), 9)}\n`);
     let totalInterest = issuedInterest + unissuedInterest;
-    console.log(`*     total interest: ${getNumberStringWithDecimal(totalInterest.toString(), 9)}`);
+    log = log.concat(`*     total interest: ${getNumberStringWithDecimal(totalInterest.toString(), 9)}`);
+    console.log(log);
+    slack.chat.postMessage({
+        token: String(process.env.SLACK_BOT_TOKEN),
+        channel: String(process.env.SLACK_CHANNEL),
+        text: `\`\`\`${log}\`\`\``,
+    });
 })();
 
 function getNumberStringWithDecimal(input: string, decimal: number): string {
