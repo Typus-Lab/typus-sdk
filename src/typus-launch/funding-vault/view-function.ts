@@ -9,6 +9,8 @@ export interface Vault {
     token: string;
     info: string[];
     config: string[];
+    fund: string;
+    refund: string;
 }
 export async function getVault(
     config: TypusConfig,
@@ -41,6 +43,10 @@ export async function getVault(
         let config = reader.readVec((reader) => {
             return reader.read64();
         });
+        let fund = AddressFromBytes(reader.readBytes(32));
+        reader.read64();
+        let refund = AddressFromBytes(reader.readBytes(32));
+        reader.read64();
 
         vaults[info[0]] = [
             {
@@ -48,6 +54,8 @@ export async function getVault(
                 token,
                 info,
                 config,
+                fund,
+                refund,
             },
         ];
     });
@@ -135,6 +143,45 @@ export async function getRefund(
         });
 
         funds[input.indexes[i]] = [fund];
+    });
+
+    return funds;
+}
+
+export async function getAllFunds(
+    config: TypusConfig,
+    input: {
+        index: string;
+        users: string[];
+    }
+): Promise<Fund[]> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let transactionBlock = new TransactionBlock();
+    input.users.forEach((user) => {
+        transactionBlock.moveCall({
+            target: `${config.package.launch.fundingVault}::funding_vault::get_fund_bcs`,
+            arguments: [
+                transactionBlock.object(config.registry.launch.fundingVault),
+                transactionBlock.pure(input.index),
+                transactionBlock.pure(user),
+            ],
+        });
+    });
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    let funds: Fund[] = [];
+    results?.forEach((result, i) => {
+        // @ts-ignore
+        let bytes = result.returnValues[0][0];
+        let reader = new BcsReader(new Uint8Array(bytes));
+        reader.readULEB();
+        let fund = reader.readVec((reader) => {
+            return {
+                balance: reader.read64(),
+                tsMs: reader.read64(),
+            } as Fund;
+        });
+
+        funds = funds.concat(fund);
     });
 
     return funds;
