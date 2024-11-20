@@ -57,18 +57,18 @@ process.removeAllListeners("warning");
         lockedBalance += Number.parseInt(fund.balance);
         issuedInterest += interest;
     });
-    log = log.concat(`*     locked balance: ${getNumberStringWithDecimal(lockedBalance.toString(), 9)}\n`);
-    log = log.concat(`*    issued interest: ${getNumberStringWithDecimal(issuedInterest.toString(), 9)}\n`);
+    log = log.concat(`*      locked balance: ${getNumberStringWithDecimal(lockedBalance.toString(), 9)}\n`);
+    log = log.concat(`*     issued interest: ${getNumberStringWithDecimal(issuedInterest.toString(), 9)}\n`);
     let remainingCapacity = Number.parseInt(vault.config[2]) - lockedBalance;
     let currentTsMs = new Date().getTime();
     let unissuedInterest = Math.floor(
         Math.floor((remainingCapacity * interestBp * (Number.parseInt(vault.config[1]) - currentTsMs)) / 10000) /
             Number.parseInt(vault.config[8])
     );
-    log = log.concat(`* remaining capacity: ${getNumberStringWithDecimal(remainingCapacity.toString(), 9)}\n`);
-    log = log.concat(`*  unissued interest: ${getNumberStringWithDecimal(unissuedInterest.toString(), 9)}\n`);
+    log = log.concat(`*  remaining capacity: ${getNumberStringWithDecimal(remainingCapacity.toString(), 9)}\n`);
+    log = log.concat(`*   unissued interest: ${getNumberStringWithDecimal(unissuedInterest.toString(), 9)}\n`);
     let totalInterest = issuedInterest + unissuedInterest;
-    log = log.concat(`*     total interest: ${getNumberStringWithDecimal(totalInterest.toString(), 9)}`);
+    log = log.concat(`*      total interest: ${getNumberStringWithDecimal(totalInterest.toString(), 9)}`);
     console.log(log);
     slack.chat.postMessage({
         token: String(process.env.SLACK_BOT_TOKEN),
