@@ -30,7 +30,7 @@ import * as fs from "fs";
     // console.log(stakingInfos[0].fields);
 
     let rewards = 1_250_000_000000000;
-    let levelShares = [0, 0.003, 0.017, 0.05, 0.1, 0.29, 0.54];
+    let levelShares = [0.001, 0.009, 0.02, 0.07, 0.12, 0.3, 0.48];
     let levelCounts = await getLevelCounts(config);
     let levelProfits = calculateLevelReward(rewards, levelShares, levelCounts);
     console.log(levelProfits);
