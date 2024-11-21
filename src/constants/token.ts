@@ -60,67 +60,43 @@ export function assetToDecimal(asset: string): number | undefined {
     switch (asset) {
         case "SUI":
         case "sSUI":
+        case "CETUS":
+        case "TURBOS":
+        case "BUCK":
+        case "AFSUI":
+        case "NAVX":
+        case "SCA":
+        case "HASUI":
+        case "VSUI":
+        case "HIPPO":
+        case "TYPUS":
             return 9;
         case "BTC":
-            return 8;
-        case "ETH":
-            return 8;
         case "WBTC":
-            return 8;
+        case "ETH":
         case "WETH":
-            return 8;
         case "SOL":
-            return 8;
         case "WSOL":
-            return 8;
-        case "USDC":
-            return 6;
-        case "wUSDC":
-            return 6;
-        case "USDT":
-            return 6;
-        case "USDY":
-            return 6;
-        case "CETUS":
-            return 9;
-        case "TURBOS":
-            return 9;
         case "APT":
-            return 8;
-        case "FUD":
-            return 5;
-        case "MFUD":
-            return 6;
         case "INJ":
         case "SEI":
         case "JUP":
             return 8;
-        case "BUCK":
-            return 9;
-        case "AFSUI":
-            return 9;
+        case "USDC":
+        case "wUSDC":
+        case "USDT":
+        case "USDY":
         case "AUSD":
-            return 6;
-        case "NAVX":
-            return 9;
-        case "SCA":
-            return 9;
-        case "HASUI":
-            return 9;
-        case "VSUI":
-            return 9;
-        case "BLUB":
-            return 2;
+        case "DEEP":
+        case "LIQ":
+        case "MLIQ":
+        case "MFUD":
         case "MBLUB":
             return 6;
-        case "HIPPO":
-            return 9;
-        case "LIQ":
-            return 6;
-        case "MLIQ":
-            return 6;
-        case "DEEP":
-            return 6;
+        case "FUD":
+            return 5;
+        case "BLUB":
+            return 2;
     }
 }
 
