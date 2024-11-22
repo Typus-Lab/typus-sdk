@@ -20,7 +20,7 @@ export function addUserShare(
     }
 ) {
     tx.moveCall({
-        target: `${config.package.launch.optionAirdrop}::option_airdop::add_user_share`,
+        target: `${config.package.launch.optionAirdrop}::option_airdrop::add_user_share`,
         arguments: [
             tx.object(config.version.launch.optionAirdrop),
             tx.object(config.object.launchSnapshot),
@@ -46,7 +46,7 @@ export function removeUserShare(
     }
 ) {
     tx.moveCall({
-        target: `${config.package.launch.optionAirdrop}::option_airdop::remove_user_share`,
+        target: `${config.package.launch.optionAirdrop}::option_airdrop::remove_user_share`,
         arguments: [tx.object(config.version.launch.optionAirdrop), tx.object(config.object.launchSnapshot)],
     });
 }
@@ -73,7 +73,7 @@ export function addAirdropPlan(
     }
 ) {
     tx.moveCall({
-        target: `${config.package.launch.optionAirdrop}::option_airdop::add_airdrop_plan`,
+        target: `${config.package.launch.optionAirdrop}::option_airdrop::add_airdrop_plan`,
         arguments: [
             tx.object(config.version.launch.optionAirdrop),
             tx.object(config.object.launchSnapshot),
@@ -96,7 +96,7 @@ export function addAirdropPlan(
 */
 export function airdropOtc(config: TypusConfig, tx: TransactionBlock) {
     tx.moveCall({
-        target: `${config.package.launch.optionAirdrop}::option_airdop::airdrop_otc`,
+        target: `${config.package.launch.optionAirdrop}::option_airdrop::airdrop_otc`,
         arguments: [
             tx.object(config.version.launch.optionAirdrop),
             tx.object(config.object.launchSnapshot),

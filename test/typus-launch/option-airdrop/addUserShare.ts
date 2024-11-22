@@ -8,19 +8,19 @@ import mnemonic from "mnemonic.json";
 import * as fs from "fs";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET", null);
-    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+    let config = await TypusConfig.default("MAINNET", null);
+    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.TGE_AIRDROP));
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let user = signer.toSuiAddress();
     console.log("User address:", user);
 
-    const raw = fs.readFileSync("airdrop.csv", "utf-8");
+    const raw = fs.readFileSync("option_airdrop.csv", "utf-8");
     const user_data = raw.split("\n").map((line) => line.split(","));
     const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     while (user_data.length > 0) {
         console.log(user_data.length);
-        let slice = user_data.splice(0, 300);
+        let slice = user_data.splice(0, 500);
         let transactionBlock = new TransactionBlock();
         addUserShare(config, transactionBlock, {
             users: slice.map((user) => user[0]),
