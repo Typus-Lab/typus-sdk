@@ -9,14 +9,14 @@ import mnemonic from "mnemonic.json";
 const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 
 (async () => {
-    let network: "MAINNET" | "TESTNET" = "MAINNET";
+    let network: "MAINNET" | "TESTNET" = "TESTNET";
     let module: "combo_dice" | "tails_exp" = "combo_dice";
-    let config = await TypusConfig.default(network);
+    let config = await TypusConfig.default(network, null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let user = keypair.toSuiAddress();
 
-    let index = "0";
-    let amount = "1000000000";
+    let index = "1";
+    let amount = "100000000000";
     let guess_1 = "5000";
     let larger_than_1 = true;
     let guess_2 = "5000";
@@ -24,6 +24,7 @@ const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
 
     let playgrounds = await getPlaygrounds(config, { module });
     let playground = playgrounds[index];
+    // console.log(playground);
     let coinType = "0x" + playground.stake_token;
     let coins = (await provider.getCoins({ owner: user, coinType })).data.map((coin) => coin.coinObjectId);
 
