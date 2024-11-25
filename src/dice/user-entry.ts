@@ -146,12 +146,21 @@ export async function newGamePlayGuessTx(
         tx.moveCall({
             target: `${config.package.dice}::${input.module}::new_game`,
             typeArguments: input.typeArguments,
-            arguments: [
-                tx.object(registry),
-                tx.pure(input.index),
-                tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
-                tx.pure(input.amount),
-            ],
+            arguments:
+                input.module == "combo_dice"
+                    ? [
+                          tx.object(config.registry.dice.comboDice),
+                          tx.object(config.registry.dice.tailsExp),
+                          tx.pure(input.index),
+                          tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
+                          tx.pure(input.amount),
+                      ]
+                    : [
+                          tx.object(registry),
+                          tx.pure(input.index),
+                          tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
+                          tx.pure(input.amount),
+                      ],
         });
     }
 
