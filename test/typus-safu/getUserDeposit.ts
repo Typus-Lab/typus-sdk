@@ -11,12 +11,14 @@ import { assetToDecimal, typeArgToAsset } from "src/constants";
 
     // 1. Get number of safu vaults
     let provider = new SuiClient({ url: config.rpcEndpoint });
+    // Request: 1
     let registry = await provider.getObject({ id: config.registry.safu.safu, options: { showContent: true } });
     // @ts-ignore
     const n = registry.data.content.fields.num_of_vault as number;
     // console.log(n);
     const indexes = Array.from({ length: n }, (_, i) => i.toString());
     // 2. Get user's shares through view function
+    // Request: 1
     const shares = await getShareData(config, {
         user,
         indexes: indexes.slice(),
@@ -32,12 +34,14 @@ import { assetToDecimal, typeArgToAsset } from "src/constants";
     }
 
     // 3. Get vault data through view function
+    // Request: 1
     const safu_vaults = await getVaultData(config, {
         indexes: user_indexes.slice(),
     });
     // console.log(JSON.stringify(safu_vaults, null, 2));
 
     // 4. Get related Dov for Safu Vault
+    // HINT: we can use the same result from `getDepositShares` line 31
     const dov_indexes: string[] = [];
     for (let index of user_indexes) {
         let vault = safu_vaults[index][0];

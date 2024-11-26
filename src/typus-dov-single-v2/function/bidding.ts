@@ -6,7 +6,7 @@ import { getUserStrategies } from "src/auto-bid";
 import { orderBy } from "lodash";
 import { PythHttpClient, getPythClusterApiUrl, getPythProgramKeyForCluster, PythCluster, PriceData } from "@pythnetwork/client";
 import { StableCoin, getTokenName, WrappedToken } from "./token";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient, SuiObjectResponse } from "@mysten/sui.js/client";
 import { typeArgsToAssets } from "src/constants";
 import BigNumber from "bignumber.js";
 import { TypusConfig } from "src/utils";
@@ -256,9 +256,11 @@ export const fetchPrices = async (provider: SuiClient, config: TypusConfig): Pro
     // console.log(prices);
 
     let mblub = await getLatestPrice("MBLUBUSDC");
+    let typus = await getLatestPrice("TYPUSUSDC");
 
     return {
         mblub: { price: mblub.toString(), decimal: "8", quote: "usd" },
+        typus: { price: typus.toString(), decimal: "8", quote: "usd" },
         ...prices,
     };
 };
@@ -613,20 +615,29 @@ export const parseBid = (
     };
 };
 
-export const getUserBidReceipts = async (config: TypusConfig, input: { user: string }) => {
+export async function getUserOwnedObjects(config: TypusConfig, user: string): Promise<SuiObjectResponse[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let bidReceipts: { [key: string]: Receipt[] } = {};
-    let result = await provider.getOwnedObjects({ owner: input.user, options: { showType: true, showContent: true } });
+    let result = await provider.getOwnedObjects({ owner: user, options: { showType: true, showContent: true } });
 
     let hasNextPage = result.hasNextPage;
     let data = result.data;
     let nextCursor = result.nextCursor;
     while (hasNextPage) {
-        result = await provider.getOwnedObjects({ owner: input.user, cursor: nextCursor, options: { showType: true, showContent: true } });
+        result = await provider.getOwnedObjects({
+            owner: user,
+            cursor: nextCursor,
+            options: { showType: true, showContent: true },
+        });
         data = [...data, ...result.data];
         hasNextPage = result.hasNextPage;
         nextCursor = result.nextCursor;
     }
+
+    return data;
+}
+
+export const getUserBidReceipts = async (config: TypusConfig, data: SuiObjectResponse[]) => {
+    let bidReceipts: { [key: string]: Receipt[] } = {};
 
     if (data.length === 0) {
         return bidReceipts;
@@ -684,13 +695,15 @@ export const getUserBidReceipts = async (config: TypusConfig, input: { user: str
  * @param prices - tokens prices (usd pair on Pyth)
  * @return User Bids.
  */
-export const fetchUserBids = async (config: TypusConfig, user: string, prices?: { [key: string]: CoinInfo }) => {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
-    // Step 1: get user bid receipts, vaults info, user strategies, auction data, prices
-    let vaultsInfo = await getVaults(config, { indexes: [] });
-    let userReceipts = await getUserBidReceipts(config, { user });
-    // console.log(userReceipts);
 
+export async function fetchUserBids(
+    config: TypusConfig,
+    user: string,
+    vaultsInfo: { [key: string]: Vault },
+    userReceipts: { [key: string]: Receipt[] },
+    prices?: { [key: string]: CoinInfo }
+) {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
     let userStrategies = await getUserStrategies(config, { user });
     // console.log(userStrategies);
 
@@ -808,4 +821,4 @@ export const fetchUserBids = async (config: TypusConfig, user: string, prices?: 
     );
 
     return byOrdered;
-};
+}

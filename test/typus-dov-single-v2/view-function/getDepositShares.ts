@@ -1,31 +1,23 @@
 import { SuiClient } from "@mysten/sui.js/client";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
-import { getDepositShares, getVaults } from "src/typus-dov-single-v2";
+import { getDepositShares, getUserOwnedObjects, getVaults } from "src/typus-dov-single-v2";
 import { TypusConfig } from "src/utils";
 
 (async () => {
+    // Hint: replace the PRC endpoint with your own
     let config = await TypusConfig.default("MAINNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
     let user = "0xd15f079d5f60b8fdfdcf3ca66c0d3473790c758b04b6418929d5d2991c5443ee";
 
-    var temp = await provider.getOwnedObjects({
-        owner: user,
-        options: { showType: true, showContent: true },
-    });
-    var datas = temp.data;
-    while (temp.hasNextPage) {
-        temp = await provider.getOwnedObjects({
-            owner: user,
-            options: { showType: true, showContent: true },
-            cursor: temp.nextCursor,
-        });
-        datas = datas.concat(temp.data);
-    }
+    // Request: depends on user's owned objects amount
+    // Hint: use owned object already catched instead of requesting again
+    const datas = await getUserOwnedObjects(config, user);
+
     let receipts = datas
         .filter((obj) => obj.data?.type! == `${config.packageOrigin.framework}::vault::TypusDepositReceipt`)
         .map((obj) => obj.data?.objectId!);
     console.log(receipts);
 
+    // Request: 1
     let depositShares = await getDepositShares(config, {
         receipts,
         user,
@@ -35,7 +27,8 @@ import { TypusConfig } from "src/utils";
     let keys = Object.keys(depositShares.depositShare);
     // console.log(keys);
 
-    let vaults = await getVaults(config, { indexes: keys });
+    // Request: 1
+    let vaults = await getVaults(config, { indexes: [] });
     // console.log(JSON.stringify(vaults, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 
     let symbolMap = new Map<string, [number, number]>();
