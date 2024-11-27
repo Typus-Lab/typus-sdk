@@ -3,6 +3,7 @@ import { TypusConfig } from "src/utils";
 import { SuiClient } from "@mysten/sui.js/client";
 import { getVaults } from "src/typus-dov-single-v2";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
+import { getFund } from "src/typus-launch/funding-vault";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
@@ -100,4 +101,12 @@ import { assetToDecimal, typeArgToAsset } from "src/constants";
             }
         }
     }
+    // 5. Get funding vault balance
+    let vaults = await getFund(config, { indexes: ["0"], user });
+    const deposit = vaults["0"].reduce((acc, cur) => {
+        acc += Number(cur.balance) / 1000000000;
+        return acc;
+    }, 0);
+    console.log(`Vault: 19JAN25 All Weather`);
+    console.log(`Balance: ${deposit} SUI`);
 })();
