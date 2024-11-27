@@ -57,7 +57,7 @@ import { TypusConfig } from "src/utils";
 
     let datas = localCacheEvents;
 
-    let txHistory = await parseTxHistory(datas, config.packageOrigin.dovSingle, vaults);
+    let txHistory = await parseTxHistory(datas, vaults);
     // console.log(txHistory.reverse());
 
     let newBidHistory = await getNewBidFromSentio(vaults, user, 0);
