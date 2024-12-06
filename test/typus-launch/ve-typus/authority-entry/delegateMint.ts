@@ -14,11 +14,12 @@ import { delegateMint } from "src/typus-launch/ve-typus";
     let transactionBlock = new TransactionBlock();
 
     delegateMint(config, transactionBlock, {
-        user: "0x603272d1e61de086a18751482684f882642eb080144aee425c4c34b5e56470b0",
-        coins: ["0x7972052d898704ad03b6c35d382b4a1bb3d3565d49c3fafadb8c24bab5cec8db"],
-        amount: "100000000000",
-        lockUpPeriod: "86400000",
+        user: "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d484107",
+        coins: ["0x2effbc729fb09fd2ffbcacd075654d4be3dedf59b08daa3c54217049a598b6b3"],
+        amount: "777000000000",
+        lockUpPeriod: "604800000",
     });
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);
 })();
+// 0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d484107
