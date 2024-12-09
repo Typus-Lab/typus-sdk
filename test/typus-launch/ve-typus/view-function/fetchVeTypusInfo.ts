@@ -3,8 +3,8 @@ import { TypusConfig } from "src/utils";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
-    let user = "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd";
-    let vaults = await fetchVeTypusInfo(config, { user, tsMs: Date.now().toString() });
-    console.log(`user: ${user}`);
+    // let user = "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd";
+    let vaults = await fetchVeTypusInfo(config, { tsMs: Date.now().toString() });
+    // console.log(`user: ${user}`);
     console.log(JSON.stringify(vaults, null, 2));
 })();
