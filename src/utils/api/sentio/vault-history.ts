@@ -15,7 +15,7 @@ export async function getVaultHistorySummary(): Promise<VaultHistorySummary[]> {
                             toStartOfHour(time) AS hour,
                             argMax(price, time) AS hourly_price
                         FROM
-                            __prices__
+                            token.prices
                         GROUP BY
                             symbol, hour
                     ),
@@ -99,7 +99,7 @@ export async function getVaultHistorySummary(): Promise<VaultHistorySummary[]> {
     let data = await response.json();
 
     let result = data.result.rows as VaultHistorySummary[];
-    console.log(data.result.rows.length);
+    // console.log(result);
 
     return result;
 }
@@ -127,7 +127,7 @@ export async function getVaultHistory(index: string, limit: number = 100): Promi
                             toStartOfHour(time) AS hour,
                             argMax(price, time) AS hourly_price  -- Get the most recent price before or at the hour
                         FROM
-                            __prices__
+                            token.prices
                         GROUP BY
                             symbol, hour
                     )
@@ -196,7 +196,7 @@ export async function getVaultHistory(index: string, limit: number = 100): Promi
     let data = await response.json();
 
     let result = data.result.rows as VaultHistory[];
-    console.log(result);
+    // console.log(result);
 
     return result;
 }
@@ -239,4 +239,4 @@ interface VaultHistory {
 }
 
 // getVaultHistorySummary();
-// getVaultHistory("0");
+// getVaultHistory("78", 3);
