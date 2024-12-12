@@ -70,6 +70,7 @@ export function assetToDecimal(asset: string): number | undefined {
         case "VSUI":
         case "HIPPO":
         case "TYPUS":
+        case "BLUE":
             return 9;
         case "BTC":
         case "WBTC":
@@ -127,6 +128,7 @@ export const tokenType = {
         LIQ: "0x9c86d1926a0a39e906f20674d6a35f337be8625ebcb6b799ee8ff011f328bee2::liq::LIQ",
         HIPPO: "0x8993129d72e733985f7f1a00396cbd055bad6f817fee36576ce483c8bbb8b87b::sudeng::SUDENG",
         MLIQ: "9614657c9d7e8799be4f49781ef1a9247b83ee178976df6c92d29b6026b9dadf::mliq::MLIQ",
+        BLUE: "0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -177,6 +179,7 @@ export type TOKEN =
     | "MLIQ"
     | "HIPPO"
     | "DEEP"
+    | "BLUE"
     | "wUSDC";
 
 export function typeArgToToken(typeArg: string): string {
@@ -211,6 +214,8 @@ export function typeArgToToken(typeArg: string): string {
             return "HIPPO";
         case "0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270":
             return "DEEP";
+        case "0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca":
+            return "BLUE";
         default:
             return typeArgs[2];
     }
