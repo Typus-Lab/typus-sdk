@@ -72,7 +72,7 @@ export async function getFund(
         indexes: string[];
         user: string;
     }
-): Promise<{ [key: string]: [Fund[]] }> {
+): Promise<{ [key: string]: Fund[] }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     input.indexes.forEach((index) => {
@@ -87,7 +87,7 @@ export async function getFund(
     });
     let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
     let funds: {
-        [key: string]: [Fund[]];
+        [key: string]: Fund[];
     } = {};
     results?.forEach((result, i) => {
         // @ts-ignore
@@ -101,7 +101,7 @@ export async function getFund(
             } as Fund;
         });
 
-        funds[input.indexes[i]] = [fund];
+        funds[input.indexes[i]] = fund;
     });
 
     return funds;
@@ -113,7 +113,7 @@ export async function getRefund(
         indexes: string[];
         user: string;
     }
-): Promise<{ [key: string]: [Fund[]] }> {
+): Promise<{ [key: string]: Fund[] }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     input.indexes.forEach((index) => {
@@ -128,7 +128,7 @@ export async function getRefund(
     });
     let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
     let funds: {
-        [key: string]: [Fund[]];
+        [key: string]: Fund[];
     } = {};
     results?.forEach((result, i) => {
         // @ts-ignore
@@ -142,7 +142,7 @@ export async function getRefund(
             } as Fund;
         });
 
-        funds[input.indexes[i]] = [fund];
+        funds[input.indexes[i]] = fund;
     });
 
     return funds;

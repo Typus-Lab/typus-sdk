@@ -14,9 +14,9 @@ import { mint } from "src/typus-launch/ve-typus";
     let transactionBlock = new TransactionBlock();
 
     mint(config, transactionBlock, {
-        coins: ["0x7972052d898704ad03b6c35d382b4a1bb3d3565d49c3fafadb8c24bab5cec8db"],
-        amount: "100000000000",
-        lockUpPeriod: "86400000",
+        coins: ["0x2effbc729fb09fd2ffbcacd075654d4be3dedf59b08daa3c54217049a598b6b3"],
+        amount: "1000000000000",
+        lockUpPeriod: "172798765",
     });
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);

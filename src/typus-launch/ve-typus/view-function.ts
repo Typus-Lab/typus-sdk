@@ -9,6 +9,7 @@ export interface VeTypus {
     balance: string;
     lockUpPeriod: string;
     createTsMs: string;
+    updateTsMs: string;
 }
 export async function getVeTypus(
     config: TypusConfig,
@@ -33,6 +34,85 @@ export async function getVeTypus(
             balance: reader.read64(),
             lockUpPeriod: reader.read64(),
             createTsMs: reader.read64(),
+            updateTsMs: reader.read64(),
         } as VeTypus;
     });
+}
+
+export interface VeTypusInfo {
+    totalVeTypusAmount: string;
+    totalStakedTypusAmount: string;
+    averageLockUpTime: string;
+    veTypusAmount: string;
+    veTypus: VeTypus[];
+}
+export async function fetchVeTypusInfo(
+    config: TypusConfig,
+    input: {
+        tsMs: string;
+        user?: string;
+    }
+): Promise<VeTypusInfo> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let transactionBlock = new TransactionBlock();
+    transactionBlock.moveCall({
+        target: `${config.package.launch.veTypus}::ve_typus::get_report`,
+        arguments: [transactionBlock.object(config.registry.launch.veTypus), transactionBlock.pure(input.tsMs)],
+    });
+    if (input.user) {
+        transactionBlock.moveCall({
+            target: `${config.package.launch.veTypus}::ve_typus::get_ve_typus_bcs`,
+            arguments: [transactionBlock.object(config.registry.launch.veTypus), transactionBlock.pure(input.user)],
+        });
+        transactionBlock.moveCall({
+            target: `${config.package.launch.veTypus}::ve_typus::get_ve_typus`,
+            arguments: [
+                transactionBlock.object(config.registry.launch.veTypus),
+                transactionBlock.pure(input.user),
+                transactionBlock.pure(input.tsMs),
+            ],
+        });
+    }
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    // @ts-ignore
+    let reader = new BcsReader(new Uint8Array(results[0].returnValues[0][0]));
+    reader.readULEB();
+    let totalVeTypusAmount = reader.read64();
+    let totalStakedTypusAmount = reader.read64();
+    let averageLockUpTime = (
+        (BigInt(totalVeTypusAmount) * BigInt(4 * 365 * 24 * 60 * 60 * 1000)) /
+        BigInt(totalStakedTypusAmount)
+    ).toString();
+    if (input.user) {
+        // @ts-ignore
+        let reader = new BcsReader(new Uint8Array(results[1].returnValues[0][0]));
+        reader.readULEB();
+        let veTypus = reader.readVec((reader) => {
+            reader.readULEB();
+            return {
+                id: AddressFromBytes(reader.readBytes(32)),
+                balance: reader.read64(),
+                lockUpPeriod: reader.read64(),
+                createTsMs: reader.read64(),
+                updateTsMs: reader.read64(),
+            } as VeTypus;
+        });
+        // @ts-ignore
+        reader = new BcsReader(new Uint8Array(results[2].returnValues[0][0]));
+        let veTypusAmount = reader.read64();
+        return {
+            totalVeTypusAmount,
+            totalStakedTypusAmount,
+            averageLockUpTime,
+            veTypusAmount,
+            veTypus,
+        };
+    } else {
+        // @ts-ignore
+        return {
+            totalVeTypusAmount,
+            totalStakedTypusAmount,
+            averageLockUpTime,
+        };
+    }
 }
