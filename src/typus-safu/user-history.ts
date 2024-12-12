@@ -1,6 +1,7 @@
 import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
 import { BcsReader } from "@mysten/bcs";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
+import BigNumber from "bignumber.js";
 
 export async function getUserEvents(
     provider: SuiClient,
@@ -132,11 +133,12 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                         }
                         break;
                     case "reduce_fund":
-                        if (Number(log[2]) > 0) {
+                        const totalWithdrawAmount = BigNumber(log[2]).plus(log[3]).plus(log[4]);
+                        if (totalWithdrawAmount.gt(0)) {
                             txHistory.push({
                                 Action: "Withdraw",
                                 Index: log[0],
-                                Amount: divByDecimal(Number(log[2]), decimal!),
+                                Amount: divByDecimal(totalWithdrawAmount.toNumber(), decimal!),
                                 Token,
                                 Exp: log[5],
                                 Date: new Date(Number(event.timestampMs)),
@@ -144,30 +146,7 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                                 log,
                             });
                         }
-                        if (Number(log[3]) > 0) {
-                            txHistory.push({
-                                Action: "Unsubscribe",
-                                Index: log[0],
-                                Amount: divByDecimal(Number(log[3]), decimal!),
-                                Token,
-                                Exp: log[5],
-                                Date: new Date(Number(event.timestampMs)),
-                                txDigest: event.id.txDigest,
-                                log,
-                            });
-                        }
-                        if (Number(log[4]) > 0) {
-                            txHistory.push({
-                                Action: "Claim",
-                                Index: log[0],
-                                Amount: divByDecimal(Number(log[4]), decimal!),
-                                Token,
-                                Exp: log[5],
-                                Date: new Date(Number(event.timestampMs)),
-                                txDigest: event.id.txDigest,
-                                log,
-                            });
-                        }
+
                         break;
                     case "claim_reward":
                         txHistory.push({
