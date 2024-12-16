@@ -133,12 +133,25 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                         }
                         break;
                     case "reduce_fund":
-                        const totalWithdrawAmount = BigNumber(log[2]).plus(log[3]).plus(log[4]);
+                        const totalWithdrawAmount = BigNumber(log[2]).plus(log[4]);
                         if (totalWithdrawAmount.gt(0)) {
                             txHistory.push({
                                 Action: "Withdraw",
                                 Index: log[0],
                                 Amount: divByDecimal(totalWithdrawAmount.toNumber(), decimal!),
+                                Token,
+                                Exp: log[5],
+                                Date: new Date(Number(event.timestampMs)),
+                                txDigest: event.id.txDigest,
+                                log,
+                            });
+                        }
+
+                        if (Number(log[3]) > 0) {
+                            txHistory.push({
+                                Action: "Unsubscribe",
+                                Index: log[0],
+                                Amount: divByDecimal(Number(log[3]), decimal!),
                                 Token,
                                 Exp: log[5],
                                 Date: new Date(Number(event.timestampMs)),
