@@ -1,4 +1,5 @@
 import camelcaseKeysDeep = require("camelcase-keys-deep");
+import * as fs from "fs";
 
 export class TypusConfig {
     rpcEndpoint: string;
@@ -11,6 +12,9 @@ export class TypusConfig {
     token: Token;
     static parse(json): TypusConfig {
         return JSON.parse(JSON.stringify(camelcaseKeysDeep(json)));
+    }
+    static local(path): TypusConfig {
+        return TypusConfig.parse(JSON.parse(fs.readFileSync(path, "utf-8")));
     }
     static async default(network: "MAINNET" | "TESTNET", customRpcEndpoint: string | null, branch = "main"): Promise<TypusConfig> {
         switch (network) {
@@ -57,9 +61,11 @@ export interface Package {
     safu: string;
     typus: string;
     launch: {
+        airdrop: string;
         auction: string;
-        optionAirdrop: string;
         fundingVault: string;
+        improvementProposal: string;
+        optionAirdrop: string;
         veTypus: string;
     };
 }
@@ -68,9 +74,11 @@ export interface Version {
     safu: string;
     typus: string;
     launch: {
+        airdrop: string;
         auction: string;
-        optionAirdrop: string;
         fundingVault: string;
+        improvementProposal: string;
+        optionAirdrop: string;
         veTypus: string;
     };
 }
@@ -108,7 +116,9 @@ export interface Registry {
         user: string;
     };
     launch: {
+        airdrop: string;
         fundingVault: string;
+        improvementProposal: string;
         veTypus: string;
     };
 }
@@ -178,7 +188,7 @@ export interface Token {
 }
 
 // (async () => {
-//     let config = await TypusConfig.default("MAINNET", null);
+//     let config = TypusConfig.local("../typus-config/config-testnet.json");
 //     console.log(config);
 //     console.log(config.rpcEndpoint);
 // })();
