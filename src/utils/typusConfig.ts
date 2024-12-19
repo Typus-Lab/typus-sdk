@@ -57,7 +57,10 @@ export interface Package {
     framework: string;
     nft: string;
     oracle: string;
-    perp: string;
+    perp: {
+        perp: string;
+        stakePool: string;
+    };
     safu: string;
     typus: string;
     launch: {
@@ -70,7 +73,10 @@ export interface Package {
     };
 }
 export interface Version {
-    perp: string;
+    perp: {
+        perp: string;
+        stakePool: string;
+    };
     safu: string;
     typus: string;
     launch: {

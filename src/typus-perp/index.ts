@@ -15,6 +15,15 @@ export const PUBLISHED_AT = async () => {
     return (await TypusConfig.default(NETWORK, null)).package.perp;
 };
 
+export const STAKE_POOL_PACKAGE_ID = async () => {
+    return (await TypusConfig.default(NETWORK, null)).packageOrigin.perp;
+};
+// export const PUBLISHED_AT = config.package.perp;
+export const STAKE_POOL_PUBLISHED_AT = async () => {
+    return (await TypusConfig.default(NETWORK, null)).package.perp;
+};
+
+
 export { installEcosystemManagerCapEntry } from "./admin/functions";
 export * from "./readVec";
 export * from "./fetch";

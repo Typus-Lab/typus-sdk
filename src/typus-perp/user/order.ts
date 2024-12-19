@@ -51,7 +51,7 @@ export async function createTradingOrder(
     }
 
     _createTradingOrder(tx, [cToken, baseToken], {
-        version: config.version.perp,
+        version: config.version.perp.perp,
         registry: config.registry.perp.market,
         poolRegistry: config.registry.perp.lpPool,
         marketIndex: BigInt(0),
@@ -87,7 +87,7 @@ export async function cancelTradingOrder(
     let BASE_TOKEN = "0x" + input.order.symbol.baseToken.name;
 
     let coin = _cancelTradingOrder(tx, [cToken, BASE_TOKEN], {
-        version: config.version.perp,
+        version: config.version.perp.perp,
         registry: config.registry.perp.market,
         marketIndex: BigInt(0),
         orderId: input.order.orderId,
@@ -132,7 +132,7 @@ export async function increaseCollateral(
     }
 
     _increaseCollateral(tx, [cToken, baseToken], {
-        version: config.version.perp,
+        version: config.version.perp.perp,
         registry: config.registry.perp.market,
         poolRegistry: config.registry.perp.lpPool,
         marketIndex: BigInt(0),
@@ -166,7 +166,7 @@ export async function releaseCollateral(
     let baseToken = tokenType[NETWORK][BASE_TOKEN];
 
     let coin = _releaseCollateral(tx, [cToken, baseToken], {
-        version: config.version.perp,
+        version: config.version.perp.perp,
         registry: config.registry.perp.market,
         poolRegistry: config.registry.perp.lpPool,
         marketIndex: BigInt(0),
