@@ -1,6 +1,6 @@
 import { SuiPriceServiceConnection, SuiPythClient } from "@pythnetwork/pyth-sui-js";
 import { pythStateId, wormholeStateId, priceIDs, priceInfoObjectIds } from "./constant";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { TOKEN } from "src/constants";
 import { ObjectId } from "@pythnetwork/pyth-sui-js/lib/client";
 
@@ -20,7 +20,7 @@ export function createPythClient(provider: any, network: "MAINNET" | "TESTNET"):
     return pythClient;
 }
 
-export async function updatePyth(pythClient: PythClient, tx: TransactionBlock, tokens: string[]): Promise<ObjectId[]> {
+export async function updatePyth(pythClient: PythClient, tx: Transaction, tokens: string[]): Promise<ObjectId[]> {
     let _priceIDs = tokens.map((token) => priceIDs[pythClient.network][token]);
     // console.log(_priceIDs);
 
@@ -34,7 +34,7 @@ export async function updatePyth(pythClient: PythClient, tx: TransactionBlock, t
 
 export function updateOracleWithPyth(
     pythClient: PythClient,
-    tx: TransactionBlock,
+    tx: Transaction,
     oraclePackage: string,
     typusOracle: string,
     baseToken: TOKEN,

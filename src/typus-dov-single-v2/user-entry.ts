@@ -1,3 +1,5 @@
+import { Transaction } from "@mysten/sui/transactions";
+import { bcs } from "@mysten/sui/bcs";
 import { TransactionBlock, TransactionObjectArgument } from "@mysten/sui.js/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
@@ -368,7 +370,7 @@ export function getTransferBidReceiptTx(
 
 export function getSplitBidReceiptTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
         receipts: string[];
@@ -381,12 +383,13 @@ export function getSplitBidReceiptTx(
         typeArguments: [],
         arguments: [
             tx.object(config.registry.dov.dovSingle),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusBidReceipt`,
-                objects: input.receipts.map((receipt) => tx.object(receipt)),
+                elements: input.receipts.map((receipt) => tx.object(receipt)),
             }),
-            tx.pure([input.share]),
+            // tx.pure([input.share]),
+            tx.pure(bcs.vector(bcs.U64).serialize([input.share])),
         ],
     });
 
