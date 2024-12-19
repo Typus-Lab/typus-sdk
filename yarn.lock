@@ -483,7 +483,7 @@
     superstruct "^1.0.3"
     tweetnacl "^1.0.3"
 
-"@mysten/sui@^1.3.0":
+"@mysten/sui@^1.17.0", "@mysten/sui@^1.3.0":
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/@mysten/sui/-/sui-1.17.0.tgz#af0ce6b72380c4e939e4dd72617a35a5d80831b9"
   integrity sha512-vL6QrH3l10dTatimPmz/feqMbYfEjvh8MPf3Xwn5tjuwDwBCS0ha1kdN+4vUpu6t0aCFviK+Df/vanORS8cbGQ==
@@ -912,7 +912,7 @@
   dependencies:
     buffer "~6.0.3"
 
-"@solana/web3.js@^1.68.0", "@solana/web3.js@^1.91.8":
+"@solana/web3.js@^1.68.0":
   version "1.95.0"
   resolved "https://registry.npmjs.org/@solana/web3.js/-/web3.js-1.95.0.tgz"
   integrity sha512-iHwJ/HcWrF9qbnI1ctwI1UXHJ0vZXRpnt+lI5UcQIk8WvJNuQ5gV06icxzM6B7ojUES85Q1/FM4jZ49UQ8yZZQ==

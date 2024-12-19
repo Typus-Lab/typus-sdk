@@ -6,6 +6,7 @@
     "dependencies": {
         "@mysten/bcs": "^0.11.1",
         "@mysten/kiosk": "0.8.10",
+        "@mysten/sui": "^1.17.0",
         "@mysten/sui.js": "0.54.1",
         "@pythnetwork/client": "^2.21.0",
         "@pythnetwork/pyth-sui-js": "^2.1.0",
