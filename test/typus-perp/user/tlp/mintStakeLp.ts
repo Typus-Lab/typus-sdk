@@ -23,6 +23,7 @@ import { TOKEN, tokenType } from "src/constants";
         parentId: lpPoolRegistry.liquidityPoolRegistry,
     });
 
+    // console.log(dynamicFields.data);
     let field = dynamicFields.data[0];
     let lpPool = await LiquidityPool.fetch(provider, field.objectId);
     // console.log(lpPool);
@@ -30,6 +31,7 @@ import { TOKEN, tokenType } from "src/constants";
     let pythClient = createPythClient(provider, NETWORK);
 
     let stakes = await getUserStake(config, user);
+    // console.log(stakes);
 
     // INPUT
     let cTOKEN: TOKEN = "USDT";
@@ -54,10 +56,13 @@ import { TOKEN, tokenType } from "src/constants";
         userShareId: stakes.length > 0 ? stakes[0].userShareId.toString() : null,
     });
 
+    // console.log(tx.getData());
+
     let dryrunRes = await provider.devInspectTransactionBlock({
         transactionBlock: tx,
         sender: user,
     });
+    // console.log(dryrunRes);
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("MintLpEvent")));
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("StakeEvent")));
 
