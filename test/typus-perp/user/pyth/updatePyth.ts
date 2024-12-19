@@ -1,6 +1,6 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { Transaction } from "@mysten/sui/transactions";
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { TypusConfig } from "src/utils";
 import { createPythClient, updatePyth } from "src/utils";
 
@@ -11,14 +11,14 @@ import mnemonic from "../../../../mnemonic.json";
     let config = await TypusConfig.default("TESTNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
     let pythClient = createPythClient(provider, "TESTNET");
     let priceInfoObjectIds = await updatePyth(pythClient, tx, ["SUI", "USDC", "USDT", "BTC", "ETH", "SOL", "CETUS", "NAVX", "SCA"]);
     console.log(priceInfoObjectIds);
 
-    let res = await provider.signAndExecuteTransactionBlock({
+    let res = await provider.signAndExecuteTransaction({
         signer: keypair,
-        transactionBlock: tx,
+        transaction: tx,
         options: {
             showEffects: true,
             showEvents: true,

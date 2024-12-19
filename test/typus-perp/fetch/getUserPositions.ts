@@ -1,5 +1,5 @@
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import { getLiquidationPrice, getUserPositions, NETWORK } from "src/typus-perp";
 import { createPythClient } from "src/utils";
 

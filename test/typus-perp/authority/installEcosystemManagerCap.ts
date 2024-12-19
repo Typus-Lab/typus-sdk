@@ -1,8 +1,8 @@
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { installEcosystemManagerCapEntry } from "src/typus-perp";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { installEcosystemManagerCapEntry } from "src/typus-perp/typus_perp/admin/functions";
+import { Transaction } from "@mysten/sui/transactions";
 
 import mnemonic from "../../../mnemonic.json";
 
@@ -14,14 +14,14 @@ import mnemonic from "../../../mnemonic.json";
     let address = keypair.toSuiAddress();
     console.log(address);
 
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
 
     installEcosystemManagerCapEntry(tx, {
-        version: config.version.perp,
+        version: config.version.perp.perp,
         typusEcosystemVersion: config.version.typus,
     });
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
+    let res = await provider.signAndExecuteTransaction({ signer: keypair, transaction: tx });
 
     console.log(res);
 })();

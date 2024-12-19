@@ -1,10 +1,10 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { Transaction } from "@mysten/sui/transactions";
 import { NETWORK, getUserStake, unstakeBurn } from "src/typus-perp";
-import { LiquidityPool, Registry } from "src/typus-perp/lp-pool/structs";
+import { LiquidityPool, Registry } from "src/typus-perp";
 import { createPythClient } from "src/utils";
 
 (async () => {
@@ -38,7 +38,7 @@ import { createPythClient } from "src/utils";
     let stake = unlockedStakes[0];
     console.log(stake);
 
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
 
     unstakeBurn(config, tx, pythClient, {
         userShareId: stake.userShareId.toString(),
@@ -55,7 +55,7 @@ import { createPythClient } from "src/utils";
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("UnstakeEvent")));
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("BurnLpEvent")));
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
+    let res = await provider.signAndExecuteTransaction({ signer: keypair, transaction: tx });
     console.log(res);
     // https://testnet.suivision.xyz/txblock/EvBgQwKFay8YMYDG9WtStsfvR7MzhPa4nu5aKMgeptzX?tab=Events
 })();

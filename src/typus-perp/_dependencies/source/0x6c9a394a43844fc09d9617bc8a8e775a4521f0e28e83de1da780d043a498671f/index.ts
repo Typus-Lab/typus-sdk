@@ -1,0 +1,10 @@
+export const PACKAGE_ID = "0x6c9a394a43844fc09d9617bc8a8e775a4521f0e28e83de1da780d043a498671f";
+export const PUBLISHED_AT = "0xd0da9b90a63aaaba92d6ace743763d8fb8a381ebdeb8017474673a1ab84c6252";
+export const PKG_V19 = "0x10250db78795fda6ce62b76efa324eb1a7dc50beeed1229fba40c50e4305ef9a";
+export const PKG_V13 = "0x197e13a257d67211cd3bc9ff5b93ffd298afedb43f4c7cbdd9438f5e4e823f4f";
+export const PKG_V25 = "0x2e462aa0224bec76acaea81c51ca5b9ae4b27ec50281a764797c84148c8a463f";
+export const PKG_V6 = "0x48b15aafeb26ade39d0c2a3b8c3635bfe8396084812b6fcaeb1104eac793b4a5";
+export const PKG_V1 = "0x6c9a394a43844fc09d9617bc8a8e775a4521f0e28e83de1da780d043a498671f";
+export const PKG_V33 = "0x6d6a803b188c991281ba26b738c239f444d35b0d03004dee53743123424f8b07";
+export const PKG_V30 = "0xad7c30e1309d4fff68e79897366fde64e8c06ef7b20ef3dc1a407a9688da846e";
+export const PKG_V31 = "0xe9b09b246ef2b1a4d8df72499f6c684733d95462a826573dce559bfba215a613";

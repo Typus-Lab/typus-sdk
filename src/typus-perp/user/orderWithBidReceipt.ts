@@ -5,8 +5,8 @@ import {
     releaseCollateral as _releaseCollateral,
     createTradingOrderWithBidReceipt as _createTradingOrderWithBidReceipt,
     reduceOptionCollateralPositionSize as _reduceOptionCollateralPositionSize,
-} from "../trading/functions";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+} from "../typus_perp/trading/functions";
+import { Transaction } from "@mysten/sui/transactions";
 import { PythClient, updatePyth, updateOracleWithPyth, priceInfoObjectIds, pythStateId, TypusConfig } from "src/utils";
 import { tokenType, TOKEN, CLOCK } from "src/constants";
 import { NETWORK } from "..";
@@ -14,7 +14,7 @@ import { getSplitBidReceiptTx } from "src/typus-dov-single-v2/";
 
 export async function createTradingOrderWithBidReceipt(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     pythClient: PythClient,
     input: {
         cToken: TOKEN;
@@ -26,7 +26,7 @@ export async function createTradingOrderWithBidReceipt(
         bidReceipt: string;
         share: string | null;
     }
-): Promise<TransactionBlock> {
+): Promise<Transaction> {
     // INPUTS
     let TOKEN = input.cToken;
     let BASE_TOKEN = input.tradingToken;
@@ -77,7 +77,7 @@ export async function createTradingOrderWithBidReceipt(
 
 export async function reduceOptionCollateralPositionSize(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     pythClient: PythClient,
     input: {
         cToken: TOKEN;
@@ -88,7 +88,7 @@ export async function reduceOptionCollateralPositionSize(
         user: string;
         bidReceipt: string;
     }
-): Promise<TransactionBlock> {
+): Promise<Transaction> {
     let TOKEN = input.cToken;
     let BASE_TOKEN = input.tradingToken;
 

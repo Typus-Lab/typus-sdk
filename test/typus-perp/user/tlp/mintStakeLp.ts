@@ -1,10 +1,10 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { Transaction } from "@mysten/sui/transactions";
 import { mintStakeLp, NETWORK, getUserStake } from "src/typus-perp";
-import { LiquidityPool, Registry } from "src/typus-perp/lp-pool/structs";
+import { LiquidityPool, Registry } from "src/typus-perp";
 import { createPythClient } from "src/utils";
 import { TOKEN, tokenType } from "src/constants";
 
@@ -44,7 +44,7 @@ import { TOKEN, tokenType } from "src/constants";
     ).data.map((coin) => coin.coinObjectId);
     console.log(coins.length);
 
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
 
     tx = await mintStakeLp(config, tx, pythClient, {
         lpPool,
@@ -61,7 +61,7 @@ import { TOKEN, tokenType } from "src/constants";
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("MintLpEvent")));
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("StakeEvent")));
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
+    let res = await provider.signAndExecuteTransaction({ signer: keypair, transaction: tx });
     console.log(res);
     // https://testnet.suivision.xyz/txblock/GRjmdrHtcqzAP4a8i6nTef88zDpPZ2ouLSVX4DTj8JnC
 })();

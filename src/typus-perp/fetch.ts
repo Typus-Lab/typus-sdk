@@ -1,17 +1,25 @@
-import { SuiClient } from "@mysten/sui.js/client";
-import { LiquidityPool } from "./lp-pool/structs";
-import { Markets, SymbolMarket } from "./trading/structs";
-import { getUserOrders as _getUserOrders, getUserPositions as _getUserPositions, getEstimatedLiquidationPrice } from "./trading/functions";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { readVecOrder, readVecPosition, readVecShares } from "./readVec";
-import { TradingOrder, Position } from "./position/structs";
-import { getUserShares } from "./stake-pool/functions";
-import { LpUserShare, StakePool } from "./stake-pool/structs";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
+import { bcs } from "@mysten/bcs";
+
+import { LiquidityPool } from "./typus_perp/lp-pool/structs";
+import { Markets, SymbolMarket } from "./typus_perp/trading/structs";
+import { TradingOrder, Position } from "./typus_perp/position/structs";
+import {
+    getUserOrders as _getUserOrders,
+    getUserPositions as _getUserPositions,
+    getEstimatedLiquidationPrice,
+} from "./typus_perp/trading/functions";
+
+import { getUserShares } from "./typus_stake_pool/stake-pool/functions";
+import { LpUserShare, StakePool } from "./typus_stake_pool/stake-pool/structs";
+
 import { CLOCK } from "src/constants";
 import { tokenType, typeArgToToken } from "src/constants";
 import { priceInfoObjectIds, pythStateId, PythClient, updatePyth, TypusConfig } from "src/utils";
+
 import { NETWORK } from ".";
-import { bcs } from "@mysten/bcs";
+import { readVecOrder, readVecPosition, readVecShares } from "./readVec";
 
 export async function getLpPools(config: TypusConfig): Promise<LiquidityPool[]> {
     // const lpPoolRegistry = await Registry.fetch(provider, config.registry.LP_POOL);
@@ -99,7 +107,7 @@ export async function getSymbolMarkets(provider: SuiClient, market: Markets): Pr
 
 export async function getUserOrders(config: TypusConfig, user: string) {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
 
     _getUserOrders(tx, {
         version: config.version.perp.perp,
@@ -122,7 +130,7 @@ export async function getUserOrders(config: TypusConfig, user: string) {
 
 export async function getUserPositions(config: TypusConfig, user: string) {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
 
     _getUserPositions(tx, {
         version: config.version.perp.perp,
@@ -145,7 +153,7 @@ export async function getUserPositions(config: TypusConfig, user: string) {
 
 export async function getUserStake(config: TypusConfig, user: string): Promise<LpUserShare[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
 
     getUserShares(tx, {
         registry: config.registry.perp.stakePool,
@@ -180,7 +188,7 @@ export async function getLiquidationPrice(
     }
 ) {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
 
     let pythTokens: string[] = [];
 
