@@ -21,6 +21,7 @@ export async function mintStakeLp(
 ): Promise<Transaction> {
     // update pyth oracle
     let tokens = input.lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
+    // console.log("tokens", tokens);
 
     await updatePyth(pythClient, tx, tokens);
     let cToken = tokenType[NETWORK][input.cTOKEN];
@@ -62,7 +63,7 @@ export async function mintStakeLp(
     });
 
     stake(tx, config.token.tlp, {
-        version: config.version.perp.perp,
+        version: config.version.perp.stakePool,
         registry: config.registry.perp.stakePool,
         index: BigInt(0),
         lpToken: lpCoin,
@@ -104,7 +105,7 @@ export async function unstakeBurn(
     }
 
     let lpCoin = unstake(tx, config.token.tlp, {
-        version: config.version.perp.perp,
+        version: config.version.perp.stakePool,
         registry: config.registry.perp.stakePool,
         index: BigInt(0),
         userShareId: BigInt(input.userShareId),
@@ -184,7 +185,7 @@ export async function unsubscribe(
     }
 ): Promise<Transaction> {
     _unsubscribe(tx, config.token.tlp, {
-        version: config.version.perp.perp,
+        version: config.version.perp.stakePool,
         registry: config.registry.perp.stakePool,
         index: BigInt(0),
         userShareId: BigInt(input.userShareId),
@@ -202,7 +203,7 @@ export async function harvest(
     }
 ): Promise<Transaction> {
     harvestPerUserShare(tx, "0x2::sui::SUI", {
-        version: config.version.perp.perp,
+        version: config.version.perp.stakePool,
         registry: config.registry.perp.stakePool,
         index: BigInt(0),
         userShareId: BigInt(input.userShareId),
