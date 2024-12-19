@@ -1,15 +1,15 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
-import { LiquidityPool } from "../lp-pool/structs";
-import { burnLp, mintLp, updateLiquidityValue, swap as _swap } from "../lp-pool/functions";
-import { harvestPerUserShare, stake, unstake, unsubscribe as _unsubscribe } from "../stake-pool/functions";
+import { LiquidityPool } from "../typus_perp/lp-pool/structs";
+import { burnLp, mintLp, updateLiquidityValue, swap as _swap } from "../typus_perp/lp-pool/functions";
+import { harvestPerUserShare, stake, unstake, unsubscribe as _unsubscribe } from "../typus_stake_pool/stake-pool/functions";
 import { PythClient, updatePyth, priceInfoObjectIds, pythStateId, TypusConfig } from "src/utils";
 import { tokenType, typeArgToAsset, TOKEN } from "src/constants";
 import { NETWORK } from "..";
 
 export async function mintStakeLp(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     pythClient: PythClient,
     input: {
         lpPool: LiquidityPool;
@@ -18,7 +18,7 @@ export async function mintStakeLp(
         amount: string;
         userShareId: string | null;
     }
-): Promise<TransactionBlock> {
+): Promise<Transaction> {
     // update pyth oracle
     let tokens = input.lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
 
@@ -75,7 +75,7 @@ export async function mintStakeLp(
 
 export async function unstakeBurn(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     pythClient: PythClient,
     input: {
         lpPool: LiquidityPool;
@@ -84,7 +84,7 @@ export async function unstakeBurn(
         share: string | null;
         user: string;
     }
-): Promise<TransactionBlock> {
+): Promise<Transaction> {
     // update pyth oracle
     let tokens = input.lpPool.tokenPools.map((p) => typeArgToAsset("0x" + p.tokenType.name));
 
@@ -130,7 +130,7 @@ export async function unstakeBurn(
 
 export async function swap(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     pythClient: PythClient,
     input: {
         coins: string[];
@@ -139,7 +139,7 @@ export async function swap(
         amount: string;
         user: string;
     }
-): Promise<TransactionBlock> {
+): Promise<Transaction> {
     await updatePyth(pythClient, tx, [input.FROM_TOKEN, input.TO_TOKEN]);
     let fromToken = tokenType[NETWORK][input.FROM_TOKEN];
     let toToken = tokenType[NETWORK][input.TO_TOKEN];
@@ -177,12 +177,12 @@ export async function swap(
 
 export async function unsubscribe(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         userShareId: string;
         share: string | null;
     }
-): Promise<TransactionBlock> {
+): Promise<Transaction> {
     _unsubscribe(tx, config.token.tlp, {
         version: config.version.perp.perp,
         registry: config.registry.perp.stakePool,
@@ -196,11 +196,11 @@ export async function unsubscribe(
 
 export async function harvest(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         userShareId: string;
     }
-): Promise<TransactionBlock> {
+): Promise<Transaction> {
     harvestPerUserShare(tx, "0x2::sui::SUI", {
         version: config.version.perp.perp,
         registry: config.registry.perp.stakePool,

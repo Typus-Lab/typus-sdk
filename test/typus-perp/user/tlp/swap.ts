@@ -1,8 +1,8 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { Transaction } from "@mysten/sui/transactions";
 import { TOKEN, tokenType } from "src/constants";
 import { NETWORK, swap } from "src/typus-perp";
 import { createPythClient } from "src/utils";
@@ -30,7 +30,7 @@ import { createPythClient } from "src/utils";
     ).data.map((coin) => coin.coinObjectId);
     console.log(coins.length);
 
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
 
     tx = await swap(config, tx, pythClient, {
         coins,
@@ -46,7 +46,7 @@ import { createPythClient } from "src/utils";
     });
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("SwapEvent"))[0].parsedJson);
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
+    let res = await provider.signAndExecuteTransaction({ signer: keypair, transaction: tx });
     console.log(res);
     // https://testnet.suivision.xyz/txblock/8TDGppninwYxBqpNtao3mMa936nemU3rdMqA8xesJREA
 })();

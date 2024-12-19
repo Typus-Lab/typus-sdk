@@ -1,8 +1,8 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { Transaction } from "@mysten/sui/transactions";
 import { unsubscribe, getUserStake } from "src/typus-perp";
 
 (async () => {
@@ -19,7 +19,7 @@ import { unsubscribe, getUserStake } from "src/typus-perp";
     let stake = stakes[1];
     console.log(stake);
 
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
 
     unsubscribe(config, tx, {
         userShareId: stake.userShareId.toString(),
@@ -32,7 +32,7 @@ import { unsubscribe, getUserStake } from "src/typus-perp";
     });
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("UnsubscribeEvent")));
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
+    let res = await provider.signAndExecuteTransaction({ signer: keypair, transaction: tx });
     console.log(res);
     // https://testnet.suivision.xyz/txblock/EvBgQwKFay8YMYDG9WtStsfvR7MzhPa4nu5aKMgeptzX?tab=Events
 })();

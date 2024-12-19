@@ -1,7 +1,7 @@
 import { SuiPriceServiceConnection, SuiPythClient } from "@pythnetwork/pyth-sui-js";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { Transaction } from "@mysten/sui/transactions";
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { TypusConfig } from "src/utils";
 
 import mnemonic from "../../../../mnemonic.json";
@@ -31,7 +31,7 @@ let wormholeStateId = "0x31358d198147da50db32eda2562951d53973a0c0ad5ed738e9b17d8
 
     // @ts-ignore
     let client = new SuiPythClient(provider, pythStateId, wormholeStateId);
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
 
     let priceFeedUpdateData = await connection.getPriceFeedsUpdateData(priceIDs);
 
@@ -43,9 +43,9 @@ let wormholeStateId = "0x31358d198147da50db32eda2562951d53973a0c0ad5ed738e9b17d8
 
     let priceInfoObjectIds = await client.createPriceFeed(tx, priceFeedUpdateData);
 
-    let res = await provider.signAndExecuteTransactionBlock({
+    let res = await provider.signAndExecuteTransaction({
         signer: keypair,
-        transactionBlock: tx,
+        transaction: tx,
         options: {
             showEffects: true,
             showEvents: true,

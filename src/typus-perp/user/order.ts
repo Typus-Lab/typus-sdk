@@ -3,17 +3,17 @@ import {
     cancelTradingOrder as _cancelTradingOrder,
     increaseCollateral as _increaseCollateral,
     releaseCollateral as _releaseCollateral,
-} from "../trading/functions";
+} from "../typus_perp/trading/functions";
+import { Position, TradingOrder } from "../typus_perp/position/structs";
 import { CLOCK } from "src/constants";
 import { NETWORK } from "..";
-import { Position, TradingOrder } from "../position/structs";
 import { PythClient, updatePyth, priceInfoObjectIds, pythStateId, TypusConfig } from "src/utils";
 import { tokenType, TOKEN, typeArgToToken } from "src/constants";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 
 export async function createTradingOrder(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     pythClient: PythClient,
     input: {
         coins: string[];
@@ -27,7 +27,7 @@ export async function createTradingOrder(
         reduceOnly: boolean;
         linkedPositionId: string | null;
     }
-): Promise<TransactionBlock> {
+): Promise<Transaction> {
     // INPUTS
     let TOKEN = input.cToken;
     let BASE_TOKEN = input.tradingToken;
@@ -77,12 +77,12 @@ export async function createTradingOrder(
 
 export async function cancelTradingOrder(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         order: TradingOrder;
         user: string;
     }
-): Promise<TransactionBlock> {
+): Promise<Transaction> {
     let cToken = "0x" + input.order.collateralToken.name;
     let BASE_TOKEN = "0x" + input.order.symbol.baseToken.name;
 
@@ -92,6 +92,7 @@ export async function cancelTradingOrder(
         marketIndex: BigInt(0),
         orderId: input.order.orderId,
         triggerPrice: input.order.triggerPrice,
+        orderUser: null,
     });
 
     tx.transferObjects([coin], input.user);
@@ -101,14 +102,14 @@ export async function cancelTradingOrder(
 
 export async function increaseCollateral(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     pythClient: PythClient,
     input: {
         coins: string[];
         amount: string;
         position: Position;
     }
-): Promise<TransactionBlock> {
+): Promise<Transaction> {
     // parse from Position
     let TOKEN = typeArgToToken(input.position.collateralToken.name);
     let BASE_TOKEN = typeArgToToken(input.position.symbol.baseToken.name);
@@ -150,13 +151,13 @@ export async function increaseCollateral(
 
 export async function releaseCollateral(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     pythClient: PythClient,
     input: {
         position: Position;
         amount: string;
     }
-): Promise<TransactionBlock> {
+): Promise<Transaction> {
     // parse from Position
     let TOKEN = typeArgToToken(input.position.collateralToken.name);
     let BASE_TOKEN = typeArgToToken(input.position.symbol.baseToken.name);
