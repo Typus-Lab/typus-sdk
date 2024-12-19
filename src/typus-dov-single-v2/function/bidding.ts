@@ -1,7 +1,6 @@
 import { AbbrStrategyName, Period, parseAssets } from "./vault";
 import { Auction, BidShare, Vault, getAuctions, getMyBids, getVaults } from "src/typus-dov-single-v2";
 import { checkNumber, countFloating, insertAt, getLatestPrice } from "src/utils";
-import { Connection, PublicKey } from "@solana/web3.js";
 import { getUserStrategies } from "src/auto-bid";
 import { orderBy } from "lodash";
 import { PythHttpClient, getPythClusterApiUrl, getPythProgramKeyForCluster, PythCluster, PriceData } from "@pythnetwork/client";
@@ -16,72 +15,72 @@ const PriceDecimal = BigNumber(10).pow(8);
 
 export const ASSET_INFO = {
     BTC: {
-        product: new PublicKey("4aDoSXJ5o3AuvL7QFeR6h44jALQfTmUUCTVGDD6aoJTM"),
-        price: new PublicKey("GVXRSBjFk6e6J3NbVPXohDJetcTjaeeuykUpbQF8UoMU"),
+        product: "4aDoSXJ5o3AuvL7QFeR6h44jALQfTmUUCTVGDD6aoJTM",
+        price: "GVXRSBjFk6e6J3NbVPXohDJetcTjaeeuykUpbQF8UoMU",
     },
     ETH: {
-        product: new PublicKey("EMkxjGC1CQ7JLiutDbfYb7UKb3zm9SJcUmr1YicBsdpZ"),
-        price: new PublicKey("JBu1AL4obBcCMqKBBxhpWCNUt136ijcuMZLFvTP7iWdB"),
+        product: "EMkxjGC1CQ7JLiutDbfYb7UKb3zm9SJcUmr1YicBsdpZ",
+        price: "JBu1AL4obBcCMqKBBxhpWCNUt136ijcuMZLFvTP7iWdB",
     },
     SUI: {
-        product: new PublicKey("2F8rfBf4z4SzNpeQstFTpLXTQQ7RNKsLFqPdbpybooCc"),
-        price: new PublicKey("3Qub3HaAJaa2xNY7SUqPKd3vVwTqDfDDkEUMPjXD2c1q"),
+        product: "2F8rfBf4z4SzNpeQstFTpLXTQQ7RNKsLFqPdbpybooCc",
+        price: "3Qub3HaAJaa2xNY7SUqPKd3vVwTqDfDDkEUMPjXD2c1q",
     },
     CETUS: {
-        product: new PublicKey("JDHPsM1zxsZ6TfDwpCVzo41DAZdRi6ZmhkzWU1iXvSQ"),
-        price: new PublicKey("GTeC2JfBFrHuYkBivDQcNdLY74X5FRDLEJntnxPKRQbY"),
+        product: "JDHPsM1zxsZ6TfDwpCVzo41DAZdRi6ZmhkzWU1iXvSQ",
+        price: "GTeC2JfBFrHuYkBivDQcNdLY74X5FRDLEJntnxPKRQbY",
     },
     SEI: {
-        product: new PublicKey("24bB1mRGsrrDVawJTCVYXrxbEz6ozztukPUKvcZCDcPz"),
-        price: new PublicKey("6cUuAyAX3eXoiWkjFF77RQBEUF15AAMQ7d1hm4EPd3tv"),
+        product: "24bB1mRGsrrDVawJTCVYXrxbEz6ozztukPUKvcZCDcPz",
+        price: "6cUuAyAX3eXoiWkjFF77RQBEUF15AAMQ7d1hm4EPd3tv",
     },
     wUSDC: {
-        product: new PublicKey("8GWTTbNiXdmyZREXbjsZBmCRuzdPrW55dnZGDkTRjWvb"),
-        price: new PublicKey("Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD"),
+        product: "8GWTTbNiXdmyZREXbjsZBmCRuzdPrW55dnZGDkTRjWvb",
+        price: "Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD",
     },
     USDT: {
-        product: new PublicKey("Av6XyAMJnyi68FdsKSPYgzfXGjYrrt6jcAMwtvzLCqaM"),
-        price: new PublicKey("3vxLXJqLqF3JG5TCbYycbKWRBbCJQLxQmBGCkyqEEefL"),
+        product: "Av6XyAMJnyi68FdsKSPYgzfXGjYrrt6jcAMwtvzLCqaM",
+        price: "3vxLXJqLqF3JG5TCbYycbKWRBbCJQLxQmBGCkyqEEefL",
     },
     TURBOS: {
-        product: new PublicKey("8DZUgXNQo5Um1pqo4gzv9oWPUZpyKV9nXm51gysZFMef"),
-        price: new PublicKey("HoxttzPFzcPvpZhUY8LCLkFNn9keDnBrctno4wXEhpFk"),
+        product: "8DZUgXNQo5Um1pqo4gzv9oWPUZpyKV9nXm51gysZFMef",
+        price: "HoxttzPFzcPvpZhUY8LCLkFNn9keDnBrctno4wXEhpFk",
     },
     APT: {
-        product: new PublicKey("6bQMDtuAmRgjvymdWk9w4tTc9YyuXcjMxF8MyPHXejsx"),
-        price: new PublicKey("FNNvb1AFDnDVPkocEri8mWbJ1952HQZtFLuwPiUjSJQ"),
+        product: "6bQMDtuAmRgjvymdWk9w4tTc9YyuXcjMxF8MyPHXejsx",
+        price: "FNNvb1AFDnDVPkocEri8mWbJ1952HQZtFLuwPiUjSJQ",
     },
     SOL: {
-        product: new PublicKey("ALP8SdU9oARYVLgLR7LrqMNCYBnhtnQz1cj6bwgwQmgj"),
-        price: new PublicKey("H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG"),
+        product: "ALP8SdU9oARYVLgLR7LrqMNCYBnhtnQz1cj6bwgwQmgj",
+        price: "H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG",
     },
     INJ: {
-        product: new PublicKey("5Q5kyCVzssrGMd2BniSdVeRwjNWrGGrFhMrgGt4zURyA"),
-        price: new PublicKey("9EdtbaivHQYA4Nh3XzGR6DwRaoorqXYnmpfsnFhvwuVj"),
+        product: "5Q5kyCVzssrGMd2BniSdVeRwjNWrGGrFhMrgGt4zURyA",
+        price: "9EdtbaivHQYA4Nh3XzGR6DwRaoorqXYnmpfsnFhvwuVj",
     },
     JUP: {
-        product: new PublicKey("AykbyeHZbUbEtEAPVpBLoPAMHBrUrDMtXJkPWZw4TRDX"),
-        price: new PublicKey("g6eRCbboSwK4tSWngn773RCMexr1APQr4uA9bGZBYfo"),
+        product: "AykbyeHZbUbEtEAPVpBLoPAMHBrUrDMtXJkPWZw4TRDX",
+        price: "g6eRCbboSwK4tSWngn773RCMexr1APQr4uA9bGZBYfo",
     },
     HASUI: {
-        product: new PublicKey("FGJutsZ3Hr9BaamiNUq369AamUEMArCxFeMnjZZ1u4oG"),
-        price: new PublicKey("7Y9jRRHvqig2wdSkjnACwt1SV1qocjY81C9nKKVJ6zJs"),
+        product: "FGJutsZ3Hr9BaamiNUq369AamUEMArCxFeMnjZZ1u4oG",
+        price: "7Y9jRRHvqig2wdSkjnACwt1SV1qocjY81C9nKKVJ6zJs",
     },
     VSUI: {
-        product: new PublicKey("9L4zWUnRWEqHT9fvH5WkmQgXf7qrr97SGV4pofTSdK5k"),
-        price: new PublicKey("6vWPEigSDaAi6m6HuX24aK4fJGJxvQZ8TLQKADC65S2S"),
+        product: "9L4zWUnRWEqHT9fvH5WkmQgXf7qrr97SGV4pofTSdK5k",
+        price: "6vWPEigSDaAi6m6HuX24aK4fJGJxvQZ8TLQKADC65S2S",
     },
     AUSD: {
-        product: new PublicKey("GHXtvZLRq3WGm7DWUke5UdB8P6Jb4MuSwWjd72gGFPc8"),
-        price: new PublicKey("FeHsLbpPsJ7JTBPGKqhBTzvNuX5bjrm4Q6HdgXWgKW8Z"),
+        product: "GHXtvZLRq3WGm7DWUke5UdB8P6Jb4MuSwWjd72gGFPc8",
+        price: "FeHsLbpPsJ7JTBPGKqhBTzvNuX5bjrm4Q6HdgXWgKW8Z",
     },
     FUD: {
-        product: new PublicKey("2fcvX3is1N5vy17xeqi2x5t7ShFKPaBx91UTH73DvTH3"),
-        price: new PublicKey("89mKNz2WRvoPXy1mbRdaptLPYHsaYBpqmh5oxk2xD4Da"),
+        product: "2fcvX3is1N5vy17xeqi2x5t7ShFKPaBx91UTH73DvTH3",
+        price: "89mKNz2WRvoPXy1mbRdaptLPYHsaYBpqmh5oxk2xD4Da",
     },
     USDY: {
-        product: new PublicKey("555ugWQAae89KU9t9SBWAZTHZtQNkQ18XumbzgxDXQmZ"),
-        price: new PublicKey("GKMnwKMJS97DZHQS9mBquF15cEbgNKHvoayz8uamBp1T"),
+        product: "555ugWQAae89KU9t9SBWAZTHZtQNkQ18XumbzgxDXQmZ",
+        price: "GKMnwKMJS97DZHQS9mBquF15cEbgNKHvoayz8uamBp1T",
     },
 };
 
@@ -204,7 +203,7 @@ export const parsePythOracleData = (data: PriceData[], decimals: { [key: string]
     Object.entries(ASSET_INFO).forEach((p) => {
         let asset = p[0].toUpperCase();
         let coinData = data.find((s) => {
-            return s.productAccountKey.equals(p[1].product);
+            return s.productAccountKey.toString() == p[1].product;
         });
         let decimal = decimals[asset];
         if (decimal && coinData) {
@@ -248,6 +247,7 @@ export const fetchPrices = async (provider: SuiClient, config: TypusConfig): Pro
     // });
 
     let PYTHNET_CLUSTER_NAME: PythCluster = "pythnet";
+    // WIP: @WayneAl to fix
     let connection = new Connection(getPythClusterApiUrl(PYTHNET_CLUSTER_NAME));
     let pythPublicKey = getPythProgramKeyForCluster(PYTHNET_CLUSTER_NAME);
     let pythClient = new PythHttpClient(connection, pythPublicKey);
