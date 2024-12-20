@@ -3,7 +3,7 @@ import { TypusConfig } from "src/utils";
 import { SuiClient } from "@mysten/sui/client";
 import { getDeactivateLeaderboardTx } from "src/typus/leaderboard";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { Transaction } from "@mysten/sui/dist/cjs/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);

@@ -4,7 +4,7 @@ import { getMintToKioskTx, getPool } from "src/typus-nft";
 import { SuiClient } from "@mysten/sui/client";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { KioskClient, Network } from "@mysten/kiosk";
-import { Transaction } from "@mysten/sui/dist/cjs/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 
 const necklace = "kriya_dex";
 
