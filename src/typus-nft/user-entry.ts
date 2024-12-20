@@ -103,12 +103,12 @@ export async function getRequestMintTx(
         price: string;
     }
 ) {
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.price)]);
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.price)]);
 
     tx.moveCall({
         target: `${config.package.nft}::discount_mint::request_mint`,
         typeArguments: [],
-        arguments: [tx.object(input.pool), tx.pure(input.seed), coin, tx.object(CLOCK)],
+        arguments: [tx.object(input.pool), tx.pure.u64(input.seed), coin, tx.object(CLOCK)],
     });
 
     return tx;
