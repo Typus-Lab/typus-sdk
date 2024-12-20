@@ -1,5 +1,5 @@
 import { assetToDecimal, typeArgToAsset } from "src/constants";
-import { SuiClient, SuiEvent } from "@mysten/sui.js/client";
+import { SuiClient, SuiEvent } from "@mysten/sui/client";
 
 const headers = {
     "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",

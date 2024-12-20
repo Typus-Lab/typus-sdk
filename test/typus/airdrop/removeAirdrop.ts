@@ -1,7 +1,7 @@
 import "src/utils/load_env";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { getRemoveAirdropTx } from "src/typus/airdrop";
 import { TypusConfig } from "src/utils";
 import mnemonic from "mnemonic.json";
@@ -11,12 +11,12 @@ import mnemonic from "mnemonic.json";
     let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
-    let transactionBlock = await getRemoveAirdropTx(config, new TransactionBlock(), {
+    let transaction = await getRemoveAirdropTx(config, new Transaction(), {
         typeArguments: [config.token.typus],
         key: "typus_airdrop",
         sender: signer.toSuiAddress(),
     });
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+    let res = await provider.signAndExecuteTransaction({ signer, transaction });
     console.log(res);
 })();

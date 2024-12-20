@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -13,7 +13,7 @@ import { TypusConfig } from "src/utils";
 */
 export function updateRegistrySetting(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         settingIndex: string;
         value: string;
@@ -43,7 +43,7 @@ export function updateRegistrySetting(
 */
 export function delegateMint(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         user: string;
         coins: string[];
@@ -59,7 +59,7 @@ export function delegateMint(
                 input.coins.map((coin) => tx.object(coin))
             );
         }
-        return tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+        return tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
     })();
     tx.moveCall({
         target: `${config.package.launch.veTypus}::ve_typus::delegate_mint`,
@@ -86,7 +86,7 @@ export function delegateMint(
 */
 export function delegateBurn(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         user: string;
         veTypus: string;
@@ -117,7 +117,7 @@ export function delegateBurn(
 */
 export function delegateRenew(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         user: string;
         veTypus: string;

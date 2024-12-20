@@ -1,4 +1,4 @@
-import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
+import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui/client";
 import { BcsReader } from "@mysten/bcs";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import BigNumber from "bignumber.js";

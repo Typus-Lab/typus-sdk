@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 /**
@@ -13,7 +13,7 @@ import { TypusConfig } from "src/utils";
 */
 export async function getActivateLeaderboardTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         key: string;
         start_ts_ms: string;
@@ -26,9 +26,9 @@ export async function getActivateLeaderboardTx(
         arguments: [
             tx.object(config.version.typus),
             tx.object(config.registry.typus.leaderboard),
-            tx.pure(input.key),
-            tx.pure(input.start_ts_ms),
-            tx.pure(input.end_ts_ms),
+            tx.pure.string(input.key),
+            tx.pure.u64(input.start_ts_ms),
+            tx.pure.u64(input.end_ts_ms),
         ],
     });
 
@@ -46,7 +46,7 @@ export async function getActivateLeaderboardTx(
 */
 export async function getDeactivateLeaderboardTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         key: string;
         id: string;
@@ -55,7 +55,12 @@ export async function getDeactivateLeaderboardTx(
     tx.moveCall({
         target: `${config.package.typus}::leaderboard::deactivate_leaderboard`,
         typeArguments: [],
-        arguments: [tx.object(config.version.typus), tx.object(config.registry.typus.leaderboard), tx.pure(input.key), tx.pure(input.id)],
+        arguments: [
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.leaderboard),
+            tx.pure.string(input.key),
+            tx.pure.address(input.id),
+        ],
     });
 
     return tx;

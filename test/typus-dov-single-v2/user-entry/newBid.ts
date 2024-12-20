@@ -1,8 +1,8 @@
 import "src/utils/load_env";
 import { getNewBidTx } from "src/typus-dov-single-v2";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 (async () => {
@@ -19,7 +19,7 @@ import { TypusConfig } from "src/utils";
     let size = "1000000000";
     let premium_required = "1000000000";
 
-    let transactionBlock = getNewBidTx(config, new TransactionBlock(), {
+    let transaction = getNewBidTx(config, new Transaction(), {
         typeArguments,
         index,
         coins,
@@ -27,6 +27,6 @@ import { TypusConfig } from "src/utils";
         premium_required,
         user,
     });
-    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+    let res = await provider.signAndExecuteTransaction({ signer, transaction });
     console.log(res);
 })();

@@ -1,4 +1,4 @@
-import { SuiClient, SuiEventFilter } from "@mysten/sui.js/client";
+import { SuiClient, SuiEventFilter } from "@mysten/sui/client";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import { TypusConfig } from "src/utils";
 

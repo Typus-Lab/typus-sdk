@@ -1,7 +1,7 @@
 import "src/utils/load_env";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { whitelistTx } from "src/typus-launch/auction";
 import { TypusConfig } from "src/utils";
 import mnemonic from "mnemonic.json";
@@ -28,14 +28,14 @@ import * as fs from "fs";
     while (user_data.length > 0) {
         console.log(user_data.length);
         let slice = user_data.splice(0, 300);
-        let transactionBlock = whitelistTx(
+        let transaction = whitelistTx(
             config,
-            new TransactionBlock(),
+            new Transaction(),
             slice.map((user) => user[0]),
             slice.map((user) => (Number(user[1]) * 1000000000).toString())
         );
 
-        let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+        let res = await provider.signAndExecuteTransaction({ signer, transaction });
         console.log(res);
         await sleep(5000);
     }

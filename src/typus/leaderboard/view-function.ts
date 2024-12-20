@@ -1,5 +1,5 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient } from "@mysten/sui.js/client";
+import { Transaction } from "@mysten/sui/transactions";
+import { SuiClient } from "@mysten/sui/client";
 import { BcsReader } from "@mysten/bcs";
 import { AddressFromBytes, TypusConfig } from "src/utils";
 import { SENDER } from "src/constants";
@@ -23,24 +23,24 @@ export async function getRankings(
     }
 ): Promise<Rankings> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
-    transactionBlock.moveCall({
+    let transaction = new Transaction();
+    transaction.moveCall({
         target: `${config.package.typus}::leaderboard::get_rankings`,
         typeArguments: [],
         arguments: [
-            transactionBlock.pure(config.version.typus),
-            transactionBlock.pure(config.registry.typus.leaderboard),
-            transactionBlock.pure(input.key),
-            transactionBlock.pure(input.id),
-            transactionBlock.pure(input.ranks),
-            transactionBlock.pure(input.user),
-            transactionBlock.pure(input.active),
+            transaction.object(config.version.typus),
+            transaction.object(config.registry.typus.leaderboard),
+            transaction.pure.string(input.key),
+            transaction.pure.address(input.id),
+            transaction.pure.u64(input.ranks),
+            transaction.pure.address(input.user),
+            transaction.pure.bool(input.active),
         ],
     });
     let results = (
         await provider.devInspectTransactionBlock({
             sender: SENDER,
-            transactionBlock,
+            transactionBlock: transaction,
         })
     ).results;
     // @ts-ignore

@@ -1,4 +1,4 @@
-import { normalizeSuiAddress } from "@mysten/sui.js/utils";
+import { normalizeSuiAddress } from "@mysten/sui/utils";
 
 export function typeArgsToAssets(typeArgs: string[]): string[] {
     let assets = typeArgs.map((x) => typeArgToAsset(x));

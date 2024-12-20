@@ -1,8 +1,8 @@
 import "src/utils/load_env";
 import { updateInfo } from "src/typus-launch/funding-vault";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 (async () => {
@@ -10,12 +10,12 @@ import { TypusConfig } from "src/utils";
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
-    let transactionBlock = new TransactionBlock();
-    updateInfo(config, transactionBlock, {
+    let transaction = new Transaction();
+    updateInfo(config, transaction, {
         index: "0",
         infoIndex: "2",
         value: "0",
     });
-    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+    let res = await provider.signAndExecuteTransaction({ signer, transaction });
     console.log(res);
 })();

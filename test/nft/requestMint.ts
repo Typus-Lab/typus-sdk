@@ -1,9 +1,9 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { getIsWhitelistTx, getRequestMintTx, getDiscountPool, getMintHistory } from "src/typus-nft";
-import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { Transaction } from "@mysten/sui/dist/cjs/transactions";
 
 (async () => {
     const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -21,20 +21,20 @@ import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
     const remaining = poolData.num;
     console.log("remaining: " + remaining);
 
-    var transactionBlock = await getIsWhitelistTx(config, new TransactionBlock(), { pool, user });
+    var transaction = await getIsWhitelistTx(config, new Transaction(), { pool, user });
 
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: user })).results;
+    let results = (await provider.devInspectTransactionBlock({ transaction, sender: user })).results;
     // @ts-ignore
     const isWhitelist = results![0].returnValues[0][0] == 1;
     console.log("isWhitelist: " + isWhitelist);
 
     const seed = "2"; // 0,1,2
 
-    var transactionBlock = await getRequestMintTx(config, new TransactionBlock(), { pool, seed, price: poolData.price });
+    var transaction = await getRequestMintTx(config, new Transaction(), { pool, seed, price: poolData.price });
 
-    const result = await provider.signAndExecuteTransactionBlock({
+    const result = await provider.signAndExecuteTransaction({
         signer: keypair,
-        transactionBlock,
+        transaction,
         options: { showEvents: true },
     });
     console.log({ result });

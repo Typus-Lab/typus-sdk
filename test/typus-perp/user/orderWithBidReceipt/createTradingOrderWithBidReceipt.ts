@@ -42,7 +42,7 @@ import { TOKEN } from "src/constants";
     });
 
     let dryrunRes = await provider.devInspectTransactionBlock({
-        transactionBlock: tx,
+        transaction: tx,
         sender: user,
     });
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("CreateTradingOrderWithBidReceiptsEvent")));

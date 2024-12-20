@@ -26,7 +26,7 @@ import { harvest, getUserStake } from "src/typus-perp";
     });
 
     let dryrunRes = await provider.devInspectTransactionBlock({
-        transactionBlock: tx,
+        transaction: tx,
         sender: user,
     });
 

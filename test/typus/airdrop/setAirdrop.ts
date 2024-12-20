@@ -1,7 +1,7 @@
 import "src/utils/load_env";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { getSetAirdropTx } from "src/typus/airdrop";
 import { TypusConfig } from "src/utils";
 import mnemonic from "mnemonic.json";
@@ -19,7 +19,7 @@ import * as fs from "fs";
     while (user_data.length > 0) {
         console.log(user_data.length);
         let slice = user_data.splice(0, 300);
-        let transactionBlock = await getSetAirdropTx(config, new TransactionBlock(), {
+        let transaction = await getSetAirdropTx(config, new Transaction(), {
             typeArguments: [config.token.typus],
             key: "typus_airdrop",
             coins: ["0xa633dd0101ae7b95ba675de8a12a7c9aad420054f4bcf7fcd23bd9d099fc2920"],
@@ -28,7 +28,7 @@ import * as fs from "fs";
             values: slice.map((user) => user[1]),
         });
 
-        let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+        let res = await provider.signAndExecuteTransaction({ signer, transaction });
         console.log(res);
         await sleep(5000);
     }

@@ -1,6 +1,6 @@
 import { TypusConfig } from "src/utils";
 import { getTotalDepositorIncentive, getTotalPremium, getTotalProfitSharing, getTotalProfitSharingClaimed } from "src/utils";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 
 (async () => {
     let res1 = await getTotalDepositorIncentive();

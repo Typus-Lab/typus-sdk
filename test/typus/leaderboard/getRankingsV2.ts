@@ -2,7 +2,7 @@ import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { getRankings, Rankings } from "src/typus/leaderboard";
 import * as fs from "fs";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 
 (async () => {
     let response = await fetch(

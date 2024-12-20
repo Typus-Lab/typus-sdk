@@ -1,6 +1,6 @@
 import { TypusConfig } from "src/utils";
 import { getVaults, getUserEvents, parseTxHistory, getNewBidFromSentio, getExerciseFromSentio } from "src/typus-dov-single-v2";
-import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
+import { EventId, SuiClient, SuiEvent } from "@mysten/sui/client";
 import * as fs from "fs";
 
 (async () => {

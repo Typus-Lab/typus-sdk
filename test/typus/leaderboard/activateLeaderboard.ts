@@ -1,9 +1,9 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import { getActivateLeaderboardTx } from "src/typus/leaderboard";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { Transaction } from "@mysten/sui/dist/cjs/transactions";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
@@ -15,12 +15,12 @@ import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
     let address = keypair.toSuiAddress();
     console.log(address);
 
-    let transactionBlock = await getActivateLeaderboardTx(config, new TransactionBlock(), {
+    let transaction = await getActivateLeaderboardTx(config, new Transaction(), {
         key,
         start_ts_ms: start_ts_ms.toString(),
         end_ts_ms: (start_ts_ms + 100 * 365 * 24 * 3600 * 1000).toString(),
     });
 
-    var res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
+    var res = await provider.signAndExecuteTransaction({ signer: keypair, transaction });
     console.log(res);
 })();

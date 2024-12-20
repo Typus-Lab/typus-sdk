@@ -1,7 +1,7 @@
 import "src/utils/load_env";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { EventId, SuiClient, SuiEvent } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { getClaimAirdropTx, getAirdrop } from "src/typus/airdrop";
 import { TypusConfig } from "src/utils";
 import mnemonic from "mnemonic.json";
@@ -23,13 +23,13 @@ import * as fs from "fs";
     console.log(`Claiming ${Number(amount[1]) / 10 ** 9} TYPUS...`);
 
     if (Number(amount[1]) > 0) {
-        let transactionBlock = getClaimAirdropTx(config, new TransactionBlock(), {
+        let transaction = getClaimAirdropTx(config, new Transaction(), {
             typeArguments: [config.token.typus],
             key: "typus_airdrop",
             user,
         });
 
-        let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+        let res = await provider.signAndExecuteTransaction({ signer, transaction });
         console.log(res);
     }
 

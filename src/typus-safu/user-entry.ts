@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -20,7 +20,7 @@ import { TypusConfig } from "src/utils";
  */
 export function getRaiseFundTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -68,7 +68,7 @@ export function getRaiseFundTx(
             tx.object(config.registry.typus.user),
             tx.object(config.version.safu),
             tx.object(config.registry.safu.safu),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.object(raiseBalance),
             tx.pure(input.raiseFromDeactivating),
             tx.pure(input.raiseFromInactive),
@@ -98,7 +98,7 @@ export function getRaiseFundTx(
  */
 export function getReduceFundTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -117,7 +117,7 @@ export function getReduceFundTx(
             tx.object(config.registry.typus.user),
             tx.object(config.version.safu),
             tx.object(config.registry.safu.safu),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.pure(input.reduceFromWarmup),
             tx.pure(input.reduceFromActive),
             tx.pure(input.reduceFromInactive),
@@ -143,7 +143,7 @@ export function getReduceFundTx(
  */
 export function getClaimRewardTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -153,7 +153,7 @@ export function getClaimRewardTx(
     let result = tx.moveCall({
         target: `${config.package.safu}::safu::claim_reward`,
         typeArguments: input.typeArguments,
-        arguments: [tx.object(config.version.safu), tx.object(config.registry.safu.safu), tx.pure(input.index)],
+        arguments: [tx.object(config.version.safu), tx.object(config.registry.safu.safu), tx.pure.u64(input.index)],
     });
     tx.moveCall({
         target: `${config.package.framework}::utils::transfer_balance`,
@@ -178,7 +178,7 @@ export function getClaimRewardTx(
  */
 export function getSnapshotTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
     }
@@ -192,7 +192,7 @@ export function getSnapshotTx(
             tx.object(config.registry.typus.user),
             tx.object(config.version.safu),
             tx.object(config.registry.safu.safu),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.object(CLOCK),
         ],
     });

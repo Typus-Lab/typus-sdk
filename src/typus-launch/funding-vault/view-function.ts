@@ -1,5 +1,5 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient } from "@mysten/sui.js/client";
+import { Transaction } from "@mysten/sui/transactions";
+import { SuiClient } from "@mysten/sui/client";
 import { BcsReader } from "@mysten/bcs";
 import { SENDER } from "src/constants";
 import { AddressFromBytes, TypusConfig } from "src/utils";
@@ -19,14 +19,14 @@ export async function getVault(
     }
 ): Promise<{ [key: string]: [Vault] }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     input.indexes.forEach((index) => {
-        transactionBlock.moveCall({
+        transaction.moveCall({
             target: `${config.package.launch.fundingVault}::funding_vault::get_vault_bcs`,
-            arguments: [transactionBlock.object(config.registry.launch.fundingVault), transactionBlock.pure(index)],
+            arguments: [transaction.object(config.registry.launch.fundingVault), transaction.pure(index)],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results;
     let vaults: {
         [key: string]: [Vault];
     } = {};
@@ -74,18 +74,18 @@ export async function getFund(
     }
 ): Promise<{ [key: string]: Fund[] }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     input.indexes.forEach((index) => {
-        transactionBlock.moveCall({
+        transaction.moveCall({
             target: `${config.package.launch.fundingVault}::funding_vault::get_fund_bcs`,
             arguments: [
-                transactionBlock.object(config.registry.launch.fundingVault),
-                transactionBlock.pure(index),
-                transactionBlock.pure(input.user),
+                transaction.object(config.registry.launch.fundingVault),
+                transaction.pure(index),
+                transaction.pure.address(input.user),
             ],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results;
     let funds: {
         [key: string]: Fund[];
     } = {};
@@ -115,18 +115,18 @@ export async function getRefund(
     }
 ): Promise<{ [key: string]: Fund[] }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     input.indexes.forEach((index) => {
-        transactionBlock.moveCall({
+        transaction.moveCall({
             target: `${config.package.launch.fundingVault}::funding_vault::get_refund_bcs`,
             arguments: [
-                transactionBlock.object(config.registry.launch.fundingVault),
-                transactionBlock.pure(index),
-                transactionBlock.pure(input.user),
+                transaction.object(config.registry.launch.fundingVault),
+                transaction.pure(index),
+                transaction.pure.address(input.user),
             ],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results;
     let funds: {
         [key: string]: Fund[];
     } = {};
@@ -156,18 +156,14 @@ export async function getAllFunds(
     }
 ): Promise<Fund[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     input.users.forEach((user) => {
-        transactionBlock.moveCall({
+        transaction.moveCall({
             target: `${config.package.launch.fundingVault}::funding_vault::get_fund_bcs`,
-            arguments: [
-                transactionBlock.object(config.registry.launch.fundingVault),
-                transactionBlock.pure(input.index),
-                transactionBlock.pure(user),
-            ],
+            arguments: [transaction.object(config.registry.launch.fundingVault), transaction.pure(input.index), transaction.pure(user)],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results;
     let funds: Fund[] = [];
     results?.forEach((result, i) => {
         // @ts-ignore

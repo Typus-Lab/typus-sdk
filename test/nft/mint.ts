@@ -1,9 +1,9 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { getMintTx, getPool } from "src/typus-nft";
-import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { Transaction } from "@mysten/sui/dist/cjs/transactions";
 
 const necklace = "typus";
 
@@ -38,11 +38,11 @@ const necklace = "typus";
     if (wlTokens.length > 0) {
         const wlToken = wlTokens[0].data?.objectId!;
 
-        let transactionBlock = await getMintTx(config, new TransactionBlock(), { pool, whitelist_token: wlToken });
+        let transaction = await getMintTx(config, new Transaction(), { pool, whitelist_token: wlToken });
 
-        const result = await provider.signAndExecuteTransactionBlock({
+        const result = await provider.signAndExecuteTransaction({
             signer: keypair,
-            transactionBlock,
+            transaction,
         });
         console.log({ result });
     }

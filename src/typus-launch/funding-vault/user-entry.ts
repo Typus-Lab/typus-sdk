@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -14,7 +14,7 @@ import { TypusConfig } from "src/utils";
 */
 export function raiseFund(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -25,7 +25,7 @@ export function raiseFund(
     let [coin] =
         input.typeArguments[0] == "0x2::sui::SUI" ||
         input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-            ? tx.splitCoins(tx.gas, [tx.pure(input.amount)])
+            ? tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)])
             : (() => {
                   let coin = input.coins.pop()!;
                   if (input.coins.length > 0) {
@@ -34,7 +34,7 @@ export function raiseFund(
                           input.coins.map((coin) => tx.object(coin))
                       );
                   }
-                  return tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+                  return tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
               })();
     tx.moveCall({
         target: `${config.package.launch.fundingVault}::funding_vault::raise_fund`,
@@ -42,7 +42,7 @@ export function raiseFund(
         arguments: [
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             coin,
             tx.object(CLOCK),
         ],
@@ -61,7 +61,7 @@ export function raiseFund(
 */
 export function reduceFund(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -76,7 +76,7 @@ export function reduceFund(
         arguments: [
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.pure(input.reduceFromFund),
             tx.pure(input.reduceFromRefund),
             tx.object(CLOCK),

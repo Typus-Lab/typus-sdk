@@ -1,7 +1,7 @@
 import "src/utils/load_env";
-import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { Transaction } from "@mysten/sui/transactions";
 
 // Generate a new Ed25519 Keypair
 
@@ -20,7 +20,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     const address = keypair.toSuiAddress();
     console.log(address);
 
-    const transactionBlock = new TransactionBlock();
+    const transaction = new Transaction();
 
     const addresses = [
         "0x78fe054243da91df1b027e6f8edb2b3a5d6f29e7193740fa33af5f3085f95584",
@@ -33,23 +33,23 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     var n = 0;
 
     for (let address of addresses) {
-        const ns = transactionBlock.moveCall({
+        const ns = transaction.moveCall({
             // target: `0xe177697e191327901637f8d2c5ffbbde8b1aaac27ec1024c4b62d1ebd1cd7430::subdomains::new`,
             target: `0xdacfd7c1176a68137b38a875d76a2f65d277596d2c632881931d926b16de2698::subdomain_proxy::new`,
             arguments: [
-                transactionBlock.object("0x6e0ddefc0ad98889c04bab9639e512c21766c5e6366f89e696956d9be6952871"),
-                transactionBlock.object("0x79d966530d85fe94e9f71b4870013ce5d18a05b8995f3b84b16ad19b673f8ae9"),
-                transactionBlock.object("0x6"),
-                transactionBlock.pure(`00${n}.cranker1.typus.sui`),
-                transactionBlock.pure("1874341370059"),
-                transactionBlock.pure(true),
-                transactionBlock.pure(true),
+                transaction.object("0x6e0ddefc0ad98889c04bab9639e512c21766c5e6366f89e696956d9be6952871"),
+                transaction.object("0x79d966530d85fe94e9f71b4870013ce5d18a05b8995f3b84b16ad19b673f8ae9"),
+                transaction.object("0x6"),
+                transaction.pure(`00${n}.cranker1.typus.sui`),
+                transaction.pure("1874341370059"),
+                transaction.pure(true),
+                transaction.pure(true),
             ],
         });
-        transactionBlock.transferObjects([ns], address);
+        transaction.transferObjects([ns], address);
         n += 1;
     }
 
-    const res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
+    const res = await provider.signAndExecuteTransaction({ signer: keypair, transaction });
     console.log(res);
 })();

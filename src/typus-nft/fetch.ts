@@ -1,4 +1,4 @@
-import { SuiClient, SuiEventFilter, SuiObjectResponse } from "@mysten/sui.js/client";
+import { SuiClient, SuiEventFilter, SuiObjectResponse } from "@mysten/sui/client";
 import { KioskClient, KioskListing } from "@mysten/kiosk";
 
 export async function getPool(provider: SuiClient, pool: string) {

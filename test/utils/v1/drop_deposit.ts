@@ -1,11 +1,11 @@
 import "src/utils/load_env";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import { TypusConfig } from "src/utils";
 import * as fs from "fs";
 import { typeArgToAsset } from "src/constants";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import mnemonic from "mnemonic.json";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", "https://sui-mainnet.blastapi.io:443/df8b799c-1e3b-4309-b289-ddfb76cc090d");
@@ -78,9 +78,9 @@ import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
                 }
                 console.log(`index:${index}, tag:${tag}, round:${round}, _users:${_users.length}`);
                 try {
-                    let tx = new TransactionBlock();
+                    let tx = new Transaction();
                     drop_deposit(tx, index, tag, _users);
-                    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock: tx });
+                    let res = await provider.signAndExecuteTransaction({ signer, transaction: tx });
                     console.log(res);
                     round++;
                 } catch (e) {
@@ -104,7 +104,7 @@ interface Vault {
     b_token: string;
 }
 
-function drop_deposit(tx: TransactionBlock, index: number, tag: number, users: string[]) {
+function drop_deposit(tx: Transaction, index: number, tag: number, users: string[]) {
     tx.moveCall({
         target: `0xb34aa383cdde6230fb41efb9b114a45f5e7e3fe37a47a8c58d0d412ba5d3a950::typus_dov_single::drop_deposit_nodes`,
         typeArguments: [],

@@ -1,6 +1,6 @@
 import { TypusConfig } from "src/utils";
 import { getDepositorCashFlows, getUserEvents, parseTxHistory } from "src/typus-safu";
-import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
+import { EventId, SuiClient, SuiEvent } from "@mysten/sui/client";
 import * as fs from "fs";
 
 (async () => {

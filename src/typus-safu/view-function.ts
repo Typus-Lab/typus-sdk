@@ -1,5 +1,5 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient } from "@mysten/sui.js/client";
+import { Transaction } from "@mysten/sui/transactions";
+import { SuiClient } from "@mysten/sui/client";
 import { BcsReader } from "@mysten/bcs";
 import { AddressFromBytes, TypusConfig } from "src/utils";
 import { SENDER } from "src/constants";
@@ -53,13 +53,13 @@ export async function getVaultData(
     }
 ): Promise<{ [key: string]: [Vault, TypusBidReceipt | null] }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
-    transactionBlock.moveCall({
+    let transaction = new Transaction();
+    transaction.moveCall({
         target: `${config.package.safu}::view_function::get_vault_data_bcs`,
         typeArguments: [`${config.package.framework}::vault::TypusBidReceipt`],
-        arguments: [transactionBlock.pure(config.registry.safu.safu), transactionBlock.pure(input.indexes)],
+        arguments: [transaction.pure(config.registry.safu.safu), transaction.pure(input.indexes)],
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results;
     // console.log(JSON.stringify(results));
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
@@ -187,17 +187,13 @@ export async function getShareData(
     }
 ): Promise<{ [key: string]: Share[] }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
-    transactionBlock.moveCall({
+    let transaction = new Transaction();
+    transaction.moveCall({
         target: `${config.package.safu}::view_function::get_share_data_bcs`,
         typeArguments: [],
-        arguments: [
-            transactionBlock.pure(config.registry.safu.safu),
-            transactionBlock.pure(input.user),
-            transactionBlock.pure(input.indexes),
-        ],
+        arguments: [transaction.pure(config.registry.safu.safu), transaction.pure.address(input.user), transaction.pure(input.indexes)],
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results;
     // console.log(JSON.stringify(results));
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];

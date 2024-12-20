@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 /**
@@ -17,7 +17,7 @@ import { TypusConfig } from "src/utils";
 
 export function getNewStrategyTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
         vaultIndex: string;
@@ -35,19 +35,19 @@ export function getNewStrategyTx(
         input.typeArguments[1] == "0x2::sui::SUI" ||
         input.typeArguments[1] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
     ) {
-        let [input_coin] = tx.splitCoins(tx.gas, [tx.pure(input.amount)]);
+        let [input_coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)]);
         tx.moveCall({
             target: `${config.package.dovSingle}::auto_bid::new_strategy`,
             typeArguments: input.typeArguments,
             arguments: [
                 tx.object(config.registry.dov.dovSingle),
                 tx.object(config.registry.dov.autoBid),
-                tx.pure(input.vaultIndex),
-                tx.pure(input.signalIndex),
-                tx.pure(input.size),
-                tx.pure(input.pricePercentage),
-                tx.pure(input.maxTimes),
-                tx.pure(input.targetRounds),
+                tx.pure.u64(input.vaultIndex),
+                tx.pure.u64(input.signalIndex),
+                tx.pure.u64(input.size),
+                tx.pure.u64(input.pricePercentage),
+                tx.pure.u64(input.maxTimes),
+                tx.pure.vector("u64", input.targetRounds),
                 input_coin,
             ],
         });
@@ -61,7 +61,7 @@ export function getNewStrategyTx(
             );
         }
 
-        let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+        let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
 
         tx.moveCall({
             target: `${config.package.dovSingle}::auto_bid::new_strategy`,
@@ -69,12 +69,12 @@ export function getNewStrategyTx(
             arguments: [
                 tx.object(config.registry.dov.dovSingle),
                 tx.object(config.registry.dov.autoBid),
-                tx.pure(input.vaultIndex),
-                tx.pure(input.signalIndex),
-                tx.pure(input.size),
-                tx.pure(input.pricePercentage),
-                tx.pure(input.maxTimes),
-                tx.pure(input.targetRounds),
+                tx.pure.u64(input.vaultIndex),
+                tx.pure.u64(input.signalIndex),
+                tx.pure.u64(input.size),
+                tx.pure.u64(input.pricePercentage),
+                tx.pure.u64(input.maxTimes),
+                tx.pure.vector("u64", input.targetRounds),
                 input_coin,
             ],
         });
@@ -95,7 +95,7 @@ export function getNewStrategyTx(
 
 export function getCloseStrategyTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
         vaultIndex: string;
@@ -110,9 +110,9 @@ export function getCloseStrategyTx(
         arguments: [
             tx.object(config.registry.dov.dovSingle),
             tx.object(config.registry.dov.autoBid),
-            tx.pure(input.vaultIndex),
-            tx.pure(input.signalIndex),
-            tx.pure(input.strategyIndex),
+            tx.pure.u64(input.vaultIndex),
+            tx.pure.u64(input.signalIndex),
+            tx.pure.u64(input.strategyIndex),
         ],
     });
 
@@ -123,7 +123,7 @@ export function getCloseStrategyTx(
 
 export function getWithdrawProfitStrategyTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
         vaultIndex: string;
@@ -138,9 +138,9 @@ export function getWithdrawProfitStrategyTx(
         arguments: [
             tx.object(config.registry.dov.dovSingle),
             tx.object(config.registry.dov.autoBid),
-            tx.pure(input.vaultIndex),
-            tx.pure(input.signalIndex),
-            tx.pure(input.strategyIndex),
+            tx.pure.u64(input.vaultIndex),
+            tx.pure.u64(input.signalIndex),
+            tx.pure.u64(input.strategyIndex),
         ],
     });
 
@@ -166,7 +166,7 @@ export function getWithdrawProfitStrategyTx(
 
 export function getUpdateStrategyTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
         vaultIndex: string;
@@ -186,7 +186,7 @@ export function getUpdateStrategyTx(
         input.typeArguments[1] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
     ) {
         if (input.amount) {
-            let [input_coin] = tx.splitCoins(tx.gas, [tx.pure(input.amount)]);
+            let [input_coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)]);
 
             tx.moveCall({
                 target: `${config.package.dovSingle}::auto_bid::update_strategy`,
@@ -194,14 +194,14 @@ export function getUpdateStrategyTx(
                 arguments: [
                     tx.object(config.registry.dov.dovSingle),
                     tx.object(config.registry.dov.autoBid),
-                    tx.pure(input.vaultIndex),
-                    tx.pure(input.signalIndex),
-                    tx.pure(input.strategyIndex),
-                    tx.pure(input.size ? [input.size] : []),
-                    tx.pure(input.pricePercentage ? [input.pricePercentage] : []),
-                    tx.pure(input.maxTimes ? [input.maxTimes] : []),
-                    tx.pure(input.targetRounds),
-                    tx.makeMoveVec({ objects: [input_coin] }),
+                    tx.pure.u64(input.vaultIndex),
+                    tx.pure.u64(input.signalIndex),
+                    tx.pure.u64(input.strategyIndex),
+                    tx.pure.option("u64", input.size),
+                    tx.pure.option("u64", input.pricePercentage),
+                    tx.pure.option("u64", input.maxTimes),
+                    tx.pure.vector("u64", input.targetRounds),
+                    tx.makeMoveVec({ elements: [input_coin] }),
                 ],
             });
         } else {
@@ -211,14 +211,14 @@ export function getUpdateStrategyTx(
                 arguments: [
                     tx.object(config.registry.dov.dovSingle),
                     tx.object(config.registry.dov.autoBid),
-                    tx.pure(input.vaultIndex),
-                    tx.pure(input.signalIndex),
-                    tx.pure(input.strategyIndex),
-                    tx.pure(input.size ? [input.size] : []),
-                    tx.pure(input.pricePercentage ? [input.pricePercentage] : []),
-                    tx.pure(input.maxTimes ? [input.maxTimes] : []),
-                    tx.pure(input.targetRounds),
-                    tx.makeMoveVec({ objects: [] }),
+                    tx.pure.u64(input.vaultIndex),
+                    tx.pure.u64(input.signalIndex),
+                    tx.pure.u64(input.strategyIndex),
+                    tx.pure.option("u64", input.size),
+                    tx.pure.option("u64", input.pricePercentage),
+                    tx.pure.option("u64", input.maxTimes),
+                    tx.pure.vector("u64", input.targetRounds),
+                    tx.makeMoveVec({ elements: [] }),
                 ],
             });
         }
@@ -232,7 +232,7 @@ export function getUpdateStrategyTx(
             );
         }
 
-        let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+        let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
 
         tx.moveCall({
             target: `${config.package.dovSingle}::auto_bid::update_strategy`,
@@ -240,14 +240,14 @@ export function getUpdateStrategyTx(
             arguments: [
                 tx.object(config.registry.dov.dovSingle),
                 tx.object(config.registry.dov.autoBid),
-                tx.pure(input.vaultIndex),
-                tx.pure(input.signalIndex),
-                tx.pure(input.strategyIndex),
-                tx.pure(input.size ? [input.size] : []),
-                tx.pure(input.pricePercentage ? [input.pricePercentage] : []),
-                tx.pure(input.maxTimes ? [input.maxTimes] : []),
-                tx.pure(input.targetRounds),
-                tx.makeMoveVec({ objects: [input_coin] }),
+                tx.pure.u64(input.vaultIndex),
+                tx.pure.u64(input.signalIndex),
+                tx.pure.u64(input.strategyIndex),
+                tx.pure.option("u64", input.size),
+                tx.pure.option("u64", input.pricePercentage),
+                tx.pure.option("u64", input.maxTimes),
+                tx.pure.vector("u64", input.targetRounds),
+                tx.makeMoveVec({ elements: [input_coin] }),
             ],
         });
     }

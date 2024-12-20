@@ -1,5 +1,5 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient } from "@mysten/sui.js/client";
+import { Transaction } from "@mysten/sui/transactions";
+import { SuiClient } from "@mysten/sui/client";
 import { BcsReader } from "@mysten/bcs";
 import { TypusConfig } from "src/utils";
 import { SENDER } from "src/constants";
@@ -13,21 +13,21 @@ export async function getAirdrop(
     }
 ): Promise<string[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
-    transactionBlock.moveCall({
+    let transaction = new Transaction();
+    transaction.moveCall({
         target: `${config.package.typus}::airdrop::get_airdrop`,
         typeArguments: input.typeArguments,
         arguments: [
-            transactionBlock.pure(config.version.typus),
-            transactionBlock.pure(config.registry.typus.airdrop),
-            transactionBlock.pure(input.key),
-            transactionBlock.pure(input.user),
+            transaction.object(config.version.typus),
+            transaction.object(config.registry.typus.airdrop),
+            transaction.pure.string(input.key),
+            transaction.pure.address(input.user),
         ],
     });
     let results = (
         await provider.devInspectTransactionBlock({
             sender: SENDER,
-            transactionBlock,
+            transactionBlock: transaction,
         })
     ).results;
     // @ts-ignore

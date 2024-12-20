@@ -1,5 +1,5 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient } from "@mysten/sui.js/client";
+import { Transaction } from "@mysten/sui/transactions";
+import { SuiClient } from "@mysten/sui/client";
 import { BcsReader } from "@mysten/bcs";
 import { SENDER } from "src/constants";
 import { AddressFromBytes, TypusConfig } from "src/utils";
@@ -14,15 +14,15 @@ interface Record {
 
 export async function getLaunchAuctionBids(config: TypusConfig): Promise<Record[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     let target = `${config.package.launch.auction}::auction::get_records_bcs` as any;
-    let transactionBlockArguments = [transactionBlock.pure(config.object.launchAuction)];
-    transactionBlock.moveCall({
+    let transactionBlockArguments = [transaction.pure(config.object.launchAuction)];
+    transaction.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -52,15 +52,15 @@ export interface UserBidData {
 
 export async function getBidderInfo(config: TypusConfig, bidder: string): Promise<UserBidData> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     let target = `${config.package.launch.auction}::auction::get_bidder_info` as any;
-    let transactionBlockArguments = [transactionBlock.pure(config.object.launchAuction), transactionBlock.pure(bidder)];
-    transactionBlock.moveCall({
+    let transactionBlockArguments = [transaction.pure(config.object.launchAuction), transaction.pure(bidder)];
+    transaction.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     // console.log(bytes);
@@ -82,14 +82,14 @@ export async function getBidderInfo(config: TypusConfig, bidder: string): Promis
 
 export async function getBiddersInfo(config: TypusConfig, bidders: string[]): Promise<{ [key: string]: [UserBidData] }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     bidders.forEach((bidder) => {
-        transactionBlock.moveCall({
+        transaction.moveCall({
             target: `${config.package.launch.auction}::auction::get_bidder_info`,
-            arguments: [transactionBlock.object(config.object.launchAuction), transactionBlock.pure(bidder)],
+            arguments: [transaction.object(config.object.launchAuction), transaction.pure(bidder)],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transaction, sender: SENDER })).results;
     let bids: { [key: string]: [UserBidData] } = {};
     results?.forEach((result, i) => {
         // @ts-ignore

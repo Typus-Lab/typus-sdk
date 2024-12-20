@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 /**
@@ -29,7 +29,7 @@ import { TypusConfig } from "src/utils";
  */
 export async function getUpdateConfigTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     requests: {
         index: string;
         input: {
