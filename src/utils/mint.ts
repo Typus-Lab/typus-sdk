@@ -4,7 +4,7 @@ export async function getMintTokenTx(packageId: string, registry: string, module
     let tx = new Transaction();
     tx.moveCall({
         target: `${packageId}::${moduleName}::mint`,
-        arguments: [tx.pure(registry), tx.pure(amount)],
+        arguments: [tx.object(registry), tx.pure.u64(amount)],
     });
 
     return tx;
