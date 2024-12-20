@@ -57,9 +57,9 @@ export async function getVaultData(
     transaction.moveCall({
         target: `${config.package.safu}::view_function::get_vault_data_bcs`,
         typeArguments: [`${config.package.framework}::vault::TypusBidReceipt`],
-        arguments: [transaction.pure(config.registry.safu.safu), transaction.pure(input.indexes)],
+        arguments: [transaction.object(config.registry.safu.safu), transaction.pure.vector("u64", input.indexes)],
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // console.log(JSON.stringify(results));
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
@@ -191,9 +191,13 @@ export async function getShareData(
     transaction.moveCall({
         target: `${config.package.safu}::view_function::get_share_data_bcs`,
         typeArguments: [],
-        arguments: [transaction.pure(config.registry.safu.safu), transaction.pure.address(input.user), transaction.pure(input.indexes)],
+        arguments: [
+            transaction.object(config.registry.safu.safu),
+            transaction.pure.address(input.user),
+            transaction.pure.vector("u64", input.indexes),
+        ],
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // console.log(JSON.stringify(results));
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
