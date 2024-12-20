@@ -23,7 +23,7 @@ import { Transaction } from "@mysten/sui/dist/cjs/transactions";
 
     var transaction = await getIsWhitelistTx(config, new Transaction(), { pool, user });
 
-    let results = (await provider.devInspectTransactionBlock({ transaction, sender: user })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: user })).results;
     // @ts-ignore
     const isWhitelist = results![0].returnValues[0][0] == 1;
     console.log("isWhitelist: " + isWhitelist);

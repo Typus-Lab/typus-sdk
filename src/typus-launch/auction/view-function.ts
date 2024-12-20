@@ -22,7 +22,7 @@ export async function getLaunchAuctionBids(config: TypusConfig): Promise<Record[
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transaction, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -60,7 +60,7 @@ export async function getBidderInfo(config: TypusConfig, bidder: string): Promis
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transaction, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     // console.log(bytes);
@@ -89,7 +89,7 @@ export async function getBiddersInfo(config: TypusConfig, bidders: string[]): Pr
             arguments: [transaction.object(config.object.launchAuction), transaction.pure(bidder)],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ transaction, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     let bids: { [key: string]: [UserBidData] } = {};
     results?.forEach((result, i) => {
         // @ts-ignore

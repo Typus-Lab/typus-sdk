@@ -143,13 +143,13 @@ export async function getVaults(
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transaction = new Transaction();
     let target = `${config.package.dovSingle}::tds_view_function::get_vault_data_bcs` as any;
-    let transactionBlockArguments = [transaction.pure(config.registry.dov.dovSingle), transaction.pure(input.indexes)];
+    let transactionBlockArguments = [transaction.object(config.registry.dov.dovSingle), transaction.pure.vector("u64", input.indexes)];
     transaction.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transaction, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     // console.log(JSON.stringify(bytes));
@@ -394,13 +394,13 @@ export async function getAuctions(
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transaction = new Transaction();
     let target = `${config.package.dovSingle}::tds_view_function::get_auction_bcs` as any;
-    let transactionBlockArguments = [transaction.pure(config.registry.dov.dovSingle), transaction.pure(input.indexes)];
+    let transactionBlockArguments = [transaction.object(config.registry.dov.dovSingle), transaction.pure.vector("u64", input.indexes)];
     transaction.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transaction, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     // console.log(JSON.stringify(bytes));
@@ -473,13 +473,13 @@ export async function getAuctionBids(
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transaction = new Transaction();
     let target = `${config.package.dovSingle}::tds_view_function::get_auction_bids_bcs` as any;
-    let transactionBlockArguments = [transaction.pure(config.registry.dov.dovSingle), transaction.pure(input.index)];
+    let transactionBlockArguments = [transaction.object(config.registry.dov.dovSingle), transaction.pure.u64(input.index)];
     transaction.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transaction, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -530,10 +530,10 @@ export async function getDepositShares(
     let transaction = new Transaction();
     let target = `${config.package.dovSingle}::tds_view_function::get_deposit_shares_bcs` as any;
     let transactionBlockArguments = [
-        transaction.pure(config.registry.dov.dovSingle),
+        transaction.object(config.registry.dov.dovSingle),
         transaction.makeMoveVec({
             type: `${config.package.framework}::vault::TypusDepositReceipt`,
-            objects: input.receipts.map((id) => transaction.object(id)),
+            elements: input.receipts.map((id) => transaction.object(id)),
         }),
         transaction.pure.address(input.user),
     ];
@@ -542,7 +542,7 @@ export async function getDepositShares(
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transaction, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -612,10 +612,10 @@ export async function getMyBids(
     let transaction = new Transaction();
     let target = `${config.package.dovSingle}::tds_view_function::get_my_bids_bcs` as any;
     let transactionBlockArguments = [
-        transaction.pure(config.registry.dov.dovSingle),
+        transaction.object(config.registry.dov.dovSingle),
         transaction.makeMoveVec({
             type: `${config.package.framework}::vault::TypusBidReceipt`,
-            objects: input.receipts.map((id) => transaction.object(id)),
+            elements: input.receipts.map((id) => transaction.object(id)),
         }),
     ];
     transaction.moveCall({
@@ -623,7 +623,7 @@ export async function getMyBids(
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transaction, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -672,7 +672,7 @@ export async function getRefundShares(
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transaction = new Transaction();
     let target = `${config.package.dovSingle}::tds_view_function::get_refund_shares_bcs` as any;
-    let transactionBlockArguments = [transaction.pure(config.registry.dov.dovSingle)];
+    let transactionBlockArguments = [transaction.object(config.registry.dov.dovSingle)];
     input.typeArguments.forEach((typeArgument) => {
         transaction.moveCall({
             target,
@@ -682,7 +682,7 @@ export async function getRefundShares(
     });
     let results = (
         await provider.devInspectTransactionBlock({
-            transaction,
+            transactionBlock: transaction,
             sender: input.user,
         })
     ).results;

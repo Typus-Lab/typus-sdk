@@ -45,7 +45,7 @@ export function getTokenRaiseFundTx(
                               arguments: [
                                   tx.object(typusTokenRegistry),
                                   tx.makeMoveVec({ elements: input.raiseCoins }),
-                                  tx.pure(input.raiseAmount),
+                                  tx.pure.u64(input.raiseAmount),
                               ],
                           })
                       ),
@@ -67,11 +67,11 @@ export function getTokenRaiseFundTx(
             tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusDepositReceipt`,
-                objects: input.receipts.map((receipt) => tx.object(receipt)),
+                elements: input.receipts.map((receipt) => tx.object(receipt)),
             }),
             tx.object(typusTokenBalance),
-            tx.pure(input.raiseFromPremium),
-            tx.pure(input.raiseFromInactive),
+            tx.pure.bool(input.raiseFromPremium),
+            tx.pure.bool(input.raiseFromInactive),
             tx.object(CLOCK),
         ],
     });
@@ -122,19 +122,19 @@ export function getTokenReduceFundTx(
             tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusDepositReceipt`,
-                objects: input.receipts.map((receipt) => tx.object(receipt)),
+                elements: input.receipts.map((receipt) => tx.object(receipt)),
             }),
-            tx.pure(input.reduceFromWarmup),
-            tx.pure(input.reduceFromActive),
-            tx.pure(input.reduceFromPremium),
-            tx.pure(input.reduceFromInactive),
-            tx.pure(input.reduceFromIncentive),
+            tx.pure.u64(input.reduceFromWarmup),
+            tx.pure.u64(input.reduceFromActive),
+            tx.pure.bool(input.reduceFromPremium),
+            tx.pure.bool(input.reduceFromInactive),
+            tx.pure.bool(input.reduceFromIncentive),
             tx.object(CLOCK),
         ],
     });
     tx.moveCall({
         target: `${config.package.framework}::vault::transfer_deposit_receipt`,
-        arguments: [tx.object(result[0]), tx.pure(input.user)],
+        arguments: [tx.object(result[0]), tx.pure.address(input.user)],
     });
     if (input.typeArguments[0] == input.typusTokenType) {
         let typusToken = tx.moveCall({
@@ -151,7 +151,7 @@ export function getTokenReduceFundTx(
         tx.moveCall({
             target: `${config.package.framework}::utils::transfer_balance`,
             typeArguments: [input.typeArguments[0]],
-            arguments: [tx.object(result[1]), tx.pure(input.user)],
+            arguments: [tx.object(result[1]), tx.pure.address(input.user)],
         });
     }
     if (input.typeArguments[1] == input.typusTokenType) {
@@ -169,7 +169,7 @@ export function getTokenReduceFundTx(
         tx.moveCall({
             target: `${config.package.framework}::utils::transfer_balance`,
             typeArguments: [input.typeArguments[1]],
-            arguments: [tx.object(result[2]), tx.pure(input.user)],
+            arguments: [tx.object(result[2]), tx.pure.address(input.user)],
         });
     }
     if (input.typeArguments[2] == input.typusTokenType) {
@@ -187,7 +187,7 @@ export function getTokenReduceFundTx(
         tx.moveCall({
             target: `${config.package.framework}::utils::transfer_balance`,
             typeArguments: [input.typeArguments[2]],
-            arguments: [tx.object(result[3]), tx.pure(input.user)],
+            arguments: [tx.object(result[3]), tx.pure.address(input.user)],
         });
     }
 
@@ -227,7 +227,7 @@ export function getTokenNewBidTx(
         arguments: [
             tx.object(typusTokenRegistry),
             tx.makeMoveVec({ elements: input.coins.map((id) => tx.object(id)) }),
-            tx.pure(input.premium_required),
+            tx.pure.u64(input.premium_required),
         ],
     });
     let result = tx.moveCall({
@@ -241,8 +241,8 @@ export function getTokenNewBidTx(
             tx.object(config.registry.dov.dovSingle),
             tx.pure.u64(input.index),
             tx.makeMoveVec({ elements: [mToken] }),
-            tx.pure(input.size),
-            tx.pure("0x6"),
+            tx.pure.u64(input.size),
+            tx.object(CLOCK),
         ],
     });
     tx.transferObjects([tx.object(result[0])], input.user);
@@ -288,7 +288,7 @@ export function getTokenExerciseTx(
             tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusBidReceipt`,
-                objects: input.receipts.map((receipt) => tx.object(receipt)),
+                elements: input.receipts.map((receipt) => tx.object(receipt)),
             }),
         ],
     });
@@ -381,11 +381,11 @@ export function getTokenCompoundWithRedeemTx(
             tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusDepositReceipt`,
-                objects: input.receipts.map((receipt) => tx.object(receipt)),
+                elements: input.receipts.map((receipt) => tx.object(receipt)),
             }),
             tx.object(raiseBalance),
-            tx.pure(true),
-            tx.pure(false),
+            tx.pure.bool(true),
+            tx.pure.bool(false),
             tx.object(CLOCK),
         ],
     });
