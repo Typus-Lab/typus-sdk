@@ -28,7 +28,7 @@ export function vote(
             tx.object(config.registry.launch.improvementProposal),
             tx.object(config.registry.launch.veTypus),
             tx.pure.u64(input.index),
-            tx.pure(input.yes),
+            tx.pure.bool(input.yes),
             tx.object(CLOCK),
         ],
     });

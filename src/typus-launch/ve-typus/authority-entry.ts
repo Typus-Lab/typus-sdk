@@ -24,8 +24,8 @@ export function updateRegistrySetting(
         arguments: [
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
-            tx.pure(input.settingIndex),
-            tx.pure(input.value),
+            tx.pure.u64(input.settingIndex),
+            tx.pure.u64(input.value),
         ],
     });
 }
@@ -68,7 +68,7 @@ export function delegateMint(
             tx.object(config.registry.launch.veTypus),
             tx.pure.address(input.user),
             coin,
-            tx.pure(input.lockUpPeriod),
+            tx.pure.u64(input.lockUpPeriod),
             tx.object(CLOCK),
         ],
     });
@@ -98,7 +98,7 @@ export function delegateBurn(
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
             tx.pure.address(input.user),
-            tx.pure(input.veTypus),
+            tx.pure.u64(input.veTypus),
             tx.object(CLOCK),
         ],
     });
@@ -130,8 +130,8 @@ export function delegateRenew(
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
             tx.pure.address(input.user),
-            tx.pure(input.veTypus),
-            tx.pure(input.lockUpPeriod),
+            tx.pure.u64(input.veTypus),
+            tx.pure.u64(input.lockUpPeriod),
             tx.object(CLOCK),
         ],
     });
