@@ -1,6 +1,7 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
+import { updateVotes } from "../improvement-proposal";
 
 /**
     public fun mint(
@@ -41,6 +42,7 @@ export function mint(
             tx.object(CLOCK),
         ],
     });
+    updateVotes(config, tx);
 }
 
 /**
@@ -90,7 +92,7 @@ export function renew(
         lockUpPeriod: string;
     }
 ) {
-    let result = tx.moveCall({
+    tx.moveCall({
         target: `${config.package.launch.veTypus}::ve_typus::renew`,
         arguments: [
             tx.object(config.version.launch.veTypus),
@@ -100,4 +102,5 @@ export function renew(
             tx.object(CLOCK),
         ],
     });
+    updateVotes(config, tx);
 }
