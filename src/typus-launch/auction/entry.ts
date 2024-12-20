@@ -27,7 +27,7 @@ export function bidTx(
         arguments: [
             tx.object(config.version.launch.auction),
             tx.object(config.object.launchAuction),
-            tx.pure(input.size),
+            tx.pure.u64(input.size),
             input_coin,
             tx.object(CLOCK),
         ],
@@ -69,8 +69,8 @@ export function whitelistTx(config: TypusConfig, tx: Transaction, users: string[
         arguments: [
             tx.object(config.version.launch.auction),
             tx.object(config.object.launchAuction),
-            tx.pure(users),
-            tx.pure(sizes),
+            tx.pure.vector("address", users),
+            tx.pure.vector("u64", sizes),
             tx.object(CLOCK),
         ],
     });

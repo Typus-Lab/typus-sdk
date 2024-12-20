@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { isSUI } from "src/_dependencies/source/0x2/sui/structs";
+import { isSUI } from "src/typus-perp/_dependencies/source/0x2/sui/structs";
 import { TypusConfig } from "src/utils";
 
 /**
@@ -43,10 +43,10 @@ export async function setAirdrop(
         arguments: [
             tx.object(config.version.launch.airdrop),
             tx.object(config.registry.launch.airdrop),
-            tx.pure(input.key),
+            tx.pure.string(input.key),
             tx.object(coin),
-            tx.pure(input.users),
-            tx.pure(input.values),
+            tx.pure.vector("address", input.users),
+            tx.pure.vector("u64", input.values),
         ],
     });
 }
@@ -70,6 +70,6 @@ export async function removeAirdrop(
     tx.moveCall({
         target: `${config.package.launch.airdrop}::airdrop::remove_airdrop`,
         typeArguments: input.typeArguments,
-        arguments: [tx.object(config.version.launch.airdrop), tx.object(config.registry.launch.airdrop), tx.pure(input.key)],
+        arguments: [tx.object(config.version.launch.airdrop), tx.object(config.registry.launch.airdrop), tx.pure.string(input.key)],
     });
 }

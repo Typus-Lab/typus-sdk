@@ -26,7 +26,7 @@ export async function getAirdrop(
     let transaction = new Transaction();
     transaction.moveCall({
         target: `${config.package.launch.airdrop}::airdrop::get_airdrop_bcs`,
-        arguments: [transaction.pure(config.registry.launch.airdrop), transaction.pure.address(input.user)],
+        arguments: [transaction.object(config.registry.launch.airdrop), transaction.pure.address(input.user)],
     });
     // @ts-ignore
     let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results[0].returnValues[0][0];

@@ -16,7 +16,7 @@ export async function getLaunchAuctionBids(config: TypusConfig): Promise<Record[
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transaction = new Transaction();
     let target = `${config.package.launch.auction}::auction::get_records_bcs` as any;
-    let transactionBlockArguments = [transaction.pure(config.object.launchAuction)];
+    let transactionBlockArguments = [transaction.object(config.object.launchAuction)];
     transaction.moveCall({
         target,
         typeArguments: [],
@@ -54,7 +54,7 @@ export async function getBidderInfo(config: TypusConfig, bidder: string): Promis
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transaction = new Transaction();
     let target = `${config.package.launch.auction}::auction::get_bidder_info` as any;
-    let transactionBlockArguments = [transaction.pure(config.object.launchAuction), transaction.pure(bidder)];
+    let transactionBlockArguments = [transaction.object(config.object.launchAuction), transaction.pure.address(bidder)];
     transaction.moveCall({
         target,
         typeArguments: [],
@@ -86,7 +86,7 @@ export async function getBiddersInfo(config: TypusConfig, bidders: string[]): Pr
     bidders.forEach((bidder) => {
         transaction.moveCall({
             target: `${config.package.launch.auction}::auction::get_bidder_info`,
-            arguments: [transaction.object(config.object.launchAuction), transaction.pure(bidder)],
+            arguments: [transaction.object(config.object.launchAuction), transaction.pure.address(bidder)],
         });
     });
     let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
