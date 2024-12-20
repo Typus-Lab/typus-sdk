@@ -110,9 +110,9 @@ function drop_deposit(tx: Transaction, index: number, tag: number, users: string
         typeArguments: [],
         arguments: [
             tx.object("0xb44c0fa1ab40f7699be3dce02475965a636ed850348435abb3b797b273f6c551"),
-            tx.pure(index),
-            tx.pure(tag),
-            tx.pure(users),
+            tx.pure.u64(index),
+            tx.pure.u64(tag),
+            tx.pure.vector("address", users),
         ],
     });
 }

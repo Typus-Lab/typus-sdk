@@ -27,7 +27,7 @@ import { unsubscribe, getUserStake } from "src/typus-perp";
     });
 
     let dryrunRes = await provider.devInspectTransactionBlock({
-        transaction: tx,
+        transactionBlock: tx,
         sender: user,
     });
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("UnsubscribeEvent")));
