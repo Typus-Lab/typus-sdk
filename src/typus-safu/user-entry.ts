@@ -42,7 +42,7 @@ export function getRaiseFundTx(
                       tx.pure.address(input.user),
                       tx.makeMoveVec({
                           type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          objects: [tx.splitCoins(tx.gas, [tx.pure.u64(input.raiseAmount)])],
+                          elements: [tx.splitCoins(tx.gas, [tx.pure.u64(input.raiseAmount)])],
                       }),
                       tx.pure.u64(input.raiseAmount),
                   ],
@@ -54,7 +54,7 @@ export function getRaiseFundTx(
                       tx.pure.address(input.user),
                       tx.makeMoveVec({
                           type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          objects: input.raiseCoins.map((coin) => tx.object(coin)),
+                          elements: input.raiseCoins.map((coin) => tx.object(coin)),
                       }),
                       tx.pure.u64(input.raiseAmount),
                   ],
@@ -70,9 +70,9 @@ export function getRaiseFundTx(
             tx.object(config.registry.safu.safu),
             tx.pure.u64(input.index),
             tx.object(raiseBalance),
-            tx.pure(input.raiseFromDeactivating),
-            tx.pure(input.raiseFromInactive),
-            tx.pure(input.raiseFromReward),
+            tx.pure.u64(input.raiseFromDeactivating),
+            tx.pure.u64(input.raiseFromInactive),
+            tx.pure.u64(input.raiseFromReward),
             tx.object(CLOCK),
         ],
     });
@@ -118,9 +118,9 @@ export function getReduceFundTx(
             tx.object(config.version.safu),
             tx.object(config.registry.safu.safu),
             tx.pure.u64(input.index),
-            tx.pure(input.reduceFromWarmup),
-            tx.pure(input.reduceFromActive),
-            tx.pure(input.reduceFromInactive),
+            tx.pure.u64(input.reduceFromWarmup),
+            tx.pure.u64(input.reduceFromActive),
+            tx.pure.u64(input.reduceFromInactive),
             tx.object(CLOCK),
         ],
     });
