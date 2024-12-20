@@ -42,7 +42,7 @@ export async function getUpdateConfigTx(
             maxBidEntry?: string;
             depositFeeBp?: string;
             depositFeeShareBp?: string;
-            depositSharedFeePool?: string;
+            depositSharedFeePool?: number[];
             bidFeeBp?: string;
             depositIncentiveBp?: string;
             bidIncentiveBp?: string;
@@ -62,27 +62,27 @@ export async function getUpdateConfigTx(
             typeArguments: [],
             arguments: [
                 tx.object(config.registry.dov.dovSingle),
-                tx.pure(request.index),
-                tx.pure(request.input.oracleId ? [request.input.oracleId] : []),
-                tx.pure(request.input.depositLotSize ? [request.input.depositLotSize] : []),
-                tx.pure(request.input.bidLotSize ? [request.input.bidLotSize] : []),
-                tx.pure(request.input.minDepositSize ? [request.input.minDepositSize] : []),
-                tx.pure(request.input.minBidSize ? [request.input.minBidSize] : []),
-                tx.pure(request.input.maxDepositEntry ? [request.input.maxDepositEntry] : []),
-                tx.pure(request.input.maxBidEntry ? [request.input.maxBidEntry] : []),
-                tx.pure(request.input.depositFeeBp ? [request.input.depositFeeBp] : []),
-                tx.pure(request.input.depositFeeShareBp ? [request.input.depositFeeShareBp] : []),
-                tx.pure(request.input.depositSharedFeePool ? [request.input.depositSharedFeePool] : []),
-                tx.pure(request.input.bidFeeBp ? [request.input.bidFeeBp] : []),
-                tx.pure(request.input.depositIncentiveBp ? [request.input.depositIncentiveBp] : []),
-                tx.pure(request.input.bidIncentiveBp ? [request.input.bidIncentiveBp] : []),
-                tx.pure(request.input.auctionDelayTsMs ? [request.input.auctionDelayTsMs] : []),
-                tx.pure(request.input.auctionDurationTsMs ? [request.input.auctionDurationTsMs] : []),
-                tx.pure(request.input.recoupDelayTsMs ? [request.input.recoupDelayTsMs] : []),
-                tx.pure(request.input.capacity ? [request.input.capacity] : []),
-                tx.pure(request.input.leverage ? [request.input.leverage] : []),
-                tx.pure(request.input.riskLevel ? [request.input.riskLevel] : []),
-                tx.pure(request.input.depositIncentiveBpDivisorDecimal ? [request.input.depositIncentiveBpDivisorDecimal] : []),
+                tx.pure.u64(request.index),
+                tx.pure.option("address", request.input.oracleId),
+                tx.pure.option("u64", request.input.depositLotSize),
+                tx.pure.option("u64", request.input.bidLotSize),
+                tx.pure.option("u64", request.input.minDepositSize),
+                tx.pure.option("u64", request.input.minBidSize),
+                tx.pure.option("u64", request.input.maxDepositEntry),
+                tx.pure.option("u64", request.input.maxBidEntry),
+                tx.pure.option("u64", request.input.depositFeeBp),
+                tx.pure.option("u64", request.input.depositFeeShareBp),
+                tx.pure.option("option<vector<u8>>", request.input.depositSharedFeePool), // ???
+                tx.pure.option("u64", request.input.bidFeeBp),
+                tx.pure.option("u64", request.input.depositIncentiveBp),
+                tx.pure.option("u64", request.input.bidIncentiveBp),
+                tx.pure.option("u64", request.input.auctionDelayTsMs),
+                tx.pure.option("u64", request.input.auctionDurationTsMs),
+                tx.pure.option("u64", request.input.recoupDelayTsMs),
+                tx.pure.option("u64", request.input.capacity),
+                tx.pure.option("u64", request.input.leverage),
+                tx.pure.option("u64", request.input.riskLevel),
+                tx.pure.option("u64", request.input.depositIncentiveBpDivisorDecimal),
             ],
         });
     });

@@ -125,7 +125,7 @@ export async function getIsWhitelistTx(
     tx.moveCall({
         target: `${config.package.nft}::discount_mint::is_whitelist`,
         typeArguments: [],
-        arguments: [tx.object(input.pool), tx.pure(input.user)],
+        arguments: [tx.object(input.pool), tx.pure.address(input.user)],
     });
 
     return tx;

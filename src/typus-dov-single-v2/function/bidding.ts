@@ -1,9 +1,8 @@
 import { AbbrStrategyName, Period, parseAssets } from "./vault";
 import { Auction, BidShare, Vault, getAuctions, getMyBids, getVaults } from "src/typus-dov-single-v2";
-import { checkNumber, countFloating, insertAt, getLatestPrice } from "src/utils";
+import { checkNumber, countFloating, insertAt, getLatestPrice, createPythClient, getLatestPriceUSD } from "src/utils";
 import { getUserStrategies } from "src/auto-bid";
 import { orderBy } from "lodash";
-import { PythHttpClient, getPythClusterApiUrl, getPythProgramKeyForCluster, PythCluster, PriceData } from "@pythnetwork/client";
 import { StableCoin, getTokenName, WrappedToken } from "./token";
 import { SuiClient, SuiObjectResponse } from "@mysten/sui/client";
 import { typeArgsToAssets } from "src/constants";
@@ -12,77 +11,6 @@ import { TypusConfig } from "src/utils";
 import moment from "moment";
 
 const PriceDecimal = BigNumber(10).pow(8);
-
-export const ASSET_INFO = {
-    BTC: {
-        product: "4aDoSXJ5o3AuvL7QFeR6h44jALQfTmUUCTVGDD6aoJTM",
-        price: "GVXRSBjFk6e6J3NbVPXohDJetcTjaeeuykUpbQF8UoMU",
-    },
-    ETH: {
-        product: "EMkxjGC1CQ7JLiutDbfYb7UKb3zm9SJcUmr1YicBsdpZ",
-        price: "JBu1AL4obBcCMqKBBxhpWCNUt136ijcuMZLFvTP7iWdB",
-    },
-    SUI: {
-        product: "2F8rfBf4z4SzNpeQstFTpLXTQQ7RNKsLFqPdbpybooCc",
-        price: "3Qub3HaAJaa2xNY7SUqPKd3vVwTqDfDDkEUMPjXD2c1q",
-    },
-    CETUS: {
-        product: "JDHPsM1zxsZ6TfDwpCVzo41DAZdRi6ZmhkzWU1iXvSQ",
-        price: "GTeC2JfBFrHuYkBivDQcNdLY74X5FRDLEJntnxPKRQbY",
-    },
-    SEI: {
-        product: "24bB1mRGsrrDVawJTCVYXrxbEz6ozztukPUKvcZCDcPz",
-        price: "6cUuAyAX3eXoiWkjFF77RQBEUF15AAMQ7d1hm4EPd3tv",
-    },
-    wUSDC: {
-        product: "8GWTTbNiXdmyZREXbjsZBmCRuzdPrW55dnZGDkTRjWvb",
-        price: "Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD",
-    },
-    USDT: {
-        product: "Av6XyAMJnyi68FdsKSPYgzfXGjYrrt6jcAMwtvzLCqaM",
-        price: "3vxLXJqLqF3JG5TCbYycbKWRBbCJQLxQmBGCkyqEEefL",
-    },
-    TURBOS: {
-        product: "8DZUgXNQo5Um1pqo4gzv9oWPUZpyKV9nXm51gysZFMef",
-        price: "HoxttzPFzcPvpZhUY8LCLkFNn9keDnBrctno4wXEhpFk",
-    },
-    APT: {
-        product: "6bQMDtuAmRgjvymdWk9w4tTc9YyuXcjMxF8MyPHXejsx",
-        price: "FNNvb1AFDnDVPkocEri8mWbJ1952HQZtFLuwPiUjSJQ",
-    },
-    SOL: {
-        product: "ALP8SdU9oARYVLgLR7LrqMNCYBnhtnQz1cj6bwgwQmgj",
-        price: "H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG",
-    },
-    INJ: {
-        product: "5Q5kyCVzssrGMd2BniSdVeRwjNWrGGrFhMrgGt4zURyA",
-        price: "9EdtbaivHQYA4Nh3XzGR6DwRaoorqXYnmpfsnFhvwuVj",
-    },
-    JUP: {
-        product: "AykbyeHZbUbEtEAPVpBLoPAMHBrUrDMtXJkPWZw4TRDX",
-        price: "g6eRCbboSwK4tSWngn773RCMexr1APQr4uA9bGZBYfo",
-    },
-    HASUI: {
-        product: "FGJutsZ3Hr9BaamiNUq369AamUEMArCxFeMnjZZ1u4oG",
-        price: "7Y9jRRHvqig2wdSkjnACwt1SV1qocjY81C9nKKVJ6zJs",
-    },
-    VSUI: {
-        product: "9L4zWUnRWEqHT9fvH5WkmQgXf7qrr97SGV4pofTSdK5k",
-        price: "6vWPEigSDaAi6m6HuX24aK4fJGJxvQZ8TLQKADC65S2S",
-    },
-    AUSD: {
-        product: "GHXtvZLRq3WGm7DWUke5UdB8P6Jb4MuSwWjd72gGFPc8",
-        price: "FeHsLbpPsJ7JTBPGKqhBTzvNuX5bjrm4Q6HdgXWgKW8Z",
-    },
-    FUD: {
-        product: "2fcvX3is1N5vy17xeqi2x5t7ShFKPaBx91UTH73DvTH3",
-        price: "89mKNz2WRvoPXy1mbRdaptLPYHsaYBpqmh5oxk2xD4Da",
-    },
-    USDY: {
-        product: "555ugWQAae89KU9t9SBWAZTHZtQNkQ18XumbzgxDXQmZ",
-        price: "GKMnwKMJS97DZHQS9mBquF15cEbgNKHvoayz8uamBp1T",
-    },
-};
 
 export const tokenOrder: { [key: string]: number } = {
     // Basically it's a to z but put SUI at first
@@ -169,101 +97,6 @@ export interface CoinInfo {
 }
 
 export const IncentiveRateBp = 4;
-
-const DefaultOracleDecimal: { [key: string]: string } = {
-    ETH: "8",
-    SUI: "8",
-    AFSUI: "8",
-    BTC: "8",
-    DOGE: "8",
-    APT: "8",
-    SOL: "8",
-    USDC: "8",
-    wUSDC: "8",
-    USDT: "8",
-    CETUS: "8",
-    TURBOS: "8",
-    NAVX: "8",
-    JUP: "8",
-    BUCK: "8",
-    USDY: "8",
-    SEI: "8",
-    FUD: "8",
-    MFUD: "8",
-    BLUB: "8",
-    MBLUB: "8",
-    INJ: "8",
-    SCA: "8",
-    VSUI: "8",
-    HASUI: "8",
-};
-
-export const parsePythOracleData = (data: PriceData[], decimals: { [key: string]: string }) => {
-    let prices: { [key: string]: CoinInfo } = {};
-    Object.entries(ASSET_INFO).forEach((p) => {
-        let asset = p[0].toUpperCase();
-        let coinData = data.find((s) => {
-            return s.productAccountKey.toString() == p[1].product;
-        });
-        let decimal = decimals[asset];
-        if (decimal && coinData) {
-            prices[asset.toLowerCase()] = {
-                price: BigNumber(coinData.price ?? 0)
-                    .multipliedBy(BigNumber(10).pow(decimal))
-                    .toString(),
-                decimal,
-                quote: "usd",
-            };
-            if (WrappedToken[asset]) {
-                prices[WrappedToken[asset].toLowerCase()] = {
-                    price: BigNumber(coinData.price ?? 0)
-                        .multipliedBy(BigNumber(10).pow(decimal))
-                        .toString(),
-                    decimal,
-                    quote: "usd",
-                };
-            }
-        }
-    });
-    return prices;
-};
-
-export const fetchPrices = async (provider: SuiClient, config: TypusConfig): Promise<{ [key: string]: CoinInfo }> => {
-    // let coinObjects = await provider.multiGetObjects({
-    //     ids: Object.values(config.oracle),
-    //     options: { showContent: true },
-    // });
-
-    let oracleDecimal: { [key: string]: string } = {
-        ...DefaultOracleDecimal,
-    };
-    // console.log(oracleDecimal);
-
-    // coinObjects.forEach((c) => {
-    //     // @ts-ignore
-    //     oracleDecimal[c.data?.content.fields.base_token] =
-    //         // @ts-ignore
-    //         c.data?.content.fields.decimal;
-    // });
-
-    let PYTHNET_CLUSTER_NAME: PythCluster = "pythnet";
-    // WIP: @WayneAl to fix
-    let connection = new Connection(getPythClusterApiUrl(PYTHNET_CLUSTER_NAME));
-    let pythPublicKey = getPythProgramKeyForCluster(PYTHNET_CLUSTER_NAME);
-    let pythClient = new PythHttpClient(connection, pythPublicKey);
-    let priceData = await pythClient.getAssetPricesFromAccounts(Object.values(ASSET_INFO).map((a) => a.price));
-    let prices = parsePythOracleData(priceData, oracleDecimal);
-    // console.log(prices);
-
-    let mblub = await getLatestPrice("MBLUBUSDC");
-    let typus = await getLatestPrice("TYPUSUSDC");
-
-    return {
-        mblub: { price: mblub.toString(), decimal: "8", quote: "usd" },
-        typus: { price: typus.toString(), decimal: "8", quote: "usd" },
-        ...prices,
-    };
-};
 
 export const calcIncentiveRate = (incentiveBp) => {
     let incentiveRateBp = BigNumber(incentiveBp).div(BigNumber(10).pow(IncentiveRateBp));
@@ -700,17 +533,14 @@ export async function fetchUserBids(
     config: TypusConfig,
     user: string,
     vaultsInfo: { [key: string]: Vault },
-    userReceipts: { [key: string]: Receipt[] },
-    prices?: { [key: string]: CoinInfo }
+    userReceipts: { [key: string]: Receipt[] }
 ) {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
     let userStrategies = await getUserStrategies(config, { user });
     // console.log(userStrategies);
 
     let auctions = await getAuctions(config, { indexes: [] });
-    if (typeof prices === "undefined") {
-        prices = await fetchPrices(provider, config);
-    }
+    let prices = await getLatestPriceUSD();
+
     // Step 2: sort receipts and flat receipts
     let { sortedBidReceipts, bidVaultsInfo } = parseBidReceipt(Object.values(vaultsInfo), userReceipts);
 
@@ -724,9 +554,7 @@ export async function fetchUserBids(
         let auction = auctions ? auctions[bidVaultInfo.vaultInfo.info.index] : null;
         let [dToken, bToken, oToken] = parseAssets(bidVaultInfo.vaultInfo.info);
         if (bidShare) {
-            let price = BigNumber(prices[oToken.toLowerCase()].price)
-                .div(BigNumber(10).pow(prices[oToken.toLowerCase()].decimal))
-                .toString();
+            let price = prices[oToken.toUpperCase()].toString();
             let data = parseBid(bidVaultInfo, bidShare, auction, price, false);
             let checkExistVault = bidsFromBidShares.find(
                 (p) => p.vaultIndex === bidVaultInfo.vaultInfo.info.index && p.receiptsVid.includes(bidVaultInfo.receipt.vid)

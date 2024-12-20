@@ -39,24 +39,24 @@ export function getRaiseFundTx(
                   target: `${config.package.framework}::utils::delegate_extract_balance`,
                   typeArguments: [input.typeArguments[0]],
                   arguments: [
-                      tx.pure(input.user),
+                      tx.pure.address(input.user),
                       tx.makeMoveVec({
                           type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          objects: [tx.splitCoins(tx.gas, [tx.pure(input.raiseAmount)])],
+                          objects: [tx.splitCoins(tx.gas, [tx.pure.u64(input.raiseAmount)])],
                       }),
-                      tx.pure(input.raiseAmount),
+                      tx.pure.u64(input.raiseAmount),
                   ],
               })
             : tx.moveCall({
                   target: `${config.package.framework}::utils::delegate_extract_balance`,
                   typeArguments: [input.typeArguments[0]],
                   arguments: [
-                      tx.pure(input.user),
+                      tx.pure.address(input.user),
                       tx.makeMoveVec({
                           type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
                           objects: input.raiseCoins.map((coin) => tx.object(coin)),
                       }),
-                      tx.pure(input.raiseAmount),
+                      tx.pure.u64(input.raiseAmount),
                   ],
               });
     let result = tx.moveCall({
@@ -127,7 +127,7 @@ export function getReduceFundTx(
     tx.moveCall({
         target: `${config.package.framework}::utils::transfer_balance`,
         typeArguments: [input.typeArguments[0]],
-        arguments: [tx.object(result[0]), tx.pure(input.user)],
+        arguments: [tx.object(result[0]), tx.pure.address(input.user)],
     });
 
     return tx;
@@ -158,7 +158,7 @@ export function getClaimRewardTx(
     tx.moveCall({
         target: `${config.package.framework}::utils::transfer_balance`,
         typeArguments: [input.typeArguments[0]],
-        arguments: [tx.object(result[0]), tx.pure(input.user)],
+        arguments: [tx.object(result[0]), tx.pure.address(input.user)],
     });
 
     return tx;

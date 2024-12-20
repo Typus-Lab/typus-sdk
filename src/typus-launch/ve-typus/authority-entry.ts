@@ -66,7 +66,7 @@ export function delegateMint(
         arguments: [
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
-            tx.pure(input.user),
+            tx.pure.address(input.user),
             coin,
             tx.pure(input.lockUpPeriod),
             tx.object(CLOCK),
@@ -97,7 +97,7 @@ export function delegateBurn(
         arguments: [
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
-            tx.pure(input.user),
+            tx.pure.address(input.user),
             tx.pure(input.veTypus),
             tx.object(CLOCK),
         ],
@@ -129,7 +129,7 @@ export function delegateRenew(
         arguments: [
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
-            tx.pure(input.user),
+            tx.pure.address(input.user),
             tx.pure(input.veTypus),
             tx.pure(input.lockUpPeriod),
             tx.object(CLOCK),
