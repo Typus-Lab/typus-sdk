@@ -4,20 +4,23 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { TypusConfig } from "src/utils";
 import { getNewStrategyTx } from "src/auto-bid";
 import { Transaction } from "@mysten/sui/transactions";
+import { tokenType } from "src/constants";
+import mnemonic from "mnemonic.json";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET", null);
-    let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    let NETWORK: "MAINNET" | "TESTNET" = "TESTNET";
+    let config = await TypusConfig.default(NETWORK, null);
+    let keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
-    let depositToken = "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC";
-    let bidToken = "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC";
+    let depositToken = tokenType[NETWORK]["TYPUS"];
+    let bidToken = tokenType[NETWORK]["TYPUS"];
     let typeArguments = [depositToken, bidToken];
-    let vaultIndex = "40";
+    let vaultIndex = "29";
     let signalIndex = "0";
     let coins = (await provider.getCoins({ owner: keypair.toSuiAddress(), coinType: bidToken })).data.map((coin) => coin.coinObjectId);
-    let amount = "10000000000";
-    let size = "30000000000";
+    let amount = "1000000000000";
+    let size = "100000000000";
     let pricePercentage = "40";
     let maxTimes = "10";
     let targetRounds = [];
