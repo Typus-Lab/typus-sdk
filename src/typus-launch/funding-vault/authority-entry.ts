@@ -20,7 +20,11 @@ export function newVault(
     tx.moveCall({
         target: `${config.package.launch.fundingVault}::funding_vault::new_vault`,
         typeArguments: input.typeArguments,
-        arguments: [tx.object(config.version.launch.fundingVault), tx.object(config.registry.launch.fundingVault), tx.pure(input.config)],
+        arguments: [
+            tx.object(config.version.launch.fundingVault),
+            tx.object(config.registry.launch.fundingVault),
+            tx.pure.vector("u64", input.config),
+        ],
     });
 }
 
@@ -46,8 +50,8 @@ export function updateRegistrySetting(
         arguments: [
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
-            tx.pure(input.settingIndex),
-            tx.pure(input.value),
+            tx.pure.u64(input.settingIndex),
+            tx.pure.u64(input.value),
         ],
     });
 }
@@ -77,8 +81,8 @@ export function updateInfo(
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
             tx.pure.u64(input.index),
-            tx.pure(input.infoIndex),
-            tx.pure(input.value),
+            tx.pure.u64(input.infoIndex),
+            tx.pure.u64(input.value),
         ],
     });
 }
@@ -108,8 +112,8 @@ export function updateConfig(
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
             tx.pure.u64(input.index),
-            tx.pure(input.configIndex),
-            tx.pure(input.value),
+            tx.pure.u64(input.configIndex),
+            tx.pure.u64(input.value),
         ],
     });
 }
@@ -166,7 +170,7 @@ export function withdrawFundFromDeepbookBalanceManager(
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
             tx.pure.u64(input.index),
-            tx.pure(input.amount ? [input.amount] : []),
+            tx.pure.option("u64", input.amount),
         ],
     });
 }
@@ -243,8 +247,8 @@ export function withdrawFromDeepbookBalanceManager(
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
             tx.pure.u64(input.index),
-            tx.pure(input.amount ? [input.amount] : []),
-            tx.pure(input.recipient),
+            tx.pure.option("u64", input.amount),
+            tx.pure.address(input.recipient),
         ],
     });
 }
@@ -322,7 +326,7 @@ export function decreaseFund(
             tx.object(config.registry.launch.fundingVault),
             tx.pure.u64(input.index),
             tx.pure.u64(input.amount),
-            tx.pure(input.recipient),
+            tx.pure.address(input.recipient),
         ],
     });
 }

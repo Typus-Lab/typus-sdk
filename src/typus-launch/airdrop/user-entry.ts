@@ -25,8 +25,8 @@ export function claimAirdrop(
         arguments: [
             tx.object(config.version.launch.airdrop),
             tx.object(config.registry.launch.airdrop),
-            tx.pure(input.key),
-            tx.pure(input.recipient),
+            tx.pure.string(input.key),
+            tx.pure.address(input.recipient),
         ],
     });
 }
