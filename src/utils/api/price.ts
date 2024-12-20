@@ -114,4 +114,4 @@ const pythId = {
     "5fc11ffe4975b624be495be038da30e30bee2004d8ae6282b5364577ef4ca92c": "BLUB",
 };
 
-getPythLatestPrice();
+// getPythLatestPrice();
