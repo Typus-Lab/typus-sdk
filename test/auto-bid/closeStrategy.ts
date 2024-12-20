@@ -3,7 +3,7 @@ import { SuiClient } from "@mysten/sui/client";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { TypusConfig } from "src/utils";
 import { getCloseStrategyTx } from "src/auto-bid";
-import { Transaction } from "@mysten/sui/dist/cjs/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
