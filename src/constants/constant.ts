@@ -1,4 +1,4 @@
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 
 export const CLOCK = "0x6";
 export const SENDER = "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";

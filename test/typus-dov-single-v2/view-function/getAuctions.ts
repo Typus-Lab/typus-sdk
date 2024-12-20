@@ -1,5 +1,5 @@
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import { getAuctions } from "src/typus-dov-single-v2";
 
 (async () => {

@@ -1,9 +1,9 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 export function getTokenNewStrategyTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
         typusTokenType: string;
@@ -36,8 +36,8 @@ export function getTokenNewStrategyTx(
         target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::mint`,
         arguments: [
             tx.object(typusTokenRegistry),
-            tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
-            tx.pure(input.amount),
+            tx.makeMoveVec({ elements: input.coins.map((id) => tx.object(id)) }),
+            tx.pure.u64(input.amount),
         ],
     });
 
@@ -47,12 +47,12 @@ export function getTokenNewStrategyTx(
         arguments: [
             tx.object(config.registry.dov.dovSingle),
             tx.object(config.registry.dov.autoBid),
-            tx.pure(input.vaultIndex),
-            tx.pure(input.signalIndex),
-            tx.pure(input.size),
-            tx.pure(input.pricePercentage),
-            tx.pure(input.maxTimes),
-            tx.pure(input.targetRounds),
+            tx.pure.u64(input.vaultIndex),
+            tx.pure.u64(input.signalIndex),
+            tx.pure.u64(input.size),
+            tx.pure.u64(input.pricePercentage),
+            tx.pure.u64(input.maxTimes),
+            tx.pure.vector("u64", input.targetRounds),
             tToken,
         ],
     });
@@ -62,7 +62,7 @@ export function getTokenNewStrategyTx(
 
 export function getTokenUpdateStrategyTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
         typusTokenType: string;
@@ -96,8 +96,8 @@ export function getTokenUpdateStrategyTx(
         target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::mint`,
         arguments: [
             tx.object(typusTokenRegistry),
-            tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
-            tx.pure(input.amount),
+            tx.makeMoveVec({ elements: input.coins.map((id) => tx.object(id)) }),
+            tx.pure.u64(input.amount),
         ],
     });
 
@@ -107,14 +107,14 @@ export function getTokenUpdateStrategyTx(
         arguments: [
             tx.object(config.registry.dov.dovSingle),
             tx.object(config.registry.dov.autoBid),
-            tx.pure(input.vaultIndex),
-            tx.pure(input.signalIndex),
-            tx.pure(input.strategyIndex),
-            tx.pure(input.size ? [input.size] : []),
-            tx.pure(input.pricePercentage ? [input.pricePercentage] : []),
-            tx.pure(input.maxTimes ? [input.maxTimes] : []),
-            tx.pure(input.targetRounds),
-            tx.makeMoveVec({ objects: [tToken] }),
+            tx.pure.u64(input.vaultIndex),
+            tx.pure.u64(input.signalIndex),
+            tx.pure.u64(input.strategyIndex),
+            tx.pure.option("u64", input.size),
+            tx.pure.option("u64", input.pricePercentage),
+            tx.pure.option("u64", input.maxTimes),
+            tx.pure.vector("u64", input.targetRounds),
+            tx.makeMoveVec({ elements: [tToken] }),
         ],
     });
 
@@ -123,7 +123,7 @@ export function getTokenUpdateStrategyTx(
 
 export function getTokenCloseStrategyTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
         typusTokenType: string;
@@ -154,9 +154,9 @@ export function getTokenCloseStrategyTx(
         arguments: [
             tx.object(config.registry.dov.dovSingle),
             tx.object(config.registry.dov.autoBid),
-            tx.pure(input.vaultIndex),
-            tx.pure(input.signalIndex),
-            tx.pure(input.strategyIndex),
+            tx.pure.u64(input.vaultIndex),
+            tx.pure.u64(input.signalIndex),
+            tx.pure.u64(input.strategyIndex),
         ],
     });
 
@@ -185,7 +185,7 @@ export function getTokenCloseStrategyTx(
 
 export function getTokenWithdrawProfitStrategyTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[]; // D_TOKEN, B_TOKEN
         typusTokenType: string;
@@ -216,9 +216,9 @@ export function getTokenWithdrawProfitStrategyTx(
         arguments: [
             tx.object(config.registry.dov.dovSingle),
             tx.object(config.registry.dov.autoBid),
-            tx.pure(input.vaultIndex),
-            tx.pure(input.signalIndex),
-            tx.pure(input.strategyIndex),
+            tx.pure.u64(input.vaultIndex),
+            tx.pure.u64(input.signalIndex),
+            tx.pure.u64(input.strategyIndex),
         ],
     });
 

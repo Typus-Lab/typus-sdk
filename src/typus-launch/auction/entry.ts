@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -14,13 +14,13 @@ import { TypusConfig } from "src/utils";
 */
 export function bidTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         size: string;
         amount: string;
     }
 ) {
-    let [input_coin] = tx.splitCoins(tx.gas, [tx.pure(input.amount)]);
+    let [input_coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)]);
 
     tx.moveCall({
         target: `${config.package.launch.auction}::auction::bid`,
@@ -44,7 +44,7 @@ export function bidTx(
         ctx: &mut TxContext,
     ) {
 */
-export function claimTx(config: TypusConfig, tx: TransactionBlock) {
+export function claimTx(config: TypusConfig, tx: Transaction) {
     tx.moveCall({
         target: `${config.package.launch.auction}::auction::claim`,
         arguments: [tx.object(config.version.launch.auction), tx.object(config.object.launchAuction), tx.object(CLOCK)],
@@ -63,7 +63,7 @@ export function claimTx(config: TypusConfig, tx: TransactionBlock) {
         ctx: &TxContext,
     ) {
 */
-export function whitelistTx(config: TypusConfig, tx: TransactionBlock, users: string[], sizes: string[]) {
+export function whitelistTx(config: TypusConfig, tx: Transaction, users: string[], sizes: string[]) {
     tx.moveCall({
         target: `${config.package.launch.auction}::auction::whitelist`,
         arguments: [

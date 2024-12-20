@@ -1,4 +1,4 @@
-import { EventId, SuiClient, SuiEvent } from "@mysten/sui.js/client";
+import { EventId, SuiClient, SuiEvent } from "@mysten/sui/client";
 import { getVaults, getUserEvents, parseTxHistory, getNewBidFromSentio, getDepositorCashFlows } from "src/typus-dov-single-v2";
 import * as fs from "fs";
 import { TypusConfig } from "src/utils";

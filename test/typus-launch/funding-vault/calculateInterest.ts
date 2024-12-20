@@ -1,5 +1,5 @@
 import { Fund, getAllFunds, getVault } from "src/typus-launch/funding-vault";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import { TypusConfig } from "src/utils";
 import slack from "slack";
 

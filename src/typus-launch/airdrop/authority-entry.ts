@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { isSUI } from "src/_dependencies/source/0x2/sui/structs";
 import { TypusConfig } from "src/utils";
 
@@ -15,7 +15,7 @@ import { TypusConfig } from "src/utils";
 */
 export async function setAirdrop(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         key: string;
@@ -26,7 +26,7 @@ export async function setAirdrop(
     }
 ) {
     let [coin] = isSUI(input.typeArguments[0])
-        ? tx.splitCoins(tx.gas, [tx.pure(input.amount)])
+        ? tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)])
         : (() => {
               let coin = input.coins.pop()!;
               if (input.coins.length > 0) {
@@ -35,7 +35,7 @@ export async function setAirdrop(
                       input.coins.map((id) => tx.object(id))
                   );
               }
-              return tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+              return tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
           })();
     tx.moveCall({
         target: `${config.package.launch.airdrop}::airdrop::set_airdrop`,
@@ -61,7 +61,7 @@ export async function setAirdrop(
 */
 export async function removeAirdrop(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         key: string;

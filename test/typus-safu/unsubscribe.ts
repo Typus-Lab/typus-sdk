@@ -1,8 +1,8 @@
 import "src/utils/load_env";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { getReduceFundTx } from "src/typus-safu";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { tokenType } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -15,7 +15,7 @@ import { TypusConfig } from "src/utils";
     // INPUT
     let cToken = config.token.sui;
 
-    let transactionBlock = getReduceFundTx(config, new TransactionBlock(), {
+    let transaction = getReduceFundTx(config, new Transaction(), {
         typeArguments: [cToken],
         index: "0",
         reduceFromWarmup: "0",
@@ -24,6 +24,6 @@ import { TypusConfig } from "src/utils";
         user,
     });
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+    let res = await provider.signAndExecuteTransaction({ signer, transaction });
     console.log(res);
 })();

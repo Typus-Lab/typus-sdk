@@ -1,8 +1,8 @@
 import "src/utils/load_env";
 import { claimTx } from "src/typus-launch/auction";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 (async () => {
@@ -11,7 +11,7 @@ import { TypusConfig } from "src/utils";
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let user = signer.toSuiAddress();
 
-    let transactionBlock = claimTx(config, new TransactionBlock());
-    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+    let transaction = claimTx(config, new Transaction());
+    let res = await provider.signAndExecuteTransaction({ signer, transaction });
     console.log(res);
 })();

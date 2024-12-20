@@ -5,7 +5,7 @@ import { getUserStrategies } from "src/auto-bid";
 import { orderBy } from "lodash";
 import { PythHttpClient, getPythClusterApiUrl, getPythProgramKeyForCluster, PythCluster, PriceData } from "@pythnetwork/client";
 import { StableCoin, getTokenName, WrappedToken } from "./token";
-import { SuiClient, SuiObjectResponse } from "@mysten/sui.js/client";
+import { SuiClient, SuiObjectResponse } from "@mysten/sui/client";
 import { typeArgsToAssets } from "src/constants";
 import BigNumber from "bignumber.js";
 import { TypusConfig } from "src/utils";

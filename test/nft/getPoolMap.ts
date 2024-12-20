@@ -1,4 +1,4 @@
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import { TypusConfig } from "src/utils";
 import { PoolData, getPoolMap, getTableTails } from "src/typus-nft";
 

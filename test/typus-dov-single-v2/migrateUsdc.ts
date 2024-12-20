@@ -1,17 +1,17 @@
 import "src/utils/load_env";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
-    // migrateDepositVault(config, transactionBlock, { index: "0", migrateDepositToken: false, migrateBidToken: false });
+    let transaction = new Transaction();
+    // migrateDepositVault(config, transaction, { index: "0", migrateDepositToken: false, migrateBidToken: false });
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+    let res = await provider.signAndExecuteTransaction({ signer, transaction });
     console.log(res);
 })();
 
@@ -80,7 +80,7 @@ interface TakeDepositVaultResult {
 }
 function takeDepositVault(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
     }
@@ -88,14 +88,14 @@ function takeDepositVault(
     let result = tx.moveCall({
         target: `${config.package.dovSingle}::tds_registry_authorized_entry::take_deposit_vault`,
         typeArguments: [],
-        arguments: [tx.object(config.registry.dov.dovSingle), tx.pure(input.index)],
+        arguments: [tx.object(config.registry.dov.dovSingle), tx.pure.u64(input.index)],
     });
 
     return { depositVault: result[0], receipt: result[1] } as TakeDepositVaultResult;
 }
 function putDepositVault(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         takeDepositVaultResult: TakeDepositVaultResult;
     }
@@ -119,7 +119,7 @@ interface TakeBidVaultResult {
 }
 function takeBidVault(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
     }
@@ -127,14 +127,14 @@ function takeBidVault(
     let result = tx.moveCall({
         target: `${config.package.dovSingle}::tds_registry_authorized_entry::take_bid_vault`,
         typeArguments: [],
-        arguments: [tx.object(config.registry.dov.dovSingle), tx.pure(input.index)],
+        arguments: [tx.object(config.registry.dov.dovSingle), tx.pure.u64(input.index)],
     });
 
     return { bidVault: result[0], receipt: result[1] } as TakeBidVaultResult;
 }
 function takeSettledBidVault(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         id: string;
     }
@@ -149,7 +149,7 @@ function takeSettledBidVault(
 }
 function putBidVault(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         takeBidVaultResult: TakeBidVaultResult;
     }
@@ -173,7 +173,7 @@ interface TakeDepositVaultDepositTokenResult {
 }
 function takeDepositVaultDepositToken(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         depositVault;
@@ -189,7 +189,7 @@ function takeDepositVaultDepositToken(
 }
 function putDepositVaultDepositToken(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         depositVault;
         takeDepositVaultDepositTokenResult: TakeDepositVaultDepositTokenResult;
@@ -211,7 +211,7 @@ interface TakeDepositVaultBidTokenResult {
 }
 function takeDepositVaultBidToken(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         depositVault;
@@ -227,7 +227,7 @@ function takeDepositVaultBidToken(
 }
 function putDepositVaultBidToken(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         depositVault;
         takeDepositVaultBidTokenResult: TakeDepositVaultBidTokenResult;
@@ -249,7 +249,7 @@ interface TakeBidVaultDepositTokenResult {
 }
 function takeBidVaultDepositToken(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         bidVault;
@@ -265,7 +265,7 @@ function takeBidVaultDepositToken(
 }
 function putBidVaultDepositToken(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         bidVault;
         takeBidVaultDepositTokenResult: TakeBidVaultDepositTokenResult;
@@ -283,7 +283,7 @@ function putBidVaultDepositToken(
 
 function swapUsdc(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         balance;
     }

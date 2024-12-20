@@ -1,6 +1,6 @@
 import { getShareData, getVaultData } from "src/typus-safu";
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import { getVaults } from "src/typus-dov-single-v2";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import { getFund } from "src/typus-launch/funding-vault";

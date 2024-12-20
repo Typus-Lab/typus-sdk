@@ -1,8 +1,8 @@
 import "src/utils/load_env";
 import { addUserShare } from "src/typus-launch/option-airdrop";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import mnemonic from "mnemonic.json";
 import * as fs from "fs";
@@ -21,13 +21,13 @@ import * as fs from "fs";
     while (user_data.length > 0) {
         console.log(user_data.length);
         let slice = user_data.splice(0, 500);
-        let transactionBlock = new TransactionBlock();
-        addUserShare(config, transactionBlock, {
+        let transaction = new Transaction();
+        addUserShare(config, transaction, {
             users: slice.map((user) => user[0]),
             shares: slice.map((user) => user[1]),
         });
 
-        let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+        let res = await provider.signAndExecuteTransaction({ signer, transaction });
         console.log(res);
         await sleep(5000);
     }

@@ -25,7 +25,7 @@ import { cancelTradingOrder, getUserOrders } from "src/typus-perp";
     });
 
     let dryrunRes = await provider.devInspectTransactionBlock({
-        transactionBlock: tx,
+        transaction: tx,
         sender: user,
     });
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("CancelTradingOrderEvent"))[0].parsedJson);

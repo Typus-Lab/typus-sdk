@@ -1,4 +1,4 @@
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import { getDepositShares, getUserOwnedObjects, getVaults } from "src/typus-dov-single-v2";
 import { TypusConfig } from "src/utils";

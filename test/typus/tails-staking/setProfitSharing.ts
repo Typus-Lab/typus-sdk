@@ -1,8 +1,8 @@
 import { getLevelCounts, getSetProfitSharingTx } from "src/typus/tails-staking";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import slack from "slack";
 import { calculateLevelReward } from "src/typus-nft";
 
@@ -91,7 +91,7 @@ interface Material {
         log(material);
         return;
     }
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
     let mergedCoin = tx.gas;
     if (material.token != config.token.sui) {
         let coins = (await provider.getCoins({ owner: keypair.toSuiAddress(), coinType: material.token })).data.map(
@@ -115,7 +115,7 @@ interface Material {
         tsMs: material.nextWeekTsMs.toString(),
     });
 
-    let result = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock: tx });
+    let result = await provider.signAndExecuteTransaction({ signer: keypair, transaction: tx });
     log(material, result.digest);
 })();
 

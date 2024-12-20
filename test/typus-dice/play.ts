@@ -1,9 +1,9 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { DrawEvent, getPlaygrounds, newGamePlayGuessTx } from "src/dice";
-import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { Transaction } from "@mysten/sui/transactions";
 
 import mnemonic from "mnemonic.json";
 const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
@@ -28,7 +28,7 @@ const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
     let coinType = "0x" + playground.stake_token;
     let coins = (await provider.getCoins({ owner: user, coinType })).data.map((coin) => coin.coinObjectId);
 
-    let transactionBlock = await newGamePlayGuessTx(config, new TransactionBlock(), {
+    let transaction = await newGamePlayGuessTx(config, new Transaction(), {
         module,
         typeArguments: [coinType],
         index,
@@ -40,7 +40,7 @@ const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
         larger_than_2,
     });
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock, options: { showEvents: true } });
+    let res = await provider.signAndExecuteTransaction({ signer: keypair, transaction, options: { showEvents: true } });
     console.log(res);
 
     try {

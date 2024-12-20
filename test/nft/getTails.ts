@@ -1,6 +1,6 @@
 import { TypusConfig } from "src/utils";
 import { KioskClient, Network } from "@mysten/kiosk";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import { getTailsIds, getkioskOwnerCaps } from "src/typus-nft";
 
 (async () => {

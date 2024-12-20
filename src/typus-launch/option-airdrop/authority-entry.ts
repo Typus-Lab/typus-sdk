@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -13,7 +13,7 @@ import { TypusConfig } from "src/utils";
 */
 export function addUserShare(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         users: string[];
         shares: string[];
@@ -39,7 +39,7 @@ export function addUserShare(
 */
 export function removeUserShare(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         users: string[];
         shares: string[];
@@ -64,7 +64,7 @@ export function removeUserShare(
 */
 export function addAirdropPlan(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         vault_index: string;
         auction_max_size: string;
@@ -94,7 +94,7 @@ export function addAirdropPlan(
         ctx: &mut TxContext,
     ) {
 */
-export function airdropOtc(config: TypusConfig, tx: TransactionBlock) {
+export function airdropOtc(config: TypusConfig, tx: Transaction) {
     tx.moveCall({
         target: `${config.package.launch.optionAirdrop}::option_airdrop::airdrop_otc`,
         arguments: [

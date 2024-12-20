@@ -1,4 +1,4 @@
-import { TransactionArgument, TransactionBlock } from "@mysten/sui.js/transactions";
+import { TransactionArgument, Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -11,7 +11,7 @@ import { TypusConfig } from "src/utils";
 */
 export async function getMintTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         pool: string;
         whitelist_token: string;
@@ -37,7 +37,7 @@ export async function getMintTx(
 */
 export async function getMintToKioskTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         pool: string;
         whitelist_token: string;
@@ -70,7 +70,7 @@ export async function getMintToKioskTx(
 */
 export async function getPayRoyaltyTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         request: TransactionArgument;
         coin: string;
@@ -96,7 +96,7 @@ export async function getPayRoyaltyTx(
 */
 export async function getRequestMintTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         pool: string;
         seed: string;
@@ -116,7 +116,7 @@ export async function getRequestMintTx(
 
 export async function getIsWhitelistTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         pool: string;
         user: string;

@@ -1,6 +1,6 @@
 import { TypusConfig } from "src/utils";
 import { fetchUserBids, getUserBidReceipts } from "src/typus-dov-single-v2";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import { getDepositShares, getUserOwnedObjects, getVaults } from "src/typus-dov-single-v2";
 
 (async () => {

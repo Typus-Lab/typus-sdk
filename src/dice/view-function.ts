@@ -1,5 +1,5 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
+import { Transaction } from "@mysten/sui/transactions";
+import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
 import { BcsReader } from "@mysten/bcs";
 import loadBls from "bls-signatures";
 import { SENDER } from "src/constants";

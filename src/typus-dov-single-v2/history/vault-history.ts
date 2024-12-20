@@ -1,4 +1,4 @@
-import { SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui.js/client";
+import { SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui/client";
 import { OracleInfo, PayoffConfig, VaultConfig } from "src/typus-dov-single-v2";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import { TypusConfig } from "src/utils";

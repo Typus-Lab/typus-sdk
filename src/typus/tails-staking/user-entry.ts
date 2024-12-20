@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { KIOSK_TYPE, KioskClient, KioskTransaction } from "@mysten/kiosk";
 import { TypusConfig } from "src/utils";
@@ -15,7 +15,7 @@ import { TypusConfig } from "src/utils";
 */
 export function getStakeTailsTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         kiosk: string;
         kioskCap: string;
@@ -24,7 +24,7 @@ export function getStakeTailsTx(
         personalKioskPackageId: string | undefined;
     }
 ) {
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.fee)]);
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.fee)]);
 
     if (input.personalKioskPackageId) {
         let [personalKioskCap, borrow] = tx.moveCall({
@@ -39,7 +39,7 @@ export function getStakeTailsTx(
                 tx.object(config.registry.typus.tailsStaking),
                 tx.object(input.kiosk),
                 personalKioskCap,
-                tx.pure(input.tails),
+                tx.pure.address(input.tails),
                 coin,
             ],
         });
@@ -56,7 +56,7 @@ export function getStakeTailsTx(
                 tx.object(config.registry.typus.tailsStaking),
                 tx.object(input.kiosk),
                 tx.object(input.kioskCap),
-                tx.pure(input.tails),
+                tx.pure.address(input.tails),
                 coin,
             ],
         });
@@ -77,7 +77,7 @@ export function getStakeTailsTx(
 */
 export function getUnstakeTailsTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         kiosk: string;
         kioskCap: string;
@@ -98,7 +98,7 @@ export function getUnstakeTailsTx(
                 tx.object(config.registry.typus.tailsStaking),
                 tx.object(input.kiosk),
                 personalKioskCap,
-                tx.pure(input.tails),
+                tx.pure.address(input.tails),
             ],
         });
         tx.moveCall({
@@ -114,7 +114,7 @@ export function getUnstakeTailsTx(
                 tx.object(config.registry.typus.tailsStaking),
                 tx.object(input.kiosk),
                 tx.object(input.kioskCap),
-                tx.pure(input.tails),
+                tx.pure.address(input.tails),
             ],
         });
     }
@@ -136,7 +136,7 @@ export function getUnstakeTailsTx(
 */
 export function getTransferTailsTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         kiosk: string;
         kioskCap: string;
@@ -146,7 +146,7 @@ export function getTransferTailsTx(
         personalKioskPackageId: string | undefined;
     }
 ) {
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.fee)]);
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.fee)]);
 
     if (input.personalKioskPackageId) {
         let [personalKioskCap, borrow] = tx.moveCall({
@@ -161,9 +161,9 @@ export function getTransferTailsTx(
                 tx.object(config.registry.typus.tailsStaking),
                 tx.object(input.kiosk),
                 personalKioskCap,
-                tx.pure(input.tails),
+                tx.pure.address(input.tails),
                 coin,
-                tx.pure(input.recipient),
+                tx.pure.address(input.recipient),
             ],
         });
         tx.moveCall({
@@ -179,9 +179,9 @@ export function getTransferTailsTx(
                 tx.object(config.registry.typus.tailsStaking),
                 tx.object(input.kiosk),
                 tx.object(input.kioskCap),
-                tx.pure(input.tails),
+                tx.pure.address(input.tails),
                 coin,
-                tx.pure(input.recipient),
+                tx.pure.address(input.recipient),
             ],
         });
     }
@@ -199,12 +199,12 @@ export function getTransferTailsTx(
 */
 export function getDailySignUpTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         fee: string;
     }
 ) {
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.fee)]);
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.fee)]);
     tx.moveCall({
         target: `${config.package.typus}::tails_staking::daily_sign_up`,
         typeArguments: [],
@@ -223,7 +223,7 @@ export function getDailySignUpTx(
 */
 export function getClaimProfitSharingTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         user: string;
@@ -237,7 +237,7 @@ export function getClaimProfitSharingTx(
     tx.moveCall({
         target: `${config.package.typus}::utility::transfer_balance`,
         typeArguments: input.typeArguments,
-        arguments: [tx.object(result[0]), tx.pure(input.user)],
+        arguments: [tx.object(result[0]), tx.pure.address(input.user)],
     });
 
     return tx;
@@ -253,7 +253,7 @@ export function getClaimProfitSharingTx(
 */
 export function getLevelUpTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         tails: string;
         raw: boolean;
@@ -265,8 +265,8 @@ export function getLevelUpTx(
         arguments: [
             tx.object(config.version.typus),
             tx.object(config.registry.typus.tailsStaking),
-            tx.pure(input.tails),
-            tx.pure(input.raw),
+            tx.pure.address(input.tails),
+            tx.pure.bool(input.raw),
         ],
     });
 
@@ -285,7 +285,7 @@ export function getLevelUpTx(
 */
 export function getExpUpTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         tails: string;
         amount: string;
@@ -298,8 +298,8 @@ export function getExpUpTx(
             tx.object(config.version.typus),
             tx.object(config.registry.typus.tailsStaking),
             tx.object(config.registry.typus.user),
-            tx.pure(input.tails),
-            tx.pure(input.amount),
+            tx.pure.address(input.tails),
+            tx.pure.u64(input.amount),
         ],
     });
 
@@ -319,7 +319,7 @@ export function getExpUpTx(
 */
 export function getExpUpWithoutStakingTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         kiosk: string;
         kioskCap: string;
@@ -342,8 +342,8 @@ export function getExpUpWithoutStakingTx(
                 tx.object(config.registry.typus.user),
                 tx.object(input.kiosk),
                 personalKioskCap,
-                tx.pure(input.tails),
-                tx.pure(input.amount),
+                tx.pure.address(input.tails),
+                tx.pure.u64(input.amount),
             ],
         });
         tx.moveCall({
@@ -360,8 +360,8 @@ export function getExpUpWithoutStakingTx(
                 tx.object(config.registry.typus.user),
                 tx.object(input.kiosk),
                 tx.object(input.kioskCap),
-                tx.pure(input.tails),
-                tx.pure(input.amount),
+                tx.pure.address(input.tails),
+                tx.pure.u64(input.amount),
             ],
         });
     }
@@ -382,14 +382,14 @@ export function getExpUpWithoutStakingTx(
 */
 export function getExpDownWithFeeTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         fee: string;
         tails: string;
         amount: string;
     }
 ) {
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.fee)]);
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.fee)]);
     tx.moveCall({
         target: `${config.package.typus}::tails_staking::exp_down_with_fee`,
         typeArguments: [],
@@ -397,8 +397,8 @@ export function getExpDownWithFeeTx(
             tx.object(config.version.typus),
             tx.object(config.registry.typus.tailsStaking),
             tx.object(config.registry.typus.user),
-            tx.pure(input.tails),
-            tx.pure(input.amount),
+            tx.pure.address(input.tails),
+            tx.pure.u64(input.amount),
             coin,
         ],
     });
@@ -420,7 +420,7 @@ export function getExpDownWithFeeTx(
 */
 export function getExpDownWithoutStakingWithFeeTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         fee: string;
         kiosk: string;
@@ -430,7 +430,7 @@ export function getExpDownWithoutStakingWithFeeTx(
         personalKioskPackageId: string | undefined;
     }
 ) {
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.fee)]);
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.fee)]);
     if (input.personalKioskPackageId) {
         let [personalKioskCap, borrow] = tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
@@ -445,8 +445,8 @@ export function getExpDownWithoutStakingWithFeeTx(
                 tx.object(config.registry.typus.user),
                 tx.object(input.kiosk),
                 personalKioskCap,
-                tx.pure(input.tails),
-                tx.pure(input.amount),
+                tx.pure.address(input.tails),
+                tx.pure.u64(input.amount),
                 coin,
             ],
         });
@@ -464,8 +464,8 @@ export function getExpDownWithoutStakingWithFeeTx(
                 tx.object(config.registry.typus.user),
                 tx.object(input.kiosk),
                 tx.object(input.kioskCap),
-                tx.pure(input.tails),
-                tx.pure(input.amount),
+                tx.pure.address(input.tails),
+                tx.pure.u64(input.amount),
                 coin,
             ],
         });
@@ -476,7 +476,7 @@ export function getExpDownWithoutStakingWithFeeTx(
 
 export function getCreateKioskAndLockNftTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     kioskClient: KioskClient,
     input: {
         nft_policy: string;
@@ -484,7 +484,7 @@ export function getCreateKioskAndLockNftTx(
         user: string;
     }
 ) {
-    let kioskTx = new KioskTransaction({ transactionBlock: tx, kioskClient });
+    let kioskTx = new KioskTransaction({ transaction: tx, kioskClient });
     kioskTx.create();
     kioskTx.lock({
         itemType: `${config.package.nft}::typus_nft::Tails`,
@@ -499,7 +499,7 @@ export function getCreateKioskAndLockNftTx(
             typeArguments: [KIOSK_TYPE],
             arguments: [kiosk],
         });
-        tx.transferObjects([kioskCap], tx.pure(input.user));
+        tx.transferObjects([kioskCap], tx.pure.address(input.user));
     } else {
         console.error("Fail to Create Kiosk Tx!!");
     }

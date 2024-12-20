@@ -49,7 +49,7 @@ import { createPythClient } from "src/utils";
     });
 
     let dryrunRes = await provider.devInspectTransactionBlock({
-        transactionBlock: tx,
+        transaction: tx,
         sender: user,
     });
     console.log(dryrunRes.events.filter((e) => e.type.endsWith("UnstakeEvent")));

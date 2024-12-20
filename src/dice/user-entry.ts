@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 /**
@@ -12,7 +12,7 @@ import { TypusConfig } from "src/utils";
 */
 export async function newGameTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         module: "tails_exp" | "combo_dice";
         typeArguments: string[]; // [TOKEN]
@@ -37,9 +37,9 @@ export async function newGameTx(
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(registry),
-            tx.pure(input.index),
-            tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
-            tx.pure(input.amount),
+            tx.pure.u64(input.index),
+            tx.makeMoveVec({ elements: input.coins.map((id) => tx.object(id)) }),
+            tx.pure.u64(input.amount),
         ],
     });
 
@@ -60,7 +60,7 @@ export async function newGameTx(
 */
 export async function playGuessTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         module: "tails_exp" | "combo_dice";
         index: string;
@@ -86,11 +86,11 @@ export async function playGuessTx(
         typeArguments: [],
         arguments: [
             tx.object(registry),
-            tx.pure(input.index),
-            tx.pure(input.guess_1),
-            tx.pure(input.larger_than_1),
-            tx.pure(input.guess_2),
-            tx.pure(input.larger_than_2),
+            tx.pure.u64(input.index),
+            tx.pure.u64(input.guess_1),
+            tx.pure.bool(input.larger_than_1),
+            tx.pure.u64(input.guess_2),
+            tx.pure.bool(input.larger_than_2),
         ],
     });
 
@@ -99,7 +99,7 @@ export async function playGuessTx(
 
 export async function newGamePlayGuessTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         module: "tails_exp" | "combo_dice";
         typeArguments: string[]; // [TOKEN]
@@ -127,7 +127,7 @@ export async function newGamePlayGuessTx(
         input.typeArguments[0] == "0x2::sui::SUI" ||
         input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
     ) {
-        let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.amount)]);
+        let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)]);
         tx.moveCall({
             target: `${config.package.dice}::${input.module}::new_game`,
             typeArguments: input.typeArguments,
@@ -136,11 +136,11 @@ export async function newGamePlayGuessTx(
                     ? [
                           tx.object(config.registry.dice.comboDice),
                           tx.object(config.registry.dice.tailsExp),
-                          tx.pure(input.index),
-                          tx.makeMoveVec({ objects: [coin] }),
-                          tx.pure(input.amount),
+                          tx.pure.u64(input.index),
+                          tx.makeMoveVec({ elements: [coin] }),
+                          tx.pure.u64(input.amount),
                       ]
-                    : [tx.object(registry), tx.pure(input.index), tx.makeMoveVec({ objects: [coin] }), tx.pure(input.amount)],
+                    : [tx.object(registry), tx.pure.u64(input.index), tx.makeMoveVec({ elements: [coin] }), tx.pure.u64(input.amount)],
         });
     } else {
         tx.moveCall({
@@ -151,15 +151,15 @@ export async function newGamePlayGuessTx(
                     ? [
                           tx.object(config.registry.dice.comboDice),
                           tx.object(config.registry.dice.tailsExp),
-                          tx.pure(input.index),
-                          tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
-                          tx.pure(input.amount),
+                          tx.pure.u64(input.index),
+                          tx.makeMoveVec({ elements: input.coins.map((id) => tx.object(id)) }),
+                          tx.pure.u64(input.amount),
                       ]
                     : [
                           tx.object(registry),
-                          tx.pure(input.index),
-                          tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
-                          tx.pure(input.amount),
+                          tx.pure.u64(input.index),
+                          tx.makeMoveVec({ elements: input.coins.map((id) => tx.object(id)) }),
+                          tx.pure.u64(input.amount),
                       ],
         });
     }
@@ -169,11 +169,11 @@ export async function newGamePlayGuessTx(
     //     typeArguments: [],
     //     arguments: [
     //         tx.object(registry),
-    //         tx.pure(input.index),
-    //         tx.pure(input.guess_1),
-    //         tx.pure(input.larger_than_1),
-    //         tx.pure(input.guess_2),
-    //         tx.pure(input.larger_than_2),
+    //         tx.pure.u64(input.index),
+    //         tx.pure.u64(input.guess_1),
+    //         tx.pure.bool(input.larger_than_1),
+    //         tx.pure.u64(input.guess_2),
+    //         tx.pure.bool(input.larger_than_2),
     //     ],
     // });
 
@@ -182,11 +182,11 @@ export async function newGamePlayGuessTx(
         typeArguments: input.module == "combo_dice" ? input.typeArguments : [],
         arguments: [
             tx.object(registry),
-            tx.pure(input.index),
-            tx.pure(input.guess_1),
-            tx.pure(input.larger_than_1),
-            tx.pure(input.guess_2),
-            tx.pure(input.larger_than_2),
+            tx.pure.u64(input.index),
+            tx.pure.u64(input.guess_1),
+            tx.pure.bool(input.larger_than_1),
+            tx.pure.u64(input.guess_2),
+            tx.pure.bool(input.larger_than_2),
             tx.object("0x8"),
         ],
     });
@@ -205,7 +205,7 @@ export async function newGamePlayGuessTx(
  */
 export function getConsumeExpCoinStakedTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         tails: string;
         coins: string[];
@@ -219,7 +219,7 @@ export function getConsumeExpCoinStakedTx(
             input.coins.map((id) => tx.object(id))
         );
     }
-    let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+    let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
     tx.moveCall({
         target: `${config.package.dice}::tails_exp::consume_exp_coin_staked`,
         typeArguments: [],
@@ -227,7 +227,7 @@ export function getConsumeExpCoinStakedTx(
             tx.object(config.registry.dice.tailsExp),
             tx.object(config.version.typus),
             tx.object(config.registry.typus.tailsStaking),
-            tx.pure(input.tails),
+            tx.pure.address(input.tails),
             tx.object(input_coin),
         ],
     });
@@ -247,7 +247,7 @@ export function getConsumeExpCoinStakedTx(
  */
 export function getConsumeExpCoinUnstakedTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         kiosk: string;
         kioskCap: string;
@@ -264,7 +264,7 @@ export function getConsumeExpCoinUnstakedTx(
             input.coins.map((id) => tx.object(id))
         );
     }
-    let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+    let [input_coin] = tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
     if (input.personalKioskPackageId) {
         let [personalKioskCap, borrow] = tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,
@@ -279,7 +279,7 @@ export function getConsumeExpCoinUnstakedTx(
                 tx.object(config.registry.typus.tailsStaking),
                 tx.object(input.kiosk),
                 personalKioskCap,
-                tx.pure(input.tails),
+                tx.pure.address(input.tails),
                 tx.object(input_coin),
             ],
         });
@@ -297,7 +297,7 @@ export function getConsumeExpCoinUnstakedTx(
                 tx.object(config.registry.typus.tailsStaking),
                 tx.object(input.kiosk),
                 tx.object(input.kioskCap),
-                tx.pure(input.tails),
+                tx.pure.address(input.tails),
                 tx.object(input_coin),
             ],
         });

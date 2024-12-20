@@ -1,4 +1,4 @@
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import * as fs from "fs";
 import { TypusConfig } from "src/utils";
 import { getTailsDynamicField } from "src/typus-nft";

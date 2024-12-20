@@ -1,6 +1,6 @@
 import { TypusConfig } from "src/utils";
 import { getLevelCounts, getStakingInfo } from "src/typus/tails-staking";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import { calculateLevelReward } from "src/typus-nft";
 import * as fs from "fs";
 

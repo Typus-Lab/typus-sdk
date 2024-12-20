@@ -1,6 +1,6 @@
 import "src/utils/load_env";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui.js/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
 import { TypusConfig, getMintTokenTx } from "src/utils";
 
 (async () => {
@@ -13,7 +13,7 @@ import { TypusConfig, getMintTokenTx } from "src/utils";
     let registry = "0xd470dbb74ae3f4cea5b39f1edaf729145fcdc8da023c81346fce1c1de046e6e4";
     let amount = 1000000000000000;
 
-    let transactionBlock = await getMintTokenTx(packageId, registry, moduleName, amount);
-    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+    let transaction = await getMintTokenTx(packageId, registry, moduleName, amount);
+    let res = await provider.signAndExecuteTransaction({ signer, transaction });
     console.log(res);
 })();

@@ -1,11 +1,11 @@
-import { TransactionBlock, TransactionObjectArgument } from "@mysten/sui.js/transactions";
+import { Transaction, TransactionObjectArgument } from "@mysten/sui/transactions";
 import { match } from "assert";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
 export function getTokenRaiseFundTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         typusTokenType: string;
@@ -44,7 +44,7 @@ export function getTokenRaiseFundTx(
                               target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::mint`,
                               arguments: [
                                   tx.object(typusTokenRegistry),
-                                  tx.makeMoveVec({ objects: input.raiseCoins }),
+                                  tx.makeMoveVec({ elements: input.raiseCoins }),
                                   tx.pure(input.raiseAmount),
                               ],
                           })
@@ -64,7 +64,7 @@ export function getTokenRaiseFundTx(
             tx.object(config.registry.typus.user),
             tx.object(config.registry.typus.leaderboard),
             tx.object(config.registry.dov.dovSingle),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusDepositReceipt`,
                 objects: input.receipts.map((receipt) => tx.object(receipt)),
@@ -82,7 +82,7 @@ export function getTokenRaiseFundTx(
 
 export function getTokenReduceFundTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         typusTokenType: string;
@@ -119,7 +119,7 @@ export function getTokenReduceFundTx(
             tx.object(config.registry.typus.user),
             tx.object(config.registry.typus.leaderboard),
             tx.object(config.registry.dov.dovSingle),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusDepositReceipt`,
                 objects: input.receipts.map((receipt) => tx.object(receipt)),
@@ -196,7 +196,7 @@ export function getTokenReduceFundTx(
 
 export function getTokenNewBidTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         typusTokenType: string;
@@ -226,7 +226,7 @@ export function getTokenNewBidTx(
         target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::mint`,
         arguments: [
             tx.object(typusTokenRegistry),
-            tx.makeMoveVec({ objects: input.coins.map((id) => tx.object(id)) }),
+            tx.makeMoveVec({ elements: input.coins.map((id) => tx.object(id)) }),
             tx.pure(input.premium_required),
         ],
     });
@@ -239,8 +239,8 @@ export function getTokenNewBidTx(
             tx.object(config.registry.typus.tgld),
             tx.object(config.registry.typus.leaderboard),
             tx.object(config.registry.dov.dovSingle),
-            tx.pure(input.index),
-            tx.makeMoveVec({ objects: [mToken] }),
+            tx.pure.u64(input.index),
+            tx.makeMoveVec({ elements: [mToken] }),
             tx.pure(input.size),
             tx.pure("0x6"),
         ],
@@ -256,7 +256,7 @@ export function getTokenNewBidTx(
 
 export function getTokenExerciseTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         typusTokenType: string;
@@ -285,7 +285,7 @@ export function getTokenExerciseTx(
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusBidReceipt`,
                 objects: input.receipts.map((receipt) => tx.object(receipt)),
@@ -308,7 +308,7 @@ export function getTokenExerciseTx(
 
 export function getTokenRebateTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArgument: string;
         typusTokenType: string;
@@ -356,7 +356,7 @@ export function getTokenRebateTx(
 
 export function getTokenCompoundWithRedeemTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         typusTokenType: string;
@@ -378,7 +378,7 @@ export function getTokenCompoundWithRedeemTx(
             tx.object(config.registry.typus.user),
             tx.object(config.registry.typus.leaderboard),
             tx.object(config.registry.dov.dovSingle),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusDepositReceipt`,
                 objects: input.receipts.map((receipt) => tx.object(receipt)),

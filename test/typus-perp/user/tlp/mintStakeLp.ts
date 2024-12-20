@@ -59,7 +59,7 @@ import { TOKEN, tokenType } from "src/constants";
     // console.log(tx.getData());
 
     let dryrunRes = await provider.devInspectTransactionBlock({
-        transactionBlock: tx,
+        transaction: tx,
         sender: user,
     });
     // console.log(dryrunRes);

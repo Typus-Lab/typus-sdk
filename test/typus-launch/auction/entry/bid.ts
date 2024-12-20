@@ -1,8 +1,8 @@
 import "src/utils/load_env";
 import { bidTx } from "src/typus-launch/auction";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 (async () => {
@@ -14,10 +14,10 @@ import { TypusConfig } from "src/utils";
     let size = "1000000000";
     let amount = "1000000000";
 
-    let transactionBlock = bidTx(config, new TransactionBlock(), {
+    let transaction = bidTx(config, new Transaction(), {
         size,
         amount,
     });
-    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+    let res = await provider.signAndExecuteTransaction({ signer, transaction });
     console.log(res);
 })();

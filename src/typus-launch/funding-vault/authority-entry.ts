@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 /**
@@ -11,7 +11,7 @@ import { TypusConfig } from "src/utils";
 */
 export function newVault(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         config: string[];
@@ -35,7 +35,7 @@ export function newVault(
 */
 export function updateRegistrySetting(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         settingIndex: string;
         value: string;
@@ -64,7 +64,7 @@ export function updateRegistrySetting(
 */
 export function updateInfo(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
         infoIndex: string;
@@ -76,7 +76,7 @@ export function updateInfo(
         arguments: [
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.pure(input.infoIndex),
             tx.pure(input.value),
         ],
@@ -95,7 +95,7 @@ export function updateInfo(
 */
 export function updateConfig(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
         configIndex: string;
@@ -107,7 +107,7 @@ export function updateConfig(
         arguments: [
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.pure(input.configIndex),
             tx.pure(input.value),
         ],
@@ -124,7 +124,7 @@ export function updateConfig(
 */
 export function depositFundToDeepbookBalanceManager(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -133,7 +133,11 @@ export function depositFundToDeepbookBalanceManager(
     tx.moveCall({
         target: `${config.package.launch.fundingVault}::funding_vault::deposit_fund_to_deepbook_balance_manager`,
         typeArguments: input.typeArguments,
-        arguments: [tx.object(config.version.launch.fundingVault), tx.object(config.registry.launch.fundingVault), tx.pure(input.index)],
+        arguments: [
+            tx.object(config.version.launch.fundingVault),
+            tx.object(config.registry.launch.fundingVault),
+            tx.pure.u64(input.index),
+        ],
     });
 }
 
@@ -148,7 +152,7 @@ export function depositFundToDeepbookBalanceManager(
 */
 export function withdrawFundFromDeepbookBalanceManager(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -161,7 +165,7 @@ export function withdrawFundFromDeepbookBalanceManager(
         arguments: [
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.pure(input.amount ? [input.amount] : []),
         ],
     });
@@ -178,7 +182,7 @@ export function withdrawFundFromDeepbookBalanceManager(
 */
 export function depositToDeepbookBalanceManager(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -189,7 +193,7 @@ export function depositToDeepbookBalanceManager(
     let [coin] =
         input.typeArguments[0] == "0x2::sui::SUI" ||
         input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-            ? tx.splitCoins(tx.gas, [tx.pure(input.amount)])
+            ? tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)])
             : (() => {
                   let coin = input.coins.pop()!;
                   if (input.coins.length > 0) {
@@ -198,7 +202,7 @@ export function depositToDeepbookBalanceManager(
                           input.coins.map((coin) => tx.object(coin))
                       );
                   }
-                  return tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+                  return tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
               })();
     tx.moveCall({
         target: `${config.package.launch.fundingVault}::funding_vault::deposit_to_deepbook_balance_manager`,
@@ -206,7 +210,7 @@ export function depositToDeepbookBalanceManager(
         arguments: [
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             coin,
         ],
     });
@@ -224,7 +228,7 @@ export function depositToDeepbookBalanceManager(
 */
 export function withdrawFromDeepbookBalanceManager(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -238,7 +242,7 @@ export function withdrawFromDeepbookBalanceManager(
         arguments: [
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.pure(input.amount ? [input.amount] : []),
             tx.pure(input.recipient),
         ],
@@ -256,7 +260,7 @@ export function withdrawFromDeepbookBalanceManager(
 */
 export function increaseFund(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -267,7 +271,7 @@ export function increaseFund(
     let [coin] =
         input.typeArguments[0] == "0x2::sui::SUI" ||
         input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-            ? tx.splitCoins(tx.gas, [tx.pure(input.amount)])
+            ? tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)])
             : (() => {
                   let coin = input.coins.pop()!;
                   if (input.coins.length > 0) {
@@ -276,7 +280,7 @@ export function increaseFund(
                           input.coins.map((coin) => tx.object(coin))
                       );
                   }
-                  return tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+                  return tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
               })();
     tx.moveCall({
         target: `${config.package.launch.fundingVault}::funding_vault::increase_fund`,
@@ -284,7 +288,7 @@ export function increaseFund(
         arguments: [
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             coin,
         ],
     });
@@ -302,7 +306,7 @@ export function increaseFund(
 */
 export function decreaseFund(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -316,8 +320,8 @@ export function decreaseFund(
         arguments: [
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
-            tx.pure(input.index),
-            tx.pure(input.amount),
+            tx.pure.u64(input.index),
+            tx.pure.u64(input.amount),
             tx.pure(input.recipient),
         ],
     });
