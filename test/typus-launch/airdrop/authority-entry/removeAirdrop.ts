@@ -14,7 +14,7 @@ import { removeAirdrop } from "src/typus-launch/airdrop";
     let transactionBlock = new TransactionBlock();
     removeAirdrop(config, transactionBlock, {
         typeArguments: ["0xd31923b6821fb7ba32d23e514b43d307da6ef991f9ef1af2cc4e26a0992ac87a::afsui::AFSUI"],
-        key: "test",
+        key: "Typus Improvement Proposal #2",
     });
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);

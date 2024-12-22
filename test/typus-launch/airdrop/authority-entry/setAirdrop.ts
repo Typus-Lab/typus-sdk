@@ -14,7 +14,7 @@ import { setAirdrop } from "src/typus-launch/airdrop";
     let transactionBlock = new TransactionBlock();
     setAirdrop(config, transactionBlock, {
         typeArguments: ["0xd31923b6821fb7ba32d23e514b43d307da6ef991f9ef1af2cc4e26a0992ac87a::afsui::AFSUI"],
-        key: "test",
+        key: "Typus Improvement Proposal #0",
         coins: ["0xc610b74b358199e9ca63298a55e4cbfc1a96aeb37cf09f3806b1428145cffe1c"],
         amount: "100000000000",
         users: [

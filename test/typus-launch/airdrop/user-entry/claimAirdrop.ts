@@ -14,7 +14,7 @@ import { TypusConfig } from "src/utils";
     let transactionBlock = new TransactionBlock();
     claimAirdrop(config, transactionBlock, {
         typeArguments: ["0xd31923b6821fb7ba32d23e514b43d307da6ef991f9ef1af2cc4e26a0992ac87a::afsui::AFSUI"],
-        key: "test",
+        key: "Typus Improvement Proposal #0",
         recipient: signer.toSuiAddress(),
     });
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
