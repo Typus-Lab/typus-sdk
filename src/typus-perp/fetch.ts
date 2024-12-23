@@ -116,7 +116,7 @@ export async function getUserOrders(config: TypusConfig, user: string) {
         user,
     });
 
-    let res = await provider.devInspectTransactionBlock({ sender: user, transaction: tx });
+    let res = await provider.devInspectTransactionBlock({ sender: user, transactionBlock: tx });
     // console.log(res);
 
     // @ts-ignore
@@ -139,7 +139,7 @@ export async function getUserPositions(config: TypusConfig, user: string) {
         user,
     });
 
-    let res = await provider.devInspectTransactionBlock({ sender: user, transaction: tx });
+    let res = await provider.devInspectTransactionBlock({ sender: user, transactionBlock: tx });
     // console.log(res);
 
     // @ts-ignore
@@ -161,7 +161,7 @@ export async function getUserStake(config: TypusConfig, user: string): Promise<L
         user,
     });
 
-    let res = await provider.devInspectTransactionBlock({ sender: user, transaction: tx });
+    let res = await provider.devInspectTransactionBlock({ sender: user, transactionBlock: tx });
     // console.log(res);
 
     if (res.results) {
@@ -224,7 +224,7 @@ export async function getLiquidationPrice(
         });
     }
 
-    let res = await provider.devInspectTransactionBlock({ sender: input.user, transaction: tx });
+    let res = await provider.devInspectTransactionBlock({ sender: input.user, transactionBlock: tx });
     // console.log(res);
 
     let prices = res.results?.slice(-input.positions.length).map((x) => bcs.u64().parse(Uint8Array.from(x.returnValues![0][0])));

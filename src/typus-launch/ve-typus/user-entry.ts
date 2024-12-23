@@ -38,7 +38,7 @@ export function mint(
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
             coin,
-            tx.pure(input.lockUpPeriod),
+            tx.pure.u64(input.lockUpPeriod),
             tx.object(CLOCK),
         ],
     });
@@ -67,7 +67,7 @@ export function burn(
         arguments: [
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
-            tx.pure(input.veTypus),
+            tx.pure.address(input.veTypus),
             tx.object(CLOCK),
         ],
     });
@@ -97,8 +97,8 @@ export function renew(
         arguments: [
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
-            tx.pure(input.veTypus),
-            tx.pure(input.lockUpPeriod),
+            tx.pure.address(input.veTypus),
+            tx.pure.u64(input.lockUpPeriod),
             tx.object(CLOCK),
         ],
     });

@@ -57,7 +57,7 @@ export async function fetchVeTypusInfo(
     let transaction = new Transaction();
     transaction.moveCall({
         target: `${config.package.launch.veTypus}::ve_typus::get_report`,
-        arguments: [transaction.object(config.registry.launch.veTypus), transaction.pure(input.tsMs)],
+        arguments: [transaction.object(config.registry.launch.veTypus), transaction.pure.u64(input.tsMs)],
     });
     if (input.user) {
         transaction.moveCall({
@@ -69,11 +69,11 @@ export async function fetchVeTypusInfo(
             arguments: [
                 transaction.object(config.registry.launch.veTypus),
                 transaction.pure.address(input.user),
-                transaction.pure(input.tsMs),
+                transaction.pure.u64(input.tsMs),
             ],
         });
     }
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
     // @ts-ignore
     let reader = new BcsReader(new Uint8Array(results[0].returnValues[0][0]));
     reader.readULEB();

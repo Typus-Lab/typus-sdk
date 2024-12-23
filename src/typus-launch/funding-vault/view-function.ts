@@ -23,10 +23,10 @@ export async function getVault(
     input.indexes.forEach((index) => {
         transaction.moveCall({
             target: `${config.package.launch.fundingVault}::funding_vault::get_vault_bcs`,
-            arguments: [transaction.object(config.registry.launch.fundingVault), transaction.pure(index)],
+            arguments: [transaction.object(config.registry.launch.fundingVault), transaction.pure.u64(index)],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
     let vaults: {
         [key: string]: [Vault];
     } = {};
@@ -80,12 +80,12 @@ export async function getFund(
             target: `${config.package.launch.fundingVault}::funding_vault::get_fund_bcs`,
             arguments: [
                 transaction.object(config.registry.launch.fundingVault),
-                transaction.pure(index),
+                transaction.pure.u64(index),
                 transaction.pure.address(input.user),
             ],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
     let funds: {
         [key: string]: Fund[];
     } = {};
@@ -121,12 +121,12 @@ export async function getRefund(
             target: `${config.package.launch.fundingVault}::funding_vault::get_refund_bcs`,
             arguments: [
                 transaction.object(config.registry.launch.fundingVault),
-                transaction.pure(index),
+                transaction.pure.u64(index),
                 transaction.pure.address(input.user),
             ],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
     let funds: {
         [key: string]: Fund[];
     } = {};
@@ -160,10 +160,14 @@ export async function getAllFunds(
     input.users.forEach((user) => {
         transaction.moveCall({
             target: `${config.package.launch.fundingVault}::funding_vault::get_fund_bcs`,
-            arguments: [transaction.object(config.registry.launch.fundingVault), transaction.pure(input.index), transaction.pure(user)],
+            arguments: [
+                transaction.object(config.registry.launch.fundingVault),
+                transaction.pure.u64(input.index),
+                transaction.pure.address(user),
+            ],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
     let funds: Fund[] = [];
     results?.forEach((result, i) => {
         // @ts-ignore

@@ -77,8 +77,8 @@ export function reduceFund(
             tx.object(config.version.launch.fundingVault),
             tx.object(config.registry.launch.fundingVault),
             tx.pure.u64(input.index),
-            tx.pure(input.reduceFromFund),
-            tx.pure(input.reduceFromRefund),
+            tx.pure.u64(input.reduceFromFund),
+            tx.pure.bool(input.reduceFromRefund),
             tx.object(CLOCK),
         ],
     });
