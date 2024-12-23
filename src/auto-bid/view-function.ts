@@ -108,7 +108,7 @@ export async function getUserStrategies(
                     id: AddressFromBytes(reader.readBytes(32)),
                     vid: AddressFromBytes(reader.readBytes(32)),
                     index: reader.read64(),
-                    metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                    metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
                     u64_padding: reader.readVec((reader) => {
                         return reader.read64();
                     }),
@@ -136,16 +136,16 @@ export async function getUserStrategies(
             reader.read16();
             let bidVault = {
                 id: AddressFromBytes(reader.readBytes(32)),
-                depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-                bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+                bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
                 incentiveToken: reader
                     .readVec((reader) => {
-                        return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+                        return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB())));
                     })
                     .at(0),
                 index: reader.read64(),
                 shareSupply: reader.read64(),
-                metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
                 u64Padding: reader.readVec((reader) => {
                     return reader.read64();
                 }),

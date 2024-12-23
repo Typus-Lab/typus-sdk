@@ -166,6 +166,7 @@ export function updateConfig(
         version: &Version,
         registry: &mut Registry,
         index: u64,
+        key: String,
         amount: u64,
         ctx: &TxContext,
     ) {
@@ -176,6 +177,7 @@ export function setReward(
     input: {
         typeArguments: string[];
         index: string;
+        key: string;
         amount: string;
     }
 ) {
@@ -186,6 +188,7 @@ export function setReward(
             tx.object(config.version.launch.improvementProposal),
             tx.object(config.registry.launch.improvementProposal),
             tx.pure(input.index),
+            tx.pure(input.key),
             tx.pure(input.amount),
         ],
     });

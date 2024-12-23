@@ -71,9 +71,9 @@ export async function getVaultData(
     reader.readVec((reader) => {
         reader.readULEB();
         let id = AddressFromBytes(reader.readBytes(32));
-        let depositToken = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+        let depositToken = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB())));
         let rewardToken = reader.readVec((reader) => {
-            return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+            return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB())));
         });
         let infoArray = reader.readVec((reader) => {
             return reader.read64();
@@ -147,7 +147,7 @@ export async function getVaultData(
                     id: AddressFromBytes(reader.readBytes(32)),
                     vid: AddressFromBytes(reader.readBytes(32)),
                     index: reader.read64(),
-                    metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                    metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
                     u64_padding: reader.readVec((reader) => {
                         return reader.read64();
                     }),

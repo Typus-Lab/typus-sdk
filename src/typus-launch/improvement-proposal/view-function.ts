@@ -16,18 +16,25 @@ export interface Tip {
     votes;
     u64Padding;
     bcsPadding;
+    votingPower;
 }
 /**
     public(package) fun get_ongoing_tips_bcs(
         registry: &Registry,
+        ve_typus_registry: &VeTypusRegistry,
+        user_opt: Option<address>,
     ): vector<u8> {
  */
-export async function getOngoingTips(config: TypusConfig): Promise<Tip[]> {
+export async function getOngoingTips(config: TypusConfig, input: { user?: string }): Promise<Tip[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transactionBlock = new TransactionBlock();
     transactionBlock.moveCall({
         target: `${config.package.launch.improvementProposal}::improvement_proposal::get_ongoing_tips_bcs`,
-        arguments: [transactionBlock.object(config.registry.launch.improvementProposal)],
+        arguments: [
+            transactionBlock.object(config.registry.launch.improvementProposal),
+            transactionBlock.object(config.registry.launch.veTypus),
+            transactionBlock.pure(input.user ? [input.user] : []),
+        ],
     });
     // @ts-ignore
     let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results[0].returnValues[0][0];
@@ -38,9 +45,9 @@ export async function getOngoingTips(config: TypusConfig): Promise<Tip[]> {
         return {
             id: AddressFromBytes(reader.readBytes(32)),
             index: reader.read64(),
-            description: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            imageUrl: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            proposal: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            description: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+            imageUrl: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+            proposal: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
             info: reader.readVec((reader) => {
                 return reader.read64();
             }),
@@ -49,14 +56,15 @@ export async function getOngoingTips(config: TypusConfig): Promise<Tip[]> {
             }),
             rewards: reader.readVec((reader) => {
                 return {
-                    token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                    token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+                    key: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
                     amount: reader.read64(),
                 };
             }),
             votes: {
                 id: AddressFromBytes(reader.readBytes(32)),
-                key_type: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-                value_type: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                key_type: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+                value_type: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
                 slice_idx: reader.read16(),
                 slice_size: reader.read32(),
                 length: reader.read64(),
@@ -67,6 +75,7 @@ export async function getOngoingTips(config: TypusConfig): Promise<Tip[]> {
             bcsPadding: reader.readVec((reader) => {
                 return reader.read8();
             }),
+            votingPower: input.user ? reader.read64() : 0,
         } as Tip;
     });
 }
@@ -91,9 +100,9 @@ export async function getEndedTips(config: TypusConfig): Promise<Tip[]> {
         return {
             id: AddressFromBytes(reader.readBytes(32)),
             index: reader.read64(),
-            description: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            imageUrl: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            proposal: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            description: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+            imageUrl: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+            proposal: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
             info: reader.readVec((reader) => {
                 return reader.read64();
             }),
@@ -102,14 +111,14 @@ export async function getEndedTips(config: TypusConfig): Promise<Tip[]> {
             }),
             rewards: reader.readVec((reader) => {
                 return {
-                    token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                    token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
                     amount: reader.read64(),
                 };
             }),
             votes: {
                 id: AddressFromBytes(reader.readBytes(32)),
-                key_type: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-                value_type: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+                key_type: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+                value_type: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
                 slice_idx: reader.read16(),
                 slice_size: reader.read32(),
                 length: reader.read64(),

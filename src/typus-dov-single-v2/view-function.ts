@@ -166,12 +166,12 @@ export async function getVaults(
             period: reader.read8() + "",
             activationTsMs: reader.read64(),
             expirationTsMs: reader.read64(),
-            depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            settlementBase: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            settlementQuote: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            settlementBaseName: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            settlementQuoteName: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+            bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+            settlementBase: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+            settlementQuote: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+            settlementBaseName: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+            settlementQuoteName: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
             dTokenDecimal: reader.read64(),
             bTokenDecimal: reader.read64(),
             oTokenDecimal: reader.read64(),
@@ -246,7 +246,7 @@ export async function getVaults(
             depositFeeShareBp: reader.read64(),
             depositSharedFeePool: reader
                 .readVec((reader) => {
-                    return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+                    return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB())));
                 })
                 .at(0),
             bidFeeBp: reader.read64(),
@@ -325,11 +325,11 @@ export async function getVaults(
         }); // tail
         let depositVault = {
             id: AddressFromBytes(reader.readBytes(32)),
-            depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+            bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
             incentiveToken: reader
                 .readVec((reader) => {
-                    return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+                    return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB())));
                 })
                 .at(0),
             index: reader.read64(),
@@ -337,7 +337,7 @@ export async function getVaults(
             feeShareBp: reader.read64(),
             sharedFeePool: reader
                 .readVec((reader) => {
-                    return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+                    return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB())));
                 })
                 .at(0),
             activeShareSupply: reader.read64(),
@@ -347,7 +347,7 @@ export async function getVaults(
             premiumShareSupply: reader.read64(), // harvest
             incentiveShareSupply: reader.read64(), // redeem
             hasNext: reader.read8() > 0,
-            metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
             u64Padding: reader.readVec((reader) => {
                 return reader.read64();
             }),
@@ -412,7 +412,7 @@ export async function getAuctions(
         reader.read16();
         let id = AddressFromBytes(reader.readBytes(32));
         let index = reader.read64();
-        let token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+        let token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB())));
         let startTsMs = reader.read64();
         let endTsMs = reader.read64();
         let size = reader.read64();
@@ -635,16 +635,16 @@ export async function getMyBids(
         reader.read16();
         let bidVault = {
             id: AddressFromBytes(reader.readBytes(32)),
-            depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            depositToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+            bidToken: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
             incentiveToken: reader
                 .readVec((reader) => {
-                    return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+                    return String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB())));
                 })
                 .at(0),
             index: reader.read64(),
             shareSupply: reader.read64(),
-            metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            metadata: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
             u64Padding: reader.readVec((reader) => {
                 return reader.read64();
             }),
@@ -696,7 +696,7 @@ export async function getRefundShares(
         let bytes = result.returnValues[0][0];
         let reader = new BcsReader(new Uint8Array(bytes));
         reader.read8();
-        refundShares[String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())))] = reader.read64();
+        refundShares[String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB())))] = reader.read64();
     });
 
     // @ts-ignore
