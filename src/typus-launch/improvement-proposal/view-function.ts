@@ -36,8 +36,9 @@ export async function getOngoingTips(config: TypusConfig, input: { user?: string
             transaction.pure.option("address", input.user),
         ],
     });
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
     // @ts-ignore
-    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results[0].returnValues[0][0];
+    let bytes = results[0].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();
     return reader.readVec((reader) => {
@@ -92,7 +93,8 @@ export async function getEndedTips(config: TypusConfig): Promise<Tip[]> {
         arguments: [transaction.object(config.registry.launch.improvementProposal)],
     });
     // @ts-ignore
-    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results[0].returnValues[0][0];
+    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results[0]
+        .returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();
     return reader.readVec((reader) => {
@@ -153,7 +155,8 @@ export async function getOngoingTipVotes(config: TypusConfig, input: { user: str
         arguments: [transaction.object(config.registry.launch.improvementProposal), transaction.pure.address(input.user)],
     });
     // @ts-ignore
-    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results[0].returnValues[0][0];
+    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results[0]
+        .returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();
     return reader.readVec((reader) => {
@@ -180,7 +183,8 @@ export async function getEndedTipVotes(config: TypusConfig, input: { user: strin
         arguments: [transaction.object(config.registry.launch.improvementProposal), transaction.pure.address(input.user)],
     });
     // @ts-ignore
-    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results[0].returnValues[0][0];
+    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results[0]
+        .returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();
     return reader.readVec((reader) => {

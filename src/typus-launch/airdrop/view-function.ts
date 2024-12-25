@@ -29,7 +29,8 @@ export async function getAirdrop(
         arguments: [transaction.object(config.registry.launch.airdrop), transaction.pure.address(input.user)],
     });
     // @ts-ignore
-    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transaction })).results[0].returnValues[0][0];
+    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results[0]
+        .returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();
     return reader.readVec((reader) => {
