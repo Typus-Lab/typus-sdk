@@ -135,6 +135,7 @@ export async function getEndedTips(config: TypusConfig): Promise<Tip[]> {
 
 export interface Vote {
     index: string;
+    user: string;
     yes: string;
     no: string;
 }
@@ -159,6 +160,7 @@ export async function getOngoingTipVotes(config: TypusConfig, input: { user: str
         reader.readULEB();
         return {
             index: reader.read64(),
+            user: input.user,
             yes: reader.read64(),
             no: reader.read64(),
         } as Vote;
@@ -185,6 +187,34 @@ export async function getEndedTipVotes(config: TypusConfig, input: { user: strin
         reader.readULEB();
         return {
             index: reader.read64(),
+            user: input.user,
+            yes: reader.read64(),
+            no: reader.read64(),
+        } as Vote;
+    });
+}
+/**
+    public(package) fun get_tip_votes_bcs(
+        registry: &Registry,
+        index: u64,
+    ): vector<u8> {
+ */
+export async function getTipVotes(config: TypusConfig, input: { index: string }): Promise<Vote[]> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let transactionBlock = new TransactionBlock();
+    transactionBlock.moveCall({
+        target: `${config.package.launch.improvementProposal}::improvement_proposal::get_tip_votes_bcs`,
+        arguments: [transactionBlock.object(config.registry.launch.improvementProposal), transactionBlock.pure(input.index)],
+    });
+    // @ts-ignore
+    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results[0].returnValues[0][0];
+    let reader = new BcsReader(new Uint8Array(bytes));
+    reader.readULEB();
+    return reader.readVec((reader) => {
+        reader.readULEB();
+        return {
+            index: input.index,
+            user: AddressFromBytes(reader.readBytes(32)),
             yes: reader.read64(),
             no: reader.read64(),
         } as Vote;
