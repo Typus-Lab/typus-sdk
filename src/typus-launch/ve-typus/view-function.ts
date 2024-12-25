@@ -23,9 +23,9 @@ export async function getVeTypus(
         target: `${config.package.launch.veTypus}::ve_typus::get_ve_typus_bcs`,
         arguments: [transaction.object(config.registry.launch.veTypus), transaction.pure.address(input.user)],
     });
+    let devInspectTransactionBlockResult = await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction });
     // @ts-ignore
-    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results[0]
-        .returnValues[0][0];
+    let bytes = devInspectTransactionBlockResult.results[0].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();
     return reader.readVec((reader) => {
