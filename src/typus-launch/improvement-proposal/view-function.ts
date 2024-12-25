@@ -114,6 +114,7 @@ export async function getEndedTips(config: TypusConfig): Promise<Tip[]> {
             rewards: reader.readVec((reader) => {
                 return {
                     token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+                    key: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
                     amount: reader.read64(),
                 };
             }),

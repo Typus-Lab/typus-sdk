@@ -12,6 +12,7 @@
         "@typemove/sui": "^1.6.1",
         "@types/node": "^20.5.7",
         "aftermath-ts-sdk": "^1.1.14",
+        "bignumber": "^1.1.0",
         "bignumber.js": "^9.1.1",
         "bls-signatures": "^2.0.2",
         "bs58": "^5.0.0",
