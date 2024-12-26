@@ -785,3 +785,52 @@ export interface DepositorCashFlow {
     netDeposit: number | undefined;
     totalHarvest: Map<string, number>;
 }
+
+export async function getGraphQLEvents(module: string, sender: string) {
+    var graphql = JSON.stringify({
+        query: `
+        {
+        events(
+          last: 50,
+          filter: {
+            emittingModule: "${module}",
+            sender: "${sender}"
+            }
+        ) {
+          nodes {
+            sendingModule {
+              name
+              package { digest }
+            }
+            sender { address }
+            timestamp
+            contents {
+              type { repr }
+              json
+            }
+            bcs
+          }
+        }}
+          `,
+    });
+
+    let response = await fetch("https://sui-mainnet.mystenlabs.com/graphql", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: graphql,
+    });
+
+    // console.log(response);
+
+    if (response.ok) {
+        let data = await response.json();
+        console.log(data.data.events.nodes[0]);
+        console.log(data.data.events.nodes.length);
+        return data;
+    }
+}
+
+// getGraphQLEvents(
+//     "0xa76499eda1d37751473de5f30e106f35943ada2f6ea764861243e7f5aa5bcc97",
+//     "0x978f65df8570a075298598a9965c18de9087f9e888eb3430fe20334f5c554cfd"
+// );
