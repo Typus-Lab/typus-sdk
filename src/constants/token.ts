@@ -38,6 +38,8 @@ export function typeArgToAsset(typeArg: string): string {
             return "sSUI";
         case "0x5ca17430c1d046fae9edeaa8fd76c7b4193a00d764a0ecfa9418d733ad27bc1e":
             return "sSCA";
+        case "0x0000000000000000000000000000000000000000000000000000000000000002":
+            return "SUI";
         case "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519":
             if (typeArgs[1] === "usdc") {
                 return "wUSDC";
