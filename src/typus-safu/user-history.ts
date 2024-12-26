@@ -98,7 +98,7 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
             // skip the event without tokenType
             if (event.parsedJson!.bcs_padding.length > 0) {
                 let reader = new BcsReader(new Uint8Array(event.parsedJson!.bcs_padding[0]));
-                let Token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+                let Token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB())));
                 let asset = typeArgToAsset(Token);
                 let decimal = assetToDecimal(asset);
                 // console.log(asset, decimal);

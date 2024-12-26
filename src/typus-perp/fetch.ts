@@ -102,7 +102,7 @@ export async function getUserOrders(config: TypusConfig, user: string) {
     let tx = new TransactionBlock();
 
     _getUserOrders(tx, {
-        version: config.version.perp,
+        version: config.version.perp.perp,
         registry: config.registry.perp.market,
         marketIndex: BigInt(0),
         user,
@@ -125,7 +125,7 @@ export async function getUserPositions(config: TypusConfig, user: string) {
     let tx = new TransactionBlock();
 
     _getUserPositions(tx, {
-        version: config.version.perp,
+        version: config.version.perp.perp,
         registry: config.registry.perp.market,
         marketIndex: BigInt(0),
         user,
@@ -203,7 +203,7 @@ export async function getLiquidationPrice(
         let baseToken = tokenType[NETWORK][BASE_TOKEN];
 
         getEstimatedLiquidationPrice(tx, [cToken, baseToken], {
-            version: config.version.perp,
+            version: config.version.perp.perp,
             registry: config.registry.perp.market,
             poolRegistry: config.registry.perp.lpPool,
             marketIndex: BigInt(0),

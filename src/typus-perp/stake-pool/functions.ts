@@ -1,9 +1,9 @@
-import { PUBLISHED_AT } from "..";
+import { STAKE_POOL_PUBLISHED_AT } from "..";
 import { ObjectArg, obj, pure, vector } from "../../_framework/util";
 import { TransactionArgument, TransactionBlock } from "@mysten/sui.js/transactions";
 
 export function init(txb: TransactionBlock) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::stake_pool::init`, arguments: [] });
+    return txb.moveCall({ target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::init`, arguments: [] });
 }
 
 export interface UnsubscribeArgs {
@@ -17,7 +17,7 @@ export interface UnsubscribeArgs {
 
 export function unsubscribe(txb: TransactionBlock, typeArg: string, args: UnsubscribeArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::unsubscribe`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::unsubscribe`,
         typeArguments: [typeArg],
         arguments: [
             obj(txb, args.version),
@@ -38,7 +38,7 @@ export interface ActivateIncentiveTokenArgs {
 
 export function activateIncentiveToken(txb: TransactionBlock, typeArg: string, args: ActivateIncentiveTokenArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::activate_incentive_token`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::activate_incentive_token`,
         typeArguments: [typeArg],
         arguments: [obj(txb, args.version), obj(txb, args.registry), pure(txb, args.index, `u64`)],
     });
@@ -55,7 +55,7 @@ export interface AddIncentiveTokenArgs {
 
 export function addIncentiveToken(txb: TransactionBlock, typeArg: string, args: AddIncentiveTokenArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::add_incentive_token`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::add_incentive_token`,
         typeArguments: [typeArg],
         arguments: [
             obj(txb, args.version),
@@ -77,7 +77,7 @@ export interface AllocateIncentiveArgs {
 
 export function allocateIncentive(txb: TransactionBlock, args: AllocateIncentiveArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::allocate_incentive`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::allocate_incentive`,
         arguments: [obj(txb, args.version), obj(txb, args.registry), pure(txb, args.index, `u64`), obj(txb, args.clock)],
     });
 }
@@ -90,7 +90,7 @@ export interface CalculateIncentiveArgs {
 
 export function calculateIncentive(txb: TransactionBlock, args: CalculateIncentiveArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::calculate_incentive`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::calculate_incentive`,
         arguments: [obj(txb, args.stakePool), obj(txb, args.incentiveToken), obj(txb, args.lpUserShare)],
     });
 }
@@ -102,7 +102,7 @@ export interface CreateUserLastIncentiveTsMsArgs {
 
 export function createUserLastIncentiveTsMs(txb: TransactionBlock, args: CreateUserLastIncentiveTsMsArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::create_user_last_incentive_ts_ms`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::create_user_last_incentive_ts_ms`,
         arguments: [obj(txb, args.stakePool), pure(txb, args.currentTsMs, `u64`)],
     });
 }
@@ -115,7 +115,7 @@ export interface DeactivateIncentiveTokenArgs {
 
 export function deactivateIncentiveToken(txb: TransactionBlock, typeArg: string, args: DeactivateIncentiveTokenArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::deactivate_incentive_token`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::deactivate_incentive_token`,
         typeArguments: [typeArg],
         arguments: [obj(txb, args.version), obj(txb, args.registry), pure(txb, args.index, `u64`)],
     });
@@ -130,7 +130,7 @@ export interface DepositIncentiveArgs {
 
 export function depositIncentive(txb: TransactionBlock, typeArg: string, args: DepositIncentiveArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::deposit_incentive`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::deposit_incentive`,
         typeArguments: [typeArg],
         arguments: [obj(txb, args.version), obj(txb, args.registry), pure(txb, args.index, `u64`), obj(txb, args.coin)],
     });
@@ -143,17 +143,17 @@ export interface GetIncentiveArgs {
 
 export function getIncentive(txb: TransactionBlock, args: GetIncentiveArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::get_incentive`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::get_incentive`,
         arguments: [obj(txb, args.stakePool), obj(txb, args.tokenType)],
     });
 }
 
 export function getIncentiveTokens(txb: TransactionBlock, stakePool: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::stake_pool::get_incentive_tokens`, arguments: [obj(txb, stakePool)] });
+    return txb.moveCall({ target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::get_incentive_tokens`, arguments: [obj(txb, stakePool)] });
 }
 
 export function getLastIncentivePriceIndex(txb: TransactionBlock, stakePool: ObjectArg) {
-    return txb.moveCall({ target: `${PUBLISHED_AT}::stake_pool::get_last_incentive_price_index`, arguments: [obj(txb, stakePool)] });
+    return txb.moveCall({ target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::get_last_incentive_price_index`, arguments: [obj(txb, stakePool)] });
 }
 
 export interface GetMutIncentiveArgs {
@@ -163,7 +163,7 @@ export interface GetMutIncentiveArgs {
 
 export function getMutIncentive(txb: TransactionBlock, args: GetMutIncentiveArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::get_mut_incentive`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::get_mut_incentive`,
         arguments: [obj(txb, args.stakePool), obj(txb, args.tokenType)],
     });
 }
@@ -175,7 +175,7 @@ export interface GetMutStakePoolArgs {
 
 export function getMutStakePool(txb: TransactionBlock, args: GetMutStakePoolArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::get_mut_stake_pool`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::get_mut_stake_pool`,
         arguments: [obj(txb, args.id), pure(txb, args.index, `u64`)],
     });
 }
@@ -187,7 +187,7 @@ export interface GetStakePoolArgs {
 
 export function getStakePool(txb: TransactionBlock, args: GetStakePoolArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::get_stake_pool`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::get_stake_pool`,
         arguments: [obj(txb, args.id), pure(txb, args.index, `u64`)],
     });
 }
@@ -199,7 +199,7 @@ export interface GetUserShareIdsArgs {
 
 export function getUserShareIds(txb: TransactionBlock, args: GetUserShareIdsArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::get_user_share_ids`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::get_user_share_ids`,
         arguments: [obj(txb, args.stakePool), pure(txb, args.user, `address`)],
     });
 }
@@ -212,7 +212,7 @@ export interface GetUserSharesArgs {
 
 export function getUserShares(txb: TransactionBlock, args: GetUserSharesArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::get_user_shares`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::get_user_shares`,
         arguments: [obj(txb, args.registry), pure(txb, args.index, `u64`), pure(txb, args.user, `address`)],
     });
 }
@@ -227,7 +227,7 @@ export interface HarvestPerUserShareArgs {
 
 export function harvestPerUserShare(txb: TransactionBlock, typeArg: string, args: HarvestPerUserShareArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::harvest_per_user_share`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::harvest_per_user_share`,
         typeArguments: [typeArg],
         arguments: [
             obj(txb, args.version),
@@ -247,7 +247,7 @@ export interface NewStakePoolArgs {
 
 export function newStakePool(txb: TransactionBlock, typeArg: string, args: NewStakePoolArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::new_stake_pool`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::new_stake_pool`,
         typeArguments: [typeArg],
         arguments: [obj(txb, args.version), obj(txb, args.registry), pure(txb, args.unlockCountdownTsMs, `u64`)],
     });
@@ -260,7 +260,7 @@ export interface RemoveIncentiveArgs {
 
 export function removeIncentive(txb: TransactionBlock, args: RemoveIncentiveArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::remove_incentive`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::remove_incentive`,
         arguments: [obj(txb, args.stakePool), obj(txb, args.tokenType)],
     });
 }
@@ -273,7 +273,7 @@ export interface RemoveIncentiveTokenArgs {
 
 export function removeIncentiveToken(txb: TransactionBlock, typeArg: string, args: RemoveIncentiveTokenArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::remove_incentive_token`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::remove_incentive_token`,
         typeArguments: [typeArg],
         arguments: [obj(txb, args.version), obj(txb, args.registry), pure(txb, args.index, `u64`)],
     });
@@ -287,7 +287,7 @@ export interface RemoveUserShareByIdArgs {
 
 export function removeUserShareById(txb: TransactionBlock, args: RemoveUserShareByIdArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::remove_user_share_by_id`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::remove_user_share_by_id`,
         arguments: [obj(txb, args.id), pure(txb, args.user, `address`), pure(txb, args.userShareId, `u64`)],
     });
 }
@@ -303,7 +303,7 @@ export interface StakeArgs {
 
 export function stake(txb: TransactionBlock, typeArg: string, args: StakeArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::stake`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::stake`,
         typeArguments: [typeArg],
         arguments: [
             obj(txb, args.version),
@@ -324,7 +324,7 @@ export interface StoreUserSharesArgs {
 
 export function storeUserShares(txb: TransactionBlock, args: StoreUserSharesArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::store_user_shares`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::store_user_shares`,
         arguments: [
             obj(txb, args.id),
             pure(txb, args.user, `address`),
@@ -344,7 +344,7 @@ export interface UnstakeArgs {
 
 export function unstake(txb: TransactionBlock, typeArg: string, args: UnstakeArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::unstake`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::unstake`,
         typeArguments: [typeArg],
         arguments: [
             obj(txb, args.version),
@@ -368,7 +368,7 @@ export interface UpdateIncentiveConfigArgs {
 
 export function updateIncentiveConfig(txb: TransactionBlock, typeArg: string, args: UpdateIncentiveConfigArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::update_incentive_config`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::update_incentive_config`,
         typeArguments: [typeArg],
         arguments: [
             obj(txb, args.version),
@@ -390,7 +390,7 @@ export interface UpdateUnlockCountdownTsMsArgs {
 
 export function updateUnlockCountdownTsMs(txb: TransactionBlock, args: UpdateUnlockCountdownTsMsArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::update_unlock_countdown_ts_ms`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::update_unlock_countdown_ts_ms`,
         arguments: [
             obj(txb, args.version),
             obj(txb, args.registry),
@@ -409,7 +409,7 @@ export interface WithdrawIncentiveArgs {
 
 export function withdrawIncentive(txb: TransactionBlock, typeArg: string, args: WithdrawIncentiveArgs) {
     return txb.moveCall({
-        target: `${PUBLISHED_AT}::stake_pool::withdraw_incentive`,
+        target: `${STAKE_POOL_PUBLISHED_AT}::stake_pool::withdraw_incentive`,
         typeArguments: [typeArg],
         arguments: [
             obj(txb, args.version),

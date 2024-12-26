@@ -36,7 +36,7 @@ export async function getVault(
         let reader = new BcsReader(new Uint8Array(bytes));
         reader.readULEB();
         let id = AddressFromBytes(reader.readBytes(32));
-        let token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8())));
+        let token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB())));
         let info = reader.readVec((reader) => {
             return reader.read64();
         });

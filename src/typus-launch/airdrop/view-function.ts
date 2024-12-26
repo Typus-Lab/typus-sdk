@@ -8,6 +8,7 @@ export interface Airdrop {
     key: string;
     token: string;
     value: string;
+    claimed: boolean;
 }
 /**
     public(package) fun get_airdrop_bcs(
@@ -34,9 +35,10 @@ export async function getAirdrop(
     return reader.readVec((reader) => {
         reader.readULEB();
         return {
-            key: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
-            token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.read8()))),
+            key: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+            token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
             value: reader.read64(),
+            claimed: reader.read8() == 0 ? false : true,
         } as Airdrop;
     });
 }

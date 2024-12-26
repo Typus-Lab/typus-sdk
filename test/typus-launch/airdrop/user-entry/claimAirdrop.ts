@@ -1,5 +1,5 @@
 import "src/utils/load_env";
-import { setReward } from "src/typus-launch/improvement-proposal";
+import { claimAirdrop } from "src/typus-launch/airdrop";
 import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
 import { SuiClient } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
@@ -12,11 +12,10 @@ import { TypusConfig } from "src/utils";
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     let transactionBlock = new TransactionBlock();
-    setReward(config, transactionBlock, {
-        typeArguments: ["0xaded0918624ba1a31a9818ae73ccb557d46f35cb0d754b34597356ce38e6004d::typus::TYPUS"],
-        index: "2",
-        key: "Typus Improvement Proposal #2",
-        amount: "20000000000000",
+    claimAirdrop(config, transactionBlock, {
+        typeArguments: ["0xd31923b6821fb7ba32d23e514b43d307da6ef991f9ef1af2cc4e26a0992ac87a::afsui::AFSUI"],
+        key: "Typus Improvement Proposal #0",
+        recipient: signer.toSuiAddress(),
     });
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);

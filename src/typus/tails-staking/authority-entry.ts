@@ -249,11 +249,13 @@ export function getUpdateTailsStakingRegistryConfigTx(
 }
 
 /**
-    entry fun set_profit_sharing<TOKEN>(
+    entry fun set_profit_sharing<TOKEN, N_TOKEN>(
         version: &Version,
         tails_staking_registry: &mut TailsStakingRegistry,
         level_profits: vector<u64>,
-        mut profit: vector<Coin<TOKEN>>,
+        profit: Coin<TOKEN>,
+        amount: u64,
+        ts_ms: u64,
         ctx: &TxContext,
     ) {
 */

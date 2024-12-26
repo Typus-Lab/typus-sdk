@@ -53,7 +53,7 @@ export async function createTradingOrderWithBidReceipt(
     }
 
     _createTradingOrderWithBidReceipt(tx, [cToken, bToken, baseToken], {
-        version: config.version.perp,
+        version: config.version.perp.perp,
         registry: config.registry.perp.market,
         poolRegistry: config.registry.perp.lpPool,
         marketIndex: BigInt(0),
@@ -113,7 +113,7 @@ export async function reduceOptionCollateralPositionSize(
     }
 
     _reduceOptionCollateralPositionSize(tx, [cToken, bToken, baseToken], {
-        version: config.version.perp,
+        version: config.version.perp.perp,
         registry: config.registry.perp.market,
         poolRegistry: config.registry.perp.lpPool,
         marketIndex: BigInt(0),

@@ -13,10 +13,11 @@ import { TypusConfig } from "src/utils";
 
     let transactionBlock = new TransactionBlock();
     newTip(config, transactionBlock, {
-        description: "Test Description2",
-        image_url: "https://i.sstatic.net/2BvbQ.jpg",
-        proposal: "Test Proposal2",
-        config: ["1734670800000", "1735275600000", "1000"],
+        description: "Lorem ipsum odor amet, consectetuer adipiscing elit.",
+        image_url: "https://www.spicybaboon.com.au/cdn/shop/products/rick-roll-magic-mug-15739811823694_1572x.png",
+        proposal:
+            "Lorem ipsum odor amet, consectetuer adipiscing elit. Nostra ad tincidunt pellentesque eget purus porta penatibus auctor montes. Auctor facilisi volutpat; nibh malesuada bibendum senectus consectetur libero bibendum. Habitasse feugiat mauris lobortis elementum; sodales accumsan vestibulum. Ante curabitur dolor mus sodales, cubilia mattis porttitor maximus. Lacus odio sit interdum placerat blandit cursus maximus. Himenaeos euismod venenatis integer, volutpat dapibus mus viverra. Dolor accumsan vulputate arcu vehicula nullam nullam. Pellentesque curae ridiculus diam habitasse tempus finibus, torquent venenatis metus.",
+        config: ["1735113600000", "1735200000000", "500"],
     });
     let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
     console.log(res);
