@@ -1,4 +1,4 @@
-import camelcaseKeysDeep = require("camelcase-keys-deep");
+import camelcaseKeysDeep from "camelcase-keys-deep";
 import * as fs from "fs";
 
 export class TypusConfig {
