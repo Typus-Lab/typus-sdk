@@ -40,6 +40,37 @@ export async function getVeTypus(
     });
 }
 
+export interface VeTypusReport {
+    totalVeTypusAmount: string;
+    totalStakedTypusAmount: string;
+}
+export async function getReports(
+    config: TypusConfig,
+    input: {
+        tsMss: string[];
+    }
+): Promise<VeTypusReport[]> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let transaction = new Transaction();
+    input.tsMss.forEach((tsMs) => {
+        transaction.moveCall({
+            target: `${config.package.launch.veTypus}::ve_typus::get_report`,
+            arguments: [transaction.object(config.registry.launch.veTypus), transaction.pure.u64(tsMs)],
+        });
+    });
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
+    // @ts-ignore
+    return results?.map((result) => {
+        // @ts-ignore
+        let reader = new BcsReader(new Uint8Array(result.returnValues[0][0]));
+        reader.readULEB();
+        return {
+            totalVeTypusAmount: reader.read64(),
+            totalStakedTypusAmount: reader.read64(),
+        } as VeTypusReport;
+    });
+}
+
 export interface VeTypusInfo {
     totalVeTypusAmount: string;
     totalStakedTypusAmount: string;
