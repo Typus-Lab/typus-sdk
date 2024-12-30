@@ -6,7 +6,8 @@ export function typeArgsToAssets(typeArgs: string[]): string[] {
 }
 
 export function typeArgToAsset(typeArg: string): TOKEN {
-    switch (typeArg) {
+    let typeArgs = typeArg.split("::");
+    switch (`${normalizeSuiAddress(typeArgs[0])}::${typeArgs[1]}::${typeArgs[2]}`) {
         // native
 
         // SUI
