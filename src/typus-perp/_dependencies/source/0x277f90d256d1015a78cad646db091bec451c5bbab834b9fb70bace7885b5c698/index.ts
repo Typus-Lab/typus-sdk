@@ -1,3 +1,0 @@
-export const PACKAGE_ID = "0x277f90d256d1015a78cad646db091bec451c5bbab834b9fb70bace7885b5c698";
-export const PUBLISHED_AT = "0x277f90d256d1015a78cad646db091bec451c5bbab834b9fb70bace7885b5c698";
-export const PKG_V1 = "0x277f90d256d1015a78cad646db091bec451c5bbab834b9fb70bace7885b5c698";
