@@ -4,6 +4,7 @@ import { getRaiseFundTx } from "src/typus-dov-single-v2";
 import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
+import { tokenType } from "src/constants";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
@@ -12,9 +13,9 @@ import { TypusConfig } from "src/utils";
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     let transaction = getRaiseFundTx(config, new Transaction(), {
-        typeArguments: [config.token.usdc, config.token.sui],
+        typeArguments: [tokenType["TESTNET"].USDC, tokenType["TESTNET"].SUI],
         index: "1",
-        raiseCoins: (await provider.getCoins({ owner: user, coinType: config.token.usdc })).data.map((coin) => coin.coinObjectId),
+        raiseCoins: (await provider.getCoins({ owner: user, coinType: tokenType["TESTNET"].USDC })).data.map((coin) => coin.coinObjectId),
         raiseAmount: "1000000",
         receipts: [],
         raiseFromPremium: false,

@@ -6,6 +6,7 @@ import { TypusConfig } from "src/utils";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import slack from "slack";
 import { calculateLevelReward } from "src/typus-nft";
+import { tokenType } from "src/constants";
 
 let process = require("process");
 process.removeAllListeners("warning");
@@ -98,8 +99,8 @@ interface Material {
         return;
     }
     let tx = new Transaction();
-    let mergedCoin = tx.gas;
-    if (material.token != config.token.sui) {
+    let splitCoins;
+    if (material.token != tokenType["MAINNET"]["SUI"]) {
         let coins = (await provider.getCoins({ owner: keypair.toSuiAddress(), coinType: material.token })).data.map(
             (coin) => coin.coinObjectId
         );
@@ -110,13 +111,14 @@ interface Material {
                 coins.map((coin) => tx.object(coin))
             );
         }
-        mergedCoin = tx.object(coin);
+        splitCoins = tx.splitCoins(tx.object(coin), [tx.pure.u64(material.spendingProfit)]);
+    } else {
+        splitCoins = tx.splitCoins(tx.gas, [tx.pure.u64(material.spendingProfit)]);
     }
-    let [inputCoin] = tx.splitCoins(mergedCoin, [tx.pure(material.spendingProfit)]);
     tx = getSetProfitSharingTx(config, tx, {
         typeArguments: [material.token, material.nextRoundToken],
         levelProfits: material.levelProfits.map((x) => x.toString()),
-        coin: inputCoin,
+        coin: splitCoins[0],
         amount: material.nextRoundRewards.toString(),
         tsMs: material.nextRoundTsMs.toString(),
     });

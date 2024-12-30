@@ -7,6 +7,7 @@ import { TypusConfig } from "src/utils";
 import mnemonic from "mnemonic.json";
 import { getUserEvents } from "src/typus-dov-single-v2";
 import * as fs from "fs";
+import { tokenType } from "src/constants";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
@@ -16,7 +17,7 @@ import * as fs from "fs";
     console.log(`Using account ${user}`);
 
     let amount = await getAirdrop(config, {
-        typeArguments: [config.token.typus],
+        typeArguments: [tokenType["TESTNET"]["TYPUS"]],
         key: "typus_airdrop",
         user,
     });
@@ -24,7 +25,7 @@ import * as fs from "fs";
 
     if (Number(amount[1]) > 0) {
         let transaction = getClaimAirdropTx(config, new Transaction(), {
-            typeArguments: [config.token.typus],
+            typeArguments: [tokenType["TESTNET"]["TYPUS"]],
             key: "typus_airdrop",
             user,
         });

@@ -5,6 +5,7 @@ import { Transaction } from "@mysten/sui/transactions";
 import { getRemoveAirdropTx } from "src/typus/airdrop";
 import { TypusConfig } from "src/utils";
 import mnemonic from "mnemonic.json";
+import { tokenType } from "src/constants";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
@@ -12,7 +13,7 @@ import mnemonic from "mnemonic.json";
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     let transaction = await getRemoveAirdropTx(config, new Transaction(), {
-        typeArguments: [config.token.typus],
+        typeArguments: [tokenType["TESTNET"]["TYPUS"]],
         key: "typus_airdrop",
         sender: signer.toSuiAddress(),
     });
