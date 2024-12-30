@@ -1,10 +1,13 @@
+import { normalizeSuiAddress } from "@mysten/sui/utils";
+
 export function typeArgsToAssets(typeArgs: string[]): string[] {
     let assets = typeArgs.map((x) => typeArgToAsset(x));
     return assets;
 }
 
 export function typeArgToAsset(typeArg: string): TOKEN {
-    switch (typeArg) {
+    let typeArgs = typeArg.split("::");
+    switch (`${normalizeSuiAddress(typeArgs[0])}::${typeArgs[1]}::${typeArgs[2]}`) {
         // native
 
         // SUI
