@@ -5,6 +5,7 @@ import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import mnemonic from "mnemonic.json";
+import { tokenType } from "src/constants";
 
 (async () => {
     let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
@@ -14,7 +15,7 @@ import mnemonic from "mnemonic.json";
 
     // INPUT
     let transaction = getClaimRewardTx(config, new Transaction(), {
-        typeArguments: [config.token.usdc],
+        typeArguments: [tokenType["MAINNET"].USDC],
         index: "1",
         user,
     });

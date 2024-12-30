@@ -6,6 +6,7 @@ import { getSetAirdropTx } from "src/typus/airdrop";
 import { TypusConfig } from "src/utils";
 import mnemonic from "mnemonic.json";
 import * as fs from "fs";
+import { tokenType } from "src/constants";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
@@ -20,7 +21,7 @@ import * as fs from "fs";
         console.log(user_data.length);
         let slice = user_data.splice(0, 300);
         let transaction = await getSetAirdropTx(config, new Transaction(), {
-            typeArguments: [config.token.typus],
+            typeArguments: [tokenType["TESTNET"]["TYPUS"]],
             key: "typus_airdrop",
             coins: ["0xa633dd0101ae7b95ba675de8a12a7c9aad420054f4bcf7fcd23bd9d099fc2920"],
             amount: "500000000000000",

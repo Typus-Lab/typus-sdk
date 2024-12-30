@@ -4,6 +4,7 @@ import { getRaiseFundTx } from "src/typus-safu";
 import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
+import { tokenType } from "src/constants";
 
 (async () => {
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
@@ -12,7 +13,7 @@ import { TypusConfig } from "src/utils";
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     // INPUT
-    let cToken = config.token.sui;
+    let cToken = tokenType["MAINNET"].USDC;
     let coins = (
         await provider.getCoins({
             owner: user,

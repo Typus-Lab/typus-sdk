@@ -4,6 +4,7 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
+import { tokenType } from "src/constants";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
@@ -14,7 +15,7 @@ import { TypusConfig } from "src/utils";
     depositToDeepbookBalanceManager(config, transaction, {
         typeArguments: ["0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP"],
         index: "1",
-        coins: (await provider.getCoins({ owner: signer.toSuiAddress(), coinType: config.token.deep })).data.map(
+        coins: (await provider.getCoins({ owner: signer.toSuiAddress(), coinType: tokenType["MAINNET"].DEEP })).data.map(
             (coin) => coin.coinObjectId
         ),
         amount: "1000000",

@@ -3,6 +3,7 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
+import { tokenType } from "src/constants";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
@@ -19,7 +20,7 @@ function migrateDepositVault(config, tx, input: { index: string; migrateDepositT
     let takeDepositVaultResult = takeDepositVault(config, tx, { index: input.index });
     if (input.migrateDepositToken) {
         let takeDepositVaultDepositTokenResult = takeDepositVaultDepositToken(config, tx, {
-            typeArguments: [config.token.wusdc, config.token.usdc],
+            typeArguments: [tokenType["TESTNET"].wUSDC, tokenType["TESTNET"].USDC],
             depositVault: takeDepositVaultResult.depositVault,
         });
         let balance = swapUsdc(config, tx, { balance: takeDepositVaultDepositTokenResult.balance });
@@ -31,7 +32,7 @@ function migrateDepositVault(config, tx, input: { index: string; migrateDepositT
     }
     if (input.migrateBidToken) {
         let takeDepositVaultBidTokenResult = takeDepositVaultBidToken(config, tx, {
-            typeArguments: [config.token.wusdc, config.token.usdc],
+            typeArguments: [tokenType["TESTNET"].wUSDC, tokenType["TESTNET"].USDC],
             depositVault: takeDepositVaultResult.depositVault,
         });
         let balance = swapUsdc(config, tx, { balance: takeDepositVaultBidTokenResult.balance });
@@ -47,7 +48,7 @@ function migrateDepositVault(config, tx, input: { index: string; migrateDepositT
 function migrateBidVault(config, tx, input: { index: string }) {
     let takeBidVaultResult = takeBidVault(config, tx, { index: input.index });
     let takeBidVaultDepositTokenResult = takeBidVaultDepositToken(config, tx, {
-        typeArguments: [config.token.wusdc, config.token.usdc],
+        typeArguments: [tokenType["TESTNET"].wUSDC, tokenType["TESTNET"].USDC],
         bidVault: takeBidVaultResult.bidVault,
     });
     let balance = swapUsdc(config, tx, { balance: takeBidVaultDepositTokenResult.balance });
@@ -62,7 +63,7 @@ function migrateBidVault(config, tx, input: { index: string }) {
 function migrateSettledBidVault(config, tx, input: { id: string }) {
     let takeBidVaultResult = takeSettledBidVault(config, tx, { id: input.id });
     let takeBidVaultDepositTokenResult = takeBidVaultDepositToken(config, tx, {
-        typeArguments: [config.token.wusdc, config.token.usdc],
+        typeArguments: [tokenType["TESTNET"].wUSDC, tokenType["TESTNET"].USDC],
         bidVault: takeBidVaultResult.bidVault,
     });
     let balance = swapUsdc(config, tx, { balance: takeBidVaultDepositTokenResult.balance });
@@ -142,7 +143,7 @@ function takeSettledBidVault(
     let result = tx.moveCall({
         target: `${config.package.dovSingle}::tds_registry_authorized_entry::take_settled_bid_vault`,
         typeArguments: [],
-        arguments: [tx.object(config.registry.dov.dovSingle), tx.pure(input.id)],
+        arguments: [tx.object(config.registry.dov.dovSingle), tx.pure.u64(input.id)],
     });
 
     return { bidVault: result[0], receipt: result[1] } as TakeBidVaultResult;
@@ -289,13 +290,13 @@ function swapUsdc(
     }
 ) {
     let coin = tx.moveCall({
-        target: `0x0::circle_usdc::swap`,
-        typeArguments: [config.token.wusdc],
+        target: `0x0::circle_USDC::swap`,
+        typeArguments: [tokenType["TESTNET"].wUSDC],
         arguments: [tx.object("registry"), tx.object(input.balance)],
     });
     let balance = tx.moveCall({
         target: `0x2::coin::into_balance`,
-        typeArguments: [config.token.usdc],
+        typeArguments: [tokenType["TESTNET"].USDC],
         arguments: [tx.object(coin)],
     });
 

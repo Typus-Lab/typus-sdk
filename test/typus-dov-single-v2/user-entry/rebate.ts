@@ -4,6 +4,7 @@ import { getRebateTx } from "src/typus-dov-single-v2";
 import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
+import { tokenType } from "src/constants";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
@@ -12,7 +13,7 @@ import { TypusConfig } from "src/utils";
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     let transaction = getRebateTx(config, new Transaction(), {
-        typeArgument: config.token.sui,
+        typeArgument: tokenType["TESTNET"].SUI,
         user,
     });
 
