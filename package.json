@@ -2,7 +2,7 @@
     "name": "@typus/typus-sdk",
     "author": "Typus",
     "description": "typus sdk",
-    "version": "1.6.4",
+    "version": "1.5.5-c",
     "dependencies": {
         "@mysten/bcs": "^0.11.1",
         "@mysten/kiosk": "0.9.34",
@@ -15,8 +15,7 @@
         "camelcase-keys-deep": "^0.1.0",
         "dotenv": "^16.4.7",
         "lodash": "^4.17.21",
-        "moment": "^2.30.1",
-        "slack": "^11.0.2"
+        "moment": "^2.30.1"
     },
     "devDependencies": {
         "@types/bs58": "^4.0.1",
