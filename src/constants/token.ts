@@ -26,6 +26,7 @@ export function typeArgToAsset(typeArg: string): TOKEN {
             return "NAVX";
         // SCA
         case "0x7016aae72cfc67f2fadf55769c0a7dd54291a583b63051a5ed71081cce836ac6::sca::SCA":
+        case "0xd33ea459d9e667c112f5168464a885a654d7bc3fd6903720aaa8cf495a32a77e::sca::SCA":
             return "SCA";
         // DEEP
         case "0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP":
