@@ -24,6 +24,7 @@
         "@types/mocha": "^10.0.1",
         "@types/rx": "^4.1.2",
         "prettier": "^3.0.0",
+        "slack": "^11.0.2",
         "tsc-alias": "^1.8.10",
         "tsconfig-paths": "^4.2.0",
         "tslint": "^6.1.3",
