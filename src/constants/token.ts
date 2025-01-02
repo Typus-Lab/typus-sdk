@@ -230,3 +230,19 @@ export function typeArgToToken(typeArg: string): string {
             return typeArgs[2];
     }
 }
+
+
+export function tokenTypeToAsset(env: 'MAINNET' | 'TESTNET', tokenAddress: string): string | undefined {
+    const normalizedTokenAddress = normalizeSuiAddress(tokenAddress);
+    const tokens = tokenType[env];
+    for (const [token, address] of Object.entries(tokens)) {
+        if (address === normalizedTokenAddress) {
+            return token;
+        }
+    }
+    // not found => return undefined
+    return undefined;
+}
+export function assetToTokenType(env: 'MAINNET' | 'TESTNET', token: string): string {
+    return tokenType[env][token];
+}
