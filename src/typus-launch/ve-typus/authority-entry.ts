@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -13,7 +13,7 @@ import { TypusConfig } from "src/utils";
 */
 export function updateRegistrySetting(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         settingIndex: string;
         value: string;
@@ -24,8 +24,8 @@ export function updateRegistrySetting(
         arguments: [
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
-            tx.pure(input.settingIndex),
-            tx.pure(input.value),
+            tx.pure.u64(input.settingIndex),
+            tx.pure.u64(input.value),
         ],
     });
 }
@@ -43,7 +43,7 @@ export function updateRegistrySetting(
 */
 export function delegateMint(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         user: string;
         coins: string[];
@@ -59,16 +59,16 @@ export function delegateMint(
                 input.coins.map((coin) => tx.object(coin))
             );
         }
-        return tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+        return tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
     })();
     tx.moveCall({
         target: `${config.package.launch.veTypus}::ve_typus::delegate_mint`,
         arguments: [
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
-            tx.pure(input.user),
+            tx.pure.address(input.user),
             coin,
-            tx.pure(input.lockUpPeriod),
+            tx.pure.u64(input.lockUpPeriod),
             tx.object(CLOCK),
         ],
     });
@@ -86,7 +86,7 @@ export function delegateMint(
 */
 export function delegateBurn(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         user: string;
         veTypus: string;
@@ -97,8 +97,8 @@ export function delegateBurn(
         arguments: [
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
-            tx.pure(input.user),
-            tx.pure(input.veTypus),
+            tx.pure.address(input.user),
+            tx.pure.u64(input.veTypus),
             tx.object(CLOCK),
         ],
     });
@@ -117,7 +117,7 @@ export function delegateBurn(
 */
 export function delegateRenew(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         user: string;
         veTypus: string;
@@ -129,9 +129,9 @@ export function delegateRenew(
         arguments: [
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
-            tx.pure(input.user),
-            tx.pure(input.veTypus),
-            tx.pure(input.lockUpPeriod),
+            tx.pure.address(input.user),
+            tx.pure.u64(input.veTypus),
+            tx.pure.u64(input.lockUpPeriod),
             tx.object(CLOCK),
         ],
     });

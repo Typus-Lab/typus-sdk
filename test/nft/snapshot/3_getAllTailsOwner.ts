@@ -1,5 +1,5 @@
 import * as json2csv from "json2csv";
-import { normalizeSuiAddress } from "@mysten/sui.js/utils";
+import { normalizeSuiAddress } from "@mysten/sui/utils";
 import * as fs from "fs";
 
 (async () => {

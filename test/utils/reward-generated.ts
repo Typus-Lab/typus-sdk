@@ -1,6 +1,6 @@
 import { TypusConfig } from "src/utils";
-import { getTotalDepositorIncentive, getTotalPremium, getTotalProfitSharing, getTotalProfitSharingClaimed } from "src/utils";
-import { SuiClient } from "@mysten/sui.js/client";
+import { getTotalDepositorIncentive, getTotalPremium, getTotalProfitSharingClaimed } from "src/utils";
+import { SuiClient } from "@mysten/sui/client";
 
 (async () => {
     let res1 = await getTotalDepositorIncentive();
@@ -9,8 +9,4 @@ import { SuiClient } from "@mysten/sui.js/client";
     console.log(res2);
     let res3 = await getTotalProfitSharingClaimed();
     console.log(res3);
-    let config = await TypusConfig.default("MAINNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
-    let res4 = await getTotalProfitSharing(provider);
-    console.log(res4);
 })();

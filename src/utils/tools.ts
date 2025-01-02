@@ -1,5 +1,11 @@
 import BigNumber from "bignumber.js";
 
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const prettify_big_number = (value, decimal) => {
+    return new BigNumber(value).div(BigNumber(10).pow(decimal)).toFormat(decimal);
+};
+
 export function U64FromBytes(x) {
     var u64 = BigInt(0);
     for (var i = 0; i < x.length; i++) {

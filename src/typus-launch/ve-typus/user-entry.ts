@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 import { updateVotes } from "../improvement-proposal";
@@ -15,7 +15,7 @@ import { updateVotes } from "../improvement-proposal";
 */
 export function mint(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         coins: string[];
         amount: string;
@@ -30,7 +30,7 @@ export function mint(
                 input.coins.map((coin) => tx.object(coin))
             );
         }
-        return tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
+        return tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
     })();
     tx.moveCall({
         target: `${config.package.launch.veTypus}::ve_typus::mint`,
@@ -38,7 +38,7 @@ export function mint(
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
             coin,
-            tx.pure(input.lockUpPeriod),
+            tx.pure.u64(input.lockUpPeriod),
             tx.object(CLOCK),
         ],
     });
@@ -56,7 +56,7 @@ export function mint(
 */
 export function burn(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         user: string;
         veTypus: string;
@@ -67,7 +67,7 @@ export function burn(
         arguments: [
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
-            tx.pure(input.veTypus),
+            tx.pure.address(input.veTypus),
             tx.object(CLOCK),
         ],
     });
@@ -86,7 +86,7 @@ export function burn(
 */
 export function renew(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         veTypus: string;
         lockUpPeriod: string;
@@ -97,8 +97,8 @@ export function renew(
         arguments: [
             tx.object(config.version.launch.veTypus),
             tx.object(config.registry.launch.veTypus),
-            tx.pure(input.veTypus),
-            tx.pure(input.lockUpPeriod),
+            tx.pure.address(input.veTypus),
+            tx.pure.u64(input.lockUpPeriod),
             tx.object(CLOCK),
         ],
     });

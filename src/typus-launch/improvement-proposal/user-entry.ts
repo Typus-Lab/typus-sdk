@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -15,7 +15,7 @@ import { TypusConfig } from "src/utils";
  */
 export function vote(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
         yes: boolean;
@@ -27,8 +27,8 @@ export function vote(
             tx.object(config.version.launch.improvementProposal),
             tx.object(config.registry.launch.improvementProposal),
             tx.object(config.registry.launch.veTypus),
-            tx.pure(input.index),
-            tx.pure(input.yes),
+            tx.pure.u64(input.index),
+            tx.pure.bool(input.yes),
             tx.object(CLOCK),
         ],
     });
@@ -43,7 +43,7 @@ export function vote(
         ctx: &TxContext,
     ) {
  */
-export function updateVotes(config: TypusConfig, tx: TransactionBlock) {
+export function updateVotes(config: TypusConfig, tx: Transaction) {
     tx.moveCall({
         target: `${config.package.launch.improvementProposal}::improvement_proposal::update_votes`,
         arguments: [

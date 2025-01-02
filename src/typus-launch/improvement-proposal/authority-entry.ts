@@ -1,5 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { isSUI } from "src/_dependencies/source/0x2/sui/structs";
+import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -16,7 +15,7 @@ import { TypusConfig } from "src/utils";
 */
 export async function newTip(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         description: string;
         image_url: string;
@@ -29,10 +28,10 @@ export async function newTip(
         arguments: [
             tx.object(config.version.launch.improvementProposal),
             tx.object(config.registry.launch.improvementProposal),
-            tx.pure(input.description),
-            tx.pure(input.image_url),
-            tx.pure(input.proposal),
-            tx.pure(input.config),
+            tx.pure.string(input.description),
+            tx.pure.string(input.image_url),
+            tx.pure.string(input.proposal),
+            tx.pure.vector("u64", input.config),
         ],
     });
 }
@@ -48,7 +47,7 @@ export async function newTip(
 */
 export function updateRegistrySetting(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         settingIndex: string;
         value: string;
@@ -59,8 +58,8 @@ export function updateRegistrySetting(
         arguments: [
             tx.object(config.version.launch.improvementProposal),
             tx.object(config.registry.launch.improvementProposal),
-            tx.pure(input.settingIndex),
-            tx.pure(input.value),
+            tx.pure.u64(input.settingIndex),
+            tx.pure.u64(input.value),
         ],
     });
 }
@@ -78,7 +77,7 @@ export function updateRegistrySetting(
 */
 export function updateDisplay(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
         description?: string;
@@ -91,10 +90,10 @@ export function updateDisplay(
         arguments: [
             tx.object(config.version.launch.improvementProposal),
             tx.object(config.registry.launch.improvementProposal),
-            tx.pure(input.index),
-            tx.pure(input.description ? [input.description] : []),
-            tx.pure(input.image_url ? [input.image_url] : []),
-            tx.pure(input.proposal ? [input.proposal] : []),
+            tx.pure.u64(input.index),
+            tx.pure.option("string", input.description),
+            tx.pure.option("string", input.image_url),
+            tx.pure.option("string", input.proposal),
         ],
     });
 }
@@ -111,7 +110,7 @@ export function updateDisplay(
 */
 export function updateInfo(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
         infoIndex: string;
@@ -123,9 +122,9 @@ export function updateInfo(
         arguments: [
             tx.object(config.version.launch.improvementProposal),
             tx.object(config.registry.launch.improvementProposal),
-            tx.pure(input.index),
-            tx.pure(input.infoIndex),
-            tx.pure(input.value),
+            tx.pure.u64(input.index),
+            tx.pure.u64(input.infoIndex),
+            tx.pure.u64(input.value),
         ],
     });
 }
@@ -142,7 +141,7 @@ export function updateInfo(
 */
 export function updateConfig(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
         configIndex: string;
@@ -154,9 +153,9 @@ export function updateConfig(
         arguments: [
             tx.object(config.version.launch.improvementProposal),
             tx.object(config.registry.launch.improvementProposal),
-            tx.pure(input.index),
-            tx.pure(input.configIndex),
-            tx.pure(input.value),
+            tx.pure.u64(input.index),
+            tx.pure.u64(input.configIndex),
+            tx.pure.u64(input.value),
         ],
     });
 }
@@ -173,7 +172,7 @@ export function updateConfig(
 */
 export function setReward(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -187,9 +186,9 @@ export function setReward(
         arguments: [
             tx.object(config.version.launch.improvementProposal),
             tx.object(config.registry.launch.improvementProposal),
-            tx.pure(input.index),
-            tx.pure(input.key),
-            tx.pure(input.amount),
+            tx.pure.u64(input.index),
+            tx.pure.string(input.key),
+            tx.pure.u64(input.amount),
         ],
     });
 }
@@ -205,7 +204,7 @@ export function setReward(
 */
 export function removeReward(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
         rewardIndex: string;
@@ -216,8 +215,8 @@ export function removeReward(
         arguments: [
             tx.object(config.version.launch.improvementProposal),
             tx.object(config.registry.launch.improvementProposal),
-            tx.pure(input.index),
-            tx.pure(input.rewardIndex),
+            tx.pure.u64(input.index),
+            tx.pure.u64(input.rewardIndex),
         ],
     });
 }
@@ -234,7 +233,7 @@ export function removeReward(
 */
 export function countVotes(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
     }
@@ -244,7 +243,7 @@ export function countVotes(
         arguments: [
             tx.object(config.version.launch.improvementProposal),
             tx.object(config.registry.launch.improvementProposal),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.object(config.registry.launch.veTypus),
             tx.object(CLOCK),
         ],

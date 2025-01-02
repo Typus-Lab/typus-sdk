@@ -1,5 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { isSUI } from "src/_dependencies/source/0x2/sui/structs";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 /**
@@ -15,7 +14,7 @@ import { TypusConfig } from "src/utils";
 */
 export async function setAirdrop(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         key: string;
@@ -25,28 +24,30 @@ export async function setAirdrop(
         values: string[];
     }
 ) {
-    let [coin] = isSUI(input.typeArguments[0])
-        ? tx.splitCoins(tx.gas, [tx.pure(input.amount)])
-        : (() => {
-              let coin = input.coins.pop()!;
-              if (input.coins.length > 0) {
-                  tx.mergeCoins(
-                      tx.object(coin),
-                      input.coins.map((id) => tx.object(id))
-                  );
-              }
-              return tx.splitCoins(tx.object(coin), [tx.pure(input.amount)]);
-          })();
+    let [coin] =
+        input.typeArguments[0] == "0x2::sui::SUI" ||
+        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
+            ? tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)])
+            : (() => {
+                  let coin = input.coins.pop()!;
+                  if (input.coins.length > 0) {
+                      tx.mergeCoins(
+                          tx.object(coin),
+                          input.coins.map((id) => tx.object(id))
+                      );
+                  }
+                  return tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
+              })();
     tx.moveCall({
         target: `${config.package.launch.airdrop}::airdrop::set_airdrop`,
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.version.launch.airdrop),
             tx.object(config.registry.launch.airdrop),
-            tx.pure(input.key),
+            tx.pure.string(input.key),
             tx.object(coin),
-            tx.pure(input.users),
-            tx.pure(input.values),
+            tx.pure.vector("address", input.users),
+            tx.pure.vector("u64", input.values),
         ],
     });
 }
@@ -61,7 +62,7 @@ export async function setAirdrop(
 */
 export async function removeAirdrop(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         key: string;
@@ -70,6 +71,6 @@ export async function removeAirdrop(
     tx.moveCall({
         target: `${config.package.launch.airdrop}::airdrop::remove_airdrop`,
         typeArguments: input.typeArguments,
-        arguments: [tx.object(config.version.launch.airdrop), tx.object(config.registry.launch.airdrop), tx.pure(input.key)],
+        arguments: [tx.object(config.version.launch.airdrop), tx.object(config.registry.launch.airdrop), tx.pure.string(input.key)],
     });
 }

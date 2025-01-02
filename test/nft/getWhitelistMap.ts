@@ -1,6 +1,6 @@
 import { TypusConfig } from "src/utils";
 import { getWhitelistMap } from "src/typus-nft";
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);

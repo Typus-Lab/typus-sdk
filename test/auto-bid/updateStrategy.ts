@@ -1,9 +1,9 @@
 import "src/utils/load_env";
-import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { TypusConfig } from "src/utils";
 import { getUpdateStrategyTx } from "src/auto-bid";
-import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
@@ -23,7 +23,7 @@ import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
     let maxTimes = "20";
     let targetRounds = [];
 
-    let transactionBlock = await getUpdateStrategyTx(config, new TransactionBlock(), {
+    let transaction = await getUpdateStrategyTx(config, new Transaction(), {
         typeArguments,
         vaultIndex,
         signalIndex,
@@ -36,6 +36,6 @@ import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
         targetRounds,
     });
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
+    let res = await provider.signAndExecuteTransaction({ signer: keypair, transaction });
     console.log(res);
 })();

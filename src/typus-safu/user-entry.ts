@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -20,7 +20,7 @@ import { TypusConfig } from "src/utils";
  */
 export function getRaiseFundTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -39,24 +39,24 @@ export function getRaiseFundTx(
                   target: `${config.package.framework}::utils::delegate_extract_balance`,
                   typeArguments: [input.typeArguments[0]],
                   arguments: [
-                      tx.pure(input.user),
+                      tx.pure.address(input.user),
                       tx.makeMoveVec({
                           type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          objects: [tx.splitCoins(tx.gas, [tx.pure(input.raiseAmount)])],
+                          elements: [tx.splitCoins(tx.gas, [tx.pure.u64(input.raiseAmount)])],
                       }),
-                      tx.pure(input.raiseAmount),
+                      tx.pure.u64(input.raiseAmount),
                   ],
               })
             : tx.moveCall({
                   target: `${config.package.framework}::utils::delegate_extract_balance`,
                   typeArguments: [input.typeArguments[0]],
                   arguments: [
-                      tx.pure(input.user),
+                      tx.pure.address(input.user),
                       tx.makeMoveVec({
                           type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          objects: input.raiseCoins.map((coin) => tx.object(coin)),
+                          elements: input.raiseCoins.map((coin) => tx.object(coin)),
                       }),
-                      tx.pure(input.raiseAmount),
+                      tx.pure.u64(input.raiseAmount),
                   ],
               });
     let result = tx.moveCall({
@@ -68,11 +68,11 @@ export function getRaiseFundTx(
             tx.object(config.registry.typus.user),
             tx.object(config.version.safu),
             tx.object(config.registry.safu.safu),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.object(raiseBalance),
-            tx.pure(input.raiseFromDeactivating),
-            tx.pure(input.raiseFromInactive),
-            tx.pure(input.raiseFromReward),
+            tx.pure.u64(input.raiseFromDeactivating),
+            tx.pure.u64(input.raiseFromInactive),
+            tx.pure.u64(input.raiseFromReward),
             tx.object(CLOCK),
         ],
     });
@@ -98,7 +98,7 @@ export function getRaiseFundTx(
  */
 export function getReduceFundTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -117,17 +117,17 @@ export function getReduceFundTx(
             tx.object(config.registry.typus.user),
             tx.object(config.version.safu),
             tx.object(config.registry.safu.safu),
-            tx.pure(input.index),
-            tx.pure(input.reduceFromWarmup),
-            tx.pure(input.reduceFromActive),
-            tx.pure(input.reduceFromInactive),
+            tx.pure.u64(input.index),
+            tx.pure.u64(input.reduceFromWarmup),
+            tx.pure.u64(input.reduceFromActive),
+            tx.pure.u64(input.reduceFromInactive),
             tx.object(CLOCK),
         ],
     });
     tx.moveCall({
         target: `${config.package.framework}::utils::transfer_balance`,
         typeArguments: [input.typeArguments[0]],
-        arguments: [tx.object(result[0]), tx.pure(input.user)],
+        arguments: [tx.object(result[0]), tx.pure.address(input.user)],
     });
 
     return tx;
@@ -143,7 +143,7 @@ export function getReduceFundTx(
  */
 export function getClaimRewardTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -153,12 +153,12 @@ export function getClaimRewardTx(
     let result = tx.moveCall({
         target: `${config.package.safu}::safu::claim_reward`,
         typeArguments: input.typeArguments,
-        arguments: [tx.object(config.version.safu), tx.object(config.registry.safu.safu), tx.pure(input.index)],
+        arguments: [tx.object(config.version.safu), tx.object(config.registry.safu.safu), tx.pure.u64(input.index)],
     });
     tx.moveCall({
         target: `${config.package.framework}::utils::transfer_balance`,
         typeArguments: [input.typeArguments[0]],
-        arguments: [tx.object(result[0]), tx.pure(input.user)],
+        arguments: [tx.object(result[0]), tx.pure.address(input.user)],
     });
 
     return tx;
@@ -178,7 +178,7 @@ export function getClaimRewardTx(
  */
 export function getSnapshotTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
     }
@@ -192,7 +192,7 @@ export function getSnapshotTx(
             tx.object(config.registry.typus.user),
             tx.object(config.version.safu),
             tx.object(config.registry.safu.safu),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.object(CLOCK),
         ],
     });

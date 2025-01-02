@@ -1,5 +1,5 @@
 import { assetToDecimal, typeArgToAsset } from "src/constants";
-import { SuiClient, SuiEvent } from "@mysten/sui.js/client";
+import { SuiClient, SuiEvent } from "@mysten/sui/client";
 
 const headers = {
     "api-key": "tz3JJ6stG7Fux6ueRSRA5mdpC9U0lozI3",
@@ -195,55 +195,55 @@ export async function getTotalProfitSharingClaimed(): Promise<TokenAmount[]> {
     return data.result.rows as TokenAmount[];
 }
 
-export async function getTotalProfitSharing(provider: SuiClient): Promise<TokenAmount[]> {
-    var hasNextPage = true;
-    var cursor: any | undefined = undefined;
+// export async function getTotalProfitSharing(provider: SuiClient): Promise<TokenAmount[]> {
+//     var hasNextPage = true;
+//     var cursor: any | undefined = undefined;
 
-    let datas: SuiEvent[] = [];
+//     let datas: SuiEvent[] = [];
 
-    while (hasNextPage) {
-        var result = await provider.queryEvents({
-            query: {
-                MoveEventType: `0x80ff0830313b36bb65ab927af811037f8b175d6e83c43f906b8f55d9263eea99::tails_staking::ProfitSharingEvent`,
-            },
-            order: "descending",
-            cursor,
-        });
+//     while (hasNextPage) {
+//         var result = await provider.queryEvents({
+//             query: {
+//                 MoveEventType: `0x80ff0830313b36bb65ab927af811037f8b175d6e83c43f906b8f55d9263eea99::tails_staking::ProfitSharingEvent`,
+//             },
+//             order: "descending",
+//             cursor,
+//         });
 
-        hasNextPage = result.hasNextPage;
-        cursor = result.nextCursor;
+//         hasNextPage = result.hasNextPage;
+//         cursor = result.nextCursor;
 
-        // @ts-ignore
-        datas = datas.concat(result.data);
-    }
+//         // @ts-ignore
+//         datas = datas.concat(result.data);
+//     }
 
-    let tokenAmountMap = new Map<string, number>();
+//     let tokenAmountMap = new Map<string, number>();
 
-    for (let data of datas) {
-        // @ts-ignore
-        let token = typeArgToAsset(data.parsedJson.token.name);
-        // @ts-ignore
-        let value = data.parsedJson.value;
+//     for (let data of datas) {
+//         // @ts-ignore
+//         let token = typeArgToAsset(data.parsedJson.token.name);
+//         // @ts-ignore
+//         let value = data.parsedJson.value;
 
-        let amount = value / 10 ** assetToDecimal(token)!;
+//         let amount = value / 10 ** assetToDecimal(token)!;
 
-        // const week = Math.round(Number(data.timestampMs) / 24 / 3600 / 1000);
-        if (tokenAmountMap.has(token)) {
-            let sum = tokenAmountMap.get(token)!;
-            tokenAmountMap.set(token, sum + Number(amount));
-        } else {
-            tokenAmountMap.set(token, Number(amount));
-        }
-    }
+//         // const week = Math.round(Number(data.timestampMs) / 24 / 3600 / 1000);
+//         if (tokenAmountMap.has(token)) {
+//             let sum = tokenAmountMap.get(token)!;
+//             tokenAmountMap.set(token, sum + Number(amount));
+//         } else {
+//             tokenAmountMap.set(token, Number(amount));
+//         }
+//     }
 
-    let tokenAmount: TokenAmount[] = [];
+//     let tokenAmount: TokenAmount[] = [];
 
-    for (let x of tokenAmountMap.entries()) {
-        tokenAmount.push({ token: x[0], total_amount: x[1].toString() });
-    }
+//     for (let x of tokenAmountMap.entries()) {
+//         tokenAmount.push({ token: x[0], total_amount: x[1].toString() });
+//     }
 
-    return tokenAmount;
-}
+//     return tokenAmount;
+// }
 
 interface TokenAmount {
     token: string;

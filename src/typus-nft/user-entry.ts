@@ -1,4 +1,4 @@
-import { TransactionArgument, TransactionBlock } from "@mysten/sui.js/transactions";
+import { TransactionArgument, Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -11,7 +11,7 @@ import { TypusConfig } from "src/utils";
 */
 export async function getMintTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         pool: string;
         whitelist_token: string;
@@ -37,7 +37,7 @@ export async function getMintTx(
 */
 export async function getMintToKioskTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         pool: string;
         whitelist_token: string;
@@ -70,7 +70,7 @@ export async function getMintToKioskTx(
 */
 export async function getPayRoyaltyTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         request: TransactionArgument;
         coin: string;
@@ -96,19 +96,19 @@ export async function getPayRoyaltyTx(
 */
 export async function getRequestMintTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         pool: string;
         seed: string;
         price: string;
     }
 ) {
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.price)]);
+    let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.price)]);
 
     tx.moveCall({
         target: `${config.package.nft}::discount_mint::request_mint`,
         typeArguments: [],
-        arguments: [tx.object(input.pool), tx.pure(input.seed), coin, tx.object(CLOCK)],
+        arguments: [tx.object(input.pool), tx.pure.u64(input.seed), coin, tx.object(CLOCK)],
     });
 
     return tx;
@@ -116,7 +116,7 @@ export async function getRequestMintTx(
 
 export async function getIsWhitelistTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         pool: string;
         user: string;
@@ -125,7 +125,7 @@ export async function getIsWhitelistTx(
     tx.moveCall({
         target: `${config.package.nft}::discount_mint::is_whitelist`,
         typeArguments: [],
-        arguments: [tx.object(input.pool), tx.pure(input.user)],
+        arguments: [tx.object(input.pool), tx.pure.address(input.user)],
     });
 
     return tx;

@@ -1,4 +1,4 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 /**
@@ -12,7 +12,7 @@ import { TypusConfig } from "src/utils";
  */
 export function claimAirdrop(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         key: string;
@@ -25,8 +25,8 @@ export function claimAirdrop(
         arguments: [
             tx.object(config.version.launch.airdrop),
             tx.object(config.registry.launch.airdrop),
-            tx.pure(input.key),
-            tx.pure(input.recipient),
+            tx.pure.string(input.key),
+            tx.pure.address(input.recipient),
         ],
     });
 }

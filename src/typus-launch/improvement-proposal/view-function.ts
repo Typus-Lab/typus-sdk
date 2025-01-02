@@ -1,5 +1,5 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient } from "@mysten/sui.js/client";
+import { Transaction } from "@mysten/sui/transactions";
+import { SuiClient } from "@mysten/sui/client";
 import { BcsReader } from "@mysten/bcs";
 import { AddressFromBytes, TypusConfig } from "src/utils";
 import { SENDER } from "src/constants";
@@ -27,17 +27,18 @@ export interface Tip {
  */
 export async function getOngoingTips(config: TypusConfig, input: { user?: string }): Promise<Tip[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
-    transactionBlock.moveCall({
+    let transaction = new Transaction();
+    transaction.moveCall({
         target: `${config.package.launch.improvementProposal}::improvement_proposal::get_ongoing_tips_bcs`,
         arguments: [
-            transactionBlock.object(config.registry.launch.improvementProposal),
-            transactionBlock.object(config.registry.launch.veTypus),
-            transactionBlock.pure(input.user ? [input.user] : []),
+            transaction.object(config.registry.launch.improvementProposal),
+            transaction.object(config.registry.launch.veTypus),
+            transaction.pure.option("address", input.user),
         ],
     });
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
     // @ts-ignore
-    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results[0].returnValues[0][0];
+    let bytes = results[0].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();
     return reader.readVec((reader) => {
@@ -86,13 +87,14 @@ export async function getOngoingTips(config: TypusConfig, input: { user?: string
  */
 export async function getEndedTips(config: TypusConfig): Promise<Tip[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
-    transactionBlock.moveCall({
+    let transaction = new Transaction();
+    transaction.moveCall({
         target: `${config.package.launch.improvementProposal}::improvement_proposal::get_ended_tips_bcs`,
-        arguments: [transactionBlock.object(config.registry.launch.improvementProposal)],
+        arguments: [transaction.object(config.registry.launch.improvementProposal)],
     });
+    let devInspectTransactionBlockResult = await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction });
     // @ts-ignore
-    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results[0].returnValues[0][0];
+    let bytes = devInspectTransactionBlockResult.results[0].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();
     return reader.readVec((reader) => {
@@ -112,6 +114,7 @@ export async function getEndedTips(config: TypusConfig): Promise<Tip[]> {
             rewards: reader.readVec((reader) => {
                 return {
                     token: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
+                    key: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
                     amount: reader.read64(),
                 };
             }),
@@ -147,13 +150,14 @@ export interface Vote {
  */
 export async function getOngoingTipVotes(config: TypusConfig, input: { user: string }): Promise<Vote[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
-    transactionBlock.moveCall({
+    let transaction = new Transaction();
+    transaction.moveCall({
         target: `${config.package.launch.improvementProposal}::improvement_proposal::get_ongoing_tip_votes_bcs`,
-        arguments: [transactionBlock.object(config.registry.launch.improvementProposal), transactionBlock.pure(input.user)],
+        arguments: [transaction.object(config.registry.launch.improvementProposal), transaction.pure.address(input.user)],
     });
+    let devInspectTransactionBlockResult = await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction });
     // @ts-ignore
-    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results[0].returnValues[0][0];
+    let bytes = devInspectTransactionBlockResult.results[0].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();
     return reader.readVec((reader) => {
@@ -174,13 +178,14 @@ export async function getOngoingTipVotes(config: TypusConfig, input: { user: str
  */
 export async function getEndedTipVotes(config: TypusConfig, input: { user: string }): Promise<Vote[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
-    transactionBlock.moveCall({
+    let transaction = new Transaction();
+    transaction.moveCall({
         target: `${config.package.launch.improvementProposal}::improvement_proposal::get_ended_tip_votes_bcs`,
-        arguments: [transactionBlock.object(config.registry.launch.improvementProposal), transactionBlock.pure(input.user)],
+        arguments: [transaction.object(config.registry.launch.improvementProposal), transaction.pure.address(input.user)],
     });
+    let devInspectTransactionBlockResult = await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction });
     // @ts-ignore
-    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results[0].returnValues[0][0];
+    let bytes = devInspectTransactionBlockResult.results[0].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();
     return reader.readVec((reader) => {
@@ -201,13 +206,14 @@ export async function getEndedTipVotes(config: TypusConfig, input: { user: strin
  */
 export async function getTipVotes(config: TypusConfig, input: { index: string }): Promise<Vote[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
-    transactionBlock.moveCall({
+    let transaction = new Transaction();
+    transaction.moveCall({
         target: `${config.package.launch.improvementProposal}::improvement_proposal::get_tip_votes_bcs`,
-        arguments: [transactionBlock.object(config.registry.launch.improvementProposal), transactionBlock.pure(input.index)],
+        arguments: [transaction.object(config.registry.launch.improvementProposal), transaction.pure.u64(input.index)],
     });
+    let devInspectTransactionBlockResult = await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction });
     // @ts-ignore
-    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results[0].returnValues[0][0];
+    let bytes = devInspectTransactionBlockResult.results[0].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();
     return reader.readVec((reader) => {

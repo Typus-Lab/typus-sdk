@@ -1,4 +1,5 @@
-import { TransactionBlock, TransactionObjectArgument } from "@mysten/sui.js/transactions";
+import { bcs } from "@mysten/sui/bcs";
+import { Transaction, TransactionObjectArgument } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -19,7 +20,7 @@ import { TypusConfig } from "src/utils";
  */
 export function getRaiseFundTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -38,24 +39,24 @@ export function getRaiseFundTx(
                   target: `${config.package.framework}::utils::delegate_extract_balance`,
                   typeArguments: [input.typeArguments[0]],
                   arguments: [
-                      tx.pure(input.user),
+                      tx.pure.address(input.user),
                       tx.makeMoveVec({
                           type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          objects: [tx.splitCoins(tx.gas, [tx.pure(input.raiseAmount)])],
+                          elements: [tx.splitCoins(tx.gas, [tx.pure.u64(input.raiseAmount)])],
                       }),
-                      tx.pure(input.raiseAmount),
+                      tx.pure.u64(input.raiseAmount),
                   ],
               })
             : tx.moveCall({
                   target: `${config.package.framework}::utils::delegate_extract_balance`,
                   typeArguments: [input.typeArguments[0]],
                   arguments: [
-                      tx.pure(input.user),
+                      tx.pure.address(input.user),
                       tx.makeMoveVec({
                           type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          objects: input.raiseCoins.map((coin) => tx.object(coin)),
+                          elements: input.raiseCoins.map((coin) => tx.object(coin)),
                       }),
-                      tx.pure(input.raiseAmount),
+                      tx.pure.u64(input.raiseAmount),
                   ],
               });
     let result = tx.moveCall({
@@ -66,14 +67,14 @@ export function getRaiseFundTx(
             tx.object(config.registry.typus.user),
             tx.object(config.registry.typus.leaderboard),
             tx.object(config.registry.dov.dovSingle),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusDepositReceipt`,
-                objects: input.receipts.map((receipt) => tx.object(receipt)),
+                elements: input.receipts.map((receipt) => tx.object(receipt)),
             }),
             tx.object(raiseBalance),
-            tx.pure(input.raiseFromPremium),
-            tx.pure(input.raiseFromInactive),
+            tx.pure.bool(input.raiseFromPremium),
+            tx.pure.bool(input.raiseFromInactive),
             tx.object(CLOCK),
         ],
     });
@@ -101,7 +102,7 @@ export function getRaiseFundTx(
  */
 export function getReduceFundTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -122,37 +123,37 @@ export function getReduceFundTx(
             tx.object(config.registry.typus.user),
             tx.object(config.registry.typus.leaderboard),
             tx.object(config.registry.dov.dovSingle),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusDepositReceipt`,
-                objects: input.receipts.map((receipt) => tx.object(receipt)),
+                elements: input.receipts.map((receipt) => tx.object(receipt)),
             }),
-            tx.pure(input.reduceFromWarmup),
-            tx.pure(input.reduceFromActive),
-            tx.pure(input.reduceFromPremium),
-            tx.pure(input.reduceFromInactive),
-            tx.pure(input.reduceFromIncentive),
+            tx.pure.u64(input.reduceFromWarmup),
+            tx.pure.u64(input.reduceFromActive),
+            tx.pure.bool(input.reduceFromPremium),
+            tx.pure.bool(input.reduceFromInactive),
+            tx.pure.bool(input.reduceFromIncentive),
             tx.object(CLOCK),
         ],
     });
     tx.moveCall({
         target: `${config.package.framework}::vault::transfer_deposit_receipt`,
-        arguments: [tx.object(result[0]), tx.pure(input.user)],
+        arguments: [tx.object(result[0]), tx.pure.address(input.user)],
     });
     tx.moveCall({
         target: `${config.package.framework}::utils::transfer_balance`,
         typeArguments: [input.typeArguments[0]],
-        arguments: [tx.object(result[1]), tx.pure(input.user)],
+        arguments: [tx.object(result[1]), tx.pure.address(input.user)],
     });
     tx.moveCall({
         target: `${config.package.framework}::utils::transfer_balance`,
         typeArguments: [input.typeArguments[1]],
-        arguments: [tx.object(result[2]), tx.pure(input.user)],
+        arguments: [tx.object(result[2]), tx.pure.address(input.user)],
     });
     tx.moveCall({
         target: `${config.package.framework}::utils::transfer_balance`,
         typeArguments: [input.typeArguments[2]],
-        arguments: [tx.object(result[3]), tx.pure(input.user)],
+        arguments: [tx.object(result[3]), tx.pure.address(input.user)],
     });
 
     return tx;
@@ -172,7 +173,7 @@ export function getReduceFundTx(
  */
 export function getRefreshDepositSnapshotTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -188,10 +189,10 @@ export function getRefreshDepositSnapshotTx(
             tx.object(config.registry.typus.user),
             tx.object(config.registry.typus.leaderboard),
             tx.object(config.registry.dov.dovSingle),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusDepositReceipt`,
-                objects: input.receipts.map((receipt) => tx.object(receipt)),
+                elements: input.receipts.map((receipt) => tx.object(receipt)),
             }),
             tx.object(CLOCK),
         ],
@@ -213,7 +214,7 @@ export function getRefreshDepositSnapshotTx(
 */
 export function getNewBidTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -229,7 +230,7 @@ export function getNewBidTx(
         (input.typeArguments[1] == "0x2::sui::SUI" ||
             input.typeArguments[1] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI")
     ) {
-        let [coin] = tx.splitCoins(tx.gas, [tx.pure(input.premium_required)]);
+        let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.premium_required)]);
         let result = tx.moveCall({
             target: `${config.package.dovSingle}::tds_user_entry::public_bid`,
             typeArguments: input.typeArguments,
@@ -239,9 +240,9 @@ export function getNewBidTx(
                 tx.object(config.registry.typus.tgld),
                 tx.object(config.registry.typus.leaderboard),
                 tx.object(config.registry.dov.dovSingle),
-                tx.pure(input.index),
-                tx.makeMoveVec({ objects: [coin] }),
-                tx.pure(input.size),
+                tx.pure.u64(input.index),
+                tx.makeMoveVec({ elements: [coin] }),
+                tx.pure.u64(input.size),
                 tx.object(CLOCK),
             ],
         });
@@ -249,13 +250,13 @@ export function getNewBidTx(
         tx.moveCall({
             target: `${config.package.framework}::utils::transfer_coins`,
             typeArguments: [input.typeArguments[1]],
-            arguments: [tx.makeMoveVec({ objects: [tx.object(result[1])] }), tx.pure(input.user)],
+            arguments: [tx.makeMoveVec({ elements: [tx.object(result[1])] }), tx.pure.address(input.user)],
         });
     } else {
         let balance = tx.moveCall({
             target: `${config.package.framework}::utils::extract_balance`,
             typeArguments: [input.typeArguments[1]],
-            arguments: [tx.makeMoveVec({ objects: input.coins.map((coin) => tx.object(coin)) }), tx.pure(input.premium_required)],
+            arguments: [tx.makeMoveVec({ elements: input.coins.map((coin) => tx.object(coin)) }), tx.pure.u64(input.premium_required)],
         });
         let coin = tx.moveCall({
             target: `0x2::coin::from_balance`,
@@ -271,17 +272,17 @@ export function getNewBidTx(
                 tx.object(config.registry.typus.tgld),
                 tx.object(config.registry.typus.leaderboard),
                 tx.object(config.registry.dov.dovSingle),
-                tx.pure(input.index),
-                tx.makeMoveVec({ objects: [coin] }),
-                tx.pure(input.size),
-                tx.pure("0x6"),
+                tx.pure.u64(input.index),
+                tx.makeMoveVec({ elements: [coin] }),
+                tx.pure.u64(input.size),
+                tx.object(CLOCK),
             ],
         });
         tx.transferObjects([tx.object(result[0])], input.user);
         tx.moveCall({
             target: `${config.package.framework}::utils::transfer_coins`,
             typeArguments: [input.typeArguments[1]],
-            arguments: [tx.makeMoveVec({ objects: [tx.object(result[1])] }), tx.pure(input.user)],
+            arguments: [tx.makeMoveVec({ elements: [tx.object(result[1])] }), tx.pure.address(input.user)],
         });
     }
 
@@ -298,7 +299,7 @@ export function getNewBidTx(
 */
 export function getExerciseTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -311,17 +312,17 @@ export function getExerciseTx(
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusBidReceipt`,
-                objects: input.receipts.map((receipt) => tx.object(receipt)),
+                elements: input.receipts.map((receipt) => tx.object(receipt)),
             }),
         ],
     });
     tx.moveCall({
         target: `${config.package.framework}::utils::transfer_balance`,
         typeArguments: [input.typeArguments[0]],
-        arguments: [tx.object(result[0]), tx.pure(input.user)],
+        arguments: [tx.object(result[0]), tx.pure.address(input.user)],
     });
 
     return tx;
@@ -339,7 +340,7 @@ export function getExerciseTx(
 */
 export function getTransferBidReceiptTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -353,13 +354,13 @@ export function getTransferBidReceiptTx(
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusBidReceipt`,
-                objects: input.receipts.map((receipt) => tx.object(receipt)),
+                elements: input.receipts.map((receipt) => tx.object(receipt)),
             }),
-            tx.pure(input.share ? [input.share] : []),
-            tx.pure(input.recipient),
+            tx.pure.option("u64", input.share),
+            tx.pure.address(input.recipient),
         ],
     });
 
@@ -368,7 +369,7 @@ export function getTransferBidReceiptTx(
 
 export function getSplitBidReceiptTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         index: string;
         receipts: string[];
@@ -381,12 +382,13 @@ export function getSplitBidReceiptTx(
         typeArguments: [],
         arguments: [
             tx.object(config.registry.dov.dovSingle),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusBidReceipt`,
-                objects: input.receipts.map((receipt) => tx.object(receipt)),
+                elements: input.receipts.map((receipt) => tx.object(receipt)),
             }),
-            tx.pure([input.share]),
+            // tx.pure([input.share]),
+            tx.pure(bcs.vector(bcs.U64).serialize([input.share])),
         ],
     });
 
@@ -418,13 +420,13 @@ export function getMultiTransferBidReceiptTx(
         sender: string;
     }
 ) {
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
     console.assert(input.shares.length == input.recipients.length, "shares.length != recipients.length");
 
-    var receipts = {
+    var receipts = tx.makeMoveVec({
         // type: `${config.packageOrigin.framework}::vault::TypusBidReceipt`,
-        objects: input.receipts.map((receipt) => tx.object(receipt)),
-    };
+        elements: input.receipts.map((receipt) => tx.object(receipt)),
+    });
 
     var i = 0;
     while (i < input.shares.length) {
@@ -435,10 +437,10 @@ export function getMultiTransferBidReceiptTx(
             typeArguments: input.typeArguments,
             arguments: [
                 tx.object(config.registry.dov.dovSingle),
-                tx.pure(input.index),
-                tx.makeMoveVec(receipts),
-                tx.pure([share]),
-                tx.pure(recipient),
+                tx.pure.u64(input.index),
+                receipts,
+                tx.pure.option("u64", share),
+                tx.pure.address(recipient),
             ],
         });
 
@@ -448,7 +450,7 @@ export function getMultiTransferBidReceiptTx(
             arguments: [tx.object(result[0])],
         });
 
-        receipts = { objects: [unwrap] };
+        receipts = tx.makeMoveVec({ elements: [unwrap] });
 
         i += 1;
         if (i == input.shares.length) {
@@ -466,7 +468,7 @@ export function getMultiTransferBidReceiptTx(
 */
 export function getRebateTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArgument: string;
         user: string;
@@ -485,7 +487,7 @@ export function getRebateTx(
     tx.moveCall({
         target: `${config.package.framework}::utils::transfer_balance`,
         typeArguments: [input.typeArgument],
-        arguments: [tx.object(balance), tx.pure(input.user)],
+        arguments: [tx.object(balance), tx.pure.address(input.user)],
     });
 
     return tx;
@@ -493,7 +495,7 @@ export function getRebateTx(
 
 export function getCompoundWithRedeemTx(
     config: TypusConfig,
-    tx: TransactionBlock,
+    tx: Transaction,
     input: {
         typeArguments: string[];
         index: string;
@@ -514,14 +516,14 @@ export function getCompoundWithRedeemTx(
             tx.object(config.registry.typus.user),
             tx.object(config.registry.typus.leaderboard),
             tx.object(config.registry.dov.dovSingle),
-            tx.pure(input.index),
+            tx.pure.u64(input.index),
             tx.makeMoveVec({
                 type: `${config.packageOrigin.framework}::vault::TypusDepositReceipt`,
-                objects: input.receipts.map((receipt) => tx.object(receipt)),
+                elements: input.receipts.map((receipt) => tx.object(receipt)),
             }),
             tx.object(raiseBalance),
-            tx.pure(true),
-            tx.pure(false),
+            tx.pure.bool(true),
+            tx.pure.bool(false),
             tx.object(CLOCK),
         ],
     });

@@ -1,5 +1,5 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient } from "@mysten/sui.js/client";
+import { Transaction } from "@mysten/sui/transactions";
+import { SuiClient } from "@mysten/sui/client";
 import { BcsReader } from "@mysten/bcs";
 import { AddressFromBytes, TypusConfig } from "src/utils";
 import { SENDER } from "src/constants";
@@ -141,15 +141,15 @@ export async function getVaults(
     }
 ): Promise<{ [key: string]: Vault }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     let target = `${config.package.dovSingle}::tds_view_function::get_vault_data_bcs` as any;
-    let transactionBlockArguments = [transactionBlock.pure(config.registry.dov.dovSingle), transactionBlock.pure(input.indexes)];
-    transactionBlock.moveCall({
+    let transactionBlockArguments = [transaction.object(config.registry.dov.dovSingle), transaction.pure.vector("u64", input.indexes)];
+    transaction.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     // console.log(JSON.stringify(bytes));
@@ -392,15 +392,15 @@ export async function getAuctions(
     }
 ): Promise<{ [key: string]: Auction }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     let target = `${config.package.dovSingle}::tds_view_function::get_auction_bcs` as any;
-    let transactionBlockArguments = [transactionBlock.pure(config.registry.dov.dovSingle), transactionBlock.pure(input.indexes)];
-    transactionBlock.moveCall({
+    let transactionBlockArguments = [transaction.object(config.registry.dov.dovSingle), transaction.pure.vector("u64", input.indexes)];
+    transaction.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     // console.log(JSON.stringify(bytes));
@@ -471,15 +471,15 @@ export async function getAuctionBids(
     }
 ): Promise<AuctionBid[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     let target = `${config.package.dovSingle}::tds_view_function::get_auction_bids_bcs` as any;
-    let transactionBlockArguments = [transactionBlock.pure(config.registry.dov.dovSingle), transactionBlock.pure(input.index)];
-    transactionBlock.moveCall({
+    let transactionBlockArguments = [transaction.object(config.registry.dov.dovSingle), transaction.pure.u64(input.index)];
+    transaction.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -527,22 +527,22 @@ export async function getDepositShares(
     }
 ): Promise<{ depositShare: { [key: string]: DepositShare }; depositSnapshot: DepositSnapshot }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     let target = `${config.package.dovSingle}::tds_view_function::get_deposit_shares_bcs` as any;
     let transactionBlockArguments = [
-        transactionBlock.pure(config.registry.dov.dovSingle),
-        transactionBlock.makeMoveVec({
+        transaction.object(config.registry.dov.dovSingle),
+        transaction.makeMoveVec({
             type: `${config.package.framework}::vault::TypusDepositReceipt`,
-            objects: input.receipts.map((id) => transactionBlock.object(id)),
+            elements: input.receipts.map((id) => transaction.object(id)),
         }),
-        transactionBlock.pure(input.user),
+        transaction.pure.address(input.user),
     ];
-    transactionBlock.moveCall({
+    transaction.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -609,21 +609,21 @@ export async function getMyBids(
     }
 ): Promise<{ [key: string]: BidShare }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     let target = `${config.package.dovSingle}::tds_view_function::get_my_bids_bcs` as any;
     let transactionBlockArguments = [
-        transactionBlock.pure(config.registry.dov.dovSingle),
-        transactionBlock.makeMoveVec({
+        transaction.object(config.registry.dov.dovSingle),
+        transaction.makeMoveVec({
             type: `${config.package.framework}::vault::TypusBidReceipt`,
-            objects: input.receipts.map((id) => transactionBlock.object(id)),
+            elements: input.receipts.map((id) => transaction.object(id)),
         }),
     ];
-    transactionBlock.moveCall({
+    transaction.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -670,11 +670,11 @@ export async function getRefundShares(
     }
 ): Promise<{ [key: string]: string }> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     let target = `${config.package.dovSingle}::tds_view_function::get_refund_shares_bcs` as any;
-    let transactionBlockArguments = [transactionBlock.pure(config.registry.dov.dovSingle)];
+    let transactionBlockArguments = [transaction.object(config.registry.dov.dovSingle)];
     input.typeArguments.forEach((typeArgument) => {
-        transactionBlock.moveCall({
+        transaction.moveCall({
             target,
             typeArguments: [typeArgument],
             arguments: transactionBlockArguments,
@@ -682,7 +682,7 @@ export async function getRefundShares(
     });
     let results = (
         await provider.devInspectTransactionBlock({
-            transactionBlock,
+            transactionBlock: transaction,
             sender: input.user,
         })
     ).results;

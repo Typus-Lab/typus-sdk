@@ -1,8 +1,8 @@
 import "src/utils/load_env";
 import { getTransferBidReceiptTx } from "src/typus-dov-single-v2";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 
 (async () => {
@@ -18,7 +18,7 @@ import { TypusConfig } from "src/utils";
     let recipient = signer.toSuiAddress();
     let share = "100";
 
-    let transactionBlock = getTransferBidReceiptTx(config, new TransactionBlock(), {
+    let transaction = getTransferBidReceiptTx(config, new Transaction(), {
         typeArguments,
         index,
         receipts,
@@ -26,6 +26,6 @@ import { TypusConfig } from "src/utils";
         recipient,
     });
 
-    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+    let res = await provider.signAndExecuteTransaction({ signer, transaction });
     console.log(res);
 })();

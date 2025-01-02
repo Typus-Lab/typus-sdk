@@ -1,7 +1,7 @@
 import "src/utils/load_env";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import { removeAirdrop } from "src/typus-launch/airdrop";
 
@@ -11,11 +11,11 @@ import { removeAirdrop } from "src/typus-launch/airdrop";
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
-    let transactionBlock = new TransactionBlock();
-    removeAirdrop(config, transactionBlock, {
+    let transaction = new Transaction();
+    removeAirdrop(config, transaction, {
         typeArguments: ["0xd31923b6821fb7ba32d23e514b43d307da6ef991f9ef1af2cc4e26a0992ac87a::afsui::AFSUI"],
-        key: "Typus Improvement Proposal #2",
+        key: "Typus Improvement Proposal #0",
     });
-    let res = await provider.signAndExecuteTransactionBlock({ signer, transactionBlock });
+    let res = await provider.signAndExecuteTransaction({ signer, transaction });
     console.log(res);
 })();

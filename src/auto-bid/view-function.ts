@@ -1,6 +1,6 @@
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import { BCS, BcsReader, getSuiMoveConfig } from "@mysten/bcs";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { AddressFromBytes } from "src/utils/tools";
 import { BidShare, BidVault } from "src/typus-dov-single-v2/view-function";
 import { TypusConfig } from "src/utils";
@@ -64,19 +64,19 @@ export async function getUserStrategies(
     // typeArguments: string[] // [D_TOKEN, B_TOKEN]
 ) {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
+    let transaction = new Transaction();
     let target = `${config.package.dovSingle}::auto_bid::view_user_strategies` as any;
     let transactionBlockArguments = [
-        transactionBlock.pure(config.registry.dov.dovSingle),
-        transactionBlock.object(config.registry.dov.autoBid),
-        transactionBlock.pure(input.user),
+        transaction.object(config.registry.dov.dovSingle),
+        transaction.object(config.registry.dov.autoBid),
+        transaction.pure.address(input.user),
     ];
-    transactionBlock.moveCall({
+    transaction.moveCall({
         target,
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock, sender: input.user })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: input.user })).results;
 
     // @ts-ignore
     let objBCS = results[0].returnValues[0][0];

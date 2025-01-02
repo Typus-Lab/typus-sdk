@@ -1,10 +1,10 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { getMintToKioskTx, getPool } from "src/typus-nft";
-import { SuiClient } from "@mysten/sui.js/client";
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { KioskClient, Network } from "@mysten/kiosk";
-import { TransactionBlock } from "@mysten/sui.js/dist/cjs/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 
 const necklace = "kriya_dex";
 
@@ -61,14 +61,14 @@ const necklace = "kriya_dex";
         const kioskOwnerCap = kiosks.kioskOwnerCaps[0];
 
         if (kioskOwnerCap.kioskId == kiosk) {
-            let transactionBlock = await getMintToKioskTx(config, new TransactionBlock(), {
+            let transaction = await getMintToKioskTx(config, new Transaction(), {
                 pool,
                 whitelist_token: wlToken,
                 kiosk,
                 kiosk_cap: kioskOwnerCap.objectId,
             });
 
-            let res = await client.signAndExecuteTransactionBlock({ signer: keypair, transactionBlock });
+            let res = await client.signAndExecuteTransaction({ signer: keypair, transaction });
             console.log(res);
         }
     }

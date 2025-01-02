@@ -1,5 +1,5 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient } from "@mysten/sui.js/client";
+import { Transaction } from "@mysten/sui/transactions";
+import { SuiClient } from "@mysten/sui/client";
 import { BcsReader } from "@mysten/bcs";
 import { SENDER } from "src/constants";
 import { AddressFromBytes, TypusConfig } from "src/utils";
@@ -18,13 +18,14 @@ export async function getVeTypus(
     }
 ): Promise<VeTypus[]> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
-    transactionBlock.moveCall({
+    let transaction = new Transaction();
+    transaction.moveCall({
         target: `${config.package.launch.veTypus}::ve_typus::get_ve_typus_bcs`,
-        arguments: [transactionBlock.object(config.registry.launch.veTypus), transactionBlock.pure(input.user)],
+        arguments: [transaction.object(config.registry.launch.veTypus), transaction.pure.address(input.user)],
     });
+    let devInspectTransactionBlockResult = await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction });
     // @ts-ignore
-    let bytes = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results[0].returnValues[0][0];
+    let bytes = devInspectTransactionBlockResult.results[0].returnValues[0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();
     return reader.readVec((reader) => {
@@ -36,6 +37,37 @@ export async function getVeTypus(
             createTsMs: reader.read64(),
             updateTsMs: reader.read64(),
         } as VeTypus;
+    });
+}
+
+export interface VeTypusReport {
+    totalVeTypusAmount: string;
+    totalStakedTypusAmount: string;
+}
+export async function getReports(
+    config: TypusConfig,
+    input: {
+        tsMss: string[];
+    }
+): Promise<VeTypusReport[]> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let transaction = new Transaction();
+    input.tsMss.forEach((tsMs) => {
+        transaction.moveCall({
+            target: `${config.package.launch.veTypus}::ve_typus::get_report`,
+            arguments: [transaction.object(config.registry.launch.veTypus), transaction.pure.u64(tsMs)],
+        });
+    });
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
+    // @ts-ignore
+    return results?.map((result) => {
+        // @ts-ignore
+        let reader = new BcsReader(new Uint8Array(result.returnValues[0][0]));
+        reader.readULEB();
+        return {
+            totalVeTypusAmount: reader.read64(),
+            totalStakedTypusAmount: reader.read64(),
+        } as VeTypusReport;
     });
 }
 
@@ -54,26 +86,26 @@ export async function fetchVeTypusInfo(
     }
 ): Promise<VeTypusInfo> {
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let transactionBlock = new TransactionBlock();
-    transactionBlock.moveCall({
+    let transaction = new Transaction();
+    transaction.moveCall({
         target: `${config.package.launch.veTypus}::ve_typus::get_report`,
-        arguments: [transactionBlock.object(config.registry.launch.veTypus), transactionBlock.pure(input.tsMs)],
+        arguments: [transaction.object(config.registry.launch.veTypus), transaction.pure.u64(input.tsMs)],
     });
     if (input.user) {
-        transactionBlock.moveCall({
+        transaction.moveCall({
             target: `${config.package.launch.veTypus}::ve_typus::get_ve_typus_bcs`,
-            arguments: [transactionBlock.object(config.registry.launch.veTypus), transactionBlock.pure(input.user)],
+            arguments: [transaction.object(config.registry.launch.veTypus), transaction.pure.address(input.user)],
         });
-        transactionBlock.moveCall({
+        transaction.moveCall({
             target: `${config.package.launch.veTypus}::ve_typus::get_ve_typus`,
             arguments: [
-                transactionBlock.object(config.registry.launch.veTypus),
-                transactionBlock.pure(input.user),
-                transactionBlock.pure(input.tsMs),
+                transaction.object(config.registry.launch.veTypus),
+                transaction.pure.address(input.user),
+                transaction.pure.u64(input.tsMs),
             ],
         });
     }
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock })).results;
+    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
     // @ts-ignore
     let reader = new BcsReader(new Uint8Array(results[0].returnValues[0][0]));
     reader.readULEB();

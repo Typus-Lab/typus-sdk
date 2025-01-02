@@ -1,10 +1,10 @@
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 
 export async function getMintTokenTx(packageId: string, registry: string, moduleName: string, amount: number) {
-    let tx = new TransactionBlock();
+    let tx = new Transaction();
     tx.moveCall({
         target: `${packageId}::${moduleName}::mint`,
-        arguments: [tx.pure(registry), tx.pure(amount)],
+        arguments: [tx.object(registry), tx.pure.u64(amount)],
     });
 
     return tx;
