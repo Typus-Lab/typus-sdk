@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { TypusConfig } from "src/utils";
+import { TypusConfig, splitCoins } from "src/utils";
 
 /**
     entry fun set_airdrop<TOKEN>(
@@ -24,20 +24,6 @@ export async function setAirdrop(
         values: string[];
     }
 ) {
-    let [coin] =
-        input.typeArguments[0] == "0x2::sui::SUI" ||
-        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-            ? tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)])
-            : (() => {
-                  let coin = input.coins.pop()!;
-                  if (input.coins.length > 0) {
-                      tx.mergeCoins(
-                          tx.object(coin),
-                          input.coins.map((id) => tx.object(id))
-                      );
-                  }
-                  return tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
-              })();
     tx.moveCall({
         target: `${config.package.launch.airdrop}::airdrop::set_airdrop`,
         typeArguments: input.typeArguments,
@@ -45,7 +31,7 @@ export async function setAirdrop(
             tx.object(config.version.launch.airdrop),
             tx.object(config.registry.launch.airdrop),
             tx.pure.string(input.key),
-            tx.object(coin),
+            tx.object(splitCoins(tx, input.typeArguments[0], input.coins, input.amount)),
             tx.pure.vector("address", input.users),
             tx.pure.vector("u64", input.values),
         ],

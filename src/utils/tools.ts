@@ -1,4 +1,7 @@
 import BigNumber from "bignumber.js";
+import { tokenType } from "src/constants";
+import { Transaction } from "@mysten/sui/transactions";
+import { normalizeSuiAddress } from "@mysten/sui/utils";
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -42,3 +45,29 @@ export const countFloating = (value: number | BigNumber) => {
     if (!num.includes(".")) return 0;
     return num.split(".")[1].length;
 };
+
+export function splitCoins(
+    tx: Transaction,
+    token: string,
+    coins: string[],
+    amount: string
+): {
+    $kind: "NestedResult";
+    NestedResult: [number, number];
+} {
+    let [coin] =
+        normalizeSuiAddress(token) == tokenType.SUI
+            ? tx.splitCoins(tx.gas, [tx.pure.u64(amount)])
+            : (() => {
+                  let coin = coins.pop()!;
+                  if (coins.length > 0) {
+                      tx.mergeCoins(
+                          tx.object(coin),
+                          coins.map((id) => tx.object(id))
+                      );
+                  }
+                  return tx.splitCoins(tx.object(coin), [tx.pure.u64(amount)]);
+              })();
+
+    return coin;
+}

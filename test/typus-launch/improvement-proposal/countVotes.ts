@@ -6,6 +6,7 @@ import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig, prettify_big_number, sleep } from "src/utils";
 import { BigNumber } from "bignumber.js";
 import { setAirdrop } from "src/typus-launch/airdrop";
+import slack from "slack";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
@@ -14,8 +15,18 @@ import { setAirdrop } from "src/typus-launch/airdrop";
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let now = Date.now();
     let tips: Tip[] = await getOngoingTips(config, {});
+    let count = 0;
+    let msg = "<<Typus Improvement Proposal Info>>\n";
     for (const tip of tips) {
+        msg = msg + `#${tip.index}: ${tip.description}\n`;
+        msg =
+            msg +
+            `  -  start time: ${tip.config[0]} (${new Date(Number.parseInt(tip.config[0])).toLocaleString("en-US", { dateStyle: "full", timeStyle: "full", hourCycle: "h24", timeZone: "Asia/Taipei" })})\n`;
+        msg =
+            msg +
+            `  -    end time: ${tip.config[1]} (${new Date(Number.parseInt(tip.config[1])).toLocaleString("en-US", { dateStyle: "full", timeStyle: "full", hourCycle: "h24", timeZone: "Asia/Taipei" })})\n`;
         if (tip.config[1] < now) {
+            count++;
             console.log(`Processing Typus Improvement Proposal #${tip.index}`);
             let votes = await getTipVotes(config, { index: tip.index });
             await sleep(1000);
@@ -42,6 +53,7 @@ import { setAirdrop } from "src/typus-launch/airdrop";
             });
             let res = await provider.signAndExecuteTransaction({ signer, transaction });
             console.log(`Count Votes: ${res.digest}`);
+            msg = msg + `  - count votes: ${res.digest}\n`;
             // transaction.setSender(signer.toSuiAddress());
             // let res = await provider.dryRunTransactionBlock({ transactionBlock: await transaction.build({ client: provider }) });
             // console.log(`Count Votes: ${JSON.stringify(res.effects.status)}`);
@@ -71,6 +83,7 @@ import { setAirdrop } from "src/typus-launch/airdrop";
                     });
                     let res = await provider.signAndExecuteTransaction({ signer, transaction });
                     console.log(`Set Airdrop: ${res.digest}`);
+                    msg = msg + `  - set airdrop: ${res.digest}\n`;
                     // transaction.setSender(signer.toSuiAddress());
                     // let res = await provider.dryRunTransactionBlock({ transactionBlock: await transaction.build({ client: provider }) });
                     // console.log(`Set Airdrop: ${JSON.stringify(res.effects.status)}`);
@@ -78,6 +91,14 @@ import { setAirdrop } from "src/typus-launch/airdrop";
                 }
             }
         }
+    }
+    console.log(msg);
+    if (count > 0 || Math.floor((Date.now() % 86400000) / 3600000) == 0) {
+        slack.chat.postMessage({
+            token: String(process.env.SLACK_BOT_TOKEN),
+            channel: String(process.env.SLACK_CHANNEL),
+            text: `\`\`\`${msg}\`\`\``,
+        });
     }
 })();
 
@@ -95,20 +116,3 @@ function calculateUserReward(votes: Vote[], reward): { user: string; reward: Big
         return userReward;
     });
 }
-
-// while (user_data.length > 0) {
-//     console.log(user_data.length);
-//     let slice = user_data.splice(0, 300);
-//     let transaction = await getSetAirdropTx(config, new Transaction(), {
-//         typeArguments: [config.token.typus],
-//         key: "typus_airdrop",
-//         coins: ["0xa633dd0101ae7b95ba675de8a12a7c9aad420054f4bcf7fcd23bd9d099fc2920"],
-//         amount: "500000000000000",
-//         users: slice.map((user) => user[0]),
-//         values: slice.map((user) => user[1]),
-//     });
-
-//     let res = await provider.signAndExecuteTransaction({ signer, transaction });
-//     console.log(res);
-//     await sleep(5000);
-// }
