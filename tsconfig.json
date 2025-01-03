@@ -1,6 +1,6 @@
 // tsconfig.json
 {
     "extends": "./tsconfig.build.json",
-    "include": ["src", "test"],
+    "include": ["src", "test", "script/setProfitSharing.ts", "script/countVotes.ts", "script/calculateInterest.ts"],
     "exclude": ["node_modules", "**/__tests__/*", "scripts", "_deprecated"]
 }

@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { getLevelCounts, getSetProfitSharingTx } from "src/typus/tails-staking";
 import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
-import { TypusConfig } from "src/utils";
+import { TypusConfig, splitCoins } from "src/utils";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import slack from "slack";
 import { calculateLevelReward } from "src/typus-nft";
@@ -97,26 +97,15 @@ interface Material {
         log(material);
         return;
     }
+    let coins = (await provider.getCoins({ owner: keypair.toSuiAddress(), coinType: material.token })).data.map(
+        (coin) => coin.coinObjectId
+    );
     let tx = new Transaction();
-    let mergedCoin = tx.gas;
-    if (material.token != config.token.sui) {
-        let coins = (await provider.getCoins({ owner: keypair.toSuiAddress(), coinType: material.token })).data.map(
-            (coin) => coin.coinObjectId
-        );
-        let coin = coins.pop()!;
-        if (coins.length > 0) {
-            tx.mergeCoins(
-                tx.object(coin),
-                coins.map((coin) => tx.object(coin))
-            );
-        }
-        mergedCoin = tx.object(coin);
-    }
-    let [inputCoin] = tx.splitCoins(mergedCoin, [tx.pure(material.spendingProfit)]);
+    let coin = splitCoins(tx, material.token, coins, material.spendingProfit.toString());
     tx = getSetProfitSharingTx(config, tx, {
         typeArguments: [material.token, material.nextRoundToken],
         levelProfits: material.levelProfits.map((x) => x.toString()),
-        coin: inputCoin,
+        coin,
         amount: material.nextRoundRewards.toString(),
         tsMs: material.nextRoundTsMs.toString(),
     });

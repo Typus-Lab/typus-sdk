@@ -1,4 +1,3 @@
-import "src/utils/load_env";
 import { Tip, Vote, getOngoingTips, getTipVotes, countVotes } from "src/typus-launch/improvement-proposal";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { SuiClient } from "@mysten/sui/client";
@@ -7,6 +6,9 @@ import { TypusConfig, prettify_big_number, sleep } from "src/utils";
 import { BigNumber } from "bignumber.js";
 import { setAirdrop } from "src/typus-launch/airdrop";
 import slack from "slack";
+import path from "path";
+import dotenv from "dotenv";
+dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
@@ -25,6 +27,8 @@ import slack from "slack";
         msg =
             msg +
             `  -    end time: ${tip.config[1]} (${new Date(Number.parseInt(tip.config[1])).toLocaleString("en-US", { dateStyle: "full", timeStyle: "full", hourCycle: "h24", timeZone: "Asia/Taipei" })})\n`;
+        msg = msg + `  -   yes votes: ${prettify_big_number(tip.info[0], 9)} \n`;
+        msg = msg + `  -    no votes: ${prettify_big_number(tip.info[1], 9)} \n`;
         if (tip.config[1] < now) {
             count++;
             console.log(`Processing Typus Improvement Proposal #${tip.index}`);
@@ -42,7 +46,10 @@ import slack from "slack";
                     console.log(
                         `Insufficient ${reward.token} Balance: ${prettify_big_number(walletBalance, coinMetadata?.decimals)}, expect: ${prettify_big_number(reward.amount, coinMetadata?.decimals)}`
                     );
-                    return;
+                    msg =
+                        msg +
+                        `  - insufficient ${reward.token} Balance: ${prettify_big_number(walletBalance, coinMetadata?.decimals)}, expect: ${prettify_big_number(reward.amount, coinMetadata?.decimals)}\n`;
+                    continue;
                 } else {
                     console.log(`Sufficient ${reward.token} Balance: ${prettify_big_number(reward.amount, coinMetadata?.decimals)}`);
                 }
@@ -51,49 +58,56 @@ import slack from "slack";
             countVotes(config, transaction, {
                 index: tip.index,
             });
-            let res = await provider.signAndExecuteTransaction({ signer, transaction });
+            let res = await provider.signAndExecuteTransaction({ signer, transaction, options: { showEvents: true } });
             console.log(`Count Votes: ${res.digest}`);
             msg = msg + `  - count votes: ${res.digest}\n`;
+            // @ts-ignore
+            msg = msg + `  -     vetypus: ${prettify_big_number(res.events[0].parsedJson.log[1], 9)}\n`;
+            // @ts-ignore
+            msg = msg + `  -   threshold: ${prettify_big_number(res.events[0].parsedJson.log[4], 9)}\n`;
             // transaction.setSender(signer.toSuiAddress());
             // let res = await provider.dryRunTransactionBlock({ transactionBlock: await transaction.build({ client: provider }) });
-            // console.log(`Count Votes: ${JSON.stringify(res.effects.status)}`);
+            // console.log(`Count Votes: ${JSON.stringify(res, null, 2)}`);
             await sleep(1000);
-            for (const reward of tip.rewards) {
-                let token = "0x" + reward.token;
-                let userRewards = calculateUserReward(votes, reward.amount);
-                while (userRewards.length > 0) {
-                    let slice = userRewards.splice(0, 300);
-                    let coins = (await provider.getCoins({ owner: signer.toSuiAddress(), coinType: token })).data.map(
-                        (coin) => coin.coinObjectId
-                    );
-                    await sleep(1000);
-                    let amount = slice.reduce((sum, current) => BigNumber(sum).plus(BigNumber(current.reward)), BigNumber(0));
-                    let transaction = new Transaction();
-                    setAirdrop(config, transaction, {
-                        typeArguments: [token],
-                        key: reward.key,
-                        coins,
-                        amount: amount.toString(),
-                        users: slice.map((userReward) => {
-                            return userReward.user;
-                        }),
-                        values: slice.map((userReward) => {
-                            return userReward.reward.toString();
-                        }),
-                    });
-                    let res = await provider.signAndExecuteTransaction({ signer, transaction });
-                    console.log(`Set Airdrop: ${res.digest}`);
-                    msg = msg + `  - set airdrop: ${res.digest}\n`;
-                    // transaction.setSender(signer.toSuiAddress());
-                    // let res = await provider.dryRunTransactionBlock({ transactionBlock: await transaction.build({ client: provider }) });
-                    // console.log(`Set Airdrop: ${JSON.stringify(res.effects.status)}`);
-                    await sleep(1000);
+            // @ts-ignore
+            if (res.events[0].parsedJson.log[6] != "0") {
+                for (const reward of tip.rewards) {
+                    let token = "0x" + reward.token;
+                    let userRewards = calculateUserReward(votes, reward.amount);
+                    while (userRewards.length > 0) {
+                        let slice = userRewards.splice(0, 300);
+                        let coins = (await provider.getCoins({ owner: signer.toSuiAddress(), coinType: token })).data.map(
+                            (coin) => coin.coinObjectId
+                        );
+                        await sleep(1000);
+                        let amount = slice.reduce((sum, current) => BigNumber(sum).plus(BigNumber(current.reward)), BigNumber(0));
+                        let transaction = new Transaction();
+                        setAirdrop(config, transaction, {
+                            typeArguments: [token],
+                            key: reward.key,
+                            coins,
+                            amount: amount.toString(),
+                            users: slice.map((userReward) => {
+                                return userReward.user;
+                            }),
+                            values: slice.map((userReward) => {
+                                return userReward.reward.toString();
+                            }),
+                        });
+                        let res = await provider.signAndExecuteTransaction({ signer, transaction });
+                        console.log(`Set Airdrop: ${res.digest}`);
+                        msg = msg + `  - set airdrop: ${res.digest}\n`;
+                        // transaction.setSender(signer.toSuiAddress());
+                        // let res = await provider.dryRunTransactionBlock({ transactionBlock: await transaction.build({ client: provider }) });
+                        // console.log(`Set Airdrop: ${JSON.stringify(res.effects.status)}`);
+                        await sleep(1000);
+                    }
                 }
             }
         }
     }
     console.log(msg);
-    if (count > 0 || Math.floor((Date.now() % 86400000) / 3600000) == 0) {
+    if (count > 0 || (Math.floor((Date.now() % 86400000) / 3600000) == 0 && tips.length > 0)) {
         slack.chat.postMessage({
             token: String(process.env.SLACK_BOT_TOKEN),
             channel: String(process.env.SLACK_CHANNEL),
