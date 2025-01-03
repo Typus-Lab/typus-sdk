@@ -64,7 +64,7 @@ dotenv.config({ path: path.resolve(__dirname, ".env") });
             // @ts-ignore
             msg = msg + `  -     vetypus: ${prettify_big_number(res.events[0].parsedJson.log[1], 9)}\n`;
             // @ts-ignore
-            msg = msg + `  -   threshold: ${prettify_big_number(res.events[0].parsedJson.log[4], 9)}\n`;
+            msg = msg + `  -   threshold: ${prettify_big_number(res.events[0].parsedJson.log[3], 9)}\n`;
             // transaction.setSender(signer.toSuiAddress());
             // let res = await provider.dryRunTransactionBlock({ transactionBlock: await transaction.build({ client: provider }) });
             // console.log(`Count Votes: ${JSON.stringify(res, null, 2)}`);
