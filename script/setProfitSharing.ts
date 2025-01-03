@@ -6,6 +6,7 @@ import { TypusConfig, splitCoins } from "src/utils";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import slack from "slack";
 import { calculateLevelReward } from "src/typus-nft";
+import { error } from "console";
 
 let process = require("process");
 process.removeAllListeners("warning");
@@ -95,7 +96,7 @@ interface Material {
 
     if (material.now < material.tsMs || material.walletBalance < material.spendingProfit) {
         log(material);
-        return;
+        throw new Error();
     }
     let coins = (await provider.getCoins({ owner: keypair.toSuiAddress(), coinType: material.token })).data.map(
         (coin) => coin.coinObjectId
