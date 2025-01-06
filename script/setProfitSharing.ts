@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { getLevelCounts, getSetProfitSharingTx } from "src/typus/tails-staking";
 import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
-import { TypusConfig, splitCoins } from "src/utils";
+import { TypusConfig, sleep, splitCoins } from "src/utils";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import slack from "slack";
 import { calculateLevelReward } from "src/typus-nft";
@@ -96,6 +96,7 @@ interface Material {
 
     if (material.now < material.tsMs || material.walletBalance < material.spendingProfit) {
         log(material);
+        await sleep(5000);
         throw new Error();
     }
     let coins = (await provider.getCoins({ owner: keypair.toSuiAddress(), coinType: material.token })).data.map(
