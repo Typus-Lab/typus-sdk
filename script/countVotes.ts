@@ -65,6 +65,20 @@ dotenv.config({ path: path.resolve(__dirname, ".env") });
             msg = msg + `  -     vetypus: ${prettify_big_number(res.events[0].parsedJson.log[1], 9)}\n`;
             // @ts-ignore
             msg = msg + `  -   threshold: ${prettify_big_number(res.events[0].parsedJson.log[3], 9)}\n`;
+            // @ts-ignore
+            msg = msg + `  -   threshold: ${prettify_big_number(res.events[0].parsedJson.log[3], 9)}\n`;
+            // @ts-ignore
+            switch (Number.parseInt(res.events[0].parsedJson.log[6])) {
+                case 0:
+                    msg = msg + `  -      status: No Quorum\n`;
+                    break;
+                case 1:
+                    msg = msg + `  -      status: Passed\n`;
+                    break;
+                case 2:
+                    msg = msg + `  -      status: Rejected\n`;
+                    break;
+            }
             // transaction.setSender(signer.toSuiAddress());
             // let res = await provider.dryRunTransactionBlock({ transactionBlock: await transaction.build({ client: provider }) });
             // console.log(`Count Votes: ${JSON.stringify(res, null, 2)}`);
