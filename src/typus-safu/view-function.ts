@@ -10,6 +10,7 @@ export interface Vault {
     rewardToken: string[];
     info: Info;
     config: Config;
+    share: BigVector;
     shareSupply: ShareSupply;
     u64Padding: string[];
     bcsPadding: string[];
@@ -46,6 +47,35 @@ export interface ShareSupply {
     snapshot_share: string;
     reward_share: string[];
 }
+
+export interface BigVector {
+    id: string;
+    element_type: string;
+    slice_idx: string;
+    slice_size: number;
+    length: string;
+}
+
+export async function getBigVectorData(config: TypusConfig, bigVector: BigVector) {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+
+    let results: any[] = [];
+    for (let i = 0; i <= Number(bigVector.slice_idx); i++) {
+        let df = await provider.getDynamicFieldObject({
+            parentId: bigVector.id,
+            name: {
+                type: "u64",
+                value: `${i}`,
+            },
+        });
+        // @ts-ignore
+        let result = df.data?.content.fields.value.fields.vector.map((x) => x.fields);
+        results = results.concat(result);
+    }
+
+    return results;
+}
+
 export async function getVaultData(
     config: TypusConfig,
     input: {
@@ -106,11 +136,13 @@ export async function getVaultData(
             incentive_fixed: configArray[7],
         };
         // skip BigVector
-        reader.readBytes(32); // id
-        reader.readBytes(reader.read8()); // element_type
-        reader.read64(); // slice_idx
-        reader.read32(); // slice_size
-        reader.read64(); // length
+        let bigVector: BigVector = {
+            id: AddressFromBytes(reader.readBytes(32)),
+            element_type: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))), // element_type
+            slice_idx: reader.read64(), // slice_idx
+            slice_size: reader.read32(), // slice_size
+            length: reader.read64(), // length
+        };
 
         let shareSupplyArray = reader.readVec((reader) => {
             return reader.read64();
@@ -139,6 +171,7 @@ export async function getVaultData(
                     rewardToken,
                     info,
                     config,
+                    share: bigVector,
                     shareSupply,
                     u64Padding,
                     bcsPadding,
@@ -161,6 +194,7 @@ export async function getVaultData(
                     rewardToken,
                     info,
                     config,
+                    share: bigVector,
                     shareSupply,
                     u64Padding,
                     bcsPadding,

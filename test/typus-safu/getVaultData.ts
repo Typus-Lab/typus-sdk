@@ -1,4 +1,4 @@
-import { getVaultData } from "src/typus-safu";
+import { getBigVectorData, getVaultData } from "src/typus-safu";
 import { TypusConfig } from "src/utils";
 
 (async () => {
@@ -10,4 +10,7 @@ import { TypusConfig } from "src/utils";
         }),
     });
     console.log(JSON.stringify(vault, null, 2));
+
+    // let shares = await getBigVectorData(config, vault["0"][0].share);
+    // console.log(shares);
 })();
