@@ -11,6 +11,7 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
     let config = await TypusConfig.default("MAINNET", "https://sui-mainnet.blastapi.io:443/df8b799c-1e3b-4309-b289-ddfb76cc090d");
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+    console.log(signer.toSuiAddress().toString());
 
     const parentId = "0xb44c0fa1ab40f7699be3dce02475965a636ed850348435abb3b797b273f6c551";
 
@@ -36,26 +37,24 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
     // console.log(vaults);
     const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-    const raw = fs.readFileSync("v1.csv", "utf-8");
+    const raw = fs.readFileSync("v1_deposit.csv", "utf-8");
     const lines = raw.split("\n");
     const headers = lines.shift();
     console.log(headers);
     console.log(lines.length);
-    const shares = lines
-        .map((l) => {
-            let x = l.split(",");
-            return {
-                index: parseInt(x[0]),
-                tag: parseInt(x[1]),
-                user: x[2],
-                exists: x[3] === "true",
-                value: parseFloat(x[4]),
-            } as Share;
-        })
-        .filter((s) => !s.exists);
+    const shares = lines.map((l) => {
+        let x = l.split(",");
+        return {
+            index: parseInt(x[0]),
+            tag: parseInt(x[1]),
+            user: x[2],
+            exists: x[3] === "true",
+            value: parseFloat(x[4]),
+        } as Share;
+    });
     console.log(shares.length);
 
-    for (let index of [4, 6, 12, 13]) {
+    for (let index of [0, 16, 4, 2, 8, 7, 17, 5, 15, 6, 14, 12, 13, 9]) {
         // for (let tag = 0; tag < 4; tag++) {
         //     let users = shares.filter((s) => s.index == index && s.tag == tag).map((s) => s.user);
         //     console.log(`${index} ${tag} ${users.length}`);
@@ -72,20 +71,20 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
             // index:4, tag:0, round:171, _users:500
             while (users.length > 0) {
                 let _users = users.splice(0, Math.min(500, users.length));
-                if (index == 4 && tag == 0 && round < 171) {
-                    round++;
-                    continue;
-                }
+                // if (index == 4 && tag == 0 && round < 171) {
+                //     round++;
+                //     continue;
+                // }
                 console.log(`index:${index}, tag:${tag}, round:${round}, _users:${_users.length}`);
-                try {
-                    let tx = new Transaction();
-                    drop_deposit(tx, index, tag, _users);
-                    let res = await provider.signAndExecuteTransaction({ signer, transaction: tx });
-                    console.log(res);
-                    round++;
-                } catch (e) {
-                    sleep(5000);
-                }
+                // try {
+                let tx = new Transaction();
+                drop_deposit(tx, index, tag, _users);
+                let res = await provider.signAndExecuteTransaction({ signer, transaction: tx });
+                console.log(res);
+                round++;
+                // } catch (e) {
+                //     sleep(5000);
+                // }
             }
         }
     }
@@ -106,40 +105,13 @@ interface Vault {
 
 function drop_deposit(tx: Transaction, index: number, tag: number, users: string[]) {
     tx.moveCall({
-        target: `0xb34aa383cdde6230fb41efb9b114a45f5e7e3fe37a47a8c58d0d412ba5d3a950::typus_dov_single::drop_deposit_nodes`,
+        target: `0x1e67528d8020969a03c8ab800e5ccab9341ef9cb70de26439f965a7f961cea07::typus_dov_single::force_drop_deposit_nodes`,
         typeArguments: [],
         arguments: [
             tx.object("0xb44c0fa1ab40f7699be3dce02475965a636ed850348435abb3b797b273f6c551"),
             tx.pure.u64(index),
-            tx.pure.u64(tag),
+            tx.pure.u8(tag),
             tx.pure.vector("address", users),
         ],
     });
 }
-
-//   13 => { d_token: 'SUI', b_token: 'SUI' },
-//   12 => { d_token: 'SUI', b_token: 'SUI' },
-//   6 => { d_token: 'CETUS', b_token: 'CETUS' },
-//   4 => { d_token: 'SUI', b_token: 'SUI' },
-//   0 => { d_token: 'SUI', b_token: 'SUI' },
-
-// 0 0 224142
-// 0 1 224142
-// 0 2 222025
-// 0 3 197785
-// 4 0 479360
-// 4 1 479360
-// 4 2 472164
-// 4 3 471743
-// 6 0 37410
-// 6 1 37410
-// 6 2 37314
-// 6 3 35433
-// 12 0 59071
-// 12 1 59071
-// 12 2 58873
-// 12 3 49995
-// 13 0 75072
-// 13 1 75072
-// 13 2 74923
-// 13 3 69243

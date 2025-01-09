@@ -31,7 +31,7 @@ import { typeArgToAsset } from "src/constants";
 
     console.log(vaults);
 
-    const raw = fs.readFileSync("v1.csv", "utf-8");
+    const raw = fs.readFileSync("v1_deposit.csv", "utf-8");
     const lines = raw.split("\n");
     const headers = lines.shift();
     console.log(headers);
@@ -94,7 +94,7 @@ import { typeArgToAsset } from "src/constants";
 
     // 4. 合併所有行並生成 CSV 文件
     const csvContent = csvRows.join("\n");
-    fs.writeFileSync("v1_output.csv", csvContent);
+    fs.writeFileSync("v1_deposit_output.csv", csvContent);
 
     console.log("CSV 已生成，檢查 output.csv");
 })();

@@ -7,12 +7,13 @@ import * as fs from "fs";
     let config = await TypusConfig.default("MAINNET", "https://sui-mainnet.blastapi.io:443/df8b799c-1e3b-4309-b289-ddfb76cc090d");
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
-    const parentId = "0x6a355cba462b62ad9e835b889af0417e080ac7ca2d9c98105b6778d75736d7bf";
+    // const parentId = "0x6a355cba462b62ad9e835b889af0417e080ac7ca2d9c98105b6778d75736d7bf";
+    const parentId = "0xe357f3b4038a218b85f63be0255b3c79e0e273e880a5f89d9bc54f9e6e0bb3c4";
 
     // 如果文件不存在，先寫入表頭，然後再追加數據
-    if (!fs.existsSync("v1_bid.csv")) {
+    if (!fs.existsSync("v1_deposit.csv")) {
         const header = ["index", "tag", "user", "exists", "value"].join(",") + "\n";
-        fs.writeFileSync("v1_bid.csv", header);
+        fs.writeFileSync("v1_deposit.csv", header);
     }
 
     var hasNextPage = true;
@@ -43,9 +44,6 @@ import * as fs from "fs";
             return [name.index, name.tag, name.user, value.exists, value.value];
         });
 
-        console.log(cursor);
-        break;
-
         var csvContent =
             [
                 ...datas.map((data) => {
@@ -53,7 +51,7 @@ import * as fs from "fs";
                 }),
             ].join("\n") + "\n";
 
-        fs.appendFileSync("v1_bid.csv", csvContent);
+        fs.appendFileSync("v1_deposit.csv", csvContent);
 
         count++;
     }
