@@ -6,7 +6,9 @@ import * as fs from "fs";
     let config = await TypusConfig.default("MAINNET", null);
 
     let vault = await getVaultData(config, {
-        indexes: ["23"],
+        indexes: [...Array(28).keys()].map((n) => {
+            return n.toString();
+        }),
     });
     console.log(JSON.stringify(vault, null, 2));
 
