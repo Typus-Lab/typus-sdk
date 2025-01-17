@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { tokenType } from "src/constants";
 import { Transaction } from "@mysten/sui/transactions";
-import { normalizeSuiAddress } from "@mysten/sui/utils";
+import { normalizeStructTag } from "@mysten/sui/utils";
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -56,7 +56,7 @@ export function splitCoins(
     NestedResult: [number, number];
 } {
     let [coin] =
-        normalizeSuiAddress(token) == normalizeSuiAddress(tokenType.SUI)
+        normalizeStructTag(token) == tokenType.SUI
             ? tx.splitCoins(tx.gas, [tx.pure.u64(amount)])
             : (() => {
                   let coin = coins.pop()!;
