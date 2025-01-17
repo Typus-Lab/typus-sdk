@@ -56,7 +56,7 @@ export function splitCoins(
     NestedResult: [number, number];
 } {
     let [coin] =
-        normalizeSuiAddress(token) == tokenType.SUI
+        normalizeSuiAddress(token) == normalizeSuiAddress(tokenType.SUI)
             ? tx.splitCoins(tx.gas, [tx.pure.u64(amount)])
             : (() => {
                   let coin = coins.pop()!;

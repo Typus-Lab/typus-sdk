@@ -111,7 +111,7 @@ export function getReduceFundTx(
     }
 ) {
     let result = tx.moveCall({
-        target: `${config.package.safu}::safu::reduce_fund`,
+        target: `${config.package.safu}::safu::reduce_fund_v2`,
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.version.typus),

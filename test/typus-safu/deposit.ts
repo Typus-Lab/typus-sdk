@@ -12,7 +12,7 @@ import { TypusConfig } from "src/utils";
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     // INPUT
-    let cToken = config.token.usdc;
+    let cToken = config.token.sui;
     let coins = (
         await provider.getCoins({
             owner: user,
@@ -22,9 +22,9 @@ import { TypusConfig } from "src/utils";
 
     let transaction = getRaiseFundTx(config, new Transaction(), {
         typeArguments: [cToken],
-        index: "1",
+        index: "28",
         raiseCoins: coins,
-        raiseAmount: "1000000",
+        raiseAmount: "1000000000",
         raiseFromDeactivating: "0",
         raiseFromInactive: "0",
         raiseFromReward: "0",
