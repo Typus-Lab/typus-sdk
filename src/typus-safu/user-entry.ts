@@ -1,6 +1,6 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { CLOCK } from "src/constants";
-import { TypusConfig } from "src/utils";
+import { CLOCK, tokenType } from "src/constants";
+import { TypusConfig, splitCoins } from "src/utils";
 
 /**
     public fun raise_fund<D_TOKEN>(
@@ -82,16 +82,17 @@ export function getRaiseFundTx(
 }
 
 /**
-    public fun reduce_fund<D_TOKEN>(
+    public fun reduce_fund_v2<D_TOKEN>(
         typus_version: &TypusVersion,
         typus_leaderboard_registry: &mut TypusLeaderboardRegistry,
         typus_user_registry: &mut TypusUserRegistry,
-        version: &Version,
+        version: &mut Version,
         registry: &mut Registry,
         index: u64,
         reduce_from_warmup: u64,
         reduce_from_active: u64,
         reduce_from_inactive: u64,
+        coin: Coin<SUI>,
         clock: &Clock,
         ctx: &mut TxContext,
     ): Balance<D_TOKEN> {
@@ -105,11 +106,12 @@ export function getReduceFundTx(
         reduceFromWarmup: string;
         reduceFromActive: string;
         reduceFromInactive: string;
+        feeAmount: string;
         user: string;
     }
 ) {
     let result = tx.moveCall({
-        target: `${config.package.safu}::safu::reduce_fund`,
+        target: `${config.package.safu}::safu::reduce_fund_v2`,
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.version.typus),
@@ -121,6 +123,7 @@ export function getReduceFundTx(
             tx.pure.u64(input.reduceFromWarmup),
             tx.pure.u64(input.reduceFromActive),
             tx.pure.u64(input.reduceFromInactive),
+            tx.object(splitCoins(tx, tokenType.SUI, [], input.feeAmount)),
             tx.object(CLOCK),
         ],
     });

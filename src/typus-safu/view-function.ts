@@ -35,9 +35,13 @@ export interface Config {
     min_size: string;
     fee_bp: string;
     utilization_rate_bp: string;
-    point_per_hour_bp: string;
+    exp_per_hour_bp: string;
     incentive_mbp: string;
     incentive_fixed: string;
+    point_per_hour_bp: string;
+    exercise_fee_bp: string;
+    exit_fee_bp: string;
+    exit_fee_amount: string;
 }
 export interface ShareSupply {
     active_share: string;
@@ -131,9 +135,13 @@ export async function getVaultData(
             min_size: configArray[2],
             fee_bp: configArray[3],
             utilization_rate_bp: configArray[4],
-            point_per_hour_bp: configArray[5],
+            exp_per_hour_bp: configArray[5],
             incentive_mbp: configArray[6],
             incentive_fixed: configArray[7],
+            point_per_hour_bp: configArray[8],
+            exercise_fee_bp: configArray[9],
+            exit_fee_bp: configArray[10],
+            exit_fee_amount: configArray[11],
         };
         // skip BigVector
         let bigVector: BigVector = {
