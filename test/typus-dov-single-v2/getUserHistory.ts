@@ -4,10 +4,11 @@ import { EventId, SuiClient, SuiEvent } from "@mysten/sui/client";
 import * as fs from "fs";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET", null);
+    let network: "MAINNET" | "TESTNET" = "MAINNET";
+    let config = await TypusConfig.default(network, null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let sender = "0xb6c7e3b1c61ee81516a8317f221daa035f1503e0ac3ae7a50b61834bc7a3ead9";
-    let fileName = "testnetLocalCacheEvents.json";
+    let sender = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d484107";
+    let fileName = `${network.toLowerCase()}LocalCacheEvents.json`;
     let vaults = await getVaults(config, { indexes: [] });
 
     // 1. Get User Events

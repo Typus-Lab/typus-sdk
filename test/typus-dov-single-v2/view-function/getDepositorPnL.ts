@@ -4,17 +4,18 @@ import * as fs from "fs";
 import { TypusConfig } from "src/utils";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET", null);
+    let network: "MAINNET" | "TESTNET" = "MAINNET";
+    let config = await TypusConfig.default(network, null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let user = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d484107";
+    let user = "0xd15f079d5f60b8fdfdcf3ca66c0d3473790c758b04b6418929d5d2991c5443ee";
+    let fileName = `${network.toLowerCase()}LocalCacheEvents.json`;
     let vaults = await getVaults(config, { indexes: [] });
 
     let localCacheMap: Map<string, [SuiEvent[], EventId | null | undefined]> = new Map<string, [SuiEvent[], EventId | null | undefined]>();
 
     // 1. Get User Events
     try {
-        let localCacheFile = fs.readFileSync("localCacheEvents.json", "utf-8");
-        let localCache = JSON.parse(localCacheFile);
+        let localCache = JSON.parse(fileName);
         for (let obj of localCache) {
             localCacheMap.set(obj.user, [obj.events, obj.cursor]);
         }
@@ -40,7 +41,7 @@ import { TypusConfig } from "src/utils";
     let localCacheArray = Array.from(localCacheMap.entries());
 
     fs.writeFileSync(
-        "localCacheEvents.json",
+        fileName,
         JSON.stringify(
             localCacheArray.map(([k, v]) => {
                 let t = { user: k, events: v[0], cursor: v[1] };
