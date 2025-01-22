@@ -432,6 +432,9 @@ export async function parseTxHistory(datas: Array<any>, vaults: { [key: string]:
                     Amount = `${BigNumber(profit).toFixed()} ${d_token!}`;
                     break;
                 case "RedeemEvent":
+                    if (event.type == "0xc654c3634a10567b329de1226c2629cae39cdc16ec5d594897d87b250d46e958::typus_dov_single::RedeemEvent") {
+                        break;
+                    }
                     var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
                     var amount = Number(event.parsedJson!.amount) / 10 ** assetToDecimal(token)!;
                     Action = "Harvest Reward";
