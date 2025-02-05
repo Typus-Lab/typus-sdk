@@ -119,46 +119,22 @@ export async function newGamePlayGuessTx(
         default:
             break;
     }
-    if (
-        input.typeArguments[0] == "0x2::sui::SUI" ||
-        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-    ) {
-        let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)]);
-        tx.moveCall({
-            target: `${config.package.dice}::${input.module}::new_game`,
-            typeArguments: input.typeArguments,
-            arguments:
-                input.module == "combo_dice"
-                    ? [
-                          tx.object(config.registry.dice.comboDice),
-                          tx.object(config.registry.dice.tailsExp),
-                          tx.pure.u64(input.index),
-                          tx.makeMoveVec({ elements: [coin] }),
-                          tx.pure.u64(input.amount),
-                      ]
-                    : [tx.object(registry), tx.pure.u64(input.index), tx.makeMoveVec({ elements: [coin] }), tx.pure.u64(input.amount)],
-        });
-    } else {
-        tx.moveCall({
-            target: `${config.package.dice}::${input.module}::new_game`,
-            typeArguments: input.typeArguments,
-            arguments:
-                input.module == "combo_dice"
-                    ? [
-                          tx.object(config.registry.dice.comboDice),
-                          tx.object(config.registry.dice.tailsExp),
-                          tx.pure.u64(input.index),
-                          tx.makeMoveVec({ elements: input.coins.map((id) => tx.object(id)) }),
-                          tx.pure.u64(input.amount),
-                      ]
-                    : [
-                          tx.object(registry),
-                          tx.pure.u64(input.index),
-                          tx.makeMoveVec({ elements: input.coins.map((id) => tx.object(id)) }),
-                          tx.pure.u64(input.amount),
-                      ],
-        });
-    }
+
+    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount);
+    tx.moveCall({
+        target: `${config.package.dice}::${input.module}::new_game`,
+        typeArguments: input.typeArguments,
+        arguments:
+            input.module == "combo_dice"
+                ? [
+                      tx.object(config.registry.dice.comboDice),
+                      tx.object(config.registry.dice.tailsExp),
+                      tx.pure.u64(input.index),
+                      tx.makeMoveVec({ elements: [coin] }),
+                      tx.pure.u64(input.amount),
+                  ]
+                : [tx.object(registry), tx.pure.u64(input.index), tx.makeMoveVec({ elements: [coin] }), tx.pure.u64(input.amount)],
+    });
 
     // tx.moveCall({
     //     target: `${config.package.dice}::${input.module}::play_guess`,
