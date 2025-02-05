@@ -1,7 +1,7 @@
 import { bcs } from "@mysten/sui/bcs";
 import { Transaction, TransactionObjectArgument } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
-import { TypusConfig } from "src/utils";
+import { TypusConfig, splitCoins } from "src/utils";
 
 /**
     public fun public_raise_fund<D_TOKEN, B_TOKEN>(
@@ -32,33 +32,12 @@ export function getRaiseFundTx(
         user: string;
     }
 ) {
-    let raiseBalance =
-        input.typeArguments[0] == "0x2::sui::SUI" ||
-        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-            ? tx.moveCall({
-                  target: `${config.package.framework}::utils::delegate_extract_balance`,
-                  typeArguments: [input.typeArguments[0]],
-                  arguments: [
-                      tx.pure.address(input.user),
-                      tx.makeMoveVec({
-                          type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          elements: [tx.splitCoins(tx.gas, [tx.pure.u64(input.raiseAmount)])],
-                      }),
-                      tx.pure.u64(input.raiseAmount),
-                  ],
-              })
-            : tx.moveCall({
-                  target: `${config.package.framework}::utils::delegate_extract_balance`,
-                  typeArguments: [input.typeArguments[0]],
-                  arguments: [
-                      tx.pure.address(input.user),
-                      tx.makeMoveVec({
-                          type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          elements: input.raiseCoins.map((coin) => tx.object(coin)),
-                      }),
-                      tx.pure.u64(input.raiseAmount),
-                  ],
-              });
+    let coin = splitCoins(tx, input.typeArguments[0], input.raiseCoins, input.raiseAmount);
+    let raiseBalance = tx.moveCall({
+        target: `0x2::coin::into_balance`,
+        typeArguments: [input.typeArguments[0]],
+        arguments: [tx.object(coin)],
+    });
     let result = tx.moveCall({
         target: `${config.package.dovSingle}::tds_user_entry::public_raise_fund`,
         typeArguments: input.typeArguments,
@@ -253,16 +232,7 @@ export function getNewBidTx(
             arguments: [tx.makeMoveVec({ elements: [tx.object(result[1])] }), tx.pure.address(input.user)],
         });
     } else {
-        let balance = tx.moveCall({
-            target: `${config.package.framework}::utils::extract_balance`,
-            typeArguments: [input.typeArguments[1]],
-            arguments: [tx.makeMoveVec({ elements: input.coins.map((coin) => tx.object(coin)) }), tx.pure.u64(input.premium_required)],
-        });
-        let coin = tx.moveCall({
-            target: `0x2::coin::from_balance`,
-            typeArguments: [input.typeArguments[1]],
-            arguments: [tx.object(balance)],
-        });
+        let coin = splitCoins(tx, input.typeArguments[1], input.coins, input.premium_required);
         let result = tx.moveCall({
             target: `${config.package.dovSingle}::tds_user_entry::public_bid`,
             typeArguments: input.typeArguments,

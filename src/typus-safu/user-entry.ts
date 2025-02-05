@@ -32,34 +32,13 @@ export function getRaiseFundTx(
         user: string;
     }
 ) {
-    let raiseBalance =
-        input.typeArguments[0] == "0x2::sui::SUI" ||
-        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-            ? tx.moveCall({
-                  target: `${config.package.framework}::utils::delegate_extract_balance`,
-                  typeArguments: [input.typeArguments[0]],
-                  arguments: [
-                      tx.pure.address(input.user),
-                      tx.makeMoveVec({
-                          type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          elements: [tx.splitCoins(tx.gas, [tx.pure.u64(input.raiseAmount)])],
-                      }),
-                      tx.pure.u64(input.raiseAmount),
-                  ],
-              })
-            : tx.moveCall({
-                  target: `${config.package.framework}::utils::delegate_extract_balance`,
-                  typeArguments: [input.typeArguments[0]],
-                  arguments: [
-                      tx.pure.address(input.user),
-                      tx.makeMoveVec({
-                          type: `0x2::coin::Coin<${input.typeArguments[0]}>`,
-                          elements: input.raiseCoins.map((coin) => tx.object(coin)),
-                      }),
-                      tx.pure.u64(input.raiseAmount),
-                  ],
-              });
-    let result = tx.moveCall({
+    let coin = splitCoins(tx, input.typeArguments[0], input.raiseCoins, input.raiseAmount);
+    let raiseBalance = tx.moveCall({
+        target: `0x2::coin::into_balance`,
+        typeArguments: [input.typeArguments[0]],
+        arguments: [tx.object(coin)],
+    });
+    tx.moveCall({
         target: `${config.package.safu}::safu::raise_fund`,
         typeArguments: input.typeArguments,
         arguments: [
