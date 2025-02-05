@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { TypusConfig } from "src/utils";
+import { TypusConfig, splitCoins } from "src/utils";
 
 /**
     public(friend) entry fun new_game<TOKEN>(
@@ -32,15 +32,11 @@ export async function newGameTx(
         default:
             break;
     }
+    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount);
     tx.moveCall({
         target: `${config.package.dice}::${input.module}::new_game`,
         typeArguments: input.typeArguments,
-        arguments: [
-            tx.object(registry),
-            tx.pure.u64(input.index),
-            tx.makeMoveVec({ elements: input.coins.map((id) => tx.object(id)) }),
-            tx.pure.u64(input.amount),
-        ],
+        arguments: [tx.object(registry), tx.pure.u64(input.index), tx.makeMoveVec({ elements: [coin] }), tx.pure.u64(input.amount)],
     });
 
     return tx;
