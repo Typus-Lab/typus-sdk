@@ -11,6 +11,7 @@ export const priceIDs = {
         CETUS: "0xe5b274b2611143df055d6e7cd8d93fe1961716bcd4dca1cad87a83bc1e78c1ef", // CETUS/USD price ID
         NAVX: "0x88250f854c019ef4f88a5c073d52a18bb1c6ac437033f5932cd017d24917ab46", // NAVX/USD price ID
         SCA: "0x7e17f0ac105abe9214deb9944c30264f5986bf292869c6bd8e8da3ccd92d79bc", // SCA/USD price ID
+        TURBOS: "0xf9c2e890443dd995d0baafc08eea3358be1ffb874f93f99c30b3816c460bbac3", // TURBOS/USD price ID
     },
     TESTNET: {
         // Pyth EVM Beta
@@ -24,6 +25,7 @@ export const priceIDs = {
         CETUS: "0xcb324dafd531712dd31c39969ae0246ee4c6ae167257bcf8ac27e28ca35e6a0c", // CETUS/USD price ID
         NAVX: "0x946292ad3f481f36f5e558726cf4974e2a7a34598bf15d2abe3619e7b6a8db91", // NAVX/USD price ID
         SCA: "0xeacabc6304d11fc10a757f63286ef44415d8e91b7a1a525ae94a7ec9398b73f3", // SCA/USD price ID
+        TURBOS: "0x3f545e3f4ec9fd8eb3b9d9d6071a1da361f6729fa1b93d1d1baca3379551d99e", // TURBOS/USD price ID
     },
 };
 
