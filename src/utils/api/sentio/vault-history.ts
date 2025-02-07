@@ -26,7 +26,16 @@ export async function getVaultHistorySummary(startTimestamp?: number): Promise<V
                         GROUP BY
                             symbol, hour
                     ),
-
+                    safu_otc_aggregated AS (
+                        SELECT
+                            index,
+                            round,
+                            AVG(delivery_price) AS delivery_price,
+                            SUM(delivery_size) AS delivery_size,
+                            SUM(bidder_bid_value) AS bidder_bid_value
+                        FROM SafuOtc
+                        GROUP BY index, round
+                    ),
                     vault_history AS (
                         SELECT
                             Settle.timestamp as timestamp,
@@ -40,17 +49,17 @@ export async function getVaultHistorySummary(startTimestamp?: number): Promise<V
                             CAST(Activate.deposit_balance as Float64) as DepositAmount,
                             DepositAmount * Settle.price_d_token as DepositAmountUSD,
                             Delivery.max_size as MaxSize,
-                            (SafuOtc.delivery_size + Delivery.delivery_size) as TotalSell,
+                            (safu_otc_aggregated.delivery_size + Delivery.delivery_size) as TotalSell,
                             CASE WHEN MaxSize != 0 THEN TotalSell / MaxSize ELSE 0 END AS Filled,
                             Delivery.delivery_size as DeliverySize,
                             Delivery.delivery_price as DeliveryPrice,
-                            SafuOtc.delivery_size as OtcSize,
-                            SafuOtc.delivery_price as OtcPrice,
+                            safu_otc_aggregated.delivery_size as OtcSize,
+                            safu_otc_aggregated.delivery_price as OtcPrice,
                             Delivery.bidder_bid_value as BidderPremium,
                             BidderPremium * Delivery.price_b_token as BidderPremiumUSD,
                             Delivery.incentive_bid_value as IncentivePremium,
-                            SafuOtc.bidder_bid_value as OtcPremium,
-                            (Delivery.bidder_bid_value + Delivery.incentive_bid_value + SafuOtc.bidder_bid_value) AS Premium, -- Total Premium b_token
+                            safu_otc_aggregated.bidder_bid_value as OtcPremium,
+                            (Delivery.bidder_bid_value + Delivery.incentive_bid_value + safu_otc_aggregated.bidder_bid_value) AS Premium, -- Total Premium b_token
                             Premium * Delivery.price_b_token AS PremiumUSD,
                             Delivery.depositor_incentive_value as BpIncentive, -- SUI or SCA based on o_token
                             BpIncentive * Delivery.price_o_token as BpIncentiveUSD,
@@ -71,7 +80,7 @@ export async function getVaultHistorySummary(startTimestamp?: number): Promise<V
                         JOIN NewAuction ON Settle.index = NewAuction.index AND Settle.round = NewAuction.round
                         LEFT JOIN UpdateStrike ON Settle.index = UpdateStrike.index AND Settle.round = UpdateStrike.round
                         JOIN Delivery ON Settle.index = Delivery.index AND Settle.round = Delivery.round
-                        LEFT JOIN SafuOtc ON Settle.index = SafuOtc.index AND Settle.round = SafuOtc.round
+                        LEFT JOIN safu_otc_aggregated ON Settle.index = safu_otc_aggregated.index AND Settle.round = safu_otc_aggregated.round
                         LEFT JOIN hourly_price_table ON 'sui' = hourly_price_table.symbol AND toStartOfHour(Settle.timestamp) = hourly_price_table.hour
                         ${timeFilter}
                         ORDER BY ActivationDate DESC
@@ -105,7 +114,7 @@ export async function getVaultHistorySummary(startTimestamp?: number): Promise<V
     });
 
     let data = await response.json();
-    // console.log(response);
+    // console.log(data);
 
     let result = data.result.rows as VaultHistorySummary[];
     // console.log(result);
@@ -136,7 +145,16 @@ export async function getFilledSummary(startTimestamp?: number): Promise<VaultHi
                         GROUP BY
                             symbol, hour
                     ),
-
+                    safu_otc_aggregated AS (
+                        SELECT
+                            index,
+                            round,
+                            AVG(delivery_price) AS delivery_price,
+                            SUM(delivery_size) AS delivery_size,
+                            SUM(bidder_bid_value) AS bidder_bid_value
+                        FROM SafuOtc
+                        GROUP BY index, round
+                    ),
                     vault_history AS (
                         SELECT
                             Delivery.timestamp as timestamp,
@@ -146,17 +164,17 @@ export async function getFilledSummary(startTimestamp?: number): Promise<VaultHi
                             COALESCE(NULLIF(UpdateStrike.strikes, ''), NewAuction.strikes) AS Strikes, -- 如果 UpdateStrike.strikes 是空字符串，就使用 NewAuction.strikes
                             Activate.deposit_balance as DepositAmount,
                             Delivery.max_size as MaxSize,
-                            (SafuOtc.delivery_size + Delivery.delivery_size) as TotalSell,
+                            (safu_otc_aggregated.delivery_size + Delivery.delivery_size) as TotalSell,
                             CASE WHEN MaxSize != 0 THEN TotalSell / MaxSize ELSE 0 END AS Filled,
                             Delivery.delivery_size as DeliverySize,
                             Delivery.delivery_price as DeliveryPrice,
-                            SafuOtc.delivery_size as OtcSize,
-                            SafuOtc.delivery_price as OtcPrice,
+                            safu_otc_aggregated.delivery_size as OtcSize,
+                            safu_otc_aggregated.delivery_price as OtcPrice,
                             Delivery.bidder_bid_value as BidderPremium,
                             BidderPremium * Delivery.price_b_token as BidderPremiumUSD,
                             Delivery.incentive_bid_value as IncentivePremium,
-                            SafuOtc.bidder_bid_value as OtcPremium,
-                            (Delivery.bidder_bid_value + Delivery.incentive_bid_value + SafuOtc.bidder_bid_value) AS Premium, -- Total Premium b_token
+                            safu_otc_aggregated.bidder_bid_value as OtcPremium,
+                            (Delivery.bidder_bid_value + Delivery.incentive_bid_value + safu_otc_aggregated.bidder_bid_value) AS Premium, -- Total Premium b_token
                             Premium * Delivery.price_b_token AS PremiumUSD,
                             Delivery.depositor_incentive_value as BpIncentive, -- SUI or SCA based on o_token
                             BpIncentive * Delivery.price_o_token as BpIncentiveUSD,
@@ -170,7 +188,7 @@ export async function getFilledSummary(startTimestamp?: number): Promise<VaultHi
                             JOIN NewAuction ON Delivery.index = NewAuction.index AND Delivery.round = NewAuction.round
                             JOIN VaultInfo ON Delivery.index = CAST(VaultInfo.id AS Decimal(76, 12))
                             LEFT JOIN UpdateStrike ON Delivery.index = UpdateStrike.index AND Delivery.round = UpdateStrike.round
-                            LEFT JOIN SafuOtc ON Delivery.index = SafuOtc.index AND Delivery.round = SafuOtc.round
+                            LEFT JOIN safu_otc_aggregated ON Delivery.index = safu_otc_aggregated.index AND Delivery.round = safu_otc_aggregated.round
                             LEFT JOIN hourly_price_table ON 'sui' = hourly_price_table.symbol AND toStartOfHour(Delivery.timestamp) = hourly_price_table.hour
                             ${timeFilter}
                         ORDER BY ActivationDate DESC
@@ -198,7 +216,7 @@ export async function getFilledSummary(startTimestamp?: number): Promise<VaultHi
     });
 
     let data = await response.json();
-    // console.log(response);
+    // console.log(data);
 
     let result = data.result.rows as VaultHistorySummary[];
     // console.log(result);
@@ -232,8 +250,17 @@ export async function getVaultHistory(index: string, limit: number = 100): Promi
                             token.prices
                         GROUP BY
                             symbol, hour
+                    ),
+                    safu_otc_aggregated AS (
+                        SELECT
+                            index,
+                            round,
+                            AVG(delivery_price) AS delivery_price,
+                            SUM(delivery_size) AS delivery_size,
+                            SUM(bidder_bid_value) AS bidder_bid_value
+                        FROM SafuOtc
+                        GROUP BY index, round
                     )
-
                 SELECT
                     Settle.timestamp as timestamp,
                     Settle.index as Index,
@@ -246,17 +273,17 @@ export async function getVaultHistory(index: string, limit: number = 100): Promi
                     Activate.deposit_balance as DepositAmount,
                     DepositAmount * Settle.price_d_token as DepositAmountUSD,
                     Delivery.max_size as MaxSize,
-                    (SafuOtc.delivery_size + Delivery.delivery_size) as TotalSell,
+                    (safu_otc_aggregated.delivery_size + Delivery.delivery_size) as TotalSell,
                     CASE WHEN MaxSize != 0 THEN TotalSell / MaxSize ELSE 0 END AS Filled,
                     Delivery.delivery_size as DeliverySize,
                     Delivery.delivery_price as DeliveryPrice,
-                    SafuOtc.delivery_size as OtcSize,
-                    SafuOtc.delivery_price as OtcPrice,
+                    safu_otc_aggregated.delivery_size as OtcSize,
+                    safu_otc_aggregated.delivery_price as OtcPrice,
                     Delivery.bidder_bid_value as BidderPremium,
                     BidderPremium * Delivery.price_b_token as BidderPremiumUSD,
                     Delivery.incentive_bid_value as IncentivePremium,
-                    SafuOtc.bidder_bid_value as OtcPremium,
-                    (Delivery.bidder_bid_value + Delivery.incentive_bid_value + SafuOtc.bidder_bid_value) AS Premium, -- Total Premium b_token
+                    safu_otc_aggregated.bidder_bid_value as OtcPremium,
+                    (Delivery.bidder_bid_value + Delivery.incentive_bid_value + safu_otc_aggregated.bidder_bid_value) AS Premium, -- Total Premium b_token
                     Premium * Delivery.price_b_token AS PremiumUSD,
                     Delivery.depositor_incentive_value as BpIncentive, -- SUI or SCA based on o_token
                     BpIncentive * Delivery.price_o_token as BpIncentiveUSD,
@@ -277,7 +304,7 @@ export async function getVaultHistory(index: string, limit: number = 100): Promi
                     JOIN NewAuction ON Settle.index = NewAuction.index AND Settle.round = NewAuction.round
                     LEFT JOIN UpdateStrike ON Settle.index = UpdateStrike.index AND Settle.round = UpdateStrike.round
                     JOIN Delivery ON Settle.index = Delivery.index AND Settle.round = Delivery.round
-                    LEFT JOIN SafuOtc ON Settle.index = SafuOtc.index AND Settle.round = SafuOtc.round
+                    LEFT JOIN safu_otc_aggregated ON Settle.index = safu_otc_aggregated.index AND Settle.round = safu_otc_aggregated.round
                     -- LEFT JOIN hourly_price_table ON LOWER(Settle.d_token) = hourly_price_table.symbol AND toStartOfHour(Settle.timestamp) = hourly_price_table.hour
                     LEFT JOIN hourly_price_table ON 'sui' = hourly_price_table.symbol AND toStartOfHour(Settle.timestamp) = hourly_price_table.hour
                 WHERE Settle.index = ${index}
