@@ -113,6 +113,99 @@ export async function getVaultHistorySummary(startTimestamp?: number): Promise<V
     return result;
 }
 
+export async function getFilledSummary(startTimestamp?: number): Promise<VaultHistorySummary[]> {
+    let apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
+
+    let timeFilter: string;
+    if (startTimestamp) {
+        timeFilter = `WHERE timestamp >= ${startTimestamp}`;
+    } else {
+        timeFilter = "";
+    }
+
+    let requestData = {
+        sqlQuery: {
+            sql: `
+                    WITH hourly_price_table AS (
+                        SELECT
+                            symbol,
+                            toStartOfHour(time) AS hour,
+                            argMax(price, time) AS hourly_price  -- Get the most recent price before or at the hour
+                        FROM
+                            sui.coin_prices
+                        GROUP BY
+                            symbol, hour
+                    ),
+
+                    vault_history AS (
+                        SELECT
+                            Delivery.timestamp as timestamp,
+                            Delivery.index as Index,
+                            Delivery.round as Round,
+                            NewAuction.start_ts_ms as ActivationDate,
+                            COALESCE(NULLIF(UpdateStrike.strikes, ''), NewAuction.strikes) AS Strikes, -- 如果 UpdateStrike.strikes 是空字符串，就使用 NewAuction.strikes
+                            Activate.deposit_balance as DepositAmount,
+                            Delivery.max_size as MaxSize,
+                            (SafuOtc.delivery_size + Delivery.delivery_size) as TotalSell,
+                            CASE WHEN MaxSize != 0 THEN TotalSell / MaxSize ELSE 0 END AS Filled,
+                            Delivery.delivery_size as DeliverySize,
+                            Delivery.delivery_price as DeliveryPrice,
+                            SafuOtc.delivery_size as OtcSize,
+                            SafuOtc.delivery_price as OtcPrice,
+                            Delivery.bidder_bid_value as BidderPremium,
+                            BidderPremium * Delivery.price_b_token as BidderPremiumUSD,
+                            Delivery.incentive_bid_value as IncentivePremium,
+                            SafuOtc.bidder_bid_value as OtcPremium,
+                            (Delivery.bidder_bid_value + Delivery.incentive_bid_value + SafuOtc.bidder_bid_value) AS Premium, -- Total Premium b_token
+                            Premium * Delivery.price_b_token AS PremiumUSD,
+                            Delivery.depositor_incentive_value as BpIncentive, -- SUI or SCA based on o_token
+                            BpIncentive * Delivery.price_o_token as BpIncentiveUSD,
+                            Delivery.fixed_incentive_amount as FixedIncentive, -- SUI
+                            FixedIncentive * hourly_price_table.hourly_price as FixedIncentiveUSD,
+                            VaultInfo.d_token as d_token,
+                            Delivery.b_token as b_token,
+                            Delivery.o_token as o_token
+                            FROM Delivery
+                            JOIN Activate ON Delivery.index = Activate.index AND Delivery.round = Activate.round
+                            JOIN NewAuction ON Delivery.index = NewAuction.index AND Delivery.round = NewAuction.round
+                            JOIN VaultInfo ON Delivery.index = CAST(VaultInfo.id AS Decimal(76, 12))
+                            LEFT JOIN UpdateStrike ON Delivery.index = UpdateStrike.index AND Delivery.round = UpdateStrike.round
+                            LEFT JOIN SafuOtc ON Delivery.index = SafuOtc.index AND Delivery.round = SafuOtc.round
+                            LEFT JOIN hourly_price_table ON 'sui' = hourly_price_table.symbol AND toStartOfHour(Delivery.timestamp) = hourly_price_table.hour
+                            ${timeFilter}
+                        ORDER BY ActivationDate DESC
+                    )
+
+                    SELECT
+                        vault_history.Index AS Index,
+                        SUM(vault_history.BidderPremiumUSD) * 0.2 AS FeeUSD,
+                        SUM(vault_history.TotalSell) AS TotalSell, -- Total Sell Size
+                        AVG(vault_history.Filled) AS AverageFilled -- Average Filled Rate
+                    FROM vault_history
+                    GROUP BY vault_history.Index
+                    ORDER BY FeeUSD DESC
+            `,
+            size: 1000,
+        },
+    };
+
+    let jsonData = JSON.stringify(requestData);
+
+    let response = await fetch(apiUrl, {
+        method: "POST",
+        headers,
+        body: jsonData,
+    });
+
+    let data = await response.json();
+    // console.log(response);
+
+    let result = data.result.rows as VaultHistorySummary[];
+    // console.log(result);
+
+    return result;
+}
+
 interface VaultHistorySummary {
     AverageDrawdown: number;
     AverageFilled: number;
@@ -250,4 +343,5 @@ interface VaultHistory {
 // let quarterly_timestamp = Math.round(new Date().setMonth(new Date().getMonth() - 3) / 1000);
 // console.log(quarterly_timestamp);
 // getVaultHistorySummary();
+// getFilledSummary(quarterly_timestamp);
 // getVaultHistory("78", 3);
