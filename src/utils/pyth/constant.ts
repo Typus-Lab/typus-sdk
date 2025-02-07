@@ -53,6 +53,7 @@ export const priceInfoObjectIds = {
         CETUS: "0xb0ba78106259b7ceefd288edc5f65b65f8b7bca0816e61dae5136616aac7d3da",
         NAVX: "0x94905bdcaa656b0908aa8a3a42cf72b0e8e2e849f7d0a7e0e39bb9e1dc3c9cf6",
         SCA: "0xf96e3c4b7d74efbde9df5b669188421196e6164adf6fbaaa92903c42569807c8",
+        TURBOS: "0xfe38289883c3afed692e5856f4896b3e094d4793e2ccf0a2715b890a718fa5c0",
     },
 };
 
