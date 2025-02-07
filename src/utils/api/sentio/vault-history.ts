@@ -3,8 +3,15 @@ const headers = {
     "Content-Type": "application/json",
 };
 
-export async function getVaultHistorySummary(): Promise<VaultHistorySummary[]> {
+export async function getVaultHistorySummary(startTimestamp?: number): Promise<VaultHistorySummary[]> {
     let apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
+
+    let timeFilter: string;
+    if (startTimestamp) {
+        timeFilter = `WHERE timestamp >= ${startTimestamp}`;
+    } else {
+        timeFilter = "";
+    }
 
     let requestData = {
         sqlQuery: {
@@ -66,6 +73,7 @@ export async function getVaultHistorySummary(): Promise<VaultHistorySummary[]> {
                         JOIN Delivery ON Settle.index = Delivery.index AND Settle.round = Delivery.round
                         LEFT JOIN SafuOtc ON Settle.index = SafuOtc.index AND Settle.round = SafuOtc.round
                         LEFT JOIN hourly_price_table ON 'sui' = hourly_price_table.symbol AND toStartOfHour(Settle.timestamp) = hourly_price_table.hour
+                        ${timeFilter}
                         ORDER BY ActivationDate DESC
                     )
 
@@ -97,6 +105,7 @@ export async function getVaultHistorySummary(): Promise<VaultHistorySummary[]> {
     });
 
     let data = await response.json();
+    // console.log(response);
 
     let result = data.result.rows as VaultHistorySummary[];
     // console.log(result);
@@ -238,5 +247,7 @@ interface VaultHistory {
     timestamp: string;
 }
 
+// let quarterly_timestamp = Math.round(new Date().setMonth(new Date().getMonth() - 3) / 1000);
+// console.log(quarterly_timestamp);
 // getVaultHistorySummary();
 // getVaultHistory("78", 3);
