@@ -310,6 +310,7 @@ export async function getAccumulatedUser(): Promise<number[]> {
 
         result.push(data.results[0].matrix.samples[0].values[0].value);
     }
+    // console.log(result);
 
     return result;
 }
@@ -362,10 +363,11 @@ export async function getAccumulatedNotionalVolumeUSD(): Promise<number[]> {
         });
 
         let data = await response.json();
-        console.log(data.results[0]);
+        // console.log(data.results[0]);
 
         result.push(data.results[0].matrix.samples[0].values[0].value);
     }
+    // console.log(result);
 
     return result;
 }
@@ -416,3 +418,6 @@ export async function getSafuAccumulatedRewardGeneratedUSD(): Promise<number> {
 
     return data.results[0].matrix.samples[0].values[0].value;
 }
+
+// getAccumulatedNotionalVolumeUSD();
+// getAccumulatedUser();
