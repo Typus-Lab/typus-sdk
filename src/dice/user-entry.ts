@@ -167,6 +167,90 @@ export async function newGamePlayGuessTx(
 }
 
 /**
+    entry fun play<TOKEN>( // combo_dice
+        registry: &mut Registry,
+        exp_registry: &mut ExpRegistry,
+        index: u64,
+        coin: Coin<TOKEN>,
+        guess_1: u64,
+        larger_than_1: bool,
+        guess_2: u64,
+        larger_than_2: bool,
+        random: &Random,
+        ctx: &mut TxContext
+    ) {
+    entry fun play<TOKEN>( // tails_exp
+        registry: &mut Registry,
+        index: u64,
+        coin: Coin<TOKEN>,
+        guess_1: u64,
+        larger_than_1: bool,
+        guess_2: u64,
+        larger_than_2: bool,
+        random: &Random,
+        ctx: &mut TxContext
+    ) {
+ */
+export async function playTx(
+    config: TypusConfig,
+    tx: Transaction,
+    input: {
+        module: "tails_exp" | "combo_dice";
+        typeArguments: string[]; // [TOKEN]
+        index: string;
+        coins: string[];
+        amount: string;
+        guess_1: string;
+        larger_than_1: boolean;
+        guess_2: string;
+        larger_than_2: boolean;
+    }
+) {
+    let registry = "";
+    switch (input.module) {
+        case "tails_exp":
+            registry = config.registry.dice.tailsExp;
+            break;
+        case "combo_dice":
+            registry = config.registry.dice.comboDice;
+            break;
+        default:
+            break;
+    }
+
+    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount);
+    tx.moveCall({
+        target: `${config.package.dice}::${input.module}::play`,
+        typeArguments: input.typeArguments,
+        arguments:
+            input.module == "combo_dice"
+                ? [
+                      tx.object(config.registry.dice.comboDice),
+                      tx.object(config.registry.dice.tailsExp),
+                      tx.pure.u64(input.index),
+                      tx.object(coin),
+                      tx.pure.u64(input.guess_1),
+                      tx.pure.bool(input.larger_than_1),
+                      tx.pure.u64(input.guess_2),
+                      tx.pure.bool(input.larger_than_2),
+                      tx.object("0x8"),
+                  ]
+                : [
+                      tx.object(config.registry.dice.tailsExp),
+                      tx.pure.u64(input.index),
+                      tx.object(coin),
+                      tx.pure.u64(input.guess_1),
+                      tx.pure.bool(input.larger_than_1),
+                      tx.pure.u64(input.guess_2),
+                      tx.pure.bool(input.larger_than_2),
+                      tx.object("0x8"),
+                  ],
+    });
+
+    return tx;
+}
+
+/**
     public fun consume_exp_coin_staked(
         registry: &mut Registry,
         version: &Version,
