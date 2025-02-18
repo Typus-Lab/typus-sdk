@@ -235,7 +235,7 @@ interface VaultHistorySummary {
     TotalSell: string;
 }
 
-export async function getVaultHistory(index: string, limit: number = 100): Promise<VaultHistory[]> {
+export async function getVaultHistory(indices: string[], limit: number = 100): Promise<VaultHistory[]> {
     let apiUrl = "https://app.sentio.xyz/api/v1/analytics/typus/typus_v2/sql/execute";
 
     let requestData = {
@@ -307,7 +307,7 @@ export async function getVaultHistory(index: string, limit: number = 100): Promi
                     LEFT JOIN safu_otc_aggregated ON Settle.index = safu_otc_aggregated.index AND Settle.round = safu_otc_aggregated.round
                     -- LEFT JOIN hourly_price_table ON LOWER(Settle.d_token) = hourly_price_table.symbol AND toStartOfHour(Settle.timestamp) = hourly_price_table.hour
                     LEFT JOIN hourly_price_table ON 'sui' = hourly_price_table.symbol AND toStartOfHour(Settle.timestamp) = hourly_price_table.hour
-                WHERE Settle.index = ${index}
+                WHERE Settle.index IN (${indices.join(",")})
                 ORDER BY ActivationDate DESC;
             `,
             size: limit,
@@ -371,4 +371,4 @@ interface VaultHistory {
 // console.log(quarterly_timestamp);
 // getVaultHistorySummary();
 // getFilledSummary(quarterly_timestamp);
-// getVaultHistory("78", 3);
+// getVaultHistory(["78", "79"], 2);
