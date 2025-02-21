@@ -55,19 +55,30 @@ export function splitCoins(
     $kind: "NestedResult";
     NestedResult: [number, number];
 } {
-    let [coin] =
-        normalizeStructTag(token) == tokenType.SUI
-            ? tx.splitCoins(tx.gas, [tx.pure.u64(amount)])
-            : (() => {
-                  let coin = coins.pop()!;
-                  if (coins.length > 0) {
-                      tx.mergeCoins(
-                          tx.object(coin),
-                          coins.map((id) => tx.object(id))
-                      );
-                  }
-                  return tx.splitCoins(tx.object(coin), [tx.pure.u64(amount)]);
-              })();
+    let coin;
+
+    if (coins.length == 0) {
+        // support zero coin input for closing position
+        [coin] = tx.moveCall({
+            target: `0x2::coin::zero`,
+            typeArguments: [token],
+            arguments: [],
+        });
+    } else {
+        [coin] =
+            normalizeStructTag(token) == tokenType.SUI
+                ? tx.splitCoins(tx.gas, [tx.pure.u64(amount)])
+                : (() => {
+                      let coin = coins.pop()!;
+                      if (coins.length > 0) {
+                          tx.mergeCoins(
+                              tx.object(coin),
+                              coins.map((id) => tx.object(id))
+                          );
+                      }
+                      return tx.splitCoins(tx.object(coin), [tx.pure.u64(amount)]);
+                  })();
+    }
 
     return coin;
 }
