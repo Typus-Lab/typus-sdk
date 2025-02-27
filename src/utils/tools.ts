@@ -66,7 +66,7 @@ export function splitCoins(
         });
     } else {
         [coin] =
-            normalizeStructTag(token) == tokenType.SUI
+            normalizeStructTag(token) == tokenType.MAINNET.SUI
                 ? tx.splitCoins(tx.gas, [tx.pure.u64(amount)])
                 : (() => {
                       let coin = coins.pop()!;
