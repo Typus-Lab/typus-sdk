@@ -344,17 +344,51 @@ export type TOKEN =
     // Other
     | "TEXP";
 
-// export function tokenTypeToAsset(env: "MAINNET" | "TESTNET", tokenAddress: string): string | undefined {
-//     const normalizedTokenAddress = normalizeSuiAddress(tokenAddress);
-//     const tokens = tokenType[env];
-//     for (const [token, address] of Object.entries(tokens)) {
-//         if (address === normalizedTokenAddress) {
-//             return token;
-//         }
-//     }
-//     // not found => return undefined
-//     return undefined;
-// }
-// export function assetToTokenType(env: "MAINNET" | "TESTNET", token: string): string {
-//     return tokenType[env][token];
-// }
+export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in TOKEN]?: string } } = {
+    MAINNET: {},
+    TESTNET: {
+        SUI: "0x7b30b7740b4d3975eca8ef4dd3723853ac676acbc334e5a64bb5aab3bcfd06a8",
+        USDC: "0xaee20b37552f4c74e8c391479a21560022453c3b72544acaec8e5b69e90747eb",
+        wUSDT: "0xcc0233a4ad637b479931cfbba64bab61647787215b10e0bd57998228cff4cd5e",
+        wBTC: "0x4321fc6ec1bcff91f8064296ac44d240b2812b81619c52b2c649c5452fdbaca9",
+        wETH: "0xbc0410a38f6cb069eee34d2519a5beea667d5a43d61b7e355f4b7ed8d705efda",
+        wSOL: "0xb6ea41a8212a35621256446c6df68741831c4b801d811a0f3ebfe8a842794b9f",
+        CETUS: "0xc4128130b7f3fed9893df8cfa372bdb1b30794e365e16e93f8617d3a9a578a9a",
+        TURBOS: "0x6818486c76eabaa24156ccd84cd1a3df188c94ccc19bb601e7c3589d9766f7a8",
+        SCA: "0xb59cb2a1df03bdbdb9af858d883dc5ea3a90dd1d616497e244a8e7f3165fe929",
+        SEI: "0x5de032cf3643705efbc749ddd271bd783f5cedc3e6555ebea70b681ad305a848",
+        INJ: "0x77fb65d1e1d3b30428ef624af83d40dc5d5240c882795a05d862b7d17b6df62b",
+        AFSUI: "0xe1a840db2b433946837a724a12f8152d9812428227684f59886b4e32a8d96bda",
+        MFUD: "0xa360c6637e84b3182545c6cb8029cbb189a1a447ee2871112ffbb7b5fb42dabe",
+        MBLUB: "0x7852083dafac5dddf42e46912114a87c81c092268e18412f4bb9ec7ec4a255d2",
+        TYPUS: "0x70253c784b82c61cb1341d6e5589f969324ac2e325278fa071ed27cbb33d7a37",
+    },
+};
+
+export const tokenRegistry: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in TOKEN]?: string } } = {
+    MAINNET: {
+        MFUD: "0xb8d7e7ab783e56700c0212bd9f0938bba9dd3e7241c149e6c52b21334ec45ece",
+        MBLUB: "0x37c31cfd324a8fdafc6dff5a083822c65b360c9dc04e2b6c4453f051754c7c3a",
+        MLIQ: "0x70acdb4a2978d2d99edf9ce0297e34e314cd097fd243a7ddbc00af1eb77f2454",
+    },
+    TESTNET: {
+        wBTC: "0xcf5184b85f47cb1ffe421249e48b2cd34807534e1a4b4ad384009295bbbd3bf4",
+        wETH: "0x5cd3726a1d1ef32bffaaeb2ec4964f0ffac56cfb919f7d13d4672aed5059bfa1",
+        wSOL: "0x1186a198ebd006e4f444ff88334307d6b376c02a040cfdad380ca06090f52472",
+        wAPT: "0xf8d1edd32c4847c6d2c0e5fbf61291ae393092540e5e0723e7c6cf52089d670f",
+        wUSDT: "0xc0bd93d1c77ff19bef3f3cd55564aa55acb46cbcc77905d2fa4893ac16cffea7",
+        wUSDC: "0xf7df3c68a7d3ffc54065565c94a9fa3f5342957340bce78be74373846241a833",
+        CETUS: "0x24a7a5297a3656ebea71ed72a4974a7710943d9a598fda60fe60b44262da9f27",
+        BUCK: "0x441cf46a499c6e4d0560c4c9000351f34a928e53018d65857a1591ca1aa2bd58",
+        TURBOS: "0x45179ff4beedfc94c29044081f3722d34ba36813b99d416bb868d1769a85bb57",
+        FUD: "0x694d47bedc6a80b405fc5c1051f065e33b2a3c5f7b79f76cb2905233b2a8c885",
+        AFSUI: "0xfee32f5338f70a782f25fabf7fa934130b43715ad6fa2aefbf91305c825c3e23",
+        INJ: "0xcfd839650442dce7ec74b2c2b2f0c5ee0d8fe1bc542d1c71062ae34192c4514c",
+        SEI: "0x2b2015fa8cad497e9673734d66ac66f411dadf2ee11be6d370ab8418331c0132",
+        SCA: "0xdb322211ad67d01232dc296fc9a1dae89fcf6188b1e6cf16e7a48e4061d23b78",
+        BLUB: "0xd470dbb74ae3f4cea5b39f1edaf729145fcdc8da023c81346fce1c1de046e6e4",
+        AUSD: "0xd87ea623f4f2635d66f59d7defaeb96e0147e0cdd8f5406756433d8d8849f785",
+        MFUD: "0x7ad87901531693f1baa541712947860dcc543617e11b14993ad70d20daf159c6",
+        MBLUB: "0x7c36d8c1b2b569676d9a3f4c73487ec49b483111cc0abf4b0d5654e026ac3d3a",
+    },
+};
