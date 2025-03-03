@@ -448,7 +448,7 @@ export async function parseTxHistory(datas: Array<any>, vaults: { [key: string]:
                     break;
                 case "ExerciseEvent":
                     var token = typeArgToAsset("0x" + event.parsedJson!.token.name);
-                    var amount = Number(event.parsedJson!.amount) / 10 ** Number(event.parsedJson!.decimal);
+                    var amount = Number(event.parsedJson!.amount) / 10 ** assetToDecimal(token)!;
                     Action = "Exercise";
                     Amount = `${BigNumber(amount).toFixed()} ${token}`;
                     if (event.parsedJson!.u64_padding[0]) {
