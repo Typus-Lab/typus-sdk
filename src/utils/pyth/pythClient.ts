@@ -39,7 +39,7 @@ export function updateOracleWithPythUsd(pythClient: PythClient, tx: Transaction,
         arguments: [
             tx.object(oracle[pythClient.network][baseToken]!),
             tx.object(pythStateId[pythClient.network]),
-            tx.object(priceInfoObjectIds[pythClient.network][baseToken]),
+            tx.object(priceInfoObjectIds[pythClient.network][baseToken]!),
             tx.object("0x6"),
         ],
     });
