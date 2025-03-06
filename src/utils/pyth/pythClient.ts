@@ -1,7 +1,7 @@
 import { SuiPriceServiceConnection, SuiPythClient } from "@pythnetwork/pyth-sui-js";
 import { pythStateId, wormholeStateId, priceIDs, priceInfoObjectIds } from "./constant";
 import { Transaction } from "@mysten/sui/transactions";
-import { TOKEN } from "src/constants";
+import { oracle, TOKEN } from "src/constants";
 import { ObjectId } from "@pythnetwork/pyth-sui-js/lib/client";
 
 export declare class PythClient {
@@ -32,22 +32,14 @@ export async function updatePyth(pythClient: PythClient, tx: Transaction, tokens
     return priceInfoObjectIds;
 }
 
-export function updateOracleWithPyth(
-    pythClient: PythClient,
-    tx: Transaction,
-    oraclePackage: string,
-    typusOracle: string,
-    baseToken: TOKEN,
-    quoteToken: TOKEN
-) {
+export function updateOracleWithPythUsd(pythClient: PythClient, tx: Transaction, oraclePackage: string, baseToken: TOKEN) {
     tx.moveCall({
-        target: `${oraclePackage}::oracle::update_with_pyth`,
+        target: `${oraclePackage}::oracle::update_with_pyth_usd`,
         typeArguments: [],
         arguments: [
-            tx.object(typusOracle),
+            tx.object(oracle[pythClient.network][baseToken]!),
             tx.object(pythStateId[pythClient.network]),
             tx.object(priceInfoObjectIds[pythClient.network][baseToken]),
-            tx.object(priceInfoObjectIds[pythClient.network][quoteToken]),
             tx.object("0x6"),
         ],
     });
