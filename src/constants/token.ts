@@ -158,6 +158,10 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::TAILS_EXP":
             return "TEXP";
 
+        // USD
+        case "0x21a3b745eaeee0ec0cbc3207230185013d1d8939f7a920aa61f5fea7d09db600::trading::USD":
+            return "USD";
+
         default:
             throw new Error(`Unknown typeArg: ${typeArg}`);
     }
@@ -246,6 +250,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         sbUSDT: "0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT",
         SPSUI: "0x83556891f4a0f233ce7b05cfe7f957d4020492a34f5405b2cb9377d060bef4bf::spring_sui::SPRING_SUI",
         sSCA: "0x5ca17430c1d046fae9edeaa8fd76c7b4193a00d764a0ecfa9418d733ad27bc1e::scallop_sca::SCALLOP_SCA",
+        USD: "",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -284,6 +289,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         SPSUI: "",
         JUP: "",
         sSCA: "",
+        USD: "0x21a3b745eaeee0ec0cbc3207230185013d1d8939f7a920aa61f5fea7d09db600::trading::USD",
     },
 };
 
@@ -342,7 +348,8 @@ export type TOKEN =
     | "sSCA"
 
     // Other
-    | "TEXP";
+    | "TEXP"
+    | "USD";
 
 export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in TOKEN]?: string } } = {
     MAINNET: {},
