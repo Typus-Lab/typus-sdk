@@ -61,7 +61,7 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0x9c86d1926a0a39e906f20674d6a35f337be8625ebcb6b799ee8ff011f328bee2::liq::LIQ":
             return "LIQ";
         // MLIQ
-        case "9614657c9d7e8799be4f49781ef1a9247b83ee178976df6c92d29b6026b9dadf::mliq::MLIQ":
+        case "0x9614657c9d7e8799be4f49781ef1a9247b83ee178976df6c92d29b6026b9dadf::mliq::MLIQ":
             return "MLIQ";
         // HIPPO
         case "0x8993129d72e733985f7f1a00396cbd055bad6f817fee36576ce483c8bbb8b87b::sudeng::SUDENG":
