@@ -25,8 +25,8 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX":
             return "NAVX";
         // SCA
-        case "0x7016aae72cfc67f2fadf55769c0a7dd54291a583b63051a5ed71081cce836ac6::sca::SCA":
-        case "0xd33ea459d9e667c112f5168464a885a654d7bc3fd6903720aaa8cf495a32a77e::sca::SCA":
+        case "0x7016aae72cfc67f2fadf55769c0a7dd54291a583b63051a5ed71081cce836ac6::sca::SCA": // MAINNET
+        case "0xd33ea459d9e667c112f5168464a885a654d7bc3fd6903720aaa8cf495a32a77e::sca::SCA": // TESTNET
             return "SCA";
         // DEEP
         case "0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP":
@@ -35,8 +35,8 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE":
             return "BLUE";
         // TYPUS
-        case "0xf82dc05634970553615eef6112a1ac4fb7bf10272bf6cbe0f80ef44a6c489385::typus::TYPUS":
-        case "0xaded0918624ba1a31a9818ae73ccb557d46f35cb0d754b34597356ce38e6004d::typus::TYPUS":
+        case "0xf82dc05634970553615eef6112a1ac4fb7bf10272bf6cbe0f80ef44a6c489385::typus::TYPUS": // MAINNET
+        case "0xaded0918624ba1a31a9818ae73ccb557d46f35cb0d754b34597356ce38e6004d::typus::TYPUS": // TESTNET
             return "TYPUS";
 
         // meme
@@ -50,12 +50,12 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0x7755ff79f0f27256c73e6c197e25b407ef6d4b9bd6e1af8cdd50fef28f84712c::mfud::MFUD": // TESTNET
             return "MFUD";
         // BLUB
-        case "0xfa7ac3951fdca92c5200d468d31a365eb03b2be9936fde615e69f0c1274ad3a0::BLUB::BLUB":
-        case "0x94b8f6dcceeb2be160f6837089cc7502458f4f070fa0814380737acb0c41fd5b::BLUB::BLUB":
+        case "0xfa7ac3951fdca92c5200d468d31a365eb03b2be9936fde615e69f0c1274ad3a0::BLUB::BLUB": // MAINNET
+        case "0x94b8f6dcceeb2be160f6837089cc7502458f4f070fa0814380737acb0c41fd5b::BLUB::BLUB": // TESTNET
             return "BLUB";
         // MBLUB
-        case "0x494e1772851793ed39e2aee9990740fe3fc4d50476572b6192adea9268e8b40c::mblub::MBLUB":
-        case "0x4b5d0a097ee8a309a89bb2bc589403a4a9a39de639d576495b697be2a60f69bb::mblub::MBLUB":
+        case "0x494e1772851793ed39e2aee9990740fe3fc4d50476572b6192adea9268e8b40c::mblub::MBLUB": // MAINNET
+        case "0x4b5d0a097ee8a309a89bb2bc589403a4a9a39de639d576495b697be2a60f69bb::mblub::MBLUB": // TESTNET
             return "MBLUB";
         // LIQ
         case "0x9c86d1926a0a39e906f20674d6a35f337be8625ebcb6b799ee8ff011f328bee2::liq::LIQ":
@@ -82,8 +82,8 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0x087653e9ffcc8ffe85e0e20523388aa27af2a5997ae64224444f0d98a2ba8279::ausd::AUSD": // TESTNET
             return "AUSD";
         // USDC
-        case "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC":
-        case "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC":
+        case "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC": // MAINNET
+        case "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC": // TESTNET
             return "USDC";
 
         // wormhole bridge
@@ -131,12 +131,15 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d::hasui::HASUI":
             return "HASUI";
         // AFSUI
-        case "0xf325ce1300e8dac124071d3152c5c5ee6174914f8bc2161e88329cf579246efc::afsui::AFSUI":
-        case "0xd31923b6821fb7ba32d23e514b43d307da6ef991f9ef1af2cc4e26a0992ac87a::afsui::AFSUI":
+        case "0xf325ce1300e8dac124071d3152c5c5ee6174914f8bc2161e88329cf579246efc::afsui::AFSUI": // MAINNET
+        case "0xd31923b6821fb7ba32d23e514b43d307da6ef991f9ef1af2cc4e26a0992ac87a::afsui::AFSUI": // TESTNET
             return "AFSUI";
         // SPSUI
         case "0x83556891f4a0f233ce7b05cfe7f957d4020492a34f5405b2cb9377d060bef4bf::spring_sui::SPRING_SUI":
             return "SPSUI";
+        // STSUI
+        case "0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI":
+            return "STSUI";
 
         // INJ
         case "0xcac46c81bbe1e516c65f4c3e5da81e7092cc2e70218deafb31f1c8d5fcc9dae3::inj::INJ": // MAINNET
@@ -183,6 +186,7 @@ export function assetToDecimal(asset: TOKEN): number | undefined {
         case "TYPUS":
         case "BLUE":
         case "sSCA":
+        case "STSUI":
             return 9;
         case "wBTC":
         case "sbETH":
@@ -251,6 +255,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         SPSUI: "0x83556891f4a0f233ce7b05cfe7f957d4020492a34f5405b2cb9377d060bef4bf::spring_sui::SPRING_SUI",
         sSCA: "0x5ca17430c1d046fae9edeaa8fd76c7b4193a00d764a0ecfa9418d733ad27bc1e::scallop_sca::SCALLOP_SCA",
         USD: "",
+        STSUI: "0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -290,6 +295,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         JUP: "",
         sSCA: "",
         USD: "0x21a3b745eaeee0ec0cbc3207230185013d1d8939f7a920aa61f5fea7d09db600::trading::USD",
+        STSUI: "",
     },
 };
 
@@ -338,6 +344,7 @@ export type TOKEN =
     | "HASUI"
     | "AFSUI"
     | "SPSUI" // suilend spring SUI
+    | "STSUI" // alphafi
 
     // Typus underlying asset token
     | "INJ"
