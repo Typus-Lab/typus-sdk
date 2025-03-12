@@ -224,7 +224,7 @@ export async function getFilledSummary(startTimestamp?: number): Promise<VaultHi
     return result;
 }
 
-interface VaultHistorySummary {
+export interface VaultHistorySummary {
     AverageDrawdown: number;
     AverageFilled: number;
     AverageLoss: number;
