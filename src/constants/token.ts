@@ -38,6 +38,10 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0xf82dc05634970553615eef6112a1ac4fb7bf10272bf6cbe0f80ef44a6c489385::typus::TYPUS": // MAINNET
         case "0xaded0918624ba1a31a9818ae73ccb557d46f35cb0d754b34597356ce38e6004d::typus::TYPUS": // TESTNET
             return "TYPUS";
+        // NS
+        case "0x5145494a5f5100e645e4b0aa950fa6b68f614e8c59e17bc5ded3495123a79178::ns::NS": // MAINNET
+        case "0xac39f86c22c0924d066454873f801b3a338791846ae8c5fd8259a9719b36f2aa::ns::NS": // TESTNET
+            return "NS";
 
         // meme
 
@@ -208,6 +212,7 @@ export function assetToDecimal(asset: TOKEN): number | undefined {
         case "MLIQ":
         case "MFUD":
         case "MBLUB":
+        case "NS":
             return 6;
         case "FUD":
             return 5;
@@ -256,6 +261,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         sSCA: "0x5ca17430c1d046fae9edeaa8fd76c7b4193a00d764a0ecfa9418d733ad27bc1e::scallop_sca::SCALLOP_SCA",
         USD: "",
         STSUI: "0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI",
+        NS: "0x5145494a5f5100e645e4b0aa950fa6b68f614e8c59e17bc5ded3495123a79178::ns::NS",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -296,6 +302,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         sSCA: "",
         USD: "0x21a3b745eaeee0ec0cbc3207230185013d1d8939f7a920aa61f5fea7d09db600::trading::USD",
         STSUI: "",
+        NS: "0xac39f86c22c0924d066454873f801b3a338791846ae8c5fd8259a9719b36f2aa::ns::NS",
     },
 };
 
@@ -309,6 +316,7 @@ export type TOKEN =
     | "DEEP"
     | "BLUE"
     | "TYPUS"
+    | "NS"
 
     // meme
     | "FUD"
@@ -377,6 +385,7 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         MFUD: "0x54f153e45008fcb7e2adf781d750f1bcbcd85e72bec6df769b6fe3e1ad6c02e4",
         MBLUB: "0x826253a1dde9907e28f465df8b2a19ba5994b4b069abad98658532785940338a",
         TYPUS: "0x73bb8651018bced7e737557fc9e4a7cf02ae28345b645566d0fd4df2da183048",
+        NS: "0x4481ebc6a26ac72abb9ecbedba60fcba87440f1306c125c1bdf61d1248af4482",
     },
 };
 
