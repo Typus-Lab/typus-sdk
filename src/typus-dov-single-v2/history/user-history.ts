@@ -3,6 +3,7 @@ import { Vault } from "src/typus-dov-single-v2";
 import { assetToDecimal, TOKEN, typeArgToAsset } from "src/constants";
 import BigNumber from "bignumber.js";
 export { getNewBidFromSentio, getExerciseFromSentio } from "src/utils/api/sentio/events";
+import { DropVaults } from "src/constants/valut";
 
 export async function getUserEvents(
     provider: SuiClient,
@@ -524,11 +525,128 @@ export async function parseTxHistory(datas: Array<any>, vaults: { [key: string]:
     return results.filter((result) => result.Action);
 }
 
+const parsePeriodName = (period: string) => {
+    switch (period) {
+        case "0":
+            return "Daily";
+
+        case "1":
+            return "Weekly";
+        case "2":
+            return "Monthly";
+        case "3":
+            return "Hourly";
+        case "4":
+            return "10min";
+        default:
+            return "";
+    }
+};
+
+const parseOptionTypeName = (optionType: string, action: string) => {
+    let optionTypeName = "";
+    switch (optionType) {
+        case "0":
+            switch (action) {
+                case "DepositEvent":
+                case "WithdrawEvent":
+                case "UnsubscribeEvent":
+                case "ClaimEvent":
+                case "CompoundEvent":
+                case "HarvestEvent":
+                case "RedeemEvent":
+                case "ReduceFundEvent":
+                case "RaiseFundEvent":
+                    optionTypeName = "Covered Call";
+                    break;
+                default:
+                    optionTypeName = "Call";
+                    break;
+            }
+            break;
+        case "1":
+            switch (action) {
+                case "DepositEvent":
+                case "WithdrawEvent":
+                case "UnsubscribeEvent":
+                case "ClaimEvent":
+                case "CompoundEvent":
+                case "HarvestEvent":
+                case "RedeemEvent":
+                case "ReduceFundEvent":
+                case "RaiseFundEvent":
+                    optionTypeName = "Put Selling";
+                    break;
+                default:
+                    optionTypeName = "Put";
+                    break;
+            }
+            break;
+        case "2":
+            optionTypeName = "Call Spread";
+            break;
+        case "3":
+            optionTypeName = "Put Spread";
+            break;
+        case "4":
+            optionTypeName = "Capped Call";
+            break;
+        case "5":
+            optionTypeName = "Capped Put";
+            break;
+        case "6":
+            switch (action) {
+                case "DepositEvent":
+                case "WithdrawEvent":
+                case "UnsubscribeEvent":
+                case "ClaimEvent":
+                case "CompoundEvent":
+                case "HarvestEvent":
+                case "RedeemEvent":
+                case "ReduceFundEvent":
+                case "RaiseFundEvent":
+                    // for depositor
+                    optionTypeName = "Call Selling";
+                    break;
+                default:
+                    // for bidder
+                    optionTypeName = "Capped Call";
+                    break;
+            }
+            break;
+        default:
+            optionTypeName = "";
+            break;
+    }
+    return optionTypeName;
+};
+
+const parseRiskLevelName = (riskLevel: string) => {
+    let riskLevelName = "";
+    switch (riskLevel) {
+        case "1":
+            riskLevelName = "Conservative";
+            break;
+        case "2":
+            riskLevelName = "Moderate";
+            break;
+        case "3":
+            riskLevelName = "Aggressive";
+            break;
+        default:
+            riskLevelName = "";
+            break;
+    }
+
+    return riskLevelName;
+};
+
 export function parseVaultInfo(
     vaults: { [key: string]: Vault },
     Index: string,
     action: string
 ): [string | undefined, string | undefined, string | undefined, TOKEN | undefined, TOKEN | undefined, TOKEN | undefined] {
+    const dropVaultIndexs = Object.keys(DropVaults);
     let v = vaults[Index];
 
     let Period: string | undefined;
@@ -541,119 +659,29 @@ export function parseVaultInfo(
     let period: string;
 
     if (v) {
-        switch (v.info.period) {
-            case "0":
-                period = "Daily";
-                break;
-            case "1":
-                period = "Weekly";
-                break;
-            case "2":
-                period = "Monthly";
-                break;
-            case "3":
-                period = "Hourly";
-                break;
-            case "4":
-                period = "10min";
-                break;
-            default:
-                period = "";
-                break;
-        }
+        period = parsePeriodName(v.info.period);
         Period = period;
+
         let optionType: string;
-        switch (v.info.optionType) {
-            case "0":
-                switch (action) {
-                    case "DepositEvent":
-                    case "WithdrawEvent":
-                    case "UnsubscribeEvent":
-                    case "ClaimEvent":
-                    case "CompoundEvent":
-                    case "HarvestEvent":
-                    case "RedeemEvent":
-                    case "ReduceFundEvent":
-                    case "RaiseFundEvent":
-                        optionType = "Covered Call";
-                        break;
-                    default:
-                        optionType = "Call";
-                        break;
-                }
-                break;
-            case "1":
-                switch (action) {
-                    case "DepositEvent":
-                    case "WithdrawEvent":
-                    case "UnsubscribeEvent":
-                    case "ClaimEvent":
-                    case "CompoundEvent":
-                    case "HarvestEvent":
-                    case "RedeemEvent":
-                    case "ReduceFundEvent":
-                    case "RaiseFundEvent":
-                        optionType = "Put Selling";
-                        break;
-                    default:
-                        optionType = "Put";
-                        break;
-                }
-                break;
-            case "2":
-                optionType = "Call Spread";
-                break;
-            case "3":
-                optionType = "Put Spread";
-                break;
-            case "4":
-                optionType = "Capped Call";
-                break;
-            case "5":
-                optionType = "Capped Put";
-                break;
-            case "6":
-                switch (action) {
-                    case "DepositEvent":
-                    case "WithdrawEvent":
-                    case "UnsubscribeEvent":
-                    case "ClaimEvent":
-                    case "CompoundEvent":
-                    case "HarvestEvent":
-                    case "RedeemEvent":
-                    case "ReduceFundEvent":
-                    case "RaiseFundEvent":
-                        // for depositor
-                        optionType = "Call Selling";
-                        break;
-                    default:
-                        // for bidder
-                        optionType = "Capped Call";
-                        break;
-                }
-                break;
-            default:
-                optionType = "";
-                break;
-        }
-        switch (v.config.riskLevel) {
-            case "1":
-                RiskLevel = "Conservative";
-                break;
-            case "2":
-                RiskLevel = "Moderate";
-                break;
-            case "3":
-                RiskLevel = "Aggressive";
-                break;
-            default:
-                RiskLevel = "";
-                break;
-        }
+        optionType = parseOptionTypeName(v.info.optionType, action);
+
+        RiskLevel = parseRiskLevelName(v.config.riskLevel);
+
         Vault = `${v.info.settlementBaseName} ${period} ${optionType}`;
         d_token = typeArgToAsset("0x" + v.info.depositToken);
         b_token = typeArgToAsset("0x" + v.info.bidToken);
         o_token = typeArgToAsset("0x" + v.info.settlementBase);
+    } else if (dropVaultIndexs.includes(Index)) {
+        period = parsePeriodName(DropVaults[Index].period);
+        Period = period;
+
+        let optionType = parseOptionTypeName(DropVaults[Index].optionType, action);
+        RiskLevel = parseRiskLevelName("1");
+
+        Vault = `TYPUS ${period} ${optionType}`;
+        d_token = "TYPUS";
+        b_token = "TYPUS";
+        o_token = "TYPUS";
     }
 
     return [Period, Vault, RiskLevel, d_token, b_token, o_token];
