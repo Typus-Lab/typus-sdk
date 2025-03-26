@@ -1,7 +1,26 @@
 import { Transaction, TransactionObjectArgument } from "@mysten/sui/transactions";
 import { match } from "assert";
-import { CLOCK } from "src/constants";
+import { CLOCK, tokenRegistry } from "src/constants";
 import { TypusConfig } from "src/utils";
+
+export function getTokenRegistry(config: TypusConfig, typusTokenType: string): string {
+    let typusTokenRegistry = "";
+    switch (typusTokenType.split("::")[1]) {
+        case "mfud":
+            typusTokenRegistry = tokenRegistry[config.network].MFUD!;
+            break;
+        case "mblub":
+            typusTokenRegistry = tokenRegistry[config.network].MBLUB!;
+            break;
+        case "mliq":
+            typusTokenRegistry = tokenRegistry[config.network].MLIQ!;
+            break;
+        default:
+            console.log("No such token exists!");
+            break;
+    }
+    return typusTokenRegistry;
+}
 
 export function getTokenRaiseFundTx(
     config: TypusConfig,
@@ -18,21 +37,7 @@ export function getTokenRaiseFundTx(
         user: string;
     }
 ) {
-    let typusTokenRegistry = "";
-    switch (input.typusTokenType.split("::")[1]) {
-        case "mfud":
-            typusTokenRegistry = config.registry.token.mfud;
-            break;
-        case "mblub":
-            typusTokenRegistry = config.registry.token.mblub;
-            break;
-        case "mliq":
-            typusTokenRegistry = config.registry.token.mliq;
-            break;
-        default:
-            console.log("No such token exists!");
-            break;
-    }
+    let typusTokenRegistry = getTokenRegistry(config, input.typusTokenType);
     let typusTokenBalance =
         input.raiseCoins.length > 0
             ? tx.moveCall({
@@ -96,21 +101,7 @@ export function getTokenReduceFundTx(
         user: string;
     }
 ) {
-    let typusTokenRegistry = "";
-    switch (input.typusTokenType.split("::")[1]) {
-        case "mfud":
-            typusTokenRegistry = config.registry.token.mfud;
-            break;
-        case "mblub":
-            typusTokenRegistry = config.registry.token.mblub;
-            break;
-        case "mliq":
-            typusTokenRegistry = config.registry.token.mliq;
-            break;
-        default:
-            console.log("No such token exists!");
-            break;
-    }
+    let typusTokenRegistry = getTokenRegistry(config, input.typusTokenType);
     let result = tx.moveCall({
         target: `${config.package.dovSingle}::tds_user_entry::public_reduce_fund`,
         typeArguments: input.typeArguments,
@@ -207,21 +198,7 @@ export function getTokenNewBidTx(
         user: string;
     }
 ) {
-    let typusTokenRegistry = "";
-    switch (input.typusTokenType.split("::")[1]) {
-        case "mfud":
-            typusTokenRegistry = config.registry.token.mfud;
-            break;
-        case "mblub":
-            typusTokenRegistry = config.registry.token.mblub;
-            break;
-        case "mliq":
-            typusTokenRegistry = config.registry.token.mliq;
-            break;
-        default:
-            console.log("No such token exists!");
-            break;
-    }
+    let typusTokenRegistry = getTokenRegistry(config, input.typusTokenType);
     let mToken = tx.moveCall({
         target: `${input.typusTokenType.split("::")[0]}::${input.typusTokenType.split("::")[1]}::mint`,
         arguments: [
@@ -265,21 +242,7 @@ export function getTokenExerciseTx(
         user: string;
     }
 ) {
-    let typusTokenRegistry = "";
-    switch (input.typusTokenType.split("::")[1]) {
-        case "mfud":
-            typusTokenRegistry = config.registry.token.mfud;
-            break;
-        case "mblub":
-            typusTokenRegistry = config.registry.token.mblub;
-            break;
-        case "mliq":
-            typusTokenRegistry = config.registry.token.mliq;
-            break;
-        default:
-            console.log("No such token exists!");
-            break;
-    }
+    let typusTokenRegistry = getTokenRegistry(config, input.typusTokenType);
     let result = tx.moveCall({
         target: `${config.package.dovSingle}::tds_user_entry::exercise`,
         typeArguments: input.typeArguments,
@@ -315,21 +278,7 @@ export function getTokenRebateTx(
         user: string;
     }
 ) {
-    let typusTokenRegistry = "";
-    switch (input.typusTokenType.split("::")[1]) {
-        case "mfud":
-            typusTokenRegistry = config.registry.token.mfud;
-            break;
-        case "mblub":
-            typusTokenRegistry = config.registry.token.mblub;
-            break;
-        case "mliq":
-            typusTokenRegistry = config.registry.token.mliq;
-            break;
-        default:
-            console.log("No such token exists!");
-            break;
-    }
+    let typusTokenRegistry = getTokenRegistry(config, input.typusTokenType);
     let result = tx.moveCall({
         target: `${config.package.dovSingle}::tds_user_entry::rebate`,
         typeArguments: [input.typeArgument],

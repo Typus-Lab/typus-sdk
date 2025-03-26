@@ -102,7 +102,7 @@ export function getReduceFundTx(
             tx.pure.u64(input.reduceFromWarmup),
             tx.pure.u64(input.reduceFromActive),
             tx.pure.u64(input.reduceFromInactive),
-            tx.object(splitCoins(tx, tokenType.SUI, [], input.feeAmount)),
+            tx.object(splitCoins(tx, tokenType.MAINNET.SUI, [], input.feeAmount)),
             tx.object(CLOCK),
         ],
     });

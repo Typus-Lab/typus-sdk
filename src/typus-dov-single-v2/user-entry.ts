@@ -343,7 +343,7 @@ export function getSplitBidReceiptTx(
     input: {
         index: string;
         receipts: string[];
-        share: string;
+        share?: string;
         recipient: string;
     }
 ) {
@@ -357,8 +357,7 @@ export function getSplitBidReceiptTx(
                 type: `${config.packageOrigin.framework}::vault::TypusBidReceipt`,
                 elements: input.receipts.map((receipt) => tx.object(receipt)),
             }),
-            // tx.pure([input.share]),
-            tx.pure(bcs.vector(bcs.U64).serialize([input.share])),
+            tx.pure.option("u64", input.share),
         ],
     });
 
@@ -368,13 +367,11 @@ export function getSplitBidReceiptTx(
         arguments: [tx.object(result[0])],
     });
 
-    let unwrap1 = tx.moveCall({
-        target: `0x1::option::destroy_some`,
-        typeArguments: [`${config.packageOrigin.framework}::vault::TypusBidReceipt`],
-        arguments: [tx.object(result[1])],
+    tx.moveCall({
+        target: `${config.package.framework}::vault::transfer_bid_receipt`,
+        typeArguments: [],
+        arguments: [tx.object(result[1]), tx.pure.address(input.recipient)],
     });
-
-    tx.transferObjects([unwrap1], input.recipient);
 
     return unwrap0;
 }

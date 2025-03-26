@@ -32,7 +32,8 @@ export async function getVaultHistorySummary(startTimestamp?: number): Promise<V
                             round,
                             AVG(delivery_price) AS delivery_price,
                             SUM(delivery_size) AS delivery_size,
-                            SUM(bidder_bid_value) AS bidder_bid_value
+                            SUM(bidder_bid_value) AS bidder_bid_value,
+                            SUM(bidder_fee) AS bidder_fee
                         FROM SafuOtc
                         GROUP BY index, round
                     ),
@@ -55,12 +56,12 @@ export async function getVaultHistorySummary(startTimestamp?: number): Promise<V
                             Delivery.delivery_price as DeliveryPrice,
                             safu_otc_aggregated.delivery_size as OtcSize,
                             safu_otc_aggregated.delivery_price as OtcPrice,
-                            Delivery.bidder_bid_value as BidderPremium,
-                            BidderPremium * Delivery.price_b_token as BidderPremiumUSD,
-                            Delivery.incentive_bid_value as IncentivePremium,
-                            safu_otc_aggregated.bidder_bid_value as OtcPremium,
-                            (Delivery.bidder_bid_value + Delivery.incentive_bid_value + safu_otc_aggregated.bidder_bid_value) AS Premium, -- Total Premium b_token
+                            (Delivery.bidder_bid_value + Delivery.bidder_fee) as BidderPremium,
+                            (Delivery.incentive_bid_value + Delivery.incentive_fee) as IncentivePremium,
+                            (safu_otc_aggregated.bidder_bid_value + safu_otc_aggregated.bidder_fee) as OtcPremium,
+                            (BidderPremium + IncentivePremium + OtcPremium) AS Premium, -- Total Premium b_token
                             Premium * Delivery.price_b_token AS PremiumUSD,
+                            (Delivery.bidder_fee + Delivery.incentive_fee + safu_otc_aggregated.bidder_fee) * Delivery.price_b_token AS PremiumFeeUSD,
                             Delivery.depositor_incentive_value as BpIncentive, -- SUI or SCA based on o_token
                             BpIncentive * Delivery.price_o_token as BpIncentiveUSD,
                             Delivery.fixed_incentive_amount as FixedIncentive, -- SUI
@@ -68,10 +69,10 @@ export async function getVaultHistorySummary(startTimestamp?: number): Promise<V
                             (1 - Settle.share_price) as LossPecentage,
                             CAST((Settle.settle_balance - Settle.settled_balance) AS Float64)  as OptionProfit, -- d_token
                             OptionProfit * Settle.price_d_token as OptionProfitUSD,
-                            PremiumUSD + BpIncentiveUSD + FixedIncentiveUSD - OptionProfitUSD  as DepositorPNL,
+                            PremiumUSD - PremiumFeeUSD + BpIncentiveUSD + FixedIncentiveUSD - OptionProfitUSD  as DepositorPNL,
                             -- CASE WHEN DepositAmountUSD != 0 THEN DepositorPNL / DepositAmountUSD ELSE 0 END AS DepositorROI,
-                            OptionProfitUSD - BidderPremiumUSD as BidderPNL,
-                            CASE WHEN BidderPremiumUSD != 0 THEN BidderPNL / BidderPremiumUSD ELSE 0 END AS BidderROI,
+                            OptionProfitUSD - PremiumUSD as BidderPNL,
+                            CASE WHEN PremiumUSD != 0 THEN BidderPNL / PremiumUSD ELSE 0 END AS BidderROI,
                             Settle.d_token as d_token,
                             Delivery.b_token as b_token,
                             Delivery.o_token as o_token
@@ -135,23 +136,11 @@ export async function getFilledSummary(startTimestamp?: number): Promise<VaultHi
     let requestData = {
         sqlQuery: {
             sql: `
-                    WITH hourly_price_table AS (
-                        SELECT
-                            symbol,
-                            toStartOfHour(time) AS hour,
-                            argMax(price, time) AS hourly_price  -- Get the most recent price before or at the hour
-                        FROM
-                            sui.coin_prices
-                        GROUP BY
-                            symbol, hour
-                    ),
-                    safu_otc_aggregated AS (
+                    WITH safu_otc_aggregated AS (
                         SELECT
                             index,
                             round,
-                            AVG(delivery_price) AS delivery_price,
-                            SUM(delivery_size) AS delivery_size,
-                            SUM(bidder_bid_value) AS bidder_bid_value
+                            SUM(delivery_size) AS delivery_size
                         FROM SafuOtc
                         GROUP BY index, round
                     ),
@@ -161,47 +150,22 @@ export async function getFilledSummary(startTimestamp?: number): Promise<VaultHi
                             Delivery.index as Index,
                             Delivery.round as Round,
                             NewAuction.start_ts_ms as ActivationDate,
-                            COALESCE(NULLIF(UpdateStrike.strikes, ''), NewAuction.strikes) AS Strikes, -- 如果 UpdateStrike.strikes 是空字符串，就使用 NewAuction.strikes
-                            Activate.deposit_balance as DepositAmount,
                             Delivery.max_size as MaxSize,
                             (safu_otc_aggregated.delivery_size + Delivery.delivery_size) as TotalSell,
-                            CASE WHEN MaxSize != 0 THEN TotalSell / MaxSize ELSE 0 END AS Filled,
-                            Delivery.delivery_size as DeliverySize,
-                            Delivery.delivery_price as DeliveryPrice,
-                            safu_otc_aggregated.delivery_size as OtcSize,
-                            safu_otc_aggregated.delivery_price as OtcPrice,
-                            Delivery.bidder_bid_value as BidderPremium,
-                            BidderPremium * Delivery.price_b_token as BidderPremiumUSD,
-                            Delivery.incentive_bid_value as IncentivePremium,
-                            safu_otc_aggregated.bidder_bid_value as OtcPremium,
-                            (Delivery.bidder_bid_value + Delivery.incentive_bid_value + safu_otc_aggregated.bidder_bid_value) AS Premium, -- Total Premium b_token
-                            Premium * Delivery.price_b_token AS PremiumUSD,
-                            Delivery.depositor_incentive_value as BpIncentive, -- SUI or SCA based on o_token
-                            BpIncentive * Delivery.price_o_token as BpIncentiveUSD,
-                            Delivery.fixed_incentive_amount as FixedIncentive, -- SUI
-                            FixedIncentive * hourly_price_table.hourly_price as FixedIncentiveUSD,
-                            VaultInfo.d_token as d_token,
-                            Delivery.b_token as b_token,
-                            Delivery.o_token as o_token
+                            CASE WHEN MaxSize != 0 THEN TotalSell / MaxSize ELSE 0 END AS Filled
                             FROM Delivery
                             JOIN Activate ON Delivery.index = Activate.index AND Delivery.round = Activate.round
                             JOIN NewAuction ON Delivery.index = NewAuction.index AND Delivery.round = NewAuction.round
-                            JOIN VaultInfo ON Delivery.index = CAST(VaultInfo.id AS Decimal(76, 12))
-                            LEFT JOIN UpdateStrike ON Delivery.index = UpdateStrike.index AND Delivery.round = UpdateStrike.round
                             LEFT JOIN safu_otc_aggregated ON Delivery.index = safu_otc_aggregated.index AND Delivery.round = safu_otc_aggregated.round
-                            LEFT JOIN hourly_price_table ON 'sui' = hourly_price_table.symbol AND toStartOfHour(Delivery.timestamp) = hourly_price_table.hour
                             ${timeFilter}
                         ORDER BY ActivationDate DESC
                     )
-
                     SELECT
                         vault_history.Index AS Index,
-                        SUM(vault_history.BidderPremiumUSD) * 0.2 AS FeeUSD,
-                        SUM(vault_history.TotalSell) AS TotalSell, -- Total Sell Size
                         AVG(vault_history.Filled) AS AverageFilled -- Average Filled Rate
                     FROM vault_history
-                    GROUP BY vault_history.Index
-                    ORDER BY FeeUSD DESC
+                    GROUP BY Index
+                    ORDER BY Index DESC
             `,
             size: 1000,
         },
@@ -245,7 +209,7 @@ export async function getVaultHistory(indices: string[], limit: number = 100): P
                         SELECT
                             symbol,
                             toStartOfHour(time) AS hour,
-                            argMax(price, time) AS hourly_price  -- Get the most recent price before or at the hour
+                            argMax(price, time) AS hourly_price
                         FROM
                             token.prices
                         GROUP BY
@@ -257,48 +221,50 @@ export async function getVaultHistory(indices: string[], limit: number = 100): P
                             round,
                             AVG(delivery_price) AS delivery_price,
                             SUM(delivery_size) AS delivery_size,
-                            SUM(bidder_bid_value) AS bidder_bid_value
+                            SUM(bidder_bid_value) AS bidder_bid_value,
+                            SUM(bidder_fee) AS bidder_fee
                         FROM SafuOtc
                         GROUP BY index, round
                     )
-                SELECT
-                    Settle.timestamp as timestamp,
-                    Settle.index as Index,
-                    Settle.round as Round,
-                    NewAuction.start_ts_ms as ActivationDate,
-                    COALESCE(NULLIF(UpdateStrike.strikes, ''), NewAuction.strikes) AS Strikes, -- 如果 UpdateStrike.strikes 是空字符串，就使用 NewAuction.strikes
-                    Settle.oracle_price as SettlePrice,
-                    -- Settle.share_price as share_price,
-                    -- Settle.settle_balance as SettleBalance,
-                    Activate.deposit_balance as DepositAmount,
-                    DepositAmount * Settle.price_d_token as DepositAmountUSD,
-                    Delivery.max_size as MaxSize,
-                    (safu_otc_aggregated.delivery_size + Delivery.delivery_size) as TotalSell,
-                    CASE WHEN MaxSize != 0 THEN TotalSell / MaxSize ELSE 0 END AS Filled,
-                    Delivery.delivery_size as DeliverySize,
-                    Delivery.delivery_price as DeliveryPrice,
-                    safu_otc_aggregated.delivery_size as OtcSize,
-                    safu_otc_aggregated.delivery_price as OtcPrice,
-                    Delivery.bidder_bid_value as BidderPremium,
-                    BidderPremium * Delivery.price_b_token as BidderPremiumUSD,
-                    Delivery.incentive_bid_value as IncentivePremium,
-                    safu_otc_aggregated.bidder_bid_value as OtcPremium,
-                    (Delivery.bidder_bid_value + Delivery.incentive_bid_value + safu_otc_aggregated.bidder_bid_value) AS Premium, -- Total Premium b_token
-                    Premium * Delivery.price_b_token AS PremiumUSD,
-                    Delivery.depositor_incentive_value as BpIncentive, -- SUI or SCA based on o_token
-                    BpIncentive * Delivery.price_o_token as BpIncentiveUSD,
-                    Delivery.fixed_incentive_amount as FixedIncentive, -- SUI
-                    FixedIncentive * hourly_price_table.hourly_price as FixedIncentiveUSD,
-                    (1 - Settle.share_price) as LossPecentage,
-                    (Settle.settle_balance - Settle.settled_balance) as OptionProfit, -- d_token
-                    OptionProfit * Settle.price_d_token as OptionProfitUSD,
-                    PremiumUSD + BpIncentiveUSD + FixedIncentiveUSD - OptionProfitUSD  as DepositorPNL,
-                    -- CASE WHEN DepositAmountUSD != 0 THEN DepositorPNL / DepositAmountUSD ELSE 0 END AS DepositorROI,
-                    OptionProfitUSD - BidderPremiumUSD as BidderPNL,
-                    CASE WHEN BidderPremiumUSD != 0 THEN BidderPNL / BidderPremiumUSD ELSE 0 END AS BidderROI,
-                    Settle.d_token as d_token,
-                    Delivery.b_token as b_token,
-                    Delivery.o_token as o_token
+                    SELECT
+                            Settle.timestamp as timestamp,
+                            Settle.index as Index,
+                            Settle.round as Round,
+                            NewAuction.start_ts_ms as ActivationDate,
+                            COALESCE(NULLIF(UpdateStrike.strikes, ''), NewAuction.strikes) AS Strikes, -- 如果 UpdateStrike.strikes 是空字符串，就使用 NewAuction.strikes
+                            Settle.oracle_price as SettlePrice,
+                            -- Settle.share_price as share_price,
+                            -- Settle.settle_balance as SettleBalance,
+                            CAST(Activate.deposit_balance as Float64) as DepositAmount,
+                            DepositAmount * Settle.price_d_token as DepositAmountUSD,
+                            Delivery.max_size as MaxSize,
+                            (safu_otc_aggregated.delivery_size + Delivery.delivery_size) as TotalSell,
+                            CASE WHEN MaxSize != 0 THEN TotalSell / MaxSize ELSE 0 END AS Filled,
+                            Delivery.delivery_size as DeliverySize,
+                            Delivery.delivery_price as DeliveryPrice,
+                            safu_otc_aggregated.delivery_size as OtcSize,
+                            safu_otc_aggregated.delivery_price as OtcPrice,
+                            (Delivery.bidder_bid_value + Delivery.bidder_fee) as BidderPremium,
+                            (Delivery.incentive_bid_value + Delivery.incentive_fee) as IncentivePremium,
+                            (safu_otc_aggregated.bidder_bid_value + safu_otc_aggregated.bidder_fee) as OtcPremium,
+                            (BidderPremium + IncentivePremium + OtcPremium) AS Premium, -- Total Premium b_token
+                            Premium * Delivery.price_b_token AS PremiumUSD,
+                            IncentivePremium * Delivery.price_b_token AS IncentivePremiumUSD,
+                            (Delivery.bidder_fee + Delivery.incentive_fee + safu_otc_aggregated.bidder_fee) * Delivery.price_b_token AS PremiumFeeUSD,
+                            Delivery.depositor_incentive_value as BpIncentive, -- SUI or SCA based on o_token
+                            BpIncentive * Delivery.price_o_token as BpIncentiveUSD,
+                            Delivery.fixed_incentive_amount as FixedIncentive, -- SUI
+                            FixedIncentive * hourly_price_table.hourly_price as FixedIncentiveUSD,
+                            (1 - Settle.share_price) as LossPecentage,
+                            CAST((Settle.settle_balance - Settle.settled_balance) AS Float64)  as OptionProfit, -- d_token
+                            OptionProfit * Settle.price_d_token as OptionProfitUSD,
+                            PremiumUSD - PremiumFeeUSD + BpIncentiveUSD + FixedIncentiveUSD - OptionProfitUSD  as DepositorPNL,
+                            -- CASE WHEN DepositAmountUSD != 0 THEN DepositorPNL / DepositAmountUSD ELSE 0 END AS DepositorROI,
+                            OptionProfitUSD - (PremiumUSD - IncentivePremiumUSD) as BidderPNL,
+                            CASE WHEN (PremiumUSD - IncentivePremiumUSD) != 0 THEN BidderPNL / (PremiumUSD - IncentivePremiumUSD) ELSE 0 END AS BidderROI,
+                            Settle.d_token as d_token,
+                            Delivery.b_token as b_token,
+                            Delivery.o_token as o_token
                 FROM Settle
                     JOIN Activate ON Settle.index = Activate.index AND Settle.round = Activate.round
                     JOIN NewAuction ON Settle.index = NewAuction.index AND Settle.round = NewAuction.round

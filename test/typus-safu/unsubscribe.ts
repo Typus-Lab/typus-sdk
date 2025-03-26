@@ -13,7 +13,7 @@ import { TypusConfig } from "src/utils";
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     // INPUT
-    let cToken = config.token.sui;
+    let cToken = tokenType["MAINNET"].SUI;
 
     let transaction = getReduceFundTx(config, new Transaction(), {
         typeArguments: [cToken],

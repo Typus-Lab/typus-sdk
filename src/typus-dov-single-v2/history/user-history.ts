@@ -1,6 +1,6 @@
 import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui/client";
 import { Vault } from "src/typus-dov-single-v2";
-import { assetToDecimal, typeArgToAsset } from "src/constants";
+import { assetToDecimal, TOKEN, typeArgToAsset } from "src/constants";
 import BigNumber from "bignumber.js";
 export { getNewBidFromSentio, getExerciseFromSentio } from "src/utils/api/sentio/events";
 import { DropVaults } from "src/constants/valut";
@@ -116,9 +116,9 @@ export async function parseTxHistory(datas: Array<any>, vaults: { [key: string]:
             let RiskLevel: string | undefined;
             var Tails: string | undefined = undefined;
             let Exp: string | undefined;
-            var d_token: string | undefined;
-            var b_token: string | undefined;
-            var o_token: string | undefined;
+            var d_token: TOKEN | undefined;
+            var b_token: TOKEN | undefined;
+            var o_token: TOKEN | undefined;
 
             Index = event.parsedJson!.index || event.parsedJson!.vault_index;
             if (Index) {
@@ -641,16 +641,20 @@ const parseRiskLevelName = (riskLevel: string) => {
     return riskLevelName;
 };
 
-export function parseVaultInfo(vaults: { [key: string]: Vault }, Index: string, action: string) {
+export function parseVaultInfo(
+    vaults: { [key: string]: Vault },
+    Index: string,
+    action: string
+): [string | undefined, string | undefined, string | undefined, TOKEN | undefined, TOKEN | undefined, TOKEN | undefined] {
     const dropVaultIndexs = Object.keys(DropVaults);
     let v = vaults[Index];
 
     let Period: string | undefined;
     let Vault: string | undefined;
     let RiskLevel: string | undefined;
-    var d_token: string | undefined;
-    var b_token: string | undefined;
-    var o_token: string | undefined;
+    var d_token: TOKEN | undefined;
+    var b_token: TOKEN | undefined;
+    var o_token: TOKEN | undefined;
 
     let period: string;
 

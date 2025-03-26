@@ -1,6 +1,6 @@
 import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui/client";
 import { parseVaultInfo, TxHistory, Vault } from "src/typus-dov-single-v2";
-import { assetToDecimal, typeArgToAsset } from "src/constants";
+import { assetToDecimal, TOKEN, typeArgToAsset } from "src/constants";
 import BigNumber from "bignumber.js";
 
 const headers = {

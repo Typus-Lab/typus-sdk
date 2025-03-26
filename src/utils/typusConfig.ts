@@ -2,14 +2,14 @@ import camelcaseKeysDeep from "camelcase-keys-deep";
 import * as fs from "fs";
 
 export class TypusConfig {
+    network: "MAINNET" | "TESTNET";
     rpcEndpoint: string;
     packageOrigin: Package;
     package: Package;
     version: Version;
     registry: Registry;
     object: Object;
-    oracle: Oracle;
-    token: Token;
+
     static parse(json): TypusConfig {
         return JSON.parse(JSON.stringify(camelcaseKeysDeep(json)));
     }
@@ -107,13 +107,6 @@ export interface Registry {
     safu: {
         safu: string;
     };
-    token: {
-        inj: string;
-        mfud: string;
-        sei: string;
-        mblub: string;
-        mliq: string;
-    };
     typus: {
         airdrop: string;
         leaderboard: string;
@@ -136,61 +129,6 @@ export interface Object {
     tlpTreasuryCap: string;
     launchAuction: string;
     launchSnapshot: string;
-}
-export interface Oracle {
-    afsui: string;
-    apt: string;
-    buck: string;
-    cetus: string;
-    inj: string;
-    jup: string;
-    navx: string;
-    sca: string;
-    sei: string;
-    sol: string;
-    sui: string;
-    turbos: string;
-    usdy: string;
-    btc: string;
-    eth: string;
-    mliq: string;
-    hippo: string;
-    deep: string;
-}
-export interface Token {
-    afsui: string;
-    apt: string;
-    ausd: string;
-    blub: string;
-    btc: string;
-    buck: string;
-    cetus: string;
-    eth: string;
-    fud: string;
-    hasui: string;
-    inj: string;
-    jup: string;
-    mblub: string;
-    mfud: string;
-    navx: string;
-    sca: string;
-    sei: string;
-    sol: string;
-    sui: string;
-    texp: string;
-    tgld: string;
-    tlp: string;
-    turbos: string;
-    usd: string;
-    usdc: string;
-    usdt: string;
-    usdy: string;
-    vsui: string;
-    wusdc: string;
-    mliq: string;
-    hippo: string;
-    deep: string;
-    typus: string;
 }
 
 // (async () => {
