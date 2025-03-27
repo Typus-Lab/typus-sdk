@@ -76,6 +76,8 @@ export function assetToDecimal(asset: string): number | undefined {
         case "TYPUS":
         case "BLUE":
         case "sSCA":
+        case "STSUI":
+        case "WAL":
             return 9;
         case "BTC":
         case "WBTC":
@@ -136,6 +138,19 @@ export const tokenType = {
         MLIQ: "9614657c9d7e8799be4f49781ef1a9247b83ee178976df6c92d29b6026b9dadf::mliq::MLIQ",
         BLUE: "0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE",
         TYPUS: "0xf82dc05634970553615eef6112a1ac4fb7bf10272bf6cbe0f80ef44a6c489385::typus::TYPUS",
+        DEEP: "0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP",
+        BLUB: "0xfa7ac3951fdca92c5200d468d31a365eb03b2be9936fde615e69f0c1274ad3a0::BLUB::BLUB",
+        MBLUB: "0x494e1772851793ed39e2aee9990740fe3fc4d50476572b6192adea9268e8b40c::mblub::MBLUB",
+        AUSD: "0x2053d08c1e2bd02791056171aab0fd12bd7cd7efad2ab8f6b9c8902f14df2ff2::ausd::AUSD",
+        USDC: "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
+        sbETH: "0xd0e89b2af5e4910726fbcd8b8dd37bb79b29e5f83f7491bca830e94f7f226d29::eth::ETH",
+        sbUSDT: "0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT",
+        SPSUI: "0x83556891f4a0f233ce7b05cfe7f957d4020492a34f5405b2cb9377d060bef4bf::spring_sui::SPRING_SUI",
+        sSCA: "0x5ca17430c1d046fae9edeaa8fd76c7b4193a00d764a0ecfa9418d733ad27bc1e::scallop_sca::SCALLOP_SCA",
+        USD: "",
+        STSUI: "0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI",
+        NS: "0x5145494a5f5100e645e4b0aa950fa6b68f614e8c59e17bc5ded3495123a79178::ns::NS",
+        WAL: "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -160,6 +175,24 @@ export const tokenType = {
         BLUB: "0x94b8f6dcceeb2be160f6837089cc7502458f4f070fa0814380737acb0c41fd5b::blub::BLUB",
         MBLUB: "0x4b5d0a097ee8a309a89bb2bc589403a4a9a39de639d576495b697be2a60f69bb::mblub::MBLUB",
         TYPUS: "0xaded0918624ba1a31a9818ae73ccb557d46f35cb0d754b34597356ce38e6004d::typus::TYPUS",
+        NAVX: "",
+        DEEP: "",
+        BLUE: "",
+        LIQ: "",
+        HIPPO: "",
+        MLIQ: "",
+        AUSD: "0x087653e9ffcc8ffe85e0e20523388aa27af2a5997ae64224444f0d98a2ba8279::ausd::AUSD",
+        sbETH: "",
+        sbUSDT: "",
+        VSUI: "",
+        HASUI: "",
+        SPSUI: "",
+        JUP: "",
+        sSCA: "",
+        USD: "0x21a3b745eaeee0ec0cbc3207230185013d1d8939f7a920aa61f5fea7d09db600::trading::USD",
+        STSUI: "",
+        NS: "0xac39f86c22c0924d066454873f801b3a338791846ae8c5fd8259a9719b36f2aa::ns::NS",
+        WAL: "",
     },
 };
 
@@ -189,6 +222,32 @@ export type TOKEN =
     | "HIPPO"
     | "DEEP"
     | "BLUE"
+    | "TYPUS"
+    | "NS"
+    | "WAL"
+
+    // meme
+    | "FUD"
+    | "BLUB"
+    | "LIQ"
+    | "HIPPO"
+
+    // Typus M token
+    | "MFUD"
+    | "MBLUB"
+    | "MLIQ"
+
+    // native USD
+    | "BUCK"
+    | "USDY"
+    | "AUSD"
+    | "USDC"
+
+    // wormhole bridge
+    | "wSOL"
+    | "wAPT"
+    | "wBTC"
+    | "wETH"
     | "wUSDC"
     | "TYPUS";
 
@@ -231,8 +290,7 @@ export function typeArgToToken(typeArg: string): string {
     }
 }
 
-
-export function tokenTypeToAsset(env: 'MAINNET' | 'TESTNET', tokenAddress: string): string | undefined {
+export function tokenTypeToAsset(env: "MAINNET" | "TESTNET", tokenAddress: string): string | undefined {
     const normalizedTokenAddress = normalizeSuiAddress(tokenAddress);
     const tokens = tokenType[env];
     for (const [token, address] of Object.entries(tokens)) {
@@ -243,6 +301,6 @@ export function tokenTypeToAsset(env: 'MAINNET' | 'TESTNET', tokenAddress: strin
     // not found => return undefined
     return undefined;
 }
-export function assetToTokenType(env: 'MAINNET' | 'TESTNET', token: string): string {
+export function assetToTokenType(env: "MAINNET" | "TESTNET", token: string): string {
     return tokenType[env][token];
 }
