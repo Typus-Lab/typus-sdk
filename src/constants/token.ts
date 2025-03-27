@@ -191,6 +191,7 @@ export function assetToDecimal(asset: TOKEN): number | undefined {
         case "BLUE":
         case "sSCA":
         case "STSUI":
+        case "WAL":
             return 9;
         case "wBTC":
         case "sbETH":
@@ -262,6 +263,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         USD: "",
         STSUI: "0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI",
         NS: "0x5145494a5f5100e645e4b0aa950fa6b68f614e8c59e17bc5ded3495123a79178::ns::NS",
+        WAL: "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -303,6 +305,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         USD: "0x21a3b745eaeee0ec0cbc3207230185013d1d8939f7a920aa61f5fea7d09db600::trading::USD",
         STSUI: "",
         NS: "0xac39f86c22c0924d066454873f801b3a338791846ae8c5fd8259a9719b36f2aa::ns::NS",
+        WAL: "",
     },
 };
 
@@ -317,6 +320,7 @@ export type TOKEN =
     | "BLUE"
     | "TYPUS"
     | "NS"
+    | "WAL"
 
     // meme
     | "FUD"
