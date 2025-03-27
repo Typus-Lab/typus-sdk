@@ -166,8 +166,12 @@ export function typeArgToAsset(typeArg: string): TOKEN {
             return "TEXP";
 
         // USD
-        case "0x21a3b745eaeee0ec0cbc3207230185013d1d8939f7a920aa61f5fea7d09db600::trading::USD":
+        case "0x7ea60df3452d1cec0064d3380cb6f2a9309dcf7ac1b51529de71ef427688b1c3::trading::USD": // MAINNET
+        case "0x21a3b745eaeee0ec0cbc3207230185013d1d8939f7a920aa61f5fea7d09db600::trading::USD": // TESTNET
             return "USD";
+
+        case "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL": // MAINNET
+            return "WAL";
 
         default:
             throw new Error(`Unknown typeArg: ${typeArg}`);
