@@ -46,7 +46,9 @@ export function updateOracleWithPyth(
         arguments: [
             tx.object(typusOracle),
             tx.object(pythStateId[pythClient.network]),
+            // @ts-ignore
             tx.object(priceInfoObjectIds[pythClient.network][baseToken]),
+            // @ts-ignore
             tx.object(priceInfoObjectIds[pythClient.network][quoteToken]),
             tx.object("0x6"),
         ],
