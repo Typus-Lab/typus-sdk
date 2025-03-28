@@ -156,6 +156,8 @@ export interface Oracle {
     mliq: string;
     hippo: string;
     deep: string;
+    stsui: string;
+    wal: string;
 }
 export interface Token {
     afsui: string;
@@ -191,6 +193,8 @@ export interface Token {
     hippo: string;
     deep: string;
     typus: string;
+    stsui: string;
+    wal: string;
 }
 
 // (async () => {

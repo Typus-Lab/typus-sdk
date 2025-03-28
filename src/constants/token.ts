@@ -76,6 +76,8 @@ export function assetToDecimal(asset: string): number | undefined {
         case "TYPUS":
         case "BLUE":
         case "sSCA":
+        case "WAL":
+        case "STSUI":
             return 9;
         case "BTC":
         case "WBTC":
@@ -136,6 +138,8 @@ export const tokenType = {
         MLIQ: "9614657c9d7e8799be4f49781ef1a9247b83ee178976df6c92d29b6026b9dadf::mliq::MLIQ",
         BLUE: "0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE",
         TYPUS: "0xf82dc05634970553615eef6112a1ac4fb7bf10272bf6cbe0f80ef44a6c489385::typus::TYPUS",
+        WAL: "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL",
+        STSUI: "0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -190,7 +194,9 @@ export type TOKEN =
     | "DEEP"
     | "BLUE"
     | "wUSDC"
-    | "TYPUS";
+    | "TYPUS"
+    | "WAL"
+    | "STSUI";
 
 export function typeArgToToken(typeArg: string): string {
     // console.log(typeArg);
@@ -231,8 +237,7 @@ export function typeArgToToken(typeArg: string): string {
     }
 }
 
-
-export function tokenTypeToAsset(env: 'MAINNET' | 'TESTNET', tokenAddress: string): string | undefined {
+export function tokenTypeToAsset(env: "MAINNET" | "TESTNET", tokenAddress: string): string | undefined {
     const normalizedTokenAddress = normalizeSuiAddress(tokenAddress);
     const tokens = tokenType[env];
     for (const [token, address] of Object.entries(tokens)) {
@@ -243,6 +248,6 @@ export function tokenTypeToAsset(env: 'MAINNET' | 'TESTNET', tokenAddress: strin
     // not found => return undefined
     return undefined;
 }
-export function assetToTokenType(env: 'MAINNET' | 'TESTNET', token: string): string {
+export function assetToTokenType(env: "MAINNET" | "TESTNET", token: string): string {
     return tokenType[env][token];
 }
