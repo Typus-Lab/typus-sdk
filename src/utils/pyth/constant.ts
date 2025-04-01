@@ -33,6 +33,7 @@ export const priceIDs: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key i
         STSUI: "0x0449948a9a210481464ea7030734fa79f59b751c2f411cfb1ba56b5f69e4a62a",
         NS: "0xbb5ff26e47a3a6cc7ec2fce1db996c2a145300edc5acaabe43bf9ff7c5dd5d32",
         WAL: "0xeba0732395fae9dec4bae12e52760b35fc1c5671e2da8b449c9af4efe5d54341",
+        LBTC: "0x8f257aab6e7698bb92b15511915e593d6f8eae914452f781874754b03d0c612b",
     },
     TESTNET: {
         // Pyth EVM Beta
@@ -65,6 +66,7 @@ export const priceIDs: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key i
         STSUI: "0xda703fbee4d7ee09aba630ef809efd79d162202bdf976ae8258875207ebd5557",
         NS: "0x65aca56071505735c09091deb8733fdeba265bd9723dd4fb326b5ffd6843b3a3",
         WAL: "0xa6ba0195b5364be116059e401fb71484ed3400d4d9bfbdf46bd11eab4f9b7cea",
+        LBTC: "0x29448db25efe8c72afe3a3c0c0631337408bd3cbc5f09d3dab0754460a965dae",
     },
 };
 
@@ -89,6 +91,8 @@ export const priceInfoObjectIds: { MAINNET: { [key in TOKEN]?: string }; TESTNET
         BLUE: "0x5515a34fc610bba6b601575ed1d2535b2f9df1f339fd0d435fef487c1ee3df9c",
         NS: "0xc6352e1ea55d7b5acc3ed690cc3cdf8007978071d7bfd6a189445018cfb366e0",
         JUP: "0xb804ada6f77feb30a73fbed7fc53dc66ff25133dee0815109d4267e43b2e6bdd",
+        WAL: "'0xeb7e669f74d976c0b99b6ef9801e3a77716a95f1a15754e0f1399ce3fb60973d'",
+        LBTC: "0xeba15840ddf425dacb5ff0990334fc03d034487f4ad416280859b96bf2af89f8",
     },
     TESTNET: {
         SUI: "0x1ebb295c789cc42b3b2a1606482cd1c7124076a0f5676718501fda8c7fd075a0",

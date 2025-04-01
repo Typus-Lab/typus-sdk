@@ -173,6 +173,10 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL": // MAINNET
             return "WAL";
 
+        // LBTC
+        case "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC": // MAINNET
+            return "LBTC";
+
         default:
             throw new Error(`Unknown typeArg: ${typeArg}`);
     }
@@ -205,6 +209,7 @@ export function assetToDecimal(asset: TOKEN): number | undefined {
         case "INJ":
         case "SEI":
         case "JUP":
+        case "LBTC":
             return 8;
         case "USDC":
         case "wUSDC":
@@ -268,6 +273,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         STSUI: "0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI",
         NS: "0x5145494a5f5100e645e4b0aa950fa6b68f614e8c59e17bc5ded3495123a79178::ns::NS",
         WAL: "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL",
+        LBTC: "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -310,6 +316,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         STSUI: "",
         NS: "0xac39f86c22c0924d066454873f801b3a338791846ae8c5fd8259a9719b36f2aa::ns::NS",
         WAL: "",
+        LBTC: "",
     },
 };
 
@@ -371,6 +378,7 @@ export type TOKEN =
     | "sSCA"
 
     // Other
+    | "LBTC"
     | "TEXP"
     | "USD";
 
