@@ -406,6 +406,7 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         BLUE: "0x5cb674306348b7fbbb5cefb4b9d085727ce81ef736eeb3caa09f780677767eb6",
         TYPUS: "0xede73f9eea4e6685a096403955b535e826274f83841be1c7d9f836c5e9564a42",
         NS: "0xfae12d4846bbf638efd477108df78c4823425a2c79395d16653eba455c485447",
+        LBTC: "0x7781a2f3a77a9a2b4a8fe8a5ce54eb8d155e924966ff9b8d4459c08efedc946b",
     },
     TESTNET: {
         SUI: "0x9083c9ce1a1eef569bb1a8b31dfa5e0fce2e05887e68ba79ca6ae522acd041f3",
