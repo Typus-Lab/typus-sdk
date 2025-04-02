@@ -166,6 +166,7 @@ export function typeArgToAsset(typeArg: string): TOKEN {
             return "TEXP";
 
         // USD
+        case "0x42c1f8533436ba9e63a609c0433ea7b9de222d9ab8911c0ed220a2f887531106::trading::USD": // MAINNET
         case "0x7ea60df3452d1cec0064d3380cb6f2a9309dcf7ac1b51529de71ef427688b1c3::trading::USD": // MAINNET
         case "0x21a3b745eaeee0ec0cbc3207230185013d1d8939f7a920aa61f5fea7d09db600::trading::USD": // TESTNET
             return "USD";
@@ -269,7 +270,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         sbUSDT: "0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT",
         SPSUI: "0x83556891f4a0f233ce7b05cfe7f957d4020492a34f5405b2cb9377d060bef4bf::spring_sui::SPRING_SUI",
         sSCA: "0x5ca17430c1d046fae9edeaa8fd76c7b4193a00d764a0ecfa9418d733ad27bc1e::scallop_sca::SCALLOP_SCA",
-        USD: "",
+        USD: "0x42c1f8533436ba9e63a609c0433ea7b9de222d9ab8911c0ed220a2f887531106::trading::USD",
         STSUI: "0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI",
         NS: "0x5145494a5f5100e645e4b0aa950fa6b68f614e8c59e17bc5ded3495123a79178::ns::NS",
         WAL: "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL",
