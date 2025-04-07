@@ -91,7 +91,7 @@ export const priceInfoObjectIds: { MAINNET: { [key in TOKEN]?: string }; TESTNET
         BLUE: "0x5515a34fc610bba6b601575ed1d2535b2f9df1f339fd0d435fef487c1ee3df9c",
         NS: "0xc6352e1ea55d7b5acc3ed690cc3cdf8007978071d7bfd6a189445018cfb366e0",
         JUP: "0xb804ada6f77feb30a73fbed7fc53dc66ff25133dee0815109d4267e43b2e6bdd",
-        WAL: "'0xeb7e669f74d976c0b99b6ef9801e3a77716a95f1a15754e0f1399ce3fb60973d'",
+        WAL: "0xeb7e669f74d976c0b99b6ef9801e3a77716a95f1a15754e0f1399ce3fb60973d",
         LBTC: "0xeba15840ddf425dacb5ff0990334fc03d034487f4ad416280859b96bf2af89f8",
     },
     TESTNET: {
