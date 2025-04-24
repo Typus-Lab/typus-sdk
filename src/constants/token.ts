@@ -410,6 +410,7 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         STSUI: "0xe3bf33dddfb5d67482fdbab3167eb1ebde9aa89e6cd6e88a6265d281ee5a7d5c",
         WAL: "0xb3cf4c510dae839c627633531f1dace4e964c99c8ca18f65d2d2f646677ce4aa",
         LBTC: "0x7781a2f3a77a9a2b4a8fe8a5ce54eb8d155e924966ff9b8d4459c08efedc946b",
+        wAPT: "0x25f9ffcc52776d5f8656bbdb4a3339a411c1550f288560ab0b101170f23b8245",
     },
     TESTNET: {
         SUI: "0x9083c9ce1a1eef569bb1a8b31dfa5e0fce2e05887e68ba79ca6ae522acd041f3",
