@@ -79,6 +79,7 @@ export const priceInfoObjectIds: { MAINNET: { [key in TOKEN]?: string }; TESTNET
         wBTC: "0x9a62b4863bdeaabdc9500fce769cf7e72d5585eeb28a6d26e4cafadc13f76ab2",
         wETH: "0x9193fd47f9a0ab99b6e365a464c8a9ae30e6150fc37ed2a89c1586631f6fc4ab",
         wSOL: "0x9d0d275efbd37d8a8855f6f2c761fa5983293dd8ce202ee5196626de8fcd4469",
+        wAPT: "0x7c5b7837c44a69b469325463ac0673ac1aa8435ff44ddb4191c9ae380463647f",
         CETUS: "0x24c0247fb22457a719efac7f670cdc79be321b521460bd6bd2ccfa9f80713b14",
         TURBOS: "0x442e52f04392b0dcb48c6aaf7940568acd510281021be9f9b3a449c559c79613",
         SCA: "0xf6de1d3279a269a597d813cbaca59aa906543ab9a8c64e84a4722f1a20863985",
