@@ -624,8 +624,11 @@ export async function getMyBids(
         arguments: transactionBlockArguments,
     });
     let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
-    // @ts-ignore
-    let bytes = results[results.length - 1].returnValues[0][0];
+    if (!results) {
+        // early return if no results
+        return {};
+    }
+    let bytes = results[results.length - 1].returnValues![0][0];
     let reader = new BcsReader(new Uint8Array(bytes));
     let result = Array.from(new Map()).reduce((map, [key, value]) => {
         map[key] = value;
