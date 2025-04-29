@@ -34,6 +34,8 @@ export const priceIDs: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key i
         NS: "0xbb5ff26e47a3a6cc7ec2fce1db996c2a145300edc5acaabe43bf9ff7c5dd5d32",
         WAL: "0xeba0732395fae9dec4bae12e52760b35fc1c5671e2da8b449c9af4efe5d54341",
         LBTC: "0x8f257aab6e7698bb92b15511915e593d6f8eae914452f781874754b03d0c612b",
+        JPY: "0xef2c98c804ba503c6a707e38be4dfbb16683775f195b091252bf24693042fd52",
+        XAU: "0x765d2ba906dbc32ca17cc11f5310a89e9ee1f6420508c63861f2f8ba4ee34bb2",
     },
     TESTNET: {
         // Pyth EVM Beta
@@ -68,6 +70,8 @@ export const priceIDs: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key i
         NS: "0x65aca56071505735c09091deb8733fdeba265bd9723dd4fb326b5ffd6843b3a3",
         WAL: "0xa6ba0195b5364be116059e401fb71484ed3400d4d9bfbdf46bd11eab4f9b7cea",
         LBTC: "0x29448db25efe8c72afe3a3c0c0631337408bd3cbc5f09d3dab0754460a965dae",
+        JPY: "0x20a938f54b68f1f2ef18ea0328f6dd0747f8ea11486d22b021e83a900be89776",
+        XAU: "0x30a19158f5a54c0adf8fb7560627343f22a1bc852b89d56be1accdc5dbf96d0e",
     },
 };
 
@@ -117,6 +121,8 @@ export const priceInfoObjectIds: { MAINNET: { [key in TOKEN]?: string }; TESTNET
         USDY: "0x1fec4ed70f870911948d93eb2abe6fa4a3a4b1e4633cf36c7e91adfb4af1733f",
         BLUE: "0xcc9016bcfaf1839f1dd63b0929a0d62dfb93e84442fd5b4598552605e365b3ec",
         BLUB: "0xdcd4cc5f06fac1ca72e8551ab1a2e847298afa6f19e370ad9891199a59d2c22e",
+        JPY: "0xd14cadaf54a926f701db021eceaa89b3d09363e1bce51bfcb2291a32a693f928",
+        XAU: "0x742d48ff1d7a45c91aee4ad4f0059396c28988f99074d4a191951ac086b90a5a",
     },
 };
 

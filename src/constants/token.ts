@@ -275,6 +275,8 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         NS: "0x5145494a5f5100e645e4b0aa950fa6b68f614e8c59e17bc5ded3495123a79178::ns::NS",
         WAL: "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL",
         LBTC: "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC",
+        JPY: "",
+        XAU: "",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -318,6 +320,8 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         NS: "0xac39f86c22c0924d066454873f801b3a338791846ae8c5fd8259a9719b36f2aa::ns::NS",
         WAL: "",
         LBTC: "",
+        JPY: "0xf6b1411610d6416f5bff08750262169fb6447eaf45750943cb89eb86fbf6542f::jpy::JPY",
+        XAU: "0x3ec6cda6b1d7003290004674e82d56530f354b4754f63334cf988a1bcd5535a4::xau::XAU",
     },
 };
 
@@ -374,6 +378,8 @@ export type TOKEN =
     | "INJ"
     | "JUP"
     | "SEI"
+    | "JPY"
+    | "XAU"
 
     // scallop token
     | "sSCA"
@@ -430,6 +436,8 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         MBLUB: "0x826253a1dde9907e28f465df8b2a19ba5994b4b069abad98658532785940338a",
         TYPUS: "0x73bb8651018bced7e737557fc9e4a7cf02ae28345b645566d0fd4df2da183048",
         NS: "0x4481ebc6a26ac72abb9ecbedba60fcba87440f1306c125c1bdf61d1248af4482",
+        JPY: "0xe4d5eaa453ffc3ee3a76b885b7a7d97756df5d4624d7d467c5d6da51f286f82b",
+        XAU: "0x172101af6fbaab02b2663ed7c502152431fed5d76ac865ac3ccad134c92d91db",
     },
 };
 
