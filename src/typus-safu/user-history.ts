@@ -119,6 +119,18 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                                 log,
                             });
                         }
+                        if (Number(log[3]) > 0) {
+                            txHistory.push({
+                                Action: "Subscribe",
+                                Index: log[0],
+                                Amount: divByDecimal(Number(log[3]), decimal!),
+                                Token,
+                                Exp: log[6],
+                                Date: new Date(Number(event.timestampMs)),
+                                txDigest: event.id.txDigest,
+                                log,
+                            });
+                        }
                         if (Number(log[5]) > 0) {
                             txHistory.push({
                                 Action: "Compound",
