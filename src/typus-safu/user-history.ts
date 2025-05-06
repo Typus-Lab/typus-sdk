@@ -107,11 +107,11 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                     case "raise_fund":
                         // balance_value, deactivating_value, inactive_value,
                         // Number(log[2]) + Number(log[3]) + Number(log[4])
-                        if (Number(log[2]) + Number(log[4]) > 0) {
+                        if (Number(log[2]) > 0) {
                             txHistory.push({
                                 Action: "Deposit",
                                 Index: log[0],
-                                Amount: divByDecimal(Number(log[2]) + Number(log[4]), decimal!),
+                                Amount: divByDecimal(Number(log[2]), decimal!),
                                 Token,
                                 Exp: log[6],
                                 Date: new Date(Number(event.timestampMs)),
@@ -126,6 +126,28 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                                 Amount: divByDecimal(Number(log[3]), decimal!),
                                 Token,
                                 Exp: log[6],
+                                Date: new Date(Number(event.timestampMs)),
+                                txDigest: event.id.txDigest,
+                                log,
+                            });
+                        }
+                        if (Number(log[4]) > 0) {
+                            txHistory.push({
+                                Action: "Withdraw",
+                                Index: log[0],
+                                Amount: divByDecimal(Number(log[4]), decimal!),
+                                Token,
+                                Exp: log[6],
+                                Date: new Date(Number(event.timestampMs)),
+                                txDigest: event.id.txDigest,
+                                log,
+                            });
+                            txHistory.push({
+                                Action: "Deposit",
+                                Index: log[0],
+                                Amount: divByDecimal(Number(log[4]), decimal!),
+                                Token,
+                                Exp: undefined,
                                 Date: new Date(Number(event.timestampMs)),
                                 txDigest: event.id.txDigest,
                                 log,
