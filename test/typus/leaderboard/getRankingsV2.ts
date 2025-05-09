@@ -5,46 +5,40 @@ import * as fs from "fs";
 import { SuiClient } from "@mysten/sui/client";
 
 (async () => {
-    let response = await fetch(
-        "https://api.sm.xyz/v1/collections/holders/0x034c162f6b594cb5a1805264dd01ca5d80ce3eca6522e6ee37fd9ebfb9d3ddca::factory::PrimeMachin/",
-        {
-            method: "GET",
-        }
-    );
-    let response_json = await response.json();
-    // @ts-ignore
-    let response_array: [string, string][] = Object.entries(response_json["data"]).map(([key, value]) => [key, value.toString()]);
-    saveToFile(["user", "num"], response_array, "prime_machin_leaderboard.csv");
-    const sm_holders = response_array.map((item) => item[0]);
+    // let response = await fetch(
+    //     "https://api.sm.xyz/v1/collections/holders/0x034c162f6b594cb5a1805264dd01ca5d80ce3eca6522e6ee37fd9ebfb9d3ddca::factory::PrimeMachin/",
+    //     {
+    //         method: "GET",
+    //     }
+    // );
+    // let response_json = await response.json();
+    // // @ts-ignore
+    // let response_array: [string, string][] = Object.entries(response_json["data"]).map(([key, value]) => [key, value.toString()]);
+    // saveToFile(["user", "num"], response_array, "prime_machin_leaderboard.csv");
+    // const sm_holders = response_array.map((item) => item[0]);
 
     let config = await TypusConfig.default("MAINNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
-    var parentId = "0x8d2b077d51c2b40ab1a8d59f12e29a3c80fdccebcf8e4ef90fe857c197b0cfcc";
-    var filename = "depositor_program.csv";
-    var datas = await getRankingsV2(provider, parentId, filename);
+    // var parentId = "0x8d2b077d51c2b40ab1a8d59f12e29a3c80fdccebcf8e4ef90fe857c197b0cfcc";
+    // var filename = "depositor_program.csv";
+    // var datas = await getRankingsV2(provider, parentId);
 
-    var new_datas = datas.map((data) => [
-        data[0],
-        sm_holders.includes(data[0]),
-        data[1],
-        sm_holders.includes(data[0]) ? Number(data[1]) * 1.2 : data[1],
-    ]);
+    // var new_datas = datas.map((data) => [
+    //     data[0],
+    //     sm_holders.includes(data[0]),
+    //     data[1],
+    //     sm_holders.includes(data[0]) ? Number(data[1]) * 1.2 : data[1],
+    // ]);
 
-    saveToFile(["user", "sm_holder", "score", "final_score"], new_datas, filename);
+    // saveToFile(["user", "sm_holder", "score", "final_score"], new_datas, filename);
 
-    var parentId = "0xcbc8ba339173e5696e0194d1ef00d843fad9f5fe0c6c7cbf48df38f88a1fc10c";
-    var filename = "bidding_leaderboard.csv";
-    var datas = await getRankingsV2(provider, parentId, filename);
+    var parentId = "0xeddbcde1baad2b364b0bd763e895a62427a0c6d4bf3b7573cb9307209dceeb3e";
+    var filename = "trading_competition.csv";
+    var datas = await getRankingsV2(provider, parentId);
 
-    var new_datas = datas.map((data) => [
-        data[0],
-        sm_holders.includes(data[0]),
-        data[1],
-        sm_holders.includes(data[0]) ? Number(data[1]) * 1.2 : data[1],
-    ]);
-
-    saveToFile(["user", "sm_holder", "score", "final_score"], new_datas, filename);
+    var new_datas = datas.map((data) => [data[0], data[1]]);
+    saveToFile(["user", "score"], new_datas, filename);
 })();
 
 function saveToFile(headers: string[], datas: any[][], filename: string) {
@@ -59,7 +53,7 @@ function saveToFile(headers: string[], datas: any[][], filename: string) {
     fs.writeFileSync(filename, csvContent);
 }
 
-async function getRankingsV2(provider: SuiClient, parentId: string, filename: string): Promise<[string, string][]> {
+async function getRankingsV2(provider: SuiClient, parentId: string): Promise<[string, string][]> {
     var result = await provider.getDynamicFields({
         parentId,
     });
