@@ -36,6 +36,7 @@ export const priceIDs: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key i
         LBTC: "0x8f257aab6e7698bb92b15511915e593d6f8eae914452f781874754b03d0c612b",
         JPY: "0xef2c98c804ba503c6a707e38be4dfbb16683775f195b091252bf24693042fd52",
         XAU: "0x765d2ba906dbc32ca17cc11f5310a89e9ee1f6420508c63861f2f8ba4ee34bb2",
+        HAEDAL: "0xe67d98cc1fbd94f569d5ba6c3c3c759eb3ffc5d2b28e64538a53ae13efad8fd1",
     },
     TESTNET: {
         // Pyth EVM Beta

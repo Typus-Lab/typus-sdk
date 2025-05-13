@@ -42,6 +42,9 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0x5145494a5f5100e645e4b0aa950fa6b68f614e8c59e17bc5ded3495123a79178::ns::NS": // MAINNET
         case "0xac39f86c22c0924d066454873f801b3a338791846ae8c5fd8259a9719b36f2aa::ns::NS": // TESTNET
             return "NS";
+        // HAEDAL
+        case "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL": // MAINNET
+            return "HAEDAL";
 
         // meme
 
@@ -201,6 +204,7 @@ export function assetToDecimal(asset: TOKEN): number | undefined {
         case "sSCA":
         case "STSUI":
         case "WAL":
+        case "HAEDAL":
             return 9;
         case "wBTC":
         case "sbETH":
@@ -277,6 +281,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         LBTC: "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC",
         JPY: "",
         XAU: "",
+        HAEDAL: "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -322,6 +327,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         LBTC: "",
         JPY: "0xf6b1411610d6416f5bff08750262169fb6447eaf45750943cb89eb86fbf6542f::jpy::JPY",
         XAU: "0x3ec6cda6b1d7003290004674e82d56530f354b4754f63334cf988a1bcd5535a4::xau::XAU",
+        HAEDAL: "",
     },
 };
 
@@ -337,6 +343,7 @@ export type TOKEN =
     | "TYPUS"
     | "NS"
     | "WAL"
+    | "HAEDAL"
 
     // meme
     | "FUD"
@@ -417,6 +424,7 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         WAL: "0xb3cf4c510dae839c627633531f1dace4e964c99c8ca18f65d2d2f646677ce4aa",
         LBTC: "0x7781a2f3a77a9a2b4a8fe8a5ce54eb8d155e924966ff9b8d4459c08efedc946b",
         wAPT: "0x25f9ffcc52776d5f8656bbdb4a3339a411c1550f288560ab0b101170f23b8245",
+        HAEDAL: "0x5dde9f285c75132a91b54ea7e93f5ddd61cdb38ca8e6191263028561a9956f94",
     },
     TESTNET: {
         SUI: "0x9083c9ce1a1eef569bb1a8b31dfa5e0fce2e05887e68ba79ca6ae522acd041f3",
