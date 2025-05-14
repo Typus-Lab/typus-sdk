@@ -205,6 +205,8 @@ export function assetToDecimal(asset: TOKEN): number | undefined {
         case "STSUI":
         case "WAL":
         case "HAEDAL":
+        case "JPY":
+        case "XAU":
             return 9;
         case "wBTC":
         case "sbETH":
@@ -425,6 +427,8 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         LBTC: "0x7781a2f3a77a9a2b4a8fe8a5ce54eb8d155e924966ff9b8d4459c08efedc946b",
         wAPT: "0x25f9ffcc52776d5f8656bbdb4a3339a411c1550f288560ab0b101170f23b8245",
         HAEDAL: "0x5dde9f285c75132a91b54ea7e93f5ddd61cdb38ca8e6191263028561a9956f94",
+        XAU: "0x511c861bcc9fb41e96091e9aefe07ff0ac55369b5838fd7f793569581b3b2f33",
+        JPY: "0x8cf8e48c6434d33ff28b8f15ca4e728821705db71087567fbedf4e4585f326b9",
     },
     TESTNET: {
         SUI: "0x9083c9ce1a1eef569bb1a8b31dfa5e0fce2e05887e68ba79ca6ae522acd041f3",
