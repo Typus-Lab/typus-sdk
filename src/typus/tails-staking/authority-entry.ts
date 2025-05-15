@@ -310,3 +310,47 @@ export function getRemoveProfitSharingTx(
 
     return tx;
 }
+
+/**
+    public fun public_exp_up(
+        _manager_cap: &ManagerCap,
+        version: &Version,
+        tails_staking_registry: &mut TailsStakingRegistry,
+        tails: address,
+        amount: u64,
+    ) {
+*/
+export function getPublicExpUpTx(
+    config: TypusConfig,
+    tx: Transaction,
+    input: {
+        tails: string;
+        amount: string;
+    }
+) {
+    let managerCap = tx.moveCall({
+        target: `${config.package.typus}::ecosystem::issue_manager_cap`,
+        typeArguments: [],
+        arguments: [tx.object(config.version.typus)],
+    });
+
+    tx.moveCall({
+        target: `${config.package.typus}::tails_staking::public_exp_up`,
+        typeArguments: [],
+        arguments: [
+            managerCap,
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.tailsStaking),
+            tx.pure.address(input.tails),
+            tx.pure.u64(input.amount),
+        ],
+    });
+
+    tx.moveCall({
+        target: `${config.package.typus}::ecosystem::burn_manager_cap`,
+        typeArguments: [],
+        arguments: [tx.object(config.version.typus), managerCap],
+    });
+
+    return tx;
+}
