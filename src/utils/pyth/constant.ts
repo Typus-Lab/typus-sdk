@@ -100,6 +100,7 @@ export const priceInfoObjectIds: { MAINNET: { [key in TOKEN]?: string }; TESTNET
         JUP: "0xb804ada6f77feb30a73fbed7fc53dc66ff25133dee0815109d4267e43b2e6bdd",
         WAL: "0xeb7e669f74d976c0b99b6ef9801e3a77716a95f1a15754e0f1399ce3fb60973d",
         LBTC: "0xeba15840ddf425dacb5ff0990334fc03d034487f4ad416280859b96bf2af89f8",
+        XAU: "0x5b36eb3c0935908082926c0c767a55b87a2a4eb3a45908785b41f9d5a11e4f7b",
     },
     TESTNET: {
         SUI: "0x1ebb295c789cc42b3b2a1606482cd1c7124076a0f5676718501fda8c7fd075a0",
