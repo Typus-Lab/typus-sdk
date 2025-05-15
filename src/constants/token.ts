@@ -181,6 +181,9 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC": // MAINNET
             return "LBTC";
 
+        case "0x732f66e6e97c0f6b7250a5f43dc3576e225ae6e7578862a9b122915f6ff63988::xau::XAU": // MAINNET
+            return "XAU";
+
         default:
             throw new Error(`Unknown typeArg: ${typeArg}`);
     }
