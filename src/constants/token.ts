@@ -282,7 +282,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         WAL: "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL",
         LBTC: "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC",
         JPY: "",
-        XAU: "",
+        XAU: "0x732f66e6e97c0f6b7250a5f43dc3576e225ae6e7578862a9b122915f6ff63988::xau::XAU",
         HAEDAL: "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL",
     },
     TESTNET: {
