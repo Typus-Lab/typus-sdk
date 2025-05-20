@@ -65,3 +65,37 @@ export async function getDeactivateLeaderboardTx(
 
     return tx;
 }
+
+/**
+    public fun extend_leaderboard(
+        version: &Version,
+        registry: &mut TypusLeaderboardRegistry,
+        key: String,
+        id: address,
+        end_ts_ms: u64,
+        ctx: &mut TxContext,
+    )
+*/
+export async function getExtendLeaderboardTx(
+    config: TypusConfig,
+    tx: Transaction,
+    input: {
+        key: string;
+        id: string;
+        end_ts_ms: string;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.typus}::leaderboard::extend_leaderboard`,
+        typeArguments: [],
+        arguments: [
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.leaderboard),
+            tx.pure.string(input.key),
+            tx.pure.address(input.id),
+            tx.pure.u64(input.end_ts_ms),
+        ],
+    });
+
+    return tx;
+}
