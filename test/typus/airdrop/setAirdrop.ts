@@ -9,24 +9,42 @@ import * as fs from "fs";
 import { tokenType } from "src/constants";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET", null);
+    let config = await TypusConfig.default("MAINNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
+    let address = signer.toSuiAddress();
+    console.log(address);
 
-    const raw = fs.readFileSync("airdrop.csv", "utf-8");
+    const raw = fs.readFileSync("trading_competition_0520.csv", "utf-8");
     const user_data = raw.split("\n").map((line) => line.split(","));
     const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    // remove headers
+    user_data.splice(0, 1);
+    console.log(user_data[0]);
+
+    let coins = (
+        await provider.getCoins({
+            owner: address,
+            coinType: tokenType["MAINNET"]["SUI"],
+        })
+    ).data.map((coin) => coin.coinObjectId);
+
+    let sum = 0;
+    user_data.forEach((x) => (sum += Number(x[3])));
+    console.log(sum);
 
     while (user_data.length > 0) {
         console.log(user_data.length);
         let slice = user_data.splice(0, 300);
+
         let transaction = await getSetAirdropTx(config, new Transaction(), {
-            typeArguments: [tokenType["TESTNET"]["TYPUS"]],
-            key: "typus_airdrop",
-            coins: ["0xa633dd0101ae7b95ba675de8a12a7c9aad420054f4bcf7fcd23bd9d099fc2920"],
-            amount: "500000000000000",
-            users: slice.map((user) => user[0]),
-            values: slice.map((user) => user[1]),
+            typeArguments: [tokenType["MAINNET"]["SUI"]],
+            key: "trading_competition",
+            coins,
+            amount: "2500000000000",
+            users: slice.map((user) => user[1]),
+            values: slice.map((user) => user[3]),
         });
 
         let res = await provider.signAndExecuteTransaction({ signer, transaction });
