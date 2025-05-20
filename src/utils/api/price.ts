@@ -64,6 +64,43 @@ export async function getPythLatestPrice() {
     }
 }
 
+/**
+ * Fetch latest Pyth prices for the specified symbols.
+ * @param symbols Array of token symbols (e.g., ["BTC", "ETH"]) to fetch prices for.
+ * @returns Map where keys are token symbols and values are their latest prices.
+ */
+export async function getPythLatestPriceBySymbols(symbols: string[]): Promise<Map<string, number>> {
+    // Build query string for requested symbols by mapping through pythId entries
+    const idsParam = Object.entries(pythId)
+        .filter(([id, token]) => symbols.includes(token))
+        .map(([id]) => `ids[]=${id}`)
+        .join("&");
+    const apiUrlWithParams = `https://hermes.pyth.network/api/latest_price_feeds?${idsParam}`;
+
+    const response = await fetch(apiUrlWithParams, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    });
+
+    const map = new Map<string, number>();
+
+    if (response.ok) {
+        const data: any[] = await response.json();
+        data.forEach((p) => {
+            const token = pythId[p.id];
+            // Convert price using exponent provided
+            const price = p.price.price / 10 ** -p.price.expo;
+            if (symbols.includes(token)) {
+                map.set(token, price);
+            }
+        });
+    } else {
+        console.error(`Failed to fetch Pyth prices: ${response.status}`);
+    }
+
+    return map;
+}
+
 export async function getLatestPriceUSD() {
     let prices = (await getPythLatestPrice())!;
 
