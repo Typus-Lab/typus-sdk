@@ -1,60 +1,9 @@
 import { SuiClient } from "@mysten/sui/client";
-import { BCS, BcsReader, getSuiMoveConfig } from "@mysten/bcs";
+import { BcsReader } from "@mysten/bcs";
 import { Transaction } from "@mysten/sui/transactions";
 import { AddressFromBytes } from "src/utils/tools";
 import { BidShare, BidVault } from "src/typus-dov-single-v2/view-function";
 import { TypusConfig } from "src/utils";
-
-let bcs = new BCS(getSuiMoveConfig());
-bcs.registerStructType("StrategyV2", {
-    id: "address",
-    vault_index: "u64",
-    signal_index: "u64",
-    user: "address",
-    price_percentage: "u64",
-    size: "u64",
-    max_times: "u64",
-    target_rounds: "vector<u64>",
-    receipts: "vector<TypusBidReceipt>",
-    active: "bool",
-    u64_padding: "vector<u64>",
-    bid_times: "u64",
-    bid_round: "u64",
-    bid_ts_ms: "u64",
-    bid_rounds: "vector<u64>",
-    accumulated_profit: "u64",
-    strategy_index: "u64",
-});
-
-// struct StrategyV2 has key, store {
-//     id: UID,
-//     vault_index: u64,
-//     signal_index: u64,
-//     user: address,
-//     // balance: Balance<B_TOKEN>,
-//     // profit: Balance<D_TOKEN>,
-//     price_percentage: u64,
-//     size: u64,
-//     max_times: u64,
-//     target_rounds: vector<u64>,
-//     receipts: vector<TypusBidReceipt>,
-//     active: bool,
-//     u64_padding: vector<u64>,
-//     // log
-//     bid_times: u64,
-//     bid_round: u64,
-//     bid_ts_ms: u64,
-//     bid_rounds: vector<u64>,
-//     accumulated_profit: u64,
-// }
-
-bcs.registerStructType("TypusBidReceipt", {
-    id: "address",
-    vid: "address",
-    index: "u64",
-    metadata: "String",
-    u64_padding: "vector<u64>",
-});
 
 export async function getUserStrategies(
     config: TypusConfig,
@@ -82,9 +31,6 @@ export async function getUserStrategies(
     let objBCS = results[0].returnValues[0][0];
     // console.log(objBCS.length);
     // console.log(objBCS.toString());
-
-    // let strategies = bcs.de("vector<StrategyV2>", objBCS.toString(), "base64");
-    // console.log(strategies);
 
     let reader = new BcsReader(new Uint8Array(objBCS));
 

@@ -4,9 +4,9 @@
     "description": "typus sdk",
     "version": "1.6.30",
     "dependencies": {
-        "@mysten/bcs": "^0.11.1",
-        "@mysten/kiosk": "0.9.34",
-        "@mysten/sui": "1.18.0",
+        "@mysten/bcs": "1.6.1",
+        "@mysten/kiosk": "0.12.6",
+        "@mysten/sui": "1.30.0",
         "@pythnetwork/client": "^2.21.0",
         "@pythnetwork/pyth-sui-js": "^2.1.0",
         "@typemove/sui": "^1.6.1",
