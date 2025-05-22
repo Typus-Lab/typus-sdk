@@ -4,6 +4,8 @@
     "description": "typus sdk",
     "version": "1.7.0",
     "dependencies": {
+        "@grpc/grpc-js": "^1.13.4",
+        "@grpc/proto-loader": "^0.7.15",
         "@mysten/bcs": "1.6.1",
         "@mysten/kiosk": "0.12.6",
         "@mysten/sui": "1.30.0",
