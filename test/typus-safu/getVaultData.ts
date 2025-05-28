@@ -5,13 +5,20 @@ import * as fs from "fs";
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
 
-    let vault = await getVaultData(config, {
+    let vaults = await getVaultData(config, {
         // indexes: [...Array(28).keys()].map((n) => {
         //     return n.toString();
         // }),
-        indexes: ["28"],
+        indexes: ["0", "2", "4", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"],
     });
-    console.log(JSON.stringify(vault, null, 2));
+    // console.log(JSON.stringify(vault, null, 2));
+    console.log(
+        JSON.stringify(
+            Object.values(vaults).map((vault) => vault[0].info),
+            null,
+            2
+        )
+    );
 
     // let shares = await getBigVectorData(config, vault["23"][0].share);
     // console.log(shares);

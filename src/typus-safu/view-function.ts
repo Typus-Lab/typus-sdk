@@ -28,6 +28,7 @@ export interface Info {
     token_decimal: string;
     lending_apr_mbp: string;
     creation_ts_ms: string;
+    dov_vault_index_add_one_up: string;
 }
 export interface Config {
     capacity: string;
@@ -128,6 +129,7 @@ export async function getVaultData(
             token_decimal: infoArray[9],
             lending_apr_mbp: infoArray[10],
             creation_ts_ms: infoArray[11],
+            dov_vault_index_add_one_up: infoArray[12],
         };
         let config = {
             capacity: configArray[0],
