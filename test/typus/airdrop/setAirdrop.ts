@@ -10,12 +10,12 @@ import { tokenType } from "src/constants";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
-    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC_2));
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let address = signer.toSuiAddress();
     console.log(address);
 
-    const raw = fs.readFileSync("trading_competition_0520.csv", "utf-8");
+    const raw = fs.readFileSync("trading_competition_0603.csv", "utf-8");
     const user_data = raw.split("\n").map((line) => line.split(","));
     const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -31,7 +31,7 @@ import { tokenType } from "src/constants";
     ).data.map((coin) => coin.coinObjectId);
 
     let sum = 0;
-    user_data.forEach((x) => (sum += Number(x[3])));
+    user_data.forEach((x) => (sum += Number(x[1])));
     console.log(sum);
 
     while (user_data.length > 0) {
@@ -42,9 +42,9 @@ import { tokenType } from "src/constants";
             typeArguments: [tokenType["MAINNET"]["SUI"]],
             key: "trading_competition",
             coins,
-            amount: "2500000000000",
-            users: slice.map((user) => user[1]),
-            values: slice.map((user) => user[3]),
+            amount: "2600000000000",
+            users: slice.map((user) => user[0]),
+            values: slice.map((user) => user[1]),
         });
 
         let res = await provider.signAndExecuteTransaction({ signer, transaction });

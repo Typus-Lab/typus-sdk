@@ -7,12 +7,12 @@ import { Transaction } from "@mysten/sui/transactions";
 import { MNEMONIC } from "mnemonic.json";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET", null);
+    let config = await TypusConfig.default("MAINNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let keypair = Ed25519Keypair.deriveKeypair(String(MNEMONIC));
 
     let key = "trading_competition";
-    let start_ts_ms = 1747008000000;
+    let start_ts_ms = 1749524400000;
     let end_ts_ms = start_ts_ms + 7 * 24 * 3600 * 1000;
     let address = keypair.toSuiAddress();
     console.log(address);

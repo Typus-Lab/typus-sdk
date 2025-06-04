@@ -8,13 +8,13 @@ import mnemonic from "mnemonic.json";
 import { tokenType } from "src/constants";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET", null);
-    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+    let config = await TypusConfig.default("MAINNET", null);
+    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC_2));
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     let transaction = await getRemoveAirdropTx(config, new Transaction(), {
-        typeArguments: [tokenType["TESTNET"]["TYPUS"]],
-        key: "typus_airdrop",
+        typeArguments: [tokenType["MAINNET"]["SUI"]],
+        key: "trading_competition",
         sender: signer.toSuiAddress(),
     });
 
