@@ -182,7 +182,12 @@ export function typeArgToAsset(typeArg: string): TOKEN {
             return "LBTC";
 
         case "0x732f66e6e97c0f6b7250a5f43dc3576e225ae6e7578862a9b122915f6ff63988::xau::XAU": // MAINNET
+        case "0x3ec6cda6b1d7003290004674e82d56530f354b4754f63334cf988a1bcd5535a4::xau::XAU": // TESTNET
             return "XAU";
+
+        case "0x437aca029849620c0d9fe4b53376a31d5ad631201b81da6a353310d5a7256b74::jpy::JPY": // MAINNET
+        case "0xf6b1411610d6416f5bff08750262169fb6447eaf45750943cb89eb86fbf6542f::jpy::JPY": // TESTNET
+            return "JPY";
 
         default:
             throw new Error(`Unknown typeArg: ${typeArg}`);
@@ -284,7 +289,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         NS: "0x5145494a5f5100e645e4b0aa950fa6b68f614e8c59e17bc5ded3495123a79178::ns::NS",
         WAL: "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL",
         LBTC: "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC",
-        JPY: "",
+        JPY: "0x437aca029849620c0d9fe4b53376a31d5ad631201b81da6a353310d5a7256b74::jpy::JPY",
         XAU: "0x732f66e6e97c0f6b7250a5f43dc3576e225ae6e7578862a9b122915f6ff63988::xau::XAU",
         HAEDAL: "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL",
     },
