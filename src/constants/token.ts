@@ -181,6 +181,9 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC": // MAINNET
             return "LBTC";
 
+        case "0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC": // MAINNET
+            return "xBTC";
+
         case "0x732f66e6e97c0f6b7250a5f43dc3576e225ae6e7578862a9b122915f6ff63988::xau::XAU": // MAINNET
         case "0x3ec6cda6b1d7003290004674e82d56530f354b4754f63334cf988a1bcd5535a4::xau::XAU": // TESTNET
             return "XAU";
@@ -188,6 +191,15 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0x437aca029849620c0d9fe4b53376a31d5ad631201b81da6a353310d5a7256b74::jpy::JPY": // MAINNET
         case "0xf6b1411610d6416f5bff08750262169fb6447eaf45750943cb89eb86fbf6542f::jpy::JPY": // TESTNET
             return "JPY";
+
+        case "0x292dd8bc71bff5714f79dd7d9c15bfc6e22bbfb07ef40bf320d61cd050dad929::doge::DOGE": // MAINNET
+            return "DOGE";
+
+        case "0x0746c122ecb19321768fb0dcfb34d237933fe306df05dc7bcd7140609a106ca5::hype::HYPE": // MAINNET
+            return "HYPE";
+
+        case "0x188faaaa44e6276295ab92fdd3eb353e5f25fc35b9d965a5b8243f336af65b78::xrp::XRP": // MAINNET
+            return "XRP";
 
         default:
             throw new Error(`Unknown typeArg: ${typeArg}`);
@@ -225,6 +237,10 @@ export function assetToDecimal(asset: TOKEN): number | undefined {
         case "SEI":
         case "JUP":
         case "LBTC":
+        case "xBTC":
+        case "HYPE":
+        case "XRP":
+        case "DOGE":
             return 8;
         case "USDC":
         case "wUSDC":
@@ -292,6 +308,10 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         JPY: "0x437aca029849620c0d9fe4b53376a31d5ad631201b81da6a353310d5a7256b74::jpy::JPY",
         XAU: "0x732f66e6e97c0f6b7250a5f43dc3576e225ae6e7578862a9b122915f6ff63988::xau::XAU",
         HAEDAL: "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL",
+        xBTC: "0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC",
+        DOGE: "0x292dd8bc71bff5714f79dd7d9c15bfc6e22bbfb07ef40bf320d61cd050dad929::doge::DOGE",
+        HYPE: "0x0746c122ecb19321768fb0dcfb34d237933fe306df05dc7bcd7140609a106ca5::hype::HYPE",
+        XRP: "0x188faaaa44e6276295ab92fdd3eb353e5f25fc35b9d965a5b8243f336af65b78::xrp::XRP",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -338,6 +358,10 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         JPY: "0xf6b1411610d6416f5bff08750262169fb6447eaf45750943cb89eb86fbf6542f::jpy::JPY",
         XAU: "0x3ec6cda6b1d7003290004674e82d56530f354b4754f63334cf988a1bcd5535a4::xau::XAU",
         HAEDAL: "",
+        xBTC: "",
+        DOGE: "",
+        HYPE: "",
+        XRP: "",
     },
 };
 
@@ -397,12 +421,16 @@ export type TOKEN =
     | "SEI"
     | "JPY"
     | "XAU"
+    | "DOGE"
+    | "HYPE"
+    | "XRP"
 
     // scallop token
     | "sSCA"
 
     // Other
     | "LBTC"
+    | "xBTC"
     | "TEXP"
     | "USD";
 
@@ -437,6 +465,10 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         HAEDAL: "0x5dde9f285c75132a91b54ea7e93f5ddd61cdb38ca8e6191263028561a9956f94",
         XAU: "0x511c861bcc9fb41e96091e9aefe07ff0ac55369b5838fd7f793569581b3b2f33",
         JPY: "0x8cf8e48c6434d33ff28b8f15ca4e728821705db71087567fbedf4e4585f326b9",
+        DOGE: "0x5eada11b8ecec767d8acb32608798b0c3951af93b13e84ef9d167f6a95e42a8a",
+        HYPE: "0x991a931286c0f46b0900da66cb60e59c57ace5103e60826ee31d568b141a8f9f",
+        XRP: "0xe81d3787435ac4e0108b98ed2a95f62d6e854c0a1821614a68d77f47bbdbec81",
+        xBTC: "0x6e7ca39c4ad0a1ad83937e98b220824566d858814aa8fd01294400b45c2bbc21",
     },
     TESTNET: {
         SUI: "0x9083c9ce1a1eef569bb1a8b31dfa5e0fce2e05887e68ba79ca6ae522acd041f3",
