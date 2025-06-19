@@ -358,7 +358,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         JPY: "0xf6b1411610d6416f5bff08750262169fb6447eaf45750943cb89eb86fbf6542f::jpy::JPY",
         XAU: "0x3ec6cda6b1d7003290004674e82d56530f354b4754f63334cf988a1bcd5535a4::xau::XAU",
         HAEDAL: "",
-        xBTC: "",
+        xBTC: "0x8ec68007c61b79244decfecc7f1e024ff60a9354dcb1ff37af94ad03f7e71d2e::xbtc::XBTC",
         DOGE: "",
         HYPE: "",
         XRP: "",
