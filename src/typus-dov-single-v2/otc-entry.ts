@@ -90,7 +90,7 @@ export async function otc(
     });
     tx.moveCall({
         target: `${config.package.dovSingle}::tds_otc_entry::otc`,
-        typeArguments: [],
+        typeArguments: input.typeArguments,
         arguments: [tx.object(config.registry.dov.dovSingle), tx.pure.u64(input.index), tx.object(balance), tx.object(CLOCK)],
     });
 }
@@ -116,7 +116,7 @@ export async function getUserOtcConfigs(
         target: `${config.package.dovSingle}::tds_otc_entry::get_user_otc_configs`,
         typeArguments: [],
         arguments: [
-            transaction.object(config.registry.safu.safu),
+            transaction.object(config.registry.dov.dovSingle),
             transaction.pure.address(input.user),
             transaction.pure.vector("u64", input.indexes),
         ],
