@@ -95,10 +95,10 @@ export function typeArgToAsset(typeArg: string): TOKEN {
 
         // wormhole bridge
 
-        // wBTC
+        // WBTC
         case "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881::coin::COIN": // MAINNET
         case "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::btc::BTC": // TESTNET
-            return "wBTC";
+            return "WBTC";
         // wETH
         case "0xaf8cd5edc19c4512f4259f0bee101a40d41ebed738ade5874359610ef8eeced5::coin::COIN": // MAINNET
         case "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::eth::ETH": // TESTNET
@@ -228,7 +228,7 @@ export function assetToDecimal(asset: TOKEN): number | undefined {
         case "JPY":
         case "XAU":
             return 9;
-        case "wBTC":
+        case "WBTC":
         case "sbETH":
         case "wETH":
         case "wSOL":
@@ -265,7 +265,7 @@ export function assetToDecimal(asset: TOKEN): number | undefined {
 export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key in TOKEN]: string } } = {
     MAINNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
-        wBTC: "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881::coin::COIN",
+        WBTC: "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881::coin::COIN",
         wETH: "0xaf8cd5edc19c4512f4259f0bee101a40d41ebed738ade5874359610ef8eeced5::coin::COIN",
         wUSDC: "0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf::coin::COIN",
         wUSDT: "0xc060006111016b8a020ad5b33834984a437aaa7d3c74c18e09a95d48aceab08c::coin::COIN",
@@ -329,7 +329,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         USDY: "0x579809c614d4388ed821c9f304bb741715cdf4a718707eb7c6fcf7b7189870ef::usdy::USDY",
         TEXP: "0x9b43ee208a3b235810c145bca1161d1a71d08bfe76b1e55bb3db319ea95d0149::tails_exp::TAILS_EXP",
         SCA: "0xd33ea459d9e667c112f5168464a885a654d7bc3fd6903720aaa8cf495a32a77e::sca::SCA",
-        wBTC: "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::btc::BTC",
+        WBTC: "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::btc::BTC",
         wETH: "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::eth::ETH",
         wUSDC: "0x949572061c09bbedef3ac4ffc42e58632291616f0605117cec86d840e09bf519::usdc::USDC",
         USDC: "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC",
@@ -399,7 +399,7 @@ export type TOKEN =
     // wormhole bridge
     | "wSOL"
     | "wAPT"
-    | "wBTC"
+    | "WBTC"
     | "wETH"
     | "wUSDC"
     | "wUSDT"
@@ -439,7 +439,7 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         SUI: "0x0a318f26fcf35922a8671a2d843872a7a25ac10b678bdee52f10fbc77140c0d0",
         USDC: "0x749d80ae01f8accf80100438bea507bba8294f41b9a0d958503341dda0433833",
         wUSDT: "0x9912f1b7a53b8d41b7c49b8ccba9ed7cef4b0aa485d6be6101d53fe4d48dc236",
-        wBTC: "0xa44a2db4812b5e0591661d1ade0bbce5b1944960aba6547469734dbbc1f1b9a2",
+        WBTC: "0xa44a2db4812b5e0591661d1ade0bbce5b1944960aba6547469734dbbc1f1b9a2",
         wETH: "0xd873a1c00439e5f6915c4d9e0c52683d6a277a3d0e4e915f817d21632430da0b",
         wSOL: "0x1bdb5e4bd7dfc96922ad932606eccdd715c08fc95735b0f67b6b3174179d30cc",
         CETUS: "0x58630809649d34da76311b8c495e3e11cba9dbbe2a22eeb8c0acca2231405c61",
@@ -475,7 +475,7 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         USDC: "0xb2c06a7b3831c92193c978ee225cac87500b8d858bcc853b6bf81d055886f057",
         wUSDC: "0xa547855d0e0579dfa38b0b83fc5ff55746c4bc629363920ba84aef7c1e70a818",
         wUSDT: "0x5c1b997c58ab64151e7f114f6a5c8b966aed871a06b3eb0730cf79822e894323",
-        wBTC: "0xc4ae30a21401fa66dc095ec7947d392cbabb7777f470b37d7c73b30574a614a7",
+        WBTC: "0xc4ae30a21401fa66dc095ec7947d392cbabb7777f470b37d7c73b30574a614a7",
         wETH: "0x1c36306a416d08895b6cdc64467c8987b1c1c88c0b46645c252b4c7b635586b1",
         wSOL: "0x24372c35d30c6187d2377af195627d4ad9ed2acc195d8830b819d47312982011",
         CETUS: "0xa4a561eb803df50be1633ab2fea597991ccb3cf35f0aac849f8742e54bd4ea9e",
@@ -500,7 +500,7 @@ export const tokenRegistry: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [
         MLIQ: "0x70acdb4a2978d2d99edf9ce0297e34e314cd097fd243a7ddbc00af1eb77f2454",
     },
     TESTNET: {
-        wBTC: "0xcf5184b85f47cb1ffe421249e48b2cd34807534e1a4b4ad384009295bbbd3bf4",
+        WBTC: "0xcf5184b85f47cb1ffe421249e48b2cd34807534e1a4b4ad384009295bbbd3bf4",
         wETH: "0x5cd3726a1d1ef32bffaaeb2ec4964f0ffac56cfb919f7d13d4672aed5059bfa1",
         wSOL: "0x1186a198ebd006e4f444ff88334307d6b376c02a040cfdad380ca06090f52472",
         wAPT: "0xf8d1edd32c4847c6d2c0e5fbf61291ae393092540e5e0723e7c6cf52089d670f",
