@@ -183,6 +183,8 @@ export function typeArgToAsset(typeArg: string): TOKEN {
 
         case "0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC": // MAINNET
             return "xBTC";
+        case "0x8ec68007c61b79244decfecc7f1e024ff60a9354dcb1ff37af94ad03f7e71d2e::xbtc::XBTC": // TESTNET
+            return "xBTC";
 
         case "0x732f66e6e97c0f6b7250a5f43dc3576e225ae6e7578862a9b122915f6ff63988::xau::XAU": // MAINNET
         case "0x3ec6cda6b1d7003290004674e82d56530f354b4754f63334cf988a1bcd5535a4::xau::XAU": // TESTNET
