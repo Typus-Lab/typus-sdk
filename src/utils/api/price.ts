@@ -149,8 +149,10 @@ const pythId = {
     "29bdd5248234e33bd93d3b81100b5fa32eaa5997843847e2c2cb16d7c6d9f7ff": "DEEP",
     "04cfeb7b143eb9c48e9b074125c1a3447b85f59c31164dc20c1beaa6f21f2b6b": "BLUE",
     "5fc11ffe4975b624be495be038da30e30bee2004d8ae6282b5364577ef4ca92c": "BLUB",
-    "765d2ba906dbc32ca17cc11f5310a89e9ee1f6420508c63861f2f8ba4ee34bb2": "XAU",  
-    "eba0732395fae9dec4bae12e52760b35fc1c5671e2da8b449c9af4efe5d54341": "WAL"
+    "765d2ba906dbc32ca17cc11f5310a89e9ee1f6420508c63861f2f8ba4ee34bb2": "XAU",
+    "eba0732395fae9dec4bae12e52760b35fc1c5671e2da8b449c9af4efe5d54341": "WAL",
+    "4279e31cc369bbcc2faf022b382b080e32a8e689ff20fbc530d2a603eb6cd98b": "HYPE",
+    "ec5d399846a9209f3fe5881d70aae9268c94339ff9817e8d18ff19fa05eea1c8": "XRP",
 };
 
 // getPythLatestPrice();

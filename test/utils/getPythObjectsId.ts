@@ -8,7 +8,7 @@ import { createPythClient } from "src/utils/pyth/pythClient";
     const provider = new SuiClient({ url: config.rpcEndpoint });
     const pythClient = createPythClient(provider, network);
 
-    const priceFeeds = [priceIDs["MAINNET"]["DOGE"]!, priceIDs["MAINNET"]["HYPE"]!, priceIDs["MAINNET"]["XRP"]!];
+    const priceFeeds = [priceIDs["MAINNET"]["XAU"]!, priceIDs["MAINNET"]["DOGE"]!, priceIDs["MAINNET"]["HYPE"]!, priceIDs["MAINNET"]["XRP"]!];
     let transaction = new Transaction();
     const priceFeedUpdateData = await pythClient.connection.getPriceFeedsUpdateData(priceFeeds);
 

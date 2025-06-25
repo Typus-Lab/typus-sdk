@@ -103,6 +103,9 @@ export const priceInfoObjectIds: { MAINNET: { [key in TOKEN]?: string }; TESTNET
         WAL: "0xeb7e669f74d976c0b99b6ef9801e3a77716a95f1a15754e0f1399ce3fb60973d",
         LBTC: "0xeba15840ddf425dacb5ff0990334fc03d034487f4ad416280859b96bf2af89f8",
         XAU: "0x5b36eb3c0935908082926c0c767a55b87a2a4eb3a45908785b41f9d5a11e4f7b",
+        DOGE: "0xd59a5f5173424ba725a7d033d86f2eadf2745f87a908bd27e1d27339eff598ce",
+        HYPE: "0x1c047be615eaa5a87afa0e111b20a512dd6c0f4a1f0f691693cf852c1768f35d",
+        XRP: "0x93bfda25cb6b1653a9c769e8216014bd2c06997f3edb479566761fbf2abf6ac2",
     },
     TESTNET: {
         SUI: "0x1ebb295c789cc42b3b2a1606482cd1c7124076a0f5676718501fda8c7fd075a0",

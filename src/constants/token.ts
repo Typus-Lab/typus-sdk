@@ -188,6 +188,7 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0x3ec6cda6b1d7003290004674e82d56530f354b4754f63334cf988a1bcd5535a4::xau::XAU": // TESTNET
             return "XAU";
 
+
         case "0x437aca029849620c0d9fe4b53376a31d5ad631201b81da6a353310d5a7256b74::jpy::JPY": // MAINNET
         case "0xf6b1411610d6416f5bff08750262169fb6447eaf45750943cb89eb86fbf6542f::jpy::JPY": // TESTNET
             return "JPY";
