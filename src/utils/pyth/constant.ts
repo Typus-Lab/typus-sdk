@@ -39,6 +39,7 @@ export const priceIDs: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key i
         HAEDAL: "0xe67d98cc1fbd94f569d5ba6c3c3c759eb3ffc5d2b28e64538a53ae13efad8fd1",
         HYPE: "0x4279e31cc369bbcc2faf022b382b080e32a8e689ff20fbc530d2a603eb6cd98b",
         XRP: "0xec5d399846a9209f3fe5881d70aae9268c94339ff9817e8d18ff19fa05eea1c8",
+        xBTC: "0xae8f269ed9c4bed616c99a98cf6dfe562bd3202e7f91821a471ff854713851b4",
     },
     TESTNET: {
         // Pyth EVM Beta
@@ -106,6 +107,7 @@ export const priceInfoObjectIds: { MAINNET: { [key in TOKEN]?: string }; TESTNET
         DOGE: "0xd59a5f5173424ba725a7d033d86f2eadf2745f87a908bd27e1d27339eff598ce",
         HYPE: "0x1c047be615eaa5a87afa0e111b20a512dd6c0f4a1f0f691693cf852c1768f35d",
         XRP: "0x93bfda25cb6b1653a9c769e8216014bd2c06997f3edb479566761fbf2abf6ac2",
+        xBTC: "0xa4b9db1866ee6e2a156e8c36fc66be0f68f232388ebb578c949c2c6beb50128b",
     },
     TESTNET: {
         SUI: "0x1ebb295c789cc42b3b2a1606482cd1c7124076a0f5676718501fda8c7fd075a0",
