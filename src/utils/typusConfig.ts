@@ -71,6 +71,11 @@ export interface Package {
         optionAirdrop: string;
         veTypus: string;
     };
+    hedge: {
+        hedge: string;
+        hedge_perp_dov: string;
+        hedge_momentum: string;
+    };
 }
 export interface Version {
     perp: {
@@ -86,6 +91,11 @@ export interface Version {
         improvementProposal: string;
         optionAirdrop: string;
         veTypus: string;
+    };
+    hedge: {
+        hedge: string;
+        hedge_perp_dov: string;
+        hedge_momentum: string;
     };
 }
 export interface Registry {
@@ -120,6 +130,7 @@ export interface Registry {
         improvementProposal: string;
         veTypus: string;
     };
+    hedge: string;
 }
 export interface Object {
     nftTransferPolicy: string;
@@ -132,7 +143,7 @@ export interface Object {
 }
 
 // (async () => {
-//     let config = TypusConfig.local("../typus-config/config-testnet.json");
+//     let config = TypusConfig.local("../typus-config/config-mainnet.json");
 //     console.log(config);
 //     console.log(config.rpcEndpoint);
 // })();
