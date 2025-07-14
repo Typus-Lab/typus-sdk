@@ -182,14 +182,19 @@ export function typeArgToAsset(typeArg: string): TOKEN {
             return "LBTC";
 
         case "0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC": // MAINNET
-            return "xBTC";
         case "0x8ec68007c61b79244decfecc7f1e024ff60a9354dcb1ff37af94ad03f7e71d2e::xbtc::XBTC": // TESTNET
             return "xBTC";
+
+        case "0xaafb102dd0902f5055cadecd687fb5b71ca82ef0e0285d90afde828ec58ca96b::btc::BTC": // MAINNET
+            return "sbBTC";
+
+        case "0x77045f1b9f811a7a8fb9ebd085b5b0c55c5cb0d1520ff55f7037f89b5da9f5f1::TBTC::TBTC": // MAINNET
+        case "0xee81baea02ef47860153569bc2f86eafb58baa81aab4e5b910950a4c72aae861::tbtc::TBTC": // TESTNET
+            return "TBTC";
 
         case "0x732f66e6e97c0f6b7250a5f43dc3576e225ae6e7578862a9b122915f6ff63988::xau::XAU": // MAINNET
         case "0x3ec6cda6b1d7003290004674e82d56530f354b4754f63334cf988a1bcd5535a4::xau::XAU": // TESTNET
             return "XAU";
-
 
         case "0x437aca029849620c0d9fe4b53376a31d5ad631201b81da6a353310d5a7256b74::jpy::JPY": // MAINNET
         case "0xf6b1411610d6416f5bff08750262169fb6447eaf45750943cb89eb86fbf6542f::jpy::JPY": // TESTNET
@@ -244,6 +249,8 @@ export function assetToDecimal(asset: TOKEN): number | undefined {
         case "HYPE":
         case "XRP":
         case "DOGE":
+        case "TBTC":
+        case "sbBTC":
             return 8;
         case "USDC":
         case "wUSDC":
@@ -315,6 +322,8 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         DOGE: "0x292dd8bc71bff5714f79dd7d9c15bfc6e22bbfb07ef40bf320d61cd050dad929::doge::DOGE",
         HYPE: "0x0746c122ecb19321768fb0dcfb34d237933fe306df05dc7bcd7140609a106ca5::hype::HYPE",
         XRP: "0x188faaaa44e6276295ab92fdd3eb353e5f25fc35b9d965a5b8243f336af65b78::xrp::XRP",
+        sbBTC: "0xaafb102dd0902f5055cadecd687fb5b71ca82ef0e0285d90afde828ec58ca96b::btc::BTC",
+        TBTC: "0x77045f1b9f811a7a8fb9ebd085b5b0c55c5cb0d1520ff55f7037f89b5da9f5f1::TBTC::TBTC",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -365,6 +374,8 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         DOGE: "",
         HYPE: "",
         XRP: "",
+        TBTC: "0xee81baea02ef47860153569bc2f86eafb58baa81aab4e5b910950a4c72aae861::tbtc::TBTC",
+        sbBTC: "",
     },
 };
 
@@ -410,6 +421,12 @@ export type TOKEN =
     // native bridge
     | "sbETH"
     | "sbUSDT"
+    | "sbBTC"
+
+    // BTCfi
+    | "LBTC"
+    | "xBTC"
+    | "TBTC"
 
     // LST
     | "VSUI"
@@ -432,8 +449,6 @@ export type TOKEN =
     | "sSCA"
 
     // Other
-    | "LBTC"
-    | "xBTC"
     | "TEXP"
     | "USD";
 
@@ -493,6 +508,7 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         NS: "0x4481ebc6a26ac72abb9ecbedba60fcba87440f1306c125c1bdf61d1248af4482",
         JPY: "0xe4d5eaa453ffc3ee3a76b885b7a7d97756df5d4624d7d467c5d6da51f286f82b",
         XAU: "0x172101af6fbaab02b2663ed7c502152431fed5d76ac865ac3ccad134c92d91db",
+        TBTC: "0x383cb3519e51c62d84ec54e2fca3438c43a83967738b364c20f0f2a662a668d5",
     },
 };
 
@@ -521,5 +537,7 @@ export const tokenRegistry: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [
         AUSD: "0xd87ea623f4f2635d66f59d7defaeb96e0147e0cdd8f5406756433d8d8849f785",
         MFUD: "0x7ad87901531693f1baa541712947860dcc543617e11b14993ad70d20daf159c6",
         MBLUB: "0x7c36d8c1b2b569676d9a3f4c73487ec49b483111cc0abf4b0d5654e026ac3d3a",
+        xBTC: "0x0701eee55ccf6ec7706e5a9b1c99c0733b49c3958f8f5a3503aea2e192706493",
+        TBTC: "0x94c1289dc6b129db6d5efc0ec49bde0e574e6ec34788b2f0fc8948ce5ed7d28a",
     },
 };
