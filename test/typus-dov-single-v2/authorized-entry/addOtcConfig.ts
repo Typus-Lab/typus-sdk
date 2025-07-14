@@ -7,24 +7,28 @@ import { addOtcConfig } from "src/typus-dov-single-v2/otc-entry";
 import { getVaults } from "src/typus-dov-single-v2";
 
 (async () => {
-    let config = await TypusConfig.default("MAINNET", null);
-    config.package.dovSingle = "0x3beedf5eb385f2ec5d77df5c5f8a7bf9a4b908908a5424262acf3830595685f3";
+    let config = await TypusConfig.default("TESTNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let index = "125";
+    let index = "43";
     let vault = (await getVaults(config, { indexes: [index] }))[index];
     // console.log(vault);
     let transaction = new Transaction();
-    let users = ["0x3774f5e22fb66c928e60beedf9347704e2b703ed7d415058aedfcf4162bd522e"];
+    let users = [
+        "0xdc72506f269feb89822c13e66b282bc52c5724c27e575a04cbec949a13671d13",
+        "0xb6b29d18c728503fb59cc59ecbe52611d26b2746b2cedc8d38cabf81428cae6c",
+        "0xf63aa0b102ddaeb791e67c26237488d1e2be10fb0bed6c022139cb354b07bc18",
+    ];
     for (let user of users) {
         await addOtcConfig(config, transaction, {
             user,
             index,
             round: vault.info.round,
-            size: "10000",
-            price: "760000",
+            size: "100000000",
+            price: "280000",
             fee_bp: "0",
-            expiration_ts_ms: (BigInt(vault.info.activationTsMs) + BigInt(150 * 60 * 1000)).toString(),
+            // expiration_ts_ms: (BigInt(vault.info.activationTsMs) + BigInt(120 * 60 * 1000)).toString(),
+            expiration_ts_ms: "1752552000000",
         });
     }
     let res = await provider.signAndExecuteTransaction({ signer, transaction });

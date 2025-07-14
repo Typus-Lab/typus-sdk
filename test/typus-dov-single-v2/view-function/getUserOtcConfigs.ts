@@ -3,9 +3,9 @@ import { TypusConfig } from "src/utils";
 import { getUserOtcConfigs, otc } from "src/typus-dov-single-v2/otc-entry";
 
 (async () => {
-    let config = await TypusConfig.default("MAINNET", null);
-    let user = "0x3774f5e22fb66c928e60beedf9347704e2b703ed7d415058aedfcf4162bd522e";
-    let index = "125";
-    let otcConfig = (await getUserOtcConfigs(config, { user, indexes: [index] }))[0];
+    let config = await TypusConfig.default("TESTNET", null);
+    let user = "0xf63aa0b102ddaeb791e67c26237488d1e2be10fb0bed6c022139cb354b07bc18";
+    let index = "43";
+    let otcConfig = (await getUserOtcConfigs(config, { user, indexes: ["42", "43"] }));
     console.log(otcConfig);
 })();
