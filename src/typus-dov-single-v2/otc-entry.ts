@@ -96,6 +96,7 @@ export async function otc(
 }
 
 export interface OtcConfig {
+    index: string;
     round: string;
     size: string;
     price: string;
@@ -131,6 +132,7 @@ export async function getUserOtcConfigs(
         reader.readULEB();
 
         return {
+            index: reader.read64(),
             round: reader.read64(),
             size: reader.read64(),
             price: reader.read64(),
