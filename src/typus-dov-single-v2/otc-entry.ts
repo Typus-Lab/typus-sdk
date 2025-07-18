@@ -18,7 +18,7 @@ import { SENDER } from "src/constants";
         ctx: &mut TxContext,
     ) {
  */
-export async function addOtcConfig(
+export function addOtcConfig(
     config: TypusConfig,
     tx: Transaction,
     input: {
