@@ -78,6 +78,7 @@ process.removeAllListeners("warning");
 })();
 
 function getNumberStringWithDecimal(input: string, decimal: number): string {
+    input = input.padStart(decimal, "0");
     let integer = input.slice(0, input.length - decimal).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     let float = input.slice(input.length - decimal, input.length);
     return `${integer == "" ? "0" : integer}.${float}`;

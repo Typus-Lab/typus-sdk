@@ -7,43 +7,29 @@ import { addOtcConfig } from "src/typus-dov-single-v2/otc-entry";
 import { getVaults } from "src/typus-dov-single-v2";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET", null);
+    let config = await TypusConfig.default("MAINNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transaction = new Transaction();
-    let indexes = ["41", "43"];
-    let users = [
-        "0xdc72506f269feb89822c13e66b282bc52c5724c27e575a04cbec949a13671d13",
-        "0xb6b29d18c728503fb59cc59ecbe52611d26b2746b2cedc8d38cabf81428cae6c",
-        "0xf63aa0b102ddaeb791e67c26237488d1e2be10fb0bed6c022139cb354b07bc18",
-    ];
+    let indexes = ["125"];
+    let users = ["0x74c7a18d6de49f31bc6007e24afa3ea0693fefa5db6c7174c68730540c82d275"];
+    let now = Date.now();
     for (let index of indexes) {
         let vault = (await getVaults(config, { indexes: [index] }))[index];
         // console.log(vault);
         for (let user of users) {
             switch (index) {
-                case "41": {
+                case "125": {
                     addOtcConfig(config, transaction, {
                         user,
                         index,
                         round: vault.info.round,
-                        size: "543210000",
-                        price: "310000",
+                        size: "711610000",
+                        price: "0.00440000",
                         fee_bp: "0",
                         // expiration_ts_ms: (BigInt(vault.info.activationTsMs) + BigInt(120 * 60 * 1000)).toString(),
-                        expiration_ts_ms: "1752645600000",
-                    });
-                }
-                case "43": {
-                    addOtcConfig(config, transaction, {
-                        user,
-                        index,
-                        round: vault.info.round,
-                        size: "100000000",
-                        price: "280000",
-                        fee_bp: "0",
-                        // expiration_ts_ms: (BigInt(vault.info.activationTsMs) + BigInt(120 * 60 * 1000)).toString(),
-                        expiration_ts_ms: "1752645600000",
+                        // expiration_ts_ms: "1752829200000",
+                        expiration_ts_ms: (now + 5 * 60 * 1000).toString(),
                     });
                 }
             }

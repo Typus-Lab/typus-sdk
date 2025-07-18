@@ -2,9 +2,9 @@ import { TypusConfig } from "src/utils";
 import { getVaults, parseAssets } from "src/typus-dov-single-v2";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET", null);
+    let config = await TypusConfig.default("MAINNET", null);
 
-    let indexes = ["43"];
+    let indexes = ["125"];
     let vaults = await getVaults(config, { indexes });
     // Object.values(vaults).forEach((vault) => {
     //     console.log(parseAssets(vault.info));
