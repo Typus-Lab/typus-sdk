@@ -110,32 +110,44 @@ process.removeAllListeners("warning");
     let msg = "<<NAVI XBTC BORROWING HEALTH CHECK>>\n";
     msg += "  <Health Factor>\n";
     // @ts-ignore
-    msg += `  * ${BigNumber(new BcsReader(new Uint8Array(results[0].returnValues[0][0])).read256()).div(BigNumber(10).pow(27))}\n`;
-    msg += "  <Collateral Balance>\n";
+    msg += `  * ${BigNumber(new BcsReader(new Uint8Array(results[0].returnValues[0][0])).read256()).div(BigNumber(10).pow(27))} (${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[7].returnValues[0][0])).read256(), 9)} / ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[8].returnValues[0][0])).read256(), 9)})\n`;
+    msg += "  <Collateral>\n";
     // @ts-ignore
-    msg += `  * SUI: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[1].returnValues[0][0])).read256(), 9)}\n`;
+    msg += `  * SUI: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[1].returnValues[0][0])).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[3].returnValues[0][0])).read256(), 9)})\n`;
     // @ts-ignore
-    msg += `  * USDC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[2].returnValues[0][0])).read256(), 9)}\n`;
-    msg += "  <Collateral Usd Value>\n";
-    // @ts-ignore
-    msg += `  * SUI: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[3].returnValues[0][0])).read256(), 9)}\n`;
-    // @ts-ignore
-    msg += `  * USDC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[4].returnValues[0][0])).read256(), 9)}\n`;
+    msg += `  * USDC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[2].returnValues[0][0])).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[4].returnValues[0][0])).read256(), 9)})\n`;
     msg += "  <Loan Balance>\n";
     // @ts-ignore
-    msg += `  * XBTC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[5].returnValues[0][0])).read256(), 9)}\n`;
-    msg += "  <Loan Usd Value>\n";
+    msg += `  * XBTC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[5].returnValues[0][0])).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[6].returnValues[0][0])).read256(), 9)})\n`;
+    let depositShareSlice = await provider.getObject({
+        id: String(process.env.DEPOSIT_SHARE_SLICE),
+        options: { showContent: true },
+    });
     // @ts-ignore
-    msg += `  * XBTC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[6].returnValues[0][0])).read256(), 9)}\n`;
-    msg += "  <Health Collateral Usd Value>\n";
-    // @ts-ignore
-    msg += `  * ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[7].returnValues[0][0])).read256(), 9)}\n`;
-    msg += "  <Health Loan Usd Value>\n";
-    // @ts-ignore
-    msg += `  * ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[8].returnValues[0][0])).read256(), 9)}\n`;
+    let depositShares: Object[] = depositShareSlice.data.content.fields.value;
+    for (var depositShare of depositShares) {
+        // @ts-ignore
+        if (depositShare.fields.receipt == String(process.env.TYPUS_DEPOSIT_RECEIPT)) {
+            msg += "  <Deposit Share>\n";
+            // @ts-ignore
+            msg += `  * Warmup: ${getNumberStringWithDecimal(depositShare.fields.warmup_share, 8)} XBTC\n`;
+            // @ts-ignore
+            msg += `  * Active: ${getNumberStringWithDecimal(depositShare.fields.active_share, 8)} XBTC\n`;
+            // @ts-ignore
+            msg += `  * Deactivating: ${getNumberStringWithDecimal(depositShare.fields.deactivating_share, 8)} XBTC\n`;
+            // @ts-ignore
+            msg += `  * Premium: ${getNumberStringWithDecimal(depositShare.fields.premium_share, 8)} XBTC\n`;
+            // @ts-ignore
+            msg += `  * Inactive: ${getNumberStringWithDecimal(depositShare.fields.inactive_share, 8)} XBTC\n`;
+            // @ts-ignore
+            msg += `  * Incentive: ${getNumberStringWithDecimal(depositShare.fields.incentive_share, 9)} SUI\n`;
+            break;
+        }
+    }
     slack.chat.postMessage({
         token: String(process.env.SLACK_BOT_TOKEN),
         channel: String(process.env.SLACK_CHANNEL),
+        // channel: "test-alert",
         text: `\`\`\`${msg}\`\`\``,
     });
 })();
