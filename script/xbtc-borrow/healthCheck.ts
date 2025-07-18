@@ -116,7 +116,7 @@ process.removeAllListeners("warning");
     msg += `  * SUI: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[1].returnValues[0][0])).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[3].returnValues[0][0])).read256(), 9)})\n`;
     // @ts-ignore
     msg += `  * USDC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[2].returnValues[0][0])).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[4].returnValues[0][0])).read256(), 9)})\n`;
-    msg += "  <Loan Balance>\n";
+    msg += "  <Loan>\n";
     // @ts-ignore
     msg += `  * XBTC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[5].returnValues[0][0])).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[6].returnValues[0][0])).read256(), 9)})\n`;
     let depositShareSlice = await provider.getObject({
