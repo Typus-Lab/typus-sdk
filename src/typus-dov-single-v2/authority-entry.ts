@@ -1,5 +1,6 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { TypusConfig } from "src/utils";
+import { CLOCK } from "src/constants";
+import { splitCoins, TypusConfig } from "src/utils";
 
 /**
     public(friend) entry fun update_config(
@@ -88,4 +89,111 @@ export async function getUpdateConfigTx(
     });
 
     return tx;
+}
+
+/**
+    public entry fun deposit_collateral_navi<TOKEN>(
+        registry: &mut Registry,
+        index: u64,
+        storage: &mut lending_core::storage::Storage,
+        pool: &mut lending_core::pool::Pool<TOKEN>,
+        asset: u8,
+        incentive_v2: &mut lending_core::incentive_v2::Incentive,
+        incentive_v3: &mut lending_core::incentive_v3::Incentive,
+        coin: Coin<TOKEN>,
+        clock: &Clock,
+        ctx: &mut TxContext,
+    ) {
+ */
+export function depositCollateralNavi(
+    config: TypusConfig,
+    tx: Transaction,
+    input: {
+        typeArguments: string[];
+        index: string;
+        raiseCoins: string[];
+        raiseAmount: string;
+        naviStorage: string;
+        naviPool: string;
+        naviAsset: number;
+        naviIncentiveV2: string;
+        naviIncentiveV3: string;
+    }
+) {
+    let coin = splitCoins(tx, input.typeArguments[0], input.raiseCoins, input.raiseAmount);
+    tx.moveCall({
+        target: `${config.package.dovSingle}::tds_authorized_entry::deposit_collateral_navi`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            tx.object(config.registry.dov.dovSingle),
+            tx.pure.u64(input.index),
+            tx.object(input.naviStorage),
+            tx.object(input.naviPool),
+            tx.pure.u8(input.naviAsset),
+            tx.object(input.naviIncentiveV2),
+            tx.object(input.naviIncentiveV3),
+            tx.object(coin),
+            tx.object(CLOCK),
+        ],
+    });
+}
+
+/**
+    public entry fun withdraw_collateral_navi<TOKEN>(
+        registry: &mut Registry,
+        index: u64,
+        oracle_config: &mut OracleConfig,
+        price_oracle: &mut PriceOracle,
+        supra_oracle_holder: &SupraOracle::SupraSValueFeed::OracleHolder,
+        pyth_price_info: &pyth::price_info::PriceInfoObject,
+        feed_address: address,
+        storage: &mut lending_core::storage::Storage,
+        pool: &mut lending_core::pool::Pool<TOKEN>,
+        asset: u8,
+        incentive_v2: &mut lending_core::incentive_v2::Incentive,
+        incentive_v3: &mut lending_core::incentive_v3::Incentive,
+        amount: Option<u64>,
+        clock: &Clock,
+        ctx: &mut TxContext,
+    ) {
+ */
+export function withdrawCollateralNavi(
+    config: TypusConfig,
+    tx: Transaction,
+    input: {
+        typeArguments: string[];
+        index: string;
+        naviOracleConfig: string;
+        naviPriceOracle: string;
+        naviSupraOracleHolder: string;
+        naviPythPriceInfo: string;
+        naviFeedAddress: string;
+        naviStorage: string;
+        naviPool: string;
+        naviAsset: number;
+        naviIncentiveV2: string;
+        naviIncentiveV3: string;
+        amount: string | undefined;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.dovSingle}::tds_authorized_entry::withdraw_collateral_navi`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            tx.object(config.registry.dov.dovSingle),
+            tx.pure.u64(input.index),
+            tx.object(input.naviOracleConfig),
+            tx.object(input.naviPriceOracle),
+            tx.object(input.naviSupraOracleHolder),
+            tx.object(input.naviPythPriceInfo),
+            tx.pure.address(input.naviFeedAddress),
+            tx.object(input.naviStorage),
+            tx.object(input.naviPool),
+            tx.pure.u8(input.naviAsset),
+            tx.object(input.naviIncentiveV2),
+            tx.object(input.naviIncentiveV3),
+            tx.pure.option("u64", input.amount),
+            tx.object(CLOCK),
+        ],
+    });
 }
