@@ -23,7 +23,7 @@ process.removeAllListeners("warning");
             transaction.object(CLOCK),
             transaction.object("0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe"),
             transaction.object("0x1568865ed9a0b5ec414220e8f79b3d04c77acc82358f6e5ae4635687392ffbef"),
-            transaction.pure.address("0xd9ad801966569a212cc9e7ecbe33400307c2083ebf7e34f64c6c48fe40707c2f"),
+            transaction.pure.address(String(process.env.NAVI_ACCOUNT_ADDRESS)),
         ],
     });
     transaction.moveCall({
@@ -32,7 +32,7 @@ process.removeAllListeners("warning");
         arguments: [
             transaction.object("0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe"),
             transaction.pure.u8(0),
-            transaction.pure.address("0xd9ad801966569a212cc9e7ecbe33400307c2083ebf7e34f64c6c48fe40707c2f"),
+            transaction.pure.address(String(process.env.NAVI_ACCOUNT_ADDRESS)),
         ],
     });
     transaction.moveCall({
@@ -41,7 +41,7 @@ process.removeAllListeners("warning");
         arguments: [
             transaction.object("0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe"),
             transaction.pure.u8(10),
-            transaction.pure.address("0xd9ad801966569a212cc9e7ecbe33400307c2083ebf7e34f64c6c48fe40707c2f"),
+            transaction.pure.address(String(process.env.NAVI_ACCOUNT_ADDRESS)),
         ],
     });
     transaction.moveCall({
@@ -52,7 +52,7 @@ process.removeAllListeners("warning");
             transaction.object("0x1568865ed9a0b5ec414220e8f79b3d04c77acc82358f6e5ae4635687392ffbef"),
             transaction.object("0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe"),
             transaction.pure.u8(0),
-            transaction.pure.address("0xd9ad801966569a212cc9e7ecbe33400307c2083ebf7e34f64c6c48fe40707c2f"),
+            transaction.pure.address(String(process.env.NAVI_ACCOUNT_ADDRESS)),
         ],
     });
     transaction.moveCall({
@@ -63,7 +63,7 @@ process.removeAllListeners("warning");
             transaction.object("0x1568865ed9a0b5ec414220e8f79b3d04c77acc82358f6e5ae4635687392ffbef"),
             transaction.object("0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe"),
             transaction.pure.u8(10),
-            transaction.pure.address("0xd9ad801966569a212cc9e7ecbe33400307c2083ebf7e34f64c6c48fe40707c2f"),
+            transaction.pure.address(String(process.env.NAVI_ACCOUNT_ADDRESS)),
         ],
     });
     transaction.moveCall({
@@ -72,7 +72,7 @@ process.removeAllListeners("warning");
         arguments: [
             transaction.object("0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe"),
             transaction.pure.u8(26),
-            transaction.pure.address("0xd9ad801966569a212cc9e7ecbe33400307c2083ebf7e34f64c6c48fe40707c2f"),
+            transaction.pure.address(String(process.env.NAVI_ACCOUNT_ADDRESS)),
         ],
     });
     transaction.moveCall({
@@ -83,7 +83,7 @@ process.removeAllListeners("warning");
             transaction.object("0x1568865ed9a0b5ec414220e8f79b3d04c77acc82358f6e5ae4635687392ffbef"),
             transaction.object("0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe"),
             transaction.pure.u8(26),
-            transaction.pure.address("0xd9ad801966569a212cc9e7ecbe33400307c2083ebf7e34f64c6c48fe40707c2f"),
+            transaction.pure.address(String(process.env.NAVI_ACCOUNT_ADDRESS)),
         ],
     });
     transaction.moveCall({
@@ -93,7 +93,7 @@ process.removeAllListeners("warning");
             transaction.object(CLOCK),
             transaction.object("0x1568865ed9a0b5ec414220e8f79b3d04c77acc82358f6e5ae4635687392ffbef"),
             transaction.object("0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe"),
-            transaction.pure.address("0xd9ad801966569a212cc9e7ecbe33400307c2083ebf7e34f64c6c48fe40707c2f"),
+            transaction.pure.address(String(process.env.NAVI_ACCOUNT_ADDRESS)),
         ],
     });
     transaction.moveCall({
@@ -103,11 +103,11 @@ process.removeAllListeners("warning");
             transaction.object(CLOCK),
             transaction.object("0x1568865ed9a0b5ec414220e8f79b3d04c77acc82358f6e5ae4635687392ffbef"),
             transaction.object("0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe"),
-            transaction.pure.address("0xd9ad801966569a212cc9e7ecbe33400307c2083ebf7e34f64c6c48fe40707c2f"),
+            transaction.pure.address(String(process.env.NAVI_ACCOUNT_ADDRESS)),
         ],
     });
     let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
-    let msg = "<<NAVI XBTC BORROWING HEALTH CHECK>>\n";
+    let msg = `<<NAVI XBTC BORROWING HEALTH CHECK ${String(process.env.INDEX)}>>\n`;
     msg += "  <Health Factor>\n";
     // @ts-ignore
     msg += `  * ${BigNumber(new BcsReader(new Uint8Array(results[0].returnValues[0][0])).read256()).div(BigNumber(10).pow(27))} (${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[7].returnValues[0][0])).read256(), 9)} / ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[8].returnValues[0][0])).read256(), 9)})\n`;
