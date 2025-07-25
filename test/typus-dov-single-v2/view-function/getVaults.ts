@@ -4,7 +4,7 @@ import { getVaults, parseAssets } from "src/typus-dov-single-v2";
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
 
-    let indexes = ["125"];
+    let indexes = ["1"];
     let vaults = await getVaults(config, { indexes });
     // Object.values(vaults).forEach((vault) => {
     //     console.log(parseAssets(vault.info));
