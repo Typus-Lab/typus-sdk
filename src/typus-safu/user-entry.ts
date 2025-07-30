@@ -32,7 +32,7 @@ export function getRaiseFundTx(
         user: string;
     }
 ) {
-    let coin = splitCoins(tx, input.typeArguments[0], input.raiseCoins, input.raiseAmount);
+    let coin = splitCoins(tx, input.typeArguments[0], input.raiseCoins, input.raiseAmount, config.sponsored);
     let raiseBalance = tx.moveCall({
         target: `0x2::coin::into_balance`,
         typeArguments: [input.typeArguments[0]],
@@ -102,7 +102,7 @@ export function getReduceFundTx(
             tx.pure.u64(input.reduceFromWarmup),
             tx.pure.u64(input.reduceFromActive),
             tx.pure.u64(input.reduceFromInactive),
-            tx.object(splitCoins(tx, tokenType.MAINNET.SUI, [], input.feeAmount)),
+            tx.object(splitCoins(tx, tokenType.MAINNET.SUI, [], input.feeAmount, config.sponsored)),
             tx.object(CLOCK),
         ],
     });

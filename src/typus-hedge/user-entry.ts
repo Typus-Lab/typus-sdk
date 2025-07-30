@@ -34,8 +34,8 @@ export function raiseFund(
         raiseFromInactive: boolean;
     }
 ) {
-    let mainCoin = splitCoins(tx, input.typeArguments[0], input.raiseMainCoins, input.raiseMainAmount);
-    let hedgeCoin = splitCoins(tx, input.typeArguments[1], input.raiseHedgeCoins, input.raiseHedgeAmount);
+    let mainCoin = splitCoins(tx, input.typeArguments[0], input.raiseMainCoins, input.raiseMainAmount, config.sponsored);
+    let hedgeCoin = splitCoins(tx, input.typeArguments[1], input.raiseHedgeCoins, input.raiseHedgeAmount, config.sponsored);
     let mainBalance = tx.moveCall({
         target: `0x2::coin::into_balance`,
         typeArguments: [input.typeArguments[0]],

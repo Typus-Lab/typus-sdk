@@ -32,7 +32,7 @@ export function getRaiseFundTx(
         user: string;
     }
 ) {
-    let coin = splitCoins(tx, input.typeArguments[0], input.raiseCoins, input.raiseAmount);
+    let coin = splitCoins(tx, input.typeArguments[0], input.raiseCoins, input.raiseAmount, config.sponsored);
     let raiseBalance = tx.moveCall({
         target: `0x2::coin::into_balance`,
         typeArguments: [input.typeArguments[0]],
@@ -204,7 +204,7 @@ export function getNewBidTx(
         usingSponsoredGasCoin?: boolean;
     }
 ) {
-    let coin = splitCoins(tx, input.typeArguments[1], input.coins, input.premium_required);
+    let coin = splitCoins(tx, input.typeArguments[1], input.coins, input.premium_required, config.sponsored);
 
     let result = tx.moveCall({
         target: `${config.package.dovSingle}::tds_user_entry::public_bid`,

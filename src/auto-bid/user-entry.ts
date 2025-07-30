@@ -30,7 +30,7 @@ export function getNewStrategyTx(
         targetRounds: string[];
     }
 ) {
-    let input_coin = splitCoins(tx, input.typeArguments[1], input.coins, input.amount);
+    let input_coin = splitCoins(tx, input.typeArguments[1], input.coins, input.amount, config.sponsored);
 
     tx.moveCall({
         target: `${config.package.dovSingle}::auto_bid::new_strategy`,
@@ -148,7 +148,7 @@ export function getUpdateStrategyTx(
         targetRounds: string[];
     }
 ) {
-    let input_coin = splitCoins(tx, input.typeArguments[1], input.coins, input.amount);
+    let input_coin = splitCoins(tx, input.typeArguments[1], input.coins, input.amount, config.sponsored);
 
     tx.moveCall({
         target: `${config.package.dovSingle}::auto_bid::update_strategy`,

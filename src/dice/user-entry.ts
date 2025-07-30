@@ -32,7 +32,7 @@ export async function newGameTx(
         default:
             break;
     }
-    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount);
+    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount, config.sponsored);
     tx.moveCall({
         target: `${config.package.dice}::${input.module}::new_game`,
         typeArguments: input.typeArguments,
@@ -120,7 +120,7 @@ export async function newGamePlayGuessTx(
             break;
     }
 
-    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount);
+    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount, config.sponsored);
     tx.moveCall({
         target: `${config.package.dice}::${input.module}::new_game`,
         typeArguments: input.typeArguments,
@@ -218,7 +218,7 @@ export async function playTx(
             break;
     }
 
-    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount);
+    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount, config.sponsored);
     tx.moveCall({
         target: `${config.package.dice}::${input.module}::play`,
         typeArguments: input.typeArguments,

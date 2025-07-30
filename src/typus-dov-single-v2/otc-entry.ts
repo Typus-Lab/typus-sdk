@@ -82,7 +82,7 @@ export async function otc(
         amount: string;
     }
 ) {
-    let coin = splitCoins(tx, input.typeArguments[1], input.coins, input.amount);
+    let coin = splitCoins(tx, input.typeArguments[1], input.coins, input.amount, config.sponsored);
     let balance = tx.moveCall({
         target: `0x2::coin::into_balance`,
         typeArguments: [input.typeArguments[1]],
