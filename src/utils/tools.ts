@@ -1,7 +1,7 @@
 import { normalizeStructTag } from "@mysten/sui/utils";
 import { tokenType } from "src/constants";
 import { Transaction } from "@mysten/sui/transactions";
-import * as readline from "readline";
+// import * as readline from "readline";
 import BigNumber from "bignumber.js";
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -86,22 +86,22 @@ export function splitCoins(
 }
 
 export function promptYesNo(question: string): Promise<boolean> {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    });
-
-    return new Promise((resolve) => {
-        rl.question(`${question} [y/N] `, (answer) => {
-            const normalizedAnswer = answer.toLowerCase();
-            if (normalizedAnswer === "y" || normalizedAnswer === "yes") {
-                resolve(true);
-            } else {
-                resolve(false);
-            }
-            rl.close();
-        });
-    });
+    // const rl = readline.createInterface({
+    //     input: process.stdin,
+    //     output: process.stdout,
+    // });
+    // return new Promise((resolve) => {
+    //     rl.question(`${question} [y/N] `, (answer) => {
+    //         const normalizedAnswer = answer.toLowerCase();
+    //         if (normalizedAnswer === "y" || normalizedAnswer === "yes") {
+    //             resolve(true);
+    //         } else {
+    //             resolve(false);
+    //         }
+    //         rl.close();
+    //     });
+    // });
+    return new Promise((resolve) => resolve(true));
 }
 
 export function getNumberStringWithDecimal(input: string, decimal: number): string {
