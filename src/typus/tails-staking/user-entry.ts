@@ -1,7 +1,7 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { CLOCK } from "src/constants";
+import { CLOCK, tokenType } from "src/constants";
 import { KIOSK_TYPE, KioskClient, KioskTransaction } from "@mysten/kiosk";
-import { TypusConfig } from "src/utils";
+import { splitCoins, TypusConfig } from "src/utils";
 /**
     public fun stake_tails(
         version: &mut Version,
@@ -22,9 +22,12 @@ export function getStakeTailsTx(
         tails: string;
         fee: string;
         personalKioskPackageId: string | undefined;
+        coins: string[];
     }
 ) {
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.fee)]);
+    // let coin = splitCoins(tx, tokenType.MAINNET.SUI, input.coins, input.fee, config.sponsored);
+
+    let coin = splitCoins(tx, tokenType.MAINNET.SUI, input.coins, input.fee, config.sponsored);
 
     if (input.personalKioskPackageId) {
         let [personalKioskCap, borrow] = tx.moveCall({
@@ -144,9 +147,10 @@ export function getTransferTailsTx(
         recipient: string;
         fee: string;
         personalKioskPackageId: string | undefined;
+        coins: string[];
     }
 ) {
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.fee)]);
+    let coin = splitCoins(tx, tokenType.MAINNET.SUI, input.coins, input.fee, config.sponsored);
 
     if (input.personalKioskPackageId) {
         let [personalKioskCap, borrow] = tx.moveCall({
@@ -191,8 +195,9 @@ export function getTransferTailsTx(
 
 /**
     entry fun daily_sign_up(
-        version: &Version,
+        version: &mut Version,
         tails_staking_registry: &mut TailsStakingRegistry,
+        coin: Coin<SUI>,
         clock: &Clock,
         ctx: &TxContext,
     ) {
@@ -202,9 +207,11 @@ export function getDailySignUpTx(
     tx: Transaction,
     input: {
         fee: string;
+        coins: string[];
     }
 ) {
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.fee)]);
+    let coin = splitCoins(tx, tokenType.MAINNET.SUI, input.coins, input.fee, config.sponsored);
+
     tx.moveCall({
         target: `${config.package.typus}::tails_staking::daily_sign_up`,
         typeArguments: [],
@@ -387,9 +394,11 @@ export function getExpDownWithFeeTx(
         fee: string;
         tails: string;
         amount: string;
+        coins: string[];
     }
 ) {
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.fee)]);
+    let coin = splitCoins(tx, tokenType.MAINNET.SUI, input.coins, input.fee, config.sponsored);
+
     tx.moveCall({
         target: `${config.package.typus}::tails_staking::exp_down_with_fee`,
         typeArguments: [],
@@ -428,9 +437,11 @@ export function getExpDownWithoutStakingWithFeeTx(
         tails: string;
         amount: string;
         personalKioskPackageId: string | undefined;
+        coins: string[];
     }
 ) {
-    let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.fee)]);
+    let coin = splitCoins(tx, tokenType.MAINNET.SUI, input.coins, input.fee, config.sponsored);
+
     if (input.personalKioskPackageId) {
         let [personalKioskCap, borrow] = tx.moveCall({
             target: `${input.personalKioskPackageId}::personal_kiosk::borrow_val`,

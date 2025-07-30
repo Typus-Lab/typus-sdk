@@ -1,6 +1,6 @@
 import { SUI_TYPE_ARG } from "@mysten/sui/dist/cjs/utils";
 import { Transaction, TransactionObjectArgument } from "@mysten/sui/transactions";
-import { CLOCK } from "src/constants";
+import { CLOCK, tokenType } from "src/constants";
 import { TypusConfig, splitCoins } from "src/utils";
 
 /**
@@ -94,9 +94,10 @@ export function reduceFund(
         reduceFromInactive: boolean;
         feeAmount: string;
         user: string;
+        coins: string[];
     }
 ) {
-    let [feeCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.feeAmount)]);
+    let feeCoin = splitCoins(tx, tokenType.MAINNET.SUI, input.coins, input.feeAmount, config.sponsored);
     let feeBalance = tx.moveCall({
         target: `0x2::coin::into_balance`,
         typeArguments: [SUI_TYPE_ARG],
