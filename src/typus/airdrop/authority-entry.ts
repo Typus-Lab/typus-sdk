@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { TypusConfig } from "src/utils";
+import { splitCoins, TypusConfig } from "src/utils";
 
 /**
     public fun remove_airdrop<TOKEN>(
@@ -56,37 +56,20 @@ export async function getSetAirdropTx(
         values: string[];
     }
 ) {
-    if (
-        input.typeArguments[0] == "0x2::sui::SUI" ||
-        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-    ) {
-        let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)]);
-        tx.moveCall({
-            target: `${config.package.typus}::airdrop::set_airdrop`,
-            typeArguments: input.typeArguments,
-            arguments: [
-                tx.object(config.version.typus),
-                tx.object(config.registry.typus.airdrop),
-                tx.pure.string(input.key),
-                tx.makeMoveVec({ elements: [coin] }),
-                tx.pure.vector("address", input.users),
-                tx.pure.vector("u64", input.values),
-            ],
-        });
-    } else {
-        tx.moveCall({
-            target: `${config.package.typus}::airdrop::set_airdrop`,
-            typeArguments: input.typeArguments,
-            arguments: [
-                tx.object(config.version.typus),
-                tx.object(config.registry.typus.airdrop),
-                tx.pure.string(input.key),
-                tx.makeMoveVec({ elements: input.coins.map((id) => tx.object(id)) }),
-                tx.pure.vector("address", input.users),
-                tx.pure.vector("u64", input.values),
-            ],
-        });
-    }
+    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount);
+
+    tx.moveCall({
+        target: `${config.package.typus}::airdrop::set_airdrop`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.airdrop),
+            tx.pure.string(input.key),
+            tx.makeMoveVec({ elements: [coin] }),
+            tx.pure.vector("address", input.users),
+            tx.pure.vector("u64", input.values),
+        ],
+    });
 
     return tx;
 }

@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { TypusConfig } from "src/utils";
+import { splitCoins, TypusConfig } from "src/utils";
 
 /**
     entry fun new_vault<TOKEN>(
@@ -194,20 +194,7 @@ export function depositToDeepbookBalanceManager(
         amount: string;
     }
 ) {
-    let [coin] =
-        input.typeArguments[0] == "0x2::sui::SUI" ||
-        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-            ? tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)])
-            : (() => {
-                  let coin = input.coins.pop()!;
-                  if (input.coins.length > 0) {
-                      tx.mergeCoins(
-                          tx.object(coin),
-                          input.coins.map((coin) => tx.object(coin))
-                      );
-                  }
-                  return tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
-              })();
+    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount);
     tx.moveCall({
         target: `${config.package.launch.fundingVault}::funding_vault::deposit_to_deepbook_balance_manager`,
         typeArguments: input.typeArguments,
@@ -272,20 +259,7 @@ export function increaseFund(
         amount: string;
     }
 ) {
-    let [coin] =
-        input.typeArguments[0] == "0x2::sui::SUI" ||
-        input.typeArguments[0] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-            ? tx.splitCoins(tx.gas, [tx.pure.u64(input.amount)])
-            : (() => {
-                  let coin = input.coins.pop()!;
-                  if (input.coins.length > 0) {
-                      tx.mergeCoins(
-                          tx.object(coin),
-                          input.coins.map((coin) => tx.object(coin))
-                      );
-                  }
-                  return tx.splitCoins(tx.object(coin), [tx.pure.u64(input.amount)]);
-              })();
+    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount);
     tx.moveCall({
         target: `${config.package.launch.fundingVault}::funding_vault::increase_fund`,
         typeArguments: input.typeArguments,

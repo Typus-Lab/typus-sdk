@@ -204,57 +204,29 @@ export function getNewBidTx(
         usingSponsoredGasCoin?: boolean;
     }
 ) {
-    if (
-        !input.usingSponsoredGasCoin &&
-        (input.typeArguments[1] == "0x2::sui::SUI" ||
-            input.typeArguments[1] == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI")
-    ) {
-        let [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(input.premium_required)]);
-        let result = tx.moveCall({
-            target: `${config.package.dovSingle}::tds_user_entry::public_bid`,
-            typeArguments: input.typeArguments,
-            arguments: [
-                tx.object(config.version.typus),
-                tx.object(config.registry.typus.user),
-                tx.object(config.registry.typus.tgld),
-                tx.object(config.registry.typus.leaderboard),
-                tx.object(config.registry.dov.dovSingle),
-                tx.pure.u64(input.index),
-                tx.makeMoveVec({ elements: [coin] }),
-                tx.pure.u64(input.size),
-                tx.object(CLOCK),
-            ],
-        });
-        tx.transferObjects([tx.object(result[0])], input.user);
-        tx.moveCall({
-            target: `${config.package.framework}::utils::transfer_coins`,
-            typeArguments: [input.typeArguments[1]],
-            arguments: [tx.makeMoveVec({ elements: [tx.object(result[1])] }), tx.pure.address(input.user)],
-        });
-    } else {
-        let coin = splitCoins(tx, input.typeArguments[1], input.coins, input.premium_required);
-        let result = tx.moveCall({
-            target: `${config.package.dovSingle}::tds_user_entry::public_bid`,
-            typeArguments: input.typeArguments,
-            arguments: [
-                tx.object(config.version.typus),
-                tx.object(config.registry.typus.user),
-                tx.object(config.registry.typus.tgld),
-                tx.object(config.registry.typus.leaderboard),
-                tx.object(config.registry.dov.dovSingle),
-                tx.pure.u64(input.index),
-                tx.makeMoveVec({ elements: [coin] }),
-                tx.pure.u64(input.size),
-                tx.object(CLOCK),
-            ],
-        });
-        tx.transferObjects([tx.object(result[0])], input.user);
-        tx.moveCall({
-            target: `${config.package.framework}::utils::transfer_coins`,
-            typeArguments: [input.typeArguments[1]],
-            arguments: [tx.makeMoveVec({ elements: [tx.object(result[1])] }), tx.pure.address(input.user)],
-        });
-    }
+    let coin = splitCoins(tx, input.typeArguments[1], input.coins, input.premium_required);
+
+    let result = tx.moveCall({
+        target: `${config.package.dovSingle}::tds_user_entry::public_bid`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            tx.object(config.version.typus),
+            tx.object(config.registry.typus.user),
+            tx.object(config.registry.typus.tgld),
+            tx.object(config.registry.typus.leaderboard),
+            tx.object(config.registry.dov.dovSingle),
+            tx.pure.u64(input.index),
+            tx.makeMoveVec({ elements: [coin] }),
+            tx.pure.u64(input.size),
+            tx.object(CLOCK),
+        ],
+    });
+    tx.transferObjects([tx.object(result[0])], input.user);
+    tx.moveCall({
+        target: `${config.package.framework}::utils::transfer_coins`,
+        typeArguments: [input.typeArguments[1]],
+        arguments: [tx.makeMoveVec({ elements: [tx.object(result[1])] }), tx.pure.address(input.user)],
+    });
 
     return tx;
 }
