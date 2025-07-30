@@ -9,6 +9,7 @@ export class TypusConfig {
     version: Version;
     registry: Registry;
     object: Object;
+    sponsored: boolean = false;
 
     static parse(json): TypusConfig {
         return JSON.parse(JSON.stringify(camelcaseKeysDeep(json)));

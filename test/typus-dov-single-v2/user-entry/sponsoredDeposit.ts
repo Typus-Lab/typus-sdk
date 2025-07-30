@@ -23,10 +23,12 @@ import { getSponsoredTx } from "src/utils/sponsoredTx";
         raiseFromInactive: false,
         user: sender,
     });
+    // For normal Tx
+    // let res = await provider.signAndExecuteTransaction({ signer, transaction });
 
     // For Sponsored Tx
     let sponsoredResponse = await getSponsoredTx(provider, sender, transaction);
-    let senderSig = await Transaction.from(sponsoredResponse?.txBytes).sign({ signer });
+    let senderSig = await Transaction.from(sponsoredResponse?.txBytes).sign({ signer }); // wallet sign
     let res = await provider.executeTransactionBlock({
         transactionBlock: sponsoredResponse?.txBytes,
         signature: [senderSig?.signature, sponsoredResponse?.sponsorSig],
