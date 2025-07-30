@@ -9,15 +9,17 @@ import { getSponsoredTx } from "src/utils/sponsoredTx";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
+    config.sponsored = true; // before getRaiseFundTx
+
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let sender = signer.toSuiAddress();
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
     let transaction = getRaiseFundTx(config, new Transaction(), {
-        typeArguments: [tokenType["MAINNET"].USDC, tokenType["MAINNET"].SUI],
-        index: "76",
-        raiseCoins: (await provider.getCoins({ owner: sender, coinType: tokenType["MAINNET"].USDC })).data.map((coin) => coin.coinObjectId),
-        raiseAmount: "10000000",
+        typeArguments: [tokenType["MAINNET"].SUI, tokenType["MAINNET"].SUI],
+        index: "1",
+        raiseCoins: (await provider.getCoins({ owner: sender, coinType: tokenType["MAINNET"].SUI })).data.map((coin) => coin.coinObjectId),
+        raiseAmount: "10000000000",
         receipts: [],
         raiseFromPremium: false,
         raiseFromInactive: false,
