@@ -2,12 +2,14 @@
     "name": "@typus/typus-sdk",
     "author": "Typus",
     "description": "typus sdk",
-    "version": "1.7.13",
+    "version": "1.7.15",
+    "resolutions": {
+        "@mysten/sui": "1.30.0"
+    },
     "dependencies": {
         "@mysten/bcs": "1.6.1",
         "@mysten/kiosk": "0.12.6",
-        "@mysten/sui": "1.30.0",
-        "@pythnetwork/pyth-sui-js": "^2.1.0",
+        "@pythnetwork/pyth-sui-js": "^2.2.0",
         "@shinami/clients": "^0.9.6",
         "@typemove/sui": "^1.6.1",
         "@types/node": "^20.5.7",
