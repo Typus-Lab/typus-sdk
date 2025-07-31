@@ -2,7 +2,7 @@
     "name": "@typus/typus-sdk",
     "author": "Typus",
     "description": "typus sdk",
-    "version": "1.7.17",
+    "version": "1.7.18",
     "resolutions": {
         "@mysten/sui": "1.30.0"
     },
