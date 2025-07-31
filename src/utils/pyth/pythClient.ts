@@ -68,6 +68,9 @@ export async function updatePriceFeeds(
         suiCoin ?? tx.gas,
         feedIds.map(() => tx.pure.u64(baseUpdateFee))
     );
+    if (suiCoin) {
+        tx.moveCall({ target: `0x2::coin::destroy_zero`, arguments: [suiCoin], typeArguments: [tokenType.MAINNET.SUI] });
+    }
 
     return await pythClient.client.executePriceFeedUpdates(tx, packageId, feedIds, priceUpdatesHotPotato, coins);
 }
