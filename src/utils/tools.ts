@@ -1,7 +1,6 @@
 import { normalizeStructTag } from "@mysten/sui/utils";
 import { tokenType } from "src/constants";
 import { Transaction } from "@mysten/sui/transactions";
-// import * as readline from "readline";
 import BigNumber from "bignumber.js";
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -47,7 +46,7 @@ export const countFloating = (value: number | BigNumber) => {
     return num.split(".")[1].length;
 };
 
-export function splitCoins(
+export function splitCoin(
     tx: Transaction,
     token: string,
     coins: string[],
@@ -57,19 +56,36 @@ export function splitCoins(
     $kind: "NestedResult";
     NestedResult: [number, number];
 } {
-    let coin;
+    let [coin] = splitCoins(tx, token, coins, [amount], sponsored);
+    return coin;
+}
+
+export function splitCoins(
+    tx: Transaction,
+    token: string,
+    coins: string[],
+    amounts: string[],
+    sponsored: boolean = false
+): {
+    $kind: "NestedResult";
+    NestedResult: [number, number];
+}[] {
+    let coinArgs;
 
     if (coins.length == 0) {
         // support zero coin input for closing position
-        [coin] = tx.moveCall({
+        coinArgs = tx.moveCall({
             target: `0x2::coin::zero`,
             typeArguments: [token],
             arguments: [],
         });
     } else {
-        [coin] =
+        coinArgs =
             normalizeStructTag(token) == tokenType.MAINNET.SUI && !sponsored
-                ? tx.splitCoins(tx.gas, [tx.pure.u64(amount)])
+                ? tx.splitCoins(
+                      tx.gas,
+                      amounts.map((amount) => tx.pure.u64(amount))
+                  )
                 : (() => {
                       let coin = coins.pop()!;
                       if (coins.length > 0) {
@@ -78,30 +94,14 @@ export function splitCoins(
                               coins.map((id) => tx.object(id))
                           );
                       }
-                      return tx.splitCoins(tx.object(coin), [tx.pure.u64(amount)]);
+                      return tx.splitCoins(
+                          tx.object(coin),
+                          amounts.map((amount) => tx.pure.u64(amount))
+                      );
                   })();
     }
 
-    return coin;
-}
-
-export function promptYesNo(question: string): Promise<boolean> {
-    // const rl = readline.createInterface({
-    //     input: process.stdin,
-    //     output: process.stdout,
-    // });
-    // return new Promise((resolve) => {
-    //     rl.question(`${question} [y/N] `, (answer) => {
-    //         const normalizedAnswer = answer.toLowerCase();
-    //         if (normalizedAnswer === "y" || normalizedAnswer === "yes") {
-    //             resolve(true);
-    //         } else {
-    //             resolve(false);
-    //         }
-    //         rl.close();
-    //     });
-    // });
-    return new Promise((resolve) => resolve(true));
+    return coinArgs;
 }
 
 export function getNumberStringWithDecimal(input: string, decimal: number): string {

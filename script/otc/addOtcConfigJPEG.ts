@@ -2,9 +2,10 @@ import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
-import { getNumberStringWithDecimal, promptYesNo, sleep, TypusConfig } from "src/utils";
+import { getNumberStringWithDecimal, sleep, TypusConfig } from "src/utils";
 import { addOtcConfig, getUserOtcConfigs } from "src/typus-dov-single-v2/otc-entry";
 import { getVaults } from "src/typus-dov-single-v2";
+import { promptYesNo } from "script/utils";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);

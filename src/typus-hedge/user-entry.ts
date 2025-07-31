@@ -1,7 +1,7 @@
 import { SUI_TYPE_ARG } from "@mysten/sui/dist/cjs/utils";
 import { Transaction, TransactionObjectArgument } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
-import { TypusConfig, splitCoins } from "src/utils";
+import { TypusConfig, splitCoin } from "src/utils";
 
 /**
     public fun raise_fund<MAIN_TOKEN, HEDGE_TOKEN>(
@@ -34,8 +34,8 @@ export function raiseFund(
         raiseFromInactive: boolean;
     }
 ) {
-    let mainCoin = splitCoins(tx, input.typeArguments[0], input.raiseMainCoins, input.raiseMainAmount, config.sponsored);
-    let hedgeCoin = splitCoins(tx, input.typeArguments[1], input.raiseHedgeCoins, input.raiseHedgeAmount, config.sponsored);
+    let mainCoin = splitCoin(tx, input.typeArguments[0], input.raiseMainCoins, input.raiseMainAmount, config.sponsored);
+    let hedgeCoin = splitCoin(tx, input.typeArguments[1], input.raiseHedgeCoins, input.raiseHedgeAmount, config.sponsored);
     let mainBalance = tx.moveCall({
         target: `0x2::coin::into_balance`,
         typeArguments: [input.typeArguments[0]],

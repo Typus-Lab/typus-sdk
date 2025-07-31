@@ -1,6 +1,6 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK, tokenType } from "src/constants";
-import { TypusConfig, splitCoins } from "src/utils";
+import { TypusConfig, splitCoin } from "src/utils";
 
 /**
     public fun raise_fund<D_TOKEN>(
@@ -32,7 +32,7 @@ export function getRaiseFundTx(
         user: string;
     }
 ) {
-    let coin = splitCoins(tx, input.typeArguments[0], input.raiseCoins, input.raiseAmount, config.sponsored);
+    let coin = splitCoin(tx, input.typeArguments[0], input.raiseCoins, input.raiseAmount, config.sponsored);
     let raiseBalance = tx.moveCall({
         target: `0x2::coin::into_balance`,
         typeArguments: [input.typeArguments[0]],
@@ -102,7 +102,7 @@ export function getReduceFundTx(
             tx.pure.u64(input.reduceFromWarmup),
             tx.pure.u64(input.reduceFromActive),
             tx.pure.u64(input.reduceFromInactive),
-            tx.object(splitCoins(tx, tokenType.MAINNET.SUI, [], input.feeAmount, config.sponsored)),
+            tx.object(splitCoin(tx, tokenType.MAINNET.SUI, [], input.feeAmount, config.sponsored)),
             tx.object(CLOCK),
         ],
     });

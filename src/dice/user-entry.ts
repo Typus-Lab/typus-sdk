@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { TypusConfig, splitCoins } from "src/utils";
+import { TypusConfig, splitCoin } from "src/utils";
 
 /**
     public(friend) entry fun new_game<TOKEN>(
@@ -32,7 +32,7 @@ export async function newGameTx(
         default:
             break;
     }
-    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount, false);
+    let coin = splitCoin(tx, input.typeArguments[0], input.coins, input.amount, false);
     tx.moveCall({
         target: `${config.package.dice}::${input.module}::new_game`,
         typeArguments: input.typeArguments,
@@ -120,7 +120,7 @@ export async function newGamePlayGuessTx(
             break;
     }
 
-    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount, false);
+    let coin = splitCoin(tx, input.typeArguments[0], input.coins, input.amount, false);
     tx.moveCall({
         target: `${config.package.dice}::${input.module}::new_game`,
         typeArguments: input.typeArguments,
@@ -218,7 +218,7 @@ export async function playTx(
             break;
     }
 
-    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount, false);
+    let coin = splitCoin(tx, input.typeArguments[0], input.coins, input.amount, false);
     tx.moveCall({
         target: `${config.package.dice}::${input.module}::play`,
         typeArguments: input.typeArguments,

@@ -1,6 +1,6 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
-import { splitCoins, TypusConfig } from "src/utils";
+import { splitCoin, TypusConfig } from "src/utils";
 
 /**
     public fun raise_fund<TOKEN>(
@@ -22,7 +22,7 @@ export function raiseFund(
         amount: string;
     }
 ) {
-    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount);
+    let coin = splitCoin(tx, input.typeArguments[0], input.coins, input.amount);
     tx.moveCall({
         target: `${config.package.launch.fundingVault}::funding_vault::raise_fund`,
         typeArguments: input.typeArguments,

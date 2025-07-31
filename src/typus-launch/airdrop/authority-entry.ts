@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { TypusConfig, splitCoins } from "src/utils";
+import { TypusConfig, splitCoin } from "src/utils";
 
 /**
     entry fun set_airdrop<TOKEN>(
@@ -31,7 +31,7 @@ export async function setAirdrop(
             tx.object(config.version.launch.airdrop),
             tx.object(config.registry.launch.airdrop),
             tx.pure.string(input.key),
-            tx.object(splitCoins(tx, input.typeArguments[0], input.coins, input.amount)),
+            tx.object(splitCoin(tx, input.typeArguments[0], input.coins, input.amount)),
             tx.pure.vector("address", input.users),
             tx.pure.vector("u64", input.values),
         ],
