@@ -1,7 +1,7 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { SuiClient } from "@mysten/sui/client";
 import { CLOCK } from "src/constants";
-import { splitCoins, TypusConfig, AddressFromBytes } from "src/utils";
+import { splitCoin, TypusConfig, AddressFromBytes } from "src/utils";
 import { BcsReader } from "@mysten/bcs";
 import { SENDER } from "src/constants";
 
@@ -82,7 +82,7 @@ export async function otc(
         amount: string;
     }
 ) {
-    let coin = splitCoins(tx, input.typeArguments[1], input.coins, input.amount, config.sponsored);
+    let coin = splitCoin(tx, input.typeArguments[1], input.coins, input.amount, config.sponsored);
     let balance = tx.moveCall({
         target: `0x2::coin::into_balance`,
         typeArguments: [input.typeArguments[1]],

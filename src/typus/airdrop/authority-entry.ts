@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { splitCoins, TypusConfig } from "src/utils";
+import { splitCoin, TypusConfig } from "src/utils";
 
 /**
     public fun remove_airdrop<TOKEN>(
@@ -56,7 +56,7 @@ export async function getSetAirdropTx(
         values: string[];
     }
 ) {
-    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount);
+    let coin = splitCoin(tx, input.typeArguments[0], input.coins, input.amount);
 
     tx.moveCall({
         target: `${config.package.typus}::airdrop::set_airdrop`,

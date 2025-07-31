@@ -1,6 +1,6 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK, tokenType } from "src/constants";
-import { TypusConfig, splitCoins } from "src/utils";
+import { TypusConfig, splitCoin } from "src/utils";
 
 /**
     entry fun update_vault_config(

@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { splitCoins, TypusConfig } from "src/utils";
+import { splitCoin, TypusConfig } from "src/utils";
 
 /**
     entry fun new_vault<TOKEN>(
@@ -194,7 +194,7 @@ export function depositToDeepbookBalanceManager(
         amount: string;
     }
 ) {
-    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount);
+    let coin = splitCoin(tx, input.typeArguments[0], input.coins, input.amount);
     tx.moveCall({
         target: `${config.package.launch.fundingVault}::funding_vault::deposit_to_deepbook_balance_manager`,
         typeArguments: input.typeArguments,
@@ -259,7 +259,7 @@ export function increaseFund(
         amount: string;
     }
 ) {
-    let coin = splitCoins(tx, input.typeArguments[0], input.coins, input.amount);
+    let coin = splitCoin(tx, input.typeArguments[0], input.coins, input.amount);
     tx.moveCall({
         target: `${config.package.launch.fundingVault}::funding_vault::increase_fund`,
         typeArguments: input.typeArguments,

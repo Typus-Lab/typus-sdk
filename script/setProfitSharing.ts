@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { getLevelCounts, getSetProfitSharingTx } from "src/typus/tails-staking";
 import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
-import { TypusConfig, sleep, splitCoins } from "src/utils";
+import { TypusConfig, sleep, splitCoin } from "src/utils";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import slack from "slack";
 import { calculateLevelReward } from "src/typus-nft";
@@ -103,7 +103,7 @@ interface Material {
         (coin) => coin.coinObjectId
     );
     let tx = new Transaction();
-    let coin = splitCoins(tx, material.token, coins, material.spendingProfit.toString());
+    let coin = splitCoin(tx, material.token, coins, material.spendingProfit.toString());
     tx = getSetProfitSharingTx(config, tx, {
         typeArguments: [material.token, material.nextRoundToken],
         levelProfits: material.levelProfits.map((x) => x.toString()),

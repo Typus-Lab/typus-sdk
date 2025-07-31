@@ -1,6 +1,6 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
-import { splitCoins, TypusConfig } from "src/utils";
+import { splitCoin, TypusConfig } from "src/utils";
 
 /**
     public(friend) entry fun update_config(
@@ -120,7 +120,7 @@ export function depositCollateralNavi(
         naviIncentiveV3: string;
     }
 ) {
-    let coin = splitCoins(tx, input.typeArguments[0], input.raiseCoins, input.raiseAmount);
+    let coin = splitCoin(tx, input.typeArguments[0], input.raiseCoins, input.raiseAmount);
     tx.moveCall({
         target: `${config.package.dovSingle}::tds_authorized_entry::deposit_collateral_navi`,
         typeArguments: input.typeArguments,

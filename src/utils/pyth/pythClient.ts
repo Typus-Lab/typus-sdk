@@ -1,7 +1,7 @@
-import { SuiPriceServiceConnection, SuiPythClient } from "@pythnetwork/pyth-sui-js";
+import { HexString, SuiPriceServiceConnection, SuiPythClient } from "@pythnetwork/pyth-sui-js";
 import { pythStateId, wormholeStateId, priceIDs, priceInfoObjectIds } from "./constant";
-import { Transaction } from "@mysten/sui/transactions";
-import { oracle, TOKEN } from "src/constants";
+import { Argument, Transaction } from "@mysten/sui/transactions";
+import { oracle, TOKEN, tokenType } from "src/constants";
 import { ObjectId } from "@pythnetwork/pyth-sui-js/lib/client";
 
 export declare class PythClient {
@@ -23,14 +23,13 @@ export function createPythClient(provider: any, network: "MAINNET" | "TESTNET"):
 /**
  * @returns priceInfoObjectIds
  */
-export async function updatePyth(pythClient: PythClient, tx: Transaction, tokens: TOKEN[]): Promise<ObjectId[]> {
+export async function updatePyth(pythClient: PythClient, tx: Transaction, tokens: TOKEN[], suiCoin?: Argument): Promise<ObjectId[]> {
     let _priceIDs = tokens.map((token) => priceIDs[pythClient.network][token]!);
     // console.log(_priceIDs);
 
     let priceFeedUpdateData = await pythClient.connection.getPriceFeedsUpdateData(_priceIDs);
 
-    // @ts-ignore
-    let priceInfoObjectIds = await pythClient.client.updatePriceFeeds(tx, priceFeedUpdateData, _priceIDs);
+    let priceInfoObjectIds = await updatePriceFeeds(pythClient, tx, priceFeedUpdateData, _priceIDs, suiCoin);
 
     return priceInfoObjectIds;
 }
@@ -46,4 +45,29 @@ export function updateOracleWithPythUsd(pythClient: PythClient, tx: Transaction,
             tx.object("0x6"),
         ],
     });
+}
+
+/**
+ * Adds the necessary commands for updating the pyth price feeds to the transaction block.
+ * @param tx transaction block to add commands to
+ * @param updates array of price feed updates received from the price service
+ * @param feedIds array of feed ids to update (in hex format)
+ */
+export async function updatePriceFeeds(
+    pythClient: PythClient,
+    tx: Transaction,
+    updates: Buffer[],
+    feedIds: HexString[],
+    suiCoin?: Argument
+): Promise<ObjectId[]> {
+    const packageId = await pythClient.client.getPythPackageId();
+    const priceUpdatesHotPotato = await pythClient.client.verifyVaasAndGetHotPotato(tx, updates, packageId);
+
+    const baseUpdateFee = await pythClient.client.getBaseUpdateFee();
+    const coins = tx.splitCoins(
+        suiCoin ?? tx.gas,
+        feedIds.map(() => tx.pure.u64(baseUpdateFee))
+    );
+
+    return await pythClient.client.executePriceFeedUpdates(tx, packageId, feedIds, priceUpdatesHotPotato, coins);
 }
