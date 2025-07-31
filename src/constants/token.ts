@@ -506,7 +506,7 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         MBLUB: "0x826253a1dde9907e28f465df8b2a19ba5994b4b069abad98658532785940338a",
         TYPUS: "0x73bb8651018bced7e737557fc9e4a7cf02ae28345b645566d0fd4df2da183048",
         NS: "0x4481ebc6a26ac72abb9ecbedba60fcba87440f1306c125c1bdf61d1248af4482",
-        JPY: "0xe4d5eaa453ffc3ee3a76b885b7a7d97756df5d4624d7d467c5d6da51f286f82b",
+        JPY: "0x58033b4a91375217a14db8efebad37000057f343e3b93be4efb028d4081d6824",
         XAU: "0x172101af6fbaab02b2663ed7c502152431fed5d76ac865ac3ccad134c92d91db",
         TBTC: "0x383cb3519e51c62d84ec54e2fca3438c43a83967738b364c20f0f2a662a668d5",
     },
