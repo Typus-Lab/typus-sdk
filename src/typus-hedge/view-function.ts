@@ -136,68 +136,55 @@ export async function getVaultData(
     return result;
 }
 
-// export interface Share {
-//     user: string;
-//     share: ShareSupply;
-//     u64Padding: string[];
-//     bcsPadding: string[];
-// }
-// export async function getShareData(
-//     config: TypusConfig,
-//     input: {
-//         user: string;
-//         indexes: string[];
-//     }
-// ): Promise<{ [key: string]: Share[] }> {
-//     let provider = new SuiClient({ url: config.rpcEndpoint });
-//     let transaction = new Transaction();
-//     transaction.moveCall({
-//         target: `${config.package.safu}::view_function::get_share_data_bcs`,
-//         typeArguments: [],
-//         arguments: [
-//             transaction.object(config.registry.safu.safu),
-//             transaction.pure.address(input.user),
-//             transaction.pure.vector("u64", input.indexes),
-//         ],
-//     });
-//     let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
-//     // console.log(JSON.stringify(results));
-//     // @ts-ignore
-//     let bytes = results[results.length - 1].returnValues[0][0];
-//     // console.log(JSON.stringify(bytes));
-//     let reader = new BcsReader(new Uint8Array(bytes));
-//     let result: {
-//         [key: string]: Share[];
-//     } = {};
-//     reader.readVec((reader, i) => {
-//         reader.read8();
-//         let share = reader.readVec((reader) => {
-//             let user = AddressFromBytes(reader.readBytes(32));
-//             let shareSupplyArray = reader.readVec((reader) => {
-//                 return reader.read64();
-//             });
-//             let shareSupply = {
-//                 active_share: shareSupplyArray[0],
-//                 deactivating_share: shareSupplyArray[1],
-//                 inactive_share: shareSupplyArray[2],
-//                 warmup_share: shareSupplyArray[3],
-//                 snapshot_share: shareSupplyArray[4],
-//                 reward_share: shareSupplyArray.slice(5),
-//             };
-//             return {
-//                 user,
-//                 share: shareSupply,
-//                 u64Padding: reader.readVec((reader) => {
-//                     return reader.read64();
-//                 }),
-//                 bcsPadding: reader.readVec((reader) => {
-//                     return reader.read8();
-//                 }),
-//             };
-//         });
-//         let index = input.indexes.pop()!;
-//         result[index] = share;
-//     });
+export interface Share {
+    index: string;
+    mainTokenShare: string[];
+    hedgeTokenShare: string[];
+    rewardTokenShare: string[];
+}
+export async function getShareData(
+    config: TypusConfig,
+    input: {
+        user: string;
+        indexes: string[];
+    }
+): Promise<{ [key: string]: Share }> {
+    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let transaction = new Transaction();
+    transaction.moveCall({
+        target: `${config.package.hedge.hedge}::view_function::get_user_share_data_bcs`,
+        typeArguments: [],
+        arguments: [
+            transaction.object(config.registry.hedge),
+            transaction.pure.address(input.user),
+            transaction.pure.vector("u64", input.indexes),
+        ],
+    });
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
+    // console.log(JSON.stringify(results));
+    // @ts-ignore
+    let bytes = results[results.length - 1].returnValues[0][0];
+    // console.log(JSON.stringify(bytes));
+    let reader = new BcsReader(new Uint8Array(bytes));
+    let result: {
+        [key: string]: Share;
+    } = {};
+    reader.readVec((reader) => {
+        reader.readULEB();
+        let index = reader.read64();
+        result[index] = {
+            index,
+            mainTokenShare: reader.readVec((reader) => {
+                return reader.read64();
+            }),
+            hedgeTokenShare: reader.readVec((reader) => {
+                return reader.read64();
+            }),
+            rewardTokenShare: reader.readVec((reader) => {
+                return reader.read64();
+            }),
+        } as Share;
+    });
 
-//     return result;
-// }
+    return result;
+}
