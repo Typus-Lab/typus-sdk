@@ -131,7 +131,9 @@ export interface Registry {
         improvementProposal: string;
         veTypus: string;
     };
-    hedge: string;
+    hedge: {
+        hedge: string;
+    };
 }
 export interface Object {
     nftTransferPolicy: string;
