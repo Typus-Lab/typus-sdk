@@ -153,6 +153,7 @@ const pythId = {
     "4279e31cc369bbcc2faf022b382b080e32a8e689ff20fbc530d2a603eb6cd98b": "HYPE",
     ec5d399846a9209f3fe5881d70aae9268c94339ff9817e8d18ff19fa05eea1c8: "XRP",
     e67d98cc1fbd94f569d5ba6c3c3c759eb3ffc5d2b28e64538a53ae13efad8fd1: "HAEDAL",
+    ef2c98c804ba503c6a707e38be4dfbb16683775f195b091252bf24693042fd52: "USDJPY",
 };
 
 // getPythLatestPrice();
