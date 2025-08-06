@@ -24,7 +24,7 @@ export interface KeyedBigVector {
     id: string;
     keyType: string;
     valueType: string;
-    sliceIdx: string;
+    sliceIdx: number;
     sliceSize: number;
     length: string;
 }
@@ -40,7 +40,7 @@ export async function getVaultData(
     transaction.moveCall({
         target: `${config.package.hedge.hedge}::view_function::get_vault_data_bcs`,
         typeArguments: [],
-        arguments: [transaction.object(config.registry.hedge), transaction.pure.vector("u64", input.indexes)],
+        arguments: [transaction.object(config.registry.hedge.hedge), transaction.pure.vector("u64", input.indexes)],
     });
     let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
     // console.log(JSON.stringify(results));
@@ -65,13 +65,13 @@ export async function getVaultData(
         });
         let config = new Map<string, string>();
         reader.readVec((reader) => {
-            config.set(String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))), reader.read64());
+            config = config.set(String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))), reader.read64());
         });
         let mainTokenShare = {
             id: AddressFromBytes(reader.readBytes(32)),
             keyType: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
             valueType: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
-            sliceIdx: reader.read64(), // slice_idx
+            sliceIdx: reader.read16(), // slice_idx
             sliceSize: reader.read32(), // slice_size
             length: reader.read64(), // length
         };
@@ -82,7 +82,7 @@ export async function getVaultData(
             id: AddressFromBytes(reader.readBytes(32)),
             keyType: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
             valueType: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
-            sliceIdx: reader.read64(), // slice_idx
+            sliceIdx: reader.read16(), // slice_idx
             sliceSize: reader.read32(), // slice_size
             length: reader.read64(), // length
         };
@@ -93,7 +93,7 @@ export async function getVaultData(
             id: AddressFromBytes(reader.readBytes(32)),
             keyType: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
             valueType: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
-            sliceIdx: reader.read64(), // slice_idx
+            sliceIdx: reader.read16(), // slice_idx
             sliceSize: reader.read32(), // slice_size
             length: reader.read64(), // length
         };
@@ -113,7 +113,7 @@ export async function getVaultData(
                 })
             );
         });
-        result[info["index"]] = [
+        result[info.get("index")!] = [
             {
                 id,
                 mainToken,
@@ -129,7 +129,7 @@ export async function getVaultData(
                 rewardTokenShareSupply,
                 u64Padding,
                 bcsPadding,
-            },
+            } as Vault,
         ];
     });
 
@@ -155,12 +155,12 @@ export async function getShareData(
         target: `${config.package.hedge.hedge}::view_function::get_user_share_data_bcs`,
         typeArguments: [],
         arguments: [
-            transaction.object(config.registry.hedge),
-            transaction.pure.address(input.user),
+            transaction.object(config.version.typus),
+            transaction.object(config.registry.hedge.hedge),
             transaction.pure.vector("u64", input.indexes),
         ],
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
+    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: input.user })).results;
     // console.log(JSON.stringify(results));
     // @ts-ignore
     let bytes = results[results.length - 1].returnValues[0][0];
