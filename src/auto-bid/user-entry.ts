@@ -1,4 +1,4 @@
-import { Transaction } from "@mysten/sui/transactions";
+import { Argument, Transaction } from "@mysten/sui/transactions";
 import { splitCoin, TypusConfig } from "src/utils";
 
 /**
@@ -168,4 +168,38 @@ export function getUpdateStrategyTx(
     });
 
     return tx;
+}
+
+/**
+public fun withdraw_bid_receipt(
+        registry: &mut Registry,
+        strategy_pool: &mut StrategyPoolV2,
+        vault_index: u64,
+        signal_index: u64,
+        strategy_index: u64,
+        ctx: &mut TxContext
+): TypusBidReceipt {
+*/
+export function getWithdrawBidReceiptTx(
+    config: TypusConfig,
+    tx: Transaction,
+    input: {
+        vaultIndex: string;
+        signalIndex: string;
+        strategyIndex: string;
+        user: string;
+    }
+): Argument {
+    let receipt = tx.moveCall({
+        target: `${config.package.dovSingle}::auto_bid::withdraw_bid_receipt`,
+        typeArguments: [],
+        arguments: [
+            tx.object(config.registry.dov.dovSingle),
+            tx.object(config.registry.dov.autoBid),
+            tx.pure.u64(input.vaultIndex),
+            tx.pure.u64(input.signalIndex),
+            tx.pure.u64(input.strategyIndex),
+        ],
+    });
+    return receipt;
 }
