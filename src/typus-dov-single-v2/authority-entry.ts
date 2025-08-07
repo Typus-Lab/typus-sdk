@@ -197,3 +197,66 @@ export function withdrawCollateralNavi(
         ],
     });
 }
+
+/**
+    public entry fun borrow_navi<TOKEN>(
+        registry: &mut Registry,
+        index: u64,
+        deposit_index: u64,
+        oracle_config: &mut OracleConfig,
+        price_oracle: &mut PriceOracle,
+        supra_oracle_holder: &SupraOracle::SupraSValueFeed::OracleHolder,
+        pyth_price_info: &pyth::price_info::PriceInfoObject,
+        feed_address: address,
+        storage: &mut lending_core::storage::Storage,
+        pool: &mut lending_core::pool::Pool<TOKEN>,
+        asset: u8,
+        incentive_v2: &mut lending_core::incentive_v2::Incentive,
+        incentive_v3: &mut lending_core::incentive_v3::Incentive,
+        amount: u64,
+        clock: &Clock,
+        ctx: &mut TxContext,
+    ) {
+ */
+export function borrowNavi(
+    config: TypusConfig,
+    tx: Transaction,
+    input: {
+        typeArguments: string[];
+        index: string;
+        deposit_index: string;
+        naviOracleConfig: string;
+        naviPriceOracle: string;
+        naviSupraOracleHolder: string;
+        naviPythPriceInfo: string;
+        naviFeedAddress: string;
+        naviStorage: string;
+        naviPool: string;
+        naviAsset: number;
+        naviIncentiveV2: string;
+        naviIncentiveV3: string;
+        amount: string;
+    }
+) {
+    tx.moveCall({
+        target: `${config.package.dovSingle}::tds_authorized_entry::borrow_navi`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            tx.object(config.registry.dov.dovSingle),
+            tx.pure.u64(input.index),
+            tx.pure.u64(input.deposit_index),
+            tx.object(input.naviOracleConfig),
+            tx.object(input.naviPriceOracle),
+            tx.object(input.naviSupraOracleHolder),
+            tx.object(input.naviPythPriceInfo),
+            tx.pure.address(input.naviFeedAddress),
+            tx.object(input.naviStorage),
+            tx.object(input.naviPool),
+            tx.pure.u8(input.naviAsset),
+            tx.object(input.naviIncentiveV2),
+            tx.object(input.naviIncentiveV3),
+            tx.pure.u64(input.amount),
+            tx.object(CLOCK),
+        ],
+    });
+}
