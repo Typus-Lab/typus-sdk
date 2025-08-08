@@ -124,6 +124,7 @@ export function typeArgToAsset(typeArg: string): TOKEN {
 
         // sbETH
         case "0xd0e89b2af5e4910726fbcd8b8dd37bb79b29e5f83f7491bca830e94f7f226d29::eth::ETH":
+        case "0xc9587969592e1a1ba605d2327194824d041823558916e854086717d5ae2ad0d8::eth::ETH":
             return "sbETH";
         // sbUSDT
         case "0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT":
@@ -355,7 +356,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         HIPPO: "",
         MLIQ: "",
         AUSD: "0x087653e9ffcc8ffe85e0e20523388aa27af2a5997ae64224444f0d98a2ba8279::ausd::AUSD",
-        sbETH: "",
+        sbETH: "0xc9587969592e1a1ba605d2327194824d041823558916e854086717d5ae2ad0d8::eth::ETH",
         sbUSDT: "",
         VSUI: "",
         HASUI: "",
@@ -487,6 +488,7 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         HYPE: "0x991a931286c0f46b0900da66cb60e59c57ace5103e60826ee31d568b141a8f9f",
         XRP: "0xe81d3787435ac4e0108b98ed2a95f62d6e854c0a1821614a68d77f47bbdbec81",
         xBTC: "0x6e7ca39c4ad0a1ad83937e98b220824566d858814aa8fd01294400b45c2bbc21",
+        sbETH: "0xc2100d191647b6b22a04a6b45d1d0381320f8eb5816ef067a69b7bc3954bf7cb",
     },
     TESTNET: {
         SUI: "0x9083c9ce1a1eef569bb1a8b31dfa5e0fce2e05887e68ba79ca6ae522acd041f3",
@@ -509,6 +511,7 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         JPY: "0x58033b4a91375217a14db8efebad37000057f343e3b93be4efb028d4081d6824",
         XAU: "0x172101af6fbaab02b2663ed7c502152431fed5d76ac865ac3ccad134c92d91db",
         TBTC: "0x383cb3519e51c62d84ec54e2fca3438c43a83967738b364c20f0f2a662a668d5",
+        sbETH: "0xdf6785f0fc35af5621c5a4d6e5056298fe34c3147dca871d8bb0fee6d1d8a536",
     },
 };
 
