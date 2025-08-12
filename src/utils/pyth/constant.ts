@@ -111,6 +111,7 @@ export const priceInfoObjectIds: { MAINNET: { [key in TOKEN]?: string }; TESTNET
         HYPE: "0x1c047be615eaa5a87afa0e111b20a512dd6c0f4a1f0f691693cf852c1768f35d",
         XRP: "0x93bfda25cb6b1653a9c769e8216014bd2c06997f3edb479566761fbf2abf6ac2",
         xBTC: "0xa4b9db1866ee6e2a156e8c36fc66be0f68f232388ebb578c949c2c6beb50128b",
+        JPY: "0xde0e6088e7292f50738ecbdebd4502415d4f8de4cfe001918e29b3f4faf15baa"
     },
     TESTNET: {
         SUI: "0x1ebb295c789cc42b3b2a1606482cd1c7124076a0f5676718501fda8c7fd075a0",
