@@ -483,7 +483,7 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         wAPT: "0x25f9ffcc52776d5f8656bbdb4a3339a411c1550f288560ab0b101170f23b8245",
         HAEDAL: "0x5dde9f285c75132a91b54ea7e93f5ddd61cdb38ca8e6191263028561a9956f94",
         XAU: "0x511c861bcc9fb41e96091e9aefe07ff0ac55369b5838fd7f793569581b3b2f33",
-        JPY: "0x8cf8e48c6434d33ff28b8f15ca4e728821705db71087567fbedf4e4585f326b9",
+        JPY: "0x1f2d3395bf4b5369c09930ccda203ad7956718713b528c9d56c16e36a8a25fbb",
         DOGE: "0x5eada11b8ecec767d8acb32608798b0c3951af93b13e84ef9d167f6a95e42a8a",
         HYPE: "0x991a931286c0f46b0900da66cb60e59c57ace5103e60826ee31d568b141a8f9f",
         XRP: "0xe81d3787435ac4e0108b98ed2a95f62d6e854c0a1821614a68d77f47bbdbec81",
@@ -542,5 +542,6 @@ export const tokenRegistry: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [
         MBLUB: "0x7c36d8c1b2b569676d9a3f4c73487ec49b483111cc0abf4b0d5654e026ac3d3a",
         xBTC: "0x0701eee55ccf6ec7706e5a9b1c99c0733b49c3958f8f5a3503aea2e192706493",
         TBTC: "0x94c1289dc6b129db6d5efc0ec49bde0e574e6ec34788b2f0fc8948ce5ed7d28a",
+        sbETH: "0x7327804456a3ec923ebf4b5bf7095c8217b725918287f504dc087c1ab907c10d",
     },
 };
