@@ -5,7 +5,7 @@ import { TypusConfig } from "src/utils";
     let config = await TypusConfig.default("TESTNET", null);
 
     let vaults = await getVaultData(config, {
-        indexes: [...Array(1).keys()].map((n) => {
+        indexes: [...Array(2).keys()].map((n) => {
             return n.toString();
         }),
     });

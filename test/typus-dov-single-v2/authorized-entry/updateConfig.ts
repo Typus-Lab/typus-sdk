@@ -10,7 +10,7 @@ import { TypusConfig } from "src/utils";
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
 
-    let transaction = await getUpdateConfigTx(config, new Transaction(), [{ index: "107", input: { recoupDelayTsMs: "1800000" } }]);
+    let transaction = await getUpdateConfigTx(config, new Transaction(), [{ index: "125", input: { incentiveFeeBp: "0" } }]);
     let res = await provider.signAndExecuteTransaction({ signer, transaction });
     console.log(res);
 })();

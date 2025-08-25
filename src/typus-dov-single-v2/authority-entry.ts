@@ -54,6 +54,7 @@ export async function getUpdateConfigTx(
             leverage?: string;
             riskLevel?: string;
             depositIncentiveBpDivisorDecimal?: string;
+            incentiveFeeBp?: string;
         };
     }[]
 ) {
@@ -84,6 +85,7 @@ export async function getUpdateConfigTx(
                 tx.pure.option("u64", request.input.leverage),
                 tx.pure.option("u64", request.input.riskLevel),
                 tx.pure.option("u64", request.input.depositIncentiveBpDivisorDecimal),
+                tx.pure.option("u64", request.input.incentiveFeeBp),
             ],
         });
     });
