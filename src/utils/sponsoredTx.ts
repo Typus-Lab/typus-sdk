@@ -24,9 +24,10 @@ export async function getSponsoredTx(provider: SuiClient, sender: string, tx: Tr
     let sponsoredResponse = await response.json();
     // console.log(sponsoredResponse);
 
-    if (sponsoredResponse.data) {
-        console.error("getSponsoredTx error: ", sponsoredResponse.data.details);
+    if (!sponsoredResponse.txBytes) {
+        console.error("getSponsoredTx error: ", sponsoredResponse);
     }
+
     return sponsoredResponse as sponsoredResponse;
 
     // let sponsoredResponse = await gasStationClient.sponsorTransaction(
