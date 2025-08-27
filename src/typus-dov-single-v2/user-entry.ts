@@ -1,7 +1,8 @@
-import { bcs } from "@mysten/sui/bcs";
 import { Transaction, TransactionObjectArgument } from "@mysten/sui/transactions";
 import { CLOCK } from "src/constants";
 import { TypusConfig, splitCoin } from "src/utils";
+import * as CryptoJS from "crypto-js";
+import NodeRSA from "node-rsa";
 
 /**
     public fun public_raise_fund<D_TOKEN, B_TOKEN>(
@@ -477,5 +478,41 @@ export function getCompoundWithRedeemTx(
         reduceFromInactive: false,
         reduceFromIncentive: true,
         user: input.user,
+    });
+}
+
+/**
+    entry fun first_price_sealed_bid<D_TOKEN, B_TOKEN>(
+        registry: &mut Registry,
+        index: u64,
+        string: String,
+        clock: &Clock,
+        ctx: &mut TxContext,
+    )
+ */
+export function getFirstPriceSealedBidTx(
+    config: TypusConfig,
+    tx: Transaction,
+    input: {
+        typeArguments: string[];
+        index: string;
+        size: string;
+        price: string;
+        publicKey: string;
+        userPassword: string;
+    }
+) {
+    let data = input.size + "," + input.price;
+    let aesEncryptedData = CryptoJS.AES.encrypt(data, input.userPassword).toString();
+    let rsaEncryptedData = new NodeRSA(input.publicKey).encrypt(data, "base64");
+    tx.moveCall({
+        target: `${config.package.dovSingle}::tds_user_entry::first_price_sealed_bid`,
+        typeArguments: input.typeArguments,
+        arguments: [
+            tx.object(config.registry.dov.dovSingle),
+            tx.pure.u64(input.index),
+            tx.pure.string(aesEncryptedData + "," + rsaEncryptedData),
+            tx.object(CLOCK),
+        ],
     });
 }

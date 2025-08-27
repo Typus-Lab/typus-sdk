@@ -13,15 +13,19 @@
         "@types/node": "^20.5.7",
         "bignumber.js": "^9.1.2",
         "camelcase-keys-deep": "^0.1.0",
+        "crypto-js": "^4.2.0",
         "dotenv": "^16.4.7",
         "lodash": "^4.17.21",
-        "moment": "^2.30.1"
+        "moment": "^2.30.1",
+        "node-rsa": "^1.1.1"
     },
     "devDependencies": {
         "@types/bs58": "^4.0.1",
         "@types/camelcase-keys-deep": "^0.1.2",
+        "@types/crypto-js": "^4.2.2",
         "@types/expect": "^24.3.0",
         "@types/mocha": "^10.0.1",
+        "@types/node-rsa": "^1.1.4",
         "@types/rx": "^4.1.2",
         "prettier": "^3.0.0",
         "slack": "^11.0.2",
