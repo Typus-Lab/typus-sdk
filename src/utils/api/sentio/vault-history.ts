@@ -149,25 +149,22 @@ export async function getFilledSummary(startTimestamp?: number): Promise<VaultHi
                             Delivery.timestamp as timestamp,
                             Delivery.index as Index,
                             Delivery.round as Round,
-                            NewAuction.start_ts_ms as ActivationDate,
                             Delivery.max_size as MaxSize,
                             (safu_otc_aggregated.delivery_size + Delivery.delivery_size) as TotalSell,
                             CASE WHEN MaxSize != 0 THEN TotalSell / MaxSize ELSE 0 END AS Filled
                             FROM Delivery
                             JOIN Activate ON Delivery.index = Activate.index AND Delivery.round = Activate.round
-                            JOIN NewAuction ON Delivery.index = NewAuction.index AND Delivery.round = NewAuction.round
                             LEFT JOIN safu_otc_aggregated ON Delivery.index = safu_otc_aggregated.index AND Delivery.round = safu_otc_aggregated.round
-                            ${timeFilter}
-                        ORDER BY ActivationDate DESC
                     )
                     SELECT
                         vault_history.Index AS Index,
                         AVG(vault_history.Filled) AS AverageFilled -- Average Filled Rate
                     FROM vault_history
+                    ${timeFilter}
                     GROUP BY Index
                     ORDER BY Index DESC
             `,
-            size: 1000,
+            size: 100,
         },
     };
 
@@ -336,5 +333,5 @@ interface VaultHistory {
 // let quarterly_timestamp = Math.round(new Date().setMonth(new Date().getMonth() - 3) / 1000);
 // console.log(quarterly_timestamp);
 // getVaultHistorySummary();
-// getFilledSummary(quarterly_timestamp);
+// getFilledSummary(quarterly_timestamp).then((x) => console.log(x));
 // getVaultHistory(["78", "79"], 2);
