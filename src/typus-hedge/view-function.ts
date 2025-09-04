@@ -10,10 +10,8 @@ export interface Vault {
     rewardTokens: string[];
     info: Map<string, string>;
     config: Map<string, string>;
-    mainTokenShare: KeyedBigVector;
-    mainTokenShareSupply: string[];
-    hedgeTokenShare: KeyedBigVector;
-    hedgeTokenShareSupply: string[];
+    userShare: KeyedBigVector;
+    userShareSupply: string[];
     rewardTokenShare: KeyedBigVector;
     rewardTokenShareSupply: string[];
     u64Padding: Map<string, string>;
@@ -67,7 +65,7 @@ export async function getVaultData(
         reader.readVec((reader) => {
             config = config.set(String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))), reader.read64());
         });
-        let mainTokenShare = {
+        let userShare = {
             id: AddressFromBytes(reader.readBytes(32)),
             keyType: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
             valueType: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
@@ -75,18 +73,7 @@ export async function getVaultData(
             sliceSize: reader.read32(), // slice_size
             length: reader.read64(), // length
         };
-        let mainTokenShareSupply = reader.readVec((reader) => {
-            return reader.read64();
-        });
-        let hedgeTokenShare = {
-            id: AddressFromBytes(reader.readBytes(32)),
-            keyType: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
-            valueType: String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB()))),
-            sliceIdx: reader.read16(), // slice_idx
-            sliceSize: reader.read32(), // slice_size
-            length: reader.read64(), // length
-        };
-        let hedgeTokenShareSupply = reader.readVec((reader) => {
+        let userShareSupply = reader.readVec((reader) => {
             return reader.read64();
         });
         let rewardTokenShare = {
@@ -121,10 +108,8 @@ export async function getVaultData(
                 rewardTokens,
                 info,
                 config,
-                mainTokenShare,
-                mainTokenShareSupply,
-                hedgeTokenShare,
-                hedgeTokenShareSupply,
+                userShare,
+                userShareSupply,
                 rewardTokenShare,
                 rewardTokenShareSupply,
                 u64Padding,
@@ -138,8 +123,7 @@ export async function getVaultData(
 
 export interface Share {
     index: string;
-    mainTokenShare: string[];
-    hedgeTokenShare: string[];
+    userShare: string[];
     rewardTokenShare: string[];
 }
 export async function getShareData(
@@ -174,10 +158,7 @@ export async function getShareData(
         let index = reader.read64();
         result[index] = {
             index,
-            mainTokenShare: reader.readVec((reader) => {
-                return reader.read64();
-            }),
-            hedgeTokenShare: reader.readVec((reader) => {
+            userShare: reader.readVec((reader) => {
                 return reader.read64();
             }),
             rewardTokenShare: reader.readVec((reader) => {
