@@ -10,10 +10,12 @@ import { TypusConfig, splitCoin } from "src/utils";
         version: &Version,
         registry: &mut Registry,
         index: u64,
-        raise_main_balance: Balance<MAIN_TOKEN>,
-        raise_hedge_balance: Balance<HEDGE_TOKEN>,
-        raise_from_deactivating: u64,
-        raise_from_inactive: u64,
+        raise_main_token_balance: Balance<MAIN_TOKEN>,
+        raise_hedge_token_balance: Balance<HEDGE_TOKEN>,
+        raise_main_token_from_deactivating: u64,
+        raise_hedge_token_from_deactivating: u64,
+        raise_main_token_from_inactive: u64,
+        raise_hedge_token_from_inactive: u64,
         clock: &Clock,
         ctx: &mut TxContext,
     ) {
@@ -28,8 +30,10 @@ export function raiseFund(
         raiseMainAmount: string;
         raiseHedgeCoins: string[];
         raiseHedgeAmount: string;
-        raiseFromDeactivating: string;
-        raiseFromInactive: string;
+        raiseMainFromDeactivating: string;
+        raiseHedgeFromDeactivating: string;
+        raiseMainFromInactive: string;
+        raiseHedgeFromInactive: string;
     }
 ) {
     let mainCoin = splitCoin(tx, input.typeArguments[0], input.raiseMainCoins, input.raiseMainAmount, config.sponsored);
@@ -56,8 +60,10 @@ export function raiseFund(
             tx.pure.u64(input.index),
             tx.object(mainBalance),
             tx.object(hedgeBalance),
-            tx.pure.u64(input.raiseFromDeactivating),
-            tx.pure.u64(input.raiseFromInactive),
+            tx.pure.u64(input.raiseMainFromDeactivating),
+            tx.pure.u64(input.raiseHedgeFromDeactivating),
+            tx.pure.u64(input.raiseMainFromInactive),
+            tx.pure.u64(input.raiseHedgeFromInactive),
             tx.object(CLOCK),
         ],
     });
@@ -65,14 +71,16 @@ export function raiseFund(
 
 /**
     public fun reduce_fund<MAIN_TOKEN, HEDGE_TOKEN>(
-        typus_version: &TypusVersion,
+        typus_version: &mut TypusVersion,
         typus_leaderboard_registry: &mut TypusLeaderboardRegistry,
         typus_user_registry: &mut TypusUserRegistry,
         version: &mut Version,
         registry: &mut Registry,
         index: u64,
-        reduce_from_warmup: u64,
-        reduce_from_active: u64,
+        reduce_main_token_from_warmup: u64,
+        reduce_hedge_token_from_warmup: u64,
+        reduce_main_token_from_active: u64,
+        reduce_hedge_token_from_active: u64,
         reduce_from_inactive: bool,
         fee: Balance<SUI>,
         clock: &Clock,
@@ -85,8 +93,10 @@ export function reduceFund(
     input: {
         typeArguments: string[];
         index: string;
-        reduceFromWarmup: string;
-        reduceFromActive: string;
+        reduceMainFromWarmup: string;
+        reduceHedgeFromWarmup: string;
+        reduceMainFromActive: string;
+        reduceHedgeFromActive: string;
         reduceFromInactive: boolean;
         feeAmount: string;
         user: string;
@@ -108,8 +118,10 @@ export function reduceFund(
             tx.object(config.version.hedge.hedge),
             tx.object(config.registry.hedge.hedge),
             tx.pure.u64(input.index),
-            tx.pure.u64(input.reduceFromWarmup),
-            tx.pure.u64(input.reduceFromActive),
+            tx.pure.u64(input.reduceMainFromWarmup),
+            tx.pure.u64(input.reduceHedgeFromWarmup),
+            tx.pure.u64(input.reduceMainFromActive),
+            tx.pure.u64(input.reduceHedgeFromActive),
             tx.pure.bool(input.reduceFromInactive),
             tx.object(feeBalance),
             tx.object(CLOCK),
