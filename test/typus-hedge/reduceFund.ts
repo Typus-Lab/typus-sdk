@@ -20,9 +20,11 @@ import { tokenType } from "src/constants";
     let transaction = new Transaction();
     reduceFund(config, transaction, {
         typeArguments: [mainToken, hedgeToken],
-        index: "0",
-        reduceFromWarmup: "10000",
-        reduceFromActive: "0",
+        index: "2",
+        reduceMainFromWarmup: "50000",
+        reduceHedgeFromWarmup: "600",
+        reduceMainFromActive: "0",
+        reduceHedgeFromActive: "0",
         reduceFromInactive: false,
         feeAmount: "0",
         user,

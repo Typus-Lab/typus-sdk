@@ -26,13 +26,15 @@ import { tokenType } from "src/constants";
     let transaction = new Transaction();
     raiseFund(config, transaction, {
         typeArguments: [mainToken, hedgeToken],
-        index: "0",
+        index: "2",
         raiseMainCoins: coins,
-        raiseMainAmount: "10000",
+        raiseMainAmount: "100000",
         raiseHedgeCoins: coins,
         raiseHedgeAmount: "1000",
-        raiseFromDeactivating: "0",
-        raiseFromInactive: "0",
+        raiseMainFromDeactivating: "0",
+        raiseHedgeFromDeactivating: "0",
+        raiseMainFromInactive: "0",
+        raiseHedgeFromInactive: "0",
     });
     // transaction.setGasBudget(10000000000);
     let res = await provider.signAndExecuteTransaction({ signer, transaction });
