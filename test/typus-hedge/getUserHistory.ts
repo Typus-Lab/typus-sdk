@@ -1,5 +1,5 @@
 import { TypusConfig } from "src/utils";
-import { getDepositorCashFlows, parseTxHistory } from "src/typus-safu";
+import { getVaultData, parseTxHistory } from "src/typus-hedge";
 import { EventId, SuiClient, SuiEvent } from "@mysten/sui/client";
 import { getUserEvents } from "src/typus-dov-single-v2";
 import * as fs from "fs";
@@ -7,7 +7,7 @@ import * as fs from "fs";
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
-    let sender = "0xd15f079d5f60b8fdfdcf3ca66c0d3473790c758b04b6418929d5d2991c5443ee";
+    let sender = "0x845c22be3e771ac8d90973e9859b5088207527c158f75ba4ac9e6201ca1eedb8";
     let fileName = "mainnetLocalCacheEvents.json";
 
     // 1. Get User Events
@@ -58,17 +58,12 @@ import * as fs from "fs";
 
     let datas = localCacheEvents;
 
+    let vaults = await getVaultData(config, {
+        indexes: [...Array(2).keys()].map((n) => {
+            return n.toString();
+        }),
+    });
+
     let txHistory = await parseTxHistory(datas);
     console.log(txHistory.reverse());
-
-    let cashFlows = await getDepositorCashFlows(txHistory);
-    console.log(cashFlows);
-
-    for (let cashFlow of cashFlows) {
-        console.log(cashFlow[0]);
-        // const netDeposit = cashFlow[1].netDeposit!;
-        const harvest = cashFlow[1].totalHarvest.values().next().value || 0;
-        const profitFromOption = cashFlow[1].totalCompound + harvest;
-        console.log(profitFromOption);
-    }
 })();

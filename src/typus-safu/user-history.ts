@@ -3,37 +3,6 @@ import { BcsReader } from "@mysten/bcs";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import BigNumber from "bignumber.js";
 
-export async function getUserEvents(
-    provider: SuiClient,
-    sender: string,
-    cursor?: EventId | null
-): Promise<[SuiEvent[], EventId | null | undefined]> {
-    let senderFilter: SuiEventFilter = {
-        Sender: sender,
-    };
-
-    var hasNextPage = true;
-
-    let datas: SuiEvent[] = [];
-
-    while (hasNextPage) {
-        let result = await provider.queryEvents({
-            query: senderFilter,
-            order: "ascending",
-            cursor,
-        });
-        // console.log(result);
-
-        hasNextPage = result.hasNextPage;
-        cursor = result.nextCursor;
-
-        // @ts-ignore
-        datas = datas.concat(result.data);
-    }
-
-    return [datas, cursor];
-}
-
 export interface TxHistory {
     Action: string;
     Index: string;
