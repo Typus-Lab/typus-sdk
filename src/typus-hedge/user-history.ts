@@ -129,7 +129,7 @@ function divByDecimal(numerator: number, decimal: number): number {
 }
 
 function bcsToString(input): string {
-    console.log(input);
+    // console.log(input);
     return bcs.string().parse(new Uint8Array(input));
 }
 
