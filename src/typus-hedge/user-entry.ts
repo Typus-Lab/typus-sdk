@@ -157,7 +157,6 @@ export function snapshot(
     input: {
         typeArguments: string[];
         index: string;
-        receipts: string[] | TransactionObjectArgument[];
         user: string;
     }
 ) {
