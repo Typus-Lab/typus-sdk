@@ -12,7 +12,7 @@ let process = require("process");
 process.removeAllListeners("warning");
 
 (async () => {
-    dotenv.config({ path: ".env" });
+    dotenv.config({ path: "script/.env" });
     let config = await TypusConfig.default("MAINNET", null);
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let transaction = new Transaction();
@@ -119,6 +119,14 @@ process.removeAllListeners("warning");
     msg += "  <Loan>\n";
     // @ts-ignore
     msg += `  * XBTC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[5].returnValues[0][0])).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[6].returnValues[0][0])).read256(), 9)})\n`;
+    // @ts-ignore
+    let deposit_receipt = await provider.getObject({
+        id: String(process.env.TYPUS_DEPOSIT_RECEIPT),
+        options: { showContent: true },
+    });
+    // @ts-ignore
+    deposit_receipt = deposit_receipt.data.content.fields.value.fields.id.id;
+    // @ts-ignore
     let depositShareSlice = await provider.getObject({
         id: String(process.env.DEPOSIT_SHARE_SLICE),
         options: { showContent: true },
@@ -127,7 +135,7 @@ process.removeAllListeners("warning");
     let depositShares: Object[] = depositShareSlice.data.content.fields.value;
     for (var depositShare of depositShares) {
         // @ts-ignore
-        if (depositShare.fields.receipt == String(process.env.TYPUS_DEPOSIT_RECEIPT)) {
+        if (depositShare.fields.receipt == deposit_receipt) {
             msg += "  <Deposit Share>\n";
             // @ts-ignore
             msg += `  * Warmup: ${getNumberStringWithDecimal(depositShare.fields.warmup_share, 8)} XBTC\n`;
