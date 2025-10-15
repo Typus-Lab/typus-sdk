@@ -41,6 +41,7 @@ export const priceIDs: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key i
         HYPE: "0x4279e31cc369bbcc2faf022b382b080e32a8e689ff20fbc530d2a603eb6cd98b",
         XRP: "0xec5d399846a9209f3fe5881d70aae9268c94339ff9817e8d18ff19fa05eea1c8",
         xBTC: "0xae8f269ed9c4bed616c99a98cf6dfe562bd3202e7f91821a471ff854713851b4",
+        TBTC: "0x56a3121958b01f99fdc4e1fd01e81050602c7ace3a571918bb55c6a96657cca9",
         BNB: "0x2f95862b045670cd22bee3114c39763a4a08beeb663b145d283c31d7d1101c4f"
     },
     TESTNET: {
@@ -79,6 +80,8 @@ export const priceIDs: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key i
         LBTC: "0x29448db25efe8c72afe3a3c0c0631337408bd3cbc5f09d3dab0754460a965dae",
         JPY: "0x20a938f54b68f1f2ef18ea0328f6dd0747f8ea11486d22b021e83a900be89776",
         XAU: "0x30a19158f5a54c0adf8fb7560627343f22a1bc852b89d56be1accdc5dbf96d0e",
+        TBTC: "0xed1b51d4fb17e8c8b54a0c5bdbd59b38a0304d032287eb38d907374f16b5f535",
+        BNB: "0xecf553770d9b10965f8fb64771e93f5690a182edc32be4a3236e0caaa6e0581a",
     },
 };
 

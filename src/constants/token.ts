@@ -452,6 +452,7 @@ export type TOKEN =
     | "DOGE"
     | "HYPE"
     | "XRP"
+    | "BNB"
 
     // scallop token
     | "sSCA"
