@@ -7,80 +7,86 @@ import { TypusConfig } from "src/utils";
 import mnemonic from "mnemonic.json";
 import { getUserEvents } from "src/typus-dov-single-v2";
 import * as fs from "fs";
-import { tokenType } from "src/constants";
+import { assetToDecimal, TOKEN, tokenType } from "src/constants";
+
+const NETWORK = "MAINNET";
 
 (async () => {
-    let config = await TypusConfig.default("TESTNET", null);
+    let config = await TypusConfig.default(NETWORK, null);
     let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.W));
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let user = signer.toSuiAddress();
     console.log(`Using account ${user}`);
 
-    let amount = await getAirdrop(config, {
-        typeArguments: [tokenType["TESTNET"]["TYPUS"]],
-        key: "typus_airdrop",
-        user,
-    });
-    console.log(`Claiming ${Number(amount[1]) / 10 ** 9} TYPUS...`);
+    let transaction = new Transaction();
 
-    if (Number(amount[1]) > 0) {
-        let transaction = getClaimAirdropTx(config, new Transaction(), {
-            typeArguments: [tokenType["TESTNET"]["TYPUS"]],
-            key: "typus_airdrop",
+    for (let token of ["SUI", "USDC", "xBTC", "sbETH"]) {
+        let amount = await getAirdrop(config, {
+            typeArguments: [tokenType[NETWORK][token]],
+            key: `tlp_remaining_${token}`,
             user,
         });
+        console.log(`Claiming ${Number(amount[1]) / 10 ** assetToDecimal(token as TOKEN)!} ${token}...`);
 
-        let res = await provider.signAndExecuteTransaction({ signer, transaction });
-        console.log(res);
+        getClaimAirdropTx(config, transaction, {
+            typeArguments: [tokenType[NETWORK][token]],
+            key: `tlp_remaining_${token}`,
+            user,
+        });
     }
 
-    // User history -> airdrop::ClaimAirdropEvent
-    var localCacheEvents: SuiEvent[] = [];
-    var cursor: EventId | null | undefined = undefined;
-    var localCacheMap = new Map<string, [SuiEvent[], EventId | null | undefined]>();
-    const fileName = "testnetLocalCacheEvents.json";
+    let dryRunRes = await provider.devInspectTransactionBlock({ sender: user, transactionBlock: transaction });
+    console.log(dryRunRes.events.map((x) => x.parsedJson));
 
-    try {
-        let localCacheFile = fs.readFileSync(fileName, "utf-8");
-        let localCache = JSON.parse(localCacheFile);
-        localCacheMap = localCache.reduce((map, obj) => {
-            map.set(obj.user, [obj.events, obj.cursor]);
-            return map;
-        }, new Map<string, [SuiEvent[], EventId | null | undefined]>());
+    // let res = await provider.signAndExecuteTransaction({ signer, transaction });
+    // console.log(res);
+    // // User history -> airdrop::ClaimAirdropEvent
+    // var localCacheEvents: SuiEvent[] = [];
+    // var cursor: EventId | null | undefined = undefined;
+    // var localCacheMap = new Map<string, [SuiEvent[], EventId | null | undefined]>();
+    // const fileName = "testnetLocalCacheEvents.json";
 
-        let userCache = localCacheMap.get(user);
-        if (userCache) {
-            localCacheEvents = userCache[0];
-            cursor = userCache[1];
-            console.log("Load from cache...");
-        }
-    } catch {}
+    // try {
+    //     let localCacheFile = fs.readFileSync(fileName, "utf-8");
+    //     let localCache = JSON.parse(localCacheFile);
+    //     localCacheMap = localCache.reduce((map, obj) => {
+    //         map.set(obj.user, [obj.events, obj.cursor]);
+    //         return map;
+    //     }, new Map<string, [SuiEvent[], EventId | null | undefined]>());
 
-    let [datas1, cursor1] = await getUserEvents(provider, user, cursor);
+    //     let userCache = localCacheMap.get(user);
+    //     if (userCache) {
+    //         localCacheEvents = userCache[0];
+    //         cursor = userCache[1];
+    //         console.log("Load from cache...");
+    //     }
+    // } catch {}
 
-    // save local cache for user
-    localCacheEvents = localCacheEvents.concat(datas1);
-    cursor = cursor1;
+    // let [datas1, cursor1] = await getUserEvents(provider, user, cursor);
 
-    localCacheMap.set(user, [localCacheEvents, cursor]);
-    let localCacheArray = Array.from(localCacheMap.entries());
+    // // save local cache for user
+    // localCacheEvents = localCacheEvents.concat(datas1);
+    // cursor = cursor1;
 
-    fs.writeFileSync(
-        fileName,
-        JSON.stringify(
-            localCacheArray.map(([k, v]) => {
-                let t = { user: k, events: v[0], cursor: v[1] };
-                return t;
-            }),
-            null,
-            2
-        ),
-        "utf-8"
-    );
+    // localCacheMap.set(user, [localCacheEvents, cursor]);
+    // let localCacheArray = Array.from(localCacheMap.entries());
 
-    const claimEvents = localCacheEvents.filter((x) => x.type.endsWith("airdrop::ClaimAirdropEvent"));
-    if (claimEvents.length > 0) {
-        // @ts-ignore
-        console.log(`Already Claimed ${Number(claimEvents[0].parsedJson.log) / 10 ** 9} TYPUS`);
-    }
+    // fs.writeFileSync(
+    //     fileName,
+    //     JSON.stringify(
+    //         localCacheArray.map(([k, v]) => {
+    //             let t = { user: k, events: v[0], cursor: v[1] };
+    //             return t;
+    //         }),
+    //         null,
+    //         2
+    //     ),
+    //     "utf-8"
+    // );
+
+    // const claimEvents = localCacheEvents.filter((x) => x.type.endsWith("airdrop::ClaimAirdropEvent"));
+    // if (claimEvents.length > 0) {
+    //     // @ts-ignore
+    //     console.log(`Already Claimed ${Number(claimEvents[0].parsedJson.log) / 10 ** 9} TYPUS`);
+    // }
 })();
