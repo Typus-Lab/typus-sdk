@@ -26,10 +26,12 @@ export const priceIDs: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key i
         VSUI: "0x57ff7100a282e4af0c91154679c5dae2e5dcacb93fd467ea9cb7e58afdcfde27",
         HASUI: "0x6120ffcf96395c70aa77e72dcb900bf9d40dccab228efca59a17b90ce423d5e8",
         AUSD: "0xd9912df360b5b7f21a122f15bdd5e27f62ce5e72bd316c291f7c86620e07fb2a",
-        FUD: "0x6a4090703da959247727f2b490eb21aea95c8684ecfac675f432008830890c75",
+        // These are not available on Pyth
+        // FUD: "0x6a4090703da959247727f2b490eb21aea95c8684ecfac675f432008830890c75",
         DEEP: "0x29bdd5248234e33bd93d3b81100b5fa32eaa5997843847e2c2cb16d7c6d9f7ff",
         BLUE: "0x04cfeb7b143eb9c48e9b074125c1a3447b85f59c31164dc20c1beaa6f21f2b6b",
-        BLUB: "0x5fc11ffe4975b624be495be038da30e30bee2004d8ae6282b5364577ef4ca92c",
+        // These are not available on Pyth
+        // BLUB: "0x5fc11ffe4975b624be495be038da30e30bee2004d8ae6282b5364577ef4ca92c",
         HIPPO: "0xf2c5249856da2fbe0221e163b3fed678dd6f76515ab933292dfb4f15a1de8f8c",
         STSUI: "0x0449948a9a210481464ea7030734fa79f59b751c2f411cfb1ba56b5f69e4a62a",
         NS: "0xbb5ff26e47a3a6cc7ec2fce1db996c2a145300edc5acaabe43bf9ff7c5dd5d32",
