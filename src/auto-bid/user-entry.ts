@@ -33,7 +33,7 @@ export function getNewStrategyTx(
     let input_coin = splitCoin(tx, input.typeArguments[1], input.coins, input.amount, config.sponsored);
 
     tx.moveCall({
-        target: `${config.package.dovSingle}::auto_bid::new_strategy`,
+        target: `${config.package.dovSingle}::auto_bid::new_strategy_v3`,
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
@@ -73,7 +73,7 @@ export function getCloseStrategyTx(
     }
 ) {
     let [d_token, b_token] = tx.moveCall({
-        target: `${config.package.dovSingle}::auto_bid::close_strategy`,
+        target: `${config.package.dovSingle}::auto_bid::close_strategy_v3`,
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
@@ -101,7 +101,7 @@ export function getWithdrawProfitStrategyTx(
     }
 ) {
     let d_token = tx.moveCall({
-        target: `${config.package.dovSingle}::auto_bid::withdraw_profit`,
+        target: `${config.package.dovSingle}::auto_bid::withdraw_profit_v3`,
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
@@ -151,7 +151,7 @@ export function getUpdateStrategyTx(
     let input_coin = splitCoin(tx, input.typeArguments[1], input.coins, input.amount, config.sponsored);
 
     tx.moveCall({
-        target: `${config.package.dovSingle}::auto_bid::update_strategy`,
+        target: `${config.package.dovSingle}::auto_bid::update_strategy_v3`,
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
@@ -191,7 +191,7 @@ export function getWithdrawBidReceiptTx(
     }
 ): Argument {
     let receipt = tx.moveCall({
-        target: `${config.package.dovSingle}::auto_bid::withdraw_bid_receipt`,
+        target: `${config.package.dovSingle}::auto_bid::withdraw_bid_receipt_v3`,
         typeArguments: [],
         arguments: [
             tx.object(config.registry.dov.dovSingle),
