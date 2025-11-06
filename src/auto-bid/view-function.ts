@@ -60,7 +60,7 @@ export async function getUserStrategies(
                     }),
                 };
             }),
-            active: reader.read8(),
+            active: reader.read8() == 1,
             u64_padding: reader.readVec((reader) => {
                 return reader.read64();
             }),
@@ -72,7 +72,12 @@ export async function getUserStrategies(
             }),
             accumulated_profit: reader.read64(),
             strategy_index: reader.read64(),
-        } as unknown as StrategyV2;
+            remaining_balance: undefined,
+            gain_to_harvest: undefined,
+            accumulated_cost: undefined,
+            my_bids: {},
+            status: undefined,
+        } as StrategyV2;
 
         let my_bids = Array.from(new Map()).reduce((map, [key, value]) => {
             map[key] = value;
@@ -184,11 +189,12 @@ export interface StrategyV2 {
     bid_ts_ms: string;
     bid_rounds: string[];
     accumulated_profit: string;
+    strategy_index: string;
     remaining_balance: string | undefined;
     gain_to_harvest: string | undefined;
     accumulated_cost: string | undefined;
     my_bids: { [key: string]: BidShare };
-    status: "active" | "insufficient balance" | "finished";
+    status: "active" | "insufficient balance" | "finished" | undefined;
 }
 
 export interface TypusBidReceipt {
