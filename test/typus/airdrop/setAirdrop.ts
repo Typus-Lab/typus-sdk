@@ -6,45 +6,51 @@ import { getSetAirdropTx } from "src/typus/airdrop";
 import { TypusConfig } from "src/utils";
 import mnemonic from "mnemonic.json";
 import * as fs from "fs";
-import { tokenType } from "src/constants";
+import { TOKEN, tokenType } from "src/constants";
 
 (async () => {
-    let config = await TypusConfig.default("MAINNET", null);
-    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC_2));
+    let network: "MAINNET" | "TESTNET" = "TESTNET";
+    let key = "tlp_compensation_1106";
+    let token: TOKEN = "wUSDC";
+    let index = 2;
+
+    let config = await TypusConfig.default(network, null);
+    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
     let provider = new SuiClient({ url: config.rpcEndpoint });
     let address = signer.toSuiAddress();
     console.log(address);
 
-    const raw = fs.readFileSync("trading_competition_0603.csv", "utf-8");
-    const user_data = raw.split("\n").map((line) => line.split(","));
+    const raw = fs.readFileSync(`${key}.csv`, "utf-8");
+    const user_data = raw.split("\r\n").map((line) => line.split(","));
     const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     // remove headers
-    user_data.splice(0, 1);
+    let header = user_data.splice(0, 1)[0];
+    console.log(header);
     console.log(user_data[0]);
 
-    let coins = (
-        await provider.getCoins({
-            owner: address,
-            coinType: tokenType["MAINNET"]["SUI"],
-        })
-    ).data.map((coin) => coin.coinObjectId);
-
     let sum = 0;
-    user_data.forEach((x) => (sum += Number(x[1])));
+    user_data.forEach((x) => (sum += Number(x[index])));
     console.log(sum);
 
     while (user_data.length > 0) {
         console.log(user_data.length);
         let slice = user_data.splice(0, 300);
 
+        let coins = (
+            await provider.getCoins({
+                owner: address,
+                coinType: tokenType[network][token],
+            })
+        ).data.map((coin) => coin.coinObjectId);
+
         let transaction = await getSetAirdropTx(config, new Transaction(), {
-            typeArguments: [tokenType["MAINNET"]["SUI"]],
-            key: "trading_competition",
+            typeArguments: [tokenType[network][token]],
+            key,
             coins,
-            amount: "2600000000000",
+            amount: sum.toString(),
             users: slice.map((user) => user[0]),
-            values: slice.map((user) => user[1]),
+            values: slice.map((user) => user[index]),
         });
 
         let res = await provider.signAndExecuteTransaction({ signer, transaction });
