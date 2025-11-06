@@ -9,7 +9,7 @@ import { getUserEvents } from "src/typus-dov-single-v2";
 import * as fs from "fs";
 import { assetToDecimal, TOKEN, tokenType } from "src/constants";
 
-const NETWORK = "MAINNET";
+const NETWORK = "TESTNET";
 
 (async () => {
     let config = await TypusConfig.default(NETWORK, null);
@@ -18,28 +18,28 @@ const NETWORK = "MAINNET";
     let user = signer.toSuiAddress();
     console.log(`Using account ${user}`);
 
+    let token = "wUSDC";
+    let key = "tlp_compensation_1106";
+
+    let amount = await getAirdrop(config, {
+        typeArguments: [tokenType[NETWORK][token]],
+        key,
+        user,
+    });
+    console.log(`Total  ${Number(amount[3]) / 10 ** assetToDecimal(token as TOKEN)!} ${token}...`);
+    console.log(`Claiming ${Number(amount[1]) / 10 ** assetToDecimal(token as TOKEN)!} ${token}...`);
+    console.log(`Already Claimed ${Number(amount[2]) / 10 ** assetToDecimal(token as TOKEN)!} ${token}...`);
+
     let transaction = new Transaction();
-
-    for (let token of ["SUI", "USDC", "xBTC", "sbETH"]) {
-        let amount = await getAirdrop(config, {
-            typeArguments: [tokenType[NETWORK][token]],
-            key: `tlp_remaining_${token}`,
-            user,
-        });
-        console.log(`Claiming ${Number(amount[1]) / 10 ** assetToDecimal(token as TOKEN)!} ${token}...`);
-
-        getClaimAirdropTx(config, transaction, {
-            typeArguments: [tokenType[NETWORK][token]],
-            key: `tlp_remaining_${token}`,
-            user,
-        });
-    }
-
-    let dryRunRes = await provider.devInspectTransactionBlock({ sender: user, transactionBlock: transaction });
-    console.log(dryRunRes.events.map((x) => x.parsedJson));
-
-    // let res = await provider.signAndExecuteTransaction({ signer, transaction });
-    // console.log(res);
+    getClaimAirdropTx(config, transaction, {
+        typeArguments: [tokenType[NETWORK][token]],
+        key,
+        user,
+    });
+    // let dryRunRes = await provider.devInspectTransactionBlock({ sender: user, transactionBlock: transaction });
+    // console.log(dryRunRes.events.map((x) => x.parsedJson));
+    let res = await provider.signAndExecuteTransaction({ signer, transaction });
+    console.log(res);
     // // User history -> airdrop::ClaimAirdropEvent
     // var localCacheEvents: SuiEvent[] = [];
     // var cursor: EventId | null | undefined = undefined;
