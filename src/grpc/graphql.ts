@@ -1,8 +1,9 @@
 import { SuiGraphQLClient } from "@mysten/sui/graphql";
 import { graphql } from "@mysten/sui/graphql/schemas/latest";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 
 const gqlClient = new SuiGraphQLClient({
-    url: "https://graphql.testnet.sui.io/graphql",
+    url: "https://graphql.mainnet.sui.io/graphql",
 });
 
 const chainIdentifierQuery = graphql(`
@@ -136,4 +137,4 @@ async function getDynamicFields(id: string) {
     return result.data?.address?.dynamicFields;
 }
 
-getDynamicFields("0x0285cbf4aa8585be6c978235d11d06fa35773266ede040d38d34e1d79b049460").then((x) => console.dir(x, { depth: null }));
+getDynamicFields("0x9973b7dd68ab8ba18702d913191a4c62c597847d9cd9f0b5bd97f1b938fc9a0a").then((x) => console.dir(x, { depth: null }));
