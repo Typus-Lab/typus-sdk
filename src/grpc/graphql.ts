@@ -126,7 +126,7 @@ const dynamicFieldsQuery = graphql(`
     }
 `);
 
-async function getDynamicFields(id: string) {
+export async function getDynamicFields(gqlClient: SuiGraphQLClient, id: string) {
     const result = await gqlClient.query({
         query: dynamicFieldsQuery,
         variables: {
@@ -137,4 +137,6 @@ async function getDynamicFields(id: string) {
     return result.data?.address?.dynamicFields;
 }
 
-getDynamicFields("0x9973b7dd68ab8ba18702d913191a4c62c597847d9cd9f0b5bd97f1b938fc9a0a").then((x) => console.dir(x, { depth: null }));
+getDynamicFields(gqlClient, "0x9973b7dd68ab8ba18702d913191a4c62c597847d9cd9f0b5bd97f1b938fc9a0a").then((x) =>
+    console.dir(x, { depth: null })
+);

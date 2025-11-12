@@ -1,7 +1,8 @@
 import { SuiGrpcClient } from "@mysten/sui/grpc";
+import { LIQUIDITY_POOL_0 } from "src/perp";
 
-const grpcClient = new SuiGrpcClient({ network: "testnet", baseUrl: "https://fullnode.testnet.sui.io:443" });
+import * as lp_pool from "src/generated/typus_perp/lp_pool";
 
-grpcClient.ledgerService
-    .getObject({ objectId: "0x0285cbf4aa8585be6c978235d11d06fa35773266ede040d38d34e1d79b049460" }, {})
-    .then((x) => console.log(x.response.object?.contents));
+const grpcClient = new SuiGrpcClient({ network: "mainnet", baseUrl: "https://fullnode.mainnet.sui.io:443" });
+
+grpcClient.ledgerService.getObject({ objectId: LIQUIDITY_POOL_0 }).then((x) => console.log(x.response.object?.contents));
