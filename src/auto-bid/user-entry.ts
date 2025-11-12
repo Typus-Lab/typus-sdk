@@ -188,6 +188,7 @@ export function getWithdrawBidReceiptTx(
         signalIndex: string;
         strategyIndex: string;
         user: string;
+        share?: string;
     }
 ): Argument {
     let receipt = tx.moveCall({
@@ -201,5 +202,36 @@ export function getWithdrawBidReceiptTx(
             tx.pure.u64(input.strategyIndex),
         ],
     });
-    return receipt;
+
+    if (input.share) {
+        let result = tx.moveCall({
+            target: `${config.package.dovSingle}::tds_user_entry::simple_split_bid_receipt`,
+            typeArguments: [],
+            arguments: [
+                tx.object(config.registry.dov.dovSingle),
+                tx.pure.u64(input.vaultIndex),
+                tx.makeMoveVec({
+                    type: `${config.packageOrigin.framework}::vault::TypusBidReceipt`,
+                    elements: [receipt],
+                }),
+                tx.pure.option("u64", input.share),
+            ],
+        });
+
+        let unwrap0 = tx.moveCall({
+            target: `0x1::option::destroy_some`,
+            typeArguments: [`${config.packageOrigin.framework}::vault::TypusBidReceipt`],
+            arguments: [tx.object(result[0])],
+        });
+
+        tx.moveCall({
+            target: `${config.package.framework}::vault::transfer_bid_receipt`,
+            typeArguments: [],
+            arguments: [tx.object(result[1]), tx.pure.address(input.user)],
+        });
+
+        return unwrap0;
+    } else {
+        return receipt;
+    }
 }
