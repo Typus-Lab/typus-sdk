@@ -33,7 +33,7 @@ export function getNewStrategyTx(
     let input_coin = splitCoin(tx, input.typeArguments[1], input.coins, input.amount, config.sponsored);
 
     tx.moveCall({
-        target: `${config.package.dovSingle}::auto_bid::new_strategy`,
+        target: `${config.package.dovSingle}::auto_bid::new_strategy_v3`,
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
@@ -73,7 +73,7 @@ export function getCloseStrategyTx(
     }
 ) {
     let [d_token, b_token] = tx.moveCall({
-        target: `${config.package.dovSingle}::auto_bid::close_strategy`,
+        target: `${config.package.dovSingle}::auto_bid::close_strategy_v3`,
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
@@ -101,7 +101,7 @@ export function getWithdrawProfitStrategyTx(
     }
 ) {
     let d_token = tx.moveCall({
-        target: `${config.package.dovSingle}::auto_bid::withdraw_profit`,
+        target: `${config.package.dovSingle}::auto_bid::withdraw_profit_v3`,
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
@@ -151,7 +151,7 @@ export function getUpdateStrategyTx(
     let input_coin = splitCoin(tx, input.typeArguments[1], input.coins, input.amount, config.sponsored);
 
     tx.moveCall({
-        target: `${config.package.dovSingle}::auto_bid::update_strategy`,
+        target: `${config.package.dovSingle}::auto_bid::update_strategy_v3`,
         typeArguments: input.typeArguments,
         arguments: [
             tx.object(config.registry.dov.dovSingle),
@@ -188,11 +188,10 @@ export function getWithdrawBidReceiptTx(
         signalIndex: string;
         strategyIndex: string;
         user: string;
-        share?: string;
     }
 ): Argument {
     let receipt = tx.moveCall({
-        target: `${config.package.dovSingle}::auto_bid::withdraw_bid_receipt`,
+        target: `${config.package.dovSingle}::auto_bid::withdraw_bid_receipt_v3`,
         typeArguments: [],
         arguments: [
             tx.object(config.registry.dov.dovSingle),
@@ -202,36 +201,5 @@ export function getWithdrawBidReceiptTx(
             tx.pure.u64(input.strategyIndex),
         ],
     });
-
-    if (input.share) {
-        let result = tx.moveCall({
-            target: `${config.package.dovSingle}::tds_user_entry::simple_split_bid_receipt`,
-            typeArguments: [],
-            arguments: [
-                tx.object(config.registry.dov.dovSingle),
-                tx.pure.u64(input.vaultIndex),
-                tx.makeMoveVec({
-                    type: `${config.packageOrigin.framework}::vault::TypusBidReceipt`,
-                    elements: [receipt],
-                }),
-                tx.pure.option("u64", input.share),
-            ],
-        });
-
-        let unwrap0 = tx.moveCall({
-            target: `0x1::option::destroy_some`,
-            typeArguments: [`${config.packageOrigin.framework}::vault::TypusBidReceipt`],
-            arguments: [tx.object(result[0])],
-        });
-
-        tx.moveCall({
-            target: `${config.package.framework}::vault::transfer_bid_receipt`,
-            typeArguments: [],
-            arguments: [tx.object(result[1]), tx.pure.address(input.user)],
-        });
-
-        return unwrap0;
-    } else {
-        return receipt;
-    }
+    return receipt;
 }
