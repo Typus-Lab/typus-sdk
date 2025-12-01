@@ -145,6 +145,7 @@ export const priceInfoObjectIds: { MAINNET: { [key in TOKEN]?: string }; TESTNET
         BLUB: "0xdcd4cc5f06fac1ca72e8551ab1a2e847298afa6f19e370ad9891199a59d2c22e",
         JPY: "0xd14cadaf54a926f701db021eceaa89b3d09363e1bce51bfcb2291a32a693f928",
         XAU: "0x742d48ff1d7a45c91aee4ad4f0059396c28988f99074d4a191951ac086b90a5a",
+        xBTC: "0xb6c3b17fdda1eaa847e62c8d36a8dada35b010bb340fdb5a16d556f0fa37e59b",
     },
 };
 
