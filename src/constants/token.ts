@@ -329,7 +329,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         XRP: "0x188faaaa44e6276295ab92fdd3eb353e5f25fc35b9d965a5b8243f336af65b78::xrp::XRP",
         sbBTC: "0xaafb102dd0902f5055cadecd687fb5b71ca82ef0e0285d90afde828ec58ca96b::btc::BTC",
         TBTC: "0x77045f1b9f811a7a8fb9ebd085b5b0c55c5cb0d1520ff55f7037f89b5da9f5f1::TBTC::TBTC",
-        BNB: "0xb848cce11ef3a8f62eccea6eb5b35a12c4c2b1ee1af7755d02d7bd6218e8226f::coin::COIN"
+        BNB: "0xb848cce11ef3a8f62eccea6eb5b35a12c4c2b1ee1af7755d02d7bd6218e8226f::coin::COIN",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -382,7 +382,7 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         XRP: "",
         TBTC: "0xee81baea02ef47860153569bc2f86eafb58baa81aab4e5b910950a4c72aae861::tbtc::TBTC",
         sbBTC: "",
-        BNB: ""
+        BNB: "",
     },
 };
 
@@ -521,6 +521,7 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         XAU: "0x172101af6fbaab02b2663ed7c502152431fed5d76ac865ac3ccad134c92d91db",
         TBTC: "0x383cb3519e51c62d84ec54e2fca3438c43a83967738b364c20f0f2a662a668d5",
         sbETH: "0xdf6785f0fc35af5621c5a4d6e5056298fe34c3147dca871d8bb0fee6d1d8a536",
+        xBTC: "0x9cc058063456b99b0b579e2c8cddbeb4b850bd8b1eb8aad02dead97ceec8f9bb",
     },
 };
 
