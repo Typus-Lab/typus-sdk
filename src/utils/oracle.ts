@@ -56,13 +56,13 @@ export async function updateOracleWithSignatureTx(
 
     const oracleAddress = oracle[network][typeArgToAsset(normalizeStructTag(tokenType))];
     if (oracleData && oracleAddress) {
-        const oracleIdBytes = new Uint8Array(Buffer.from(oracleAddress, "utf8"));
+        const oracleIdBytes = fromHex(oracleAddress.startsWith('0x') ? oracleAddress.slice(2) : oracleAddress);
         const pairBytes = new Uint8Array(Buffer.from(baseTokenType, "utf8"));
         const priceBytes = bcs.u64().serialize(oracleData.signed.price).toBytes();
         const twapBytes = bcs.u64().serialize(oracleData.signed.twap).toBytes();
         const timestampBytes = bcs.u64().serialize(oracleData.signed.timestamp.toString()).toBytes();
 
-        const totalLength = pairBytes.length + priceBytes.length + twapBytes.length + timestampBytes.length;
+        const totalLength = oracleIdBytes.length +pairBytes.length + priceBytes.length + twapBytes.length + timestampBytes.length;
         const messageBytes = new Uint8Array(totalLength);
         let offset = 0;
         messageBytes.set(oracleIdBytes, offset);
