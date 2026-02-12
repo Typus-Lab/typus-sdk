@@ -197,6 +197,11 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0x3ec6cda6b1d7003290004674e82d56530f354b4754f63334cf988a1bcd5535a4::xau::XAU": // TESTNET
             return "XAU";
 
+        case "0xb365b4a72824da69a6096aa13b6a92d6d3c0e195a2c61f49734654b792490b54::xag::XAG": // MAINNET
+            return "XAG";
+        case "0x6501f3bccbf463f349ae945fa050f6a675e0b648e54afbd1899ba94d66e33447::usoil::USOIL": // MAINNET
+            return "USOIL";
+
         case "0x437aca029849620c0d9fe4b53376a31d5ad631201b81da6a353310d5a7256b74::jpy::JPY": // MAINNET
         case "0xf6b1411610d6416f5bff08750262169fb6447eaf45750943cb89eb86fbf6542f::jpy::JPY": // TESTNET
             return "JPY";
@@ -239,6 +244,8 @@ export function assetToDecimal(asset: TOKEN): number | undefined {
         case "HAEDAL":
         case "JPY":
         case "XAU":
+        case "XAG":
+        case "USOIL":
             return 9;
         case "WBTC":
         case "sbETH":
@@ -322,6 +329,8 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         LBTC: "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC",
         JPY: "0x437aca029849620c0d9fe4b53376a31d5ad631201b81da6a353310d5a7256b74::jpy::JPY",
         XAU: "0x732f66e6e97c0f6b7250a5f43dc3576e225ae6e7578862a9b122915f6ff63988::xau::XAU",
+        XAG: "0xb365b4a72824da69a6096aa13b6a92d6d3c0e195a2c61f49734654b792490b54::xag::XAG",
+        USOIL: "0x6501f3bccbf463f349ae945fa050f6a675e0b648e54afbd1899ba94d66e33447::usoil::USOIL",
         HAEDAL: "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL",
         xBTC: "0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC",
         DOGE: "0x292dd8bc71bff5714f79dd7d9c15bfc6e22bbfb07ef40bf320d61cd050dad929::doge::DOGE",
@@ -377,6 +386,8 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         LBTC: "",
         JPY: "0xf6b1411610d6416f5bff08750262169fb6447eaf45750943cb89eb86fbf6542f::jpy::JPY",
         XAU: "0x3ec6cda6b1d7003290004674e82d56530f354b4754f63334cf988a1bcd5535a4::xau::XAU",
+        XAG: "",
+        USOIL: "",
         HAEDAL: "",
         xBTC: "0x8ec68007c61b79244decfecc7f1e024ff60a9354dcb1ff37af94ad03f7e71d2e::xbtc::XBTC",
         DOGE: "",
