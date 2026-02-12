@@ -330,6 +330,8 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         sbBTC: "0xaafb102dd0902f5055cadecd687fb5b71ca82ef0e0285d90afde828ec58ca96b::btc::BTC",
         TBTC: "0x77045f1b9f811a7a8fb9ebd085b5b0c55c5cb0d1520ff55f7037f89b5da9f5f1::TBTC::TBTC",
         BNB: "0xb848cce11ef3a8f62eccea6eb5b35a12c4c2b1ee1af7755d02d7bd6218e8226f::coin::COIN",
+        USOIL: "0x6501f3bccbf463f349ae945fa050f6a675e0b648e54afbd1899ba94d66e33447::usoil::USOIL",
+        XAG: "0xb365b4a72824da69a6096aa13b6a92d6d3c0e195a2c61f49734654b792490b54::xag::XAG"
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -383,6 +385,8 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         TBTC: "0xee81baea02ef47860153569bc2f86eafb58baa81aab4e5b910950a4c72aae861::tbtc::TBTC",
         sbBTC: "",
         BNB: "",
+        USOIL: "",
+        XAG: ""
     },
 };
 
@@ -453,6 +457,8 @@ export type TOKEN =
     | "HYPE"
     | "XRP"
     | "BNB"
+    | "USOIL"
+    | "XAG"
 
     // scallop token
     | "sSCA"
@@ -498,6 +504,8 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         xBTC: "0x6e7ca39c4ad0a1ad83937e98b220824566d858814aa8fd01294400b45c2bbc21",
         sbETH: "0xc2100d191647b6b22a04a6b45d1d0381320f8eb5816ef067a69b7bc3954bf7cb",
         BNB: "0xad5c469c811d567f2460d065aab1704034ebb63aecd06f515059cd29707917e8",
+        USOIL: "0x3f5f8d67b9e6ae87b45c8c829ac70d17dfd0ce6d479b4381e5ae6520e3079e01",
+        XAG: "0x1149971d20a0f6322099e66cb36e233ed1202635e8cee281dcbb68fd3ba1d9fa",
     },
     TESTNET: {
         SUI: "0x9083c9ce1a1eef569bb1a8b31dfa5e0fce2e05887e68ba79ca6ae522acd041f3",
