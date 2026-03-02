@@ -338,7 +338,9 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         TBTC: "0x77045f1b9f811a7a8fb9ebd085b5b0c55c5cb0d1520ff55f7037f89b5da9f5f1::TBTC::TBTC",
         BNB: "0xb848cce11ef3a8f62eccea6eb5b35a12c4c2b1ee1af7755d02d7bd6218e8226f::coin::COIN",
         USOIL: "0x6501f3bccbf463f349ae945fa050f6a675e0b648e54afbd1899ba94d66e33447::usoil::USOIL",
-        XAG: "0xb365b4a72824da69a6096aa13b6a92d6d3c0e195a2c61f49734654b792490b54::xag::XAG"
+        XAG: "0xb365b4a72824da69a6096aa13b6a92d6d3c0e195a2c61f49734654b792490b54::xag::XAG",
+        QQQX: "0x7460dd922537293115cb0b96bb8ce203ec7ef1747c471753c52b4dc68d9208b4::qqqx::QQQX",
+        SPYX: "0x2073b577f211f188eb243bfc97c7471fdc21980b7a445f1800327a8c687f3ce9::spyx::SPYX",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -393,7 +395,9 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         sbBTC: "",
         BNB: "",
         USOIL: "",
-        XAG: ""
+        XAG: "",
+        QQQX: "",
+        SPYX: "",
     },
 };
 
@@ -466,6 +470,8 @@ export type TOKEN =
     | "BNB"
     | "USOIL"
     | "XAG"
+    | "QQQX"
+    | "SPYX"
 
     // scallop token
     | "sSCA"

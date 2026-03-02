@@ -47,8 +47,8 @@ export const priceIDs: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key i
         xBTC: "0xae8f269ed9c4bed616c99a98cf6dfe562bd3202e7f91821a471ff854713851b4",
         TBTC: "0x56a3121958b01f99fdc4e1fd01e81050602c7ace3a571918bb55c6a96657cca9",
         BNB: "0x2f95862b045670cd22bee3114c39763a4a08beeb663b145d283c31d7d1101c4f",
-        USOIL: "0x925ca92ff005ae943c158e3563f59698ce7e75c5a8c8dd43303a0a154887b3e6",
-        XAG: "0xf2fb02c32b055c805e7238d628e5e9dadef274376114eb1f012337cabe93871e"
+        QQQX: "0x178a6f73a5aede9d0d682e86b0047c9f333ed0efe5c6537ca937565219c4054d",
+        SPYX: "0x2817b78438c769357182c04346fddaad1178c82f4048828fe0997c3c64624e14",
     },
     TESTNET: {
         // Pyth EVM Beta
@@ -128,8 +128,6 @@ export const priceInfoObjectIds: { MAINNET: { [key in TOKEN]?: string }; TESTNET
         xBTC: "0xa4b9db1866ee6e2a156e8c36fc66be0f68f232388ebb578c949c2c6beb50128b",
         JPY: "0xde0e6088e7292f50738ecbdebd4502415d4f8de4cfe001918e29b3f4faf15baa",
         BNB: "0x9c6e77f0ecfc46aac395e21c52ccb96518f85acacae743c5b47f4ca5e29826c3",
-        USOIL: "0x71e40a6e2af5a194e149a761ae11d43e987b9ecbee1834d65d61103721c72e02",
-        XAG: "0xd5c5afce92e988bf0a0940d618443c36c31dd7f239a545982db3166e963c9aa4"
     },
     TESTNET: {
         SUI: "0x1ebb295c789cc42b3b2a1606482cd1c7124076a0f5676718501fda8c7fd075a0",

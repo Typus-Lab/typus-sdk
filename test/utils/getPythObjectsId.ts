@@ -3,12 +3,13 @@ import { SuiClient } from "@mysten/sui/client";
 import { priceIDs, TypusConfig } from "src/utils";
 import { createPythClient } from "src/utils/pyth/pythClient";
 (async () => {
-    const network = "TESTNET";
+    const network = "MAINNET";
     const config = await TypusConfig.default(network, null);
     const provider = new SuiClient({ url: config.rpcEndpoint });
     const pythClient = createPythClient(provider, network);
 
-    const priceFeed = priceIDs[network]["XAG"]!;
+    const priceFeed = priceIDs[network]["SPYX"]!;
+    console.log(priceFeed);
     let priceInfoObjectId = await pythClient.client.getPriceFeedObjectId(priceFeed);
     console.log(priceInfoObjectId);
 })();
