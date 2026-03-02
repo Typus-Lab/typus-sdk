@@ -527,6 +527,8 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         BNB: "0xad5c469c811d567f2460d065aab1704034ebb63aecd06f515059cd29707917e8",
         USOIL: "0x3f5f8d67b9e6ae87b45c8c829ac70d17dfd0ce6d479b4381e5ae6520e3079e01",
         XAG: "0x1149971d20a0f6322099e66cb36e233ed1202635e8cee281dcbb68fd3ba1d9fa",
+        QQQX: "0xbd1feb161d6a4f76534604f75be6c63df4413cdfab1da1a393a03e502f940599",
+        SPYX: "0x3b95d58624f44361a5441e4f19c8c75bf5246e36b3f7ced4b8675d2e396e204c",
     },
     TESTNET: {
         SUI: "0x9083c9ce1a1eef569bb1a8b31dfa5e0fce2e05887e68ba79ca6ae522acd041f3",
