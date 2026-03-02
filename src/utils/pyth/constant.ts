@@ -128,6 +128,8 @@ export const priceInfoObjectIds: { MAINNET: { [key in TOKEN]?: string }; TESTNET
         xBTC: "0xa4b9db1866ee6e2a156e8c36fc66be0f68f232388ebb578c949c2c6beb50128b",
         JPY: "0xde0e6088e7292f50738ecbdebd4502415d4f8de4cfe001918e29b3f4faf15baa",
         BNB: "0x9c6e77f0ecfc46aac395e21c52ccb96518f85acacae743c5b47f4ca5e29826c3",
+        SPYX: "0x6a2d53a802faee96b26f5fa86d9ccf05d58008e4f32c95985d12edb60f5e23ea",
+        QQQX: "0xcce836357b028bd85e866320f194980125b58e6117a2e86a24ed5c154df1e799"
     },
     TESTNET: {
         SUI: "0x1ebb295c789cc42b3b2a1606482cd1c7124076a0f5676718501fda8c7fd075a0",
