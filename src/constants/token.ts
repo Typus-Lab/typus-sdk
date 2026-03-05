@@ -349,6 +349,8 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         XAG: "0xb365b4a72824da69a6096aa13b6a92d6d3c0e195a2c61f49734654b792490b54::xag::XAG",
         QQQX: "0x7460dd922537293115cb0b96bb8ce203ec7ef1747c471753c52b4dc68d9208b4::qqqx::QQQX",
         SPYX: "0x2073b577f211f188eb243bfc97c7471fdc21980b7a445f1800327a8c687f3ce9::spyx::SPYX",
+        NVDAX: "0x37d108f2d4bf75f748dbca15d1bbc35d277d3ca121c1b60d43ee01c77053a316::nvdax::NVDAX",
+        TSLAX: "0xa3a202cf7aa8b28f4c6d8a29e4a62ab530093eb7ac69f67dffda01bf30c47b20::tslax::TSLAX",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -406,6 +408,8 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         XAG: "",
         QQQX: "",
         SPYX: "",
+        NVDAX: "",
+        TSLAX: "",
     },
 };
 
@@ -480,6 +484,8 @@ export type TOKEN =
     | "XAG"
     | "QQQX"
     | "SPYX"
+    | "NVDAX"
+    | "TSLAX"
 
     // scallop token
     | "sSCA"
@@ -529,6 +535,8 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         XAG: "0x1149971d20a0f6322099e66cb36e233ed1202635e8cee281dcbb68fd3ba1d9fa",
         QQQX: "0xbd1feb161d6a4f76534604f75be6c63df4413cdfab1da1a393a03e502f940599",
         SPYX: "0x3b95d58624f44361a5441e4f19c8c75bf5246e36b3f7ced4b8675d2e396e204c",
+        NVDAX: "0x284c31305f029182f423f8d3907d737b03fd75d38cf4832167eaba02cdcee1df",
+        TSLAX: "0x49db264043811003e5ab7947dd8cfd5035c0fc84161df4ac589984abc26b9839",
     },
     TESTNET: {
         SUI: "0x9083c9ce1a1eef569bb1a8b31dfa5e0fce2e05887e68ba79ca6ae522acd041f3",

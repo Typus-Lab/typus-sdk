@@ -49,6 +49,8 @@ export const priceIDs: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key i
         BNB: "0x2f95862b045670cd22bee3114c39763a4a08beeb663b145d283c31d7d1101c4f",
         QQQX: "0x178a6f73a5aede9d0d682e86b0047c9f333ed0efe5c6537ca937565219c4054d",
         SPYX: "0x2817b78438c769357182c04346fddaad1178c82f4048828fe0997c3c64624e14",
+        NVDAX: "0x4244d07890e4610f46bbde67de8f43a4bf8b569eebe904f136b469f148503b7f",
+        TSLAX: "0x47a156470288850a440df3a6ce85a55917b813a19bb5b31128a33a986566a362",
     },
     TESTNET: {
         // Pyth EVM Beta
@@ -129,7 +131,9 @@ export const priceInfoObjectIds: { MAINNET: { [key in TOKEN]?: string }; TESTNET
         JPY: "0xde0e6088e7292f50738ecbdebd4502415d4f8de4cfe001918e29b3f4faf15baa",
         BNB: "0x9c6e77f0ecfc46aac395e21c52ccb96518f85acacae743c5b47f4ca5e29826c3",
         SPYX: "0x6a2d53a802faee96b26f5fa86d9ccf05d58008e4f32c95985d12edb60f5e23ea",
-        QQQX: "0xcce836357b028bd85e866320f194980125b58e6117a2e86a24ed5c154df1e799"
+        QQQX: "0xcce836357b028bd85e866320f194980125b58e6117a2e86a24ed5c154df1e799",
+        NVDAX: "0x1ccc57727035cc40a122cecd95f15240de4fb3f2acd5542c8f2109ebc47871a1",
+        TSLAX: "0x678fee0f8d449160f7df3a14db41d7318e917c3afae98eed434a87073cb80c6b",
     },
     TESTNET: {
         SUI: "0x1ebb295c789cc42b3b2a1606482cd1c7124076a0f5676718501fda8c7fd075a0",
