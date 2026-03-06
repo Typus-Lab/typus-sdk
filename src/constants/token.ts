@@ -224,6 +224,12 @@ export function typeArgToAsset(typeArg: string): TOKEN {
         case "0x2073b577f211f188eb243bfc97c7471fdc21980b7a445f1800327a8c687f3ce9::spyx::SPYX": // MAINNET
             return "SPYX";
 
+        case "0x37d108f2d4bf75f748dbca15d1bbc35d277d3ca121c1b60d43ee01c77053a316::nvdax::NVDAX": // MAINNET
+            return "NVDAX";
+
+        case "0xa3a202cf7aa8b28f4c6d8a29e4a62ab530093eb7ac69f67dffda01bf30c47b20::tslax::TSLAX": // MAINNET
+            return "TSLAX";
+
         default:
             throw new Error(`Unknown typeArg: ${typeArg}`);
     }
@@ -254,6 +260,8 @@ export function assetToDecimal(asset: TOKEN): number | undefined {
         case "USOIL":
         case "QQQX":
         case "SPYX":
+        case "NVDAX":
+        case "TSLAX":
             return 9;
         case "WBTC":
         case "sbETH":
