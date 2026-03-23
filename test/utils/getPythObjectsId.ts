@@ -8,7 +8,7 @@ import { createPythClient } from "src/utils/pyth/pythClient";
     const provider = new SuiClient({ url: config.rpcEndpoint });
     const pythClient = createPythClient(provider, network);
 
-    const priceFeeds = [priceIDs[network]["AAPLX"]!, priceIDs[network]["GOOGLX"]!, priceIDs[network]["METAX"]!];
+    const priceFeeds = [priceIDs[network]["COINX"]!, priceIDs[network]["CRCLX"]!];
 
     for (const priceFeed of priceFeeds) {
         // console.log(priceFeed);

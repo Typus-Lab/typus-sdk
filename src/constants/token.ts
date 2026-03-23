@@ -238,6 +238,10 @@ export function typeArgToAsset(typeArg: string): TOKEN {
 
         case "0x72e15b9fd01209df5a600aa640de86c276a0d0ffc3794c918200f4716dbf3bf1::metax::METAX": // MAINNET
             return "METAX";
+        case "0x003a49883e870b82ce4a3977e721f41e3b66d8fde9314e3188f225a1cdd731c3::coinx::COINX": // MAINNET
+            return "COINX";
+        case "0xc5771d7ab8cc3111cf838f7c0c5433ec6f4841a9136291f5b363229288a1b846::crclx::CRCLX": // MAINNET
+            return "CRCLX";
 
         default:
             throw new Error(`Unknown typeArg: ${typeArg}`);
@@ -274,6 +278,8 @@ export function assetToDecimal(asset: TOKEN): number | undefined {
         case "AAPLX":
         case "GOOGLX":
         case "METAX":
+        case "COINX":
+        case "CRCLX":
             return 9;
         case "WBTC":
         case "sbETH":
@@ -374,6 +380,8 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         AAPLX: "0xebaa69a5fed8930fb8cb7169a07e7367bb15b32853572c248022629ca78d406e::aaplx::AAPLX",
         GOOGLX: "0x4fecdcf17e091cf6cbd25ae680e4a98c42636dafaa532f60328986599b4e9514::googlx::GOOGLX",
         METAX: "0x72e15b9fd01209df5a600aa640de86c276a0d0ffc3794c918200f4716dbf3bf1::metax::METAX",
+        COINX: "0x003a49883e870b82ce4a3977e721f41e3b66d8fde9314e3188f225a1cdd731c3::coinx::COINX",
+        CRCLX: "0xc5771d7ab8cc3111cf838f7c0c5433ec6f4841a9136291f5b363229288a1b846::crclx::CRCLX",
     },
     TESTNET: {
         SUI: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
@@ -436,6 +444,8 @@ export const tokenType: { MAINNET: { [key in TOKEN]: string }; TESTNET: { [key i
         AAPLX: "",
         GOOGLX: "",
         METAX: "",
+        COINX: "",
+        CRCLX: "",
     },
 };
 
@@ -515,6 +525,8 @@ export type TOKEN =
     | "AAPLX"
     | "GOOGLX"
     | "METAX"
+    | "COINX"
+    | "CRCLX"
 
     // scallop token
     | "sSCA"
@@ -569,6 +581,8 @@ export const oracle: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key in 
         AAPLX: "0x2dde386504d04343a4f712e3367d4f0247ab40317d0b3db135546ebe39ac09ff",
         GOOGLX: "0x75b6bf96a4b7dc6a9d556b27888573fa7f63a08fc22f06fe33bbf423fee6eb6d",
         METAX: "0xa092d2d3b160cb4fc2d9d3370ea80a02658652a3876fcfce7698376be1e01006",
+        COINX: "0x05d85f9d77247f3a7d701adeeb16e38c436c10d8b75dc0a2bd0baa5b2ac271f7",
+        CRCLX: "0x9dcd38327f49d327c53ab1b42b920325e0e7df6c20cfbfe83e59a2d5b60e5d3a",
     },
     TESTNET: {
         SUI: "0x9083c9ce1a1eef569bb1a8b31dfa5e0fce2e05887e68ba79ca6ae522acd041f3",

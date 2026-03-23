@@ -54,6 +54,8 @@ export const priceIDs: { MAINNET: { [key in TOKEN]?: string }; TESTNET: { [key i
         AAPLX: "0x978e6cc68a119ce066aa830017318563a9ed04ec3a0a6439010fc11296a58675",
         GOOGLX: "0xb911b0329028cd0283e4259c33809d62942bd2716a58084e5f31d64c00b5424e",
         METAX: "0xbf3e5871be3f80ab7a4d1f1fd039145179fb58569e159aee1ccd472868ea5900",
+        COINX: "0x641435d5dffb5311140b480517c79986d8488d5cf08a11eec53b83ad02cab33f",
+        CRCLX: "0xc13184461c0c80d98ffcd89be627c2220b94a96c7c67f0c4b16bc12fd3b17758",
     },
     TESTNET: {
         // Pyth EVM Beta
@@ -140,6 +142,8 @@ export const priceInfoObjectIds: { MAINNET: { [key in TOKEN]?: string }; TESTNET
         AAPLX: "0x80c9fa9060e2682528a9b02e0facfd6c4816e1bb363bdc3c9a6e94224618e03d",
         GOOGLX: "0xff0bda4e0c212f409b89c6c5714c1957f6a867eced1bcfde863bd074d2a0d54c",
         METAX: "0x0cd398ea0262b504a946b3d4acde457a21bee9d41a27083ebf6ec19f99272155",
+        COINX: "0xf19da6da74181c159f3619cc50fdd4dcc62d15538c707175464968a14cbb0464",
+        CRCLX: "0x299b647faef2456b93155b5609ac5edc9ba18bb4f5f6a27383920a528b2ff052",
     },
     TESTNET: {
         SUI: "0x1ebb295c789cc42b3b2a1606482cd1c7124076a0f5676718501fda8c7fd075a0",
