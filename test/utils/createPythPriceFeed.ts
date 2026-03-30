@@ -11,7 +11,7 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
     const pythClient = createPythClient(provider, network);
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.AUTH_MNEMONIC));
 
-    const priceFeeds = [priceIDs[network]["COINX"]!, priceIDs[network]["CRCLX"]!];
+    const priceFeeds = [priceIDs[network]["HOODX"]!, priceIDs[network]["MSTRX"]!];
     let transaction = new Transaction();
     const priceFeedUpdateData = await pythClient.connection.getPriceFeedsUpdateData(priceFeeds);
 
