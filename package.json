@@ -2,7 +2,7 @@
     "name": "@typus/typus-sdk",
     "author": "Typus",
     "description": "typus sdk",
-    "version": "1.8.41",
+    "version": "1.8.42",
     "dependencies": {
         "@mysten/bcs": "^1.6.1",
         "@mysten/kiosk": "^0.12.6",
@@ -50,6 +50,5 @@
     "bugs": {
         "url": "https://github.com/Typus-Lab/typus-sdk/issues"
     },
-    "homepage": "https://github.com/Typus-Lab/typus-sdk#readme",
-    "packageManager": "yarn@4.10.3+sha512.c38cafb5c7bb273f3926d04e55e1d8c9dfa7d9c3ea1f36a4868fa028b9e5f72298f0b7f401ad5eb921749eb012eb1c3bb74bf7503df3ee43fd600d14a018266f"
+    "homepage": "https://github.com/Typus-Lab/typus-sdk#readme"
 }
