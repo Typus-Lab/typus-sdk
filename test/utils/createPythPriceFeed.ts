@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { priceIDs, TypusConfig } from "src/utils";
 import { createPythClient } from "src/utils/pyth/pythClient";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";

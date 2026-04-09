@@ -1,11 +1,11 @@
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import * as fs from "fs";
 import { TypusConfig } from "src/utils";
 import { getTailsKiosk } from "src/typus-nft";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     const raw = fs.readFileSync("tailsDynamicField.csv", "utf-8");
     const dataArray = JSON.parse(raw);

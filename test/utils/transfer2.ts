@@ -1,6 +1,6 @@
 import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { TypusConfig, getMintTokenTx, splitCoin } from "src/utils";
 import { assetToDecimal, TOKEN, tokenRegistry, tokenType } from "src/constants";
 import { Transaction } from "@mysten/sui/transactions";
@@ -10,7 +10,7 @@ import mne from "mnemonic.json";
     let network: "MAINNET" | "TESTNET" = "MAINNET";
     let config = await TypusConfig.default(network, null);
     let signer = Ed25519Keypair.deriveKeypair(String(mne.MNEMONIC));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     let token: TOKEN = "SUI";
 

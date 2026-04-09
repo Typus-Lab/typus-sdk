@@ -1,5 +1,5 @@
 import { Fund, getAllFunds, getVault } from "src/typus-launch/funding-vault";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { TypusConfig } from "src/utils";
 import slack from "slack";
 
@@ -9,12 +9,12 @@ process.removeAllListeners("warning");
 (async () => {
     const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     let config = await TypusConfig.default("MAINNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let index = "0";
     let vault = (await getVault(config, { indexes: [index] }))[index][0];
     let interestBp = Number.parseInt(vault.config[7]);
     let users: string[] = [];
-    let result = await provider.getDynamicFields({ parentId: vault.fund });
+    let result = await provider.listDynamicFields({ parentId: vault.fund });
     while (true) {
         users = users.concat(
             result.data.map((fund) => {
@@ -25,9 +25,9 @@ process.removeAllListeners("warning");
             break;
         }
         await sleep(1000);
-        result = await provider.getDynamicFields({
+        result = await provider.listDynamicFields({
             parentId: "0x5abf51dbb82ada2401f0610d118b090a0b54a47247c5302cb4b5951480fa0115",
-            cursor: result.nextCursor,
+            cursor: result.cursor,
         });
     }
     let funds: Fund[] = [];
@@ -63,7 +63,7 @@ process.removeAllListeners("warning");
     let currentTsMs = new Date().getTime();
     let unissuedInterest = Math.floor(
         Math.floor((remainingCapacity * interestBp * (Number.parseInt(vault.config[1]) - currentTsMs)) / 10000) /
-            Number.parseInt(vault.config[8])
+        Number.parseInt(vault.config[8])
     );
     log = log.concat(`*  remaining capacity: ${getNumberStringWithDecimal(remainingCapacity.toString(), 9)}\n`);
     log = log.concat(`*   unissued interest: ${getNumberStringWithDecimal(unissuedInterest.toString(), 9)}\n`);

@@ -38,5 +38,5 @@ export const getTokenName = ({ token, wrapped, million }: { token: string; wrapp
         tokenName = UnwrappedToken[token] ?? token;
     }
 
-    return million ? MillionToken[tokenName] ?? tokenName : RemoveMillionToken[tokenName] ?? tokenName;
+    return million ? (MillionToken[tokenName] ?? tokenName) : (RemoveMillionToken[tokenName] ?? tokenName);
 };

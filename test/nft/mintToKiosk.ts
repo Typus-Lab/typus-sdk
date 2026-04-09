@@ -1,7 +1,7 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { getMintToKioskTx, getPool } from "src/typus-nft";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { KioskClient, Network } from "@mysten/kiosk";
 import { Transaction } from "@mysten/sui/transactions";
@@ -19,18 +19,18 @@ const necklace = "kriya_dex";
 
     console.log(address);
 
-    var result = await client.getOwnedObjects({
+    var result = await client.listOwnedObjects({
         owner: address,
-        options: { showType: true, showContent: true },
+        include: { content: true },
     });
 
     var datas = result.data;
 
     while (result.hasNextPage) {
-        result = await client.getOwnedObjects({
+        result = await client.listOwnedObjects({
             owner: address,
-            options: { showType: true, showContent: true },
-            cursor: result.nextCursor,
+            include: { content: true },
+            cursor: result.cursor,
         });
         datas = datas.concat(result.data);
     }

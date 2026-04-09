@@ -1,6 +1,6 @@
 import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { whitelistTx } from "src/typus-launch/auction";
 import { TypusConfig } from "src/utils";
@@ -10,7 +10,7 @@ import * as fs from "fs";
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.TGE_AUCTION));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     const raw = fs.readFileSync("whitelist.csv", "utf-8");
     const user_data = raw.split("\n").map((line) => line.split(","));

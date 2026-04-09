@@ -1,27 +1,27 @@
 import { TypusConfig } from "src/utils";
 import { KioskClient, Network } from "@mysten/kiosk";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { getTailsIds, getkioskOwnerCaps } from "src/typus-nft";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     const address = "0xdbe178c2c8c8ca8b5789bbc85c1398ec3470817a1d462e6ca443e24bc3ddf54d";
     console.log(address);
 
-    var result = await provider.getOwnedObjects({
+    var result = await provider.listOwnedObjects({
         owner: address,
-        options: { showType: true, showContent: true },
+        include: { content: true },
     });
 
     var datas = result.data;
 
     while (result.hasNextPage) {
-        result = await provider.getOwnedObjects({
+        result = await provider.listOwnedObjects({
             owner: address,
-            options: { showType: true, showContent: true },
-            cursor: result.nextCursor,
+            include: { content: true },
+            cursor: result.cursor,
         });
         datas = datas.concat(result.data);
     }

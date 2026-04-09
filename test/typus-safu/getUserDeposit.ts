@@ -1,6 +1,6 @@
 import { getShareData, getVaultData } from "src/typus-safu";
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { getVaults } from "src/typus-dov-single-v2";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import { getFund } from "src/typus-launch/funding-vault";
@@ -11,9 +11,9 @@ import { getFund } from "src/typus-launch/funding-vault";
     console.log(user);
 
     // 1. Get number of safu vaults
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     // Request: 1
-    let registry = await provider.getObject({ id: config.registry.safu.safu, options: { showContent: true } });
+    let registry = await provider.getObject({ id: config.registry.safu.safu, include: { content: true } });
     // @ts-ignore
     const n = registry.data.content.fields.num_of_vault as number;
     // console.log(n);

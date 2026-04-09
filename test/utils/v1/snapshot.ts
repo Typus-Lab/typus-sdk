@@ -1,11 +1,11 @@
 import "src/utils/load_env";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { TypusConfig } from "src/utils";
 import * as fs from "fs";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", "https://sui-mainnet.blastapi.io:443/df8b799c-1e3b-4309-b289-ddfb76cc090d");
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     // const parentId = "0x6a355cba462b62ad9e835b889af0417e080ac7ca2d9c98105b6778d75736d7bf";
     const parentId = "0xe357f3b4038a218b85f63be0255b3c79e0e273e880a5f89d9bc54f9e6e0bb3c4";
@@ -22,17 +22,17 @@ import * as fs from "fs";
 
     while (hasNextPage) {
         console.log(count, ",", cursor);
-        var result = await provider.getDynamicFields({
+        var result = await provider.listDynamicFields({
             parentId,
             cursor,
         });
 
         hasNextPage = result.hasNextPage;
-        cursor = result.nextCursor;
+        cursor = result.cursor;
 
-        var objects = await provider.multiGetObjects({
+        var objects = await provider.getObjects({
             ids: result.data.map((item) => item.objectId),
-            options: { showContent: true },
+            include: { content: true },
         });
 
         var datas = objects.map((item) => {

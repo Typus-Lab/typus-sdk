@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { BcsReader } from "@mysten/bcs";
 import { SENDER } from "src/constants";
 import { AddressFromBytes, TypusConfig } from "src/utils";
@@ -17,15 +17,15 @@ export async function getVeTypus(
         user: string;
     }
 ): Promise<VeTypus[]> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     transaction.moveCall({
         target: `${config.package.launch.veTypus}::ve_typus::get_ve_typus_bcs`,
         arguments: [transaction.object(config.registry.launch.veTypus), transaction.pure.address(input.user)],
     });
-    let devInspectTransactionBlockResult = await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction });
+    let devInspectTransactionBlockResult = await provider.simulateTransaction({ transaction });
     // @ts-ignore
-    let bytes = devInspectTransactionBlockResult.results[0].returnValues[0][0];
+    let bytes = devInspectTransactionBlockResult.commandResults[0].returnValues[0].bcs;
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();
     return reader.readVec((reader) => {
@@ -50,7 +50,7 @@ export async function getReports(
         tsMss: string[];
     }
 ): Promise<VeTypusReport[]> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     input.tsMss.forEach((tsMs) => {
         transaction.moveCall({
@@ -58,11 +58,12 @@ export async function getReports(
             arguments: [transaction.object(config.registry.launch.veTypus), transaction.pure.u64(tsMs)],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     // @ts-ignore
     return results?.map((result) => {
         // @ts-ignore
-        let reader = new BcsReader(new Uint8Array(result.returnValues[0][0]));
+        let reader = new BcsReader(new Uint8Array(result.returnValues[0].bcs));
         reader.readULEB();
         return {
             totalVeTypusAmount: reader.read64(),
@@ -85,7 +86,7 @@ export async function fetchVeTypusInfo(
         user?: string;
     }
 ): Promise<VeTypusInfo> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     transaction.moveCall({
         target: `${config.package.launch.veTypus}::ve_typus::get_report`,
@@ -105,9 +106,10 @@ export async function fetchVeTypusInfo(
             ],
         });
     }
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     // @ts-ignore
-    let reader = new BcsReader(new Uint8Array(results[0].returnValues[0][0]));
+    let reader = new BcsReader(new Uint8Array(results[0].returnValues[0].bcs));
     reader.readULEB();
     let totalVeTypusAmount = reader.read64();
     let totalStakedTypusAmount = reader.read64();
@@ -117,7 +119,7 @@ export async function fetchVeTypusInfo(
     ).toString();
     if (input.user) {
         // @ts-ignore
-        let reader = new BcsReader(new Uint8Array(results[1].returnValues[0][0]));
+        let reader = new BcsReader(new Uint8Array(results[1].returnValues[0].bcs));
         reader.readULEB();
         let veTypus = reader.readVec((reader) => {
             reader.readULEB();
@@ -130,7 +132,7 @@ export async function fetchVeTypusInfo(
             } as VeTypus;
         });
         // @ts-ignore
-        reader = new BcsReader(new Uint8Array(results[2].returnValues[0][0]));
+        reader = new BcsReader(new Uint8Array(results[2].returnValues[0].bcs));
         let veTypusAmount = reader.read64();
         return {
             totalVeTypusAmount,

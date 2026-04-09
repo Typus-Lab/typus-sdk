@@ -15,16 +15,23 @@
     "@gql.tada/internal" "^1.0.0"
     graphql "^15.5.0 || ^16.0.0 || ^17.0.0"
 
-"@gql.tada/cli-utils@1.7.2":
-  version "1.7.2"
-  resolved "https://registry.npmjs.org/@gql.tada/cli-utils/-/cli-utils-1.7.2.tgz#3dcdc4baacaed8f499b65b4202fdccdaf7340273"
-  integrity sha512-Qbc7hbLvCz6IliIJpJuKJa9p05b2Jona7ov7+qofCsMRxHRZE1kpAmZMvL8JCI4c0IagpIlWNaMizXEQUe8XjQ==
+"@gql.tada/cli-utils@1.7.3":
+  version "1.7.3"
+  resolved "https://registry.npmjs.org/@gql.tada/cli-utils/-/cli-utils-1.7.3.tgz#06dcab8d646f805176393864414c314d4a77826c"
+  integrity sha512-3iQY5E/jvv3Lnh6D1Mh7zr+Bb9C/TGk1DHkm+lbIjQBnZAu2m+BcTcr1e3spUt6Aa6HG/xAN2XxpbWw9oZALEg==
   dependencies:
     "@0no-co/graphqlsp" "^1.12.13"
-    "@gql.tada/internal" "1.0.8"
+    "@gql.tada/internal" "1.0.9"
     graphql "^15.5.0 || ^16.0.0 || ^17.0.0"
 
-"@gql.tada/internal@1.0.8", "@gql.tada/internal@^1.0.0":
+"@gql.tada/internal@1.0.9":
+  version "1.0.9"
+  resolved "https://registry.npmjs.org/@gql.tada/internal/-/internal-1.0.9.tgz#15602e4d444741b11557d17b0dab7e0299b18030"
+  integrity sha512-Bp8yi+kLrzIJ3l5Dfxhz48H4OCH2LCX+pShaPcJgh+oiBt6clrjUKDYNDD3Z78aDQ3+Tyrxe4dd0MfLgpSLPPg==
+  dependencies:
+    "@0no-co/graphql.web" "^1.0.5"
+
+"@gql.tada/internal@^1.0.0":
   version "1.0.8"
   resolved "https://registry.npmjs.org/@gql.tada/internal/-/internal-1.0.8.tgz#3ba9fa6534809788bbbe103492f70b8e9d754027"
   integrity sha512-XYdxJhtHC5WtZfdDqtKjcQ4d7R1s0d1rnlSs3OcBEUbYiPoJJfZU7tWsVXuv047Z6msvmr4ompJ7eLSK5Km57g==
@@ -36,75 +43,61 @@
   resolved "https://registry.npmjs.org/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
 
-"@mysten/bcs@1.9.2", "@mysten/bcs@^1.6.1":
-  version "1.9.2"
-  resolved "https://registry.npmjs.org/@mysten/bcs/-/bcs-1.9.2.tgz#3bf0e30f14595c9d9e5c142e94b5646ac1318da7"
-  integrity sha512-kBk5xrxV9OWR7i+JhL/plQrgQ2/KJhB2pB5gj+w6GXhbMQwS3DPpOvi/zN0Tj84jwPvHMllpEl0QHj6ywN7/eQ==
+"@mysten/bcs@2.0.3", "@mysten/bcs@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.npmjs.org/@mysten/bcs/-/bcs-2.0.3.tgz#c1ec110fb67e1a5e45a58da97210ad62ee2c03fe"
+  integrity sha512-dwcaL4HNAsEGpU3hKUAsXgCZp9l6++e2A3THpzoYZ8e7bsy4XH1V0dXD5dIzgNcVZiZfb6ZnDMG+gdF6+1WOQA==
   dependencies:
-    "@mysten/utils" "0.2.0"
-    "@scure/base" "^1.2.6"
+    "@mysten/utils" "^0.3.1"
+    "@scure/base" "^2.0.0"
 
-"@mysten/kiosk@^0.12.6":
-  version "0.12.26"
-  resolved "https://registry.npmjs.org/@mysten/kiosk/-/kiosk-0.12.26.tgz#3d5d6199feda52a727833b2ff841c01034b55f02"
-  integrity sha512-CvkBOIUfYWc0CL9LMyjLOrtFRQqazR5IHAmnEUjUHP0iTneFoGHVs+9U0FGVvhM9u1RmmjM32NzXA4+PiG1FDw==
+"@mysten/kiosk@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.npmjs.org/@mysten/kiosk/-/kiosk-1.2.0.tgz#1395af7654d1d7de3ffc6a7d6405cea57f361717"
+  integrity sha512-rfO0Sku/d02OlrveDCzWLU4tnkRPGKBz9DjMgk2KZFIyIoIyewSlIVtTTgAf6fbKMzl3SUsolB1jSY3R9dVpyQ==
   dependencies:
-    "@mysten/sui" "1.37.6"
-    "@mysten/utils" "0.1.1"
+    "@mysten/bcs" "^2.0.3"
+    "@mysten/utils" "^0.3.1"
 
-"@mysten/sui@1.37.6", "@mysten/sui@^1.3.0", "@mysten/sui@^1.30.0":
-  version "1.45.2"
-  resolved "https://registry.npmjs.org/@mysten/sui/-/sui-1.45.2.tgz#cd5f06226e3db74eba163d1deb180e53f9ec147b"
-  integrity sha512-gftf7fNpFSiXyfXpbtP2afVEnhc7p2m/MEYc/SO5pov92dacGKOpQIF7etZsGDI1Wvhv+dpph+ulRNpnYSs7Bg==
+"@mysten/sui@2.13.2", "@mysten/sui@^1.3.0":
+  version "2.13.2"
+  resolved "https://registry.npmjs.org/@mysten/sui/-/sui-2.13.2.tgz#442cab5fbb3858e2f4b60054e012ca4db0f8306c"
+  integrity sha512-M/H2CZJQyLyi0vvCJZ6rRzItJCsnh66v1OTI2VoBad2lau/BTuUKOEPjRpfU4YlVJcGR4h+RLCjDXV4ACuRKSA==
   dependencies:
     "@graphql-typed-document-node/core" "^3.2.0"
-    "@mysten/bcs" "1.9.2"
-    "@mysten/utils" "0.2.0"
-    "@noble/curves" "=1.9.4"
-    "@noble/hashes" "^1.8.0"
+    "@mysten/bcs" "^2.0.3"
+    "@mysten/utils" "^0.3.1"
+    "@noble/curves" "^2.0.1"
+    "@noble/hashes" "^2.0.1"
     "@protobuf-ts/grpcweb-transport" "^2.11.1"
     "@protobuf-ts/runtime" "^2.11.1"
     "@protobuf-ts/runtime-rpc" "^2.11.1"
-    "@scure/base" "^1.2.6"
-    "@scure/bip32" "^1.7.0"
-    "@scure/bip39" "^1.6.0"
-    gql.tada "^1.8.13"
-    graphql "^16.11.0"
+    "@scure/base" "^2.0.0"
+    "@scure/bip32" "^2.0.1"
+    "@scure/bip39" "^2.0.1"
+    gql.tada "^1.9.0"
+    graphql "^16.12.0"
     poseidon-lite "0.2.1"
     valibot "^1.2.0"
 
-"@mysten/utils@0.1.1":
-  version "0.1.1"
-  resolved "https://registry.npmjs.org/@mysten/utils/-/utils-0.1.1.tgz#4f2e24234bcf8b6977e47fd5469f46af57de5575"
-  integrity sha512-jvhJC6/2la1QHltukQXzfyTZ+VVHxe187JjPx+mEXRUWyAo6jCSdioOQJIfaGu4K4i+37KeiydXRwV/bq/7UJQ==
+"@mysten/utils@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.npmjs.org/@mysten/utils/-/utils-0.3.1.tgz#5bcade6f47f24f81001a2d268092f3a3b5043a3a"
+  integrity sha512-36KhxG284uhDdSnlkyNaS6fzKTX9FpP2WQWOwUKIRsqQFFIm2ooCf2TP1IuqrtMpkairwpiWkAS0eg7cpemVzg==
   dependencies:
-    "@scure/base" "^1.2.6"
+    "@scure/base" "^2.0.0"
 
-"@mysten/utils@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.npmjs.org/@mysten/utils/-/utils-0.2.0.tgz#8c4fa3858284de84c333bc7ae09510cf54d55a54"
-  integrity sha512-CM6kJcJHX365cK6aXfFRLBiuyXc5WSBHQ43t94jqlCAIRw8umgNcTb5EnEA9n31wPAQgLDGgbG/rCUISCTJ66w==
+"@noble/curves@2.0.1", "@noble/curves@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/@noble/curves/-/curves-2.0.1.tgz#64ba8bd5e8564a02942655602515646df1cdb3ad"
+  integrity sha512-vs1Az2OOTBiP4q0pwjW5aF0xp9n4MxVrmkFBxc6EKZc6ddYx5gaZiAsZoq0uRRXWbi3AT/sBqn05eRPtn1JCPw==
   dependencies:
-    "@scure/base" "^1.2.6"
+    "@noble/hashes" "2.0.1"
 
-"@noble/curves@=1.9.4":
-  version "1.9.4"
-  resolved "https://registry.npmjs.org/@noble/curves/-/curves-1.9.4.tgz#a748c6837ee7854a558cc3b951aedd87a5e7d6a5"
-  integrity sha512-2bKONnuM53lINoDrSmK8qP8W271ms7pygDhZt4SiLOoLwBtoHqeCFi6RG42V8zd3mLHuJFhU/Bmaqo4nX0/kBw==
-  dependencies:
-    "@noble/hashes" "1.8.0"
-
-"@noble/curves@~1.9.0":
-  version "1.9.7"
-  resolved "https://registry.npmjs.org/@noble/curves/-/curves-1.9.7.tgz#79d04b4758a43e4bca2cbdc62e7771352fa6b951"
-  integrity sha512-gbKGcRUYIjA3/zCCNaWDciTMFI0dCkvou3TL8Zmy5Nc7sJ47a0jtOeZoTaMxkuqRo9cRhjOdZJXegxYE5FN/xw==
-  dependencies:
-    "@noble/hashes" "1.8.0"
-
-"@noble/hashes@1.8.0", "@noble/hashes@^1.8.0", "@noble/hashes@~1.8.0":
-  version "1.8.0"
-  resolved "https://registry.npmjs.org/@noble/hashes/-/hashes-1.8.0.tgz#cee43d801fcef9644b11b8194857695acd5f815a"
-  integrity sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==
+"@noble/hashes@2.0.1", "@noble/hashes@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/@noble/hashes/-/hashes-2.0.1.tgz#fc1a928061d1232b0a52bb754393c37a5216c89e"
+  integrity sha512-XlOlEbQcE9fmuXxrVTXCTlG2nlRXa9Rj3rr5Ue/+tX+nmkgbX720YHh0VR3hBF9xDvwnb8D2shVGOwNx+ulArw==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -174,32 +167,32 @@
     "@pythnetwork/hermes-client" "2.0.0"
     buffer "^6.0.3"
 
-"@scure/base@^1.2.6", "@scure/base@~1.2.5":
-  version "1.2.6"
-  resolved "https://registry.npmjs.org/@scure/base/-/base-1.2.6.tgz#ca917184b8231394dd8847509c67a0be522e59f6"
-  integrity sha512-g/nm5FgUa//MCj1gV09zTJTaM6KBAHqLN907YVQqf7zC49+DcO4B1so4ZX07Ef10Twr6nuqYEH9GEggFXA4Fmg==
+"@scure/base@2.0.0", "@scure/base@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/@scure/base/-/base-2.0.0.tgz#ba6371fddf92c2727e88ad6ab485db6e624f9a98"
+  integrity sha512-3E1kpuZginKkek01ovG8krQ0Z44E3DHPjc5S2rjJw9lZn3KSQOs8S7wqikF/AH7iRanHypj85uGyxk0XAyC37w==
 
-"@scure/bip32@^1.7.0":
-  version "1.7.0"
-  resolved "https://registry.npmjs.org/@scure/bip32/-/bip32-1.7.0.tgz#b8683bab172369f988f1589640e53c4606984219"
-  integrity sha512-E4FFX/N3f4B80AKWp5dP6ow+flD1LQZo/w8UnLGYZO674jS6YnYeepycOOksv+vLPSpgN35wgKgy+ybfTb2SMw==
+"@scure/bip32@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/@scure/bip32/-/bip32-2.0.1.tgz#4ceea207cee8626d3fe8f0b6ab68b6af8f81c482"
+  integrity sha512-4Md1NI5BzoVP+bhyJaY3K6yMesEFzNS1sE/cP+9nuvE7p/b0kx9XbpDHHFl8dHtufcbdHRUUQdRqLIPHN/s7yA==
   dependencies:
-    "@noble/curves" "~1.9.0"
-    "@noble/hashes" "~1.8.0"
-    "@scure/base" "~1.2.5"
+    "@noble/curves" "2.0.1"
+    "@noble/hashes" "2.0.1"
+    "@scure/base" "2.0.0"
 
-"@scure/bip39@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.npmjs.org/@scure/bip39/-/bip39-1.6.0.tgz#475970ace440d7be87a6086cbee77cb8f1a684f9"
-  integrity sha512-+lF0BbLiJNwVlev4eKelw1WWLaiKXw7sSl8T6FvBlWkdX+94aGJ4o8XjUdlyhTCjd8c+B3KT3JfS8P0bLRNU6A==
+"@scure/bip39@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/@scure/bip39/-/bip39-2.0.1.tgz#47a6dc15e04faf200041239d46ae3bb7c3c96add"
+  integrity sha512-PsxdFj/d2AcJcZDX1FXN3dDgitDDTmwf78rKZq1a6c1P1Nan1X/Sxc7667zU3U+AN60g7SxxP0YCVw2H/hBycg==
   dependencies:
-    "@noble/hashes" "~1.8.0"
-    "@scure/base" "~1.2.5"
+    "@noble/hashes" "2.0.1"
+    "@scure/base" "2.0.0"
 
-"@shinami/clients@^0.9.6":
-  version "0.9.8"
-  resolved "https://registry.npmjs.org/@shinami/clients/-/clients-0.9.8.tgz#2ab6108478e0f2d7be3cc0fea1056172fb10afe7"
-  integrity sha512-GjJTC3Kgk+upcS7GFCsjHgkaks6mHLOrAhruFhsR1UifSW/xFfwAhP2q1jmLR/3RLGeEsnZoRAwEuYK8JGL8Cw==
+"@shinami/clients@0.10.0":
+  version "0.10.0"
+  resolved "https://registry.npmjs.org/@shinami/clients/-/clients-0.10.0.tgz#65b346354403e3a6bc5eea1e28a6178e3ada127b"
+  integrity sha512-urmTiGsGC0qBKkZMDz5vlPbt/xtUsfkW8zAOHSER6gZNc4oYDQTJbeP6j1poXpXSncxvPTv7QYdgBcM9jfNhgw==
   dependencies:
     "@open-rpc/client-js" "^2.0.0"
     superstruct "^2.0.2"
@@ -227,13 +220,6 @@
   integrity sha512-jp2P3tQMSxWugkCUKLRPVUpGaL5MVFwF8RDuSRztfwgN1wmqJeMSbKlnEtQqU8UrhTmzEmZdu2I6v2dpp7XIxw==
   dependencies:
     undici-types "~7.18.0"
-
-"@types/node@^20.5.7":
-  version "20.19.37"
-  resolved "https://registry.npmjs.org/@types/node/-/node-20.19.37.tgz#b4fb4033408dd97becce63ec932c9ec57a9e2919"
-  integrity sha512-8kzdPJ3FsNsVIurqBs7oodNnCEVbni9yUEkaHbgptDACOPW04jimGagZ51E6+lXUwJjgnBw+hyko/lkFWCldqw==
-  dependencies:
-    undici-types "~6.21.0"
 
 "@zodios/core@^10.9.6":
   version "10.9.6"
@@ -528,17 +514,17 @@ gopd@^1.2.0:
   resolved "https://registry.npmjs.org/gopd/-/gopd-1.2.0.tgz#89f56b8217bdbc8802bd299df6d7f1081d7e51a1"
   integrity sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==
 
-gql.tada@^1.8.13:
-  version "1.9.1"
-  resolved "https://registry.npmjs.org/gql.tada/-/gql.tada-1.9.1.tgz#6b28d689fcd72003d47991eb12994e2b0268126e"
-  integrity sha512-Ijtwgw08aE7l06wK5oj5Msgpk9SUe5FSVcuxU5dHyefdM7fDqLQpA76yHBoq8lPB3MNSir8tznodDknHkm2Z/w==
+gql.tada@^1.9.0:
+  version "1.9.2"
+  resolved "https://registry.npmjs.org/gql.tada/-/gql.tada-1.9.2.tgz#9ceb5e4fe614c821a09e6e27075fe7bdfbbe4af1"
+  integrity sha512-QxRHVpxtrOVdYXz6oavq0lBM+Zdp0swapLGJcD4SLpXDcsD337BHDFrzqqjfkbepv0sSAiO0LGabu1kI5D5Gyg==
   dependencies:
     "@0no-co/graphql.web" "^1.0.5"
     "@0no-co/graphqlsp" "^1.12.13"
-    "@gql.tada/cli-utils" "1.7.2"
-    "@gql.tada/internal" "1.0.8"
+    "@gql.tada/cli-utils" "1.7.3"
+    "@gql.tada/internal" "1.0.9"
 
-"graphql@^15.5.0 || ^16.0.0 || ^17.0.0", graphql@^16.11.0:
+"graphql@^15.5.0 || ^16.0.0 || ^17.0.0", graphql@^16.12.0:
   version "16.13.2"
   resolved "https://registry.npmjs.org/graphql/-/graphql-16.13.2.tgz#4d2b73df5796b201f1bc2765f5d7067f689cb55f"
   integrity sha512-5bJ+nf/UCpAjHM8i06fl7eLyVC9iuNAjm9qzkiu2ZGhM0VscSvS6WDPfAwkdkBuoXGM9FJSbKl6wylMwP9Ktig==
@@ -809,11 +795,6 @@ typescript@^5.1.6:
   version "5.9.3"
   resolved "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz#5b4f59e15310ab17a216f5d6cf53ee476ede670f"
   integrity sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==
-
-undici-types@~6.21.0:
-  version "6.21.0"
-  resolved "https://registry.npmjs.org/undici-types/-/undici-types-6.21.0.tgz#691d00af3909be93a7faa13be61b3a5b50ef12cb"
-  integrity sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==
 
 undici-types@~7.18.0:
   version "7.18.2"

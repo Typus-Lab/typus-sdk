@@ -10,9 +10,7 @@ export async function getUserEvents(
     sender: string,
     cursor?: EventId | null
 ): Promise<[SuiEvent[], EventId | null | undefined]> {
-    let senderFilter: SuiEventFilter = {
-        Sender: sender,
-    };
+    let senderFilter: SuiEventFilter = {};
 
     var hasNextPage = true;
 
@@ -27,7 +25,7 @@ export async function getUserEvents(
         // console.log(result);
 
         hasNextPage = result.hasNextPage;
-        cursor = result.nextCursor;
+        cursor = result.cursor;
 
         // @ts-ignore
         datas = datas.concat(result.data);
@@ -55,7 +53,7 @@ export async function getAutoBidEvents(provider: SuiClient, originPackage: strin
         // console.log(result);
 
         hasNextPage = result.hasNextPage;
-        cursor = result.nextCursor;
+        cursor = result.cursor;
 
         // @ts-ignore
         datas = datas.concat(result.data);

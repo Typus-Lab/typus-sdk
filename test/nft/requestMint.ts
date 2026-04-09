@@ -1,14 +1,14 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { getIsWhitelistTx, getRequestMintTx, getDiscountPool, getMintHistory } from "src/typus-nft";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Transaction } from "@mysten/sui/transactions";
 
 (async () => {
     const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let config = await TypusConfig.default("TESTNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     const pool = "0x7e3172a59cdde0ba50abd57ca82bd4dd9427b1a5ae3b3d386da0db251402aaae";
 
@@ -23,9 +23,9 @@ import { Transaction } from "@mysten/sui/transactions";
 
     var transaction = await getIsWhitelistTx(config, new Transaction(), { pool, user });
 
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: user })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } })).commandResults;
     // @ts-ignore
-    const isWhitelist = results![0].returnValues[0][0] == 1;
+    const isWhitelist = results![0].returnValues[0].bcs == 1;
     console.log("isWhitelist: " + isWhitelist);
 
     const seed = "2"; // 0,1,2
@@ -35,7 +35,7 @@ import { Transaction } from "@mysten/sui/transactions";
     const result = await provider.signAndExecuteTransaction({
         signer: keypair,
         transaction,
-        options: { showEvents: true },
+        include: { showEvents: true },
     });
     console.log({ result });
 

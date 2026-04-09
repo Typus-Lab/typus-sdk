@@ -1,6 +1,6 @@
 import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import { addOtcConfig } from "src/typus-dov-single-v2/otc-entry";
@@ -9,7 +9,7 @@ import { getVaults } from "src/typus-dov-single-v2";
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     let indexes = ["125"];
     let users = ["0x74c7a18d6de49f31bc6007e24afa3ea0693fefa5db6c7174c68730540c82d275"];

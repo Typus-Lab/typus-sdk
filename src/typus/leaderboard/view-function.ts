@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { BcsReader } from "@mysten/bcs";
 import { AddressFromBytes, TypusConfig } from "src/utils";
 import { SENDER } from "src/constants";
@@ -22,7 +22,7 @@ export async function getRankings(
         active: boolean;
     }
 ): Promise<Rankings> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     transaction.moveCall({
         target: `${config.package.typus}::leaderboard::get_rankings`,
@@ -38,13 +38,12 @@ export async function getRankings(
         ],
     });
     let results = (
-        await provider.devInspectTransactionBlock({
-            sender: SENDER,
-            transactionBlock: transaction,
+        await provider.simulateTransaction({
+            transaction,
         })
-    ).results;
+    ).commandResults;
     // @ts-ignore
-    let bytes = results[results.length - 1].returnValues[0][0];
+    let bytes = results[results.length - 1].returnValues[0].bcs;
     let reader = new BcsReader(new Uint8Array(bytes));
     let result = reader.readVec((reader, i) => {
         if (i == 0) {

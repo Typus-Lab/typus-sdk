@@ -1,10 +1,10 @@
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { TypusConfig } from "src/utils";
 import { PoolData, getPoolMap, getTableTails } from "src/typus-nft";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     let poolMap = await getPoolMap(provider, config);
     console.log(poolMap);

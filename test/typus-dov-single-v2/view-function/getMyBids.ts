@@ -1,22 +1,22 @@
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { getMyBids } from "src/typus-dov-single-v2";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     let user = "0xe6b6849126c345010c93022f038ff1f6fb9a759dd7848e4d9e22f68c764377e7";
-    var temp = await provider.getOwnedObjects({
+    var temp = await provider.listOwnedObjects({
         owner: user,
-        options: { showType: true, showContent: true },
+        include: { content: true },
     });
     var datas = temp.data;
     while (temp.hasNextPage) {
-        temp = await provider.getOwnedObjects({
+        temp = await provider.listOwnedObjects({
             owner: user,
-            options: { showType: true, showContent: true },
-            cursor: temp.nextCursor,
+            include: { content: true },
+            cursor: temp.cursor,
         });
         datas = datas.concat(temp.data);
     }

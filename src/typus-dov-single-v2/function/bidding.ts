@@ -4,7 +4,6 @@ import { checkNumber, countFloating, insertAt, getLatestPrice, createPythClient,
 import { getUserStrategies } from "src/auto-bid";
 import { orderBy } from "lodash";
 import { StableCoin, getTokenName, WrappedToken } from "./token";
-import { SuiClient, SuiObjectResponse } from "@mysten/sui/client";
 import { typeArgsToAssets } from "src/constants";
 import BigNumber from "bignumber.js";
 import { TypusConfig } from "src/utils";
@@ -386,8 +385,8 @@ export const parseBid = (
     let live = !auction
         ? false
         : moment.unix(Number(auction.endTsMs) / 1000).isAfter(moment()) &&
-          moment.unix(Number(auction.startTsMs) / 1000).isBefore(moment()) &&
-          moment(expirationDate, "DD MMM YY, HH:mm").isAfter(moment.unix(Number(auction.endTsMs) / 1000));
+        moment.unix(Number(auction.startTsMs) / 1000).isBefore(moment()) &&
+        moment(expirationDate, "DD MMM YY, HH:mm").isAfter(moment.unix(Number(auction.endTsMs) / 1000));
 
     let deliveryPrice = calcDeliveryPrice(bidShare, vaultInfo);
 
@@ -448,28 +447,28 @@ export const parseBid = (
     };
 };
 
-export async function getUserOwnedObjects(config: TypusConfig, user: string): Promise<SuiObjectResponse[]> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
-    let result = await provider.getOwnedObjects({ owner: user, options: { showType: true, showContent: true } });
+export async function getUserOwnedObjects(config: TypusConfig, user: string) {
+    const provider = config.gRpcClient();
+    let result = await provider.listOwnedObjects({ owner: user, include: { content: true } });
 
     let hasNextPage = result.hasNextPage;
-    let data = result.data;
-    let nextCursor = result.nextCursor;
+    let data = result.objects;
+    let cursor = result.cursor;
     while (hasNextPage) {
-        result = await provider.getOwnedObjects({
+        result = await provider.listOwnedObjects({
             owner: user,
-            cursor: nextCursor,
-            options: { showType: true, showContent: true },
+            cursor: cursor,
+            include: { content: true },
         });
-        data = [...data, ...result.data];
+        data = [...data, ...result.objects];
         hasNextPage = result.hasNextPage;
-        nextCursor = result.nextCursor;
+        cursor = result.cursor;
     }
 
     return data;
 }
 
-export const getUserBidReceipts = async (config: TypusConfig, data: SuiObjectResponse[]) => {
+export const getUserBidReceipts = async (config: TypusConfig, data) => {
     let bidReceipts: { [key: string]: Receipt[] } = {};
 
     if (data.length === 0) {

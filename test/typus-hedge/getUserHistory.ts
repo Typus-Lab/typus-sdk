@@ -6,7 +6,7 @@ import * as fs from "fs";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let sender = "0x845c22be3e771ac8d90973e9859b5088207527c158f75ba4ac9e6201ca1eedb8";
     let fileName = "mainnetLocalCacheEvents.json";
 
@@ -29,7 +29,7 @@ import * as fs from "fs";
             cursor = userCache[1];
             console.log("Load from cache...");
         }
-    } catch {}
+    } catch { }
 
     let [datas1, cursor1] = await getUserEvents(provider, sender, cursor);
 

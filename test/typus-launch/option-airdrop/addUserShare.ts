@@ -1,7 +1,7 @@
 import "src/utils/load_env";
 import { addUserShare } from "src/typus-launch/option-airdrop";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import mnemonic from "mnemonic.json";
@@ -10,7 +10,7 @@ import * as fs from "fs";
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.TGE_AIRDROP));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let user = signer.toSuiAddress();
     console.log("User address:", user);
 

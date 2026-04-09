@@ -1,6 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { normalizeStructTag } from "@mysten/sui/utils";
-import axios from "axios";
 import { oracle } from "src/constants";
 import { typeArgToAsset } from "src/constants/token";
 import { bcs, fromHex } from "@mysten/bcs";
@@ -21,14 +20,14 @@ export type TypusOracleData = {
         timestamp: number;
         signature: string;
     };
-}
+};
 
 export const parseFullTypusOracleData = (data: TypusOracleData) => {
     if (data.success == true) {
         return {
             data: data.data,
             signed: data.signed,
-        }
+        };
     }
     return null;
 };
@@ -37,32 +36,31 @@ export async function updateOracleWithSignatureTx(
     network: "MAINNET" | "TESTNET",
     tx: Transaction,
     oracleContract: string,
-    tokenType: string,
+    tokenType: string
 ) {
     const baseTokenType = tokenType.startsWith("0x") ? tokenType.slice(2) : tokenType;
 
-
     let oracleData: Omit<TypusOracleData, "success"> | null = null;
     try {
-        const result = await axios.get<TypusOracleData>(`https://asia-east1-aqueous-freedom-378103.cloudfunctions.net/get-price?pair=${tokenType}`)
-        if (result.data) {
-            oracleData = parseFullTypusOracleData(result.data);
+        const result = await fetch(`https://asia-east1-aqueous-freedom-378103.cloudfunctions.net/get-price?pair=${tokenType}`);
+        const data = await result.json();
+        if (data) {
+            oracleData = parseFullTypusOracleData(data);
         }
     } catch (error) {
         console.error(error);
         return tx;
     }
 
-
     const oracleAddress = oracle[network][typeArgToAsset(normalizeStructTag(tokenType))];
     if (oracleData && oracleAddress) {
-        const oracleIdBytes = fromHex(oracleAddress.startsWith('0x') ? oracleAddress.slice(2) : oracleAddress);
+        const oracleIdBytes = fromHex(oracleAddress.startsWith("0x") ? oracleAddress.slice(2) : oracleAddress);
         const pairBytes = new Uint8Array(Buffer.from(baseTokenType, "utf8"));
         const priceBytes = bcs.u64().serialize(oracleData.signed.price).toBytes();
         const twapBytes = bcs.u64().serialize(oracleData.signed.twap).toBytes();
         const timestampBytes = bcs.u64().serialize(oracleData.signed.timestamp.toString()).toBytes();
 
-        const totalLength = oracleIdBytes.length +pairBytes.length + priceBytes.length + twapBytes.length + timestampBytes.length;
+        const totalLength = oracleIdBytes.length + pairBytes.length + priceBytes.length + twapBytes.length + timestampBytes.length;
         const messageBytes = new Uint8Array(totalLength);
         let offset = 0;
         messageBytes.set(oracleIdBytes, offset);
@@ -79,7 +77,6 @@ export async function updateOracleWithSignatureTx(
 
         const signatureBytes = Uint8Array.from(fromHex(signatureHex));
 
-
         // TODO: replace oracle address with the actual oracle address
         tx.moveCall({
             target: `${oracleContract}::oracle::update_with_signature`,
@@ -92,7 +89,7 @@ export async function updateOracleWithSignatureTx(
                 tx.pure.u64(oracleData.signed.price),
                 tx.pure.u64(oracleData.signed.twap),
                 tx.pure.u64(oracleData.signed.timestamp.toString()),
-                tx.object("0x6")
+                tx.object("0x6"),
             ],
         });
         return tx;

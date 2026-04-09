@@ -1,7 +1,7 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { DrawEvent, getPlaygrounds, playTx } from "src/dice";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Transaction } from "@mysten/sui/transactions";
 
@@ -12,7 +12,7 @@ const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
     let network: "MAINNET" | "TESTNET" = "MAINNET";
     let module: "combo_dice" | "tails_exp" = "combo_dice";
     let config = await TypusConfig.default(network, null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let user = keypair.toSuiAddress();
 
     let index = "0";
@@ -40,7 +40,7 @@ const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
         larger_than_2,
     });
 
-    let res = await provider.signAndExecuteTransaction({ signer: keypair, transaction, options: { showEvents: true } });
+    let res = await provider.signAndExecuteTransaction({ signer: keypair, transaction, include: { showEvents: true } });
     console.log(res);
 
     try {
@@ -48,5 +48,5 @@ const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
         let result = res.events![2].parsedJson!;
         let drawResultV2 = result as DrawEvent;
         console.log(drawResultV2);
-    } catch (e) {}
+    } catch (e) { }
 })();

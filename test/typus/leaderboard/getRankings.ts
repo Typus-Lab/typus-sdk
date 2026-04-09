@@ -8,7 +8,7 @@ import * as fs from "fs";
 
     const trading_competition = await getRankings(config, {
         key: "trading_competition",
-        id: "0x78e0cb9e3316d7138d4fe90f421e6b246bac6bb35d671ac61b42367a3ad95860", // 5/12 0x571a9134c5fe68731a7955a63dfb453d287a130fa1d5beb8b6313a7df13faa04
+        id: "0xa3cffb5dffd9b5b628a6be09996a895598aa0cc2bd803a18f6b366e7c2cda0db", // 5/12 0x571a9134c5fe68731a7955a63dfb453d287a130fa1d5beb8b6313a7df13faa04
         ranks: 500,
         user: "0x51f7f4abb6a4cf83ed59ce634f7c17dc1df2f04abe6842317049a3df0f8be8e4",
         active: true,
@@ -16,7 +16,7 @@ import * as fs from "fs";
     console.log(JSON.stringify(trading_competition, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
 
     console.log(trading_competition.leaderboard.length);
-    saveToFile(trading_competition, "trading_competition_0603.csv");
+    saveToFile(trading_competition, "trading_competition_0407.csv");
 
     // const depositor_program = await getRankings(config, {
     //     key: "depositor_program",

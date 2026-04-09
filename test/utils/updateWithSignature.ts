@@ -1,6 +1,6 @@
 import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import { updateOracleWithSignatureTx } from "src/utils/oracle";
@@ -9,7 +9,7 @@ import { tokenType } from "src/constants";
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     // Test with SUI token
     let token = tokenType["MAINNET"]["TYPUS"];
@@ -27,10 +27,10 @@ import { tokenType } from "src/constants";
     let res = await provider.signAndExecuteTransaction({
         signer,
         transaction,
-        options: {
+        include: {
             showEffects: true,
             showObjectChanges: true,
-        }
+        },
     });
 
     console.log("Transaction result:");

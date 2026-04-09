@@ -1,16 +1,16 @@
 import "src/utils/load_env";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { TypusConfig } from "src/utils";
 import * as fs from "fs";
 import { typeArgToAsset } from "src/constants";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", "https://sui-mainnet.blastapi.io:443/df8b799c-1e3b-4309-b289-ddfb76cc090d");
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     const parentId = "0xb44c0fa1ab40f7699be3dce02475965a636ed850348435abb3b797b273f6c551";
 
-    var result = await provider.getDynamicFields({
+    var result = await provider.listDynamicFields({
         parentId,
         cursor: null,
     });

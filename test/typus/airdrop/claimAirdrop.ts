@@ -14,7 +14,7 @@ const NETWORK = "TESTNET";
 (async () => {
     let config = await TypusConfig.default(NETWORK, null);
     let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.W));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let user = signer.toSuiAddress();
     console.log(`Using account ${user}`);
 
@@ -36,7 +36,7 @@ const NETWORK = "TESTNET";
         key,
         user,
     });
-    // let dryRunRes = await provider.devInspectTransactionBlock({ sender: user, transactionBlock: transaction });
+    // let dryRunRes = await provider.simulateTransaction({ transaction });
     // console.log(dryRunRes.events.map((x) => x.parsedJson));
     let res = await provider.signAndExecuteTransaction({ signer, transaction });
     console.log(res);

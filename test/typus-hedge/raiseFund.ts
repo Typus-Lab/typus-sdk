@@ -1,7 +1,7 @@
 import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { raiseFund } from "src/typus-hedge";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import { tokenType } from "src/constants";
@@ -11,7 +11,7 @@ import { tokenType } from "src/constants";
     let user = signer.toSuiAddress();
     let network: any = "TESTNET";
     let config = await TypusConfig.default(network, null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     // INPUT
     let mainToken = tokenType[network].SUI;

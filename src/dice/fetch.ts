@@ -1,4 +1,5 @@
-import { SuiClient, SuiEventFilter } from "@mysten/sui/client";
+import { bcs, BcsReader } from "@mysten/bcs";
+// import { SuiClient, SuiEventFilter } from "@mysten/sui/client";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import { TypusConfig } from "src/utils";
 
@@ -8,7 +9,7 @@ export async function getPlaygrounds(
         module: "tails_exp" | "combo_dice";
     }
 ) {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.graphQlClient();
     let registry = "";
     switch (input.module) {
         case "tails_exp":
@@ -20,52 +21,28 @@ export async function getPlaygrounds(
         default:
             break;
     }
-    let playgroundIds = (await provider.getDynamicFields({ parentId: registry })).data
-        .filter((a) => a.objectType.endsWith("Playground"))
-        .sort((a, b) => Number(a.name.value) - Number(b.name.value))
-        .map((x) => x.objectId as string);
 
-    // console.log(playgroundIds);
+    let dfs = await config.getDynamicObjectFields(registry, "Playground");
+    // console.log(dfs);
 
-    let objects = await provider.multiGetObjects({
-        ids: playgroundIds,
-        options: { showContent: true },
-    });
+    if (!dfs) {
+        console.error("Not found any playground");
+        return [];
+    }
 
-    let result = objects
-        // @ts-ignore
-        .filter((object) => object.data?.content?.type.endsWith("Playground"))
-        .map((object) => {
-            // @ts-ignore
-            let fields = object.data?.content.fields;
-            // console.log(fields);
-
-            let opened_games = new Map<string, Game>();
-            if (fields.opened_games.fields) {
-                for (let curr of fields.opened_games.fields.contents) {
-                    // console.log(curr);
-                    opened_games.set(curr.fields.key, curr.fields.value.fields as Game);
-                }
-            }
-            // console.log(opened_games);
-
-            let game_config = fields.game_config.fields as GameConfig;
-            // console.log(game_config);
-
+    let result = dfs
+        .map((df) => {
             let playground: Playground = {
-                id: fields.id.id,
-                house_whitelist: fields.house_whitelist,
-                public_key: fields.public_key,
-                num_of_games: fields.num_of_games,
-                stake_token: fields.stake_token.fields.name,
-                opened_games,
-                game_config,
-                is_active: fields.is_active,
+                id: df.id,
+                house_whitelist: df.house_whitelist,
+                public_key: df.public_key,
+                num_of_games: df.num_of_games,
+                stake_token: df.stake_token,
+                opened_games: new Map<string, Game>(),
+                game_config: df.game_config as GameConfig,
+                is_active: df.is_active,
+                exp_config: df.exp_config as ExpConfig ?? undefined
             };
-            if (fields.exp_config) {
-                playground.exp_config = fields.exp_config.fields;
-            }
-            // console.log(playground);
             return playground;
         });
 
@@ -113,46 +90,46 @@ export interface Game {
     vrf_input_2: number[] | null;
 }
 
-export async function getHistory(
-    config: TypusConfig,
-    input: {
-        module: "tails_exp" | "combo_dice";
-        playgrounds: Playground[];
-    }
-): Promise<DrawDisplay[]> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
-    let MoveEventType = "";
-    switch (input.module) {
-        case "tails_exp":
-            MoveEventType = `${config.packageOrigin.dice}::tails_exp::Draw`;
-            break;
-        case "combo_dice":
-            if (config.rpcEndpoint.includes("mainnet")) {
-                MoveEventType = `${config.packageOrigin.dice}::combo_dice::Draw`;
-            } else {
-                MoveEventType = `0xf1d628b4f14f9dae42d73a6cdee9b5f80567fee323166c4ecfb124de7d4ff254::combo_dice::Draw`;
-            }
-            break;
-        default:
-            break;
-    }
-    let eventFilter: SuiEventFilter = {
-        MoveEventType,
-    };
+// export async function getHistory(
+//     config: TypusConfig,
+//     input: {
+//         module: "tails_exp" | "combo_dice";
+//         playgrounds: Playground[];
+//     }
+// ): Promise<DrawDisplay[]> {
+//     const provider = config.gRpcClient();
+//     let MoveEventType = "";
+//     switch (input.module) {
+//         case "tails_exp":
+//             MoveEventType = `${config.packageOrigin.dice}::tails_exp::Draw`;
+//             break;
+//         case "combo_dice":
+//             if (config.rpcEndpoint.includes("mainnet")) {
+//                 MoveEventType = `${config.packageOrigin.dice}::combo_dice::Draw`;
+//             } else {
+//                 MoveEventType = `0xf1d628b4f14f9dae42d73a6cdee9b5f80567fee323166c4ecfb124de7d4ff254::combo_dice::Draw`;
+//             }
+//             break;
+//         default:
+//             break;
+//     }
+//     let eventFilter: SuiEventFilter = {
+//         MoveEventType,
+//     };
 
-    var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
-    // console.log(result);
+//     var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
+//     // console.log(result);
 
-    var history = await parseHistory(result.data, input.playgrounds);
+//     var history = await parseHistory(result.data, input.playgrounds);
 
-    while (result.hasNextPage && history.length <= 60) {
-        result = await provider.queryEvents({ query: eventFilter, order: "descending", cursor: result.nextCursor });
-        let nextPage = await parseHistory(result.data, input.playgrounds);
-        history = history.concat(nextPage);
-    }
+//     while (result.hasNextPage && history.length <= 60) {
+//         result = await provider.queryEvents({ query: eventFilter, order: "descending", cursor: result.cursor });
+//         let nextPage = await parseHistory(result.data, input.playgrounds);
+//         history = history.concat(nextPage);
+//     }
 
-    return history;
-}
+//     return history;
+// }
 
 export async function parseHistory(datas, playgrounds: Playground[]): Promise<DrawDisplay[]> {
     let result = datas.map((event) => {
@@ -304,7 +281,7 @@ export interface DrawDisplay {
 // export async function getProfitSharing(provider: SuiClient, diceProfitSharing: string) {
 //     let object = await provider.getObject({
 //         id: diceProfitSharing,
-//         options: { showContent: true },
+//         include: { content: true },
 //     });
 
 //     // @ts-ignore

@@ -1,13 +1,13 @@
 import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { TypusConfig, getMintTokenTx } from "src/utils";
 import { TOKEN, tokenRegistry, tokenType } from "src/constants";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     let token: TOKEN = "wUSDC";
     let packageId = tokenType["TESTNET"][token].split("::")[0];

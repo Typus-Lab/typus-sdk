@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { BcsReader } from "@mysten/bcs";
 import { SENDER } from "src/constants";
 import { AddressFromBytes, TypusConfig } from "src/utils";
@@ -13,7 +13,7 @@ interface Record {
 }
 
 export async function getLaunchAuctionBids(config: TypusConfig): Promise<Record[]> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     let target = `${config.package.launch.auction}::auction::get_records_bcs` as any;
     let transactionBlockArguments = [transaction.object(config.object.launchAuction)];
@@ -22,9 +22,10 @@ export async function getLaunchAuctionBids(config: TypusConfig): Promise<Record[
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     // @ts-ignore
-    let bytes = results[results.length - 1].returnValues[0][0];
+    let bytes = results[results.length - 1].returnValues[0].bcs;
     let reader = new BcsReader(new Uint8Array(bytes));
     let result = reader.readVec((reader, i) => {
         reader.read8();
@@ -51,7 +52,7 @@ export interface UserBidData {
 }
 
 export async function getBidderInfo(config: TypusConfig, bidder: string): Promise<UserBidData> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     let target = `${config.package.launch.auction}::auction::get_bidder_info` as any;
     let transactionBlockArguments = [transaction.object(config.object.launchAuction), transaction.pure.address(bidder)];
@@ -60,9 +61,10 @@ export async function getBidderInfo(config: TypusConfig, bidder: string): Promis
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     // @ts-ignore
-    let bytes = results[results.length - 1].returnValues[0][0];
+    let bytes = results[results.length - 1].returnValues[0].bcs;
     // console.log(bytes);
 
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -81,7 +83,7 @@ export async function getBidderInfo(config: TypusConfig, bidder: string): Promis
 }
 
 export async function getBiddersInfo(config: TypusConfig, bidders: string[]): Promise<{ [key: string]: [UserBidData] }> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     bidders.forEach((bidder) => {
         transaction.moveCall({
@@ -89,11 +91,12 @@ export async function getBiddersInfo(config: TypusConfig, bidders: string[]): Pr
             arguments: [transaction.object(config.object.launchAuction), transaction.pure.address(bidder)],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     let bids: { [key: string]: [UserBidData] } = {};
     results?.forEach((result, i) => {
         // @ts-ignore
-        let bytes = result.returnValues[0][0];
+        let bytes = result.returnValues[0].bcs;
         let reader = new BcsReader(new Uint8Array(bytes));
         reader.read8();
         let bid = {
@@ -131,9 +134,9 @@ export interface LaunchAuction {
 }
 
 export async function getLaunchAuction(config: TypusConfig): Promise<LaunchAuction> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
-    let response = await provider.getObject({ id: config.object.launchAuction, options: { showContent: true } });
+    let response = await provider.getObject({ id: config.object.launchAuction, include: { content: true } });
 
     // @ts-ignore
     return response.data.content.fields as LaunchAuction;

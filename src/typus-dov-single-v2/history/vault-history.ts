@@ -4,7 +4,7 @@ import { assetToDecimal, typeArgToAsset } from "src/constants";
 import { TypusConfig } from "src/utils";
 
 export async function getVaultHistoryEvents(config: TypusConfig, startTimeMs: number) {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let senderFilter: SuiEventFilter = {
         MoveEventModule: {
             package: config.packageOrigin.dovSingle,
@@ -15,7 +15,7 @@ export async function getVaultHistoryEvents(config: TypusConfig, startTimeMs: nu
     var result = await provider.queryEvents({ query: senderFilter, order: "descending" });
     var datas = result.data;
     var hasNextPage = result.hasNextPage;
-    var cursor = result.nextCursor;
+    var cursor = result.cursor;
 
     while (hasNextPage) {
         var result = await provider.queryEvents({ query: senderFilter, order: "descending", cursor });
@@ -27,7 +27,7 @@ export async function getVaultHistoryEvents(config: TypusConfig, startTimeMs: nu
         }
 
         hasNextPage = result.hasNextPage;
-        cursor = result.nextCursor;
+        cursor = result.cursor;
     }
 
     return datas;

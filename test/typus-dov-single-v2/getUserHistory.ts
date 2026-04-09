@@ -6,7 +6,7 @@ import * as fs from "fs";
 (async () => {
     let network: "MAINNET" | "TESTNET" = "MAINNET";
     let config = await TypusConfig.default(network, null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let sender = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d484107";
     let fileName = `${network.toLowerCase()}LocalCacheEvents.json`;
     let vaults = await getVaults(config, { indexes: [] });
@@ -30,7 +30,7 @@ import * as fs from "fs";
             cursor = userCache[1];
             console.log("Load from cache...");
         }
-    } catch {}
+    } catch { }
 
     let [datas1, cursor1] = await getUserEvents(provider, sender, cursor);
 

@@ -1,7 +1,7 @@
 import "src/utils/load_env";
 import { getPublicExpUpTx } from "src/typus/tails-staking";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import mnemonic from "mnemonic.json";
@@ -9,7 +9,7 @@ import mnemonic from "mnemonic.json";
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     let transaction = new Transaction();
     getPublicExpUpTx(config, transaction, {

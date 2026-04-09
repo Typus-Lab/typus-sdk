@@ -1,24 +1,24 @@
 import { TypusConfig } from "src/utils";
 import { getLevelCounts, getStakingInfo } from "src/typus/tails-staking";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { calculateLevelReward } from "src/typus-nft";
 import * as fs from "fs";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
 
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     // user staking info
     let slice0 = await provider.getObject({
         id: "0x5a9d890ec39f40c658daf5d9d36d87094e3a61a1027394ebfe95438e851f59b6",
-        options: { showContent: true },
+        include: { content: true },
     });
 
     // tails level mapping
     let level_res = await provider.getObject({
         id: "0xa04da4863566e5c11919747b82a1955047a1534be2081348d66ef28da610e728",
-        options: { showContent: true },
+        include: { content: true },
     });
     // @ts-ignore
     let levels = level_res.data?.content.fields.value;

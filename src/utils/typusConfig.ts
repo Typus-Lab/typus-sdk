@@ -1,5 +1,9 @@
 import camelcaseKeysDeep from "camelcase-keys-deep";
 import * as fs from "fs";
+import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
+import { SuiGraphQLClient } from "@mysten/sui/graphql";
+import { graphql } from "@mysten/sui/graphql/schema";
 
 export class TypusConfig {
     network: "MAINNET" | "TESTNET";
@@ -12,44 +16,64 @@ export class TypusConfig {
     sponsored: boolean = false;
 
     static parse(json): TypusConfig {
-        return JSON.parse(JSON.stringify(camelcaseKeysDeep(json)));
+        return Object.assign(new TypusConfig(), JSON.parse(JSON.stringify(camelcaseKeysDeep(json))));
     }
     static local(path): TypusConfig {
         return TypusConfig.parse(JSON.parse(fs.readFileSync(path, "utf-8")));
     }
     static async default(network: "MAINNET" | "TESTNET", customRpcEndpoint: string | null, branch = "main"): Promise<TypusConfig> {
-        switch (network) {
-            case "MAINNET": {
-                let typusConfig = JSON.parse(
-                    JSON.stringify(
-                        camelcaseKeysDeep(
-                            await (
-                                await fetch(`https://raw.githubusercontent.com/Typus-Lab/typus-config/${branch}/config-mainnet.json`)
-                            ).json()
-                        )
-                    )
-                );
-                if (customRpcEndpoint) {
-                    typusConfig.rpcEndpoint = customRpcEndpoint;
-                }
-                return typusConfig;
-            }
-            case "TESTNET": {
-                let typusConfig = JSON.parse(
-                    JSON.stringify(
-                        camelcaseKeysDeep(
-                            await (
-                                await fetch(`https://raw.githubusercontent.com/Typus-Lab/typus-config/${branch}/config-testnet.json`)
-                            ).json()
-                        )
-                    )
-                );
-                if (customRpcEndpoint) {
-                    typusConfig.rpcEndpoint = customRpcEndpoint;
-                }
-                return typusConfig;
-            }
+        const url =
+            network === "MAINNET"
+                ? `https://raw.githubusercontent.com/Typus-Lab/typus-config/${branch}/config-mainnet.json`
+                : `https://raw.githubusercontent.com/Typus-Lab/typus-config/${branch}/config-testnet.json`;
+
+        const data = camelcaseKeysDeep(await (await fetch(url)).json());
+        const typusConfig = Object.assign(new TypusConfig(), JSON.parse(JSON.stringify(data)));
+        if (customRpcEndpoint) {
+            typusConfig.rpcEndpoint = customRpcEndpoint;
         }
+        return typusConfig;
+    }
+
+    gRpcClient() {
+        const transport = new GrpcWebFetchTransport({
+            baseUrl: this.rpcEndpoint,
+        });
+        const provider = new SuiGrpcClient({
+            network: this.network.toLocaleLowerCase(),
+            transport,
+        });
+
+        return provider;
+    }
+
+    graphQlClient() {
+        const provider = new SuiGraphQLClient({
+            network: this.network.toLocaleLowerCase(),
+            url: `https://graphql.${this.network.toLocaleLowerCase()}.sui.io/graphql`,
+        });
+        return provider;
+    }
+
+    async getDynamicObjectFields(parent: string, typeFilter: string = "") {
+        // Get only bcs
+        // const x = await this.graphQLClient.listDynamicFields({ parentId: parent, include: { value: true } });
+
+        // Get json
+        const x = await this.graphQlClient().query({
+            query: dynamicFieldsQuery,
+            variables: {
+                id: parent,
+            },
+        });
+
+        // @ts-ignore
+        return x.data?.address?.dynamicFields?.nodes.filter((a) => a.value?.contents && a.value?.contents.type.repr.endsWith(typeFilter)).sort((a, b) => Number(a.name?.json) - Number(b.name?.json)).map((x_1) => {
+            // @ts-ignore
+            const json = x_1.value?.contents.json;
+            // console.dir(json, { depth: null });
+            return json;
+        });
     }
 }
 export interface Package {
@@ -150,3 +174,36 @@ export interface Object {
 //     console.log(config);
 //     console.log(config.rpcEndpoint);
 // })();
+
+
+
+const dynamicFieldsQuery = graphql(`
+    query ($id: SuiAddress!) {
+        address(address: $id) {
+            dynamicFields {
+                nodes {
+                    name {
+                        ...Value
+                    }
+                    value {
+                        ... on MoveValue {
+                            ...Value
+                        }
+                        ... on MoveObject {
+                            contents {
+                                ...Value
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fragment Value on MoveValue {
+        type {
+            repr
+        }
+        json
+    }
+`);

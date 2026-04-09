@@ -1,6 +1,6 @@
 import { TypusConfig } from "src/utils";
 import { getTotalDepositorIncentive, getTotalPremium, getTotalProfitSharingClaimed } from "src/utils";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 
 (async () => {
     let res1 = await getTotalDepositorIncentive();

@@ -1,7 +1,7 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
 import { getMintTx, getPool } from "src/typus-nft";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Transaction } from "@mysten/sui/transactions";
 
@@ -10,16 +10,16 @@ const necklace = "typus";
 (async () => {
     const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let config = await TypusConfig.default("TESTNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     const pool = config[necklace];
 
     const address = keypair.toSuiAddress();
     console.log(address);
 
-    const objs = await provider.getOwnedObjects({
+    const objs = await provider.listOwnedObjects({
         owner: address,
-        options: { showType: true, showContent: true },
+        include: { content: true },
     });
     // console.log(objs);
 

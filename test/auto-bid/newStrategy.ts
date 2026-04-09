@@ -1,5 +1,5 @@
 import "src/utils/load_env";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { TypusConfig } from "src/utils";
 import { getNewStrategyTx } from "src/auto-bid";
@@ -11,7 +11,7 @@ import mnemonic from "mnemonic.json";
     let NETWORK: "MAINNET" | "TESTNET" = "TESTNET";
     let config = await TypusConfig.default(NETWORK, null);
     let keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     let depositToken = tokenType[NETWORK]["TYPUS"];
     let bidToken = tokenType[NETWORK]["TYPUS"];

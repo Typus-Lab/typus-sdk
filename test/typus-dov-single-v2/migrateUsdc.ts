@@ -1,6 +1,6 @@
 import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import { tokenType } from "src/constants";
@@ -8,7 +8,7 @@ import { tokenType } from "src/constants";
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     // migrateDepositVault(config, transaction, { index: "0", migrateDepositToken: false, migrateBidToken: false });
 

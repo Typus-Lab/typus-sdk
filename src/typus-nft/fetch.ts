@@ -1,8 +1,9 @@
 import { SuiClient, SuiEventFilter, SuiObjectResponse } from "@mysten/sui/client";
 import { KioskClient, KioskListing } from "@mysten/kiosk";
+import { bcs } from "@mysten/bcs";
 
 export async function getPool(provider: SuiClient, pool: string) {
-    let res = await provider.getObject({ id: pool, options: { showContent: true } });
+    let res = await provider.getObject({ id: pool, include: { content: true } });
 
     // @ts-ignore
     let fields = res.data?.content.fields;
@@ -49,7 +50,7 @@ export const necklaces = [
 export async function getPoolMap(provider: SuiClient, nftConfig) {
     let pools: string[] = necklaces.map((necklace) => nftConfig[necklace]);
 
-    let res = await provider.multiGetObjects({ ids: pools, options: { showContent: true } });
+    let res = await provider.getObjects({ objectIds: pools, include: { content: true } });
 
     let poolMap = new Map<string, PoolData>();
 
@@ -172,7 +173,7 @@ export async function getTails(provider: SuiClient, tailsIds: string[]) {
     while (tailsIds.length > 0) {
         let len = tailsIds.length > 50 ? 50 : tailsIds.length;
 
-        let results = await provider.multiGetObjects({ ids: tailsIds.splice(0, len), options: { showContent: true } });
+        let results = await provider.getObjects({ objectIds: tailsIds.splice(0, len), include: { content: true } });
 
         for (let result of results) {
             // @ts-ignore
@@ -196,7 +197,7 @@ export async function getTailsDynamicField(provider: SuiClient, tailsIds: string
     while (tailsIds.length > 0) {
         let len = tailsIds.length > 50 ? 50 : tailsIds.length;
 
-        let results = await provider.multiGetObjects({ ids: tailsIds.splice(0, len), options: { showContent: true, showOwner: true } });
+        let results = await provider.getObjects({ objectIds: tailsIds.splice(0, len), include: { content: true, showOwner: true } });
         // console.log(results);
 
         for (let result of results) {
@@ -232,9 +233,9 @@ export async function getTailsKiosk(provider: SuiClient, tailsToDynamicField: Ma
     while (dynamicFields.length > 0) {
         let len = dynamicFields.length > 50 ? 50 : dynamicFields.length;
 
-        let results = await provider.multiGetObjects({
+        let results = await provider.getObjects({
             ids: dynamicFields.splice(0, len),
-            options: { showOwner: true },
+            include: { showOwner: true },
         });
 
         for (let result of results) {
@@ -262,9 +263,9 @@ export async function getKioskOwner(provider: SuiClient, DynamicFieldToKiosk: Ma
     while (uniqueKiosks.length > 0) {
         let len = uniqueKiosks.length > 50 ? 50 : uniqueKiosks.length;
 
-        let results = await provider.multiGetObjects({
+        let results = await provider.getObjects({
             ids: uniqueKiosks.splice(0, len),
-            options: { showContent: true },
+            include: { content: true },
         });
 
         for (let result of results) {
@@ -343,14 +344,14 @@ export function getLevelExp(level: number): number | undefined {
 export const LevelExpVec = [0, 0, 1_000, 50_000, 250_000, 1_000_000, 5_000_000, 20_000_000];
 
 export async function getTableTails(provider: SuiClient, parentId: string): Promise<TailsWithType[]> {
-    var result = await provider.getDynamicFields({
+    var result = await provider.listDynamicFields({
         parentId,
     });
     var datas = result.data;
     while (result.hasNextPage) {
-        result = await provider.getDynamicFields({
+        result = await provider.listDynamicFields({
             parentId,
-            cursor: result.nextCursor,
+            cursor: result.cursor,
         });
         datas = datas.concat(result.data);
     }
@@ -368,7 +369,7 @@ export async function getTableTails(provider: SuiClient, parentId: string): Prom
 }
 
 export async function getDiscountPool(provider: SuiClient, pool: string) {
-    let res = await provider.getObject({ id: pool, options: { showContent: true } });
+    let res = await provider.getObject({ id: pool, include: { content: true } });
     // console.log(res);
 
     // @ts-ignore
@@ -378,9 +379,9 @@ export async function getDiscountPool(provider: SuiClient, pool: string) {
     let inventory = poolData.tails.fields.contents.fields.size - poolData.requests.length;
     poolData.inventory = inventory;
 
-    let dynamicField = await provider.getDynamicFieldObject({
+    let dynamicField = await provider.dynamicField({
         parentId: pool,
-        name: { type: "0x1::string::String", value: "total" },
+        name: { type: "0x1::string::String", value: bcs.string().serialize("total").toBytes() },
     });
     // @ts-ignore
     let total = dynamicField.data?.content.fields.value;
@@ -493,7 +494,7 @@ export function calculateLevelReward(totalRewards: number, levelShares: number[]
         let scaledRewardPerHolder: number =
             uncalculatedDistributedRewardsStep4 > 0
                 ? (rewardPerHolder * (uncalculatedDistributedRewardsStep4 + undistributedRewardsStep4)) /
-                  uncalculatedDistributedRewardsStep4
+                uncalculatedDistributedRewardsStep4
                 : rewardPerHolder;
 
         undistributedRewardsStep4 -= (scaledRewardPerHolder - rewardPerHolder) * num;

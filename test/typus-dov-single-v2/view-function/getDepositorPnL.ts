@@ -6,7 +6,7 @@ import { TypusConfig } from "src/utils";
 (async () => {
     let network: "MAINNET" | "TESTNET" = "MAINNET";
     let config = await TypusConfig.default(network, null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let user = "0xd15f079d5f60b8fdfdcf3ca66c0d3473790c758b04b6418929d5d2991c5443ee";
     let fileName = `${network.toLowerCase()}LocalCacheEvents.json`;
     let vaults = await getVaults(config, { indexes: [] });
@@ -19,7 +19,7 @@ import { TypusConfig } from "src/utils";
         for (let obj of localCache) {
             localCacheMap.set(obj.user, [obj.events, obj.cursor]);
         }
-    } catch (e) {}
+    } catch (e) { }
 
     var localCacheEvents: SuiEvent[] = [];
     var cursor: EventId | null | undefined = undefined;

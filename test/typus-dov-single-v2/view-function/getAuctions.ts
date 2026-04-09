@@ -1,10 +1,10 @@
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { getAuctions } from "src/typus-dov-single-v2";
 
 (async () => {
     let config = await TypusConfig.default("TESTNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     let indexes = [];
     let result = await getAuctions(config, { indexes });

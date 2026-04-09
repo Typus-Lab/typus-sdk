@@ -1,4 +1,4 @@
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Transaction } from "@mysten/sui/transactions";
 import { getStakingInfo } from "src/typus/tails-staking";
@@ -9,7 +9,7 @@ import mnemonic from "mnemonic.json";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC_2));
     let transaction = new Transaction();
 

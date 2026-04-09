@@ -1,6 +1,6 @@
 import { Tip, Vote, getOngoingTips, getTipVotes, countVotes } from "src/typus-launch/improvement-proposal";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig, prettify_big_number, sleep } from "src/utils";
 import { BigNumber } from "bignumber.js";
@@ -14,7 +14,7 @@ dotenv.config({ path: path.resolve(__dirname, ".env") });
     let config = await TypusConfig.default("TESTNET", null);
     // let config = TypusConfig.local("../typus-config/config-testnet.json");
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let now = Date.now();
     let tips: Tip[] = await getOngoingTips(config, {});
     let count = 0;
@@ -58,7 +58,7 @@ dotenv.config({ path: path.resolve(__dirname, ".env") });
             countVotes(config, transaction, {
                 index: tip.index,
             });
-            let res = await provider.signAndExecuteTransaction({ signer, transaction, options: { showEvents: true } });
+            let res = await provider.signAndExecuteTransaction({ signer, transaction, include: { showEvents: true } });
             console.log(`Count Votes: ${res.digest}`);
             msg = msg + `  - count votes: ${res.digest}\n`;
             // @ts-ignore
