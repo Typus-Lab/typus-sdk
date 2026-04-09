@@ -1,4 +1,3 @@
-
 const headers = {
     "api-key": "RIobs1PpAZ4SmHxY2InErtz0pL5LqHTtY",
     "Content-Type": "application/json",

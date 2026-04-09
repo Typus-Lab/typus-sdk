@@ -494,7 +494,7 @@ export function calculateLevelReward(totalRewards: number, levelShares: number[]
         let scaledRewardPerHolder: number =
             uncalculatedDistributedRewardsStep4 > 0
                 ? (rewardPerHolder * (uncalculatedDistributedRewardsStep4 + undistributedRewardsStep4)) /
-                uncalculatedDistributedRewardsStep4
+                  uncalculatedDistributedRewardsStep4
                 : rewardPerHolder;
 
         undistributedRewardsStep4 -= (scaledRewardPerHolder - rewardPerHolder) * num;

@@ -68,12 +68,16 @@ export class TypusConfig {
         });
 
         // @ts-ignore
-        return x.data?.address?.dynamicFields?.nodes.filter((a) => a.value?.contents && a.value?.contents.type.repr.endsWith(typeFilter)).sort((a, b) => Number(a.name?.json) - Number(b.name?.json)).map((x_1) => {
+        return x.data?.address?.dynamicFields?.nodes
             // @ts-ignore
-            const json = x_1.value?.contents.json;
-            // console.dir(json, { depth: null });
-            return json;
-        });
+            .filter((a) => a.value?.contents && a.value?.contents.type.repr.endsWith(typeFilter))
+            .sort((a, b) => Number(a.name?.json) - Number(b.name?.json))
+            .map((x_1) => {
+                // @ts-ignore
+                const json = x_1.value?.contents.json;
+                // console.dir(json, { depth: null });
+                return json;
+            });
     }
 }
 export interface Package {
@@ -174,8 +178,6 @@ export interface Object {
 //     console.log(config);
 //     console.log(config.rpcEndpoint);
 // })();
-
-
 
 const dynamicFieldsQuery = graphql(`
     query ($id: SuiAddress!) {

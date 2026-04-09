@@ -385,8 +385,8 @@ export const parseBid = (
     let live = !auction
         ? false
         : moment.unix(Number(auction.endTsMs) / 1000).isAfter(moment()) &&
-        moment.unix(Number(auction.startTsMs) / 1000).isBefore(moment()) &&
-        moment(expirationDate, "DD MMM YY, HH:mm").isAfter(moment.unix(Number(auction.endTsMs) / 1000));
+          moment.unix(Number(auction.startTsMs) / 1000).isBefore(moment()) &&
+          moment(expirationDate, "DD MMM YY, HH:mm").isAfter(moment.unix(Number(auction.endTsMs) / 1000));
 
     let deliveryPrice = calcDeliveryPrice(bidShare, vaultInfo);
 

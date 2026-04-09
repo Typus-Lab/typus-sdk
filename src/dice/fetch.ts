@@ -30,21 +30,20 @@ export async function getPlaygrounds(
         return [];
     }
 
-    let result = dfs
-        .map((df) => {
-            let playground: Playground = {
-                id: df.id,
-                house_whitelist: df.house_whitelist,
-                public_key: df.public_key,
-                num_of_games: df.num_of_games,
-                stake_token: df.stake_token,
-                opened_games: new Map<string, Game>(),
-                game_config: df.game_config as GameConfig,
-                is_active: df.is_active,
-                exp_config: df.exp_config as ExpConfig ?? undefined
-            };
-            return playground;
-        });
+    let result = dfs.map((df) => {
+        let playground: Playground = {
+            id: df.id,
+            house_whitelist: df.house_whitelist,
+            public_key: df.public_key,
+            num_of_games: df.num_of_games,
+            stake_token: df.stake_token,
+            opened_games: new Map<string, Game>(),
+            game_config: df.game_config as GameConfig,
+            is_active: df.is_active,
+            exp_config: (df.exp_config as ExpConfig) ?? undefined,
+        };
+        return playground;
+    });
 
     return result;
 }

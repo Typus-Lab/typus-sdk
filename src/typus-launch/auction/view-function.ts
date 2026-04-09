@@ -136,7 +136,7 @@ export interface LaunchAuction {
 export async function getLaunchAuction(config: TypusConfig): Promise<LaunchAuction> {
     const provider = config.gRpcClient();
 
-    let response = await provider.getObject({ id: config.object.launchAuction, include: { content: true } });
+    let response = await provider.getObject({ objectId: config.object.launchAuction, include: { content: true } });
 
     // @ts-ignore
     return response.data.content.fields as LaunchAuction;

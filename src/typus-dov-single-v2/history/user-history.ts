@@ -1,4 +1,4 @@
-import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui/client";
+import { EventId, SuiEvent, SuiEventFilter } from "@mysten/sui/client";
 import { Vault } from "src/typus-dov-single-v2";
 import { assetToDecimal, TOKEN, typeArgToAsset } from "src/constants";
 import BigNumber from "bignumber.js";

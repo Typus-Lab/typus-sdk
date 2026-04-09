@@ -71,7 +71,7 @@ export async function getBigVectorData(config: TypusConfig, bigVector: BigVector
             parentId: bigVector.id,
             name: {
                 type: "u64",
-                bcs: bcs.u64().serialize(i).toBytes()
+                bcs: bcs.u64().serialize(i).toBytes(),
             },
         });
         // @ts-ignore
