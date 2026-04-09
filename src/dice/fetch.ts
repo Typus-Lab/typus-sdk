@@ -2,6 +2,7 @@ import { bcs, BcsReader } from "@mysten/bcs";
 // import { SuiClient, SuiEventFilter } from "@mysten/sui/client";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import { TypusConfig } from "src/utils";
+import { getDynamicObjectFields } from "src/utils/graphQl";
 
 export async function getPlaygrounds(
     config: TypusConfig,
@@ -9,7 +10,7 @@ export async function getPlaygrounds(
         module: "tails_exp" | "combo_dice";
     }
 ) {
-    const provider = config.graphQlClient();
+    const graphQlClient = config.graphQlClient();
     let registry = "";
     switch (input.module) {
         case "tails_exp":
@@ -22,7 +23,7 @@ export async function getPlaygrounds(
             break;
     }
 
-    let dfs = await config.getDynamicObjectFields(registry, "Playground");
+    let dfs = await getDynamicObjectFields(graphQlClient, registry, "Playground");
     // console.log(dfs);
 
     if (!dfs) {

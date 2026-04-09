@@ -3,7 +3,6 @@ import * as fs from "fs";
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { SuiGraphQLClient } from "@mysten/sui/graphql";
-import { graphql } from "@mysten/sui/graphql/schema";
 
 export class TypusConfig {
     network: "MAINNET" | "TESTNET";
@@ -55,30 +54,6 @@ export class TypusConfig {
         return provider;
     }
 
-    async getDynamicObjectFields(parent: string, typeFilter: string = "") {
-        // Get only bcs
-        // const x = await this.graphQLClient.listDynamicFields({ parentId: parent, include: { value: true } });
-
-        // Get json
-        const x = await this.graphQlClient().query({
-            query: dynamicFieldsQuery,
-            variables: {
-                id: parent,
-            },
-        });
-
-        // @ts-ignore
-        return x.data?.address?.dynamicFields?.nodes
-            // @ts-ignore
-            .filter((a) => a.value?.contents && a.value?.contents.type.repr.endsWith(typeFilter))
-            .sort((a, b) => Number(a.name?.json) - Number(b.name?.json))
-            .map((x_1) => {
-                // @ts-ignore
-                const json = x_1.value?.contents.json;
-                // console.dir(json, { depth: null });
-                return json;
-            });
-    }
 }
 export interface Package {
     dice: string;
@@ -179,33 +154,3 @@ export interface Object {
 //     console.log(config.rpcEndpoint);
 // })();
 
-const dynamicFieldsQuery = graphql(`
-    query ($id: SuiAddress!) {
-        address(address: $id) {
-            dynamicFields {
-                nodes {
-                    name {
-                        ...Value
-                    }
-                    value {
-                        ... on MoveValue {
-                            ...Value
-                        }
-                        ... on MoveObject {
-                            contents {
-                                ...Value
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    fragment Value on MoveValue {
-        type {
-            repr
-        }
-        json
-    }
-`);

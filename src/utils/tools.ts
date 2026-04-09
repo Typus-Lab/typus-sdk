@@ -83,22 +83,22 @@ export function splitCoins(
         coinArgs =
             normalizeStructTag(token) == tokenType.MAINNET.SUI && !sponsored
                 ? tx.splitCoins(
-                      tx.gas,
-                      amounts.map((amount) => tx.pure.u64(amount))
-                  )
+                    tx.gas,
+                    amounts.map((amount) => tx.pure.u64(amount))
+                )
                 : (() => {
-                      let coin = coins.pop()!;
-                      if (coins.length > 0) {
-                          tx.mergeCoins(
-                              tx.object(coin),
-                              coins.map((id) => tx.object(id))
-                          );
-                      }
-                      return tx.splitCoins(
-                          tx.object(coin),
-                          amounts.map((amount) => tx.pure.u64(amount))
-                      );
-                  })();
+                    let coin = coins.pop()!;
+                    if (coins.length > 0) {
+                        tx.mergeCoins(
+                            tx.object(coin),
+                            coins.map((id) => tx.object(id))
+                        );
+                    }
+                    return tx.splitCoins(
+                        tx.object(coin),
+                        amounts.map((amount) => tx.pure.u64(amount))
+                    );
+                })();
     }
 
     return coinArgs;
