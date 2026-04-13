@@ -37,14 +37,14 @@ import * as fs from "fs";
     // }
 
     let txHistory = await parseTxHistory(events, vaults);
-    console.log(txHistory.reverse());
+    // console.log(txHistory.reverse());
 
     // let newBidHistory = await getNewBidFromSentio(vaults, sender, 0);
     // // console.log(newBidHistory);
 
     // let exerciseHistory = await getExerciseFromSentio(vaults, sender, 0);
-    // // console.log(exerciseHistory);
-    ``
+    // console.log(exerciseHistory);
+
     // let concatHistory = txHistory
     //     .concat(newBidHistory.filter((x) => txHistory.findIndex((y) => y.txDigest == x.txDigest) == -1))
     //     .concat(exerciseHistory.filter((x) => txHistory.findIndex((y) => y.txDigest == x.txDigest) == -1))

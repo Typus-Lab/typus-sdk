@@ -204,7 +204,7 @@ export async function getExpLeaderBoardWithOwner(expLeaderBoard: ExpLeaderBoard[
 }
 
 const headers = {
-    "api-key": "RIobs1PpAZ4SmHxY2InErtz0pL5LqHTtY",
+    "api-key": "g8vRPVCM3CScaTVGVT5X9Eh4fyEJDbmAE",
     "Content-Type": "application/json",
 };
 

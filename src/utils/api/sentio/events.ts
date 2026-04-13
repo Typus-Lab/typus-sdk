@@ -2,7 +2,7 @@ import { parseVaultInfo, TxHistory, Vault } from "src/typus-dov-single-v2";
 import { assetToDecimal } from "src/constants";
 
 const headers = {
-    "api-key": "RIobs1PpAZ4SmHxY2InErtz0pL5LqHTtY",
+    "api-key": "g8vRPVCM3CScaTVGVT5X9Eh4fyEJDbmAE",
     "Content-Type": "application/json",
 };
 
@@ -14,7 +14,7 @@ export async function getFromSentio(event: string, userAddress: string, startTim
             sql: `
                 SELECT *
                 FROM ${event}
-                WHERE distinct_id = '${userAddress}' AND timestamp >= ${startTimestamp}
+                WHERE distinctId = '${userAddress}' AND timestamp >= ${startTimestamp}
                 ORDER BY timestamp DESC;
             `,
             size: 1000,
@@ -30,7 +30,7 @@ export async function getFromSentio(event: string, userAddress: string, startTim
     });
 
     let data = await response.json();
-    // console.log(data);
+    console.log(data);
 
     return data.result.rows as any[];
 }
@@ -43,10 +43,10 @@ export async function getFromSentioWithExpUp(event: string, userAddress: string,
                 SELECT *
                 FROM ${event} N
                 LEFT JOIN (
-                    SELECT number, distinct_id, exp_earn, transaction_hash, log_index
+                    SELECT number, distinctId, exp_earn, transaction_hash, log_index
                     FROM ExpUp
                 ) S ON N.transaction_hash = S.transaction_hash AND N.log_index + 1 = S.log_index
-                WHERE N.distinct_id = '${userAddress}' AND N.timestamp >= ${startTimestamp}
+                WHERE N.distinctId = '${userAddress}' AND N.timestamp >= ${startTimestamp}
                 ORDER BY N.timestamp DESC;
             `,
             size: 1000,
