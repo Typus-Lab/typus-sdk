@@ -28,8 +28,7 @@ import { tokenType } from "src/constants";
         signer,
         transaction,
         include: {
-            showEffects: true,
-            showObjectChanges: true,
+            effects: true,
         },
     });
 

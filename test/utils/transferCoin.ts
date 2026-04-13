@@ -8,7 +8,7 @@ import { Transaction } from "@mysten/sui/transactions";
 (async () => {
     let network: "MAINNET" | "TESTNET" = "MAINNET";
     let config = await TypusConfig.default(network, null);
-    let signer = Ed25519Keypair.deriveKeypair(String(mne.MNEMONIC));
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     const provider = config.gRpcClient();
 
     let token: TOKEN = "SUI";
@@ -23,11 +23,11 @@ import { Transaction } from "@mysten/sui/transactions";
 
     // coins
     let coins = (
-        await provider.getCoins({
+        await provider.listCoins({
             owner: signer.toSuiAddress(),
             coinType: tokenType[network][token],
         })
-    ).data.map((coin) => coin.coinObjectId);
+    ).objects.map((coin) => coin.objectId);
     console.log("coins.length", coins.length);
 
     let total_amount = recipients.reduce((acc, x) => acc + x[1], 0);
