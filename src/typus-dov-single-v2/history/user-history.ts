@@ -7,9 +7,9 @@ import { SuiGraphQLClient } from "@mysten/sui/graphql";
 import { getEvents } from "src/utils/graphQl";
 
 export async function getUserEvents(graphQlClient: SuiGraphQLClient, sender: string, cursor?: string | null) {
-    const events = await getEvents(graphQlClient, null, sender, cursor);
+    const { events, beforeCursor } = await getEvents(graphQlClient, null, sender, cursor);
     // console.log(events.map(x => x.timestamp))
-    return events.reverse();
+    return { events: events.reverse(), beforeCursor };
 }
 
 export interface TxHistory {

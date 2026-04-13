@@ -150,5 +150,6 @@ export async function getEvents(
         beforeCursor = x.data?.events?.pageInfo.startCursor ?? null;
     }
 
-    return events;
+
+    return { events, beforeCursor };
 }
