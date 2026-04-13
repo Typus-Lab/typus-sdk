@@ -2,7 +2,7 @@ import { bcs, BcsReader } from "@mysten/bcs";
 // import { SuiClient, SuiEventFilter } from "@mysten/sui/client";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import { TypusConfig } from "src/utils";
-import { getDynamicObjectFields } from "src/utils/graphQl";
+import { getDynamicObjectFields, getEvents } from "src/utils/graphQl";
 
 export async function getPlaygrounds(
     config: TypusConfig,
@@ -90,51 +90,42 @@ export interface Game {
     vrf_input_2: number[] | null;
 }
 
-// export async function getHistory(
-//     config: TypusConfig,
-//     input: {
-//         module: "tails_exp" | "combo_dice";
-//         playgrounds: Playground[];
-//     }
-// ): Promise<DrawDisplay[]> {
-//     const provider = config.gRpcClient();
-//     let MoveEventType = "";
-//     switch (input.module) {
-//         case "tails_exp":
-//             MoveEventType = `${config.packageOrigin.dice}::tails_exp::Draw`;
-//             break;
-//         case "combo_dice":
-//             if (config.rpcEndpoint.includes("mainnet")) {
-//                 MoveEventType = `${config.packageOrigin.dice}::combo_dice::Draw`;
-//             } else {
-//                 MoveEventType = `0xf1d628b4f14f9dae42d73a6cdee9b5f80567fee323166c4ecfb124de7d4ff254::combo_dice::Draw`;
-//             }
-//             break;
-//         default:
-//             break;
-//     }
-//     let eventFilter: SuiEventFilter = {
-//         MoveEventType,
-//     };
+export async function getHistory(
+    config: TypusConfig,
+    input: {
+        module: "tails_exp" | "combo_dice";
+        playgrounds: Playground[];
+    }
+): Promise<DrawDisplay[]> {
+    const graphQlClient = config.graphQlClient();
+    let MoveEventType = "";
+    switch (input.module) {
+        case "tails_exp":
+            MoveEventType = `${config.packageOrigin.dice}::tails_exp::Draw`;
+            break;
+        case "combo_dice":
+            if (config.rpcEndpoint.includes("mainnet")) {
+                MoveEventType = `${config.packageOrigin.dice}::combo_dice::Draw`;
+            } else {
+                MoveEventType = `0xf1d628b4f14f9dae42d73a6cdee9b5f80567fee323166c4ecfb124de7d4ff254::combo_dice::Draw`;
+            }
+            break;
+        default:
+            break;
+    }
 
-//     var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
-//     // console.log(result);
+    const events = await getEvents(graphQlClient, MoveEventType, null, null, false);
+    // console.log(`Found ${events.length} events of type ${MoveEventType}`);
 
-//     var history = await parseHistory(result.data, input.playgrounds);
-
-//     while (result.hasNextPage && history.length <= 60) {
-//         result = await provider.queryEvents({ query: eventFilter, order: "descending", cursor: result.cursor });
-//         let nextPage = await parseHistory(result.data, input.playgrounds);
-//         history = history.concat(nextPage);
-//     }
-
-//     return history;
-// }
+    const history = await parseHistory(events, input.playgrounds);
+    return history;
+}
 
 export async function parseHistory(datas, playgrounds: Playground[]): Promise<DrawDisplay[]> {
     let result = datas.map((event) => {
-        let drawEvent = event.parsedJson as DrawEvent;
-        drawEvent.timestampMs = event.timestampMs;
+        // console.log(event);
+        let drawEvent = event.contents.json as DrawEvent;
+        drawEvent.timestamp = event.timestamp;
 
         let playground = playgrounds[Number(drawEvent.index)];
 
@@ -189,7 +180,7 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
             result_2,
             bet_amount: `${amount} ${asset}`,
             exp: `${exp} EXP`,
-            timestampMs: drawEvent.timestampMs,
+            timestamp: drawEvent.timestamp,
         };
 
         if (drawEvent.reward) {
@@ -224,7 +215,7 @@ export interface DrawEvent {
     signature_2: number[];
     signer: string;
     stake_amount: string;
-    timestampMs: string;
+    timestamp: string;
     exp?: string;
     exp_amount?: string;
     reward?: string;
@@ -239,7 +230,7 @@ export interface DrawDisplay {
     result_2: string;
     bet_amount: string;
     exp: string;
-    timestampMs: string;
+    timestamp: string;
     reward?: string;
 }
 
