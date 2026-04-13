@@ -4,7 +4,6 @@ import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { TypusConfig, getMintTokenTx } from "src/utils";
 import { TOKEN, tokenRegistry, tokenType } from "src/constants";
 import { Transaction } from "@mysten/sui/transactions";
-import mne from "mnemonic.json";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);

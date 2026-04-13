@@ -5,12 +5,12 @@ import { getStakingInfo } from "src/typus/tails-staking";
 import { TypusConfig } from "src/utils";
 import * as fs from "fs";
 import { getUserMetadata } from "src/typus/user";
-import mnemonic from "mnemonic.json";
+
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
     const provider = config.gRpcClient();
-    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC_2));
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC_2));
     let transaction = new Transaction();
 
     let users = [];

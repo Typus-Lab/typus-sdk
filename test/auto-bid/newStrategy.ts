@@ -5,12 +5,12 @@ import { TypusConfig } from "src/utils";
 import { getNewStrategyTx } from "src/auto-bid";
 import { Transaction } from "@mysten/sui/transactions";
 import { tokenType } from "src/constants";
-import mnemonic from "mnemonic.json";
+
 
 (async () => {
     let NETWORK: "MAINNET" | "TESTNET" = "TESTNET";
     let config = await TypusConfig.default(NETWORK, null);
-    let keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+    let keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     const provider = config.gRpcClient();
 
     let depositToken = tokenType[NETWORK]["TYPUS"];

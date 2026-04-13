@@ -5,8 +5,7 @@ import { Transaction } from "@mysten/sui/transactions";
 
 // Generate a new Ed25519 Keypair
 
-import mnemonic from "../../../mnemonic.json";
-const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.NFT));
+const keypair = Ed25519Keypair.deriveKeypair(String(process.env.NFT));
 
 let provider = new SuiClient({
     url: "https://fullnode.mainnet.sui.io:443",

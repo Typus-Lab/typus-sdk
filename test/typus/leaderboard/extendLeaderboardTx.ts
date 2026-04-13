@@ -4,7 +4,6 @@ import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { getExtendLeaderboardTx } from "src/typus/leaderboard";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Transaction } from "@mysten/sui/transactions";
-import { MNEMONIC } from "mnemonic.json";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);

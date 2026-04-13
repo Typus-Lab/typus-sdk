@@ -4,11 +4,11 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
-import mnemonic from "mnemonic.json";
+
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
-    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     const provider = config.gRpcClient();
 
     let transaction = new Transaction();

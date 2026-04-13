@@ -13,8 +13,8 @@ import { TypusConfig } from "src/utils";
     const datas = await getUserOwnedObjects(config, user);
 
     let receipts = datas
-        .filter((obj) => obj.data?.type! == `${config.packageOrigin.framework}::vault::TypusDepositReceipt`)
-        .map((obj) => obj.data?.objectId!);
+        .filter((obj) => obj?.type! == `${config.packageOrigin.framework}::vault::TypusDepositReceipt`)
+        .map((obj) => obj?.objectId!);
     console.log(receipts);
 
     // Request: 1

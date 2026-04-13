@@ -4,12 +4,12 @@ import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { whitelistTx } from "src/typus-launch/auction";
 import { TypusConfig } from "src/utils";
-import mnemonic from "mnemonic.json";
+
 import * as fs from "fs";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
-    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.TGE_AUCTION));
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.TGE_AUCTION));
     const provider = config.gRpcClient();
 
     const raw = fs.readFileSync("whitelist.csv", "utf-8");

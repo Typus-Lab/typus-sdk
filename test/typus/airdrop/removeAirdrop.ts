@@ -4,12 +4,12 @@ import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { getRemoveAirdropTx } from "src/typus/airdrop";
 import { TypusConfig } from "src/utils";
-import mnemonic from "mnemonic.json";
+
 import { tokenType } from "src/constants";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
-    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC_2));
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC_2));
     const provider = config.gRpcClient();
 
     let transaction = await getRemoveAirdropTx(config, new Transaction(), {

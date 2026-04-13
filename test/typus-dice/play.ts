@@ -5,8 +5,8 @@ import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Transaction } from "@mysten/sui/transactions";
 
-import mnemonic from "mnemonic.json";
-const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+
+const keypair = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
 
 (async () => {
     let network: "MAINNET" | "TESTNET" = "MAINNET";

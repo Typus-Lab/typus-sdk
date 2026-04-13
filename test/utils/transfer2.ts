@@ -4,7 +4,6 @@ import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { TypusConfig, getMintTokenTx, splitCoin } from "src/utils";
 import { assetToDecimal, TOKEN, tokenRegistry, tokenType } from "src/constants";
 import { Transaction } from "@mysten/sui/transactions";
-import mne from "mnemonic.json";
 
 (async () => {
     let network: "MAINNET" | "TESTNET" = "MAINNET";

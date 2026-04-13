@@ -4,7 +4,7 @@ import { EventId, SuiClient, SuiEvent } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { getClaimAirdropTx, getAirdrop } from "src/typus/airdrop";
 import { TypusConfig } from "src/utils";
-import mnemonic from "mnemonic.json";
+
 import { getUserEvents } from "src/typus-dov-single-v2";
 import * as fs from "fs";
 import { assetToDecimal, TOKEN, tokenType } from "src/constants";
@@ -13,7 +13,7 @@ const NETWORK = "TESTNET";
 
 (async () => {
     let config = await TypusConfig.default(NETWORK, null);
-    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.W));
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.W));
     const provider = config.gRpcClient();
     let user = signer.toSuiAddress();
     console.log(`Using account ${user}`);

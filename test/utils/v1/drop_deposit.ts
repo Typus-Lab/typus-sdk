@@ -4,13 +4,13 @@ import { TypusConfig } from "src/utils";
 import * as fs from "fs";
 import { typeArgToAsset } from "src/constants";
 import { Transaction } from "@mysten/sui/transactions";
-import mnemonic from "mnemonic.json";
+
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", "https://sui-mainnet.blastapi.io:443/df8b799c-1e3b-4309-b289-ddfb76cc090d");
     const provider = config.gRpcClient();
-    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.MNEMONIC));
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     console.log(signer.toSuiAddress().toString());
 
     const parentId = "0xb44c0fa1ab40f7699be3dce02475965a636ed850348435abb3b797b273f6c551";
