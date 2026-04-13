@@ -44,7 +44,11 @@ export async function updateOracleWithSignatureTx(
 
     let oracleData: Omit<TypusOracleData, "success"> | null = null;
     try {
-        const result = await axios.get<TypusOracleData>(`https://asia-east1-aqueous-freedom-378103.cloudfunctions.net/get-price?pair=${tokenType}`)
+        const pair = encodeURIComponent(tokenType);
+        const result = await axios.get<TypusOracleData>(
+            `https://asia-east1-aqueous-freedom-378103.cloudfunctions.net/get-price?pair=${pair}`,
+            { timeout: 30_000 }
+        );
         if (result.data) {
             oracleData = parseFullTypusOracleData(result.data);
         }

@@ -1,5 +1,6 @@
 import camelcaseKeysDeep from "camelcase-keys-deep";
 import * as fs from "fs";
+import { assertSafeTypusConfigBranch } from "src/utils/typusConfigBranch";
 
 export class TypusConfig {
     network: "MAINNET" | "TESTNET";
@@ -18,14 +19,18 @@ export class TypusConfig {
         return TypusConfig.parse(JSON.parse(fs.readFileSync(path, "utf-8")));
     }
     static async default(network: "MAINNET" | "TESTNET", customRpcEndpoint: string | null, branch = "main"): Promise<TypusConfig> {
+        assertSafeTypusConfigBranch(branch);
         switch (network) {
             case "MAINNET": {
+                const url = `https://raw.githubusercontent.com/Typus-Lab/typus-config/${branch}/config-mainnet.json`;
+                const res = await fetch(url);
+                if (!res.ok) {
+                    throw new Error(`Failed to load typus mainnet config: HTTP ${res.status} ${url}`);
+                }
                 let typusConfig = JSON.parse(
                     JSON.stringify(
                         camelcaseKeysDeep(
-                            await (
-                                await fetch(`https://raw.githubusercontent.com/Typus-Lab/typus-config/${branch}/config-mainnet.json`)
-                            ).json()
+                            await res.json()
                         )
                     )
                 );
@@ -35,12 +40,15 @@ export class TypusConfig {
                 return typusConfig;
             }
             case "TESTNET": {
+                const url = `https://raw.githubusercontent.com/Typus-Lab/typus-config/${branch}/config-testnet.json`;
+                const res = await fetch(url);
+                if (!res.ok) {
+                    throw new Error(`Failed to load typus testnet config: HTTP ${res.status} ${url}`);
+                }
                 let typusConfig = JSON.parse(
                     JSON.stringify(
                         camelcaseKeysDeep(
-                            await (
-                                await fetch(`https://raw.githubusercontent.com/Typus-Lab/typus-config/${branch}/config-testnet.json`)
-                            ).json()
+                            await res.json()
                         )
                     )
                 );

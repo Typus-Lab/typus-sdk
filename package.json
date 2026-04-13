@@ -22,13 +22,22 @@
     "resolutions": {
         "@mysten/sui": "^1.30.0"
     },
+    "overrides": {
+        "@mysten/kiosk": {
+            "@mysten/sui": "^1.30.0"
+        }
+    },
     "devDependencies": {
         "@types/camelcase-keys-deep": "^0.1.2",
         "@types/crypto-js": "^4.2.2",
+        "@types/mocha": "^10.0.6",
         "@types/node-rsa": "^1.1.4",
+        "mocha": "^10.4.0",
         "prettier": "^3.0.0",
+        "rimraf": "^5.0.5",
         "slack": "^11.0.2",
         "tsc-alias": "^1.8.10",
+        "ts-mocha": "^10.0.0",
         "tsconfig-paths": "^4.2.0",
         "typescript": "^5.1.6"
     },
@@ -38,8 +47,8 @@
         "dist"
     ],
     "scripts": {
-        "build": "rm -rf dist && tsc -p tsconfig.build.json && tsc-alias",
-        "test": "rm -rf dist && tsc -p tsconfig.build.json && ts-mocha test/test*.ts",
+        "build": "rimraf dist && tsc -p tsconfig.build.json && tsc-alias",
+        "test": "tsc -p tsconfig.build.json && ts-mocha -r tsconfig-paths/register -p tsconfig.json \"test/test*.ts\"",
         "publish": "yarn build && npm publish"
     },
     "repository": {
