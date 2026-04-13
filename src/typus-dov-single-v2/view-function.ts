@@ -633,7 +633,7 @@ export async function getMyBids(
         // early return if no results
         return {};
     }
-    let bytes = results[results.length - 1].returnValues![0][0];
+    let bytes = results[results.length - 1].returnValues![0].bcs;
     let reader = new BcsReader(new Uint8Array(bytes));
     let result = Array.from(new Map()).reduce((map, [key, value]) => {
         map[key] = value;
