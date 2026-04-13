@@ -9,7 +9,7 @@ import * as fs from "fs";
     let sender = "0xbd637af537b5d8d734bacb36477a71cc83251e5545af22d51d671fb94d484107";
     let vaults = await getVaults(config, { indexes: [] });
 
-    const datas = await getUserEvents(graphQlClient, sender, null);
+    const { events, beforeCursor } = await getUserEvents(graphQlClient, sender, null);
 
 
     // {
@@ -36,7 +36,7 @@ import * as fs from "fs";
     //     }
     // }
 
-    let txHistory = await parseTxHistory(datas, vaults);
+    let txHistory = await parseTxHistory(events, vaults);
     console.log(txHistory.reverse());
 
     // let newBidHistory = await getNewBidFromSentio(vaults, sender, 0);
