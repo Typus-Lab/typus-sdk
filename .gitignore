@@ -15,5 +15,6 @@ vaultHistory.json
 *.txt
 dist
 test*.ts
+!test/test_smoke.ts
 install-state.gz
 .yarn
