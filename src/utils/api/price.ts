@@ -102,23 +102,6 @@ export async function getPythLatestPriceBySymbols(symbols: string[]): Promise<Ma
 
 export async function getLatestPriceUSD() {
     let prices = (await getPythLatestPrice())!;
-
-    for (let pair of ["SUIFUD", "SUIBUCK", "SUIAFSUI", "SCASUI", "USDYUSDC"]) {
-        let currentTimestampInSeconds: number = Math.floor(new Date().getTime() / 1000);
-        let minuteAgo = currentTimestampInSeconds - 300;
-        let res: any[] = await getPairPrices(pair, minuteAgo.toString(), currentTimestampInSeconds.toString());
-        let price = res.at(-1).price;
-        let result;
-        if (pair.startsWith("SUI")) {
-            result = prices.get("SUI")! / Number(price);
-        } else if (pair.endsWith("SUI")) {
-            result = prices.get("SUI")! * Number(price);
-        } else {
-            result = Number(price);
-        }
-        prices.set(pair.replace("SUI", ""), result);
-    }
-
     return prices;
 }
 
