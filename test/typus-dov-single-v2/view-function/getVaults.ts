@@ -6,15 +6,5 @@ import { getVaults, parseAssets } from "src/typus-dov-single-v2";
 
     let indexes = ["126", "133", "132"];
     let vaults = await getVaults(config, { indexes });
-    // Object.values(vaults).forEach((vault) => {
-    //     console.log(parseAssets(vault.info));
-    // });
-    console.log(JSON.stringify(vaults, (_, v) => (typeof v === "bigint" ? `${v}` : v), 2));
-    // console.log(
-    //     JSON.stringify(
-    //         Object.values(vaults).map((vault) => vault.info.index + ": https://suivision.xyz/object/" + vault.id),
-    //         null,
-    //         2
-    //     )
-    // );
+    console.dir(vaults, { depth: null });
 })();
