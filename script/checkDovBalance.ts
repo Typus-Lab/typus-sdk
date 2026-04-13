@@ -14,7 +14,7 @@ import { SuiGrpcClient } from "@mysten/sui/grpc";
         for (var balance of balances
             .filter((balance) => balance.objectType.includes("balance::Balance"))
             .sort((a, b) => (a.bcsName > b.bcsName ? -1 : 1))) {
-            let balanceObj = (await provider.getObject({ id: balance.objectId, include: { content: true } })).data;
+            let balanceObj = (await provider.getObject({ objectId: balance.objectId, include: { content: true } })).data;
             // @ts-ignore
             let name = String.fromCharCode.apply(null, Array.from(balanceObj.content.fields.name));
             // @ts-ignore

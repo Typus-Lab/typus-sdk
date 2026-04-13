@@ -18,7 +18,7 @@ import { SuiGrpcClient } from "@mysten/sui/grpc";
             BigInt(vault.shareSupply.warmup_share) +
             BigInt(vault.shareSupply.inactive_share);
         let balance = (await provider.listDynamicFields({ parentId: vault.id })).data.filter((v) => v.name.value === "deposit_balance")[0];
-        let balanceObj = (await provider.getObject({ id: balance.objectId, include: { content: true } })).data;
+        let balanceObj = (await provider.getObject({ objectId: balance.objectId, include: { content: true } })).data;
         // @ts-ignore
         let balanceValue = balanceObj.content.fields.value;
         // console.log(balanceValue);

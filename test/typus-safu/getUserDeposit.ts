@@ -13,9 +13,9 @@ import { getFund } from "src/typus-launch/funding-vault";
     // 1. Get number of safu vaults
     const provider = config.gRpcClient();
     // Request: 1
-    let registry = await provider.getObject({ id: config.registry.safu.safu, include: { content: true } });
+    let registry = await provider.getObject({ objectId: config.registry.safu.safu, include: { json: true } });
     // @ts-ignore
-    const n = registry.data.content.fields.num_of_vault as number;
+    const n = registry.object.json.num_of_vault as number;
     // console.log(n);
     const indexes = Array.from({ length: n }, (_, i) => i.toString());
     // 2. Get user's shares through view function

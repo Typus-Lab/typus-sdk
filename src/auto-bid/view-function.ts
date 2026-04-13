@@ -137,7 +137,7 @@ export async function getUserStrategies(
 export async function getStrategyPool(config: TypusConfig) {
     const provider = config.gRpcClient();
     // @ts-ignore
-    let pool = (await provider.getObject({ id: config.registry.dov.autoBid, include: { content: true } })).data?.content.fields;
+    let pool = (await provider.getObject({ objectId: config.registry.dov.autoBid, include: { content: true } })).data?.content.fields;
     // console.log(pool);
 
     // console.log(pool.strategies.fields.contents.fields);

@@ -64,7 +64,7 @@ interface Material {
             .map((x) => x.objectId as string)[0];
         let remainingProfit = profitAsset
             ? // @ts-ignore
-            Number.parseInt((await provider.getObject({ id: profitAsset, include: { content: true } })).data?.content.fields.value)
+            Number.parseInt((await provider.getObject({ objectId: profitAsset, include: { content: true } })).data?.content.fields.value)
             : 0;
         let walletBalance = Number.parseInt((await provider.getBalance({ owner: keypair.toSuiAddress(), coinType: token })).totalBalance);
         let spendingProfit = 0;

@@ -91,11 +91,11 @@ export async function getFund(
     let funds: {
         [key: string]: Fund[];
     } = {};
+    // console.log(results);
     results?.forEach((result, i) => {
         // @ts-ignore
         let bytes = result.returnValues[0].bcs;
         let reader = new BcsReader(new Uint8Array(bytes));
-        reader.readULEB();
         let fund = reader.readVec((reader) => {
             return {
                 balance: reader.read64(),
