@@ -53,7 +53,6 @@ export class TypusConfig {
         });
         return provider;
     }
-
 }
 export interface Package {
     dice: string;
@@ -153,4 +152,3 @@ export interface Object {
 //     console.log(config);
 //     console.log(config.rpcEndpoint);
 // })();
-

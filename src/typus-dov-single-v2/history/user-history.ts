@@ -6,11 +6,7 @@ import { DropVaults } from "src/constants/valut";
 import { SuiGraphQLClient } from "@mysten/sui/graphql";
 import { getEvents } from "src/utils/graphQl";
 
-export async function getUserEvents(
-    graphQlClient: SuiGraphQLClient,
-    sender: string,
-    cursor?: string | null
-) {
+export async function getUserEvents(graphQlClient: SuiGraphQLClient, sender: string, cursor?: string | null) {
     const events = await getEvents(graphQlClient, null, sender, cursor);
     // console.log(events.map(x => x.timestamp))
     return events.reverse();
@@ -358,9 +354,7 @@ export async function parseTxHistory(datas: Array<any>, vaults: { [key: string]:
                 case "CloseStrategyEventV2":
                     Action = "Close Strategy";
                     if (b_token == d_token) {
-                        var balance =
-                            (Number(json.u64_padding[0]) + Number(json.u64_padding[1])) /
-                            10 ** assetToDecimal(b_token!)!;
+                        var balance = (Number(json.u64_padding[0]) + Number(json.u64_padding[1])) / 10 ** assetToDecimal(b_token!)!;
                         Amount = `${BigNumber(balance).toFixed()} ${b_token!}`;
                     } else {
                         var balance = Number(json.u64_padding[0]) / 10 ** assetToDecimal(b_token!)!;

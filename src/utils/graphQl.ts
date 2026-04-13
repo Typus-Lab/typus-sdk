@@ -14,18 +14,19 @@ export async function getDynamicObjectFields(graphQlClient: SuiGraphQLClient, pa
     });
 
     // @ts-ignore
-    return x.data?.address?.dynamicFields?.nodes
-        // @ts-ignore
-        .filter((a) => a.value?.contents && a.value?.contents.type.repr.endsWith(typeFilter))
-        .sort((a, b) => Number(a.name?.json) - Number(b.name?.json))
-        .map((x_1) => {
+    return (
+        x.data?.address?.dynamicFields?.nodes
             // @ts-ignore
-            const json = x_1.value?.contents.json;
-            // console.dir(json, { depth: null });
-            return json;
-        });
+            .filter((a) => a.value?.contents && a.value?.contents.type.repr.endsWith(typeFilter))
+            .sort((a, b) => Number(a.name?.json) - Number(b.name?.json))
+            .map((x_1) => {
+                // @ts-ignore
+                const json = x_1.value?.contents.json;
+                // console.dir(json, { depth: null });
+                return json;
+            })
+    );
 }
-
 
 const dynamicFieldsQuery = graphql(`
     query ($id: SuiAddress!) {
@@ -58,38 +59,42 @@ const dynamicFieldsQuery = graphql(`
     }
 `);
 
-
 const eventsQuery = graphql(`
     query QueryEvents($type: String, $before: String, $sender: SuiAddress) {
-        events(
-            last: 50,
-            before: $before
-            filter: { type: $type, sender: $sender }
-        ) {
+        events(last: 50, before: $before, filter: { type: $type, sender: $sender }) {
             pageInfo {
                 hasPreviousPage
                 hasNextPage
                 startCursor
                 endCursor
             }
-            edges { cursor }
+            edges {
+                cursor
+            }
             nodes {
-                transaction { digest }
+                transaction {
+                    digest
+                }
                 transactionModule {
                     name
-                    package { digest }
+                    package {
+                        digest
+                    }
                 }
-                sender { address }
+                sender {
+                    address
+                }
                 timestamp
                 contents {
-                    type { repr }
+                    type {
+                        repr
+                    }
                     json
                 }
             }
         }
     }
 `);
-
 
 export interface Event {
     transaction: {
@@ -111,11 +116,15 @@ export interface Event {
         } | null;
         json: unknown;
     } | null;
-};
+}
 
-
-export async function getEvents(graphQlClient: SuiGraphQLClient, module: string | null, sender: string | null, beforeCursor: string | null = null) {
-
+export async function getEvents(
+    graphQlClient: SuiGraphQLClient,
+    module: string | null,
+    sender: string | null,
+    beforeCursor: string | null = null,
+    getAll: boolean = true
+) {
     var hasPreviousPage = true;
 
     const events: Event[] = [];
@@ -134,6 +143,9 @@ export async function getEvents(graphQlClient: SuiGraphQLClient, module: string 
 
         events.push(...(x.data?.events?.nodes.reverse() ?? []));
 
+        if (!getAll) {
+            break;
+        }
         hasPreviousPage = x.data?.events?.pageInfo.hasPreviousPage ?? false;
         beforeCursor = x.data?.events?.pageInfo.startCursor ?? null;
     }
