@@ -709,3 +709,24 @@ export async function getRefundShares(
     // @ts-ignore
     return refundShares;
 }
+
+export async function getUserOwnedObjects(config: TypusConfig, user: string) {
+    const provider = config.gRpcClient();
+    let result = await provider.listOwnedObjects({ owner: user, include: { content: true } });
+
+    let hasNextPage = result.hasNextPage;
+    let data = result.objects;
+    let cursor = result.cursor;
+    while (hasNextPage) {
+        result = await provider.listOwnedObjects({
+            owner: user,
+            cursor: cursor,
+            include: { content: true },
+        });
+        data = [...data, ...result.objects];
+        hasNextPage = result.hasNextPage;
+        cursor = result.cursor;
+    }
+
+    return data;
+}
