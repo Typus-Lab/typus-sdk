@@ -143,14 +143,14 @@ process.removeAllListeners("warning");
     msg += `  * XBTC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[7].returnValues[0].bcs)).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[8].returnValues[0].bcs)).read256(), 9)})\n`;
     // @ts-ignore
     let deposit_receipt = await provider.getObject({
-        id: String(process.env.TYPUS_DEPOSIT_RECEIPT),
+        objectId: String(process.env.TYPUS_DEPOSIT_RECEIPT),
         include: { content: true },
     });
     // @ts-ignore
     deposit_receipt = deposit_receipt.data.content.fields.value.fields.id.id;
     // @ts-ignore
     let depositShareSlice = await provider.getObject({
-        id: String(process.env.DEPOSIT_SHARE_SLICE),
+        objectId: String(process.env.DEPOSIT_SHARE_SLICE),
         include: { content: true },
     });
     // @ts-ignore

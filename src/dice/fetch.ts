@@ -271,7 +271,7 @@ export interface DrawDisplay {
 
 // export async function getProfitSharing(provider: SuiClient, diceProfitSharing: string) {
 //     let object = await provider.getObject({
-//         id: diceProfitSharing,
+//         objectId: diceProfitSharing,
 //         include: { content: true },
 //     });
 
