@@ -1,20 +1,20 @@
 import { TypusConfig } from "src/utils";
 import { getVaults } from "src/typus-dov-single-v2";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let indexes = ["88", "63"];
     let vaults = await getVaults(config, { indexes });
     for (var vault of Object.values(vaults)) {
-        let balances = (await provider.getDynamicFields({ parentId: vault.depositVault.id })).data;
+        let balances = (await provider.listDynamicFields({ parentId: vault.depositVault.id })).data;
         let withIncentiveBalance = false;
         let balanceData = "";
         for (var balance of balances
             .filter((balance) => balance.objectType.includes("balance::Balance"))
             .sort((a, b) => (a.bcsName > b.bcsName ? -1 : 1))) {
-            let balanceObj = (await provider.getObject({ id: balance.objectId, options: { showContent: true } })).data;
+            let balanceObj = (await provider.getObject({ objectId: balance.objectId, include: { content: true } })).data;
             // @ts-ignore
             let name = String.fromCharCode.apply(null, Array.from(balanceObj.content.fields.name));
             // @ts-ignore

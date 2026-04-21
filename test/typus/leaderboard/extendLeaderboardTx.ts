@@ -1,14 +1,13 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { getExtendLeaderboardTx } from "src/typus/leaderboard";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Transaction } from "@mysten/sui/transactions";
-import { MNEMONIC } from "mnemonic.json";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let keypair = Ed25519Keypair.deriveKeypair(String(MNEMONIC));
 
     let key = "trading_competition";

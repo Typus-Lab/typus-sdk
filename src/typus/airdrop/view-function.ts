@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { BcsReader } from "@mysten/bcs";
 import { TypusConfig } from "src/utils";
 import { SENDER } from "src/constants";
@@ -12,7 +12,7 @@ export async function getAirdrop(
         user: string;
     }
 ): Promise<string[]> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     transaction.moveCall({
         target: `${config.package.typus}::airdrop::get_airdrop`,
@@ -25,13 +25,12 @@ export async function getAirdrop(
         ],
     });
     let results = (
-        await provider.devInspectTransactionBlock({
-            sender: SENDER,
-            transactionBlock: transaction,
+        await provider.simulateTransaction({
+            transaction,
         })
-    ).results;
+    ).commandResults;
     // @ts-ignore
-    let bytes = results[results.length - 1].returnValues[0][0];
+    let bytes = results[results.length - 1].returnValues[0].bcs;
     let reader = new BcsReader(new Uint8Array(bytes));
     return reader.readVec((reader) => {
         return reader.read64();

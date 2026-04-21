@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { BcsReader } from "@mysten/bcs";
 import { SENDER } from "src/constants";
 import { AddressFromBytes, TypusConfig } from "src/utils";
@@ -18,7 +18,7 @@ export async function getVault(
         indexes: string[];
     }
 ): Promise<{ [key: string]: [Vault] }> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     input.indexes.forEach((index) => {
         transaction.moveCall({
@@ -26,13 +26,14 @@ export async function getVault(
             arguments: [transaction.object(config.registry.launch.fundingVault), transaction.pure.u64(index)],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     let vaults: {
         [key: string]: [Vault];
     } = {};
     results?.forEach((result) => {
         // @ts-ignore
-        let bytes = result.returnValues[0][0];
+        let bytes = result.returnValues[0].bcs;
         let reader = new BcsReader(new Uint8Array(bytes));
         reader.readULEB();
         let id = AddressFromBytes(reader.readBytes(32));
@@ -73,7 +74,7 @@ export async function getFund(
         user: string;
     }
 ): Promise<{ [key: string]: Fund[] }> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     input.indexes.forEach((index) => {
         transaction.moveCall({
@@ -85,15 +86,16 @@ export async function getFund(
             ],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     let funds: {
         [key: string]: Fund[];
     } = {};
+    // console.log(results);
     results?.forEach((result, i) => {
         // @ts-ignore
-        let bytes = result.returnValues[0][0];
+        let bytes = result.returnValues[0].bcs;
         let reader = new BcsReader(new Uint8Array(bytes));
-        reader.readULEB();
         let fund = reader.readVec((reader) => {
             return {
                 balance: reader.read64(),
@@ -114,7 +116,7 @@ export async function getRefund(
         user: string;
     }
 ): Promise<{ [key: string]: Fund[] }> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     input.indexes.forEach((index) => {
         transaction.moveCall({
@@ -126,13 +128,14 @@ export async function getRefund(
             ],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     let funds: {
         [key: string]: Fund[];
     } = {};
     results?.forEach((result, i) => {
         // @ts-ignore
-        let bytes = result.returnValues[0][0];
+        let bytes = result.returnValues[0].bcs;
         let reader = new BcsReader(new Uint8Array(bytes));
         reader.readULEB();
         let fund = reader.readVec((reader) => {
@@ -155,7 +158,7 @@ export async function getAllFunds(
         users: string[];
     }
 ): Promise<Fund[]> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     input.users.forEach((user) => {
         transaction.moveCall({
@@ -167,11 +170,12 @@ export async function getAllFunds(
             ],
         });
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     let funds: Fund[] = [];
     results?.forEach((result, i) => {
         // @ts-ignore
-        let bytes = result.returnValues[0][0];
+        let bytes = result.returnValues[0].bcs;
         let reader = new BcsReader(new Uint8Array(bytes));
         reader.readULEB();
         let fund = reader.readVec((reader) => {

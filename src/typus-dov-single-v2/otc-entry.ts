@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { CLOCK } from "src/constants";
 import { splitCoin, TypusConfig, AddressFromBytes } from "src/utils";
 import { BcsReader } from "@mysten/bcs";
@@ -111,7 +111,7 @@ export async function getUserOtcConfigs(
         indexes: string[];
     }
 ): Promise<OtcConfig[]> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     transaction.moveCall({
         target: `${config.package.dovSingle}::tds_otc_entry::get_user_otc_configs`,
@@ -122,10 +122,11 @@ export async function getUserOtcConfigs(
             transaction.pure.vector("u64", input.indexes),
         ],
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     // console.log(JSON.stringify(results));
     // @ts-ignore
-    let bytes = results[results.length - 1].returnValues[0][0];
+    let bytes = results[results.length - 1].returnValues[0].bcs;
     // console.log(JSON.stringify(bytes));
     let reader = new BcsReader(new Uint8Array(bytes));
     return reader.readVec((reader) => {

@@ -102,23 +102,6 @@ export async function getPythLatestPriceBySymbols(symbols: string[]): Promise<Ma
 
 export async function getLatestPriceUSD() {
     let prices = (await getPythLatestPrice())!;
-
-    for (let pair of ["SUIFUD", "SUIBUCK", "SUIAFSUI", "SCASUI", "USDYUSDC"]) {
-        let currentTimestampInSeconds: number = Math.floor(new Date().getTime() / 1000);
-        let minuteAgo = currentTimestampInSeconds - 300;
-        let res: any[] = await getPairPrices(pair, minuteAgo.toString(), currentTimestampInSeconds.toString());
-        let price = res.at(-1).price;
-        let result;
-        if (pair.startsWith("SUI")) {
-            result = prices.get("SUI")! / Number(price);
-        } else if (pair.endsWith("SUI")) {
-            result = prices.get("SUI")! * Number(price);
-        } else {
-            result = Number(price);
-        }
-        prices.set(pair.replace("SUI", ""), result);
-    }
-
     return prices;
 }
 
@@ -152,7 +135,7 @@ const pythId = {
     // "5fc11ffe4975b624be495be038da30e30bee2004d8ae6282b5364577ef4ca92c": "BLUB",
     "765d2ba906dbc32ca17cc11f5310a89e9ee1f6420508c63861f2f8ba4ee34bb2": "XAU",
     "925ca92ff005ae943c158e3563f59698ce7e75c5a8c8dd43303a0a154887b3e6": "USOIL",
-    "f2fb02c32b055c805e7238d628e5e9dadef274376114eb1f012337cabe93871e": "XAG",
+    f2fb02c32b055c805e7238d628e5e9dadef274376114eb1f012337cabe93871e: "XAG",
     eba0732395fae9dec4bae12e52760b35fc1c5671e2da8b449c9af4efe5d54341: "WAL",
     "4279e31cc369bbcc2faf022b382b080e32a8e689ff20fbc530d2a603eb6cd98b": "HYPE",
     ec5d399846a9209f3fe5881d70aae9268c94339ff9817e8d18ff19fa05eea1c8: "XRP",

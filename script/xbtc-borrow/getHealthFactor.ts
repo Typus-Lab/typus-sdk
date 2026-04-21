@@ -1,5 +1,5 @@
 import "src/utils/load_env";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { BcsReader } from "@mysten/bcs";
 import { TypusConfig } from "src/utils";
@@ -8,7 +8,7 @@ import BigNumber from "bignumber.js";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     let target = `0x81c408448d0d57b3e371ea94de1d40bf852784d3e225de1e74acab3e8395c18f::logic::user_health_factor` as any;
     let transactionBlockArguments = [
@@ -22,9 +22,9 @@ import BigNumber from "bignumber.js";
         typeArguments: [],
         arguments: transactionBlockArguments,
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } })).commandResults;
     // @ts-ignore
-    let bytes = results[results.length - 1].returnValues[0][0];
+    let bytes = results[results.length - 1].returnValues[0].bcs;
     let reader = new BcsReader(new Uint8Array(bytes));
     let result = reader.read256();
     let healthFactor = BigNumber(result).div(BigNumber(10).pow(27));

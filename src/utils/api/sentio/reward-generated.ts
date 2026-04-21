@@ -1,8 +1,5 @@
-import { assetToDecimal, typeArgToAsset } from "src/constants";
-import { SuiClient, SuiEvent } from "@mysten/sui/client";
-
 const headers = {
-    "api-key": "RIobs1PpAZ4SmHxY2InErtz0pL5LqHTtY",
+    "api-key": "g8vRPVCM3CScaTVGVT5X9Eh4fyEJDbmAE",
     "Content-Type": "application/json",
 };
 
@@ -37,7 +34,7 @@ export async function getTotalPremium(): Promise<number> {
 
     let requestData = {
         timeRange: {
-            start: "now",
+            start: "now-1h",
             end: "now",
             step: 3600,
             timezone: "Europe/Paris",
@@ -83,7 +80,7 @@ export async function getAccumulatedRewardGeneratedUSD(): Promise<[number, numbe
 
     let requestDataV1 = {
         timeRange: {
-            start: "now",
+            start: "now-1h",
             end: "now",
             step: 3600,
             timezone: "Asia/Taipei",
@@ -127,7 +124,7 @@ export async function getAccumulatedRewardGeneratedUSD(): Promise<[number, numbe
 
     let requestData = {
         timeRange: {
-            start: "now",
+            start: "now-1h",
             end: "now",
             step: 3600,
             timezone: "Asia/Taipei",
@@ -195,56 +192,6 @@ export async function getTotalProfitSharingClaimed(): Promise<TokenAmount[]> {
     return data.result.rows as TokenAmount[];
 }
 
-// export async function getTotalProfitSharing(provider: SuiClient): Promise<TokenAmount[]> {
-//     var hasNextPage = true;
-//     var cursor: any | undefined = undefined;
-
-//     let datas: SuiEvent[] = [];
-
-//     while (hasNextPage) {
-//         var result = await provider.queryEvents({
-//             query: {
-//                 MoveEventType: `0x80ff0830313b36bb65ab927af811037f8b175d6e83c43f906b8f55d9263eea99::tails_staking::ProfitSharingEvent`,
-//             },
-//             order: "descending",
-//             cursor,
-//         });
-
-//         hasNextPage = result.hasNextPage;
-//         cursor = result.nextCursor;
-
-//         // @ts-ignore
-//         datas = datas.concat(result.data);
-//     }
-
-//     let tokenAmountMap = new Map<string, number>();
-
-//     for (let data of datas) {
-//         // @ts-ignore
-//         let token = typeArgToAsset(data.parsedJson.token.name);
-//         // @ts-ignore
-//         let value = data.parsedJson.value;
-
-//         let amount = value / 10 ** assetToDecimal(token)!;
-
-//         // const week = Math.round(Number(data.timestampMs) / 24 / 3600 / 1000);
-//         if (tokenAmountMap.has(token)) {
-//             let sum = tokenAmountMap.get(token)!;
-//             tokenAmountMap.set(token, sum + Number(amount));
-//         } else {
-//             tokenAmountMap.set(token, Number(amount));
-//         }
-//     }
-
-//     let tokenAmount: TokenAmount[] = [];
-
-//     for (let x of tokenAmountMap.entries()) {
-//         tokenAmount.push({ token: x[0], total_amount: x[1].toString() });
-//     }
-
-//     return tokenAmount;
-// }
-
 interface TokenAmount {
     token: string;
     total_amount: string;
@@ -262,12 +209,10 @@ export async function getAccumulatedUser(): Promise<number[]> {
     for (let apiUrl of apiUrls) {
         let requestData = {
             timeRange: {
-                start: "now-1h",
+                start: "now-3d",
                 end: "now",
-                step: 3600,
-                timezone: "Asia/Taipei",
+                step: 86400,
             },
-            limit: 1,
             queries: [
                 {
                     eventsQuery: {
@@ -286,7 +231,7 @@ export async function getAccumulatedUser(): Promise<number[]> {
                             },
                         },
                         groupBy: [],
-                        limit: 1,
+                        limit: 0,
                         functions: [],
                         disabled: false,
                     },
@@ -306,9 +251,9 @@ export async function getAccumulatedUser(): Promise<number[]> {
         });
 
         let data = await response.json();
-        // console.log(data.results[0].matrix.samples[0].values[0].value);
+        // console.dir(data.results[0].matrix, { depth: null });
 
-        result.push(data.results[0].matrix.samples[0].values[0].value);
+        result.push(data.results[0].matrix.samples[0].values.at(-1).value);
     }
     // console.log(result);
 
@@ -327,10 +272,9 @@ export async function getAccumulatedNotionalVolumeUSD(): Promise<number[]> {
     for (let apiUrl of apiUrls) {
         let requestData = {
             timeRange: {
-                start: "now",
+                start: "now-1h",
                 end: "now",
                 step: 3600,
-                timezone: "Asia/Taipei",
             },
             limit: 1,
             queries: [
@@ -378,7 +322,7 @@ export async function getSafuAccumulatedRewardGeneratedUSD(): Promise<number> {
 
     let requestData = {
         timeRange: {
-            start: "now",
+            start: "now-1h",
             end: "now",
             step: 3600,
             timezone: "Asia/Taipei",
@@ -419,5 +363,8 @@ export async function getSafuAccumulatedRewardGeneratedUSD(): Promise<number> {
     return data.results[0].matrix.samples[0].values[0].value;
 }
 
-// getAccumulatedNotionalVolumeUSD();
-// getAccumulatedUser();
+// getTotalDepositorIncentive().then((res) => console.log(res));
+// getTotalPremium().then((res) => console.log(res));
+// getAccumulatedNotionalVolumeUSD().then((res) => console.log(res));
+// getAccumulatedUser().then((res) => console.log(res));
+// getAccumulatedRewardGeneratedUSD().then((res) => console.log(res));

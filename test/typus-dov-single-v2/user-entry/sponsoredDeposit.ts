@@ -1,7 +1,7 @@
 import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { getRaiseFundTx } from "src/typus-dov-single-v2";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import { tokenType } from "src/constants";
@@ -13,7 +13,7 @@ import { getSponsoredTx } from "src/utils/sponsoredTx";
 
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let sender = signer.toSuiAddress();
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     let transaction = getRaiseFundTx(config, new Transaction(), {
         typeArguments: [tokenType["MAINNET"].SUI, tokenType["MAINNET"].SUI],

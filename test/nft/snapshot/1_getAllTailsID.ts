@@ -1,10 +1,10 @@
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import * as fs from "fs";
 import { TypusConfig } from "src/utils";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     var hasNextPage = true;
     var cursor: any | undefined = undefined;
@@ -20,7 +20,7 @@ import { TypusConfig } from "src/utils";
         // console.log(result);
 
         hasNextPage = result.hasNextPage;
-        cursor = result.nextCursor;
+        cursor = result.cursor;
 
         // @ts-ignore
         nftIDs = nftIDs.concat(result.data.map((d) => d.parsedJson.id));

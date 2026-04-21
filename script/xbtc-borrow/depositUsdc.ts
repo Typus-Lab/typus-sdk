@@ -1,7 +1,7 @@
 import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { depositCollateralNavi } from "src/typus-dov-single-v2";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import { tokenType } from "src/constants";
@@ -11,7 +11,7 @@ import { tokenType } from "src/constants";
     config.package.dovSingle = "0xe4da96f1c34f80f1d08b2c753400b96e35a8f2817942ed06dbb0d3b79fe3991a";
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     let user = signer.toSuiAddress();
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let token = tokenType["MAINNET"].USDC;
     let amount = "1000000";
 

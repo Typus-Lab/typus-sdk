@@ -1,6 +1,6 @@
 import "src/utils/load_env";
 import dotenv from "dotenv";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import slack from "slack";
@@ -14,7 +14,7 @@ process.removeAllListeners("warning");
 (async () => {
     dotenv.config({ path: "script/.env" });
     let config = await TypusConfig.default("MAINNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     transaction.moveCall({
         target: `0x81c408448d0d57b3e371ea94de1d40bf852784d3e225de1e74acab3e8395c18f::logic::user_health_factor`,
@@ -126,32 +126,32 @@ process.removeAllListeners("warning");
             transaction.pure.address(String(process.env.NAVI_ACCOUNT_ADDRESS)),
         ],
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } })).commandResults;
     let msg = `<<NAVI XBTC BORROWING HEALTH CHECK>>\n`;
     msg += "  <Health Factor>\n";
     // @ts-ignore
-    msg += `  * ${BigNumber(new BcsReader(new Uint8Array(results[0].returnValues[0][0])).read256()).div(BigNumber(10).pow(27))} (${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[7].returnValues[0][0])).read256(), 9)} / ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[8].returnValues[0][0])).read256(), 9)})\n`;
+    msg += `  * ${BigNumber(new BcsReader(new Uint8Array(results[0].returnValues[0].bcs)).read256()).div(BigNumber(10).pow(27))} (${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[7].returnValues[0].bcs)).read256(), 9)} / ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[8].returnValues[0].bcs)).read256(), 9)})\n`;
     msg += "  <Collateral>\n";
     // @ts-ignore
-    msg += `  * SUI: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[1].returnValues[0][0])).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[4].returnValues[0][0])).read256(), 9)})\n`;
+    msg += `  * SUI: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[1].returnValues[0].bcs)).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[4].returnValues[0].bcs)).read256(), 9)})\n`;
     // @ts-ignore
-    msg += `  * USDC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[2].returnValues[0][0])).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[5].returnValues[0][0])).read256(), 9)})\n`;
+    msg += `  * USDC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[2].returnValues[0].bcs)).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[5].returnValues[0].bcs)).read256(), 9)})\n`;
     // @ts-ignore
-    msg += `  * XBTC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[3].returnValues[0][0])).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[6].returnValues[0][0])).read256(), 9)})\n`;
+    msg += `  * XBTC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[3].returnValues[0].bcs)).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[6].returnValues[0].bcs)).read256(), 9)})\n`;
     msg += "  <Loan>\n";
     // @ts-ignore
-    msg += `  * XBTC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[7].returnValues[0][0])).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[8].returnValues[0][0])).read256(), 9)})\n`;
+    msg += `  * XBTC: ${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[7].returnValues[0].bcs)).read256(), 9)} ($${getNumberStringWithDecimal(new BcsReader(new Uint8Array(results[8].returnValues[0].bcs)).read256(), 9)})\n`;
     // @ts-ignore
     let deposit_receipt = await provider.getObject({
-        id: String(process.env.TYPUS_DEPOSIT_RECEIPT),
-        options: { showContent: true },
+        objectId: String(process.env.TYPUS_DEPOSIT_RECEIPT),
+        include: { content: true },
     });
     // @ts-ignore
     deposit_receipt = deposit_receipt.data.content.fields.value.fields.id.id;
     // @ts-ignore
     let depositShareSlice = await provider.getObject({
-        id: String(process.env.DEPOSIT_SHARE_SLICE),
-        options: { showContent: true },
+        objectId: String(process.env.DEPOSIT_SHARE_SLICE),
+        include: { content: true },
     });
     // @ts-ignore
     let depositShares: Object[] = depositShareSlice.data.content.fields.value;

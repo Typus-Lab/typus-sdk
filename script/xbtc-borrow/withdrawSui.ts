@@ -1,7 +1,7 @@
 import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { withdrawCollateralNavi } from "src/typus-dov-single-v2";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import { tokenType } from "src/constants";
@@ -10,7 +10,7 @@ import { tokenType } from "src/constants";
     let config = await TypusConfig.default("MAINNET", null);
     config.package.dovSingle = "0xe4da96f1c34f80f1d08b2c753400b96e35a8f2817942ed06dbb0d3b79fe3991a";
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let token = tokenType["MAINNET"].SUI;
 
     let transaction = new Transaction();
@@ -27,7 +27,7 @@ import { tokenType } from "src/constants";
         naviAsset: 0,
         naviIncentiveV2: "0xf87a8acb8b81d14307894d12595541a73f19933f88e1326d5be349c7a6f7559c",
         naviIncentiveV3: "0x62982dad27fb10bb314b3384d5de8d2ac2d72ab2dbeae5d801dbdb9efa816c80",
-        amount: undefined
+        amount: undefined,
     });
     let res = await provider.signAndExecuteTransaction({ signer, transaction });
 

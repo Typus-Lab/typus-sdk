@@ -1,6 +1,8 @@
-import { SuiClient, SuiEventFilter } from "@mysten/sui/client";
+import { bcs, BcsReader } from "@mysten/bcs";
+// import { SuiClient, SuiEventFilter } from "@mysten/sui/client";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import { TypusConfig } from "src/utils";
+import { getDynamicObjectFields, getEvents } from "src/utils/graphQl";
 
 export async function getPlaygrounds(
     config: TypusConfig,
@@ -8,7 +10,7 @@ export async function getPlaygrounds(
         module: "tails_exp" | "combo_dice";
     }
 ) {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const graphQlClient = config.graphQlClient();
     let registry = "";
     switch (input.module) {
         case "tails_exp":
@@ -20,54 +22,29 @@ export async function getPlaygrounds(
         default:
             break;
     }
-    let playgroundIds = (await provider.getDynamicFields({ parentId: registry })).data
-        .filter((a) => a.objectType.endsWith("Playground"))
-        .sort((a, b) => Number(a.name.value) - Number(b.name.value))
-        .map((x) => x.objectId as string);
 
-    // console.log(playgroundIds);
+    let dfs = await getDynamicObjectFields(graphQlClient, registry, "Playground");
+    // console.log(dfs);
 
-    let objects = await provider.multiGetObjects({
-        ids: playgroundIds,
-        options: { showContent: true },
+    if (!dfs) {
+        console.error("Not found any playground");
+        return [];
+    }
+
+    let result = dfs.map((df) => {
+        let playground: Playground = {
+            id: df.id,
+            house_whitelist: df.house_whitelist,
+            public_key: df.public_key,
+            num_of_games: df.num_of_games,
+            stake_token: df.stake_token,
+            opened_games: new Map<string, Game>(),
+            game_config: df.game_config as GameConfig,
+            is_active: df.is_active,
+            exp_config: (df.exp_config as ExpConfig) ?? undefined,
+        };
+        return playground;
     });
-
-    let result = objects
-        // @ts-ignore
-        .filter((object) => object.data?.content?.type.endsWith("Playground"))
-        .map((object) => {
-            // @ts-ignore
-            let fields = object.data?.content.fields;
-            // console.log(fields);
-
-            let opened_games = new Map<string, Game>();
-            if (fields.opened_games.fields) {
-                for (let curr of fields.opened_games.fields.contents) {
-                    // console.log(curr);
-                    opened_games.set(curr.fields.key, curr.fields.value.fields as Game);
-                }
-            }
-            // console.log(opened_games);
-
-            let game_config = fields.game_config.fields as GameConfig;
-            // console.log(game_config);
-
-            let playground: Playground = {
-                id: fields.id.id,
-                house_whitelist: fields.house_whitelist,
-                public_key: fields.public_key,
-                num_of_games: fields.num_of_games,
-                stake_token: fields.stake_token.fields.name,
-                opened_games,
-                game_config,
-                is_active: fields.is_active,
-            };
-            if (fields.exp_config) {
-                playground.exp_config = fields.exp_config.fields;
-            }
-            // console.log(playground);
-            return playground;
-        });
 
     return result;
 }
@@ -120,7 +97,7 @@ export async function getHistory(
         playgrounds: Playground[];
     }
 ): Promise<DrawDisplay[]> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const graphQlClient = config.graphQlClient();
     let MoveEventType = "";
     switch (input.module) {
         case "tails_exp":
@@ -136,28 +113,19 @@ export async function getHistory(
         default:
             break;
     }
-    let eventFilter: SuiEventFilter = {
-        MoveEventType,
-    };
 
-    var result = await provider.queryEvents({ query: eventFilter, order: "descending" });
-    // console.log(result);
+    const events = await getEvents(graphQlClient, MoveEventType, null, null, false);
+    // console.log(`Found ${events.length} events of type ${MoveEventType}`);
 
-    var history = await parseHistory(result.data, input.playgrounds);
-
-    while (result.hasNextPage && history.length <= 60) {
-        result = await provider.queryEvents({ query: eventFilter, order: "descending", cursor: result.nextCursor });
-        let nextPage = await parseHistory(result.data, input.playgrounds);
-        history = history.concat(nextPage);
-    }
-
+    const history = await parseHistory(events, input.playgrounds);
     return history;
 }
 
 export async function parseHistory(datas, playgrounds: Playground[]): Promise<DrawDisplay[]> {
     let result = datas.map((event) => {
-        let drawEvent = event.parsedJson as DrawEvent;
-        drawEvent.timestampMs = event.timestampMs;
+        // console.log(event);
+        let drawEvent = event.contents.json as DrawEvent;
+        drawEvent.timestamp = event.timestamp;
 
         let playground = playgrounds[Number(drawEvent.index)];
 
@@ -212,7 +180,7 @@ export async function parseHistory(datas, playgrounds: Playground[]): Promise<Dr
             result_2,
             bet_amount: `${amount} ${asset}`,
             exp: `${exp} EXP`,
-            timestampMs: drawEvent.timestampMs,
+            timestamp: drawEvent.timestamp,
         };
 
         if (drawEvent.reward) {
@@ -247,7 +215,7 @@ export interface DrawEvent {
     signature_2: number[];
     signer: string;
     stake_amount: string;
-    timestampMs: string;
+    timestamp: string;
     exp?: string;
     exp_amount?: string;
     reward?: string;
@@ -262,7 +230,7 @@ export interface DrawDisplay {
     result_2: string;
     bet_amount: string;
     exp: string;
-    timestampMs: string;
+    timestamp: string;
     reward?: string;
 }
 
@@ -303,8 +271,8 @@ export interface DrawDisplay {
 
 // export async function getProfitSharing(provider: SuiClient, diceProfitSharing: string) {
 //     let object = await provider.getObject({
-//         id: diceProfitSharing,
-//         options: { showContent: true },
+//         objectId: diceProfitSharing,
+//         include: { content: true },
 //     });
 
 //     // @ts-ignore

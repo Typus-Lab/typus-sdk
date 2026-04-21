@@ -1,13 +1,12 @@
 import "src/utils/load_env";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Transaction } from "@mysten/sui/transactions";
 import * as fs from "fs";
 
 // Generate a new Ed25519 Keypair
 
-import mnemonic from "../../../mnemonic.json";
-const keypair = Ed25519Keypair.deriveKeypair(String(mnemonic.NFT));
+const keypair = Ed25519Keypair.deriveKeypair(String(process.env.NFT));
 
 let provider = new SuiClient({
     url: "https://fullnode.mainnet.sui.io:443",

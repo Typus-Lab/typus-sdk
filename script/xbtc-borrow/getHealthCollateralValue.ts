@@ -1,5 +1,5 @@
 import "src/utils/load_env";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { BcsReader } from "@mysten/bcs";
 import { TypusConfig } from "src/utils";
@@ -7,7 +7,7 @@ import { CLOCK, SENDER } from "src/constants";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     let target = `0x81c408448d0d57b3e371ea94de1d40bf852784d3e225de1e74acab3e8395c18f::logic::user_health_collateral_value` as any;
     transaction.moveCall({
@@ -20,7 +20,7 @@ import { CLOCK, SENDER } from "src/constants";
             transaction.pure.address("0xd9ad801966569a212cc9e7ecbe33400307c2083ebf7e34f64c6c48fe40707c2f"),
         ],
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } })).commandResults;
     // @ts-ignore
-    console.log(new BcsReader(new Uint8Array(results[0].returnValues[0][0])).read256());
+    console.log(new BcsReader(new Uint8Array(results[0].returnValues[0].bcs)).read256());
 })();

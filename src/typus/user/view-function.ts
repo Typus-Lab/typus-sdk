@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { BcsReader } from "@mysten/bcs";
 import { TypusConfig } from "src/utils";
 import { SENDER } from "src/constants";
@@ -10,7 +10,7 @@ export async function getUserMetadata(
         user: string;
     }
 ): Promise<string[]> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     transaction.moveCall({
         target: `${config.package.typus}::user::get_user_metadata`,
@@ -21,10 +21,11 @@ export async function getUserMetadata(
             transaction.pure.address(input.user),
         ],
     });
-    let results = (await provider.devInspectTransactionBlock({ sender: SENDER, transactionBlock: transaction })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     // console.log(JSON.stringify(results));
     // @ts-ignore
-    let bytes = results[results.length - 1].returnValues[0][0];
+    let bytes = results[results.length - 1].returnValues[0].bcs;
     // console.log(JSON.stringify(bytes));
     let reader = new BcsReader(new Uint8Array(bytes));
     reader.readULEB();

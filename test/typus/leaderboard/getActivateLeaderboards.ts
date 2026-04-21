@@ -1,20 +1,22 @@
 import "src/utils/load_env";
 import { TypusConfig } from "src/utils";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { getRankings } from "src/typus/leaderboard";
 
 (async () => {
     let config = await TypusConfig.default("MAINNET", null);
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
-    let dfs = await provider.getDynamicFields({ parentId: "0xa6a9615115f50b848191f7503507f16df83d42e7d487ced03d6d854920356717" });
+    let dfs = await provider.listDynamicFields({ parentId: "0xa6a9615115f50b848191f7503507f16df83d42e7d487ced03d6d854920356717" });
     // console.dir(dfs, { depth: null });
 
     let ids = dfs.data.map((x) => x.objectId);
+    console.log(ids);
 
     // 0 => this round
     // 1 => last round
-    let id = ids[1];
+    // let id = ids[1];
+    let id = "0xa3cffb5dffd9b5b628a6be09996a895598aa0cc2bd803a18f6b366e7c2cda0db";
 
     const trading_competition = await getRankings(config, {
         key: "trading_competition",

@@ -1,4 +1,4 @@
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import { getDepositShares, getUserOwnedObjects, getVaults } from "src/typus-dov-single-v2";
 import { TypusConfig } from "src/utils";
@@ -13,8 +13,8 @@ import { TypusConfig } from "src/utils";
     const datas = await getUserOwnedObjects(config, user);
 
     let receipts = datas
-        .filter((obj) => obj.data?.type! == `${config.packageOrigin.framework}::vault::TypusDepositReceipt`)
-        .map((obj) => obj.data?.objectId!);
+        .filter((obj) => obj?.type! == `${config.packageOrigin.framework}::vault::TypusDepositReceipt`)
+        .map((obj) => obj?.objectId!);
     console.log(receipts);
 
     // Request: 1

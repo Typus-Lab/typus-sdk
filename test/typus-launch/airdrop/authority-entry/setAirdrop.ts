@@ -1,6 +1,6 @@
 import "src/utils/load_env";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { TypusConfig } from "src/utils";
 import { setAirdrop } from "src/typus-launch/airdrop";
@@ -9,7 +9,7 @@ import { setAirdrop } from "src/typus-launch/airdrop";
     let config = await TypusConfig.default("TESTNET", null);
     // let config = TypusConfig.local("../typus-config/config-testnet.json");
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     let transaction = new Transaction();
     setAirdrop(config, transaction, {

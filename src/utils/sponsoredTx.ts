@@ -1,8 +1,8 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { GasStationClient, createSuiClient, buildGaslessTransaction, GaslessTransaction } from "@shinami/clients/sui";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 
-export async function getSponsoredTx(provider: SuiClient, sender: string, tx: Transaction) {
+export async function getSponsoredTx(provider: SuiGrpcClient, sender: string, tx: Transaction) {
     let gaslessTx = await buildGaslessTransaction(tx, {
         sui: provider,
         sender,

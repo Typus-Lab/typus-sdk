@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { BcsReader } from "@mysten/bcs";
 import { AddressFromBytes, TypusConfig } from "src/utils";
 import { SENDER } from "src/constants";
@@ -33,17 +33,18 @@ export async function getVaultData(
         indexes: string[];
     }
 ): Promise<{ [key: string]: [Vault] }> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     transaction.moveCall({
         target: `${config.package.hedge.hedge}::view_function::get_vault_data_bcs`,
         typeArguments: [],
         arguments: [transaction.object(config.registry.hedge.hedge), transaction.pure.vector("u64", input.indexes)],
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     // console.log(JSON.stringify(results));
     // @ts-ignore
-    let bytes = results[results.length - 1].returnValues[0][0];
+    let bytes = results[results.length - 1].returnValues[0].bcs;
     // console.log(JSON.stringify(bytes));
     let reader = new BcsReader(new Uint8Array(bytes));
     let result: {
@@ -133,7 +134,7 @@ export async function getShareData(
         indexes: string[];
     }
 ): Promise<{ [key: string]: Share }> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     transaction.moveCall({
         target: `${config.package.hedge.hedge}::view_function::get_user_share_data_bcs`,
@@ -144,10 +145,11 @@ export async function getShareData(
             transaction.pure.vector("u64", input.indexes),
         ],
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: input.user })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     // console.log(JSON.stringify(results));
     // @ts-ignore
-    let bytes = results[results.length - 1].returnValues[0][0];
+    let bytes = results[results.length - 1].returnValues[0].bcs;
     // console.log(JSON.stringify(bytes));
     let reader = new BcsReader(new Uint8Array(bytes));
     let result: {

@@ -1,9 +1,10 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { SuiClient } from "@mysten/sui/client";
-import { BcsReader } from "@mysten/bcs";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
+import { bcs, BcsReader } from "@mysten/bcs";
 import { AddressFromBytes, TypusConfig } from "src/utils";
 import { SENDER } from "src/constants";
 import { TypusBidReceipt } from "src/auto-bid/view-function";
+
 export interface Vault {
     id: string;
     depositToken: string;
@@ -62,15 +63,15 @@ export interface BigVector {
 }
 
 export async function getBigVectorData(config: TypusConfig, bigVector: BigVector) {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
 
     let results: any[] = [];
     for (let i = 0; i <= Number(bigVector.slice_idx); i++) {
-        let df = await provider.getDynamicFieldObject({
+        let df = await provider.getDynamicField({
             parentId: bigVector.id,
             name: {
                 type: "u64",
-                value: `${i}`,
+                bcs: bcs.u64().serialize(i).toBytes(),
             },
         });
         // @ts-ignore
@@ -87,17 +88,18 @@ export async function getVaultData(
         indexes: string[];
     }
 ): Promise<{ [key: string]: [Vault, TypusBidReceipt | null] }> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     transaction.moveCall({
         target: `${config.package.safu}::view_function::get_vault_data_bcs`,
         typeArguments: [`${config.package.framework}::vault::TypusBidReceipt`],
         arguments: [transaction.object(config.registry.safu.safu), transaction.pure.vector("u64", input.indexes)],
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     // console.log(JSON.stringify(results));
     // @ts-ignore
-    let bytes = results[results.length - 1].returnValues[0][0];
+    let bytes = results[results.length - 1].returnValues[0].bcs;
     // console.log(JSON.stringify(bytes));
     let reader = new BcsReader(new Uint8Array(bytes));
     let result: {
@@ -230,7 +232,7 @@ export async function getShareData(
         indexes: string[];
     }
 ): Promise<{ [key: string]: Share[] }> {
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    const provider = config.gRpcClient();
     let transaction = new Transaction();
     transaction.moveCall({
         target: `${config.package.safu}::view_function::get_share_data_bcs`,
@@ -241,10 +243,11 @@ export async function getShareData(
             transaction.pure.vector("u64", input.indexes),
         ],
     });
-    let results = (await provider.devInspectTransactionBlock({ transactionBlock: transaction, sender: SENDER })).results;
+    let results = (await provider.simulateTransaction({ transaction, checksEnabled: false, include: { commandResults: true } }))
+        .commandResults;
     // console.log(JSON.stringify(results));
     // @ts-ignore
-    let bytes = results[results.length - 1].returnValues[0][0];
+    let bytes = results[results.length - 1].returnValues[0].bcs;
     // console.log(JSON.stringify(bytes));
     let reader = new BcsReader(new Uint8Array(bytes));
     let result: {

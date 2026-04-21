@@ -4,7 +4,7 @@ import { EventId, SuiClient, SuiEvent } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { getClaimAirdropTx, getAirdrop } from "src/typus/airdrop";
 import { TypusConfig } from "src/utils";
-import mnemonic from "mnemonic.json";
+
 import { getUserEvents } from "src/typus-dov-single-v2";
 import * as fs from "fs";
 import { assetToDecimal, TOKEN, tokenType } from "src/constants";
@@ -13,8 +13,8 @@ const NETWORK = "TESTNET";
 
 (async () => {
     let config = await TypusConfig.default(NETWORK, null);
-    let signer = Ed25519Keypair.deriveKeypair(String(mnemonic.W));
-    let provider = new SuiClient({ url: config.rpcEndpoint });
+    let signer = Ed25519Keypair.deriveKeypair(String(process.env.W));
+    const provider = config.gRpcClient();
     let user = signer.toSuiAddress();
     console.log(`Using account ${user}`);
 
@@ -36,7 +36,7 @@ const NETWORK = "TESTNET";
         key,
         user,
     });
-    // let dryRunRes = await provider.devInspectTransactionBlock({ sender: user, transactionBlock: transaction });
+    // let dryRunRes = await provider.simulateTransaction({ transaction });
     // console.log(dryRunRes.events.map((x) => x.parsedJson));
     let res = await provider.signAndExecuteTransaction({ signer, transaction });
     console.log(res);
