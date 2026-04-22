@@ -70,6 +70,8 @@ export async function getLevelCounts(config: TypusConfig): Promise<number[]> {
     let results = (
         await provider.simulateTransaction({
             transaction,
+            checksEnabled: false,
+            include: { commandResults: true },
         })
     ).commandResults;
     // @ts-ignore
