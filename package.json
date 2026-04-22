@@ -2,7 +2,7 @@
     "name": "@typus/typus-sdk",
     "author": "Typus",
     "description": "typus sdk",
-    "version": "1.9.1",
+    "version": "1.9.2",
     "dependencies": {
         "@mysten/bcs": "2.0.3",
         "@mysten/kiosk": "1.2.0",
