@@ -30,6 +30,8 @@ export async function getStakingInfo(
     let results = (
         await provider.simulateTransaction({
             transaction,
+            checksEnabled: false,
+            include: { commandResults: true },
         })
     ).commandResults;
     // @ts-ignore

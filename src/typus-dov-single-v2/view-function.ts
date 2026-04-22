@@ -691,6 +691,8 @@ export async function getRefundShares(
     let results = (
         await provider.simulateTransaction({
             transaction,
+            checksEnabled: false,
+            include: { commandResults: true },
         })
     ).commandResults;
     let refundShares = Array.from(new Map()).reduce((map, [key, value]) => {

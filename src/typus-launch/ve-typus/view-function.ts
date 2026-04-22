@@ -23,7 +23,11 @@ export async function getVeTypus(
         target: `${config.package.launch.veTypus}::ve_typus::get_ve_typus_bcs`,
         arguments: [transaction.object(config.registry.launch.veTypus), transaction.pure.address(input.user)],
     });
-    let devInspectTransactionBlockResult = await provider.simulateTransaction({ transaction });
+    let devInspectTransactionBlockResult = await provider.simulateTransaction({
+        transaction,
+        checksEnabled: false,
+        include: { commandResults: true },
+    });
     // @ts-ignore
     let bytes = devInspectTransactionBlockResult.commandResults[0].returnValues[0].bcs;
     let reader = new BcsReader(new Uint8Array(bytes));

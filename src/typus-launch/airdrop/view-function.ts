@@ -28,7 +28,11 @@ export async function getAirdrop(
         target: `${config.package.launch.airdrop}::airdrop::get_airdrop_bcs`,
         arguments: [transaction.object(config.registry.launch.airdrop), transaction.pure.address(input.user)],
     });
-    let devInspectTransactionBlockResult = await provider.simulateTransaction({ transaction });
+    let devInspectTransactionBlockResult = await provider.simulateTransaction({
+        transaction,
+        checksEnabled: false,
+        include: { commandResults: true },
+    });
     // @ts-ignore
     let bytes = devInspectTransactionBlockResult.commandResults[0].returnValues[0].bcs;
     let reader = new BcsReader(new Uint8Array(bytes));

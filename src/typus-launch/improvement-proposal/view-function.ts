@@ -93,7 +93,11 @@ export async function getEndedTips(config: TypusConfig): Promise<Tip[]> {
         target: `${config.package.launch.improvementProposal}::improvement_proposal::get_ended_tips_bcs`,
         arguments: [transaction.object(config.registry.launch.improvementProposal)],
     });
-    let devInspectTransactionBlockResult = await provider.simulateTransaction({ transaction });
+    let devInspectTransactionBlockResult = await provider.simulateTransaction({
+        transaction,
+        checksEnabled: false,
+        include: { commandResults: true },
+    });
     // @ts-ignore
     let bytes = devInspectTransactionBlockResult.commandResults[0].returnValues[0].bcs;
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -156,7 +160,11 @@ export async function getOngoingTipVotes(config: TypusConfig, input: { user: str
         target: `${config.package.launch.improvementProposal}::improvement_proposal::get_ongoing_tip_votes_bcs`,
         arguments: [transaction.object(config.registry.launch.improvementProposal), transaction.pure.address(input.user)],
     });
-    let devInspectTransactionBlockResult = await provider.simulateTransaction({ transaction });
+    let devInspectTransactionBlockResult = await provider.simulateTransaction({
+        transaction,
+        checksEnabled: false,
+        include: { commandResults: true },
+    });
     // @ts-ignore
     let bytes = devInspectTransactionBlockResult.commandResults[0].returnValues[0].bcs;
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -184,7 +192,11 @@ export async function getEndedTipVotes(config: TypusConfig, input: { user: strin
         target: `${config.package.launch.improvementProposal}::improvement_proposal::get_ended_tip_votes_bcs`,
         arguments: [transaction.object(config.registry.launch.improvementProposal), transaction.pure.address(input.user)],
     });
-    let devInspectTransactionBlockResult = await provider.simulateTransaction({ transaction });
+    let devInspectTransactionBlockResult = await provider.simulateTransaction({
+        transaction,
+        checksEnabled: false,
+        include: { commandResults: true },
+    });
     // @ts-ignore
     let bytes = devInspectTransactionBlockResult.commandResults[0].returnValues[0].bcs;
     let reader = new BcsReader(new Uint8Array(bytes));
@@ -212,7 +224,11 @@ export async function getTipVotes(config: TypusConfig, input: { index: string })
         target: `${config.package.launch.improvementProposal}::improvement_proposal::get_tip_votes_bcs`,
         arguments: [transaction.object(config.registry.launch.improvementProposal), transaction.pure.u64(input.index)],
     });
-    let devInspectTransactionBlockResult = await provider.simulateTransaction({ transaction });
+    let devInspectTransactionBlockResult = await provider.simulateTransaction({
+        transaction,
+        checksEnabled: false,
+        include: { commandResults: true },
+    });
     // @ts-ignore
     let bytes = devInspectTransactionBlockResult.commandResults[0].returnValues[0].bcs;
     let reader = new BcsReader(new Uint8Array(bytes));

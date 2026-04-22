@@ -27,6 +27,8 @@ export async function getAirdrop(
     let results = (
         await provider.simulateTransaction({
             transaction,
+            checksEnabled: false,
+            include: { commandResults: true },
         })
     ).commandResults;
     // @ts-ignore
