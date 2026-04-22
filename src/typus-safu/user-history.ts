@@ -1,4 +1,6 @@
-import { BcsReader } from "@mysten/bcs";
+import { fromBase64 } from '@mysten/bcs';
+import { bcs } from '@mysten/sui/bcs';
+import { Event } from "src/utils";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 import BigNumber from "bignumber.js";
 
@@ -13,37 +15,41 @@ export interface TxHistory {
     log: string[];
 }
 
-export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory>> {
+export async function parseTxHistory(datas: Event[]): Promise<Array<TxHistory>> {
+    console.log(datas[0])
     let results = await datas
         .filter((event) => {
             return (
-                event.type.includes("safu") ||
-                event.type == "0x7dab89563066afa000ee154738aac2cc8e7d3e26cd0b470183db63630ee9f965::funding_vault::RaiseFundEvent"
+                event.contents?.type?.repr.includes("safu") ||
+                event.contents?.type?.repr == "0x7dab89563066afa000ee154738aac2cc8e7d3e26cd0b470183db63630ee9f965::funding_vault::RaiseFundEvent"
             );
         })
         .sort((a, b) => {
             // From Old to New!
-            if (a.timestampMs == b.timestampMs) {
-                return Number(a.id.eventSeq) - Number(b.id.eventSeq);
+            if (a.timestamp == b.timestamp) {
+                return Number(a.sequenceNumber) - Number(b.sequenceNumber);
             } else {
-                return Number(a.timestampMs) - Number(b.timestampMs);
+                return Number(a.timestamp) - Number(b.timestamp);
             }
         })
         .reduce(async (promise, event) => {
             let txHistory: TxHistory[] = await promise;
             // console.log(event);
 
-            if (event.type == "0x7dab89563066afa000ee154738aac2cc8e7d3e26cd0b470183db63630ee9f965::funding_vault::RaiseFundEvent") {
-                let log = event.parsedJson!.log;
+            if (event.contents?.type?.repr == "0x7dab89563066afa000ee154738aac2cc8e7d3e26cd0b470183db63630ee9f965::funding_vault::RaiseFundEvent") {
+                //@ts-ignore
+                let log = event.contents?.json?.log;
                 if (log.length > 1) {
                     txHistory.push({
                         Action: "Deposit",
                         Index: `deepbook/${log[0]}`,
                         Amount: divByDecimal(Number(log[1]), 9),
-                        Token: event.parsedJson!.token.name,
+                        //@ts-ignore
+                        Token: event.contents?.json?.token,
                         Exp: undefined,
-                        Date: new Date(Number(event.timestampMs)),
-                        txDigest: event.id.txDigest,
+                        Date: new Date(Number(event.timestamp)),
+                        //@ts-ignore
+                        txDigest: event.transaction?.digest,
                         log,
                     });
                 } else {
@@ -51,22 +57,28 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                         Action: "Deposit",
                         Index: "deepbook/0",
                         Amount: divByDecimal(Number(log[0]), 9),
-                        Token: event.parsedJson!.token.name,
+                        //@ts-ignore
+                        Token: event.contents?.json?.token,
                         Exp: undefined,
-                        Date: new Date(Number(event.timestampMs)),
-                        txDigest: event.id.txDigest,
+                        Date: new Date(Number(event.timestamp)),
+                        //@ts-ignore
+                        txDigest: event.transaction?.digest,
                         log,
                     });
                 }
                 return txHistory;
             }
 
-            let action = event.parsedJson!.action;
-            let log = event.parsedJson!.log;
+            //@ts-ignore
+            let action = event.contents!.json.action;
+            //@ts-ignore
+            let log = event.contents!.json.log;
             // skip the event without tokenType
-            if (event.parsedJson!.bcs_padding.length > 0) {
-                let reader = new BcsReader(new Uint8Array(event.parsedJson!.bcs_padding[0]));
-                let Token = String.fromCharCode.apply(null, Array.from(reader.readBytes(reader.readULEB())));
+            //@ts-ignore
+            if (event.contents!.json.bcs_padding.length > 0) {
+                //@ts-ignore
+                let reader = fromBase64(event.contents!.json.bcs_padding[0]);
+                let Token = bcs.string().parse(reader);
                 let asset = typeArgToAsset(Token);
                 let decimal = assetToDecimal(asset);
                 // console.log(asset, decimal);
@@ -82,8 +94,9 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                                 Amount: divByDecimal(Number(log[2]), decimal!),
                                 Token,
                                 Exp: log[6],
-                                Date: new Date(Number(event.timestampMs)),
-                                txDigest: event.id.txDigest,
+                                Date: new Date(Number(event.timestamp)),
+                                //@ts-ignore
+                                txDigest: event.transaction?.digest,
                                 log,
                             });
                         }
@@ -94,8 +107,9 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                                 Amount: divByDecimal(Number(log[3]), decimal!),
                                 Token,
                                 Exp: log[6],
-                                Date: new Date(Number(event.timestampMs)),
-                                txDigest: event.id.txDigest,
+                                Date: new Date(Number(event.timestamp)),
+                                //@ts-ignore
+                                txDigest: event.transaction?.digest,
                                 log,
                             });
                         }
@@ -106,8 +120,9 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                                 Amount: divByDecimal(Number(log[4]), decimal!),
                                 Token,
                                 Exp: log[6],
-                                Date: new Date(Number(event.timestampMs)),
-                                txDigest: event.id.txDigest,
+                                Date: new Date(Number(event.timestamp)),
+                                //@ts-ignore
+                                txDigest: event.transaction?.digest,
                                 log,
                             });
                             txHistory.push({
@@ -116,8 +131,9 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                                 Amount: divByDecimal(Number(log[4]), decimal!),
                                 Token,
                                 Exp: undefined,
-                                Date: new Date(Number(event.timestampMs)),
-                                txDigest: event.id.txDigest,
+                                Date: new Date(Number(event.timestamp)),
+                                //@ts-ignore
+                                txDigest: event.transaction?.digest,
                                 log,
                             });
                         }
@@ -128,8 +144,9 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                                 Amount: divByDecimal(Number(log[5]), decimal!),
                                 Token,
                                 Exp: log[6],
-                                Date: new Date(Number(event.timestampMs)),
-                                txDigest: event.id.txDigest,
+                                Date: new Date(Number(event.timestamp)),
+                                //@ts-ignore
+                                txDigest: event.transaction?.digest,
                                 log,
                             });
                         }
@@ -143,8 +160,9 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                                 Amount: divByDecimal(totalWithdrawAmount.toNumber(), decimal!),
                                 Token,
                                 Exp: log[5],
-                                Date: new Date(Number(event.timestampMs)),
-                                txDigest: event.id.txDigest,
+                                Date: new Date(Number(event.timestamp)),
+                                //@ts-ignore
+                                txDigest: event.transaction?.digest,
                                 log,
                             });
                         }
@@ -156,8 +174,9 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                                 Amount: divByDecimal(Number(log[3]), decimal!),
                                 Token,
                                 Exp: log[5],
-                                Date: new Date(Number(event.timestampMs)),
-                                txDigest: event.id.txDigest,
+                                Date: new Date(Number(event.timestamp)),
+                                //@ts-ignore
+                                txDigest: event.transaction?.digest,
                                 log,
                             });
                         }
@@ -170,8 +189,9 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                             Amount: divByDecimal(Number(log[2]), decimal!),
                             Token,
                             Exp: undefined,
-                            Date: new Date(Number(event.timestampMs)),
-                            txDigest: event.id.txDigest,
+                            Date: new Date(Number(event.timestamp)),
+                            //@ts-ignore
+                            txDigest: event.transaction?.digest,
                             log,
                         });
                         break;

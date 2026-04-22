@@ -72,6 +72,7 @@ const eventsQuery = graphql(`
                 cursor
             }
             nodes {
+                sequenceNumber
                 transaction {
                     digest
                 }
@@ -97,6 +98,7 @@ const eventsQuery = graphql(`
 `);
 
 export interface Event {
+    sequenceNumber: number;
     transaction: {
         digest: string;
     } | null;

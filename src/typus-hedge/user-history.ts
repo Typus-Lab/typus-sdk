@@ -1,4 +1,6 @@
-import { bcs } from "@mysten/bcs";
+import { fromBase64 } from '@mysten/bcs';
+import { bcs } from '@mysten/sui/bcs';
+import { Event } from "src/utils";
 import { assetToDecimal, typeArgToAsset } from "src/constants";
 
 export interface TxHistory {
@@ -12,24 +14,27 @@ export interface TxHistory {
     log: string[];
 }
 
-export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory>> {
+export async function parseTxHistory(datas: Array<Event>): Promise<Array<TxHistory>> {
     let results = await datas
         .filter((event) => {
-            return event.type == "0x15f0d9c093179f38ec90b20ac336750f82921730c25fed63e951d37a1a542bf0::event::UserEvent";
+            return event.contents?.type?.repr == "0x15f0d9c093179f38ec90b20ac336750f82921730c25fed63e951d37a1a542bf0::event::UserEvent";
         })
         .sort((a, b) => {
             // From Old to New!
-            if (a.timestampMs == b.timestampMs) {
-                return Number(a.id.eventSeq) - Number(b.id.eventSeq);
+            if (a.timestamp == b.timestamp) {
+                return Number(a.sequenceNumber) - Number(b.sequenceNumber);
             } else {
-                return Number(a.timestampMs) - Number(b.timestampMs);
+                return Number(a.timestamp) - Number(b.timestamp);
             }
         })
         .reduce(async (promise, event) => {
             let txHistory: TxHistory[] = await promise;
-            let action = event.parsedJson!.action;
-            let log = toMap(event.parsedJson!.log.contents);
-            let bcs_padding = toMap(event.parsedJson!.bcs_padding.contents);
+            //@ts-ignore
+            let action = event.contents.json.action;
+            //@ts-ignore
+            let log = toMap(event.contents.json.log.contents);
+            //@ts-ignore
+            let bcs_padding = toMap(event.contents.json.bcs_padding);
             // console.log(action, log, bcs_padding, bcs_padding.size);
 
             if (bcs_padding.size == 0) {
@@ -65,8 +70,9 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                         Amount: [mainTokenAmount, hedgeTokenAmount],
                         Token: [mainToken, hedgeToken],
                         Exp: log.get("exps"),
-                        Date: new Date(Number(event.timestampMs)),
-                        txDigest: event.id.txDigest,
+                        Date: new Date(Number(event.timestamp)),
+                        //@ts-ignore
+                        txDigest: event.transaction?.digest,
                         log: [],
                     });
 
@@ -93,8 +99,9 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                             Amount: [mainTokenWarmupAmount, hedgeTokenWarmupAmount],
                             Token: [mainToken, hedgeToken],
                             Exp: log.get("exps"),
-                            Date: new Date(Number(event.timestampMs)),
-                            txDigest: event.id.txDigest,
+                            Date: new Date(Number(event.timestamp)),
+                            //@ts-ignore
+                            txDigest: event.transaction?.digest,
                             log: [],
                         });
                     }
@@ -109,8 +116,9 @@ export async function parseTxHistory(datas: Array<any>): Promise<Array<TxHistory
                             Amount: [mainTokenActiveAmount, hedgeTokenActiveAmount],
                             Token: [mainToken, hedgeToken],
                             Exp: log["exps"],
-                            Date: new Date(Number(event.timestampMs)),
-                            txDigest: event.id.txDigest,
+                            Date: new Date(Number(event.timestamp)),
+                            //@ts-ignore
+                            txDigest: event.transaction?.digest,
                             log: [],
                         });
                     }
