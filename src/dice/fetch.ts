@@ -117,7 +117,7 @@ export async function getHistory(
     const events = await getEvents(graphQlClient, MoveEventType, null, null, false);
     // console.log(`Found ${events.length} events of type ${MoveEventType}`);
 
-    const history = await parseHistory(events, input.playgrounds);
+    const history = await parseHistory(events.events, input.playgrounds);
     return history;
 }
 
