@@ -75,5 +75,5 @@ export const feedIds: { [key in TOKEN]: number } = {
 // Source: https://docs.pyth.network/price-feeds/pro/contract-addresses
 export const lazerStateId = {
     MAINNET: "",
-    TESTNET: "0x8ecb2bc0e01a145e84417dfbefa746f31afa5c5066bc3180031ae81ef2a424fd",
+    TESTNET: "0x7b570126bfdcc7f7b2b4028445d4ac1d35c41da498606a2b097c3973425698d3",
 };
