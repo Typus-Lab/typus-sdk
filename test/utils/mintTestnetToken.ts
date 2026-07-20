@@ -8,6 +8,7 @@ import { TOKEN, tokenRegistry, tokenType } from "src/constants";
     let config = await TypusConfig.default("TESTNET", null);
     let signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
     const provider = config.gRpcClient();
+    console.log(signer.toSuiAddress());
 
     let token: TOKEN = "wUSDC";
     let packageId = tokenType["TESTNET"][token].split("::")[0];

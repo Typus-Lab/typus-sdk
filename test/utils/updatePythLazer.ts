@@ -3,38 +3,34 @@ import { Transaction } from "@mysten/sui/transactions";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { PythLazerClient } from "@pythnetwork/pyth-lazer-sdk";
 import { TypusConfig } from "src/utils";
-import { feedIds, lazerStateId } from "src/utils/pyth/constant";
-import {
-    addLatestPriceNewToken,
-    addSettlePriceNewToken,
-    updateOracleV2SettlePriceWithPythLazer,
-    updateOracleV2WithPythLazer,
-    updatePythLazer,
-} from "src/utils/pyth/pythClient";
-import { tokenType } from "src/constants";
+import { PythLazerSuiClient } from "src/utils/pyth/pythClient";
 
 (async () => {
     const network = "TESTNET";
     const config = await TypusConfig.default(network, null);
-    config.package.oracle = "0x834db2ed971e77d2b9379f6ba5042b7b6c930964154c9af74399a0e2918ba656";
+    config.package.oracle = "0xd2e030ab7f0fc956c7e683cf3c6faf3d22868dee81a4aae9f4a10a6d998a8a02";
 
     const sui = new SuiJsonRpcClient({ url: config.rpcEndpoint, network: network.toLowerCase() });
     const lazer = await PythLazerClient.create({ token: String(process.env.LAZER_TOKEN), webSocketPoolConfig: {} });
-    const signer = Ed25519Keypair.deriveKeypair(String(process.env.AUTH_MNEMONIC));
+    const signer = Ed25519Keypair.deriveKeypair(String(process.env.MNEMONIC));
+    console.log(signer.toSuiAddress());
+    const oracleV2Id = "0x6378d4a139475984613344077a862972756e2bd0cb2aab7018e7f48eeee0742d";
+    const lazerPackage = "0xacb76cbd636b83839153feff75b83157c400075717ce8c979fbbe88cf3564901";
 
-    const oracleV2Id = "0xdf6ad9349192df7ad0823eda0828a051cf29e6ee37d8209490da878bf4642482";
-    const lazerPackage = "0x162e08fec78a1e0eba06951abce9019fe9a270dfb574b1e05b133ba4aa6bc0df";
-    const timestamp = 1778572800;
-
-    const client = { lazer, sui, stateObjectId: lazerStateId[network], lazerPackage };
+    const pythClient = new PythLazerSuiClient({
+        lazer,
+        sui,
+        network,
+        lazerPackage,
+        oraclePackage: config.package.oracle,
+        oracleV2Id,
+    });
     const tx = new Transaction();
 
-    const verifiedUpdate = await updatePythLazer(client, tx, ["AAPLX"]);
-    addLatestPriceNewToken(tx, config.package.oracle, oracleV2Id, tokenType[network]["AAPLX"], feedIds["AAPLX"], verifiedUpdate);
-    // addSettlePriceNewToken(tx, config.package.oracle, oracleV2Id, tokenType[network]["SUI"], feedIds["SUI"], verifiedUpdate);
-
-    // updateOracleV2WithPythLazer(tx, config.package.oracle, oracleV2Id, verifiedUpdate);
-    // updateOracleV2SettlePriceWithPythLazer(tx, config.package.oracle, oracleV2Id, verifiedUpdate, timestamp);
+    await pythClient.addLatestPriceNewToken(tx, "JPY");
+    // await pythClient.addSettlePriceNewToken(tx, "SCA", 1778572800);
+    // await pythClient.updateOracleV2WithPythLazer(tx, ["SUI"]);
+    // await pythClient.updateOracleV2SettlePriceWithPythLazer(tx, ["SUI"], 1778572800);
 
     const res = await sui.signAndExecuteTransaction({ signer, transaction: tx });
     console.log(res);
