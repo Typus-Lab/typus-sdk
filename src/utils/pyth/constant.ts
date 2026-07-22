@@ -1,8 +1,10 @@
 import { TOKEN } from "src/constants";
 
 // Pyth Lazer numeric feed IDs (u32). Source: https://docs.pyth.network/lazer/price-feed-ids
-// Wrapped / staked variants (wETH, sbETH, wSOL, wAPT, wUSDT, wUSDC, LBTC, xBTC, TBTC, AFSUI,
-// VSUI, HASUI, STSUI) are mapped to their underlying base/USD feed.
+// Same-asset wrappers (wETH, sbETH, wSOL, wAPT, wUSDT, wUSDC, sbBTC) map to their
+// underlying base/USD feed; LSTs and BTC derivatives (AFSUI, VSUI, HASUI, STSUI,
+// LBTC, xBTC, TBTC, WBTC) use their own dedicated feeds, matching typus-rust.
+// XAU is priced off Crypto.XAUT/USD 172 (24/7; spot 346 is market-hours gated).
 export const feedIds: { [key in TOKEN]: number } = {
     // placeholder feed ID for Typus Index; not live on Pyth Lazer
     TYPUS: 0,
@@ -17,10 +19,10 @@ export const feedIds: { [key in TOKEN]: number } = {
     TEXP: 0,
     USD: 0,
     sbBTC: 1,
-    WBTC: 1,
-    xBTC: 1,
-    TBTC: 1,
-    LBTC: 1,
+    WBTC: 103,
+    xBTC: 1598,
+    TBTC: 588,
+    LBTC: 468,
     wETH: 2,
     sbETH: 2,
     wSOL: 6,
@@ -29,10 +31,10 @@ export const feedIds: { [key in TOKEN]: number } = {
     sbUSDT: 8,
     wUSDT: 8,
     SUI: 11,
-    AFSUI: 11,
-    VSUI: 11,
+    AFSUI: 353,
+    VSUI: 622,
     HASUI: 443,
-    STSUI: 11,
+    STSUI: 736,
     DOGE: 13,
     XRP: 14,
     BNB: 15,
@@ -44,9 +46,9 @@ export const feedIds: { [key in TOKEN]: number } = {
     DEEP: 173,
     USDY: 276,
     JPY: 340,
-    USOIL: 344,
+    USOIL: 657,
     XAG: 345,
-    XAU: 346,
+    XAU: 172,
     AUSD: 367,
     BLUE: 381,
     BUCK: 390,
