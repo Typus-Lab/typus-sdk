@@ -144,17 +144,19 @@ export class PythLazerSuiClient {
     }
 
     /**
-     * Calls `oracle_v2::add_settle_price_new_token<TOKEN>(oracle_v2, feed_id, update, clock)`.
-     * `timestamp` (seconds) is forwarded to the Lazer fetch when supplied.
+     * Calls `oracle_v2::add_settle_price_new_token<TOKEN>(oracle_v2, feed_id, update, timestamp, clock)`.
+     * `timestamp` (seconds) is forwarded to the Lazer fetch when supplied and
+     * passed on-chain; defaults to now, matching the freshness window.
      */
     async addSettlePriceNewToken(tx: Transaction, token: TOKEN, timestamp?: number, tokenTypeArgument?: string): Promise<void> {
         const feedId = this.resolveFeedIds([token])[0];
         const typeArg = this.resolveTypeArgument(token, tokenTypeArgument);
+        const ts = timestamp ?? Math.floor(Date.now() / 1000);
         const verifiedUpdate = await this.updatePythLazer(tx, [token], timestamp);
         tx.moveCall({
             target: `${this.oraclePackage}::oracle_v2::add_settle_price_new_token`,
             typeArguments: [typeArg],
-            arguments: [tx.object(this.oracleV2Id), tx.pure.u32(feedId), verifiedUpdate, tx.object("0x6")],
+            arguments: [tx.object(this.oracleV2Id), tx.pure.u32(feedId), verifiedUpdate, tx.pure.u64(ts), tx.object("0x6")],
         });
     }
 }
