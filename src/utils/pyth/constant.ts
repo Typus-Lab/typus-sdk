@@ -76,6 +76,6 @@ export const feedIds: { [key in TOKEN]: number } = {
 // Pyth Lazer State object IDs on Sui.
 // Source: https://docs.pyth.network/price-feeds/pro/contract-addresses
 export const lazerStateId = {
-    MAINNET: "",
+    MAINNET: "0xd0db9c1e9212a98120384bf78d8b8c985d87b9ee6921dffcf9d1394062911573",
     TESTNET: "0x7b570126bfdcc7f7b2b4028445d4ac1d35c41da498606a2b097c3973425698d3",
 };
