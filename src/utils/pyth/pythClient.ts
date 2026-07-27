@@ -1,4 +1,6 @@
-import { JsonUpdate, PythLazerClient, type Channel, type PriceFeedProperty } from "@pythnetwork/pyth-lazer-sdk";
+// Type-only: the WS client is node-only, and importing it for real would drag
+// the whole Lazer SDK into browser bundles that never construct one.
+import type { JsonUpdate, PythLazerClient, Channel, PriceFeedProperty } from "@pythnetwork/pyth-lazer-sdk";
 import {} from "@pythnetwork/pyth-lazer-sui-js";
 import { SuiJsonRpcClient } from "@mysten/sui/jsonRpc";
 import { Transaction, type TransactionResult } from "@mysten/sui/transactions";
@@ -74,9 +76,8 @@ export class PythLazerSuiClient {
     constructor(opts: PythLazerSuiClientOpts) {
         this.lazer = opts.lazer;
         this.getAccessToken = opts.getAccessToken;
-        if (!this.lazer && !this.getAccessToken) {
-            throw new Error("PythLazerSuiClient needs either `lazer` (WS) or `getAccessToken` (REST)");
-        }
+        // A missing price source is only fatal when a price is actually fetched
+        // — plenty of callers construct a client purely for read-only views.
         this.restEndpoint = (opts.restEndpoint ?? DEFAULT_REST_ENDPOINT).replace(/\/+$/, "");
         this.channel = opts.channel ?? DEFAULT_CHANNEL;
         this.moveApiVersion = opts.moveApiVersion ?? DEFAULT_MOVE_API;
@@ -148,6 +149,9 @@ export class PythLazerSuiClient {
         const priceFeedIds = this.resolveFeedIds(tokens);
 
         let update: JsonUpdate;
+        if (!this.lazer && !this.getAccessToken) {
+            throw new Error("PythLazerSuiClient needs either `lazer` (WS) or `getAccessToken` (REST) to fetch prices");
+        }
         if (this.getAccessToken) {
             update = await this.fetchUpdateOverRest(priceFeedIds, timestamp);
         } else if (timestamp) {
