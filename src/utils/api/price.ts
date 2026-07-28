@@ -60,7 +60,7 @@ const lazerDisplayIds: { [name: string]: number } = {
     INJ: 46,
     SEI: 51,
     JUP: 92,
-    SCA: 545,
+    // SCA: 545,
     AFSUI: 353,
     NAVX: 509,
     USDY: 276,
