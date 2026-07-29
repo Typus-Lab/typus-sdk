@@ -36,68 +36,96 @@ export async function getLatestPrice(pair: string): Promise<string> {
     return "0";
 }
 
-export async function getPythLatestPrice() {
-    // Append the query parameters to the URL
-    const keys = Object.keys(pythId)
-        .map((key) => `ids[]=${key}`)
-        .join("&");
-    let apiUrlWithParams = `https://hermes.pyth.network/api/latest_price_feeds?${keys}`;
+// Pyth Lazer (Pro) numeric feed ids for the display-price helpers below.
+// hermes.pyth.network requires an API key from 2026-08-18 and no key form is
+// browser-safe there, so these helpers fetch from the Lazer `/price` endpoint
+// instead — it accepts the short-lived JWTs a browser can hold.
+// - XAU is priced off XAUT/USD (feed 172): the metal-spot feed 346 is not
+//   entitled on our key, and one unentitled id 403s the whole batch.
+// - USOIL / XAG / USDJPY are unentitled with no crypto proxy — dropped.
+// - Several Sui-ecosystem feeds are inactive upstream as of 2026-07-20
+//   (TURBOS, SCA, AFSUI, NAVX, BUCK, VSUI, HASUI) and return no row until
+//   Pyth reactivates them.
+const lazerDisplayIds: { [name: string]: number } = {
+    SUI: 11,
+    CETUS: 401,
+    USDC: 7,
+    BTC: 1,
+    ETH: 2,
+    SOL: 6,
+    TURBOS: 599,
+    APT: 28,
+    USDT: 8,
+    DOGE: 13,
+    INJ: 46,
+    SEI: 51,
+    JUP: 92,
+    // SCA: 545,
+    AFSUI: 353,
+    NAVX: 509,
+    USDY: 276,
+    BUCK: 390,
+    VSUI: 622,
+    HASUI: 443,
+    AUSD: 367,
+    DEEP: 173,
+    BLUE: 381,
+    XAU: 172,
+    WAL: 624,
+    HYPE: 110,
+    XRP: 14,
+    HAEDAL: 648,
+};
 
-    let response = await fetch(apiUrlWithParams, {
+const LAZER_PRICE_URL = "https://pyth.dourolabs.app/v1/fixed_rate@1000ms/price";
+
+async function fetchLazerDisplayPrices(names: string[], accessToken?: string): Promise<Map<string, number>> {
+    const entries = names.map((name) => [name, lazerDisplayIds[name]] as const).filter(([, id]) => id != null);
+    const ids = [...new Set(entries.map(([, id]) => id))];
+    // /price matches an exact channel tick — an unaligned timestamp returns
+    // 200 with an empty array — so floor to the 1s interval and look slightly
+    // back to stay behind publish lag.
+    const timestamp = Math.floor((Date.now() - 2000) / 1000) * 1_000_000;
+    const query = ids.map((id) => `ids=${id}`).join("&");
+    const token = accessToken ?? process.env.PYTH_LAZER_TOKEN;
+
+    const map = new Map<string, number>();
+    const response = await fetch(`${LAZER_PRICE_URL}?${query}&timestamp=${timestamp}`, {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
-
-    let map = new Map<string, number>();
-
-    if (response.ok) {
-        let data = await response.json();
-
-        data.forEach((p) => {
-            let token = pythId[p.id];
-            let price = p.price.price / 10 ** -p.price.expo;
-            map.set(token, price);
-        });
-
+    if (!response.ok) {
+        console.error(`Failed to fetch Pyth prices: ${response.status}`);
         return map;
     }
+
+    const rows: { price_feed_id: number; price: number; exponent: number }[] = await response.json();
+    const priceById = new Map(rows.map((r) => [r.price_feed_id, r.price * 10 ** r.exponent]));
+    entries.forEach(([name, id]) => {
+        const price = priceById.get(id);
+        if (price != null) {
+            map.set(name, price);
+        }
+    });
+    return map;
+}
+
+/**
+ * Fetch latest display prices for every mapped token.
+ * @param accessToken Optional Lazer JWT / API key; falls back to PYTH_LAZER_TOKEN env.
+ */
+export async function getPythLatestPrice(accessToken?: string) {
+    return fetchLazerDisplayPrices(Object.keys(lazerDisplayIds), accessToken);
 }
 
 /**
  * Fetch latest Pyth prices for the specified symbols.
  * @param symbols Array of token symbols (e.g., ["BTC", "ETH"]) to fetch prices for.
+ * @param accessToken Optional Lazer JWT / API key; falls back to PYTH_LAZER_TOKEN env.
  * @returns Map where keys are token symbols and values are their latest prices.
  */
-export async function getPythLatestPriceBySymbols(symbols: string[]): Promise<Map<string, number>> {
-    // Build query string for requested symbols by mapping through pythId entries
-    const idsParam = Object.entries(pythId)
-        .filter(([id, token]) => symbols.includes(token))
-        .map(([id]) => `ids[]=${id}`)
-        .join("&");
-    const apiUrlWithParams = `https://hermes.pyth.network/api/latest_price_feeds?${idsParam}`;
-
-    const response = await fetch(apiUrlWithParams, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-    });
-
-    const map = new Map<string, number>();
-
-    if (response.ok) {
-        const data: any[] = await response.json();
-        data.forEach((p) => {
-            const token = pythId[p.id];
-            // Convert price using exponent provided
-            const price = p.price.price / 10 ** -p.price.expo;
-            if (symbols.includes(token)) {
-                map.set(token, price);
-            }
-        });
-    } else {
-        console.error(`Failed to fetch Pyth prices: ${response.status}`);
-    }
-
-    return map;
+export async function getPythLatestPriceBySymbols(symbols: string[], accessToken?: string): Promise<Map<string, number>> {
+    return fetchLazerDisplayPrices(symbols, accessToken);
 }
 
 export async function getLatestPriceUSD() {
